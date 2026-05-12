@@ -193,7 +193,6 @@ struct StructuralRankedPathSelection {
     candidate_set_id: String,
     candidate_paths: Vec<StructuralPathArtifact>,
     runtime: Option<StructuralPathRankerRuntimeSurface>,
-    paths: Vec<StructuralPathArtifact>,
 }
 
 #[derive(Debug, Clone)]
@@ -3576,35 +3575,6 @@ fn structural_feedback_path_candidates(
         .collect()
 }
 
-fn structural_ranked_paths(
-    snapshot: &WorkflowSnapshot,
-    provider_status_agent: &ProviderCatalogAgentSurface,
-    feedback_history: &[FeedbackRecord],
-) -> Vec<StructuralPathArtifact> {
-    structural_ranked_paths_with_prior_state(
-        snapshot,
-        provider_status_agent,
-        feedback_history,
-        &StructuralPriorLearningState::default(),
-    )
-}
-
-fn structural_ranked_paths_with_prior_state(
-    snapshot: &WorkflowSnapshot,
-    provider_status_agent: &ProviderCatalogAgentSurface,
-    feedback_history: &[FeedbackRecord],
-    structural_prior_state: &StructuralPriorLearningState,
-) -> Vec<StructuralPathArtifact> {
-    structural_ranked_paths_with_runtime_context_and_prior_state(
-        snapshot,
-        provider_status_agent,
-        feedback_history,
-        structural_prior_state,
-        StructuralPathRankerRuntimeContext::default(),
-    )
-    .paths
-}
-
 fn structural_ranked_paths_with_runtime_context_and_prior_state(
     snapshot: &WorkflowSnapshot,
     provider_status_agent: &ProviderCatalogAgentSurface,
@@ -3654,7 +3624,6 @@ fn structural_ranked_paths_with_runtime_context_and_prior_state(
         candidate_set_id: path_plan.candidate_set_id.clone(),
         candidate_paths: path_plan.candidate_paths.clone(),
         runtime: path_plan.path_ranker_runtime,
-        paths: path_plan.paths,
     }
 }
 
@@ -6443,7 +6412,7 @@ mod tests {
         assert_eq!(runtime.applied_path_count, 1);
         assert_eq!(
             selection
-                .paths
+                .candidate_paths
                 .iter()
                 .find(|path| path.path_id == path_id)
                 .and_then(|path| path.path_ranker_runtime_source.as_deref()),
@@ -6542,7 +6511,7 @@ mod tests {
         assert_eq!(runtime.applied_path_count, current_rows.len());
         let expected_first = current_rows.first().expect("first row");
         let selected = selection
-            .paths
+            .candidate_paths
             .iter()
             .find(|path| path.path_id == expected_first.path_id)
             .expect("ranked path with registered score");
@@ -6652,7 +6621,7 @@ mod tests {
         assert_eq!(runtime.applied_path_count, current_rows.len());
         let expected_first = current_rows.first().expect("first row");
         let selected = selection
-            .paths
+            .candidate_paths
             .iter()
             .find(|path| path.path_id == expected_first.path_id)
             .expect("ranked path with persisted current target score");
@@ -6747,7 +6716,7 @@ mod tests {
         assert_eq!(runtime.candidate_set_match_count, 0);
         assert_eq!(runtime.applied_path_count, 0);
         assert!(selection
-            .paths
+            .candidate_paths
             .iter()
             .all(|path| path.path_ranker_runtime_source.is_none()));
     }

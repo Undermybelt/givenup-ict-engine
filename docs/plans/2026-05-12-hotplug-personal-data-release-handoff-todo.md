@@ -60,7 +60,7 @@ Status legend: `done`, `active`, `next`, `blocked`, `not_yet`.
 | done | Run full verification after route-precedence repair | `cargo test`, `cargo fmt --check`, and `cargo clippy --all-targets -- -D warnings` passed. |
 | done | Final compile/targeted verification after path-literal cleanup and candidate-set field sync | `cargo fmt --check`, `cargo test --test provider_neutral_cli -- --nocapture`, `cargo test application::orchestration::workflow_status::tests:: -- --nocapture`, `cargo clippy --all-targets -- -D warnings`, and `cargo check --tests --quiet` passed. |
 | done | Repair clean-export BBN fixture dependency | BBN tests now use tracked, path-redacted `tests/fixtures/policy_training/`; runtime user-state hot-plug path remains unchanged. |
-| active | Clean release-export audit | `/tmp` clean export next caught ignored `state/policy_training` BBN test fixtures; fix now points tests at tracked, path-redacted `tests/fixtures/policy_training/` files while runtime hot-plug search still uses user state. Re-run clean export from HEAD before any mirror push. |
+| active | Clean release-export audit | Latest `/tmp` clean export passes `bbn::trading`, then Clippy catches HEAD-only dead code in `structural_playbook.rs`; fold the already-local minimal `candidate_paths` cleanup into the release checkpoint and re-run clean export Clippy before any mirror push. |
 | done | Update this board after each slice | Current slice recorded here. |
 | done | Commit safe slices | Checkpoint commit created for the intended source/docs/tests; nested dependency workspaces and active run state were excluded. |
 | next | Prepare release-mirror export/audit | Requires clean curated export from committed source, excluding dirty local docs/runtime artifacts. |
@@ -104,6 +104,9 @@ If resuming:
 - `/tmp` clean export after adding `ranking_label.rs`: same command progressed and then found one omitted `StructuralPathRankingTargetRow` test constructor in `src/application/entry_models/training_export.rs`.
 - `/tmp` clean export after checkpoint commit: `cargo test --manifest-path /tmp/ict-engine-release-export.Fa3UTZ/Cargo.toml bbn::trading -- --nocapture` compiled but failed 3 tests because ignored `state/policy_training` fixtures were absent from the export.
 - Local fixture repair: `cargo fmt --check` passed, `cargo test bbn::trading -- --nocapture` passed with 19 matching tests, and `cargo clippy --all-targets -- -D warnings` passed after moving test dependency to tracked fixtures.
+- `/tmp` clean export from `f1a561a`: `cargo test --manifest-path /tmp/ict-engine-release-export.IWadVv/Cargo.toml bbn::trading -- --nocapture` passed with 19 matching tests.
+- `/tmp` clean export from `f1a561a`: `cargo fmt --manifest-path /tmp/ict-engine-release-export.IWadVv/Cargo.toml --check` passed.
+- `/tmp` clean export from `f1a561a`: `cargo clippy --manifest-path /tmp/ict-engine-release-export.IWadVv/Cargo.toml --all-targets -- -D warnings` failed on dead `StructuralRankedPathSelection.paths` and two unused `structural_ranked_paths*` wrappers that were still absent from the committed tree.
 - GH CLI: `gh auth status` currently reports an active `Undermybelt` login with `repo`/`workflow` scopes.
 - Release mirror remote probe via HTTPS showed `v0.1.1` exists at commit `5bc7bc74dfc2b6c88840b774c662d62c1d81cca1`.
 
@@ -209,7 +212,12 @@ Evidence:
 - `cargo fmt --check`: passed after fixture repair formatting.
 - `cargo test bbn::trading -- --nocapture`: passed, 19 matching tests.
 - `cargo clippy --all-targets -- -D warnings`: passed.
+- `/tmp` clean export `/tmp/ict-engine-release-export.IWadVv`:
+  `cargo test --manifest-path ... bbn::trading -- --nocapture` passed,
+  `cargo fmt --manifest-path ... --check` passed, and
+  `cargo clippy --manifest-path ... --all-targets -- -D warnings` failed on
+  committed-tree-only structural-playbook dead code.
 
 Next:
-- Rebuild a clean `/tmp` export from `HEAD` after staging/commit decision and
-  re-run `bbn::trading` there.
+- Commit the minimal structural-playbook cleanup already present in the working
+  tree, then rebuild a clean `/tmp` export from `HEAD` and re-run Clippy there.
