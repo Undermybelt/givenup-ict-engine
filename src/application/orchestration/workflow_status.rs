@@ -5286,7 +5286,7 @@ mod tests {
         let mut payload =
             build_factor_research_handoff_payload(BuildFactorResearchHandoffPayloadInput {
                 symbol: "DEMO",
-                data: "examples/demo/demo-15m.json",
+                data: "support/examples/demo/demo-15m.json",
                 objective: "expansion_manipulation",
                 provider_profile_selector: None,
                 paired_data: None,
@@ -6364,14 +6364,14 @@ mod tests {
     fn workflow_status_human_view_prefers_persisted_scorecards() {
         let snapshot = sample_human_workflow_snapshot();
         let persisted = vec![EnsembleExecutorScorecard {
-            executor: "xgboost_file".to_string(),
+            executor: "catboost_file".to_string(),
             latest_weight_hint: Some(0.72),
             ..EnsembleExecutorScorecard::default()
         }];
         let value = build_human_workflow_status_view(&snapshot, &persisted);
         assert_eq!(
             value["ensemble_consensus"]["executor_scorecards"][0]["executor"],
-            "xgboost_file"
+            "catboost_file"
         );
         assert_eq!(
             value["ensemble_consensus"]["executor_scorecard_source"],
@@ -12177,10 +12177,9 @@ mod tests {
         let mut vote = vote;
         vote.executor_summaries = vec![
             "executor=catboost_file action=observe confidence=0.500 policy_source=catboost_file:placeholder".to_string(),
-            "executor=xgboost_file action=observe confidence=0.450 policy_source=xgboost_file:sample_file".to_string(),
         ];
         let persisted = vec![EnsembleExecutorScorecard {
-            executor: "xgboost_file".to_string(),
+            executor: "catboost_file".to_string(),
             latest_weight_hint: Some(0.80),
             ..EnsembleExecutorScorecard::default()
         }];
@@ -12194,13 +12193,13 @@ mod tests {
         assert_eq!(value.history[0].executor_scorecard_source, "persisted");
         assert_eq!(
             value.history[0].executor_scorecards[0].executor,
-            "xgboost_file"
+            "catboost_file"
         );
         assert_eq!(value.hard_block_only[0].artifact_id, vote.artifact_id);
         assert_eq!(value.hard_block_summary.count, 1);
         assert_eq!(
             value.history[0].policy_runtime_line.as_deref(),
-            Some("Policy runtime: catboost_file:placeholder, xgboost_file:sample_file")
+            Some("Policy runtime: catboost_file:placeholder")
         );
     }
 

@@ -20,6 +20,15 @@ fn correlation_asset_map(
     spot_symbol: &str,
     options_symbol: &str,
 ) -> CorrelationAssetMap {
+    correlation_asset_map_with_available(futures_symbol, spot_symbol, options_symbol, None)
+}
+
+fn correlation_asset_map_with_available(
+    futures_symbol: &str,
+    spot_symbol: &str,
+    options_symbol: &str,
+    available_symbols: Option<&[String]>,
+) -> CorrelationAssetMap {
     let upper = futures_symbol.to_ascii_uppercase();
     let mut related_futures_symbols = Vec::new();
     let mut related_etf_symbols = vec![spot_symbol.to_string()];
@@ -54,6 +63,7 @@ fn correlation_asset_map(
         }
         "BTC" | "BTCUSD" | "BTCUSDT" => {
             related_crypto_symbols.extend(["ETH", "SOL", "TOTAL"].map(str::to_string));
+            related_futures_symbols.extend(["DXY"].map(str::to_string));
             related_etf_symbols.extend(["IBIT", "ETHE", "QQQ"].map(str::to_string));
         }
         "EURUSD" => {
@@ -66,7 +76,23 @@ fn correlation_asset_map(
             related_etf_symbols.extend(["FXB", "UUP"].map(str::to_string));
             related_cfd_symbols.extend(["EURUSD", "EURGBP"].map(str::to_string));
         }
-        _ => {}
+        _ => {
+            if looks_like_equity_symbol(&upper) {
+                related_etf_symbols.extend(
+                    equity_market_proxy_etfs(&upper)
+                        .into_iter()
+                        .map(str::to_string),
+                );
+                related_futures_symbols.extend(["ES", "NQ", "VIX", "DXY"].map(str::to_string));
+            }
+        }
+    }
+
+    if let Some(available) = available_symbols {
+        filter_available_symbols(&mut related_futures_symbols, available);
+        filter_available_symbols(&mut related_etf_symbols, available);
+        filter_available_symbols(&mut related_cfd_symbols, available);
+        filter_available_symbols(&mut related_crypto_symbols, available);
     }
 
     related_futures_symbols.sort();
@@ -85,6 +111,34 @@ fn correlation_asset_map(
         related_cfd_symbols,
         related_crypto_symbols,
     }
+}
+
+fn looks_like_equity_symbol(symbol: &str) -> bool {
+    !symbol.is_empty()
+        && symbol.len() <= 5
+        && symbol
+            .chars()
+            .all(|character| character.is_ascii_uppercase() || character == '.')
+}
+
+fn equity_market_proxy_etfs(symbol: &str) -> Vec<&'static str> {
+    let sector_etf = match symbol {
+        "AAPL" | "MSFT" | "NVDA" | "AMD" | "AVGO" | "META" | "GOOGL" | "GOOG" => "XLK",
+        "JPM" | "BAC" | "GS" | "MS" | "WFC" => "XLF",
+        "XOM" | "CVX" | "COP" | "SLB" => "XLE",
+        "TSLA" | "AMZN" | "HD" | "MCD" | "NKE" => "XLY",
+        "LLY" | "UNH" | "JNJ" | "MRK" | "PFE" => "XLV",
+        _ => "SPY",
+    };
+    vec!["SPY", "QQQ", "IWM", sector_etf]
+}
+
+fn filter_available_symbols(symbols: &mut Vec<String>, available_symbols: &[String]) {
+    let available: std::collections::BTreeSet<String> = available_symbols
+        .iter()
+        .map(|symbol| symbol.to_ascii_uppercase())
+        .collect();
+    symbols.retain(|symbol| available.contains(&symbol.to_ascii_uppercase()));
 }
 
 #[derive(Debug, Serialize)]
@@ -170,137 +224,6 @@ pub fn empty_smt_correlation_section() -> SmtCorrelationSection {
         fail_closed_reason: Some("paired_market_not_provided".to_string()),
         notes: vec!["paired_market_not_provided".to_string()],
         narrative: "smt_analysis_unavailable_without_paired_market".to_string(),
-    }
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-    use crate::data::realtime::market_support::SpotInstrumentKind;
-    use chrono::{Duration, TimeZone, Utc};
-
-    fn candle(index: i64, high: f64, low: f64, close: f64) -> Candle {
-        Candle {
-            timestamp: Utc.with_ymd_and_hms(2026, 5, 12, 13, 30, 0).unwrap()
-                + Duration::minutes(index),
-            open: close,
-            high,
-            low,
-            close,
-            volume: 1000.0,
-        }
-    }
-
-    fn auxiliary() -> AuxiliaryMarketEvidence {
-        AuxiliaryMarketEvidence {
-            spot_symbol: "ES".to_string(),
-            options_symbol: "SPY".to_string(),
-            spot_kind: SpotInstrumentKind::Index,
-            spot_last_close: None,
-            futures_last_close: None,
-            spot_return: None,
-            futures_return: None,
-            raw_basis_bps: None,
-            normalized_basis_bps: None,
-            rolling_price_ratio_mean: None,
-            put_call_oi_ratio: None,
-            put_call_volume_ratio: None,
-            near_atm_implied_volatility: None,
-            near_atm_delta: None,
-            near_atm_gamma: None,
-            near_atm_vega: None,
-            call_gamma_oi: None,
-            put_gamma_oi: None,
-            gamma_skew: None,
-            hedge_pressure_direction: None,
-            hedge_pressure_score: None,
-            long_bias: 0.0,
-            short_bias: 0.0,
-            uncertainty_penalty: 0.0,
-            notes: Vec::new(),
-        }
-    }
-
-    #[test]
-    fn ict_smt_bearish_requires_higher_high_sweep_without_pair_confirmation() {
-        let mut base = Vec::new();
-        let mut pair = Vec::new();
-        for index in 0..24 {
-            base.push(candle(index, 100.0 + index as f64 * 0.1, 95.0, 99.0));
-            pair.push(candle(index, 200.0 + index as f64 * 0.1, 195.0, 199.0));
-        }
-        base.push(candle(24, 106.75, 96.0, 105.5));
-        pair.push(candle(24, 201.20, 196.0, 200.4));
-
-        let section = build_smt_correlation_section("NQ", "ES", &base, &pair, &auxiliary())
-            .expect("smt section");
-
-        assert_eq!(section.smt_signal.as_deref(), Some("bearish_smt"));
-        assert_eq!(section.base_swing_type.as_deref(), Some("HH_sweep"));
-        assert_eq!(section.base_level, Some(106.75));
-        assert_eq!(section.comparison_swing_type.as_deref(), Some("failed_HH"));
-        assert_eq!(section.comparison_level, Some(201.2));
-        assert_eq!(
-            section.raw_comparison_swing_type.as_deref(),
-            Some("failed_HH")
-        );
-        assert_eq!(section.raw_comparison_level, Some(201.2));
-        assert_eq!(section.swept_side.as_deref(), Some("buy_side_liquidity"));
-        assert_eq!(section.trade_use, "confirmation_only");
-    }
-
-    #[test]
-    fn ict_smt_bullish_requires_lower_low_sweep_without_pair_confirmation() {
-        let mut base = Vec::new();
-        let mut pair = Vec::new();
-        for index in 0..24 {
-            base.push(candle(index, 105.0, 100.0 - index as f64 * 0.1, 101.0));
-            pair.push(candle(index, 205.0, 200.0 - index as f64 * 0.1, 201.0));
-        }
-        base.push(candle(24, 103.0, 96.25, 97.0));
-        pair.push(candle(24, 203.0, 197.85, 199.0));
-
-        let section = build_smt_correlation_section("NQ", "ES", &base, &pair, &auxiliary())
-            .expect("smt section");
-
-        assert_eq!(section.smt_signal.as_deref(), Some("bullish_smt"));
-        assert_eq!(section.base_swing_type.as_deref(), Some("LL_sweep"));
-        assert_eq!(section.base_level, Some(96.25));
-        assert_eq!(section.comparison_swing_type.as_deref(), Some("failed_LL"));
-        assert_eq!(section.comparison_level, Some(197.85));
-        assert_eq!(
-            section.raw_comparison_swing_type.as_deref(),
-            Some("failed_LL")
-        );
-        assert_eq!(section.raw_comparison_level, Some(197.85));
-        assert_eq!(section.swept_side.as_deref(), Some("sell_side_liquidity"));
-        assert_eq!(section.trade_use, "confirmation_only");
-    }
-
-    #[test]
-    fn ict_smt_inverse_relationship_normalizes_comparison_structure() {
-        let mut base = Vec::new();
-        let mut inverse_pair = Vec::new();
-        for index in 0..24 {
-            base.push(candle(index, 100.0 + index as f64 * 0.1, 95.0, 99.0));
-            inverse_pair.push(candle(index, 205.0, 200.0 - index as f64 * 0.1, 201.0));
-        }
-        base.push(candle(24, 106.75, 96.0, 105.5));
-        inverse_pair.push(candle(24, 203.0, 197.85, 199.0));
-
-        let snapshot = detect_ict_smt(&base, &inverse_pair, 20, true);
-
-        assert_eq!(snapshot.smt_signal.as_deref(), Some("bearish_smt"));
-        assert_eq!(snapshot.base_swing_type.as_deref(), Some("HH_sweep"));
-        assert_eq!(snapshot.base_level, Some(106.75));
-        assert_eq!(snapshot.comparison_swing_type.as_deref(), Some("failed_HH"));
-        assert_eq!(snapshot.comparison_level, Some(197.85));
-        assert_eq!(
-            snapshot.raw_comparison_swing_type.as_deref(),
-            Some("failed_LL")
-        );
-        assert_eq!(snapshot.raw_comparison_level, Some(197.85));
-        assert_eq!(snapshot.swept_side.as_deref(), Some("buy_side_liquidity"));
     }
 }
 
@@ -624,5 +547,177 @@ fn comparison_failure_low_level(candle: &Candle, inverse: bool) -> f64 {
         candle.high
     } else {
         candle.low
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::data::realtime::market_support::SpotInstrumentKind;
+    use chrono::{Duration, TimeZone, Utc};
+
+    fn candle(index: i64, high: f64, low: f64, close: f64) -> Candle {
+        Candle {
+            timestamp: Utc.with_ymd_and_hms(2026, 5, 12, 13, 30, 0).unwrap()
+                + Duration::minutes(index),
+            open: close,
+            high,
+            low,
+            close,
+            volume: 1000.0,
+        }
+    }
+
+    fn auxiliary() -> AuxiliaryMarketEvidence {
+        AuxiliaryMarketEvidence {
+            spot_symbol: "ES".to_string(),
+            options_symbol: "SPY".to_string(),
+            spot_kind: SpotInstrumentKind::Index,
+            spot_last_close: None,
+            futures_last_close: None,
+            spot_return: None,
+            futures_return: None,
+            raw_basis_bps: None,
+            normalized_basis_bps: None,
+            rolling_price_ratio_mean: None,
+            put_call_oi_ratio: None,
+            put_call_volume_ratio: None,
+            near_atm_implied_volatility: None,
+            near_atm_delta: None,
+            near_atm_gamma: None,
+            near_atm_vega: None,
+            call_gamma_oi: None,
+            put_gamma_oi: None,
+            gamma_skew: None,
+            hedge_pressure_direction: None,
+            hedge_pressure_score: None,
+            long_bias: 0.0,
+            short_bias: 0.0,
+            uncertainty_penalty: 0.0,
+            notes: Vec::new(),
+        }
+    }
+
+    #[test]
+    fn ict_smt_bearish_requires_higher_high_sweep_without_pair_confirmation() {
+        let mut base = Vec::new();
+        let mut pair = Vec::new();
+        for index in 0..24 {
+            base.push(candle(index, 100.0 + index as f64 * 0.1, 95.0, 99.0));
+            pair.push(candle(index, 200.0 + index as f64 * 0.1, 195.0, 199.0));
+        }
+        base.push(candle(24, 106.75, 96.0, 105.5));
+        pair.push(candle(24, 201.20, 196.0, 200.4));
+
+        let section = build_smt_correlation_section("NQ", "ES", &base, &pair, &auxiliary())
+            .expect("smt section");
+
+        assert_eq!(section.smt_signal.as_deref(), Some("bearish_smt"));
+        assert_eq!(section.base_swing_type.as_deref(), Some("HH_sweep"));
+        assert_eq!(section.base_level, Some(106.75));
+        assert_eq!(section.comparison_swing_type.as_deref(), Some("failed_HH"));
+        assert_eq!(section.comparison_level, Some(201.2));
+        assert_eq!(
+            section.raw_comparison_swing_type.as_deref(),
+            Some("failed_HH")
+        );
+        assert_eq!(section.raw_comparison_level, Some(201.2));
+        assert_eq!(section.swept_side.as_deref(), Some("buy_side_liquidity"));
+        assert_eq!(section.trade_use, "confirmation_only");
+    }
+
+    #[test]
+    fn ict_smt_bullish_requires_lower_low_sweep_without_pair_confirmation() {
+        let mut base = Vec::new();
+        let mut pair = Vec::new();
+        for index in 0..24 {
+            base.push(candle(index, 105.0, 100.0 - index as f64 * 0.1, 101.0));
+            pair.push(candle(index, 205.0, 200.0 - index as f64 * 0.1, 201.0));
+        }
+        base.push(candle(24, 103.0, 96.25, 97.0));
+        pair.push(candle(24, 203.0, 197.85, 199.0));
+
+        let section = build_smt_correlation_section("NQ", "ES", &base, &pair, &auxiliary())
+            .expect("smt section");
+
+        assert_eq!(section.smt_signal.as_deref(), Some("bullish_smt"));
+        assert_eq!(section.base_swing_type.as_deref(), Some("LL_sweep"));
+        assert_eq!(section.base_level, Some(96.25));
+        assert_eq!(section.comparison_swing_type.as_deref(), Some("failed_LL"));
+        assert_eq!(section.comparison_level, Some(197.85));
+        assert_eq!(
+            section.raw_comparison_swing_type.as_deref(),
+            Some("failed_LL")
+        );
+        assert_eq!(section.raw_comparison_level, Some(197.85));
+        assert_eq!(section.swept_side.as_deref(), Some("sell_side_liquidity"));
+        assert_eq!(section.trade_use, "confirmation_only");
+    }
+
+    #[test]
+    fn ict_smt_inverse_relationship_normalizes_comparison_structure() {
+        let mut base = Vec::new();
+        let mut inverse_pair = Vec::new();
+        for index in 0..24 {
+            base.push(candle(index, 100.0 + index as f64 * 0.1, 95.0, 99.0));
+            inverse_pair.push(candle(index, 205.0, 200.0 - index as f64 * 0.1, 201.0));
+        }
+        base.push(candle(24, 106.75, 96.0, 105.5));
+        inverse_pair.push(candle(24, 203.0, 197.85, 199.0));
+
+        let snapshot = detect_ict_smt(&base, &inverse_pair, 20, true);
+
+        assert_eq!(snapshot.smt_signal.as_deref(), Some("bearish_smt"));
+        assert_eq!(snapshot.base_swing_type.as_deref(), Some("HH_sweep"));
+        assert_eq!(snapshot.base_level, Some(106.75));
+        assert_eq!(snapshot.comparison_swing_type.as_deref(), Some("failed_HH"));
+        assert_eq!(snapshot.comparison_level, Some(197.85));
+        assert_eq!(
+            snapshot.raw_comparison_swing_type.as_deref(),
+            Some("failed_LL")
+        );
+        assert_eq!(snapshot.raw_comparison_level, Some(197.85));
+        assert_eq!(snapshot.swept_side.as_deref(), Some("buy_side_liquidity"));
+    }
+
+    #[test]
+    fn smt_relationship_resolver_keeps_crypto_macro_driver() {
+        let map = correlation_asset_map("BTC", "BTC", "IBIT");
+
+        assert!(map.related_crypto_symbols.contains(&"ETH".to_string()));
+        assert!(map.related_crypto_symbols.contains(&"SOL".to_string()));
+        assert!(map.related_futures_symbols.contains(&"DXY".to_string()));
+        assert!(map.related_etf_symbols.contains(&"QQQ".to_string()));
+    }
+
+    #[test]
+    fn smt_relationship_resolver_filters_by_provider_universe() {
+        let available = vec![
+            "ETH".to_string(),
+            "DXY".to_string(),
+            "QQQ".to_string(),
+            "SPY".to_string(),
+        ];
+        let map = correlation_asset_map_with_available("BTC", "BTC", "IBIT", Some(&available));
+
+        assert_eq!(map.related_crypto_symbols, vec!["ETH".to_string()]);
+        assert_eq!(map.related_futures_symbols, vec!["DXY".to_string()]);
+        assert_eq!(map.related_etf_symbols, vec!["QQQ".to_string()]);
+    }
+
+    #[test]
+    fn smt_relationship_resolver_adds_equity_index_sector_and_options_proxies() {
+        let available = vec![
+            "SPY".to_string(),
+            "QQQ".to_string(),
+            "XLK".to_string(),
+            "DXY".to_string(),
+            "VIX".to_string(),
+        ];
+        let map = correlation_asset_map_with_available("AAPL", "AAPL", "AAPL", Some(&available));
+
+        assert_eq!(map.related_etf_symbols, vec!["QQQ", "SPY", "XLK"]);
+        assert_eq!(map.related_futures_symbols, vec!["DXY", "VIX"]);
+        assert_eq!(map.related_options_symbols, vec!["AAPL".to_string()]);
     }
 }

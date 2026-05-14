@@ -4,6 +4,7 @@ use std::collections::{BTreeMap, BTreeSet};
 use std::fs;
 use std::path::Path;
 
+use crate::application::auto_quant::AgentMaterialRankArtifact;
 use crate::application::belief::{
     blend_branch_prior_with_transition_prior, blend_node_posterior_with_duration_prior,
     transition_adjusted_branch_posteriors,
@@ -1057,6 +1058,7 @@ fn structural_path_ranking_target_artifact_from_candidates(
     let denominator = structural_candidate_policy_denominator(&candidate_paths);
     let candidate_set_size = candidate_paths.len();
     let regime_calibration_bucket = structural_path_ranking_regime_bucket(snapshot);
+    let regime_aux_context = StructuralRegimeAuxContext::from_snapshot(snapshot);
     let rows = candidate_paths
         .into_iter()
         .enumerate()
@@ -1125,12 +1127,18 @@ fn structural_path_ranking_target_artifact_from_candidates(
                 experience_prior: path.path_prior,
                 current_posterior: path.path_posterior,
                 structural_baseline_score: path.composite_preference_score,
+                regime_aux_qqq_hv_level: None,
+                regime_aux_nq_vs_200d_pct: None,
+                regime_aux_vix3m_level: None,
+                regime_aux_qqq_hv_pct_rank_252: None,
+                regime_aux_vvix_over_vix: None,
                 score_model_family: None,
                 score_source_kind: None,
                 score_model_artifact_uri: None,
                 score_generator: None,
             };
             structural_populate_regime_profit_branch_fields(&mut row);
+            regime_aux_context.apply_to_row(&mut row);
             row
         })
         .collect::<Vec<_>>();
@@ -1310,6 +1318,11 @@ fn structural_path_ranking_feedback_target_rows(
                 experience_prior,
                 current_posterior,
                 structural_baseline_score: behavior_policy_probability,
+                regime_aux_qqq_hv_level: None,
+                regime_aux_nq_vs_200d_pct: None,
+                regime_aux_vix3m_level: None,
+                regime_aux_qqq_hv_pct_rank_252: None,
+                regime_aux_vvix_over_vix: None,
                 score_model_family: None,
                 score_source_kind: None,
                 score_model_artifact_uri: None,
@@ -1481,6 +1494,51 @@ fn structural_regime_bundle_branch_score(snapshot: &WorkflowSnapshot) -> f64 {
     score.clamp(0.0, 1.0)
 }
 
+#[derive(Debug, Clone, Default)]
+struct StructuralRegimeAuxContext {
+    qqq_hv_level: Option<f64>,
+    nq_vs_200d_pct: Option<f64>,
+    vix3m_level: Option<f64>,
+    qqq_hv_pct_rank_252: Option<f64>,
+    vvix_over_vix: Option<f64>,
+}
+
+impl StructuralRegimeAuxContext {
+    fn from_snapshot(snapshot: &WorkflowSnapshot) -> Self {
+        let Some(assignments) = snapshot
+            .latest_analyze
+            .as_ref()
+            .map(|phase| &phase.pre_bayes_filtered_assignments)
+        else {
+            return Self::default();
+        };
+        Self {
+            qqq_hv_level: structural_assignment_f64(assignments, "regime_aux_qqq_hv_level"),
+            nq_vs_200d_pct: structural_assignment_f64(assignments, "regime_aux_nq_vs_200d_pct"),
+            vix3m_level: structural_assignment_f64(assignments, "regime_aux_vix3m_level"),
+            qqq_hv_pct_rank_252: structural_assignment_f64(
+                assignments,
+                "regime_aux_qqq_hv_pct_rank_252",
+            ),
+            vvix_over_vix: structural_assignment_f64(assignments, "regime_aux_vvix_over_vix"),
+        }
+    }
+
+    fn apply_to_row(&self, row: &mut StructuralPathRankingTargetRow) {
+        row.regime_aux_qqq_hv_level = self.qqq_hv_level;
+        row.regime_aux_nq_vs_200d_pct = self.nq_vs_200d_pct;
+        row.regime_aux_vix3m_level = self.vix3m_level;
+        row.regime_aux_qqq_hv_pct_rank_252 = self.qqq_hv_pct_rank_252;
+        row.regime_aux_vvix_over_vix = self.vvix_over_vix;
+    }
+}
+
+fn structural_assignment_f64(assignments: &BTreeMap<String, String>, key: &str) -> Option<f64> {
+    assignments
+        .get(key)
+        .and_then(|value| value.trim().parse::<f64>().ok())
+}
+
 fn structural_regime_bundle_branch_path_candidates(
     snapshot: &WorkflowSnapshot,
     structural_prior_state: &StructuralPriorLearningState,
@@ -1617,6 +1675,127 @@ fn structural_path_ranking_regime_bundle_target_rows(
     rows
 }
 
+fn structural_path_ranking_agent_material_rank_target_rows(
+    snapshot: &WorkflowSnapshot,
+    structural_prior_state: &StructuralPriorLearningState,
+    rank_artifact: &AgentMaterialRankArtifact,
+) -> Vec<StructuralPathRankingTargetRow> {
+    let mut seen = BTreeSet::new();
+    let branch_paths = rank_artifact
+        .ranking
+        .iter()
+        .filter_map(|row| {
+            row.regime_profit_branch_path
+                .as_ref()
+                .or(row.branch_path.as_ref())
+                .map(|path| {
+                    path.trim()
+                        .replace("_->_", " -> ")
+                        .replace("->", " -> ")
+                        .split_whitespace()
+                        .collect::<Vec<_>>()
+                        .join(" ")
+                })
+                .filter(|path| path.contains(" -> ") && seen.insert(path.clone()))
+                .map(|path| (path, row))
+        })
+        .collect::<Vec<_>>();
+    if branch_paths.is_empty() {
+        return Vec::new();
+    }
+
+    let candidate_set_id = rank_artifact.artifact_id.clone();
+    let candidate_set_size = branch_paths.len();
+    let denominator = branch_paths
+        .iter()
+        .map(|(_, row)| structural_agent_material_rank_row_score(row).max(0.0))
+        .sum::<f64>();
+    let regime_calibration_bucket = structural_path_ranking_regime_bucket(snapshot);
+    let regime_aux_context = StructuralRegimeAuxContext::from_snapshot(snapshot);
+    branch_paths
+        .into_iter()
+        .enumerate()
+        .map(|(index, (branch_path, rank_row))| {
+            let row_score = structural_agent_material_rank_row_score(rank_row);
+            let behavior_policy_probability =
+                structural_candidate_policy_probability(row_score, denominator, candidate_set_size);
+            let prior_stats = structural_prior_state.paths.get(&branch_path);
+            let experience_prior =
+                structural_resolved_smoothed_prior(prior_stats, structural_prior_state, row_score);
+            let mut row = StructuralPathRankingTargetRow {
+                rank: index + 1,
+                candidate_set_id: candidate_set_id.clone(),
+                candidate_set_size,
+                path_id: branch_path.clone(),
+                scenario_id: format!(
+                    "auto-quant-agent-material-rank:{:016x}",
+                    structural_stable_hash64(&format!("{}|{}", candidate_set_id, branch_path))
+                ),
+                path_label: rank_row.unit_label.clone(),
+                regime_profit_branch_path: Some(branch_path.clone()),
+                parent_regime_root: None,
+                main_regime: rank_row.main_regime.clone(),
+                sub_regime: rank_row.sub_regime.clone(),
+                sub_sub_regime_or_profit_factor: rank_row.sub_sub_regime_or_profit_factor.clone(),
+                profit_factor: rank_row.profit_factor.clone(),
+                direction: structural_feedback_path_direction_label(&branch_path, None, snapshot),
+                raw_path_score: None,
+                calibrated_path_prob: None,
+                path_prob_lower_bound: None,
+                execution_gate_status: None,
+                execution_gate_min_path_prob: None,
+                execution_gate_reason: None,
+                pending_reward_state: "unobserved".to_string(),
+                maturity_mask: false,
+                maturity_weight: 0.0,
+                calibrated_label: None,
+                propensity_estimate: Some(behavior_policy_probability),
+                ips_weight: structural_path_ranking_ips_weight(Some(behavior_policy_probability)),
+                training_weight: None,
+                regime_calibration_bucket: regime_calibration_bucket.clone(),
+                behavior_policy_probability,
+                execution_propensity: Some(behavior_policy_probability),
+                target_policy_probability_confidence:
+                    structural_prior_target_policy_probability_confidence(prior_stats),
+                target_policy_probability_lower_bound:
+                    structural_prior_target_policy_probability_lower_bound(prior_stats),
+                target_policy_reward_prior: structural_prior_target_policy_reward_prior(
+                    prior_stats,
+                ),
+                target_policy_reward_lower_bound: structural_prior_target_policy_reward_lower_bound(
+                    prior_stats,
+                ),
+                experience_prior,
+                current_posterior: row_score,
+                structural_baseline_score: row_score,
+                regime_aux_qqq_hv_level: None,
+                regime_aux_nq_vs_200d_pct: None,
+                regime_aux_vix3m_level: None,
+                regime_aux_qqq_hv_pct_rank_252: None,
+                regime_aux_vvix_over_vix: None,
+                score_model_family: Some("auto_quant_agent_material_rank".to_string()),
+                score_source_kind: Some("agent_material_rank".to_string()),
+                score_model_artifact_uri: Some(rank_artifact.artifact_id.clone()),
+                score_generator: Some("ict-engine-auto-quant-rank-adapter-v1".to_string()),
+            };
+            structural_populate_regime_profit_branch_fields(&mut row);
+            regime_aux_context.apply_to_row(&mut row);
+            row
+        })
+        .collect()
+}
+
+fn structural_agent_material_rank_row_score(
+    row: &crate::application::auto_quant::AgentMaterialRankRow,
+) -> f64 {
+    row.win_rate_pct
+        .map(|value| value / 100.0)
+        .or(row.total_profit_pct.map(|value| value / 100.0))
+        .or(row.sharpe.map(|value| value / 10.0))
+        .unwrap_or(0.0)
+        .clamp(0.0, 1.0)
+}
+
 fn structural_required_candidate_paths(
     snapshot: &WorkflowSnapshot,
     ranked_paths: Vec<StructuralPathArtifact>,
@@ -1677,6 +1856,26 @@ pub fn export_structural_path_ranking_target(
     feedback_history: &[FeedbackRecord],
     structural_prior_state: &StructuralPriorLearningState,
 ) -> Result<StructuralPathRankingTargetExportSummary> {
+    export_structural_path_ranking_target_with_agent_material_rank(
+        state_dir,
+        symbol,
+        snapshot,
+        provider_status_agent,
+        feedback_history,
+        structural_prior_state,
+        None,
+    )
+}
+
+pub fn export_structural_path_ranking_target_with_agent_material_rank(
+    state_dir: &str,
+    symbol: &str,
+    snapshot: &WorkflowSnapshot,
+    provider_status_agent: &ProviderCatalogAgentSurface,
+    feedback_history: &[FeedbackRecord],
+    structural_prior_state: &StructuralPriorLearningState,
+    agent_material_rank: Option<&AgentMaterialRankArtifact>,
+) -> Result<StructuralPathRankingTargetExportSummary> {
     let mut artifact = build_structural_path_ranking_target_artifact_with_prior_state(
         snapshot,
         provider_status_agent,
@@ -1715,6 +1914,15 @@ pub fn export_structural_path_ranking_target(
         &artifact.candidate_set_id,
         artifact.candidate_set_size,
     );
+    let agent_material_rank_target_rows = agent_material_rank
+        .map(|rank| {
+            structural_path_ranking_agent_material_rank_target_rows(
+                snapshot,
+                structural_prior_state,
+                rank,
+            )
+        })
+        .unwrap_or_default();
     let existing_history_score_map = existing_history_rows
         .iter()
         .filter_map(|row| {
@@ -1733,6 +1941,7 @@ pub fn export_structural_path_ranking_target(
     let mut rows_for_history = artifact.rows.clone();
     rows_for_history.extend(feedback_target_rows.clone());
     rows_for_history.extend(regime_bundle_target_rows.clone());
+    rows_for_history.extend(agent_material_rank_target_rows.clone());
     let history_rows =
         upsert_structural_path_ranking_target_history(&history_jsonl_path, &rows_for_history)?;
     let mut history_artifact = StructuralPathRankingTargetArtifact {
@@ -1764,6 +1973,14 @@ pub fn export_structural_path_ranking_target(
     current_artifact
         .rows
         .extend(current_regime_bundle_target_rows);
+    let current_agent_material_rank_target_rows =
+        structural_path_ranking_current_feedback_target_rows(
+            &agent_material_rank_target_rows,
+            &current_artifact.rows,
+        );
+    current_artifact
+        .rows
+        .extend(current_agent_material_rank_target_rows);
     for row in &mut current_artifact.rows {
         structural_populate_regime_profit_branch_fields(row);
     }
@@ -4977,6 +5194,11 @@ mod tests {
             experience_prior: 0.5,
             current_posterior: 0.7,
             structural_baseline_score: 0.4,
+            regime_aux_qqq_hv_level: None,
+            regime_aux_nq_vs_200d_pct: None,
+            regime_aux_vix3m_level: None,
+            regime_aux_qqq_hv_pct_rank_252: None,
+            regime_aux_vvix_over_vix: None,
             score_model_family: None,
             score_source_kind: None,
             score_model_artifact_uri: None,
@@ -6263,6 +6485,74 @@ mod tests {
                 "trainer manifest must expose {feature} as a CatBoost/path-ranker feature"
             );
         }
+    }
+
+    #[test]
+    fn agent_material_rank_rows_export_as_structural_score_targets() {
+        let branch_path =
+            "Transition -> RuntimeEvidenceDensity -> upbar_reclaim -> runtime_density_upbar_reclaim_long_v1";
+        let rank_artifact = crate::application::auto_quant::AgentMaterialRankArtifact {
+            artifact_id: "auto-quant-agent-material-rank:HDR_205900:20260512T132018.388Z"
+                .to_string(),
+            generated_at: Utc::now(),
+            symbol: "HDR_205900".to_string(),
+            source_dispatch_artifact_id: "dispatch-1".to_string(),
+            ranking: vec![
+                crate::application::auto_quant::AgentMaterialRankRow {
+                    unit_label: "ranked upbar reclaim".to_string(),
+                    status: "completed".to_string(),
+                    regime_profit_branch_path: Some(branch_path.to_string()),
+                    main_regime: Some("Transition".to_string()),
+                    sub_regime: Some("RuntimeEvidenceDensity".to_string()),
+                    sub_sub_regime_or_profit_factor: Some("upbar_reclaim".to_string()),
+                    profit_factor: Some("runtime_density_upbar_reclaim_long_v1".to_string()),
+                    win_rate_pct: Some(30.6691),
+                    sharpe: Some(-1.833),
+                    total_profit_pct: Some(-19.44),
+                    trade_count: Some(538),
+                    ..crate::application::auto_quant::AgentMaterialRankRow::default()
+                },
+                crate::application::auto_quant::AgentMaterialRankRow {
+                    unit_label: "duplicate provider row".to_string(),
+                    status: "completed".to_string(),
+                    regime_profit_branch_path: Some(branch_path.to_string()),
+                    trade_count: Some(583),
+                    ..crate::application::auto_quant::AgentMaterialRankRow::default()
+                },
+            ],
+        };
+        let rows = structural_path_ranking_agent_material_rank_target_rows(
+            &WorkflowSnapshot {
+                symbol: "HDR_205900".to_string(),
+                ..WorkflowSnapshot::default()
+            },
+            &StructuralPriorLearningState::default(),
+            &rank_artifact,
+        );
+
+        assert_eq!(
+            rows.len(),
+            1,
+            "rank adapter must expose one structural candidate per branch path"
+        );
+        let row = &rows[0];
+        assert_eq!(row.candidate_set_id, rank_artifact.artifact_id);
+        assert_eq!(row.path_id, branch_path);
+        assert_eq!(row.regime_profit_branch_path.as_deref(), Some(branch_path));
+        assert_eq!(row.main_regime.as_deref(), Some("Transition"));
+        assert_eq!(row.sub_regime.as_deref(), Some("RuntimeEvidenceDensity"));
+        assert_eq!(
+            row.sub_sub_regime_or_profit_factor.as_deref(),
+            Some("upbar_reclaim")
+        );
+        assert_eq!(
+            row.profit_factor.as_deref(),
+            Some("runtime_density_upbar_reclaim_long_v1")
+        );
+        assert_eq!(
+            structural_path_ranking_target_row_score_key(row),
+            format!("{}|{}", rank_artifact.artifact_id, branch_path)
+        );
     }
 
     #[test]

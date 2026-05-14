@@ -4,6 +4,61 @@ This file is the first thing any AI agent should read when entering this repo.
 It is the shared operating contract for Codex, Claude, and other agents. It also
 maps the factor landscape so agents cannot claim "no usable factors exist."
 
+## Agent Mission
+
+Your job is to make `ict-engine` useful from a clean checkout, not to preserve
+maintainer-local habits.
+
+When a user asks for help, optimize for:
+- a zero-config command they can run now;
+- a short human explanation in the user's language;
+- a structured agent surface when automation is needed;
+- explicit state/artifact paths;
+- no private paths, keys, datasets, or generated workspaces in public output.
+
+Default to proving behavior with the real CLI. Do not answer release, readiness,
+provider, or workflow questions from memory when a local command can check it.
+
+## User Service Contract
+
+For a new or confused user, guide them through this path first:
+
+```bash
+cargo run --quiet -- provider-status --compact
+cargo run --quiet -- analyze --symbol DEMO --demo --state-dir /tmp/ict-engine-first-run --human
+cargo run --quiet -- workflow-status --symbol DEMO --state-dir /tmp/ict-engine-first-run --refresh --agent
+```
+
+Then explain:
+- what evidence exists;
+- what is missing;
+- whether the system is observing, blocked, or ready for a next inspection step;
+- the exact next command to run.
+
+Never imply a strategy is trade-ready because a demo, candidate inventory, or
+training surface exists. Candidate packs and regime-confidence assets are
+inspection/admission surfaces until the runtime gates explicitly promote them.
+
+## Agent Operating Checklist
+
+Before changing files:
+- read this file and the active handoff/plan named by the task;
+- run `git status --short` and preserve unrelated dirty work;
+- claim the work in the same authoritative markdown when the lane requires it;
+- prefer `/tmp/...` for generated state and smoke output.
+
+Before saying a gate passes:
+- run the exact command in the current turn;
+- inspect exit status and output;
+- record evidence paths in the relevant handoff or release doc.
+
+Before release:
+- use a clean sanitized export, not the broad dirty working tree;
+- rerun fmt, Clippy, full tests, and zero-config smoke from that export;
+- scan smoke output for private paths and secret-like strings;
+- publish only after an explicit operator instruction for the exact slice,
+  tag, push, and GitHub release.
+
 ## User Language Contract
 
 CLI, `--human`, `--agent`, and compact machine surfaces may use stable
@@ -18,7 +73,7 @@ respond in Chinese unless they explicitly ask otherwise.
 
 Do not publish, tag, push a release mirror, or tell the operator that the release
 is ready until the closed-loop path below has fresh evidence in
-`docs/plans/2026-05-12-hotplug-personal-data-release-handoff-todo.md`.
+`support/docs/plans/2026-05-12-hotplug-personal-data-release-handoff-todo.md`.
 
 Required before release:
 - zero-config first run works for an open-source consumer;
@@ -74,7 +129,7 @@ Provider policy:
 - Missing provider: route agents through `provider-status --agent` and surface
   install/config guidance via workflow status or `human-next` text. Do not invent
   provider setup text in isolated command branches.
-- Private profiles: examples under `examples/provider_profiles/` are opt-in
+- Private profiles: examples under `support/examples/provider_profiles/` are opt-in
   references, not default runtime inputs.
 
 Privacy rules:
@@ -133,7 +188,7 @@ regime accuracy and regime-conditioned win rate matter for promotion.
 ## TimesFM Policy
 
 TimesFM is an optional forecast bridge (`src/python_bridge/timesfm.rs` and
-`scripts/timesfm_forecast.py`). Treat it as hot-pluggable evidence:
+`support/scripts/timesfm_forecast.py`). Treat it as hot-pluggable evidence:
 - do not require Python or TimesFM for zero-config Rust CLI use;
 - do not block consumer workflow if TimesFM is absent;
 - only wire TimesFM into posterior or execution decisions when fresh validation
@@ -144,8 +199,28 @@ TimesFM is an optional forecast bridge (`src/python_bridge/timesfm.rs` and
 ## Agent Work Discipline
 
 - Read and update
-  `docs/plans/2026-05-12-hotplug-personal-data-release-handoff-todo.md` during
+  `support/docs/plans/2026-05-12-hotplug-personal-data-release-handoff-todo.md` during
   this release/closed-loop lane.
+- For Board A/B regime-confidence or profitability-factor work, start from the
+  compact current-state docs, not the oversized historical logs:
+  `support/docs/plans/2026-05-12-board-a-regime-state-current.md`,
+  `support/docs/plans/2026-05-12-board-b-profit-factor-current.md`, and
+  `support/docs/plans/2026-05-12-board-ab-cleanup-retention-plan.md`. Open the old
+  May 10 append-only logs only for targeted evidence lookup by heading, root id,
+  or exact artifact reference.
+- Do not append routine coordination/readback rows to the old May 10 Board A/B
+  logs. New status belongs in the compact current-state docs; detailed evidence
+  belongs in compact run-root packets under `support/docs/experiments/.../materials`,
+  `summaries`, and `checks`.
+- For Board A/B high-concurrency work, do not use repo markdown as a lock table
+  or scratchpad. Start claims belong outside the repo, for example under
+  `/tmp/ict-engine-agent-claims/board-a/` or `/tmp/ict-engine-agent-claims/board-b/`.
+  The compact current-state docs should receive only terminal decisions with
+  evidence paths.
+- Docs are not runtime inputs. Rust, Python, shell, provider, Auto-Quant,
+  training, and workflow code must not import, parse, grep, or depend on
+  `support/docs/plans/*.md`. Promote any needed rule into typed config, command flags,
+  schemas, fixtures, or tests before code consumes it.
 - Preserve unrelated dirty worktree changes. Stage only files touched for the
   current coherent slice.
 - Prefer `/tmp/...` for smoke state and generated artifacts.
@@ -199,12 +274,12 @@ TimesFM is an optional forecast bridge (`src/python_bridge/timesfm.rs` and
 ### State Directories
 
 Pattern: `state/<SYMBOL>/` for production, `state_<experiment>/` for isolated runs.
-All state dirs are `/tmp/...` by default via `--state-dir` flag. Zero-config: `./target/debug/ict-engine analyze --demo --human`.
+All state dirs are `/tmp/...` by default via `--state-dir` flag. Zero-config: `cargo run --quiet -- analyze --demo --human`.
 
 ### Why Agents Say "No Factors"
 
 1. No AGENTS.md existed before this file — agents had no entry map
-2. Factor families A-H are documented only in `docs/plans/2026-05-05-execution-tree-factor-auto-quant-todo.md` (5590 lines) — agents cannot scan a 436KB doc efficiently
+2. Factor families A-H are documented only in `support/docs/plans/2026-05-05-execution-tree-factor-auto-quant-todo.md` (5590 lines) — agents cannot scan a 436KB doc efficiently
 3. Families E, F, H now have `FactorCategory` enum variants and compute stubs — previously missing
 4. Factor compute paths are split across `factor_lab/` and `factors/` — grep for "factor" hits 20+ files with no index
 

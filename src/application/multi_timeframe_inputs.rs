@@ -185,7 +185,7 @@ pub fn resolve_analyze_cli_inputs(
     demo: bool,
 ) -> Result<(String, String, String)> {
     if demo {
-        let demo_path = "examples/demo/demo-15m.json".to_string();
+        let demo_path = "support/examples/demo/demo-15m.json".to_string();
         return Ok((demo_path.clone(), demo_path.clone(), demo_path));
     }
     if let (Some(htf), Some(mtf), Some(ltf)) = (data_htf, data_mtf, data_ltf) {
@@ -219,16 +219,6 @@ pub fn default_tomac_root_candidates() -> Vec<String> {
             candidates.push(root);
         }
     }
-    if let Ok(home) = std::env::var("HOME") {
-        for candidate in [
-            format!("{home}/Downloads/Tomac"),
-            format!("{home}/Downloads/tomac"),
-            format!("{home}/Documents/Tomac"),
-            format!("{home}/Documents/tomac"),
-        ] {
-            candidates.push(candidate);
-        }
-    }
     candidates
 }
 
@@ -253,11 +243,8 @@ pub fn resolve_tomac_root(root: Option<&str>) -> Result<String> {
     if let Some(root) = root {
         return Ok(root.to_string());
     }
-    detected_tomac_root().ok_or_else(|| {
-        anyhow!(
-            "no TOMAC root provided and no default TOMAC history directory detected; set --root or ICT_ENGINE_TOMAC_ROOT"
-        )
-    })
+    detected_tomac_root()
+        .ok_or_else(|| anyhow!("no TOMAC root provided; set --root or ICT_ENGINE_TOMAC_ROOT"))
 }
 
 pub fn detected_tomac_root_or_placeholder() -> String {

@@ -1,0 +1,17 @@
+{
+  "market_key": "board-a-204858-tvr-BTC-USD-1h",
+  "interval": "1h",
+  "count": 1200,
+  "related_roles": [
+    "crypto_reference"
+  ],
+  "provider_preferences": {
+    "crypto_reference": "tradingview_mcp"
+  },
+  "symbol_overrides": {
+    "crypto_reference": {
+      "display_symbol": "BTC-USD",
+      "tradingview_mcp": "BTC-USD"
+    }
+  }
+}

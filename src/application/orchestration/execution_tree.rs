@@ -82,7 +82,7 @@ pub struct ExecutionTreeArtifact {
 
 /// SHAP-like feature attribution row for an Execution Tree branch.
 /// v1 is a structural attribution (deterministic contribution function over
-/// ExecutionTreeInput features), not a CatBoost/XGBoost Shapley value — the
+/// ExecutionTreeInput features), not a CatBoost Shapley value — the
 /// trait `ExecutionShapProvider` lets a real model-SHAP implementation replace
 /// the default without touching reflection_bundle consumers.
 #[derive(Debug, Clone, Serialize, Deserialize, Default, PartialEq)]
@@ -519,7 +519,7 @@ impl ExecutionTreeScorer for DefaultExecutionTreeScorer {
             }
         }
         if let Some(path_ranker_lineage) = input.path_ranker_lineage {
-            for line in path_ranker_lineage.iter().take(8) {
+            for line in path_ranker_lineage.iter().take(16) {
                 lineage.push(format!("path_ranker={}", line));
             }
         }

@@ -1,0 +1,223 @@
+{
+  "symbol": "SRC_ROOT_CARRY_LONG_220646",
+  "generated_at": "2026-05-12T14:15:02.122057Z",
+  "current_focus_phase": "update",
+  "current_focus_reason": "insufficient_improvement|artifact_actionable_count=0 artifact_latest_promotable=None artifact_rule_breaks=0 artifact_consumed_trend_status=no_consumed_validation artifact_consumed_targets=[]|artifact_promotion_strength=low|artifact_consumed_trend_reason=no_consumed_artifacts",
+  "blocking_truth": {
+    "stage": "update",
+    "status": "follow_current_focus",
+    "reason": "insufficient_improvement|artifact_actionable_count=0 artifact_latest_promotable=None artifact_rule_breaks=0 artifact_consumed_trend_status=no_consumed_validation artifact_consumed_targets=[]|artifact_promotion_strength=low|artifact_consumed_trend_reason=no_consumed_artifacts",
+    "evidence": [
+      "promotion:Block Promotion"
+    ],
+    "next_command": "ict-engine update --symbol SRC_ROOT_CARRY_LONG_220646 --outcome loss --state-dir /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T220646-codex-board-b-source-root-stop-carry-longhorizon-v1/b5-branch-feedback-calibration-v1/state_branch_feedback_v1"
+  },
+  "recommended_next_command": "ict-engine update --symbol SRC_ROOT_CARRY_LONG_220646 --outcome loss --state-dir /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T220646-codex-board-b-source-root-stop-carry-longhorizon-v1/b5-branch-feedback-calibration-v1/state_branch_feedback_v1",
+  "recommended_next_command_meta": {
+    "kind": "ict_engine",
+    "requires_user_input": false,
+    "blocked": false,
+    "prompt": null,
+    "executable_command": "ict-engine update --symbol SRC_ROOT_CARRY_LONG_220646 --outcome loss --state-dir /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T220646-codex-board-b-source-root-stop-carry-longhorizon-v1/b5-branch-feedback-calibration-v1/state_branch_feedback_v1",
+    "recorded_data_paths": []
+  },
+  "pending_actions": [
+    "promotion:Block Promotion"
+  ],
+  "risk_flags": [
+    "update:pre_bayes:blocked_missing_consumed_pre_bayes_filter",
+    "update:promotion_blocked:insufficient_improvement|artifact_actionable_count=0 artifact_latest_promotable=None artifact_rule_breaks=0 artifact_consumed_trend_status=no_consumed_validation artifact_consumed_targets=[]|artifact_promotion_strength=low|artifact_consumed_trend_reason=no_consumed_artifacts"
+  ],
+  "latest_train": null,
+  "latest_analyze": null,
+  "latest_research": null,
+  "latest_backtest": null,
+  "latest_update": {
+    "phase": "update",
+    "source_command": "update",
+    "run_id": "update:SRC_ROOT_CARRY_LONG_220646:20260511T143817.955Z",
+    "timestamp": "2026-05-11T14:38:18.002796Z",
+    "workflow_phase": "research_iteration",
+    "workflow_reason": "insufficient_improvement|artifact_actionable_count=0 artifact_latest_promotable=None artifact_rule_breaks=0 artifact_consumed_trend_status=no_consumed_validation artifact_consumed_targets=[]|artifact_promotion_strength=low|artifact_consumed_trend_reason=no_consumed_artifacts",
+    "promotion_status": "hold",
+    "rollback_scope": "none",
+    "comparable_to_previous": true,
+    "comparison_class": "same_data_same_config",
+    "recommended_next_command": "ict-engine update --symbol SRC_ROOT_CARRY_LONG_220646 --outcome loss --state-dir /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T220646-codex-board-b-source-root-stop-carry-longhorizon-v1/b5-branch-feedback-calibration-v1/state_branch_feedback_v1",
+    "recommended_next_command_meta": {
+      "kind": "ict_engine",
+      "requires_user_input": false,
+      "blocked": false,
+      "prompt": null,
+      "executable_command": "ict-engine update --symbol SRC_ROOT_CARRY_LONG_220646 --outcome loss --state-dir /Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260511T220646-codex-board-b-source-root-stop-carry-longhorizon-v1/b5-branch-feedback-calibration-v1/state_branch_feedback_v1",
+      "recorded_data_paths": []
+    },
+    "phase_summary": "realized_outcome=loss learning_credit_class=negative_executed success_credit=0.000 observation_weight=1.000 feedback_applied=1 duplicate_feedback_skipped=false consumed_pre_bayes_gate_status=blocked mtf_source=primary_only execution_readiness=0.370 execution_gate=execution_blocked execution_edge=0.600",
+    "top_actions": [
+      "promotion:Block Promotion"
+    ],
+    "risk_flags": [
+      "promotion_blocked:insufficient_improvement|artifact_actionable_count=0 artifact_latest_promotable=None artifact_rule_breaks=0 artifact_consumed_trend_status=no_consumed_validation artifact_consumed_targets=[]|artifact_promotion_strength=low|artifact_consumed_trend_reason=no_consumed_artifacts",
+      "pre_bayes:blocked_missing_consumed_pre_bayes_filter"
+    ],
+    "selected_direction": null,
+    "selected_entry_quality": "medium",
+    "pre_bayes_gate_status": "blocked",
+    "pre_bayes_uses_soft_evidence": false,
+    "pre_bayes_policy_version": "structural-feedback-branch-path-v1",
+    "pre_bayes_evidence_quality_score": 0.0,
+    "pre_bayes_conflict_flags": [],
+    "pre_bayes_filtered_assignments": {
+      "parent_regime_root": "Crisis",
+      "pre_bayes_branch_path_gate": "blocked_missing_consumed_pre_bayes_filter",
+      "regime_profit_branch_path": "Crisis -> CrisisReliefCarry -> StopManagedPanicRecovery -> SourceRootStopCarryLongHorizonV1:crisis_carry_h8_sl048_tp12"
+    },
+    "pre_bayes_soft_evidence": {},
+    "market_state_evidence": [],
+    "canonical_structural_active_regime": null,
+    "canonical_structural_confidence": null,
+    "canonical_structural_probabilities": {},
+    "pre_bayes_long_signal_probability": null,
+    "pre_bayes_short_signal_probability": null,
+    "pre_bayes_selected_entry_quality_probability": null,
+    "pre_bayes_bridge_selected_entry_quality": null,
+    "pre_bayes_bridge_probability_gap": null,
+    "pre_bayes_bridge_rationale_summary": [],
+    "pre_bayes_multi_timeframe_direction_bias": "direction_bias_unavailable",
+    "pre_bayes_multi_timeframe_alignment_score": null,
+    "pre_bayes_multi_timeframe_entry_alignment_score": null,
+    "realized_outcome": "loss",
+    "structural_learning_credit_class": "negative_executed",
+    "structural_learning_success_credit": 0.0,
+    "structural_learning_observation_weight": 1.0,
+    "family_states": [],
+    "factor_actions": [],
+    "multi_timeframe_summary": [],
+    "structural_feedback": {
+      "protocol_version": "board-b-source-root-stop-carry-longhorizon/v1",
+      "recommendation_id": "SourceRootStopCarryLongHorizonV1:crisis_carry_h8_sl048_tp12:NQ/USD:4h:18840",
+      "recommended_at": "2022-11-07T00:00:00+00:00",
+      "node_id": "Crisis",
+      "branch_id": "Crisis -> CrisisReliefCarry -> StopManagedPanicRecovery -> SourceRootStopCarryLongHorizonV1:crisis_carry_h8_sl048_tp12",
+      "scenario_id": "CrisisReliefCarry",
+      "path_id": "Crisis -> CrisisReliefCarry -> StopManagedPanicRecovery -> SourceRootStopCarryLongHorizonV1:crisis_carry_h8_sl048_tp12",
+      "followed_path": true,
+      "exit_reason": "time_stop",
+      "notes": "b5_branch_feedback_calibration_v1; exact Board B regime_profit_branch_path; source_trade_id=SourceRootStopCarryLongHorizonV1:crisis_carry_h8_sl048_tp12:NQ/USD:4h:18840"
+    },
+    "family_score_map": {},
+    "factor_score_map": {},
+    "objective_market_credibility_shrink": null,
+    "execution_edge_share": 0.6,
+    "prediction_edge_share": 0.4,
+    "execution_readiness": 0.37,
+    "execution_gate_status": "execution_blocked",
+    "pda_cluster_label": null,
+    "hybrid_duration_model": null,
+    "hybrid_remaining_expected_bars": null,
+    "spectral_entropy": null,
+    "sparsity_ratio": null,
+    "segments_gate": null
+  },
+  "latest_pre_bayes_policy": null,
+  "latest_pre_bayes_entry_quality_bridge": null,
+  "latest_pre_bayes_entry_quality_bridge_diff": null,
+  "latest_pre_bayes_policy_diff": null,
+  "latest_pre_bayes_policy_lineage": {
+    "latest_version": null,
+    "previous_version": null,
+    "total_versions": 0,
+    "changed_fields_union": [],
+    "rollback_candidate_version": null,
+    "rollback_reason": "no_policy_rollback_suggested"
+  },
+  "latest_pre_bayes_soft_evidence_diff": [],
+  "recent_pre_bayes_policies": [],
+  "latest_pending_update": null,
+  "recent_pending_updates": [],
+  "latest_execution_candidate": null,
+  "recent_execution_candidates": [],
+  "latest_ensemble_vote": null,
+  "recent_ensemble_votes": [],
+  "recent_artifacts": [],
+  "actionable_artifacts": [],
+  "latest_promotable_artifact": null,
+  "artifact_history_summary": {
+    "total_entries": 0,
+    "pending_update_entries": 0,
+    "execution_candidate_entries": 0,
+    "ensemble_vote_entries": 0,
+    "promotable_entries": 0,
+    "actionable_entries": 0,
+    "consumed_entries": 0,
+    "average_quality_score": 0.0,
+    "latest_consumed_artifact_id": null,
+    "statuses_by_kind": {}
+  },
+  "artifact_factor_trends": [],
+  "artifact_family_trends": [],
+  "artifact_decision_summary": {
+    "actionable_artifact_count": 0,
+    "latest_promotable_artifact_id": null,
+    "artifact_rule_break_count": 0,
+    "highlighted_actions": [],
+    "highlighted_factor_targets": [],
+    "highlighted_family_targets": [],
+    "promotion_strength": "low",
+    "rollback_strength": "low",
+    "consumed_trend_status": "no_consumed_validation",
+    "consumed_trend_reason": "no_consumed_artifacts",
+    "consumed_target_kinds": [],
+    "summary": "actionable_artifacts=0 latest_promotable=None rule_breaks=0 consumed_trend=no_consumed_validation consumed_targets=[]"
+  },
+  "artifact_review_rules": {
+    "pending_update": {
+      "min_probability_improvement": 0.03,
+      "min_top_factor_score_improvement": 0.05,
+      "min_avg_family_score_improvement": 0.03,
+      "require_same_data": true,
+      "require_same_factor_version": true,
+      "require_same_prompt_version": true
+    },
+    "execution_candidate": {
+      "min_posterior_improvement": 0.03,
+      "min_win_probability_improvement": 0.03,
+      "require_same_data": true,
+      "require_same_factor_version": true
+    }
+  },
+  "artifact_review_rule_sources": {
+    "pending_update": {
+      "min_avg_family_score_improvement": "default",
+      "min_probability_improvement": "default",
+      "min_top_factor_score_improvement": "default",
+      "require_same_data": "default",
+      "require_same_factor_version": "default",
+      "require_same_prompt_version": "default"
+    },
+    "execution_candidate": {
+      "min_posterior_improvement": "default",
+      "min_win_probability_improvement": "default",
+      "require_same_data": "default",
+      "require_same_factor_version": "default"
+    }
+  },
+  "artifact_lineage_summaries": [],
+  "artifact_rule_break_effects": [],
+  "artifact_factor_rule_break_impacts": [],
+  "artifact_family_rule_break_impacts": [],
+  "artifact_consumed_impact_summary": {
+    "total_consumed": 0,
+    "positive_consumed": 0,
+    "negative_consumed": 0,
+    "neutral_consumed": 0,
+    "cumulative_quality_score": 0,
+    "points": [],
+    "by_kind": {},
+    "recent_windows": [],
+    "trend_comparisons": [],
+    "by_kind_trend_comparisons": {}
+  },
+  "field_diffs": [],
+  "disagreements": []
+}
