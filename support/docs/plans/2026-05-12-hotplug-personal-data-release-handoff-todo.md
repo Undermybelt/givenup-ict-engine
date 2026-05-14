@@ -81,6 +81,7 @@ Status legend: `done`, `active`, `next`, `blocked`, `not_yet`.
 | done | Release mirror CI Clippy 1.95/test repair | Owner: Codex current turn, claimed 2026-05-14 08:59:46 +0800, closed 2026-05-14 after source verification. Fixed the original Rust 1.95 Clippy drift and the follow-up CI-only test failure where `ibkr_requires_runtime_probe_even_with_consent_files` depended on maintainer-local `HOME` IBKR consent files. The test now creates its own temporary consent/capability fixture. |
 | done | Hubble opt-in provider/API intake | Owner: Codex current turn, claimed 2026-05-14 18:26:43 +0800, closed 2026-05-14 19:48:05 +0800. Added the env-driven `hubble-kline` fetch adapter, a placeholder-only repo example profile `hubble-v2-opt-in-v1`, focused Rust/Python tests, and verification evidence showing `provider-status` surfaces Hubble as opt-in while keeping yfinance zero-config by default and excluding sample host/key values from repo artifacts and command output. |
 | done | Hubble upstream default-key compatibility | Owner: Codex current turn, claimed 2026-05-14 20:22:00 +0800, closed 2026-05-14 after verified upstream default-key compatibility. Kept Hubble opt-in and provider-neutral, but made `engine` compatible with the upstream baked-in API key behavior by falling back to the verified upstream default key `123456` when `ICT_ENGINE_HUBBLE_API_KEY` is unset; preserved explicit env override, avoided hard-coding the upstream host as a new default, and refreshed catalog/profile/test evidence accordingly. |
+| done | Hubble direct engine runtime integration | Owner: Codex current turn, claimed 2026-05-14 20:27:00 +0800, closed 2026-05-14 after direct engine-path verification. `engine` now consumes Hubble-backed OHLCV and options-summary data through the existing market-data-harness / control-matrix runtime path, not only through Auto-Quant CSV export; provider choice remains opt-in, Hubble does not replace yfinance defaults, and the public `provider-status` surface stays deduped to one Hubble entry. |
 | done | Source repo macOS CI cargo-cache repair | Owner: Codex current turn, claimed 2026-05-14 after source Actions run `25838723352` failed only macOS `Format`. Root cause evidence: `cargo fmt --check` invoked `rustup-init fmt` after `Swatinem/rust-cache@v2` restored `/Users/runner/.cargo/bin` from key `v0-rust-rust-Darwin-arm64-9d946206-6388d80f`; Ubuntu passed and release mirror passed on an older macOS runner image. Fix: stop caching cargo bin shims, bump the cache prefix, request rustfmt/clippy components explicitly, and add a toolchain sanity step. Verification: source Actions run `25840195711` passed on both `ubuntu-latest` and `macos-latest`, including Toolchain sanity, Format, Docs runtime isolation, Clippy, and Test. |
 | blocked | Current-tree release completion | Full `cargo test` now passes after the provider Python probe repair. Still blocked until the current dirty tree is split/committed or clean-exported from the intended HEAD; do not publish from this dirty worktree. |
 | blocked | Publish release mirror | Blocked on the new closed-loop/entrypoint/privacy gate and then explicit operator confirmation for `v0.1.2` tag/push/`gh release create`. GitHub auth was previously available and remote had no `v0.1.2` tag, but re-check before any publish. |
@@ -189,6 +190,66 @@ Evidence:
   passed.
 - Upstream live-service probe confirmed `123456` succeeds while no-key,
   empty-key, and wrong-key requests return `401`.
+
+### 2026-05-14 Hubble direct engine runtime integration claim
+
+Status:
+- done, owner Codex current turn, claimed 2026-05-14 20:27:00 +0800,
+  closed 2026-05-14 after direct engine-path verification.
+
+Current checkpoint:
+- Before this slice, Hubble was reachable through `provider-status` and
+  Auto-Quant CSV export only; `engine` runtime fetch paths still accepted only
+  `yfinance`, `tradingview_mcp`, and `ibkr` in the explicit harness request
+  contract.
+- The missing owner path was `market-data-harness -> provider_fetch ->
+  control_matrix_runtime`, plus the control-matrix provider summary and CLI
+  shorthand parsing layer.
+
+Active slice:
+- Add Hubble as an explicit harness/provider request type for `OHLCV` and
+  `options.summary`.
+- Fetch Hubble candles and options summary directly in Rust for engine runtime
+  paths, while leaving the existing Python `fetch_external.py hubble-kline`
+  route intact for Auto-Quant CSV export.
+- Keep `provider-status` deduped to one Hubble entry even after the
+  control-matrix provider summary learns Hubble.
+
+Explicit non-edits:
+- Do not make Hubble the default provider ahead of yfinance.
+- Do not hard-code the upstream host as a new repo default.
+- Do not claim that Hubble premium options data is fully production-ready when
+  the current service response may still be schema/sample data.
+
+Evidence:
+- `cargo test application::data_sources::harness::tests:: -- --nocapture`
+  passed, 4 tests, including explicit Hubble provider plan coverage.
+- `cargo test application::data_sources::provider_fetch::tests:: -- --nocapture`
+  passed, 6 tests, including Hubble candle-request and options-summary parsing.
+- `cargo test application::data_sources::control_matrix_runtime::tests:: -- --nocapture`
+  passed, 3 tests, including Hubble provider normalization.
+- `cargo test application::data_sources::control_matrix_providers::tests:: -- --nocapture`
+  passed, 7 tests, including Hubble ready-with-base-url-only provider summary.
+- `cargo test application::data_sources::command_entry::tests:: -- --nocapture`
+  passed, 7 tests, including Hubble CLI symbol-spec inference and crypto
+  explicit-JSON rejection.
+- `cargo test --test provider_neutral_cli -- --nocapture` passed, 21 tests
+  after deduping the public Hubble provider surface.
+- Real engine-path proof:
+  `ICT_ENGINE_HUBBLE_BASE_URL=http://43.167.234.49:3101 cargo run --quiet -- market-data-harness --action fetch --request-json <tmp-hubble-request.json>`
+  exited `0` and returned:
+  - `etf_reference` via Hubble with 30 SPY daily candles
+  - `options_underlying` via Hubble with an `OptionsChainSummary` for AAPL
+- Public surface proof:
+  `ICT_ENGINE_HUBBLE_BASE_URL=http://43.167.234.49:3101 cargo run --quiet -- provider-status --provider hubble --compact`
+  now reports exactly one ready Hubble provider entry with no duplication.
+
+Residual risk:
+- The live Hubble `/api/v2/options/chain` response currently returns a premium
+  endpoint/sample-schema payload. The engine path now parses it correctly, but
+  callers should not overclaim that the returned options summary is guaranteed to
+  be a fully entitled realtime chain unless the upstream Hubble account/service
+  tier is confirmed.
 
 ## Resume State Hint
 

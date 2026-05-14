@@ -404,6 +404,7 @@ impl ProviderCatalogSource for MarketDataProviderCatalogSource {
         let mut items = summary
             .provider_statuses
             .into_iter()
+            .filter(|status| status.provider != "hubble")
             .map(|status| ProviderCatalogItem {
                 provider_id: status.provider,
                 domain: self.domain().as_str().to_string(),

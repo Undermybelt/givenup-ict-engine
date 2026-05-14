@@ -35,10 +35,11 @@ pub use control_matrix_runtime::{
 pub use harness::{
     build_market_data_harness_plan, execute_market_data_harness_plan,
     load_market_data_harness_preset_config, repo_root_from_harness, MarketDataHarnessBundle,
-    MarketDataHarnessEnvelope, MarketDataHarnessIbkrSpec, MarketDataHarnessOperation,
-    MarketDataHarnessPlan, MarketDataHarnessPreset, MarketDataHarnessPresetConfig,
-    MarketDataHarnessRequest, MarketDataHarnessSymbolSpec, MarketDataHarnessTask,
-    MarketLiveDefaultsSpec, ProviderExecutionRequest, MARKET_DATA_HARNESS_PRESETS_FILE,
+    MarketDataHarnessEnvelope, MarketDataHarnessHubbleSpec, MarketDataHarnessIbkrSpec,
+    MarketDataHarnessOperation, MarketDataHarnessPlan, MarketDataHarnessPreset,
+    MarketDataHarnessPresetConfig, MarketDataHarnessRequest, MarketDataHarnessSymbolSpec,
+    MarketDataHarnessTask, MarketLiveDefaultsSpec, ProviderExecutionRequest,
+    MARKET_DATA_HARNESS_PRESETS_FILE,
 };
 pub use live_defaults::{
     analyze_live_inferred_symbols, build_inferable_live_defaults_map, parse_live_backend,

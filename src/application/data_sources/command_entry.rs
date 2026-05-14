@@ -4,8 +4,8 @@ use std::collections::{BTreeMap, BTreeSet};
 use std::io::Read;
 
 use crate::application::data_sources::{
-    build_market_data_harness_plan, execute_market_data_harness_plan, MarketDataHarnessRequest,
-    MarketDataHarnessSymbolSpec,
+    build_market_data_harness_plan, execute_market_data_harness_plan, MarketDataHarnessHubbleSpec,
+    MarketDataHarnessRequest, MarketDataHarnessSymbolSpec,
 };
 use crate::application::multi_timeframe_inputs::resolve_tomac_root;
 
@@ -272,6 +272,9 @@ fn parse_symbol_specs(
         match provider_preferences.get(&role).map(String::as_str) {
             Some("yfinance") => spec.yfinance = Some(symbol),
             Some("tradingview_mcp") => spec.tradingview_mcp = Some(symbol),
+            Some("hubble") => {
+                spec.hubble = Some(infer_hubble_spec_from_symbol(&symbol)?);
+            }
             Some("ibkr") => {
                 anyhow::bail!(
                     "role '{}' uses ibkr; provide a full request JSON with an explicit ibkr contract",
@@ -283,6 +286,36 @@ fn parse_symbol_specs(
         symbol_overrides.insert(role, spec);
     }
     Ok(symbol_overrides)
+}
+
+fn infer_hubble_spec_from_symbol(symbol: &str) -> Result<MarketDataHarnessHubbleSpec> {
+    let normalized = symbol.trim();
+    if normalized.ends_with(".SZ") || normalized.ends_with(".SH") || normalized.ends_with(".BJ") {
+        return Ok(MarketDataHarnessHubbleSpec {
+            symbol: normalized.to_string(),
+            market: "cn".to_string(),
+            exchange: None,
+        });
+    }
+    if normalized.ends_with(".HK") {
+        return Ok(MarketDataHarnessHubbleSpec {
+            symbol: normalized.to_string(),
+            market: "hk".to_string(),
+            exchange: None,
+        });
+    }
+    if normalized.ends_with("USDT") || normalized.ends_with("USDC") || normalized.ends_with("BUSD")
+    {
+        anyhow::bail!(
+            "role uses hubble with crypto symbol '{}'; provide a full request JSON with explicit market=crypto and exchange",
+            normalized
+        );
+    }
+    Ok(MarketDataHarnessHubbleSpec {
+        symbol: normalized.to_string(),
+        market: "us".to_string(),
+        exchange: None,
+    })
 }
 
 #[cfg(test)]
@@ -337,6 +370,46 @@ mod tests {
 
         let report_path = temp.path().join("futures_sop_report.15m.json");
         assert!(report_path.exists());
+    }
+
+    #[test]
+    fn parse_symbol_specs_infers_hubble_us_and_hk_markets() {
+        let specs = vec![
+            "etf_reference=SPY".to_string(),
+            "hk_reference=00700.HK".to_string(),
+        ];
+        let provider_preferences = BTreeMap::from([
+            ("etf_reference".to_string(), "hubble".to_string()),
+            ("hk_reference".to_string(), "hubble".to_string()),
+        ]);
+
+        let parsed = parse_symbol_specs(&specs, &provider_preferences).unwrap();
+
+        assert_eq!(
+            parsed["etf_reference"]
+                .hubble
+                .as_ref()
+                .map(|spec| spec.market.as_str()),
+            Some("us")
+        );
+        assert_eq!(
+            parsed["hk_reference"]
+                .hubble
+                .as_ref()
+                .map(|spec| spec.market.as_str()),
+            Some("hk")
+        );
+    }
+
+    #[test]
+    fn parse_symbol_specs_rejects_hubble_crypto_without_exchange() {
+        let specs = vec!["crypto_reference=BTCUSDT".to_string()];
+        let provider_preferences =
+            BTreeMap::from([("crypto_reference".to_string(), "hubble".to_string())]);
+
+        let result = parse_symbol_specs(&specs, &provider_preferences);
+
+        assert!(result.is_err());
     }
 
     #[test]

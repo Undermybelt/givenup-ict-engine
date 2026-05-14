@@ -267,6 +267,7 @@ fn infer_provider_preferences_from_legacy_env() -> std::collections::BTreeMap<St
 fn normalize_optional_provider(value: Option<&str>) -> Option<String> {
     match value?.trim().to_ascii_lowercase().as_str() {
         "ibkr" => Some("ibkr".to_string()),
+        "hubble" => Some("hubble".to_string()),
         "tradingview_mcp" | "tradingview" | "tvremix" => Some("tradingview_mcp".to_string()),
         "yfinance" => Some("yfinance".to_string()),
         _ => None,
@@ -419,5 +420,13 @@ mod tests {
         assert!(notes
             .iter()
             .any(|item| item.starts_with("runtime_vix_change_5bar=")));
+    }
+
+    #[test]
+    fn normalize_optional_provider_accepts_hubble() {
+        assert_eq!(
+            normalize_optional_provider(Some("hubble")).as_deref(),
+            Some("hubble")
+        );
     }
 }

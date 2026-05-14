@@ -51,6 +51,14 @@ pub struct MarketDataHarnessIbkrSpec {
     pub primary_exchange: Option<String>,
 }
 
+#[derive(Debug, Clone, Serialize, Deserialize, Default, PartialEq, Eq)]
+pub struct MarketDataHarnessHubbleSpec {
+    pub symbol: String,
+    pub market: String,
+    #[serde(default)]
+    pub exchange: Option<String>,
+}
+
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]
 pub struct MarketDataHarnessSymbolSpec {
     #[serde(default)]
@@ -59,6 +67,8 @@ pub struct MarketDataHarnessSymbolSpec {
     pub yfinance: Option<String>,
     #[serde(default)]
     pub tradingview_mcp: Option<String>,
+    #[serde(default)]
+    pub hubble: Option<MarketDataHarnessHubbleSpec>,
     #[serde(default)]
     pub ibkr: Option<MarketDataHarnessIbkrSpec>,
 }
@@ -107,6 +117,7 @@ impl MarketDataHarnessOperation {
 pub enum ProviderExecutionRequest {
     YahooFinance { symbol: String },
     TradingViewMcp { symbol: String },
+    Hubble { spec: MarketDataHarnessHubbleSpec },
     Ibkr { contract: MarketDataHarnessIbkrSpec },
 }
 
@@ -114,6 +125,7 @@ impl ProviderExecutionRequest {
     pub fn symbol(&self) -> &str {
         match self {
             Self::YahooFinance { symbol } | Self::TradingViewMcp { symbol } => symbol,
+            Self::Hubble { spec } => &spec.symbol,
             Self::Ibkr { contract } => &contract.symbol,
         }
     }
@@ -121,6 +133,13 @@ impl ProviderExecutionRequest {
     pub fn ibkr_contract(&self) -> Option<&MarketDataHarnessIbkrSpec> {
         match self {
             Self::Ibkr { contract } => Some(contract),
+            _ => None,
+        }
+    }
+
+    pub fn hubble_spec(&self) -> Option<&MarketDataHarnessHubbleSpec> {
+        match self {
+            Self::Hubble { spec } => Some(spec),
             _ => None,
         }
     }
@@ -395,6 +414,7 @@ fn display_symbol_for_spec(spec: &MarketDataHarnessSymbolSpec) -> Result<String>
         .clone()
         .or_else(|| spec.yfinance.clone())
         .or_else(|| spec.tradingview_mcp.clone())
+        .or_else(|| spec.hubble.as_ref().map(|item| item.symbol.clone()))
         .or_else(|| spec.ibkr.as_ref().map(|item| item.symbol.clone()))
         .ok_or_else(|| anyhow!("missing display symbol"))
 }
@@ -414,6 +434,12 @@ fn build_provider_request(
             .clone()
             .map(|symbol| ProviderExecutionRequest::TradingViewMcp { symbol })
             .ok_or_else(|| anyhow!("missing tradingview symbol")),
+        "hubble" => spec
+            .hubble
+            .as_ref()
+            .cloned()
+            .map(|spec| ProviderExecutionRequest::Hubble { spec })
+            .ok_or_else(|| anyhow!("missing hubble spec")),
         "ibkr" => spec
             .ibkr
             .as_ref()
@@ -603,6 +629,66 @@ mod tests {
             options.fallback_options_proxy_symbol.as_deref(),
             Some("^VIX")
         );
+    }
+
+    #[test]
+    fn plan_supports_hubble_provider_for_ohlcv_and_options_roles() {
+        let plan = build_market_data_harness_plan(MarketDataHarnessRequest {
+            market_key: "caller-label".to_string(),
+            primary_data_path: None,
+            interval: Some("1d".to_string()),
+            start: Some(Utc::now() - TimeDelta::days(10)),
+            end: Some(Utc::now()),
+            count: Some(20),
+            related_roles: vec![
+                "etf_reference".to_string(),
+                "options_underlying".to_string(),
+            ],
+            provider_preferences: BTreeMap::from([
+                ("etf_reference".to_string(), "hubble".to_string()),
+                ("options_underlying".to_string(), "hubble".to_string()),
+            ]),
+            symbol_overrides: BTreeMap::from([
+                (
+                    "etf_reference".to_string(),
+                    MarketDataHarnessSymbolSpec {
+                        display_symbol: Some("SPY".to_string()),
+                        hubble: Some(MarketDataHarnessHubbleSpec {
+                            symbol: "SPY".to_string(),
+                            market: "us".to_string(),
+                            exchange: None,
+                        }),
+                        ..MarketDataHarnessSymbolSpec::default()
+                    },
+                ),
+                (
+                    "options_underlying".to_string(),
+                    MarketDataHarnessSymbolSpec {
+                        display_symbol: Some("AAPL".to_string()),
+                        hubble: Some(MarketDataHarnessHubbleSpec {
+                            symbol: "AAPL".to_string(),
+                            market: "us".to_string(),
+                            exchange: None,
+                        }),
+                        ..MarketDataHarnessSymbolSpec::default()
+                    },
+                ),
+            ]),
+            options_volatility_proxy_symbol: Some("^VIX".to_string()),
+        })
+        .unwrap();
+
+        assert!(plan.tasks.iter().any(|task| {
+            task.role == "etf_reference"
+                && task.provider == "hubble"
+                && matches!(&task.request, ProviderExecutionRequest::Hubble { .. })
+        }));
+        assert!(plan.tasks.iter().any(|task| {
+            task.role == "options_underlying"
+                && task.provider == "hubble"
+                && task.fallback_options_proxy_symbol.as_deref() == Some("^VIX")
+                && matches!(&task.request, ProviderExecutionRequest::Hubble { .. })
+        }));
     }
 
     #[test]

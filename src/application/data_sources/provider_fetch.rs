@@ -1,5 +1,6 @@
 use anyhow::{anyhow, bail, Context, Result};
-use chrono::{DateTime, Utc};
+use chrono::{DateTime, NaiveDate, NaiveDateTime, Utc};
+use reqwest::blocking::Client;
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
 use std::net::{SocketAddr, TcpStream};
@@ -7,7 +8,10 @@ use std::path::{Path, PathBuf};
 use std::process::Command;
 use std::time::Duration;
 
-use super::harness::{MarketDataHarnessIbkrSpec, MarketDataHarnessTask, ProviderExecutionRequest};
+use super::harness::{
+    MarketDataHarnessHubbleSpec, MarketDataHarnessIbkrSpec, MarketDataHarnessTask,
+    ProviderExecutionRequest,
+};
 use super::tradingview_mcp::{fetch_tradingview_ohlcv, TradingViewMcpClient};
 use crate::data::realtime::market_support::{OptionsChainSummary, SpotInstrumentKind};
 use crate::data::realtime::yfinance_runtime::YahooFinanceProvider;
@@ -15,6 +19,9 @@ use crate::types::Candle;
 
 pub(crate) const CONTROL_MATRIX_IBKR_FETCH_SCRIPT_ENV: &str = "ICT_ENGINE_IBKR_FETCH_SCRIPT";
 pub(crate) const CONTROL_MATRIX_IBKR_GATEWAY_PORT_ENV: &str = "ICT_ENGINE_IBKR_GATEWAY_PORT";
+const HUBBLE_BASE_URL_ENV: &str = "ICT_ENGINE_HUBBLE_BASE_URL";
+const HUBBLE_API_KEY_ENV: &str = "ICT_ENGINE_HUBBLE_API_KEY";
+const HUBBLE_DEFAULT_API_KEY: &str = "123456";
 const IBKR_GATEWAY_HOST: &str = "127.0.0.1";
 const IBKR_GATEWAY_PORT_CANDIDATES: [u16; 4] = [7497, 7496, 4002, 4001];
 const IBKR_GATEWAY_PORT_CACHE_RELATIVE_PATH: &str = ".ict-engine/ibkr_gateway_port.json";
@@ -39,6 +46,9 @@ pub(crate) fn fetch_reference_candles_for_task(
         }
         ProviderExecutionRequest::TradingViewMcp { symbol } => {
             fetch_tradingview_ohlcv(symbol, interval, start, end, count)
+        }
+        ProviderExecutionRequest::Hubble { spec } => {
+            fetch_hubble_candles(spec, interval, start, end, count)
         }
         ProviderExecutionRequest::Ibkr { contract } => {
             fetch_ibkr_historical_candles(contract, interval, start, end)
@@ -78,6 +88,17 @@ pub(crate) fn fetch_options_summary_for_task(
                 }
             }
         }
+        ProviderExecutionRequest::Hubble { spec } => match fetch_hubble_options_summary(spec) {
+            Ok(summary) => Ok(summary),
+            Err(primary_error) => {
+                if let Some(proxy_symbol) = task.fallback_options_proxy_symbol.as_deref() {
+                    YahooFinanceProvider::new("native://yfinance")
+                        .fetch_options_volatility_proxy_summary(proxy_symbol, &spec.symbol)
+                } else {
+                    Err(primary_error)
+                }
+            }
+        },
         ProviderExecutionRequest::Ibkr { .. } => {
             bail!("unsupported options provider '{}'", task.provider)
         }
@@ -102,6 +123,400 @@ fn fetch_yahoo_candles(
 fn fetch_yahoo_options_summary(symbol: &str) -> Result<OptionsChainSummary> {
     let provider = YahooFinanceProvider::new("native://yfinance");
     provider.fetch_options_chain_summary(symbol)
+}
+
+fn hubble_client() -> Result<(String, Client)> {
+    let base_url = std::env::var(HUBBLE_BASE_URL_ENV)
+        .ok()
+        .map(|value| value.trim().to_string())
+        .filter(|value| !value.is_empty())
+        .ok_or_else(|| anyhow!("{HUBBLE_BASE_URL_ENV} must be set for Hubble runtime fetches"))?;
+    let client = Client::builder()
+        .timeout(Duration::from_secs(30))
+        .build()
+        .context("failed to build Hubble HTTP client")?;
+    Ok((base_url.trim_end_matches('/').to_string(), client))
+}
+
+fn build_hubble_candle_request(
+    spec: &MarketDataHarnessHubbleSpec,
+    interval: &str,
+    start: DateTime<Utc>,
+    end: DateTime<Utc>,
+    count: usize,
+) -> Result<(String, Vec<(String, String)>)> {
+    let market = spec.market.trim().to_ascii_lowercase();
+    match market.as_str() {
+        "cn" => {
+            let mapped = match interval {
+                "1d" => "daily",
+                "1w" => "weekly",
+                "1mo" => "monthly",
+                other => bail!("unsupported Hubble CN interval '{}'", other),
+            };
+            Ok((
+                "/api/v2/cnstock/stocks".to_string(),
+                vec![
+                    ("symbol".to_string(), spec.symbol.clone()),
+                    ("interval".to_string(), mapped.to_string()),
+                    ("startDate".to_string(), start.format("%Y%m%d").to_string()),
+                    ("endDate".to_string(), end.format("%Y%m%d").to_string()),
+                    ("limit".to_string(), count.to_string()),
+                ],
+            ))
+        }
+        "hk" => {
+            if interval != "1d" {
+                bail!("unsupported Hubble HK interval '{}'", interval);
+            }
+            Ok((
+                "/api/v2/hkstock/stocks".to_string(),
+                vec![
+                    ("symbol".to_string(), spec.symbol.clone()),
+                    ("startDate".to_string(), start.format("%Y%m%d").to_string()),
+                    ("endDate".to_string(), end.format("%Y%m%d").to_string()),
+                ],
+            ))
+        }
+        "us" => {
+            if interval != "1d" {
+                bail!("unsupported Hubble US interval '{}'", interval);
+            }
+            Ok((
+                "/api/v2/usstock/stocks".to_string(),
+                vec![
+                    ("symbol".to_string(), spec.symbol.clone()),
+                    ("startDate".to_string(), start.format("%Y%m%d").to_string()),
+                    ("endDate".to_string(), end.format("%Y%m%d").to_string()),
+                    ("limit".to_string(), count.to_string()),
+                ],
+            ))
+        }
+        "crypto" => {
+            let exchange = spec
+                .exchange
+                .clone()
+                .filter(|value| !value.trim().is_empty())
+                .ok_or_else(|| anyhow!("Hubble crypto fetch requires exchange"))?;
+            Ok((
+                "/api/v2/crypto/klines".to_string(),
+                vec![
+                    ("exchange".to_string(), exchange),
+                    ("symbol".to_string(), spec.symbol.clone()),
+                    ("interval".to_string(), interval.to_string()),
+                    ("startDate".to_string(), start.format("%Y%m%d").to_string()),
+                    ("endDate".to_string(), end.format("%Y%m%d").to_string()),
+                    ("limit".to_string(), count.to_string()),
+                ],
+            ))
+        }
+        other => bail!("unsupported Hubble market '{}'", other),
+    }
+}
+
+fn fetch_hubble_candles(
+    spec: &MarketDataHarnessHubbleSpec,
+    interval: &str,
+    start: DateTime<Utc>,
+    end: DateTime<Utc>,
+    count: usize,
+) -> Result<Vec<Candle>> {
+    let (base_url, client) = hubble_client()?;
+    let (path, params) = build_hubble_candle_request(spec, interval, start, end, count)?;
+    let response = client
+        .get(format!("{base_url}{path}"))
+        .header("X-API-Key", current_hubble_api_key())
+        .header("Content-Type", "application/json")
+        .query(&params)
+        .send()
+        .with_context(|| format!("failed to fetch Hubble candles for '{}'", spec.symbol))?;
+    if !response.status().is_success() {
+        let status = response.status();
+        let body = response.text().unwrap_or_default();
+        bail!(
+            "hubble candle fetch failed for '{}' with HTTP {}: {}",
+            spec.symbol,
+            status,
+            body
+        );
+    }
+    let payload: Value = response.json().with_context(|| {
+        format!(
+            "failed to decode Hubble candle payload for '{}'",
+            spec.symbol
+        )
+    })?;
+    parse_hubble_candles_payload(&payload)
+}
+
+fn current_hubble_api_key() -> String {
+    std::env::var(HUBBLE_API_KEY_ENV)
+        .ok()
+        .map(|value| value.trim().to_string())
+        .filter(|value| !value.is_empty())
+        .unwrap_or_else(|| HUBBLE_DEFAULT_API_KEY.to_string())
+}
+
+fn parse_hubble_candles_payload(payload: &Value) -> Result<Vec<Candle>> {
+    let rows = extract_hubble_rows(payload);
+    if rows.is_empty() {
+        bail!("Hubble candle payload contained no rows");
+    }
+    rows.into_iter()
+        .map(parse_hubble_candle_row)
+        .collect::<Result<Vec<_>>>()
+}
+
+fn extract_hubble_rows<'a>(payload: &'a Value) -> Vec<&'a Value> {
+    if let Some(items) = payload.as_array() {
+        return items.iter().collect();
+    }
+    for pointer in [
+        "/data",
+        "/list",
+        "/rows",
+        "/items",
+        "/data/data",
+        "/result/data",
+        "/result/list",
+    ] {
+        if let Some(items) = payload.pointer(pointer).and_then(Value::as_array) {
+            return items.iter().collect();
+        }
+    }
+    Vec::new()
+}
+
+fn parse_hubble_candle_row(row: &Value) -> Result<Candle> {
+    let timestamp = parse_hubble_timestamp(
+        row.get("time")
+            .or_else(|| row.get("timestamp"))
+            .or_else(|| row.get("ts"))
+            .or_else(|| row.get("date"))
+            .ok_or_else(|| anyhow!("Hubble candle row missing timestamp"))?,
+    )?;
+    Ok(Candle {
+        timestamp,
+        open: parse_hubble_f64(row.get("open")).ok_or_else(|| anyhow!("missing open"))?,
+        high: parse_hubble_f64(row.get("high")).ok_or_else(|| anyhow!("missing high"))?,
+        low: parse_hubble_f64(row.get("low")).ok_or_else(|| anyhow!("missing low"))?,
+        close: parse_hubble_f64(row.get("close")).ok_or_else(|| anyhow!("missing close"))?,
+        volume: parse_hubble_f64(row.get("volume").or_else(|| row.get("vol"))).unwrap_or(0.0),
+    })
+}
+
+fn fetch_hubble_options_summary(spec: &MarketDataHarnessHubbleSpec) -> Result<OptionsChainSummary> {
+    let (base_url, client) = hubble_client()?;
+    let response = client
+        .get(format!("{base_url}/api/v2/options/chain"))
+        .header("X-API-Key", current_hubble_api_key())
+        .header("Content-Type", "application/json")
+        .query(&[("symbol", spec.symbol.as_str()), ("require_greeks", "true")])
+        .send()
+        .with_context(|| format!("failed to fetch Hubble options chain for '{}'", spec.symbol))?;
+    if !response.status().is_success() {
+        let status = response.status();
+        let body = response.text().unwrap_or_default();
+        bail!(
+            "hubble options fetch failed for '{}' with HTTP {}: {}",
+            spec.symbol,
+            status,
+            body
+        );
+    }
+    let payload: Value = response.json().with_context(|| {
+        format!(
+            "failed to decode Hubble options payload for '{}'",
+            spec.symbol
+        )
+    })?;
+    parse_hubble_options_summary(&spec.symbol, &payload)
+}
+
+fn parse_hubble_options_summary(symbol: &str, payload: &Value) -> Result<OptionsChainSummary> {
+    let rows = payload
+        .pointer("/data/data")
+        .and_then(Value::as_array)
+        .or_else(|| payload.pointer("/data").and_then(Value::as_array))
+        .ok_or_else(|| anyhow!("Hubble options payload contained no rows"))?;
+    let underlying_price = payload
+        .pointer("/data/underlying_price")
+        .and_then(parse_hubble_f64_value)
+        .or_else(|| {
+            payload
+                .get("underlying_price")
+                .and_then(parse_hubble_f64_value)
+        });
+    let mut call_open_interest = 0.0;
+    let mut put_open_interest = 0.0;
+    let mut call_volume = 0.0;
+    let mut put_volume = 0.0;
+    let mut nearest_expiration: Option<NaiveDate> = None;
+    let mut nearest_atm: Option<(f64, f64, Option<f64>, Option<f64>, Option<f64>)> = None;
+    let mut call_gamma_oi = 0.0;
+    let mut put_gamma_oi = 0.0;
+    let mut saw_call_gamma = false;
+    let mut saw_put_gamma = false;
+
+    for row in rows {
+        let option_type = row
+            .get("type")
+            .and_then(Value::as_str)
+            .map(|value| value.to_ascii_lowercase())
+            .unwrap_or_default();
+        let open_interest =
+            parse_hubble_f64(row.get("open_interest").or_else(|| row.get("openInterest")))
+                .unwrap_or(0.0);
+        let volume = parse_hubble_f64(row.get("volume")).unwrap_or(0.0);
+        let gamma = parse_hubble_f64(row.get("gamma"));
+        match option_type.as_str() {
+            "call" | "c" => {
+                call_open_interest += open_interest;
+                call_volume += volume;
+                if let Some(gamma) = gamma {
+                    call_gamma_oi += gamma * open_interest;
+                    saw_call_gamma = true;
+                }
+            }
+            "put" | "p" => {
+                put_open_interest += open_interest;
+                put_volume += volume;
+                if let Some(gamma) = gamma {
+                    put_gamma_oi += gamma * open_interest;
+                    saw_put_gamma = true;
+                }
+            }
+            _ => {}
+        }
+        if let Some(expiration) = row
+            .get("expiration")
+            .and_then(Value::as_str)
+            .and_then(parse_hubble_expiration)
+        {
+            if nearest_expiration
+                .map(|current| expiration < current)
+                .unwrap_or(true)
+            {
+                nearest_expiration = Some(expiration);
+            }
+        }
+        if let Some(underlying_price) = underlying_price {
+            let strike = parse_hubble_f64(row.get("strike"));
+            let iv = parse_hubble_f64(
+                row.get("implied_volatility")
+                    .or_else(|| row.get("iv"))
+                    .or_else(|| row.get("impliedVolatility")),
+            );
+            if let Some(strike) = strike {
+                let distance =
+                    (strike - underlying_price).abs() / underlying_price.max(f64::EPSILON);
+                let candidate = (
+                    distance,
+                    iv.unwrap_or_default(),
+                    parse_hubble_f64(row.get("delta")),
+                    gamma,
+                    parse_hubble_f64(row.get("vega")),
+                );
+                if nearest_atm
+                    .map(|current| distance < current.0)
+                    .unwrap_or(true)
+                {
+                    nearest_atm = Some(candidate);
+                }
+            }
+        }
+    }
+
+    let nearest_expiration_dte =
+        nearest_expiration.map(|date| (date - Utc::now().date_naive()).num_days().max(0) as f64);
+
+    Ok(OptionsChainSummary {
+        symbol: symbol.to_string(),
+        source: Some("hubble:/api/v2/options/chain".to_string()),
+        underlying_price,
+        call_open_interest,
+        put_open_interest,
+        put_call_oi_ratio: ratio_or_none(put_open_interest, call_open_interest),
+        call_volume,
+        put_volume,
+        put_call_volume_ratio: ratio_or_none(put_volume, call_volume),
+        near_atm_implied_volatility: nearest_atm.map(|item| item.1).filter(|value| *value > 0.0),
+        near_atm_delta: nearest_atm.and_then(|item| item.2),
+        near_atm_gamma: nearest_atm.and_then(|item| item.3),
+        near_atm_vega: nearest_atm.and_then(|item| item.4),
+        call_gamma_oi: saw_call_gamma.then_some(call_gamma_oi),
+        put_gamma_oi: saw_put_gamma.then_some(put_gamma_oi),
+        gamma_skew: if saw_call_gamma || saw_put_gamma {
+            Some(call_gamma_oi - put_gamma_oi)
+        } else {
+            None
+        },
+        nearest_expiration_dte,
+    })
+}
+
+fn parse_hubble_timestamp(value: &Value) -> Result<DateTime<Utc>> {
+    if let Some(number) = value
+        .as_i64()
+        .or_else(|| value.as_u64().map(|item| item as i64))
+    {
+        return parse_hubble_epoch(number);
+    }
+    let raw = value
+        .as_str()
+        .map(str::trim)
+        .filter(|value| !value.is_empty())
+        .ok_or_else(|| anyhow!("invalid Hubble timestamp"))?;
+    if raw.chars().all(|item| item.is_ascii_digit()) {
+        if raw.len() == 8 {
+            let date = NaiveDate::parse_from_str(raw, "%Y%m%d")
+                .with_context(|| format!("failed to parse Hubble date '{}'", raw))?;
+            return Ok(date.and_hms_opt(0, 0, 0).unwrap().and_utc());
+        }
+        return parse_hubble_epoch(raw.parse::<i64>()?);
+    }
+    chrono::DateTime::parse_from_rfc3339(raw)
+        .map(|value| value.with_timezone(&Utc))
+        .or_else(|_| {
+            NaiveDateTime::parse_from_str(raw, "%Y-%m-%d %H:%M:%S").map(|value| value.and_utc())
+        })
+        .or_else(|_| {
+            NaiveDate::parse_from_str(raw, "%Y-%m-%d")
+                .map(|value| value.and_hms_opt(0, 0, 0).unwrap().and_utc())
+        })
+        .with_context(|| format!("failed to parse Hubble timestamp '{}'", raw))
+}
+
+fn parse_hubble_epoch(value: i64) -> Result<DateTime<Utc>> {
+    if value.abs() >= 1_000_000_000_000 {
+        chrono::DateTime::<Utc>::from_timestamp_millis(value)
+            .ok_or_else(|| anyhow!("invalid millisecond timestamp '{}'", value))
+    } else {
+        chrono::DateTime::<Utc>::from_timestamp(value, 0)
+            .ok_or_else(|| anyhow!("invalid second timestamp '{}'", value))
+    }
+}
+
+fn parse_hubble_f64(value: Option<&Value>) -> Option<f64> {
+    value.and_then(parse_hubble_f64_value)
+}
+
+fn parse_hubble_f64_value(value: &Value) -> Option<f64> {
+    match value {
+        Value::Number(number) => number.as_f64(),
+        Value::String(raw) => raw.trim().parse::<f64>().ok(),
+        _ => None,
+    }
+}
+
+fn parse_hubble_expiration(raw: &str) -> Option<NaiveDate> {
+    NaiveDate::parse_from_str(raw, "%Y-%m-%d")
+        .or_else(|_| NaiveDate::parse_from_str(raw, "%Y%m%d"))
+        .ok()
+}
+
+fn ratio_or_none(numerator: f64, denominator: f64) -> Option<f64> {
+    (denominator.abs() > f64::EPSILON).then_some(numerator / denominator)
 }
 
 fn fetch_ibkr_historical_candles(
@@ -533,5 +948,92 @@ mod tests {
         assert_eq!(cache.host, "127.0.0.1");
         assert_eq!(cache.port, 4002);
         assert_eq!(cache.source, "auto_probe");
+    }
+
+    #[test]
+    fn hubble_candle_request_uses_market_specific_paths() {
+        let spec = MarketDataHarnessHubbleSpec {
+            symbol: "SPY".to_string(),
+            market: "us".to_string(),
+            exchange: None,
+        };
+        let start = Utc.with_ymd_and_hms(2026, 4, 1, 0, 0, 0).unwrap();
+        let end = Utc.with_ymd_and_hms(2026, 5, 1, 0, 0, 0).unwrap();
+
+        let (path, params) = build_hubble_candle_request(&spec, "1d", start, end, 50).unwrap();
+
+        assert_eq!(path, "/api/v2/usstock/stocks");
+        assert!(params
+            .iter()
+            .any(|item| item == &("symbol".to_string(), "SPY".to_string())));
+        assert!(params
+            .iter()
+            .any(|item| item == &("limit".to_string(), "50".to_string())));
+    }
+
+    #[test]
+    fn hubble_candle_request_requires_crypto_exchange() {
+        let spec = MarketDataHarnessHubbleSpec {
+            symbol: "BTCUSDT".to_string(),
+            market: "crypto".to_string(),
+            exchange: None,
+        };
+        let start = Utc.with_ymd_and_hms(2026, 4, 1, 0, 0, 0).unwrap();
+        let end = Utc.with_ymd_and_hms(2026, 5, 1, 0, 0, 0).unwrap();
+
+        let result = build_hubble_candle_request(&spec, "1h", start, end, 200);
+
+        assert!(result.is_err());
+    }
+
+    #[test]
+    fn parse_hubble_options_payload_summarizes_call_put_rows() {
+        let payload = serde_json::json!({
+            "data": {
+                "data": [
+                    {
+                        "symbol": "AAPL",
+                        "expiration": "2026-06-19",
+                        "strike": "200.0",
+                        "type": "call",
+                        "volume": "10",
+                        "open_interest": "20",
+                        "delta": "0.52",
+                        "gamma": "0.10",
+                        "vega": "0.20",
+                        "iv": "0.31"
+                    },
+                    {
+                        "symbol": "AAPL",
+                        "expiration": "2026-06-19",
+                        "strike": "200.0",
+                        "type": "put",
+                        "volume": "5",
+                        "open_interest": "8",
+                        "delta": "-0.48",
+                        "gamma": "0.08",
+                        "vega": "0.18",
+                        "iv": "0.29"
+                    }
+                ],
+                "underlying_price": 200.0
+            }
+        });
+
+        let summary = parse_hubble_options_summary("AAPL", &payload).unwrap();
+
+        assert_eq!(summary.symbol, "AAPL");
+        assert_eq!(summary.call_open_interest, 20.0);
+        assert_eq!(summary.put_open_interest, 8.0);
+        assert_eq!(summary.call_volume, 10.0);
+        assert_eq!(summary.put_volume, 5.0);
+        assert_eq!(summary.put_call_oi_ratio, Some(0.4));
+        assert_eq!(summary.put_call_volume_ratio, Some(0.5));
+        assert_eq!(summary.near_atm_delta, Some(0.52));
+        assert_eq!(summary.near_atm_gamma, Some(0.10));
+        assert_eq!(summary.near_atm_vega, Some(0.20));
+        assert_eq!(summary.near_atm_implied_volatility, Some(0.31));
+        assert_eq!(summary.call_gamma_oi, Some(2.0));
+        assert_eq!(summary.put_gamma_oi, Some(0.64));
     }
 }

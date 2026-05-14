@@ -11,6 +11,8 @@ use crate::application::backtest::{ControlMatrixPlan, Pb12Toggle, PB12_TOGGLES};
 pub const TVREMIX_MCP_DEFAULT_URL: &str = "https://tvremix.xyz/api/mcp/v1";
 pub const TVREMIX_MCP_URL_ENV: &str = "ICT_ENGINE_TVREMIX_MCP_URL";
 pub const TVREMIX_MCP_API_KEY_ENV: &str = "ICT_ENGINE_TVREMIX_MCP_API_KEY";
+pub const HUBBLE_BASE_URL_ENV: &str = "ICT_ENGINE_HUBBLE_BASE_URL";
+pub const HUBBLE_API_KEY_ENV: &str = "ICT_ENGINE_HUBBLE_API_KEY";
 pub const TVREMIX_MCP_LOCAL_CONFIG_RELATIVE_PATH: &str = ".ict-engine/tvremix_mcp.json";
 pub const TRADINGVIEW_MCP_CMD_ENV: &str = "ICT_ENGINE_TRADINGVIEW_MCP_CMD";
 pub const TRADINGVIEW_MCP_ARGS_ENV: &str = "ICT_ENGINE_TRADINGVIEW_MCP_ARGS";
@@ -80,6 +82,7 @@ impl ControlMatrixDataRequirement {
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize)]
 pub enum ControlMatrixProviderKind {
     Ibkr,
+    Hubble,
     YahooFinance,
     TradingViewMcp,
 }
@@ -88,6 +91,7 @@ impl ControlMatrixProviderKind {
     pub fn as_str(self) -> &'static str {
         match self {
             Self::Ibkr => "ibkr",
+            Self::Hubble => "hubble",
             Self::YahooFinance => "yfinance",
             Self::TradingViewMcp => "tradingview_mcp",
         }
@@ -149,6 +153,7 @@ where
 {
     let provider_statuses = vec![
         ibkr_provider_status(&required, home_dir.as_deref(), &ibkr_runtime_probe()),
+        hubble_provider_status(&required, env_lookup),
         yfinance_provider_status(&required, env_lookup),
         tradingview_mcp_provider_status(
             &required,
@@ -408,6 +413,75 @@ where
             .collect(),
         install_prompts: Vec::new(),
         redacted_config: vec!["provider_mode=public_http".to_string()],
+    }
+}
+
+fn hubble_provider_status<F>(
+    required: &BTreeSet<ControlMatrixDataRequirement>,
+    env_lookup: &F,
+) -> ControlMatrixProviderStatus
+where
+    F: Fn(&str) -> Option<String>,
+{
+    let supported = [
+        ControlMatrixDataRequirement::EtfReference,
+        ControlMatrixDataRequirement::CfdReference,
+        ControlMatrixDataRequirement::VixOverlay,
+        ControlMatrixDataRequirement::OptionsGreeks,
+        ControlMatrixDataRequirement::OptionsOpenInterest,
+        ControlMatrixDataRequirement::OptionsImpliedVolatility,
+    ];
+    let base_url = env_lookup(HUBBLE_BASE_URL_ENV).filter(|value| !value.trim().is_empty());
+    let api_key_present =
+        env_lookup(HUBBLE_API_KEY_ENV).is_some_and(|value| !value.trim().is_empty());
+    let (healthy, status, reason, install_prompts) = if base_url.is_some() {
+        (
+            true,
+            "ready".to_string(),
+            if api_key_present {
+                "hubble_base_url_and_api_key_env_configured".to_string()
+            } else {
+                "hubble_base_url_env_configured_with_upstream_default_key".to_string()
+            },
+            Vec::new(),
+        )
+    } else {
+        (
+            false,
+            "installed_unconfigured".to_string(),
+            "hubble_base_url_missing".to_string(),
+            vec![
+                format!(
+                    "Consumer agent optional Hubble mode: set {}. {} is optional and overrides the upstream-compatible default key fallback.",
+                    HUBBLE_BASE_URL_ENV, HUBBLE_API_KEY_ENV
+                ),
+            ],
+        )
+    };
+    ControlMatrixProviderStatus {
+        provider: ControlMatrixProviderKind::Hubble.as_str().to_string(),
+        status,
+        healthy,
+        reason,
+        supported_requirements: supported
+            .into_iter()
+            .filter(|item| required.contains(item))
+            .map(|item| item.as_str().to_string())
+            .collect(),
+        install_prompts,
+        redacted_config: vec![
+            format!(
+                "{}={}",
+                HUBBLE_BASE_URL_ENV,
+                redact_secret_presence(base_url.is_some())
+            ),
+            format!(
+                "{}={}",
+                HUBBLE_API_KEY_ENV,
+                redact_secret_presence(api_key_present)
+            ),
+            "default_key_fallback=<enabled>".to_string(),
+        ],
     }
 }
 
@@ -905,6 +979,38 @@ mod tests {
             .redacted_config
             .iter()
             .any(|item| item.contains("<set>")));
+    }
+
+    #[test]
+    fn hubble_provider_becomes_ready_with_base_url_only() {
+        let required = BTreeSet::from([
+            ControlMatrixDataRequirement::EtfReference,
+            ControlMatrixDataRequirement::OptionsGreeks,
+        ]);
+        let summary = build_provider_summary_for_requirements_with_env(
+            required,
+            &|name| match name {
+                HUBBLE_BASE_URL_ENV => Some("http://example.test:3101".to_string()),
+                _ => None,
+            },
+            None,
+            &IbkrRuntimeProbeDetails::default,
+            &|_, _, _| TradingviewMcpProbeDetails::default(),
+        );
+        let provider = summary
+            .provider_statuses
+            .iter()
+            .find(|status| status.provider == "hubble")
+            .unwrap();
+        assert!(provider.healthy);
+        assert_eq!(provider.status, "ready");
+        assert_eq!(
+            provider.reason,
+            "hubble_base_url_env_configured_with_upstream_default_key"
+        );
+        assert!(provider
+            .supported_requirements
+            .contains(&"options_greeks".to_string()));
     }
 
     #[test]
