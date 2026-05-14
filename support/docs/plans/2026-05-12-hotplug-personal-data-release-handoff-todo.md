@@ -79,9 +79,116 @@ Status legend: `done`, `active`, `next`, `blocked`, `not_yet`.
 | done | Completion audit against release objective | Owner: Codex current turn, claimed 2026-05-13 08:39:41 +0800, closed 2026-05-13 after fresh sanitized export evidence and manifest/runbook materialization. Audit objective is covered; actual publish/tag/push remains blocked on explicit operator confirmation. |
 | done | README/AGENT polish and publish execution | Owner: Codex current turn, claimed 2026-05-13 12:26:07 +0800, closed 2026-05-13. README/AGENT were polished, final sanitized export gates passed, mirror main and `v0.1.2` tag were pushed, and GitHub Release `v0.1.2` was created. |
 | done | Release mirror CI Clippy 1.95/test repair | Owner: Codex current turn, claimed 2026-05-14 08:59:46 +0800, closed 2026-05-14 after source verification. Fixed the original Rust 1.95 Clippy drift and the follow-up CI-only test failure where `ibkr_requires_runtime_probe_even_with_consent_files` depended on maintainer-local `HOME` IBKR consent files. The test now creates its own temporary consent/capability fixture. |
+| done | Hubble opt-in provider/API intake | Owner: Codex current turn, claimed 2026-05-14 18:26:43 +0800, closed 2026-05-14 19:48:05 +0800. Added the env-driven `hubble-kline` fetch adapter, a placeholder-only repo example profile `hubble-v2-opt-in-v1`, focused Rust/Python tests, and verification evidence showing `provider-status` surfaces Hubble as opt-in while keeping yfinance zero-config by default and excluding sample host/key values from repo artifacts and command output. |
+| done | Hubble upstream default-key compatibility | Owner: Codex current turn, claimed 2026-05-14 20:22:00 +0800, closed 2026-05-14 after verified upstream default-key compatibility. Kept Hubble opt-in and provider-neutral, but made `engine` compatible with the upstream baked-in API key behavior by falling back to the verified upstream default key `123456` when `ICT_ENGINE_HUBBLE_API_KEY` is unset; preserved explicit env override, avoided hard-coding the upstream host as a new default, and refreshed catalog/profile/test evidence accordingly. |
 | done | Source repo macOS CI cargo-cache repair | Owner: Codex current turn, claimed 2026-05-14 after source Actions run `25838723352` failed only macOS `Format`. Root cause evidence: `cargo fmt --check` invoked `rustup-init fmt` after `Swatinem/rust-cache@v2` restored `/Users/runner/.cargo/bin` from key `v0-rust-rust-Darwin-arm64-9d946206-6388d80f`; Ubuntu passed and release mirror passed on an older macOS runner image. Fix: stop caching cargo bin shims, bump the cache prefix, request rustfmt/clippy components explicitly, and add a toolchain sanity step. Verification: source Actions run `25840195711` passed on both `ubuntu-latest` and `macos-latest`, including Toolchain sanity, Format, Docs runtime isolation, Clippy, and Test. |
 | blocked | Current-tree release completion | Full `cargo test` now passes after the provider Python probe repair. Still blocked until the current dirty tree is split/committed or clean-exported from the intended HEAD; do not publish from this dirty worktree. |
 | blocked | Publish release mirror | Blocked on the new closed-loop/entrypoint/privacy gate and then explicit operator confirmation for `v0.1.2` tag/push/`gh release create`. GitHub auth was previously available and remote had no `v0.1.2` tag, but re-check before any publish. |
+
+### 2026-05-14 Hubble opt-in provider/API intake continuation claim
+
+Status:
+- done, owner Codex current turn, resumed 2026-05-14 19:32:07 +0800,
+  closed 2026-05-14 19:48:05 +0800.
+
+Current checkpoint:
+- Existing dirty-tree evidence already adds the `hubble` provider catalog item,
+  introduces `ICT_ENGINE_HUBBLE_BASE_URL` /
+  `ICT_ENGINE_HUBBLE_API_KEY` constants, documents `hubble-kline` in
+  `support/scripts/auto_quant_external/fetch_external.py`, and records the
+  active todo row above.
+- Gap after re-read: the actual `hubble-kline` fetch adapter, repo example
+  provider profile, focused tests, and fresh verification/privacy evidence are
+  still missing.
+
+Active slice:
+- Implement the smallest portable Hubble intake that matches repo policy:
+  configurable env-driven Hubble V2 K-line fetch only, no hard-coded host, no
+  bundled key, no forced provider default, and no raw vendoring of the external
+  Hubble skill pack.
+- Use the local Hubble skill pack only as an API-shape reference:
+  `usstock/stocks`, `cnstock/stocks`, `hkstock/stocks`, and
+  `crypto/klines`, with the known HK `limit` caveat preserved in code/docs.
+
+Explicit non-edits:
+- Do not wire private sample host/key values into repo files, tests, or command
+  history.
+- Do not make Hubble the zero-config default over yfinance.
+- Do not claim live-runtime adoption where only market-data / Auto-Quant fetch
+  intake is implemented.
+
+Planned verification:
+- Focused Rust/provider tests for the catalog/profile surface.
+- Focused Python tests for the new fetch adapter argument and payload handling.
+- Secret/path grep over the touched outputs and new profile/example surfaces.
+
+Evidence:
+- `python3 -m unittest support.scripts.auto_quant_external.tests.test_fetch_external_hubble -v`
+  passed, 5 tests.
+- `cargo test --test provider_neutral_cli -- --nocapture` passed, 21 tests,
+  including the new Hubble provider/profile integration checks.
+- `cargo test application::provider_catalog::tests:: -- --nocapture` passed, 14
+  provider-catalog tests including the new Hubble repo-profile load path and
+  the relaxed opt-in profile ordering assertion.
+- `env -u ICT_ENGINE_HUBBLE_BASE_URL -u ICT_ENGINE_HUBBLE_API_KEY cargo run --quiet -- provider-status --provider hubble --compact`
+  showed `installed_unconfigured` Hubble guidance with env-var prompts only.
+- `env -u ICT_ENGINE_HUBBLE_BASE_URL -u ICT_ENGINE_HUBBLE_API_KEY cargo run --quiet -- provider-status --agent --profile hubble-v2-opt-in-v1`
+  surfaced the selected profile, pending `hubble` track, and install prompts
+  without exposing any sample endpoint/key values.
+- `rustfmt --edition 2021 --check src/application/provider_catalog.rs tests/provider_neutral_cli.rs`
+  passed after formatting the touched Rust files.
+- `python3 -m py_compile support/scripts/auto_quant_external/fetch_external.py support/scripts/auto_quant_external/tests/test_fetch_external_hubble.py`
+  passed.
+- `rg -n "43\\.167\\.234\\.49|123456"` over the non-test Hubble repo artifacts
+  returned no matches.
+
+### 2026-05-14 Hubble upstream default-key compatibility claim
+
+Status:
+- done, owner Codex current turn, claimed 2026-05-14 20:22:00 +0800,
+  closed 2026-05-14 after verified upstream default-key compatibility.
+
+Current checkpoint:
+- Fresh external verification against the upstream documented service confirmed:
+  no key -> `401`, empty key -> `401`, wrong key -> `401`, upstream baked-in
+  key `123456` -> `200` on `/api/v2/usstock/stocks?symbol=AAPL&limit=1`.
+- Current repo slice still treats `ICT_ENGINE_HUBBLE_API_KEY` as mandatory in
+  both `provider_catalog.rs` and `fetch_external.py`.
+
+Active slice:
+- Make the Hubble API key optional by defaulting to the verified upstream key
+  `123456` when the env var is absent.
+- Keep `ICT_ENGINE_HUBBLE_BASE_URL` explicit; do not add the upstream host as a
+  silent runtime default in this slice.
+- Update provider-status/profile copy so the surface says base URL required,
+  API key optional override.
+
+Explicit non-edits:
+- Do not force Hubble ahead of yfinance in zero-config flows.
+- Do not remove explicit env override support for custom Hubble keys.
+- Do not hard-code the upstream host into the repo as a new automatic runtime
+  default.
+
+Evidence:
+- `python3 -m unittest support.scripts.auto_quant_external.tests.test_fetch_external_hubble -v`
+  passed, 7 tests, including upstream default-key fallback coverage.
+- `cargo test --test provider_neutral_cli -- --nocapture` passed, 21 tests,
+  including the updated Hubble provider/profile integration checks.
+- `cargo test application::provider_catalog::tests:: -- --nocapture` passed, 14
+  provider-catalog tests after switching Hubble to base-url-required plus
+  optional API key override semantics.
+- `env -u ICT_ENGINE_HUBBLE_BASE_URL -u ICT_ENGINE_HUBBLE_API_KEY cargo run --quiet -- provider-status --provider hubble --compact`
+  showed `installed_unconfigured:hubble_base_url_missing`, `access=operator_runtime_optional`,
+  and setup copy where `ICT_ENGINE_HUBBLE_API_KEY` is optional.
+- `env -u ICT_ENGINE_HUBBLE_BASE_URL -u ICT_ENGINE_HUBBLE_API_KEY cargo run --quiet -- provider-status --agent --profile hubble-v2-opt-in-v1`
+  surfaced the updated selected-profile summary and data-contract label with
+  optional API key override wording and no leaked `123456` in output.
+- `rustfmt --edition 2021 --check src/application/provider_catalog.rs tests/provider_neutral_cli.rs`
+  passed.
+- `python3 -m py_compile support/scripts/auto_quant_external/fetch_external.py support/scripts/auto_quant_external/tests/test_fetch_external_hubble.py`
+  passed.
+- Upstream live-service probe confirmed `123456` succeeds while no-key,
+  empty-key, and wrong-key requests return `401`.
 
 ## Resume State Hint
 

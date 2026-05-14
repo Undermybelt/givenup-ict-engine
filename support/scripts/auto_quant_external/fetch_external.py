@@ -14,6 +14,11 @@ Providers (sub-commands):
   polygon            Stocks/ETFs/options/crypto/forex via Polygon.io REST
                      (requires POLYGON_API_KEY).
 
+  hubble-kline       OHLCV via an opt-in Hubble V2 HTTP API endpoint.
+                     Requires ICT_ENGINE_HUBBLE_BASE_URL.
+                     ICT_ENGINE_HUBBLE_API_KEY optionally overrides the
+                     upstream-compatible default key fallback.
+
   bybit-kline        OHLCV via Bybit V5 public REST. Categories: spot, linear
                      (USDT perps), inverse (coin-margined perps), option.
                      No API key; pagination-aware. Useful for crypto perps
@@ -54,6 +59,10 @@ Auth model: all sub-commands above use public read endpoints. Authenticated
 features (account / order / portfolio) are intentionally out of scope here and
 will be wired through env-var driven keys (e.g. BYBIT_API_KEY/SECRET,
 KRAKEN_API_KEY/SECRET, BINANCE_API_KEY/SECRET) when the operator applies.
+Hubble is also opt-in and credentialed: callers must supply their own endpoint
+via ICT_ENGINE_HUBBLE_BASE_URL. ICT_ENGINE_HUBBLE_API_KEY is an optional
+override; when absent, the fetcher falls back to the upstream-compatible
+default key behavior. This script does not embed Hubble's sample endpoint.
 """
 from __future__ import annotations
 
@@ -94,6 +103,20 @@ YAHOO_UA_ROTATION = [
     "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36",
     "Mozilla/5.0 (Macintosh; Intel Mac OS X 14_4_1) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.4 Safari/605.1.15",
 ]
+
+HUBBLE_BASE_URL_ENV = "ICT_ENGINE_HUBBLE_BASE_URL"
+HUBBLE_API_KEY_ENV = "ICT_ENGINE_HUBBLE_API_KEY"
+HUBBLE_DEFAULT_API_KEY = "123456"
+HUBBLE_STOCK_INTERVAL_MAP = {
+    "1d": "daily",
+    "daily": "daily",
+    "1w": "weekly",
+    "weekly": "weekly",
+    "1mo": "monthly",
+    "1M": "monthly",
+    "monthly": "monthly",
+}
+HUBBLE_CRYPTO_INTERVALS = {"1m", "5m", "15m", "1h", "4h", "1d", "1w"}
 
 NSE_HEADERS = {
     "user-agent": (
@@ -400,6 +423,320 @@ def cmd_polygon(args: argparse.Namespace) -> int:
     out_path.parent.mkdir(parents=True, exist_ok=True)
     df.to_csv(out_path, index=False)
     print(f"polygon {args.symbol} {args.interval}: {len(df):,} rows -> {out_path}")
+    return 0
+
+
+# ---------------------------------------------------------------------------
+# Hubble V2 (opt-in; operator supplies endpoint + API key via env)
+
+
+def _format_hubble_date(value: datetime | None) -> str | None:
+    if value is None:
+        return None
+    return value.date().strftime("%Y%m%d")
+
+
+def build_hubble_kline_request(
+    market: str,
+    symbol: str,
+    interval: str,
+    start: datetime | None = None,
+    end: datetime | None = None,
+    limit: int | None = None,
+    exchange: str | None = None,
+) -> tuple[str, dict[str, Any]]:
+    market_key = (market or "").strip().lower()
+    interval_key = (interval or "").strip()
+    symbol_value = (symbol or "").strip()
+    exchange_value = (exchange or "").strip().lower()
+    if not symbol_value:
+        raise ValueError("hubble symbol must not be empty")
+    if limit is not None and limit <= 0:
+        raise ValueError("hubble limit must be positive")
+    if start and end and end < start:
+        raise ValueError("hubble end must be greater than or equal to start")
+
+    if market_key == "cn":
+        mapped_interval = HUBBLE_STOCK_INTERVAL_MAP.get(interval_key)
+        if mapped_interval is None:
+            raise ValueError("hubble cn interval must be one of 1d, 1w, 1mo")
+        if start is None and end is None and limit is None:
+            raise ValueError("hubble cn fetch requires --start/--end or --limit")
+        params: dict[str, Any] = {"symbol": symbol_value, "interval": mapped_interval}
+        if start is not None:
+            params["startDate"] = _format_hubble_date(start)
+        if end is not None:
+            params["endDate"] = _format_hubble_date(end)
+        if limit is not None:
+            params["limit"] = limit
+        return "/api/v2/cnstock/stocks", params
+
+    if market_key == "hk":
+        if interval_key not in ("1d", "daily"):
+            raise ValueError("hubble hk interval currently supports 1d only")
+        if limit is not None:
+            raise ValueError("hubble hk fetch does not support --limit; use --start and --end")
+        if start is None or end is None:
+            raise ValueError("hubble hk fetch requires both --start and --end")
+        return "/api/v2/hkstock/stocks", {
+            "symbol": symbol_value,
+            "startDate": _format_hubble_date(start),
+            "endDate": _format_hubble_date(end),
+        }
+
+    if market_key == "us":
+        if interval_key not in ("1d", "daily"):
+            raise ValueError("hubble us interval currently supports 1d only")
+        if start is None and end is None and limit is None:
+            raise ValueError("hubble us fetch requires --start/--end or --limit")
+        params = {"symbol": symbol_value}
+        if start is not None:
+            params["startDate"] = _format_hubble_date(start)
+        if end is not None:
+            params["endDate"] = _format_hubble_date(end)
+        if limit is not None:
+            params["limit"] = limit
+        return "/api/v2/usstock/stocks", params
+
+    if market_key == "crypto":
+        if interval_key not in HUBBLE_CRYPTO_INTERVALS:
+            raise ValueError("hubble crypto interval must be one of 1m, 5m, 15m, 1h, 4h, 1d, 1w")
+        if not exchange_value:
+            raise ValueError("hubble crypto fetch requires --exchange")
+        if limit is None and not (start is not None and end is not None):
+            raise ValueError("hubble crypto fetch requires --limit or both --start and --end")
+        params = {
+            "exchange": exchange_value,
+            "symbol": symbol_value,
+            "interval": interval_key,
+        }
+        if limit is not None:
+            params["limit"] = limit
+        # Some Hubble deployments accept explicit date bounds on crypto klines.
+        if start is not None:
+            params["startDate"] = _format_hubble_date(start)
+        if end is not None:
+            params["endDate"] = _format_hubble_date(end)
+        return "/api/v2/crypto/klines", params
+
+    raise ValueError("hubble market must be one of cn, hk, us, crypto")
+
+
+def _extract_hubble_kline_rows(payload: Any) -> list[Any]:
+    if isinstance(payload, list):
+        return payload
+    if not isinstance(payload, dict):
+        return []
+    candidates = [payload.get("data"), payload.get("list"), payload.get("rows"), payload.get("items")]
+    for candidate in candidates:
+        if isinstance(candidate, list):
+            return candidate
+        if isinstance(candidate, dict):
+            for key in ("data", "list", "rows", "items", "candles"):
+                nested = candidate.get(key)
+                if isinstance(nested, list):
+                    return nested
+    result = payload.get("result")
+    if isinstance(result, dict):
+        for key in ("data", "list", "rows", "items", "candles"):
+            nested = result.get(key)
+            if isinstance(nested, list):
+                return nested
+    return []
+
+
+def _parse_hubble_timestamp(value: Any) -> pd.Timestamp:
+    if value is None:
+        raise ValueError("missing timestamp")
+    if isinstance(value, (int, float)):
+        numeric = int(value)
+        unit = "ms" if abs(numeric) >= 1_000_000_000_000 else "s"
+        return pd.to_datetime(numeric, unit=unit, utc=True)
+    if isinstance(value, str):
+        trimmed = value.strip()
+        if not trimmed:
+            raise ValueError("empty timestamp")
+        if trimmed.isdigit():
+            if len(trimmed) >= 13:
+                return pd.to_datetime(int(trimmed), unit="ms", utc=True)
+            if len(trimmed) >= 10:
+                return pd.to_datetime(int(trimmed), unit="s", utc=True)
+            if len(trimmed) == 8:
+                return pd.to_datetime(trimmed, format="%Y%m%d", utc=True)
+        return pd.to_datetime(trimmed, utc=True)
+    raise ValueError(f"unsupported timestamp type: {type(value).__name__}")
+
+
+def _hubble_row_to_record(row: Any) -> dict[str, Any]:
+    if isinstance(row, dict):
+        ts_value = (
+            row.get("time")
+            or row.get("timestamp")
+            or row.get("ts")
+            or row.get("tradeDate")
+            or row.get("date")
+        )
+        open_value = row.get("open")
+        high_value = row.get("high")
+        low_value = row.get("low")
+        close_value = row.get("close")
+        volume_value = row.get("volume", row.get("vol", 0))
+    elif isinstance(row, (list, tuple)) and len(row) >= 6:
+        ts_value, open_value, high_value, low_value, close_value, volume_value = row[:6]
+    else:
+        raise ValueError(f"unsupported row shape: {row!r}")
+
+    open_price = _to_float_or_none(open_value)
+    high_price = _to_float_or_none(high_value)
+    low_price = _to_float_or_none(low_value)
+    close_price = _to_float_or_none(close_value)
+    if None in (open_price, high_price, low_price, close_price):
+        raise ValueError(f"incomplete OHLC row: {row!r}")
+
+    return {
+        "date": _parse_hubble_timestamp(ts_value),
+        "open": open_price,
+        "high": high_price,
+        "low": low_price,
+        "close": close_price,
+        "volume": _to_float_or_none(volume_value) or 0.0,
+    }
+
+
+def parse_hubble_kline_payload(payload: Any) -> pd.DataFrame:
+    rows = _extract_hubble_kline_rows(payload)
+    if not rows:
+        return pd.DataFrame(columns=["date", "open", "high", "low", "close", "volume"])
+    records = [_hubble_row_to_record(row) for row in rows]
+    return (
+        pd.DataFrame(records)
+        .drop_duplicates(subset=["date"])
+        .sort_values("date")
+        .reset_index(drop=True)
+    )
+
+
+class HubbleFetcher:
+    """Fetch OHLCV from an operator-supplied Hubble V2 deployment."""
+
+    def __init__(self, base_url: str, api_key: str, timeout: float = 30.0) -> None:
+        self.base_url = base_url.rstrip("/")
+        self.session = requests.Session()
+        self.session.headers.update(
+            {
+                "User-Agent": YAHOO_DEFAULT_UA,
+                "Accept": "application/json",
+                "Content-Type": "application/json",
+                "X-API-Key": api_key,
+            }
+        )
+        self.timeout = timeout
+
+    @classmethod
+    def from_env(cls, timeout: float = 30.0) -> "HubbleFetcher":
+        base_url = os.environ.get(HUBBLE_BASE_URL_ENV, "").strip()
+        api_key = os.environ.get(HUBBLE_API_KEY_ENV, "").strip() or HUBBLE_DEFAULT_API_KEY
+        if not base_url:
+            raise ValueError(
+                f"{HUBBLE_BASE_URL_ENV} must be set for hubble-kline; {HUBBLE_API_KEY_ENV} is optional"
+            )
+        return cls(base_url=base_url, api_key=api_key, timeout=timeout)
+
+    def _get(self, path: str, params: dict[str, Any], max_retries: int = 5) -> Any:
+        url = f"{self.base_url}{path}"
+        for attempt in range(1, max_retries + 1):
+            try:
+                resp = self.session.get(url, params=params, timeout=self.timeout)
+            except (requests.exceptions.SSLError,
+                    requests.exceptions.ConnectionError,
+                    requests.exceptions.Timeout) as exc:
+                wait = min(60, 5 * (2 ** (attempt - 1)))
+                print(
+                    f"  hubble {path}: {type(exc).__name__}, retry in {wait}s "
+                    f"({attempt}/{max_retries})",
+                    file=sys.stderr,
+                )
+                time.sleep(wait)
+                continue
+            if resp.status_code == 200:
+                payload = resp.json()
+                rows = _extract_hubble_kline_rows(payload)
+                if rows:
+                    return payload
+                if isinstance(payload, dict):
+                    code = payload.get("code")
+                    if code not in (None, 0, "0", 200, "200", True):
+                        msg = payload.get("msg") or payload.get("message") or "unknown"
+                        raise RuntimeError(f"hubble {path}: code {code!r} {msg!r}")
+                return payload
+            if resp.status_code in (429, 500, 502, 503, 504):
+                wait = min(60, 5 * (2 ** (attempt - 1)))
+                print(
+                    f"  hubble {path}: HTTP {resp.status_code}, retry in {wait}s "
+                    f"({attempt}/{max_retries})",
+                    file=sys.stderr,
+                )
+                time.sleep(wait)
+                continue
+            raise RuntimeError(f"hubble {path}: HTTP {resp.status_code} {resp.text[:200]!r}")
+        raise RuntimeError(f"hubble {path}: retries exhausted")
+
+    def kline(
+        self,
+        market: str,
+        symbol: str,
+        interval: str,
+        start: datetime | None = None,
+        end: datetime | None = None,
+        limit: int | None = None,
+        exchange: str | None = None,
+    ) -> pd.DataFrame:
+        path, params = build_hubble_kline_request(
+            market=market,
+            symbol=symbol,
+            interval=interval,
+            start=start,
+            end=end,
+            limit=limit,
+            exchange=exchange,
+        )
+        payload = self._get(path, params)
+        return parse_hubble_kline_payload(payload)
+
+
+def cmd_hubble_kline(args: argparse.Namespace) -> int:
+    try:
+        start = datetime.fromisoformat(args.start) if args.start else None
+        end = datetime.fromisoformat(args.end) if args.end else None
+        fetcher = HubbleFetcher.from_env()
+        df = fetcher.kline(
+            market=args.market,
+            symbol=args.symbol,
+            interval=args.interval,
+            start=start,
+            end=end,
+            limit=args.limit,
+            exchange=args.exchange,
+        )
+    except ValueError as exc:
+        print(f"ERROR: {exc}", file=sys.stderr)
+        return 2
+    if df.empty:
+        print(
+            f"ERROR: hubble returned no rows for {args.market}/{args.symbol}",
+            file=sys.stderr,
+        )
+        return 3
+    out = Path(args.output).resolve()
+    out.parent.mkdir(parents=True, exist_ok=True)
+    df.to_csv(out, index=False)
+    label = args.symbol
+    if args.market == "crypto" and args.exchange:
+        label = f"{args.exchange}:{label}"
+    print(
+        f"hubble {args.market} {label} {args.interval}: {len(df):,} rows "
+        f"({df['date'].min()} -> {df['date'].max()}) -> {out}"
+    )
     return 0
 
 
@@ -1535,6 +1872,20 @@ def build_parser() -> argparse.ArgumentParser:
     pol.add_argument("--end", required=True, help="YYYY-MM-DD")
     pol.add_argument("--output", required=True)
 
+    hb = sub.add_parser("hubble-kline", help="OHLCV via opt-in Hubble V2 HTTP API")
+    hb.add_argument("--market", required=True, choices=["cn", "hk", "us", "crypto"])
+    hb.add_argument("--symbol", required=True,
+                    help="cn=000001.SZ hk=00700.HK us=AAPL crypto=BTCUSDT")
+    hb.add_argument("--exchange", default=None,
+                    help="required for crypto, e.g. binance")
+    hb.add_argument("--interval", default="1d",
+                    help="cn:1d/1w/1mo hk/us:1d crypto:1m/5m/15m/1h/4h/1d/1w")
+    hb.add_argument("--start", help="ISO start, e.g. 2024-01-01")
+    hb.add_argument("--end", help="ISO end, e.g. 2024-12-31")
+    hb.add_argument("--limit", type=int, default=None,
+                    help="optional row limit; hk disables it, crypto usually uses it")
+    hb.add_argument("--output", required=True)
+
     bk = sub.add_parser("bybit-kline", help="OHLCV via Bybit V5 public REST")
     bk.add_argument("--category", required=True,
                     choices=["spot", "linear", "inverse", "option"])
@@ -1659,6 +2010,8 @@ def main(argv: list[str] | None = None) -> int:
         return cmd_nse_options(args)
     if args.provider == "polygon":
         return cmd_polygon(args)
+    if args.provider == "hubble-kline":
+        return cmd_hubble_kline(args)
     if args.provider == "bybit-kline":
         return cmd_bybit_kline(args)
     if args.provider == "bybit-options":

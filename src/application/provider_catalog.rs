@@ -19,6 +19,9 @@ const PROVIDER_PROFILE_SCHEMA_VERSION: &str = "provider-profile/v1";
 const REPO_PROVIDER_PROFILE_DIR: &str = "support/examples/provider_profiles";
 const KRAKEN_API_KEY_ENV: &str = "KRAKEN_API_KEY";
 const KRAKEN_API_SECRET_ENV: &str = "KRAKEN_API_SECRET";
+const HUBBLE_BASE_URL_ENV: &str = "ICT_ENGINE_HUBBLE_BASE_URL";
+const HUBBLE_API_KEY_ENV: &str = "ICT_ENGINE_HUBBLE_API_KEY";
+const HUBBLE_UPSTREAM_DEFAULT_KEY_COMPAT: &str = "upstream_default_key_compatible";
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 pub enum ProviderCatalogDomain {
@@ -422,6 +425,7 @@ impl ProviderCatalogSource for MarketDataProviderCatalogSource {
 
         let public_fetch_runtime = probe_public_fetch_python_runtime();
         items.extend([
+            hubble_provider_item(),
             public_provider_item(
                 "binance_public",
                 &public_fetch_runtime,
@@ -459,6 +463,76 @@ impl ProviderCatalogSource for MarketDataProviderCatalogSource {
             apply_provider_user_semantics(item);
         }
         Ok(items)
+    }
+}
+
+fn hubble_provider_item() -> ProviderCatalogItem {
+    let script_present = provider_fetch_script_exists();
+    let base_url_present = env::var_os(HUBBLE_BASE_URL_ENV).is_some();
+    let api_key_present = env::var_os(HUBBLE_API_KEY_ENV).is_some();
+    let configured = base_url_present;
+    let ready = script_present && configured;
+    let (status, reason) = if ready {
+        if api_key_present {
+            ("ready", "hubble_base_url_and_api_key_env_configured")
+        } else {
+            (
+                "ready",
+                "hubble_base_url_env_configured_with_upstream_default_key",
+            )
+        }
+    } else if !script_present {
+        ("install_required", "fetch_external_script_missing")
+    } else {
+        ("installed_unconfigured", "hubble_base_url_missing")
+    };
+    let mut install_prompts = Vec::new();
+    if !ready {
+        install_prompts.push(
+            "Consumer agent request: ask whether the user wants zero-config yfinance, local IBKR, or opt-in Hubble V2 before using Hubble-sourced data."
+                .to_string(),
+        );
+        install_prompts.push(format!(
+            "Consumer agent follow-up: if the user chooses Hubble, set {} in the execution environment. {} is optional and overrides the upstream-compatible default key fallback; do not paste custom keys into repo files or command history.",
+            HUBBLE_BASE_URL_ENV, HUBBLE_API_KEY_ENV
+        ));
+    }
+
+    ProviderCatalogItem {
+        provider_id: "hubble".to_string(),
+        domain: ProviderCatalogDomain::MarketData.as_str().to_string(),
+        selectable_by_user: true,
+        adopted_by_default: false,
+        access_mode: "hubble_v2_http_api".to_string(),
+        user_access: "operator_runtime_optional".to_string(),
+        market_fit: vec![
+            "tradfi".to_string(),
+            "crypto".to_string(),
+            "indices".to_string(),
+            "options".to_string(),
+        ],
+        fallback_priority: Some(12),
+        user_summary:
+            "Opt-in Hubble V2 market-data API path for OHLCV, realtime quote, indicator, options, and cross-market context when the user supplies a base URL; a custom API key is optional and otherwise falls back to the upstream-compatible default."
+                .to_string(),
+        ready,
+        status: status.to_string(),
+        reason: reason.to_string(),
+        capabilities: vec![
+            "ohlcv".to_string(),
+            "realtime_quote".to_string(),
+            "technical_indicators".to_string(),
+            "options_chain".to_string(),
+            "cross_market_context".to_string(),
+        ],
+        notes: vec![
+            "opt_in_only".to_string(),
+            format!("base_url_env={}", env_presence(HUBBLE_BASE_URL_ENV)),
+            format!("api_key_env={}", env_presence(HUBBLE_API_KEY_ENV)),
+            HUBBLE_UPSTREAM_DEFAULT_KEY_COMPAT.to_string(),
+            "uses support/scripts/auto_quant_external/fetch_external.py hubble-kline for Auto-Quant CSV intake".to_string(),
+        ],
+        install_prompts,
     }
 }
 
@@ -1098,6 +1172,14 @@ fn home_dir() -> Option<PathBuf> {
     env::var_os("HOME").map(PathBuf::from)
 }
 
+fn env_presence(name: &str) -> &'static str {
+    if env::var_os(name).is_some() {
+        "<set>"
+    } else {
+        "<unset>"
+    }
+}
+
 fn command_exists(names: &[&str]) -> bool {
     let Some(path_os) = env::var_os("PATH") else {
         return false;
@@ -1635,6 +1717,12 @@ fn workflow_relevant_provider_ids(
 
 fn provider_ask_user_prompts(provider: &ProviderCatalogPendingAgentItem) -> Vec<String> {
     match provider.provider_id.as_str() {
+        "hubble" => vec![
+            format!(
+                "Ask the user for a Hubble base URL for this run. {} is optional and only needed when they want to override the upstream-compatible default key fallback.",
+                HUBBLE_API_KEY_ENV
+            ),
+        ],
         "tradingview_mcp" => vec![
             "Use local stdio TradingView MCP for OHLCV by default; ask for ICT_ENGINE_TVREMIX_MCP_API_KEY only when the selected lane explicitly needs remote/options enrichment.".to_string(),
         ],
@@ -2115,10 +2203,11 @@ mod tests {
         let jsonl = render_provider_catalog_jsonl(&surface).unwrap();
         let first = jsonl.lines().next().unwrap_or("");
         let value: serde_json::Value = serde_json::from_str(first).unwrap();
-        assert_eq!(
-            value["available_opt_in_profiles"][0]["selector"],
-            "thrill3r-nq-closed-loop-v1"
-        );
+        assert!(value["available_opt_in_profiles"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .any(|item| item["selector"] == "thrill3r-nq-closed-loop-v1"));
         let selected = &value["selected_profile"];
 
         assert_eq!(selected["profile_id"], "thrill3r_nq_closed_loop_v1");
@@ -2329,6 +2418,20 @@ mod tests {
             .data_contracts
             .iter()
             .any(|contract| contract.label.contains("Tomac cleaned")));
+    }
+
+    #[test]
+    fn hubble_repo_example_profile_can_be_loaded_by_id() {
+        let profile = load_provider_profile("hubble-v2-opt-in-v1").unwrap();
+        assert_eq!(profile.profile_id, "hubble_v2_opt_in_v1");
+        assert!(profile.opt_in_only);
+        assert!(profile.data_contracts.iter().any(|contract| contract
+            .label
+            .contains("Hubble V2 base URL via environment with optional API key override")));
+        assert!(profile
+            .provider_tracks
+            .iter()
+            .any(|track| track.track_id == "hubble_market_data_opt_in"));
     }
 
     #[test]

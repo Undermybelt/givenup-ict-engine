@@ -197,6 +197,49 @@ fn provider_status_agent_accepts_opt_in_profile_path() {
 }
 
 #[test]
+fn provider_status_agent_accepts_hubble_opt_in_profile_id() {
+    let binary = env!("CARGO_BIN_EXE_ict-engine");
+
+    let output = Command::new(binary)
+        .env_remove("ICT_ENGINE_HUBBLE_BASE_URL")
+        .env_remove("ICT_ENGINE_HUBBLE_API_KEY")
+        .args([
+            "provider-status",
+            "--agent",
+            "--profile",
+            "hubble-v2-opt-in-v1",
+        ])
+        .output()
+        .unwrap();
+
+    assert!(output.status.success());
+    let value: Value = serde_json::from_slice(&output.stdout).unwrap();
+    assert_eq!(
+        value["selected_profile"]["profile_id"],
+        "hubble_v2_opt_in_v1"
+    );
+    assert!(value["selected_profile"]["data_contract_labels"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .any(|item| item
+            .as_str()
+            .unwrap()
+            .contains("Hubble V2 base URL via environment with optional API key override")));
+    assert!(value["selected_profile"]["track_statuses"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .any(|item| item
+            .as_str()
+            .unwrap()
+            .contains("hubble_market_data_opt_in:pending:hubble")));
+    let stdout = String::from_utf8(output.stdout).unwrap();
+    assert!(!stdout.contains("43.167.234.49"));
+    assert!(!stdout.contains("123456"));
+}
+
+#[test]
 fn provider_status_agent_hides_opt_in_profiles_without_selecting_one() {
     let binary = env!("CARGO_BIN_EXE_ict-engine");
 
@@ -350,6 +393,31 @@ fn provider_status_single_provider_compact_surfaces_setup_prompts() {
     let stdout = String::from_utf8(output.stdout).unwrap();
     assert!(stdout.contains("detail: ibkr | access=login_and_local_runtime"));
     assert!(stdout.contains("setup:"));
+}
+
+#[test]
+fn provider_status_single_hubble_provider_compact_surfaces_env_setup_without_sample_values() {
+    let binary = env!("CARGO_BIN_EXE_ict-engine");
+    let temp_home = TempDir::new().unwrap();
+
+    let output = Command::new(binary)
+        .env("HOME", temp_home.path())
+        .env("XDG_CONFIG_HOME", temp_home.path().join(".config"))
+        .env("XDG_DATA_HOME", temp_home.path().join(".local/share"))
+        .env("XDG_STATE_HOME", temp_home.path().join(".local/state"))
+        .env_remove("ICT_ENGINE_HUBBLE_BASE_URL")
+        .env_remove("ICT_ENGINE_HUBBLE_API_KEY")
+        .args(["provider-status", "--provider", "hubble", "--compact"])
+        .output()
+        .unwrap();
+
+    assert!(output.status.success());
+    let stdout = String::from_utf8(output.stdout).unwrap();
+    assert!(stdout.contains("detail: hubble | access=operator_runtime_optional"));
+    assert!(stdout.contains("ICT_ENGINE_HUBBLE_BASE_URL"));
+    assert!(stdout.contains("ICT_ENGINE_HUBBLE_API_KEY"));
+    assert!(!stdout.contains("43.167.234.49"));
+    assert!(!stdout.contains("123456"));
 }
 
 #[test]
