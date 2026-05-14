@@ -318,6 +318,8 @@ Terminal pointer:
   - `workflow-status --human` prefers the Auto-Quant handoff over first-run
     generic routing
   - `auto-quant-adoption-review` exposes the formal review/readiness surface
+- Source commit for the verified slice:
+  `bc9ccab5` (`feat: lock public factor iteration to auto-quant`).
 
 If resuming:
 1. Re-run `git status --short --branch`.

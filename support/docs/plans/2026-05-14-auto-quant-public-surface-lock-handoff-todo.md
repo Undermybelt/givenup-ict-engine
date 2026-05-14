@@ -45,8 +45,8 @@ Status legend:
 | done | Remove native factor-iteration wording from public help/docs | `src/main.rs`, `README.md`, and `README.zh-CN.md` now advertise the AQ path instead of native factor research. |
 | done | Re-run focused verification after the source edits | `cargo fmt --check`; `cargo test public_factor_iteration_backend -- --nocapture`; `cargo test single_recorded_research_path_does_not_require_user_selection -- --nocapture`; `cargo test factor_research_human_output_is_short_text_not_json_dump -- --nocapture`; `cargo test application::orchestration::workflow_status::tests:: -- --nocapture`; `cargo test workflow_provider_support_stays_inactive_when_command_has_no_provider_gap -- --nocapture` all passed. |
 | done | Run zero-config smoke against the revised public route wording | Real CLI proof under `/tmp/ict-engine-aq-lock-smoke`: native backend rejected; default `factor-research` emitted AQ handoff; `workflow-status --human` preferred the AQ handoff; `auto-quant-adoption-review` returned the formal review surface. |
-| active | Decide commit boundary | The slice is now verification-complete and appears commit-worthy; confirm touched-file set and preserve unrelated dirty work before committing. |
-| next | Write terminal result back to parent release board | Parent board should get a compact pointer plus evidence once this slice is committed or explicitly handed off. |
+| done | Decide commit boundary | Committed as `bc9ccab5` (`feat: lock public factor iteration to auto-quant`) after staging only the AQ public-surface slice plus the new handoff board; `src/main.rs` was staged with a cached hunk-only patch so unrelated in-flight logic edits were not pulled into the commit. |
+| done | Write terminal result back to parent release board | Parent board now points at this handoff file as the live authority for the slice. |
 
 ## File ownership for this slice
 
@@ -121,3 +121,5 @@ cargo run --quiet -- workflow-status --symbol DEMO --state-dir /tmp/ict-engine-f
   `cargo run --quiet -- auto-quant-adoption-review --symbol DEMO --state-dir /tmp/ict-engine-aq-lock-smoke`
   exited `0` with `backend=auto-quant`, `review_status=prepare_required`,
   and `recommended_next_command=ict-engine auto-quant-prepare --state-dir /tmp/ict-engine-aq-lock-smoke`.
+- 2026-05-14 current turn: committed the verified slice as `bc9ccab5`
+  (`feat: lock public factor iteration to auto-quant`).
