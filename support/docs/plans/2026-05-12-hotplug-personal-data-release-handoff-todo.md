@@ -169,6 +169,7 @@ If resuming:
 - Release mirror CI failed run `25836480345`: both Ubuntu and macOS failed only `application::data_sources::control_matrix_providers::tests::ibkr_requires_runtime_probe_even_with_consent_files`; CI saw `left: "install_required"` vs expected `right: "configured_runtime_unhealthy"` because runner `HOME` had no local IBKR consent file.
 - Source fix: `src/application/data_sources/control_matrix_providers.rs` now creates temporary `.ict-engine/ibkr_consent.json` and `.ict-engine/ibkr_capabilities.json` fixtures inside the test instead of reading the real operator `HOME`.
 - Source verification after the test fixture fix: `cargo fmt --check` passed; `python3 support/scripts/ci/check_docs_runtime_isolation.py` passed; `cargo +1.95.0 clippy --all-targets -- -D warnings` passed; clean CI-shaped environment `env -i HOME=/tmp/... CI=true GITHUB_ACTIONS=true cargo +1.95.0 test` passed.
+- Release mirror verification in `/tmp/ict-engine-release-mirror-17uBsZ`: `cargo fmt --check`, `python3 support/scripts/ci/check_docs_runtime_isolation.py`, `cargo +1.95.0 clippy --all-targets -- -D warnings`, and clean CI-shaped `env -i HOME=/tmp/... CI=true GITHUB_ACTIONS=true cargo +1.95.0 test` passed after applying the source patch.
 
 ## Slice Notes
 
