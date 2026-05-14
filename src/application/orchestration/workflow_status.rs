@@ -1258,7 +1258,7 @@ fn build_first_run_guide(
     let symbol = shell_quote(symbol);
     WorkflowFirstRunGuide {
         active: true,
-        summary: "Choose a first path: replay a demo/historical run, iterate factors/backtests from historical data, or bootstrap the live path after provider selection.".to_string(),
+        summary: "Choose a first path: replay a demo/historical run, start an Auto-Quant factor-iteration handoff from historical data, or bootstrap the live path after provider selection.".to_string(),
         provider_command: workflow_status_provider_compact_command(provider_status_agent),
         provider_summary: build_first_run_provider_summary(provider_status_agent),
         bootstrap_command: bootstrap_command.clone(),
@@ -1279,9 +1279,9 @@ fn build_first_run_guide(
             },
             WorkflowFirstRunRoute {
                 route_id: "backtest_or_factor_loop".to_string(),
-                label: "Backtest / Factors".to_string(),
+                label: "Auto-Quant Iteration".to_string(),
                 summary:
-                    "Use historical data to clarify strategy and iterate factors or backtests."
+                    "Use historical data to create the formal Auto-Quant handoff, then inspect adoption/readiness before external execution."
                         .to_string(),
                 command: apply_selected_profile_to_workflow_command(
                     &format!(
@@ -1290,12 +1290,9 @@ fn build_first_run_guide(
                     ),
                     provider_status_agent,
                 ),
-                follow_up_command: Some(apply_selected_profile_to_workflow_command(
-                    &format!(
-                        "ict-engine factor-backtest --symbol {} --data <historical-data.json> --state-dir {} --human",
-                        symbol, state_dir
-                    ),
-                    provider_status_agent,
+                follow_up_command: Some(format!(
+                    "ict-engine auto-quant-adoption-review --symbol {} --state-dir {}",
+                    symbol, state_dir
                 )),
             },
             WorkflowFirstRunRoute {
@@ -1328,7 +1325,7 @@ fn first_run_route_line(guide: &WorkflowFirstRunGuide) -> String {
         .map(|route| route.command.clone())
         .unwrap_or_else(|| "ict-engine factor-research --data <historical-data.json>".to_string());
     format!(
-        "Routes: replay={} | factors/backtest={} | live bootstrap={}",
+        "Routes: replay={} | auto_quant={} | live bootstrap={}",
         human_display_command(&replay),
         human_display_command(&factor_loop),
         human_display_command(&guide.bootstrap_command)
@@ -1337,7 +1334,7 @@ fn first_run_route_line(guide: &WorkflowFirstRunGuide) -> String {
 
 fn first_run_next_action(guide: &WorkflowFirstRunGuide) -> String {
     format!(
-        "Start with {}. Then choose replay, factors/backtest, or live from the routes below.",
+        "Start with {}. Then choose replay, Auto-Quant iteration, or live from the routes below.",
         guide.provider_command
     )
 }
@@ -6433,8 +6430,7 @@ mod tests {
         let mut snapshot = WorkflowSnapshot::default();
         snapshot.symbol = "DEMO".to_string();
         snapshot.current_focus_phase = "research".to_string();
-        snapshot.recommended_next_command =
-            "ict-engine factor-research --symbol DEMO --backend native".to_string();
+        snapshot.recommended_next_command = "ict-engine factor-research --symbol DEMO".to_string();
         snapshot.latest_research = Some(crate::state::WorkflowPhaseSnapshot {
             phase: "research".to_string(),
             phase_summary: "research ready".to_string(),
@@ -6555,7 +6551,7 @@ mod tests {
             symbol: "DEMO".to_string(),
             current_focus_phase: "research".to_string(),
             current_focus_reason: "no_previous_run".to_string(),
-            recommended_next_command: "ict-engine factor-research --symbol DEMO --data /tmp/demo.json --state-dir /tmp/state --backend native --objective expansion_manipulation".to_string(),
+            recommended_next_command: "ict-engine factor-research --symbol DEMO --data /tmp/demo.json --state-dir /tmp/state --objective expansion_manipulation".to_string(),
             latest_research: Some(crate::state::WorkflowPhaseSnapshot {
                 phase: "research".to_string(),
                 phase_summary: "objective=expansion_manipulation best_factor=trend_momentum aggregate_return=0.0017 feedback_applied=46 execution_gate=execution_observe_only".to_string(),
@@ -6610,7 +6606,7 @@ mod tests {
             symbol: "NQ".to_string(),
             current_focus_phase: "research".to_string(),
             current_focus_reason: "no_previous_run".to_string(),
-            recommended_next_command: "ict-engine factor-research --symbol NQ --data /tmp/demo.json --state-dir /tmp/state --backend native --objective expansion_manipulation".to_string(),
+            recommended_next_command: "ict-engine factor-research --symbol NQ --data /tmp/demo.json --state-dir /tmp/state --objective expansion_manipulation".to_string(),
             latest_research: Some(crate::state::WorkflowPhaseSnapshot {
                 phase: "research".to_string(),
                 phase_summary: "research_summary".to_string(),

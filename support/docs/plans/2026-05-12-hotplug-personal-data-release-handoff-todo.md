@@ -258,6 +258,67 @@ entrypoint docs, fresh sanitized `/tmp` export/smoke, and manifest/runbook
 materialization are covered. Actual publish/tag/push remains blocked until
 explicit operator confirmation.
 
+### 2026-05-14 Auto-Quant-only factor-iteration public-surface lock claim
+
+Status:
+- handoff, owner Codex current turn, claimed 2026-05-14 21:39:44 +0800,
+  continued under
+  `support/docs/plans/2026-05-14-auto-quant-public-surface-lock-handoff-todo.md`.
+
+Current checkpoint:
+- Public factor-iteration surfaces still expose parallel routes: CLI help and
+  README mention `--backend native`, first-run/workflow guidance still routes
+  through generic `factor-research`, and native runtime surfaces can rewrite the
+  next command back to `--backend native` even after Auto-Quant guidance exists.
+- Repo rules and current authority were re-read before this claim:
+  Hermes routers, repo `CLAUDE.md`, repo `AGENT.md`, current release handoff
+  board, `support/docs/plans/2026-05-12-board-b-profit-factor-current.md`,
+  `support/docs/plans/2026-05-12-board-a-regime-state-current.md`, and scoped
+  dirty-tree status. No unrelated edits will be reverted.
+
+Active slice:
+- Lock public factor-iteration entry surfaces to Auto-Quant only while keeping
+  the existing downstream Pre-Bayes / BBN / structural-path / execution-tree
+  consumers additive and reusable.
+- Smooth the upstream path so `provider-status`, `workflow-status`,
+  first-run/human-next guidance, and deferred follow-up commands all point to
+  the same Auto-Quant mainline instead of exposing native-vs-AQ choice.
+- Smooth the downstream path so Auto-Quant handoff/readiness/adoption surfaces
+  are the canonical formal iteration readback, not an optional side path next
+  to native research loops.
+
+Explicit non-edits:
+- Do not rewrite Board A or Board B research objectives, gates, or active run
+  roots.
+- Do not clean historical scripts, old run artifacts, or unrelated dirty-tree
+  source files.
+- Do not collapse existing downstream consumers into a new architecture; only
+  retarget public entry/readback surfaces to the existing Auto-Quant chain.
+
+Planned verification:
+- Focused Rust tests around `workflow_status`, provider-neutral CLI, and any
+  touched Auto-Quant/readback surfaces.
+- `cargo fmt --check`
+- `cargo test` on the smallest command/output suites that prove the public route
+  is now AQ-only and that deferred/profile-preserving follow-up commands still
+  work.
+
+Expected products:
+- Public CLI/help/README no longer advertise native factor iteration.
+- `workflow-status` / provider-guidance surfaces emit AQ-mainline commands only.
+- Auto-Quant handoff/readiness output becomes the canonical recommended follow-up
+  for factor iteration.
+
+Terminal pointer:
+- Live authority for this slice moved to
+  `support/docs/plans/2026-05-14-auto-quant-public-surface-lock-handoff-todo.md`.
+- Verified there:
+  - public CLI rejects `--backend native`
+  - default `factor-research` emits Auto-Quant handoff output
+  - `workflow-status --human` prefers the Auto-Quant handoff over first-run
+    generic routing
+  - `auto-quant-adoption-review` exposes the formal review/readiness surface
+
 If resuming:
 1. Re-run `git status --short --branch`.
 2. Check for active processes writing under `support/docs/experiments/actionable-regime-confidence/runs`.

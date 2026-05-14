@@ -186,14 +186,6 @@ pub fn render_factor_research_human_output(
         .and_then(Value::as_str)
         .unwrap_or_default();
     lines.push(format!("Next: {}", humanize_next_step_line(next_command)));
-    if next_command.starts_with("ict-engine factor-research ")
-        && next_command.contains(" --backend native")
-    {
-        lines.push(format!(
-            "Auto-Quant: optional managed iteration path: {}",
-            next_command.replacen(" --backend native", " --backend auto-quant", 1)
-        ));
-    }
 
     if let Some(compare_summary) = human_research_compare_summary(compare) {
         lines.push(compare_summary);
@@ -504,7 +496,8 @@ mod tests {
             aggregate_return: 0.0123,
             feedback_records_generated: 8,
             feedback_records_applied: 5,
-            recommended_next_command: "ict-engine factor-research --symbol DEMO --data /tmp/demo.json --state-dir /tmp/state --backend native".to_string(),
+            recommended_next_command:
+                "ict-engine factor-research --symbol DEMO --data /tmp/demo.json --state-dir /tmp/state".to_string(),
             multi_timeframe_summary: vec![
                 "market_state_primary_regime=RangeConsolidation".to_string(),
                 "market_state_secondary_regime=WideRange".to_string(),
@@ -547,14 +540,10 @@ mod tests {
             "Action: review top factors: trend_momentum=0.820 keep B; structure_ict=0.490 observe D"
         ));
         assert!(rendered.contains(
-            "Next: ict-engine factor-research --symbol DEMO --data /tmp/demo.json --state-dir /tmp/state --backend native"
+            "Next: ict-engine factor-research --symbol DEMO --data /tmp/demo.json --state-dir /tmp/state"
         ) || rendered.contains(
-            "Next: ict-engine factor-research --symbol DEMO --data <local-path> --state-dir <local-path> --backend native"
+            "Next: ict-engine factor-research --symbol DEMO --data <local-path> --state-dir <local-path>"
         ));
-        assert!(rendered.contains(
-            "Auto-Quant: optional managed iteration path: ict-engine factor-research --symbol DEMO"
-        ));
-        assert!(rendered.contains("--backend auto-quant"));
         assert!(rendered.contains("/tmp/demo.json") || rendered.contains("<local-path>"));
     }
 

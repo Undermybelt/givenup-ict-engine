@@ -2322,7 +2322,7 @@ mod tests {
                 selected_profile: None,
                 selected_profile_full: None,
             },
-            "ict-engine factor-research --symbol NQ --backend native",
+            "ict-engine factor-research --symbol NQ",
             None,
         );
 

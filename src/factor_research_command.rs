@@ -28,6 +28,17 @@ pub(crate) struct FactorResearchShellInput<'a> {
     pub(crate) backend: &'a str,
 }
 
+fn ensure_public_auto_quant_backend(backend: &str, surface: &str) -> Result<()> {
+    let normalized = backend.trim().to_ascii_lowercase();
+    if normalized.is_empty() || normalized == "auto-quant" {
+        return Ok(());
+    }
+    anyhow::bail!(
+        "{} public factor iteration is locked to Auto-Quant; rerun without --backend or pass --backend auto-quant",
+        surface
+    );
+}
+
 pub(crate) fn factor_research_shell(input: FactorResearchShellInput<'_>) -> Result<()> {
     let FactorResearchShellInput {
         symbol,
@@ -57,6 +68,7 @@ pub(crate) fn factor_research_shell(input: FactorResearchShellInput<'_>) -> Resu
         backend,
     } = input;
 
+    ensure_public_auto_quant_backend(backend, "factor-research")?;
     ensure_state_dir_ready(state_dir)?;
     let cli_auxiliary_override = load_auxiliary_evidence_override(auxiliary_evidence)?;
     let cli_runtime_notes =
@@ -67,66 +79,34 @@ pub(crate) fn factor_research_shell(input: FactorResearchShellInput<'_>) -> Resu
         OutputFormat::Agent => "agent",
         OutputFormat::Human => "human",
     };
-    if backend == "auto-quant" {
-        auto_quant_factor_research_command(AutoQuantFactorResearchCommandInput {
-            symbol,
-            data,
-            objective,
-            provider_profile_selector: provider_profile,
-            paired_data,
-            auto_quant_profile,
-            auxiliary_evidence_path: auxiliary_evidence,
-            mutation_spec_path: mutation_spec,
-            strategy_material_root,
-            state_dir,
-            output_format,
-        })
-    } else {
-        ict_engine::application::backtest::factor_research_command(
-            ict_engine::application::backtest::FactorResearchCommandInput {
-                symbol,
-                data,
-                objective,
-                mutation_spec_path: mutation_spec,
-                control_matrix_pb12,
-                emit_mutation_evaluation,
-                ensemble,
-                state_dir,
-                output_format,
-            },
-            load_factor_mutation_spec,
-            |objective_mode,
-             mutation_spec,
-             control_matrix_plan,
-             _control_matrix_run,
-             runtime_overrides,
-             run_state_dir| {
-                let mut runtime_notes = runtime_overrides.runtime_notes;
-                runtime_notes.extend(cli_runtime_notes.clone());
-                run_factor_research(RunFactorResearchInput {
-                    symbol,
-                    data,
-                    objective: objective_mode,
-                    data_1m,
-                    data_5m,
-                    data_15m,
-                    data_30m,
-                    data_1h,
-                    data_4h,
-                    data_1d,
-                    paired_data,
-                    paired_candles_override: runtime_overrides.paired_candles,
-                    auxiliary_override: cli_auxiliary_override
-                        .clone()
-                        .or(runtime_overrides.auxiliary),
-                    runtime_notes,
-                    mutation_spec: mutation_spec.as_ref(),
-                    control_matrix_plan,
-                    state_dir: run_state_dir,
-                })
-            },
-        )
-    }
+    let _ = (
+        data_1m,
+        data_5m,
+        data_15m,
+        data_30m,
+        data_1h,
+        data_4h,
+        data_1d,
+        cli_auxiliary_override,
+        cli_runtime_notes,
+        control_matrix_pb12,
+        emit_mutation_evaluation,
+        ensemble,
+        backend,
+    );
+    auto_quant_factor_research_command(AutoQuantFactorResearchCommandInput {
+        symbol,
+        data,
+        objective,
+        provider_profile_selector: provider_profile,
+        paired_data,
+        auto_quant_profile,
+        auxiliary_evidence_path: auxiliary_evidence,
+        mutation_spec_path: mutation_spec,
+        strategy_material_root,
+        state_dir,
+        output_format,
+    })
 }
 
 pub(crate) struct FactorAutoresearchShellInput<'a> {
@@ -180,70 +160,39 @@ pub(crate) fn factor_autoresearch_shell(input: FactorAutoresearchShellInput<'_>)
         backend,
     } = input;
 
+    ensure_public_auto_quant_backend(backend, "factor-autoresearch")?;
     ensure_state_dir_ready(state_dir)?;
     let cli_auxiliary_override = load_auxiliary_evidence_override(auxiliary_evidence)?;
     let cli_runtime_notes =
         build_auxiliary_runtime_notes(auxiliary_evidence, cli_auxiliary_override.as_ref());
-    if backend == "auto-quant" {
-        auto_quant_factor_autoresearch_command(AutoQuantFactorAutoresearchCommandInput {
-            symbol,
-            data,
-            objective,
-            provider_profile_selector: provider_profile,
-            paired_data,
-            auto_quant_profile,
-            auxiliary_evidence_path: auxiliary_evidence,
-            mutation_spec_path: mutation_spec,
-            strategy_material_root,
-            iterations,
-            session_id,
-            state_dir,
-        })
-    } else {
-        ict_engine::application::factor_lifecycle::factor_autoresearch_command(
-            ict_engine::application::factor_lifecycle::FactorAutoresearchCommandInput {
-                symbol,
-                data,
-                objective,
-                mutation_spec_path: mutation_spec,
-                iterations,
-                data_1m,
-                data_5m,
-                data_15m,
-                data_30m,
-                data_1h,
-                data_4h,
-                data_1d,
-                paired_data,
-                session_id,
-                resume_latest,
-                max_cluster_fail_streak,
-                state_dir,
-            },
-            load_factor_mutation_spec,
-            |objective_mode, mutation_spec| {
-                run_factor_research(RunFactorResearchInput {
-                    symbol,
-                    data,
-                    objective: objective_mode,
-                    data_1m,
-                    data_5m,
-                    data_15m,
-                    data_30m,
-                    data_1h,
-                    data_4h,
-                    data_1d,
-                    paired_data,
-                    paired_candles_override: None,
-                    auxiliary_override: cli_auxiliary_override.clone(),
-                    runtime_notes: cli_runtime_notes.clone(),
-                    mutation_spec: Some(mutation_spec),
-                    control_matrix_plan: None,
-                    state_dir,
-                })
-            },
-        )
-    }
+    let _ = (
+        data_1m,
+        data_5m,
+        data_15m,
+        data_30m,
+        data_1h,
+        data_4h,
+        data_1d,
+        cli_auxiliary_override,
+        cli_runtime_notes,
+        resume_latest,
+        max_cluster_fail_streak,
+        backend,
+    );
+    auto_quant_factor_autoresearch_command(AutoQuantFactorAutoresearchCommandInput {
+        symbol,
+        data,
+        objective,
+        provider_profile_selector: provider_profile,
+        paired_data,
+        auto_quant_profile,
+        auxiliary_evidence_path: auxiliary_evidence,
+        mutation_spec_path: mutation_spec,
+        strategy_material_root,
+        iterations,
+        session_id,
+        state_dir,
+    })
 }
 
 fn load_auxiliary_evidence_override(path: Option<&str>) -> Result<Option<AuxiliaryMarketEvidence>> {
@@ -291,6 +240,21 @@ fn build_auxiliary_runtime_notes(
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn public_factor_iteration_backend_accepts_auto_quant() {
+        assert!(ensure_public_auto_quant_backend("auto-quant", "factor-research").is_ok());
+        assert!(ensure_public_auto_quant_backend("", "factor-research").is_ok());
+    }
+
+    #[test]
+    fn public_factor_iteration_backend_rejects_native() {
+        let error = ensure_public_auto_quant_backend("native", "factor-research")
+            .expect_err("native backend should be rejected on public CLI");
+        assert!(error
+            .to_string()
+            .contains("public factor iteration is locked to Auto-Quant"));
+    }
 
     #[test]
     fn loads_auxiliary_evidence_from_direct_json() {

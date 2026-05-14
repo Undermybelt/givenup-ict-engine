@@ -201,15 +201,14 @@ cargo run -- factor-pipeline-debug \
   --objective expansion_manipulation
 ```
 
-### 🔬 跑原生 factor research
+### 🔬 跑 Auto-Quant factor 迭代
 
 ```bash
 cargo run -- factor-research \
   --symbol <SYM> \
   --data <cleaned-15m.json> \
   --objective expansion_manipulation \
-  --state-dir /tmp/ict-engine-native-research \
-  --backend native \
+  --state-dir /tmp/ict-engine-auto-quant \
   --human
 ```
 

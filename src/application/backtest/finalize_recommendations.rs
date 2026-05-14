@@ -55,16 +55,6 @@ pub fn user_data_selection_prompt(symbol: &str, data_paths: &[String]) -> String
     )
 }
 
-fn demo_research_backend_suffix(recorded_data_paths: &[String]) -> &'static str {
-    if recorded_data_paths.len() == 1
-        && recorded_data_paths[0].starts_with("support/examples/demo/")
-    {
-        " --backend native"
-    } else {
-        ""
-    }
-}
-
 pub fn command_recommendations(context: &CommandContext) -> CommandRecommendations {
     let mut recorded_data_paths = Vec::new();
     if let Some(analyze) = &context.analyze {
@@ -110,7 +100,6 @@ pub fn command_recommendations(context: &CommandContext) -> CommandRecommendatio
     let requires_user_data_selection =
         context.user_data_selection_required && recorded_data_paths.len() > 1;
     let user_prompt = user_data_selection_prompt(&context.symbol, &recorded_data_paths);
-    let research_backend_suffix = demo_research_backend_suffix(&recorded_data_paths);
     let analyze = match &context.analyze {
         Some(AnalyzeCommandSource::Files {
             data_htf,
@@ -158,7 +147,7 @@ pub fn command_recommendations(context: &CommandContext) -> CommandRecommendatio
     let mut research = if let Some(data) = &context.research_data {
         recommended_command(
             format!(
-                "ict-engine factor-research --symbol {} --data {}{} --state-dir {}{}",
+                "ict-engine factor-research --symbol {} --data {}{} --state-dir {}",
                 shell_quote(&context.symbol),
                 shell_quote(data),
                 context
@@ -166,8 +155,7 @@ pub fn command_recommendations(context: &CommandContext) -> CommandRecommendatio
                     .as_ref()
                     .map(|paired| format!(" --paired-data {}", shell_quote(paired)))
                     .unwrap_or_default(),
-                shell_quote(&context.state_dir),
-                research_backend_suffix
+                shell_quote(&context.state_dir)
             ),
             true,
             Vec::new(),
@@ -341,7 +329,7 @@ mod tests {
         assert!(!commands.research.user_data_selection_required);
         assert_eq!(
             commands.research.command,
-            "ict-engine factor-research --symbol DEMO --data support/examples/demo/demo-15m.json --state-dir state --backend native"
+            "ict-engine factor-research --symbol DEMO --data support/examples/demo/demo-15m.json --state-dir state"
         );
         assert_eq!(commands.research.recorded_data_paths.len(), 1);
         assert_eq!(

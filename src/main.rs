@@ -486,8 +486,9 @@ struct UpdateCommandInput<'a> {
   ict-engine provider-status --compact
   ict-engine analyze --symbol DEMO --demo --state-dir /tmp/ict-engine-first-run --human
 
-When you want managed factor iteration:
-  ict-engine auto-quant-status --state-dir /tmp/ict-engine-auto-quant"
+When you want Auto-Quant factor iteration:
+  ict-engine factor-research --symbol NQ --data <historical-data.json> --state-dir /tmp/ict-engine-auto-quant --human
+  ict-engine auto-quant-adoption-review --symbol NQ --state-dir /tmp/ict-engine-auto-quant"
 )]
 struct Cli {
     #[command(subcommand)]
@@ -887,7 +888,7 @@ enum Commands {
         #[arg(
             long,
             default_value = "auto-quant",
-            help = "Research backend: auto-quant (default) or native; pass --backend native for the Rust-only first-run path"
+            help = "Research backend: public factor iteration is locked to auto-quant; keep the default or pass --backend auto-quant explicitly."
         )]
         backend: String,
     },
@@ -1135,7 +1136,7 @@ enum Commands {
         #[arg(
             long,
             default_value = "auto-quant",
-            help = "Autoresearch backend: auto-quant (default) or native"
+            help = "Autoresearch backend: public factor iteration is locked to auto-quant; keep the default or pass --backend auto-quant explicitly."
         )]
         backend: String,
     },
