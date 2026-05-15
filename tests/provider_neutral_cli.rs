@@ -370,6 +370,11 @@ fn workflow_status_agent_surfaces_matching_opt_in_profile_reference_without_adop
         .unwrap()
         .iter()
         .any(|profile| profile["selector"] == "thrill3r-nq-closed-loop-v1"));
+    assert!(value["available_opt_in_profiles"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .any(|profile| profile["selector"] == "thrill3r-nq-external-history-v1"));
     assert!(!String::from_utf8(output.stdout)
         .unwrap()
         .contains("/Users/"));

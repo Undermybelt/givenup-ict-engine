@@ -124,23 +124,44 @@ def _dataset_entries_from_profile(
     datasets: list[dict[str, Any]] = []
     for contract in profile.get("data_contracts", []):
         path_hint = contract.get("path_hint")
-        datasets.append(
-            {
-                "dataset_id": contract["contract_id"],
-                "category": contract["category"],
-                "required": contract["required"],
-                "label": contract["label"],
-                "symbols": contract.get("symbols", []),
-                "timeframes": contract.get("timeframes", []),
-                "path_hint": path_hint,
-                "path_exists": bool(path_hint) and Path(path_hint).expanduser().exists(),
-                "opt_in_only": profile.get("opt_in_only", False),
-                "selection_profile_id": profile["profile_id"],
-                "provider_candidates": list(default_providers),
-                "notes": contract.get("notes", []),
-            }
-        )
+        dataset = {
+            "dataset_id": contract["contract_id"],
+            "category": contract["category"],
+            "required": contract["required"],
+            "label": contract["label"],
+            "symbols": contract.get("symbols", []),
+            "timeframes": contract.get("timeframes", []),
+            "path_hint": path_hint,
+            "path_exists": bool(path_hint) and Path(path_hint).expanduser().exists(),
+            "opt_in_only": profile.get("opt_in_only", False),
+            "selection_profile_id": profile["profile_id"],
+            "provider_candidates": list(default_providers),
+            "notes": contract.get("notes", []),
+        }
+        dataset.update(_contract_source_hints(contract))
+        datasets.append(dataset)
     return datasets
+
+
+def _contract_source_hints(contract: dict[str, Any]) -> dict[str, Any]:
+    hints: dict[str, Any] = {}
+    for key in (
+        "source_kind",
+        "adoption_mode",
+        "runtime_input_mode",
+    ):
+        value = contract.get(key)
+        if value:
+            hints[key] = value
+    for key in (
+        "format_hints",
+        "conversion_command_hints",
+        "path_template_hints",
+    ):
+        value = contract.get(key) or []
+        if value:
+            hints[key] = list(value)
+    return hints
 
 
 def _generic_dataset_entries(

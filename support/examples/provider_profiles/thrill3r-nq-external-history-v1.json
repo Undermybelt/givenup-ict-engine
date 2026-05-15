@@ -1,0 +1,115 @@
+{
+  "schema_version": "provider-profile/v1",
+  "profile_id": "thrill3r_nq_external_history_v1",
+  "display_name": "Thrill3r NQ External History v1",
+  "opt_in_only": true,
+  "summary": "Optional external-history lane: reuse a locally normalized NQ/QQQ/VIX multi-timeframe pack for factor research or managed Auto-Quant handoff, while zero-config yfinance stays first.",
+  "data_contracts": [
+    {
+      "contract_id": "external_normalized_history_root",
+      "category": "historical",
+      "required": true,
+      "label": "External normalized multi-timeframe history root",
+      "symbols": ["NQ"],
+      "timeframes": ["1d", "4h", "1h", "15m", "5m"],
+      "path_hint": "<normalized-external-history-root>",
+      "source_kind": "normalized_external_history",
+      "format_hints": ["ict_engine_candles_json", "csv", "parquet"],
+      "adoption_mode": "opt_in_reuse_only",
+      "runtime_input_mode": "normalize_before_runtime",
+      "conversion_command_hints": [
+        "python3 support/scripts/auto_quant_external/normalize_external_ohlcv.py --input <vendor-file> --symbol NQ --output <normalized-json>"
+      ],
+      "path_template_hints": [
+        "<normalized-external-history-root>/nq-15m.json",
+        "<normalized-external-history-root>/nq-1h.json",
+        "<normalized-external-history-root>/qqq-1h.json"
+      ],
+      "notes": [
+        "Use this only when you explicitly want to reuse a saved external-history pack.",
+        "The normalized outputs should be ict-engine candle JSON before entering factor-research or managed Auto-Quant handoff."
+      ]
+    },
+    {
+      "contract_id": "external_raw_ohlcv_cache",
+      "category": "historical_cache",
+      "required": false,
+      "label": "Raw external OHLCV cache root",
+      "symbols": ["NQ", "QQQ", "^VIX"],
+      "timeframes": ["1d", "4h", "1h", "15m", "5m"],
+      "path_hint": "<external-ohlcv-cache-root>",
+      "source_kind": "raw_external_ohlcv_cache",
+      "format_hints": ["parquet", "csv", "json"],
+      "adoption_mode": "inspect_only_until_normalized",
+      "runtime_input_mode": "not_runtime_input",
+      "notes": [
+        "Raw vendor cache is evidence only until normalized.",
+        "Keep parquet or CSV here if your fetcher writes cache shards directly."
+      ]
+    },
+    {
+      "contract_id": "public_context_companions",
+      "category": "market_context",
+      "required": false,
+      "label": "Public QQQ / VIX companion context",
+      "symbols": ["QQQ", "^VIX"],
+      "timeframes": ["1d", "1h", "15m"],
+      "source_kind": "public_context_companion",
+      "format_hints": ["yfinance", "tradingview_mcp", "json"],
+      "adoption_mode": "zero_config_or_opt_in_mix",
+      "runtime_input_mode": "direct_or_mixed",
+      "notes": [
+        "Keep public companion context generic unless you explicitly want to save your own local copy."
+      ]
+    }
+  ],
+  "provider_tracks": [
+    {
+      "track_id": "research_zero_config",
+      "label": "Zero-config research companion data",
+      "required": true,
+      "mode": "any_of",
+      "provider_ids": ["yfinance"],
+      "activation_hints": [
+        "factor-research",
+        "factor-backtest",
+        "market-data-harness",
+        "research",
+        "backtest"
+      ],
+      "notes": [
+        "YFinance stays the default public companion lane."
+      ]
+    },
+    {
+      "track_id": "live_zero_config",
+      "label": "Zero-config live analyze",
+      "required": true,
+      "mode": "any_of",
+      "provider_ids": ["yfinance"],
+      "activation_hints": [
+        "analyze-live",
+        "live"
+      ],
+      "notes": [
+        "Use this first when the user wants the no-setup path."
+      ]
+    },
+    {
+      "track_id": "external_history_reuse",
+      "label": "Operator-managed external history reuse",
+      "required": false,
+      "mode": "any_of",
+      "provider_ids": ["external_http_runtime"],
+      "activation_hints": [
+        "historical",
+        "factor-research",
+        "auto-quant",
+        "normalized history"
+      ],
+      "notes": [
+        "Opt in only when the user explicitly wants a saved external-history sidecar instead of the default public lane."
+      ]
+    }
+  ]
+}

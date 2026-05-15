@@ -67,6 +67,42 @@ class MarketDataResolverTests(unittest.TestCase):
             "<cleaned-mtf-root>",
         )
 
+    def test_external_history_profile_surfaces_source_and_conversion_hints(self) -> None:
+        bundle = resolver.build_resolution_bundle(
+            repo_root=REPO_ROOT,
+            market_selector="NQ",
+            profile_selector="thrill3r_nq_external_history_v1",
+            timeframes=["15m", "1h"],
+        )
+
+        self.assertEqual(
+            bundle["symbol_resolution"]["selected_profile"]["profile_id"],
+            "thrill3r_nq_external_history_v1",
+        )
+        historical_entry = next(
+            entry
+            for entry in bundle["data_catalog"]["datasets"]
+            if entry["dataset_id"] == "external_normalized_history_root"
+        )
+        self.assertEqual(historical_entry["source_kind"], "normalized_external_history")
+        self.assertEqual(historical_entry["adoption_mode"], "opt_in_reuse_only")
+        self.assertEqual(
+            historical_entry["runtime_input_mode"],
+            "normalize_before_runtime",
+        )
+        self.assertIn(
+            "normalize_external_ohlcv.py",
+            historical_entry["conversion_command_hints"][0],
+        )
+        self.assertIn(
+            "<normalized-external-history-root>/nq-15m.json",
+            historical_entry["path_template_hints"],
+        )
+        self.assertEqual(
+            bundle["data_catalog"]["summary"]["requested_timeframes"],
+            ["15m", "1h"],
+        )
+
     def test_main_writes_expected_artifacts(self) -> None:
         with TemporaryDirectory() as tmpdir:
             output_dir = Path(tmpdir)
