@@ -54,6 +54,11 @@ Status legend: `done`, `active`, `next`, `blocked`, `not_yet`.
 | done | Add a standalone history normalizer helper | Added `support/scripts/auto_quant_external/normalize_external_ohlcv.py` for CSV/JSON/parquet -> `ict-engine` candle JSON normalization. |
 | done | Focused verification for the new lane | `py_compile`, two Python unittest modules, and `cargo test --test provider_neutral_cli -- --nocapture` all passed. |
 | done | Optional commit decision | This slice is isolated enough to commit independently; only the new hotplug profile/resolver/normalizer/tests/doc files should be staged, and the wider dirty tree must remain untouched. |
+| done | Real external-source profile/readback smoke | `workflow-status --symbol NQ --state-dir /tmp/ict-engine-external-history-smoke/state-profile --profile thrill3r-nq-external-history-v1 --agent` surfaced `selected_profile_id=thrill3r_nq_external_history_v1`, the new profile contracts, and the `external_history_reuse:pending:external_http_runtime` opt-in track while keeping zero-config yfinance ready. |
+| done | Real external-source normalization smoke | Public Binance klines JSON normalized successfully to `/tmp/ict-engine-external-history-smoke/btcusdt.binance.1h.normalized.json` with `300` rows via `normalize_external_ohlcv.py`. |
+| done | Engine consumer smoke on normalized external JSON | `cargo run --quiet -- analyze --symbol BTCUSDT_EXT_1H --data-htf ... --data-mtf ... --data-ltf ... --state-dir /tmp/ict-engine-external-history-smoke/state-analyze --human` exited `0`; runtime readback reported `market_state=RangeConsolidation/WideRange`, `execution=observe/transition_guardrail/guarded`, `quality=0.556`. |
+| done | Auto-Quant handoff + prepare smoke on normalized external JSON | `factor-research --backend auto-quant --auto-quant-profile synthetic_ohlcv` created a real handoff for `BTCUSDT_EXT_1H`; `auto-quant-status` moved from `dependency_ready_data_missing` to `dependency_ready_data_ready` after `auto-quant-prepare`, and generated `BTCUSDT_EXT_1H_USD-{1h,4h,1d}.feather` under the managed workspace. |
+| blocked | Auto-Quant runtime execution beyond prepare | `uv run --with ta-lib --with freqtrade /tmp/ict-engine-external-history-smoke/state-factor/.deps/auto-quant/run_tomac.py` reached live Freqtrade/backtest init but stopped at `OperationalException: No pair in whitelist.` The current blocker is AQ runtime pair/strategy alignment, not external-history normalization or engine/AQ data intake. |
 
 ## Working Direction
 
@@ -88,3 +93,30 @@ Observed result:
 - Python normalizer tests: `3 passed`
 - Market-data resolver tests: `4 passed`
 - `provider_neutral_cli`: `21 passed`
+
+## 2026-05-15 Real Smoke Packet
+
+Run root:
+- `/tmp/ict-engine-external-history-smoke`
+
+External-source notes:
+- Public Stooq CSV was rejected as a friction-heavy candidate for this slice because it now requires an interactive API key/captcha flow. The failure was external-source policy friction, not a repo/runtime parsing bug.
+- Public Binance klines JSON was accepted as the real smoke source because it is read-only, unauthenticated, and matches the gist-style OHLCV shape closely.
+
+Commands run:
+- `cargo run --quiet -- workflow-status --symbol NQ --state-dir /tmp/ict-engine-external-history-smoke/state-profile --profile thrill3r-nq-external-history-v1 --agent`
+- `python3 support/scripts/research/market_data_resolver.py --repo-root . --market NQ --profile thrill3r_nq_external_history_v1 --output-dir /tmp/ict-engine-external-history-smoke/resolver --timeframe 1d --bar-count 120`
+- `curl -L --max-time 20 'https://api.binance.com/api/v3/klines?symbol=BTCUSDT&interval=1h&limit=300' -o /tmp/ict-engine-external-history-smoke/btcusdt.binance.1h.json`
+- `python3 support/scripts/auto_quant_external/normalize_external_ohlcv.py --input /tmp/ict-engine-external-history-smoke/btcusdt.binance.1h.json --output /tmp/ict-engine-external-history-smoke/btcusdt.binance.1h.normalized.json --symbol BTCUSDT`
+- `cargo run --quiet -- analyze --symbol BTCUSDT_EXT_1H --data-htf /tmp/ict-engine-external-history-smoke/btcusdt.binance.1h.normalized.json --data-mtf /tmp/ict-engine-external-history-smoke/btcusdt.binance.1h.normalized.json --data-ltf /tmp/ict-engine-external-history-smoke/btcusdt.binance.1h.normalized.json --state-dir /tmp/ict-engine-external-history-smoke/state-analyze --human`
+- `cargo run --quiet -- factor-research --symbol BTCUSDT_EXT_1H --data /tmp/ict-engine-external-history-smoke/btcusdt.binance.1h.normalized.json --objective regime_conditioned_profitability --backend auto-quant --auto-quant-profile synthetic_ohlcv --state-dir /tmp/ict-engine-external-history-smoke/state-factor --human`
+- `cargo run --quiet -- auto-quant-status --state-dir /tmp/ict-engine-external-history-smoke/state-factor --output-format json`
+- `cargo run --quiet -- auto-quant-prepare --state-dir /tmp/ict-engine-external-history-smoke/state-factor`
+- `uv run --with ta-lib --with freqtrade /tmp/ict-engine-external-history-smoke/state-factor/.deps/auto-quant/run_tomac.py`
+
+Outcome summary:
+- The opt-in external-history profile is visible and selectable.
+- The standalone normalizer converts a real external OHLCV feed into `ict-engine` candle JSON.
+- `ict-engine analyze` directly consumes the normalized external JSON.
+- Auto-Quant synthetic OHLCV prepare consumes the normalized external JSON and materializes the expected managed workspace data files.
+- The remaining runtime blocker is downstream AQ pair/strategy alignment (`No pair in whitelist`), which is beyond the intake/normalization boundary proven by this slice.
