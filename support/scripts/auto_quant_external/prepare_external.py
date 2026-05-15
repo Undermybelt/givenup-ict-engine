@@ -188,7 +188,6 @@ def write_feather(df: pd.DataFrame, datadir: Path, pair: str, timeframe: str) ->
     pair_filename = pair.replace("/", "_").replace(":", "_")
     out_path = datadir / f"{pair_filename}-{timeframe}.feather"
     out = df.copy()
-    out["date"] = (out["date"].astype("int64") // 1_000_000).astype("int64")
     out.to_feather(out_path)
     return out_path
 

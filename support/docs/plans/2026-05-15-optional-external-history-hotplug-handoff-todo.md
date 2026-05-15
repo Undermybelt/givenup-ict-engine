@@ -58,7 +58,11 @@ Status legend: `done`, `active`, `next`, `blocked`, `not_yet`.
 | done | Real external-source normalization smoke | Public Binance klines JSON normalized successfully to `/tmp/ict-engine-external-history-smoke/btcusdt.binance.1h.normalized.json` with `300` rows via `normalize_external_ohlcv.py`. |
 | done | Engine consumer smoke on normalized external JSON | `cargo run --quiet -- analyze --symbol BTCUSDT_EXT_1H --data-htf ... --data-mtf ... --data-ltf ... --state-dir /tmp/ict-engine-external-history-smoke/state-analyze --human` exited `0`; runtime readback reported `market_state=RangeConsolidation/WideRange`, `execution=observe/transition_guardrail/guarded`, `quality=0.556`. |
 | done | Auto-Quant handoff + prepare smoke on normalized external JSON | `factor-research --backend auto-quant --auto-quant-profile synthetic_ohlcv` created a real handoff for `BTCUSDT_EXT_1H`; `auto-quant-status` moved from `dependency_ready_data_missing` to `dependency_ready_data_ready` after `auto-quant-prepare`, and generated `BTCUSDT_EXT_1H_USD-{1h,4h,1d}.feather` under the managed workspace. |
-| blocked | Auto-Quant runtime execution beyond prepare | `uv run --with ta-lib --with freqtrade /tmp/ict-engine-external-history-smoke/state-factor/.deps/auto-quant/run_tomac.py` reached live Freqtrade/backtest init but stopped at `OperationalException: No pair in whitelist.` The current blocker is AQ runtime pair/strategy alignment, not external-history normalization or engine/AQ data intake. |
+| done | Auto-Quant runtime pair alias repair | `synthetic_ohlcv` now normalizes runtime-only workflow symbols like `BTCUSDT_EXT_1H` down to AQ pair aliases like `BTCUSDT/USD`; the v2 smoke moved past `OperationalException: No pair in whitelist.` |
+| done | Auto-Quant feather datetime repair | `prepare_external.py` now preserves datetimelike `date` columns in Feather output; the v3 smoke moved past `Can only use .dt accessor with datetimelike values.` |
+| done | Auto-Quant source-derived timerange repair | `synthetic_ohlcv` now writes `config.tomac.json` timerange from the actual source candle range instead of a stale template window; the v4 smoke moved past `No data found. Terminating.` |
+| done | Auto-Quant runtime execution beyond prepare | `uv run --with ta-lib --with freqtrade /tmp/ict-engine-external-history-smoke-v4/state-factor/.deps/auto-quant/run_tomac.py` exited `0` with `Done: 1 succeeded, 0 failed.` Current result is a valid AQ runtime smoke with `trade_count=0`, which is acceptable as an intake/runtime proof even though it is not yet a profitable candidate. |
+| done | Auto-Quant adoption review after runtime repair | `auto-quant-adoption-review --symbol BTCUSDT_EXT_1H --state-dir /tmp/ict-engine-external-history-smoke-v4/state-factor` returned `review_status=ready_for_external_execution`, `data_ready=true`, `dependency_healthy=true`. |
 
 ## Working Direction
 
@@ -119,4 +123,39 @@ Outcome summary:
 - The standalone normalizer converts a real external OHLCV feed into `ict-engine` candle JSON.
 - `ict-engine analyze` directly consumes the normalized external JSON.
 - Auto-Quant synthetic OHLCV prepare consumes the normalized external JSON and materializes the expected managed workspace data files.
-- The remaining runtime blocker is downstream AQ pair/strategy alignment (`No pair in whitelist`), which is beyond the intake/normalization boundary proven by this slice.
+- The original runtime blockers were repaired in sequence:
+  - pair alias normalization (`BTCUSDT_EXT_1H/USD` -> `BTCUSDT/USD`)
+  - Feather `date` dtype preservation
+  - source-derived timerange instead of stale template range
+- The latest AQ runtime smoke now executes successfully and reaches adoption-review `ready_for_external_execution`.
+
+## 2026-05-15 Runtime Repair Packet
+
+Repair summary:
+- `src/application/auto_quant/workspace_profile.rs`
+  - normalize runtime-only workflow symbols before generating AQ `pair_whitelist`
+  - derive `timerange` from the source candle set
+- `support/scripts/auto_quant_external/prepare_external.py`
+  - preserve datetimelike `date` when writing Feather
+
+Focused verification:
+- `cargo test synthetic_ohlcv_pair_alias -- --nocapture`
+- `cargo test source_candle_timerange_uses_first_and_last_utc_dates -- --nocapture`
+- `python3 -m py_compile support/scripts/auto_quant_external/prepare_external.py support/scripts/auto_quant_external/tests/test_prepare_external.py`
+- `uv run --with pandas --with pyarrow python -m unittest support/scripts/auto_quant_external/tests/test_prepare_external.py -v`
+
+Latest runtime smoke:
+- Root: `/tmp/ict-engine-external-history-smoke-v4`
+- Input: `/tmp/ict-engine-external-history-smoke-v4/btcusdt.binance.1h.normalized.json`
+- AQ state: `/tmp/ict-engine-external-history-smoke-v4/state-factor`
+- `config.tomac.json` now contains:
+  - `pair_whitelist=["BTCUSDT/USD"]`
+  - source-derived `timerange` covering the real 2026-05 sample window
+- `run_tomac.py` result:
+  - `Done: 1 succeeded, 0 failed.`
+  - `pair=BTCUSDT/USD`
+  - `trade_count=0`
+  - backtest window loaded and indicators/backtest loop executed successfully
+- `auto-quant-adoption-review` result:
+  - `review_status=ready_for_external_execution`
+  - `review_summary=handoff is ready for Auto-Quant execution and candidate export`

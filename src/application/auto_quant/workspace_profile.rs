@@ -23,6 +23,11 @@ pub struct AutoQuantWorkspaceProfileConfig {
     pub notes: Vec<String>,
 }
 
+#[derive(Debug, Clone, PartialEq, Eq)]
+struct ProfileSourceCsvSummary {
+    timerange: String,
+}
+
 pub fn load_workspace_profile(state_dir: &str) -> Result<Option<AutoQuantWorkspaceProfileConfig>> {
     let path = workspace_profile_path(state_dir);
     if !path.exists() {
@@ -57,7 +62,7 @@ pub fn persist_workspace_profile_selection(
                 profile: AUTO_QUANT_PROFILE_SYNTHETIC_OHLCV.to_string(),
                 symbol: symbol.to_string(),
                 source_data_path: source_data_path.to_string(),
-                pair: format!("{symbol}/USD"),
+                pair: synthetic_ohlcv_pair_alias(symbol),
                 base_timeframe: "1h".to_string(),
                 additional_timeframes: vec!["4h".to_string(), "1d".to_string()],
                 notes: vec![
@@ -135,10 +140,14 @@ pub fn materialize_workspace_profile(
         repo_root.join("support/scripts/auto_quant_external/config.tomac.json"),
         workspace_root.join("config.tomac.json"),
     )?;
-    write_profile_config(&workspace_root.join("config.tomac.json"), &profile)?;
-    write_profile_source_csv(
+    let source_summary = write_profile_source_csv(
         &profile.source_data_path,
         &workspace_root.join("profile_source.csv"),
+    )?;
+    write_profile_config(
+        &workspace_root.join("config.tomac.json"),
+        &profile,
+        &source_summary.timerange,
     )?;
     seed_profile_strategies(
         workspace
@@ -182,12 +191,28 @@ fn expected_data_files(profile: &AutoQuantWorkspaceProfileConfig) -> Vec<String>
         .collect()
 }
 
-fn write_profile_config(path: &Path, profile: &AutoQuantWorkspaceProfileConfig) -> Result<()> {
+fn synthetic_ohlcv_pair_alias(symbol: &str) -> String {
+    let trimmed = symbol.trim();
+    let base = trimmed
+        .split_once("_EXT_")
+        .map(|(head, _)| head)
+        .unwrap_or(trimmed)
+        .trim_end_matches("_EXT")
+        .trim();
+    format!("{base}/USD")
+}
+
+fn write_profile_config(
+    path: &Path,
+    profile: &AutoQuantWorkspaceProfileConfig,
+    timerange: &str,
+) -> Result<()> {
     let mut config: serde_json::Value =
         serde_json::from_str(&fs::read_to_string(path)?).context("parsing config.tomac.json")?;
     config["timeframe"] = serde_json::Value::String(profile.base_timeframe.clone());
     config["exchange"]["pair_whitelist"] = serde_json::json!([profile.pair.clone()]);
     config["trading_mode"] = serde_json::Value::String("spot".to_string());
+    config["timerange"] = serde_json::Value::String(timerange.to_string());
     config
         .as_object_mut()
         .map(|root| root.remove("margin_mode"));
@@ -200,8 +225,9 @@ fn write_profile_config(path: &Path, profile: &AutoQuantWorkspaceProfileConfig) 
     Ok(())
 }
 
-fn write_profile_source_csv(input_path: &str, csv_path: &Path) -> Result<()> {
+fn write_profile_source_csv(input_path: &str, csv_path: &Path) -> Result<ProfileSourceCsvSummary> {
     let candles = load_candles(input_path)?;
+    let timerange = source_candle_timerange(&candles)?;
     let mut writer = Writer::from_path(csv_path)?;
     writer.write_record(["date", "open", "high", "low", "close", "volume"])?;
     for candle in candles {
@@ -215,7 +241,21 @@ fn write_profile_source_csv(input_path: &str, csv_path: &Path) -> Result<()> {
         ])?;
     }
     writer.flush()?;
-    Ok(())
+    Ok(ProfileSourceCsvSummary { timerange })
+}
+
+fn source_candle_timerange(candles: &[crate::types::Candle]) -> Result<String> {
+    let first = candles
+        .first()
+        .context("synthetic_ohlcv source candle set is empty")?;
+    let last = candles
+        .last()
+        .context("synthetic_ohlcv source candle set is empty")?;
+    Ok(format!(
+        "{}-{}",
+        first.timestamp.format("%Y%m%d"),
+        last.timestamp.format("%Y%m%d")
+    ))
 }
 
 fn seed_profile_strategies(
@@ -382,4 +422,57 @@ fn inject_auto_quant_meta_into_docstring(source: &str, meta_block: &str) -> Stri
         }
     }
     format!("\"\"\"\n{meta_block}\n\"\"\"\n\n{source}")
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn synthetic_ohlcv_pair_alias_preserves_plain_symbol_shape() {
+        assert_eq!(synthetic_ohlcv_pair_alias("NQ"), "NQ/USD");
+        assert_eq!(synthetic_ohlcv_pair_alias("BTCUSDT"), "BTCUSDT/USD");
+    }
+
+    #[test]
+    fn synthetic_ohlcv_pair_alias_strips_external_runtime_suffixes() {
+        assert_eq!(
+            synthetic_ohlcv_pair_alias("BTCUSDT_EXT_1H"),
+            "BTCUSDT/USD"
+        );
+        assert_eq!(
+            synthetic_ohlcv_pair_alias("ETHUSDT_EXT_4H"),
+            "ETHUSDT/USD"
+        );
+    }
+
+    #[test]
+    fn source_candle_timerange_uses_first_and_last_utc_dates() {
+        use chrono::{TimeZone, Utc};
+        use crate::types::Candle;
+
+        let candles = vec![
+            Candle {
+                timestamp: Utc.with_ymd_and_hms(2026, 5, 2, 23, 0, 0).unwrap(),
+                open: 1.0,
+                high: 2.0,
+                low: 0.5,
+                close: 1.5,
+                volume: 10.0,
+            },
+            Candle {
+                timestamp: Utc.with_ymd_and_hms(2026, 5, 15, 18, 0, 0).unwrap(),
+                open: 1.5,
+                high: 2.5,
+                low: 1.0,
+                close: 2.0,
+                volume: 12.0,
+            },
+        ];
+
+        assert_eq!(
+            source_candle_timerange(&candles).unwrap(),
+            "20260502-20260515"
+        );
+    }
 }
