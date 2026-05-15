@@ -63,6 +63,8 @@ Status legend: `done`, `active`, `next`, `blocked`, `not_yet`.
 | done | Auto-Quant source-derived timerange repair | `synthetic_ohlcv` now writes `config.tomac.json` timerange from the actual source candle range instead of a stale template window; the v4 smoke moved past `No data found. Terminating.` |
 | done | Auto-Quant runtime execution beyond prepare | `uv run --with ta-lib --with freqtrade /tmp/ict-engine-external-history-smoke-v4/state-factor/.deps/auto-quant/run_tomac.py` exited `0` with `Done: 1 succeeded, 0 failed.` Current result is a valid AQ runtime smoke with `trade_count=0`, which is acceptable as an intake/runtime proof even though it is not yet a profitable candidate. |
 | done | Auto-Quant adoption review after runtime repair | `auto-quant-adoption-review --symbol BTCUSDT_EXT_1H --state-dir /tmp/ict-engine-external-history-smoke-v4/state-factor` returned `review_status=ready_for_external_execution`, `data_ready=true`, `dependency_healthy=true`. |
+| done | Add explicit consumer adoption helper | Added `support/scripts/research/external_history_adoption.py`; it emits a token-friendly adoption bundle plus `suggested_commands.sh` so a user can inspect and choose the opt-in lane without touching mainline defaults. |
+| done | Longer-window non-zero AQ runtime smoke | `1000 x 1h` Binance BTCUSDT input in `/tmp/ict-engine-external-history-smoke-v5` ran through the same lane and produced `trade_count=5`, `total_profit_pct=1.12`, `sharpe=0.6437`, `win_rate_pct=80.0`, `profit_factor=1.5635`. |
 
 ## Working Direction
 
@@ -143,6 +145,8 @@ Focused verification:
 - `cargo test source_candle_timerange_uses_first_and_last_utc_dates -- --nocapture`
 - `python3 -m py_compile support/scripts/auto_quant_external/prepare_external.py support/scripts/auto_quant_external/tests/test_prepare_external.py`
 - `uv run --with pandas --with pyarrow python -m unittest support/scripts/auto_quant_external/tests/test_prepare_external.py -v`
+- `python3 -m py_compile support/scripts/research/external_history_adoption.py support/scripts/research/tests/test_external_history_adoption.py`
+- `python3 -m unittest support/scripts/research/tests/test_external_history_adoption.py -v`
 
 Latest runtime smoke:
 - Root: `/tmp/ict-engine-external-history-smoke-v4`
@@ -159,3 +163,47 @@ Latest runtime smoke:
 - `auto-quant-adoption-review` result:
   - `review_status=ready_for_external_execution`
   - `review_summary=handoff is ready for Auto-Quant execution and candidate export`
+
+## Consumer Command Helper
+
+New helper:
+- `support/scripts/research/external_history_adoption.py`
+
+Purpose:
+- Build a token-friendly local adoption bundle for an opt-in external-history lane.
+- Emit `suggested_commands.sh` so the user can choose whether to run
+  `workflow-status`, `analyze`, `factor-research`, `auto-quant-prepare`, and
+  `auto-quant-adoption-review` with the selected profile.
+- Keep zero-config defaults unchanged by staying outside the Rust CLI mainline.
+
+Example real run:
+- `python3 support/scripts/research/external_history_adoption.py --repo-root . --market NQ --profile thrill3r_nq_external_history_v1 --symbol BTCUSDT_EXT_1H_LONG --state-dir /tmp/ict-engine-external-history-adoption-v2 --input 1h=/tmp/ict-engine-external-history-smoke-v5/btcusdt.binance.1h.1000.normalized.json --input 4h=/tmp/ict-engine-external-history-smoke-v5/btcusdt.binance.1h.1000.normalized.json --input 1d=/tmp/ict-engine-external-history-smoke-v5/btcusdt.binance.1h.1000.normalized.json --output-dir /tmp/ict-engine-external-history-adoption-v2`
+
+Artifacts:
+- `/tmp/ict-engine-external-history-adoption-v2/external_history_adoption_bundle.json`
+- `/tmp/ict-engine-external-history-adoption-v2/suggested_commands.sh`
+
+## 2026-05-15 Longer-Window Packet
+
+Run root:
+- `/tmp/ict-engine-external-history-smoke-v5`
+
+Input:
+- Binance public BTCUSDT `1h` JSON, `limit=1000`
+- normalized output:
+  `/tmp/ict-engine-external-history-smoke-v5/btcusdt.binance.1h.1000.normalized.json`
+
+Commands run:
+- `cargo run --quiet -- factor-research --symbol BTCUSDT_EXT_1H_LONG --data /tmp/ict-engine-external-history-smoke-v5/btcusdt.binance.1h.1000.normalized.json --objective regime_conditioned_profitability --backend auto-quant --auto-quant-profile synthetic_ohlcv --state-dir /tmp/ict-engine-external-history-smoke-v5/state-factor --human`
+- `cargo run --quiet -- auto-quant-prepare --state-dir /tmp/ict-engine-external-history-smoke-v5/state-factor`
+- `uv run --with ta-lib --with freqtrade /tmp/ict-engine-external-history-smoke-v5/state-factor/.deps/auto-quant/run_tomac.py`
+- `cargo run --quiet -- auto-quant-adoption-review --symbol BTCUSDT_EXT_1H_LONG --state-dir /tmp/ict-engine-external-history-smoke-v5/state-factor`
+
+Outcome:
+- `pair=BTCUSDT/USD`
+- `trade_count=5`
+- `total_profit_pct=1.12`
+- `sharpe=0.6437`
+- `win_rate_pct=80.0`
+- `profit_factor=1.5635`
+- `review_status=ready_for_external_execution`
