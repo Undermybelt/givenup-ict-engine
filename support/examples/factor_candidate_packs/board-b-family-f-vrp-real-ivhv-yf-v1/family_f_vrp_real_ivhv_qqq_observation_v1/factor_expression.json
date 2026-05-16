@@ -1,0 +1,62 @@
+{
+  "schema_version": "factor-expression/v1",
+  "candidate_id": "family_f_vrp_real_ivhv_qqq_observation_v1",
+  "display_name": "Family F VRP Real IV/HV QQQ Observation V1",
+  "family": "Family F VRP",
+  "status": "observation_only",
+  "promotion_state": "candidate_only",
+  "strategy_name": "FamilyFRealIvHvQqqObservationOnly",
+  "mutation_id": null,
+  "base_factor": "family_f_vrp_compression_15m_v1",
+  "expression_text": "qqq_yfinance_real_option_chain_iv and qqq_historical_realized_volatility and iv_minus_hv_positive and trade_usable == false",
+  "operator_set": [
+    "near_atm_implied_volatility",
+    "open_interest",
+    "option_volume",
+    "historical_vol_20d",
+    "historical_vol_60d",
+    "iv_minus_hv_spread"
+  ],
+  "complexity": 5,
+  "paradigm": "real_iv_hv_vrp_observation",
+  "expected_regime": "TrendExpansion",
+  "target_market_hypothesis": [
+    "QQQ"
+  ],
+  "base_timeframe": "1d",
+  "context_timeframes": [
+    "15m",
+    "4h",
+    "1d"
+  ],
+  "regime_role": "root_conditioned_factor",
+  "evidence_window": "yfinance QQQ 6mo daily history plus four near option expirations",
+  "strategy_source": "support/docs/experiments/actionable-regime-confidence/runs/20260516T203228+0800-codex-board-b-family-f-vrp-real-ivhv-gate1-v1/checks/qqq_yfinance_iv_hv_summary.json",
+  "branch_path_contract": {
+    "main_regime": "TrendExpansion",
+    "sub_regime": "VolatilityCompression",
+    "sub_sub_regime_or_profit_factor": "iv_hv_compression_regime",
+    "profit_factor": "family_f_vrp_real_ivhv_qqq_observation_v1",
+    "regime_profit_branch_path": "TrendExpansion -> VolatilityCompression -> iv_hv_compression_regime -> family_f_vrp_real_ivhv_qqq_observation_v1"
+  },
+  "filter_belief_execution_mapping": {
+    "pre_bayes_targets": [
+      "volatility_compression_gate"
+    ],
+    "belief_targets": [
+      "bbn_vol_regime_evidence"
+    ],
+    "path_ranking_targets": [
+      "candidate_pack_admission_pending"
+    ],
+    "execution_tree_targets": [
+      "fail_closed_observation_only"
+    ],
+    "execution_tree_blockers_intended": [
+      "no_realized_trade_rows",
+      "single_provider_single_observation",
+      "no_auto_quant_backtest"
+    ],
+    "structural_feedback_required": true
+  }
+}

@@ -44,7 +44,9 @@ pub use liquidity::{detect_session, LiquidityClassifier, LiquidityRegime, Sessio
 pub use mtf_resonance::{
     ResonanceResult, TimeframeResonanceConfig, TimeframeResonanceFilter, TimeframeResonanceResult,
 };
-pub use structure::{MarketStructureClassifier, MarketStructureRegime};
+pub use structure::{
+    MarketStructureClassifier, MarketStructureRegime, OscillationBoxState, OscillationBoxThresholds,
+};
 pub use validation_tool::{
     ConfidenceDistribution, MarketStateValidator, ValidationConfig, ValidationResult,
 };
@@ -67,6 +69,8 @@ pub struct MarketStateSnapshot {
     pub structure: MarketStructureRegime,
     /// 结构置信度
     pub structure_confidence: f64,
+    /// ATR-compressed oscillation box state
+    pub oscillation_box: OscillationBoxState,
     /// 投资者行为状态
     pub behavior: InvestorBehaviorRegime,
     /// 行为置信度
@@ -205,10 +209,31 @@ impl MarketStateClassifier {
 
         // 3. 结构分类
         let (struct_regime, struct_conf) = self.structure.classify(candles);
+        let oscillation_box = self
+            .structure
+            .detect_oscillation_box(candles, &OscillationBoxThresholds::default());
         if struct_conf > 0.5 {
             rationale.push(format!(
                 "structure={:?} conf={:.2}",
                 struct_regime, struct_conf
+            ));
+        }
+        if oscillation_box.active {
+            rationale.push(format!(
+                "oscillation_box=active high={:.2} low={:.2} touches={} atr_ratio={:.2} conf={:.2}",
+                oscillation_box.box_high.unwrap_or_default(),
+                oscillation_box.box_low.unwrap_or_default(),
+                oscillation_box.touch_count,
+                oscillation_box.atr_compression_ratio,
+                oscillation_box.confidence
+            ));
+        } else {
+            rationale.push(format!(
+                "oscillation_box=inactive reason={} touches={} atr_ratio={:.2} conf={:.2}",
+                oscillation_box.exit_reason.as_deref().unwrap_or("none"),
+                oscillation_box.touch_count,
+                oscillation_box.atr_compression_ratio,
+                oscillation_box.confidence
             ));
         }
 
@@ -260,6 +285,7 @@ impl MarketStateClassifier {
             liquidity_confidence: liq_conf,
             structure: struct_regime,
             structure_confidence: struct_conf,
+            oscillation_box,
             behavior: behav,
             behavior_confidence: behav_conf,
             primary_regime: primary,

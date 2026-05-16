@@ -276,6 +276,70 @@ class DirectModelArtifactTests(unittest.TestCase):
         self.assertIn("catboost_runtime_scores_uri=required", metadata["notes"])
 
 
+class RankingTrainerModeTests(unittest.TestCase):
+    def test_train_catboost_ranking_uses_candidate_set_groups(self) -> None:
+        class FakeRanker:
+            last_init = None
+            last_fit = None
+            last_saved_path = None
+
+            def __init__(self, **kwargs):
+                FakeRanker.last_init = kwargs
+
+            def fit(self, X, y, group_id=None, sample_weight=None):
+                FakeRanker.last_fit = {
+                    "columns": list(X.columns),
+                    "y": list(y),
+                    "group_id": list(group_id) if group_id is not None else None,
+                    "sample_weight": list(sample_weight) if sample_weight is not None else None,
+                }
+
+            def save_model(self, path):
+                FakeRanker.last_saved_path = path
+
+            def get_feature_importance(self, prettified=True):
+                return [{"Feature Id": "current_posterior", "Importances": 1.0}]
+
+        features = pd.DataFrame(
+            {
+                "current_posterior": [0.9, 0.2, 0.8, 0.1],
+                "candidate_set_id": ["set-a", "set-a", "set-b", "set-b"],
+            }
+        )
+        labels = pd.Series([1.0, 0.0, 1.0, 0.0])
+        weights = pd.Series([1.0, 1.0, 1.0, 1.0])
+
+        fake_cb = mock.Mock(CatBoostRanker=FakeRanker)
+        with tempfile.TemporaryDirectory() as tmpdir, mock.patch.object(
+            trainer, "HAS_CATBOOST", True
+        ), mock.patch.object(trainer, "cb", fake_cb):
+            trainer.train_catboost(
+                features,
+                labels,
+                weights,
+                Path(tmpdir),
+                training_mode="ranking",
+                group_ids=features["candidate_set_id"],
+            )
+
+        self.assertEqual(FakeRanker.last_init["loss_function"], "YetiRankPairwise")
+        self.assertEqual(FakeRanker.last_fit["group_id"], ["set-a", "set-a", "set-b", "set-b"])
+        self.assertEqual(FakeRanker.last_fit["y"], [1.0, 0.0, 1.0, 0.0])
+        self.assertTrue(str(FakeRanker.last_saved_path).endswith("catboost_model.cbm"))
+
+    def test_prepare_features_ranking_requires_candidate_set_id(self) -> None:
+        rows = pd.DataFrame(
+            {
+                "current_posterior": [0.7, 0.3],
+                "calibrated_label": [1.0, 0.0],
+                "training_weight": [1.0, 1.0],
+            }
+        )
+
+        with self.assertRaisesRegex(ValueError, "candidate_set_id"):
+            trainer.prepare_features(rows, training_mode="ranking")
+
+
 def subprocess_result(stdout: str = "{}\n", stderr: str = "", returncode: int = 0):
     return mock.Mock(stdout=stdout, stderr=stderr, returncode=returncode)
 

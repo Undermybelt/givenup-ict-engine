@@ -8,6 +8,11 @@ use crate::math::spectral::{
 /// Minimum sample count before the estimator is allowed to fit. Below this
 /// the dominant bin is dominated by aliasing and entropy is saturated.
 pub const SPECTRAL_MIN_SAMPLES: usize = 32;
+/// Upper bound on the trailing window we feed into the dependency-free FFT.
+/// The overlay is an execution-readiness heuristic on recent price rhythm, not
+/// a full-history spectral study, so capping the tail keeps runtime predictable
+/// on dense intraday packets while preserving the freshest context.
+pub const SPECTRAL_MAX_SAMPLES: usize = 1024;
 
 /// Default softshrink threshold as a fraction of the largest bin magnitude.
 /// AFNO uses a fixed lambda because the input is pre-normalized; price series
@@ -50,15 +55,20 @@ pub fn estimate_spectral_execution_metrics(
     if prices.len() < SPECTRAL_MIN_SAMPLES {
         return None;
     }
-    if prices.iter().any(|value| !value.is_finite()) {
+    let price_window = if prices.len() > SPECTRAL_MAX_SAMPLES {
+        &prices[prices.len() - SPECTRAL_MAX_SAMPLES..]
+    } else {
+        prices
+    };
+    if price_window.iter().any(|value| !value.is_finite()) {
         return None;
     }
 
-    let bins = rfft_one_sided(prices);
+    let bins = rfft_one_sided(price_window);
     if bins.is_empty() {
         return None;
     }
-    let padded_length = next_power_of_two(prices.len());
+    let padded_length = next_power_of_two(price_window.len());
 
     let total_energy: f64 = bins.iter().skip(1).map(|bin| bin.norm_sq()).sum();
     if total_energy <= 0.0 {
@@ -71,7 +81,8 @@ pub fn estimate_spectral_execution_metrics(
 
     let dominant_energy = dominant_energy_ratio(&bins);
     let spectral_entropy = normalized_spectral_entropy(&bins);
-    let cycle_phase_alignment = dominant_phase_alignment(dominant, prices.len(), padded_length);
+    let cycle_phase_alignment =
+        dominant_phase_alignment(dominant, price_window.len(), padded_length);
 
     let mut pruned_bins = bins.clone();
     softshrink_bins(&mut pruned_bins, lambda);
@@ -84,7 +95,7 @@ pub fn estimate_spectral_execution_metrics(
         spectral_entropy,
         high_freq_noise_ratio,
         softshrink_lambda: lambda,
-        sample_count: prices.len(),
+        sample_count: price_window.len(),
         padded_length,
     })
 }
@@ -170,5 +181,19 @@ mod tests {
             "dominant_cycle_energy={}",
             metrics.dominant_cycle_energy
         );
+    }
+
+    #[test]
+    fn oversized_windows_use_recent_capped_tail() {
+        let n = SPECTRAL_MAX_SAMPLES * 3;
+        let cycle = 64.0_f64;
+        let prices: Vec<f64> = (0..n)
+            .map(|i| 100.0 + (2.0 * PI * i as f64 / cycle).sin() * 2.0)
+            .collect();
+        let metrics = estimate_spectral_execution_metrics(&prices, SPECTRAL_DEFAULT_LAMBDA_RATIO)
+            .expect("spectral metrics should fit");
+        assert_eq!(metrics.sample_count, SPECTRAL_MAX_SAMPLES);
+        assert_eq!(metrics.padded_length, SPECTRAL_MAX_SAMPLES);
+        assert!(metrics.dominant_cycle_energy > 0.8);
     }
 }

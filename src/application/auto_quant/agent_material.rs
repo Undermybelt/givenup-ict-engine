@@ -28,6 +28,8 @@ pub struct AgentMaterialPackage {
     pub title: String,
     pub symbol: String,
     pub timeframe: String,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub additional_timeframes: Vec<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub timerange: Option<String>,
     pub direction: String,
@@ -838,6 +840,7 @@ fn materialize_material_workspace(
             .join(material_strategy_filename(package)),
     )?;
     let pair = format!("{}/USD", package.symbol);
+    let material_timeframes = effective_material_timeframes_csv(package);
     let prepare = run_workspace_python_script(
         runtime_python,
         workspace_root,
@@ -848,7 +851,7 @@ fn materialize_material_workspace(
             "--pair",
             &pair,
             "--timeframes",
-            &package.timeframe,
+            &material_timeframes,
             "--datadir",
             "user_data/data",
             "--column-map",
@@ -908,6 +911,18 @@ fn effective_material_timerange(package: &AgentMaterialPackage) -> Result<Option
         return Ok(Some(timerange.to_string()));
     }
     derive_material_timerange_from_data_path(&package.data_path)
+}
+
+fn effective_material_timeframes_csv(package: &AgentMaterialPackage) -> String {
+    let mut timeframes = Vec::new();
+    for timeframe in std::iter::once(&package.timeframe).chain(package.additional_timeframes.iter())
+    {
+        let trimmed = timeframe.trim();
+        if !trimmed.is_empty() && !timeframes.iter().any(|seen| seen == trimmed) {
+            timeframes.push(trimmed.to_string());
+        }
+    }
+    timeframes.join(",")
 }
 
 fn derive_material_timerange_from_data_path(data_path: &str) -> Result<Option<String>> {
@@ -1340,6 +1355,20 @@ mod tests {
             serde_json::from_str(&fs::read_to_string(config_path).unwrap()).unwrap();
         assert_eq!(config["timerange"], "20260101-20260512");
         assert_eq!(config["exchange"]["pair_whitelist"][0], "NQ/USD");
+    }
+
+    #[test]
+    fn material_timeframes_include_additional_informative_frames_without_duplicates() {
+        let mut package = sample_package("/tmp/strategy.py");
+        package.timeframe = "1h".to_string();
+        package.additional_timeframes = vec![
+            "4h".to_string(),
+            "1d".to_string(),
+            "1h".to_string(),
+            " ".to_string(),
+        ];
+
+        assert_eq!(effective_material_timeframes_csv(&package), "1h,4h,1d");
     }
 
     #[test]

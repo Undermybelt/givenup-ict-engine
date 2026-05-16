@@ -8,11 +8,13 @@ use std::sync::{mpsc, Arc, Mutex};
 use std::time::{Duration, Instant};
 
 use super::control_matrix_providers::{
-    tradingview_mcp_config_from_env_or_local, TRADINGVIEW_MCP_ARGS_ENV, TRADINGVIEW_MCP_CMD_ENV,
+    tradingview_mcp_config_from_env_or_local, tradingview_mcp_stdio_override_from_env,
+    TRADINGVIEW_MCP_ARGS_ENV, TRADINGVIEW_MCP_CMD_ENV,
 };
 use crate::types::Candle;
 
 const MCP_TIMEOUT: Duration = Duration::from_secs(30);
+const STDIO_INIT_TIMEOUT: Duration = Duration::from_secs(90);
 const DEFAULT_STDIO_CMD: &str = "uvx";
 const DEFAULT_STDIO_ARGS: &[&str] = &["--from", "tradingview-mcp-server", "tradingview-mcp"];
 const LOCAL_SOURCE_RELATIVE_PATH: &str = "tradingview-mcp/tradingview-mcp";
@@ -30,6 +32,13 @@ enum TradingViewMcpTransport {
 
 impl TradingViewMcpClient {
     pub(crate) fn from_env_or_local() -> Self {
+        if tradingview_mcp_stdio_override_from_env() {
+            let (command, args) = stdio_command_from_env();
+            return Self {
+                transport: TradingViewMcpTransport::Stdio { command, args },
+            };
+        }
+
         let config = tradingview_mcp_config_from_env_or_local();
         if let Some(api_key) = config.api_key {
             return Self {
@@ -265,10 +274,10 @@ fn call_stdio_tool(command: &str, args: &[String], name: &str, arguments: Value)
 
     let result = (|| -> Result<Value> {
         write_json_rpc(&mut stdin, &initialize_request(1))?;
-        read_json_rpc_response(&rx, 1, &stderr)?;
+        read_json_rpc_response(&rx, 1, &stderr, STDIO_INIT_TIMEOUT)?;
         write_json_rpc(&mut stdin, &initialized_notification())?;
         write_json_rpc(&mut stdin, &tool_call_request(2, name, arguments))?;
-        let response = read_json_rpc_response(&rx, 2, &stderr)?;
+        let response = read_json_rpc_response(&rx, 2, &stderr, MCP_TIMEOUT)?;
         extract_tool_payload(name, response)
     })();
 
@@ -316,8 +325,9 @@ fn read_json_rpc_response(
     rx: &mpsc::Receiver<String>,
     id: i64,
     stderr: &Arc<Mutex<String>>,
+    timeout: Duration,
 ) -> Result<Value> {
-    let deadline = Instant::now() + MCP_TIMEOUT;
+    let deadline = Instant::now() + timeout;
     loop {
         let now = Instant::now();
         if now >= deadline {
@@ -545,5 +555,27 @@ mod tests {
             default_stdio_args(),
             vec!["--from", "tradingview-mcp-server", "tradingview-mcp"]
         );
+    }
+
+    #[test]
+    fn client_prefers_explicit_stdio_override_over_http_config() {
+        unsafe {
+            std::env::set_var(TRADINGVIEW_MCP_CMD_ENV, "uv");
+            std::env::set_var(
+                TRADINGVIEW_MCP_ARGS_ENV,
+                "--directory /tmp/tvr run tradingview-mcp",
+            );
+            std::env::set_var("ICT_ENGINE_TVREMIX_MCP_API_KEY", "secret-token");
+        }
+        let client = TradingViewMcpClient::from_env_or_local();
+        assert!(matches!(
+            client.transport,
+            TradingViewMcpTransport::Stdio { .. }
+        ));
+        unsafe {
+            std::env::remove_var(TRADINGVIEW_MCP_CMD_ENV);
+            std::env::remove_var(TRADINGVIEW_MCP_ARGS_ENV);
+            std::env::remove_var("ICT_ENGINE_TVREMIX_MCP_API_KEY");
+        }
     }
 }

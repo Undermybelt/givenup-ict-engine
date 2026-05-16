@@ -1,0 +1,61 @@
+{
+  "schema_version": "factor-expression/v1",
+  "candidate_id": "order_block_mitigation_block_1h_v1",
+  "display_name": "Order Block Mitigation Block 1h",
+  "family": "OrderBlockVariant",
+  "status": "active",
+  "promotion_state": "candidate_only",
+  "strategy_name": "OrderBlockVariantMitigationBlock1h",
+  "mutation_id": null,
+  "base_factor": "order_block_variant_classifier",
+  "expression_text": "order_block_variant == mitigation_block within Transition -> OrderBlockVariant rooted branch; confirmation/context only, not standalone actionable",
+  "operator_set": [
+    "variant",
+    "validation_state",
+    "mitigation_count",
+    "breaker_confirmed",
+    "rejection_confirmed",
+    "confidence",
+    "main_regime",
+    "sub_regime"
+  ],
+  "complexity": 8,
+  "paradigm": "order block mitigation context",
+  "expected_regime": "Transition -> OrderBlockVariant -> ob_mitigation_breaker_rejection -> order_block_variant_classifier_v1",
+  "target_market_hypothesis": [
+    "BTCUSDT",
+    "SPY",
+    "XBTUSD"
+  ],
+  "base_timeframe": "1h",
+  "context_timeframes": [],
+  "regime_role": "confirmation_only",
+  "evidence_window": "2025-01 -> 2026-05 retained provider outcome rows",
+  "strategy_source": "support/docs/experiments/actionable-regime-confidence/runs/20260515T162135+0800-hermes-order-block-variant-classifier-v1/materials/order_block_variant_classifier_packet.json",
+  "filter_belief_execution_mapping": {
+    "pre_bayes_targets": [
+      "order_block_variant_gate",
+      "mitigation_confirmation"
+    ],
+    "belief_targets": [
+      "regime_context_evidence",
+      "entry_quality"
+    ],
+    "path_ranking_targets": [
+      "structural_path_confidence",
+      "recommended_path_bundle"
+    ],
+    "execution_tree_targets": [
+      "mitigation_count",
+      "breaker_confirmed",
+      "rejection_confirmed",
+      "transition_guardrail"
+    ],
+    "execution_tree_blockers_intended": [
+      "missing_level_or_cisd_displacement_context",
+      "standalone_factor_not_actionable",
+      "provider_matrix_incomplete_for_generic_promotion"
+    ],
+    "structural_feedback_required": true
+  }
+}

@@ -1,0 +1,67 @@
+{
+  "schema_version": "factor-expression/v1",
+  "candidate_id": "smt_historical_strict_scan_v1",
+  "display_name": "SMT Historical Strict Scan V1",
+  "family": "Board B SMT Strict",
+  "status": "candidate_only",
+  "promotion_state": "candidate_only",
+  "strategy_name": "SmtHistoricalStrictScan",
+  "mutation_id": null,
+  "base_factor": "smt_relationship_resolver",
+  "expression_text": "historical same_timeframe and overlapping_session and same_event_swing_confirmation_failure and trade_use == confirmation_only and mss_or_cisd_confirmed and displacement_confirmed and near_pd_array",
+  "operator_set": [
+    "same_timeframe",
+    "overlapping_session",
+    "stable_relationship",
+    "same_event_swing_confirmation_failure",
+    "base_level",
+    "comparison_level",
+    "normalized_for_inverse_correlation",
+    "raw_inverse_structure",
+    "mss_or_cisd_confirmed",
+    "displacement_confirmed",
+    "near_pd_array",
+    "forward_outcome"
+  ],
+  "complexity": 9,
+  "paradigm": "historical strict same-event SMT training",
+  "expected_regime": "Range|Trend|Transition|Stress|Other",
+  "target_market_hypothesis": [
+    "NQ/ES",
+    "NQ/YM",
+    "EURUSD/GBPUSD",
+    "EURUSD/DXY",
+    "XAUUSD/XAGUSD",
+    "XAUUSD/DXY",
+    "BTC/ETH"
+  ],
+  "base_timeframe": "15m",
+  "context_timeframes": [
+    "15m"
+  ],
+  "regime_role": "root_conditioned_factor",
+  "evidence_window": "historical provider-backed 15m scan from 20260516T091500 SMT provider-touch root",
+  "strategy_source": "support/docs/experiments/actionable-regime-confidence/runs/20260516T195905+0800-codex-board-b-smt-historical-strict-scan-v1/materials/historical_smt_strict_scan_packet.json",
+  "filter_belief_execution_mapping": {
+    "pre_bayes_targets": [
+      "smt_confirmation_filter",
+      "same_event_confirmation_failure"
+    ],
+    "belief_targets": [
+      "cross_market_confirmation_quality",
+      "strict_entry_context_density",
+      "per_regime_smt_density"
+    ],
+    "path_ranking_targets": [
+      "recommended_path_bundle"
+    ],
+    "execution_tree_targets": [
+      "execution_readiness",
+      "pda_confirmation_dependency"
+    ],
+    "execution_tree_blockers_intended": [
+      "insufficient_historical_strict_pair_or_regime_density"
+    ],
+    "structural_feedback_required": true
+  }
+}

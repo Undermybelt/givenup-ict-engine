@@ -1,0 +1,127 @@
+{
+  "schema_version": "factor-eval-grid-summary/v1",
+  "selected_strategy": "OrderBlockVariantMitigationBlock1h",
+  "timeframe": "1h",
+  "candidate_status": "active",
+  "promotion_state": "candidate_only",
+  "breadth_matrix": {
+    "Binance/BTCUSDT": {
+      "status": "covered",
+      "trade_count": 226,
+      "trade_density_label": "preferred_density",
+      "sharpe": null,
+      "win_rate_pct": 99.115044,
+      "profit_factor": null,
+      "total_profit_pct": null,
+      "max_drawdown_pct": null,
+      "expectancy_r": 1.9672,
+      "source_window": "2025-01..2026-05 inherited from source provider outcome rows",
+      "evidence_source": "order_block_variant_classifier_packet",
+      "notes": []
+    },
+    "Bybit/BTCUSDT": {
+      "status": "covered",
+      "trade_count": 24,
+      "trade_density_label": "probe_only",
+      "sharpe": null,
+      "win_rate_pct": 100.0,
+      "profit_factor": null,
+      "total_profit_pct": null,
+      "max_drawdown_pct": null,
+      "expectancy_r": 2.0,
+      "source_window": "2025-01..2026-05 inherited from source provider outcome rows",
+      "evidence_source": "order_block_variant_classifier_packet",
+      "notes": []
+    },
+    "IBKR/SPY": {
+      "status": "covered",
+      "trade_count": 46,
+      "trade_density_label": "probe_only",
+      "sharpe": null,
+      "win_rate_pct": 95.652174,
+      "profit_factor": null,
+      "total_profit_pct": null,
+      "max_drawdown_pct": null,
+      "expectancy_r": 1.8806,
+      "source_window": "2025-01..2026-05 inherited from source provider outcome rows",
+      "evidence_source": "order_block_variant_classifier_packet",
+      "notes": []
+    },
+    "Kraken/XBTUSD": {
+      "status": "covered",
+      "trade_count": 12,
+      "trade_density_label": "probe_only",
+      "sharpe": null,
+      "win_rate_pct": 100.0,
+      "profit_factor": null,
+      "total_profit_pct": null,
+      "max_drawdown_pct": null,
+      "expectancy_r": 2.0,
+      "source_window": "2025-01..2026-05 inherited from source provider outcome rows",
+      "evidence_source": "order_block_variant_classifier_packet",
+      "notes": []
+    },
+    "yfinance/SPY": {
+      "status": "covered",
+      "trade_count": 34,
+      "trade_density_label": "probe_only",
+      "sharpe": null,
+      "win_rate_pct": 100.0,
+      "profit_factor": null,
+      "total_profit_pct": null,
+      "max_drawdown_pct": null,
+      "expectancy_r": 2.0,
+      "source_window": "2025-01..2026-05 inherited from source provider outcome rows",
+      "evidence_source": "order_block_variant_classifier_packet",
+      "notes": []
+    }
+  },
+  "trade_density_summary": {
+    "aggregate_trade_count": 342,
+    "aggregate_label": "preferred_density",
+    "covered_market_count": 5
+  },
+  "aggregate_metrics": {
+    "sharpe": null,
+    "win_rate_pct": 98.830409,
+    "profit_factor": null,
+    "total_profit_pct": null,
+    "max_drawdown_pct": null,
+    "trade_count": 342,
+    "expectancy_r": 1.96225
+  },
+  "resonance_summary": {
+    "base_timeframe": "1h",
+    "context_stack": [],
+    "resonance_by_timeframe": {}
+  },
+  "autoresearch": {
+    "effective_status": null,
+    "decision_counts": {},
+    "failure_tag_counts": {},
+    "best_attempt_score_delta": null
+  },
+  "cross_market_evidence": {
+    "IBKR/SPY": {
+      "trade_count": 46,
+      "win_rate_pct": 95.652174,
+      "expectancy_r": 1.8806,
+      "window": "2025-01..2026-05 inherited from source provider outcome rows",
+      "evidence_source": "order_block_variant_classifier_packet"
+    },
+    "Kraken/XBTUSD": {
+      "trade_count": 12,
+      "win_rate_pct": 100.0,
+      "expectancy_r": 2.0,
+      "window": "2025-01..2026-05 inherited from source provider outcome rows",
+      "evidence_source": "order_block_variant_classifier_packet"
+    },
+    "yfinance/SPY": {
+      "trade_count": 34,
+      "win_rate_pct": 100.0,
+      "expectancy_r": 2.0,
+      "window": "2025-01..2026-05 inherited from source provider outcome rows",
+      "evidence_source": "order_block_variant_classifier_packet"
+    }
+  }
+}

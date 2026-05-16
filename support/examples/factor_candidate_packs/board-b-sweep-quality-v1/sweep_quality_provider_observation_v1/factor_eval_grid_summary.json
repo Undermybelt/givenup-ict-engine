@@ -1,0 +1,162 @@
+{
+  "schema_version": "factor-eval-grid-summary/v1",
+  "selected_strategy": "SweepQualityProviderObservationOnly",
+  "timeframe": "mixed",
+  "candidate_status": "observation_only",
+  "promotion_state": "candidate_only",
+  "breadth_matrix": {
+    "BTC/USD": {
+      "status": "observation_only",
+      "trade_count": 0,
+      "trade_density_label": "observation_only",
+      "confidence": 0.62,
+      "observation_count": 3,
+      "provider_set": [
+        "paired_provider_packet",
+        "kraken",
+        "yahoo"
+      ],
+      "notes": [
+        "provider-backed sweep events exist",
+        "no realized entry model or forward outcome labels yet"
+      ]
+    },
+    "ETH/USD": {
+      "status": "observation_only",
+      "trade_count": 0,
+      "trade_density_label": "observation_only",
+      "confidence": 0.62,
+      "observation_count": 3,
+      "provider_set": [
+        "paired_provider_packet",
+        "kraken",
+        "yahoo"
+      ],
+      "notes": [
+        "provider-backed sweep events exist",
+        "no realized entry model or forward outcome labels yet"
+      ]
+    },
+    "NQ": {
+      "status": "observation_only",
+      "trade_count": 0,
+      "trade_density_label": "observation_only",
+      "confidence": 0.6,
+      "observation_count": 3,
+      "provider_set": [
+        "paired_provider_packet",
+        "yahoo"
+      ],
+      "notes": [
+        "provider-backed sweep events exist",
+        "no realized entry model or forward outcome labels yet"
+      ]
+    },
+    "EURUSD": {
+      "status": "observation_only",
+      "trade_count": 0,
+      "trade_density_label": "observation_only",
+      "confidence": 0.6,
+      "observation_count": 4,
+      "provider_set": [
+        "paired_provider_packet",
+        "yahoo"
+      ],
+      "notes": [
+        "provider-backed sweep events exist",
+        "no realized entry model or forward outcome labels yet"
+      ]
+    },
+    "XAUUSD": {
+      "status": "observation_only",
+      "trade_count": 0,
+      "trade_density_label": "observation_only",
+      "confidence": 0.6,
+      "observation_count": 3,
+      "provider_set": [
+        "paired_provider_packet"
+      ],
+      "notes": [
+        "provider-backed sweep events exist",
+        "no realized entry model or forward outcome labels yet"
+      ]
+    }
+  },
+  "trade_density_summary": {
+    "aggregate_trade_count": 0,
+    "aggregate_label": "observation_only",
+    "covered_market_count": 8,
+    "observation_row_count": 24,
+    "source_packet_rows": 24
+  },
+  "aggregate_metrics": {
+    "trade_count": 0,
+    "observation_count": 24,
+    "confidence_mean": 0.608
+  },
+  "resonance_summary": {
+    "base_timeframe": "1h",
+    "context_stack": [
+      "1h",
+      "15m",
+      "5m"
+    ],
+    "resonance_by_timeframe": {
+      "1h": "sweep_quality_crypto_and_macro_observation",
+      "15m": "sweep_quality_fx_and_metals_observation",
+      "5m": "sweep_quality_index_pair_observation"
+    }
+  },
+  "autoresearch": {
+    "effective_status": "not_run",
+    "decision_counts": {},
+    "failure_tag_counts": {
+      "no_realized_trade_outcomes": 1,
+      "observation_only_factor": 1
+    },
+    "best_attempt_score_delta": null
+  },
+  "cross_market_evidence": {
+    "BTC/USD": {
+      "observation_count": 3,
+      "provider_set": [
+        "paired_provider_packet",
+        "kraken",
+        "yahoo"
+      ],
+      "evidence_source": "sweep_quality_provider_observation_packet"
+    },
+    "ETH/USD": {
+      "observation_count": 3,
+      "provider_set": [
+        "paired_provider_packet",
+        "kraken",
+        "yahoo"
+      ],
+      "evidence_source": "sweep_quality_provider_observation_packet"
+    },
+    "NQ": {
+      "observation_count": 3,
+      "provider_set": [
+        "paired_provider_packet",
+        "yahoo"
+      ],
+      "evidence_source": "sweep_quality_provider_observation_packet"
+    },
+    "EURUSD": {
+      "observation_count": 4,
+      "provider_set": [
+        "paired_provider_packet",
+        "yahoo"
+      ],
+      "evidence_source": "sweep_quality_provider_observation_packet"
+    },
+    "XAUUSD": {
+      "observation_count": 3,
+      "provider_set": [
+        "paired_provider_packet"
+      ],
+      "evidence_source": "sweep_quality_provider_observation_packet"
+    }
+  }
+}

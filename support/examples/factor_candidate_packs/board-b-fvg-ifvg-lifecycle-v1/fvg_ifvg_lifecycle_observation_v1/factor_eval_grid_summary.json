@@ -1,0 +1,136 @@
+{
+  "schema_version": "factor-eval-grid-summary/v1",
+  "factor_name": "fvg_ifvg_lifecycle",
+  "candidate_id": "fvg_ifvg_lifecycle_observation_v1",
+  "selected_strategy": "fvg_ifvg_lifecycle_observation_packet",
+  "timeframe": "1h",
+  "candidate_status": "active",
+  "promotion_state": "candidate_only",
+  "breadth_matrix": {
+    "ibkr": {
+      "status": "provider_backed_retained_window_rows",
+      "trade_count": 10,
+      "trade_density_label": "retained_window_density",
+      "evidence_source": "support/docs/experiments/actionable-regime-confidence/runs/20260516T195114+0800-codex-board-b-fvg-ifvg-provider-outcome-density-v1/materials/combined_fvg_ifvg_provider_observation_packet.json",
+      "win_rate_pct": 40.0,
+      "expectancy_r": -0.156
+    },
+    "kraken_public": {
+      "status": "provider_backed_retained_window_rows",
+      "trade_count": 10,
+      "trade_density_label": "retained_window_density",
+      "evidence_source": "support/docs/experiments/actionable-regime-confidence/runs/20260516T195114+0800-codex-board-b-fvg-ifvg-provider-outcome-density-v1/materials/combined_fvg_ifvg_provider_observation_packet.json",
+      "win_rate_pct": 60.0,
+      "expectancy_r": 0.156
+    },
+    "yfinance": {
+      "status": "provider_backed_retained_window_rows",
+      "trade_count": 10,
+      "trade_density_label": "retained_window_density",
+      "evidence_source": "support/docs/experiments/actionable-regime-confidence/runs/20260516T195114+0800-codex-board-b-fvg-ifvg-provider-outcome-density-v1/materials/combined_fvg_ifvg_provider_observation_packet.json",
+      "win_rate_pct": 30.0,
+      "expectancy_r": -0.312
+    }
+  },
+  "trade_density_summary": {
+    "aggregate_trade_count": 30,
+    "aggregate_label": "retained_window_density_30",
+    "covered_market_count": 3
+  },
+  "aggregate_metrics": {
+    "sharpe": null,
+    "win_rate_pct": 43.3333,
+    "profit_factor": null,
+    "total_profit_pct": null,
+    "max_drawdown_pct": null,
+    "trade_count": 30,
+    "expectancy_r": -0.104
+  },
+  "per_regime_statistics": {
+    "trend": {
+      "win_rate": 0.433333,
+      "trade_count": 30,
+      "expectancy": -0.104,
+      "sample_window": "retained sliding windows from source manifests",
+      "instrument_coverage": [
+        "ibkr",
+        "kraken_public",
+        "yfinance"
+      ],
+      "confidence": 0.55,
+      "fail_closed_reason": "retained_window_observation_not_trade_promotion"
+    },
+    "range": {
+      "win_rate": null,
+      "trade_count": 0,
+      "expectancy": null,
+      "sample_window": null,
+      "instrument_coverage": [],
+      "confidence": 0.0,
+      "fail_closed_reason": "not_tested"
+    },
+    "transition": {
+      "win_rate": null,
+      "trade_count": 0,
+      "expectancy": null,
+      "sample_window": null,
+      "instrument_coverage": [],
+      "confidence": 0.0,
+      "fail_closed_reason": "not_tested"
+    },
+    "stress": {
+      "win_rate": null,
+      "trade_count": 0,
+      "expectancy": null,
+      "sample_window": null,
+      "instrument_coverage": [],
+      "confidence": 0.0,
+      "fail_closed_reason": "not_tested"
+    },
+    "other": {
+      "win_rate": null,
+      "trade_count": 0,
+      "expectancy": null,
+      "sample_window": null,
+      "instrument_coverage": [],
+      "confidence": 0.0,
+      "fail_closed_reason": "not_tested"
+    }
+  },
+  "field_mapping": {
+    "Structure": [
+      "fvg_type",
+      "direction",
+      "top",
+      "bottom",
+      "validation_state"
+    ],
+    "Technicals": [
+      "fvg_type",
+      "direction",
+      "top",
+      "bottom",
+      "midpoint",
+      "fill_ratio",
+      "inverted",
+      "respected"
+    ],
+    "SMT": [],
+    "Regime posterior evidence": [
+      "main_regime",
+      "session",
+      "validation_state",
+      "confidence"
+    ],
+    "Execution tree": [
+      "top",
+      "bottom",
+      "midpoint",
+      "fill_ratio",
+      "inverted",
+      "failed",
+      "validation_state",
+      "realized_r"
+    ]
+  }
+}

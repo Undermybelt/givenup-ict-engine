@@ -1,0 +1,143 @@
+{
+  "schema_version": "factor-eval-grid-summary/v1",
+  "factor_name": "options_dealer_context",
+  "candidate_id": "options_dealer_context_etf_breadth_observation_v1",
+  "selected_strategy": "options_dealer_context_observation_packet",
+  "timeframe": "options_chain_snapshot",
+  "candidate_status": "active",
+  "promotion_state": "observation_only",
+  "breadth_matrix": {
+    "SPY options chain": {
+      "status": "provider_backed_observation_only",
+      "trade_count": 0,
+      "trade_density_label": "single_snapshot_no_realized_trades",
+      "evidence_source": "support/docs/experiments/actionable-regime-confidence/runs/20260516T211000+0800-codex-board-b-options-dealer-etf-breadth-v1/materials/spy_options_dealer_context_packet.json",
+      "win_rate_pct": null,
+      "expectancy_r": null
+    },
+    "DIA options chain": {
+      "status": "provider_backed_observation_only",
+      "trade_count": 0,
+      "trade_density_label": "single_snapshot_no_realized_trades",
+      "evidence_source": "support/docs/experiments/actionable-regime-confidence/runs/20260516T211000+0800-codex-board-b-options-dealer-etf-breadth-v1/materials/dia_options_dealer_context_packet.json",
+      "win_rate_pct": null,
+      "expectancy_r": null
+    },
+    "IWM options chain": {
+      "status": "provider_backed_observation_only",
+      "trade_count": 0,
+      "trade_density_label": "single_snapshot_no_realized_trades",
+      "evidence_source": "support/docs/experiments/actionable-regime-confidence/runs/20260516T211000+0800-codex-board-b-options-dealer-etf-breadth-v1/materials/iwm_options_dealer_context_packet.json",
+      "win_rate_pct": null,
+      "expectancy_r": null
+    },
+    "repeated realized windows": {
+      "status": "required_not_yet_labeled",
+      "trade_count": 0,
+      "trade_density_label": "missing_realized_outcomes",
+      "evidence_source": "support/scripts/research/options_dealer_context_observation_packet.py",
+      "win_rate_pct": null,
+      "expectancy_r": null
+    }
+  },
+  "trade_density_summary": {
+    "aggregate_trade_count": 0,
+    "aggregate_label": "multi_symbol_snapshot_observation_only",
+    "covered_market_count": 3
+  },
+  "aggregate_metrics": {
+    "sharpe": null,
+    "win_rate_pct": null,
+    "profit_factor": null,
+    "total_profit_pct": null,
+    "max_drawdown_pct": null,
+    "trade_count": 0,
+    "expectancy_r": null
+  },
+  "per_regime_statistics": {
+    "trend": {
+      "win_rate": null,
+      "trade_count": 0,
+      "expectancy": null,
+      "sample_window": null,
+      "instrument_coverage": [],
+      "confidence": 0.0,
+      "fail_closed_reason": "no_realized_trades_observation_only"
+    },
+    "range": {
+      "win_rate": null,
+      "trade_count": 0,
+      "expectancy": null,
+      "sample_window": "2026-05-16T21:10:00+08:00",
+      "instrument_coverage": [
+        "yfinance:SPY:options_chain",
+        "yfinance:DIA:options_chain",
+        "yfinance:IWM:options_chain"
+      ],
+      "confidence": 0.85,
+      "fail_closed_reason": "multi_symbol_snapshot_observation_only_no_realized_outcomes"
+    },
+    "transition": {
+      "win_rate": null,
+      "trade_count": 0,
+      "expectancy": null,
+      "sample_window": null,
+      "instrument_coverage": [],
+      "confidence": 0.0,
+      "fail_closed_reason": "no_realized_trades_observation_only"
+    },
+    "stress": {
+      "win_rate": null,
+      "trade_count": 0,
+      "expectancy": null,
+      "sample_window": null,
+      "instrument_coverage": [],
+      "confidence": 0.0,
+      "fail_closed_reason": "no_realized_trades_observation_only"
+    },
+    "other": {
+      "win_rate": null,
+      "trade_count": 0,
+      "expectancy": null,
+      "sample_window": null,
+      "instrument_coverage": [],
+      "confidence": 0.0,
+      "fail_closed_reason": "no_realized_trades_observation_only"
+    }
+  },
+  "field_mapping": {
+    "Structure": [
+      "gamma_wall",
+      "put_wall",
+      "call_wall"
+    ],
+    "Technicals": [
+      "dealer_gamma_regime",
+      "zero_dte_pressure",
+      "skew_stress",
+      "expected_pin_or_acceleration"
+    ],
+    "SMT": [],
+    "Regime posterior evidence": [
+      "dealer_gamma_regime",
+      "zero_dte_pressure",
+      "skew_stress",
+      "confidence"
+    ],
+    "Execution tree": [
+      "gamma_wall",
+      "put_wall",
+      "call_wall",
+      "dealer_gamma_regime",
+      "expected_pin_or_acceleration",
+      "skew_stress"
+    ],
+    "Feedback/update learning fields": [
+      "provider",
+      "snapshot_time",
+      "spot_price",
+      "regime_profit_branch_path",
+      "realized_outcome_required_before_learning"
+    ]
+  }
+}

@@ -1,0 +1,57 @@
+{
+  "schema_version": "transfer-score/v1",
+  "strategy_name": "market_structure_direct_limit_seed_packet",
+  "candidate_id": "market_structure_event_classifier_direct_limit_v1",
+  "covered_market_count": 3,
+  "covered_markets": [
+    "IBKR",
+    "Kraken",
+    "yfinance/YF"
+  ],
+  "markets_without_trade_counts": [
+    "TradingViewRemix"
+  ],
+  "status": "positive_seed_gate1_only",
+  "overall_transfer_score": 0.64,
+  "average_sharpe": null,
+  "average_trade_count": 42.0,
+  "timeframe": "1h",
+  "market_evidence": {
+    "IBKR": {
+      "trade_count": 70,
+      "wins": 52,
+      "win_rate": 0.742857,
+      "expectancy": 1.184775,
+      "gross_gain_r": 99.575174,
+      "gross_loss_r": 16.640936,
+      "profit_factor_r": 5.983748
+    },
+    "Kraken": {
+      "trade_count": 12,
+      "wins": 10,
+      "win_rate": 0.833333,
+      "expectancy": 1.5,
+      "gross_gain_r": 20.0,
+      "gross_loss_r": 2.0,
+      "profit_factor_r": 10.0
+    },
+    "yfinance/YF": {
+      "trade_count": 44,
+      "wins": 34,
+      "win_rate": 0.772727,
+      "expectancy": 1.318182,
+      "gross_gain_r": 68.0,
+      "gross_loss_r": 10.0,
+      "profit_factor_r": 6.8
+    }
+  },
+  "branch_path_contract": {
+    "main_regime": "Transition",
+    "sub_regime": "CisdDisplacementValidity",
+    "sub_sub_regime_or_profit_factor": "direct_limit",
+    "profit_factor": "market_structure_event_classifier_direct_limit_v1",
+    "regime_profit_branch_path": "Transition -> CisdDisplacementValidity -> direct_limit -> market_structure_event_classifier_direct_limit_v1"
+  },
+  "evidence_source": "support/docs/experiments/actionable-regime-confidence/runs/20260516T-current-codex-board-b-market-structure-direct-limit-seed-v1/materials/market_structure_direct_limit_seed_packet.json",
+  "fail_closed_reason": "needs_native_admission_and_downstream_observation_before_promotion"
+}

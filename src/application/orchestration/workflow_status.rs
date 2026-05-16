@@ -2,6 +2,7 @@ use anyhow::Result;
 use chrono::Utc;
 use serde::{Deserialize, Serialize};
 use serde_json::{json, Value};
+use std::fs;
 use std::net::{SocketAddr, TcpStream};
 use std::path::Path;
 use std::time::Duration;
@@ -329,6 +330,121 @@ fn build_path_ranker_summary_value(
     })
 }
 
+fn build_current_regime_posterior_value(snapshot: &WorkflowSnapshot) -> Value {
+    let Some(phase) = latest_pre_bayes_phase(snapshot) else {
+        return Value::Null;
+    };
+
+    json!({
+        "active_regime": phase.canonical_structural_active_regime.clone(),
+        "confidence": phase.canonical_structural_confidence,
+        "probabilities": phase.canonical_structural_probabilities.clone(),
+        "filtered_assignments": phase.pre_bayes_filtered_assignments.clone(),
+        "soft_evidence": phase.pre_bayes_soft_evidence.clone(),
+        "gate_status": phase.pre_bayes_gate_status.clone(),
+        "policy_version": phase.pre_bayes_policy_version.clone(),
+        "execution_gate_status": phase.execution_gate_status.clone(),
+        "source_phase": phase.phase.clone(),
+        "source_run_id": phase.run_id.clone(),
+        "source_timestamp": phase.timestamp,
+        "promotion_allowed": false,
+    })
+}
+
+fn build_regime_confidence_assets_value(
+    snapshot: &WorkflowSnapshot,
+    state_dir: Option<&str>,
+) -> Value {
+    let Some(state_dir) = state_dir else {
+        return Value::Null;
+    };
+    let Ok(ledger) = crate::state::load_artifact_ledger(state_dir, &snapshot.symbol) else {
+        return json!({
+            "inventory_ready": false,
+            "inventory_status": "ledger_unavailable",
+            "asset_count": 0,
+            "promotion_allowed": false,
+            "runtime_selection_enabled": false,
+        });
+    };
+    let Some(entry) = ledger
+        .iter()
+        .rev()
+        .find(|entry| entry.artifact_kind == "regime_confidence_asset_inventory")
+    else {
+        return json!({
+            "inventory_ready": false,
+            "inventory_status": "missing",
+            "asset_count": 0,
+            "promotion_allowed": false,
+            "runtime_selection_enabled": false,
+        });
+    };
+    let path = Path::new(&entry.path);
+    if !path.exists() {
+        return json!({
+            "inventory_ready": false,
+            "inventory_status": "missing_file",
+            "asset_count": 0,
+            "inventory_path": entry.path,
+            "artifact_id": entry.artifact_id,
+            "promotion_allowed": false,
+            "runtime_selection_enabled": false,
+        });
+    }
+    let Ok(raw) = fs::read_to_string(path) else {
+        return json!({
+            "inventory_ready": false,
+            "inventory_status": "read_error",
+            "asset_count": 0,
+            "inventory_path": entry.path,
+            "artifact_id": entry.artifact_id,
+            "promotion_allowed": false,
+            "runtime_selection_enabled": false,
+        });
+    };
+    let Ok(inventory) = serde_json::from_str::<Value>(&raw) else {
+        return json!({
+            "inventory_ready": false,
+            "inventory_status": "parse_error",
+            "asset_count": 0,
+            "inventory_path": entry.path,
+            "artifact_id": entry.artifact_id,
+            "promotion_allowed": false,
+            "runtime_selection_enabled": false,
+        });
+    };
+    let assets_len = inventory
+        .get("assets")
+        .and_then(Value::as_array)
+        .map(Vec::len)
+        .unwrap_or_default();
+    let asset_count = inventory
+        .pointer("/summary/asset_count")
+        .and_then(Value::as_u64)
+        .map(|value| value as usize)
+        .unwrap_or(assets_len);
+
+    json!({
+        "inventory_ready": asset_count > 0,
+        "inventory_status": "ready",
+        "asset_count": asset_count,
+        "board_a_regime_gate_count": inventory.pointer("/summary/board_a_regime_gate_count").and_then(Value::as_u64).unwrap_or(0),
+        "direct_event_overlay_count": inventory.pointer("/summary/direct_event_overlay_count").and_then(Value::as_u64).unwrap_or(0),
+        "diagnostic_after_source_control_unlock_count": inventory.pointer("/summary/diagnostic_after_source_control_unlock_count").and_then(Value::as_u64).unwrap_or(0),
+        "contrast_evidence_count": inventory.pointer("/summary/contrast_evidence_count").and_then(Value::as_u64).unwrap_or(0),
+        "recovered_not_candidate_pack_count": inventory.pointer("/summary/recovered_not_candidate_pack_count").and_then(Value::as_u64).unwrap_or(0),
+        "promotion_allowed": inventory.pointer("/summary/promotion_allowed").and_then(Value::as_bool).unwrap_or(false),
+        "runtime_selection_enabled": inventory.pointer("/summary/runtime_selection_enabled").and_then(Value::as_bool).unwrap_or(false),
+        "inventory_path": entry.path,
+        "artifact_id": entry.artifact_id,
+        "status": entry.status,
+        "actionable": entry.actionable,
+        "decision_hint": entry.decision_hint,
+        "review_reason": entry.review_reason,
+    })
+}
+
 fn structural_execution_candidate_value_from_recommended_path_bundle(
     snapshot: &WorkflowSnapshot,
     provider_status_agent: &ProviderCatalogAgentSurface,
@@ -496,6 +612,80 @@ fn build_full_workflow_status_json_value(
     state_dir: Option<&str>,
 ) -> Result<Value> {
     let mut value = serde_json::to_value(snapshot)?;
+    if let Value::Object(map) = &mut value {
+        map.insert(
+            "current_regime_posterior".to_string(),
+            build_current_regime_posterior_value(snapshot),
+        );
+        map.insert(
+            "regime_confidence_assets".to_string(),
+            build_regime_confidence_assets_value(snapshot, state_dir),
+        );
+        if let Some(phase) = latest_pre_bayes_phase(snapshot) {
+            let posterior = json!({
+                "active_regime": phase.canonical_structural_active_regime,
+                "confidence": phase.canonical_structural_confidence,
+                "probabilities": phase.canonical_structural_probabilities,
+            });
+            map.insert("posterior".to_string(), posterior);
+            map.insert(
+                "active_regime".to_string(),
+                serde_json::to_value(&phase.canonical_structural_active_regime)?,
+            );
+            map.insert(
+                "confidence".to_string(),
+                serde_json::to_value(phase.canonical_structural_confidence)?,
+            );
+            map.insert(
+                "probabilities".to_string(),
+                serde_json::to_value(&phase.canonical_structural_probabilities)?,
+            );
+            map.insert(
+                "gate_status".to_string(),
+                serde_json::to_value(&phase.pre_bayes_gate_status)?,
+            );
+            map.insert(
+                "policy_version".to_string(),
+                serde_json::to_value(&phase.pre_bayes_policy_version)?,
+            );
+            map.insert(
+                "filtered_assignments".to_string(),
+                serde_json::to_value(&phase.pre_bayes_filtered_assignments)?,
+            );
+            map.insert(
+                "soft_evidence".to_string(),
+                serde_json::to_value(&phase.pre_bayes_soft_evidence)?,
+            );
+            map.insert(
+                "latest_gate_status".to_string(),
+                serde_json::to_value(&phase.pre_bayes_gate_status)?,
+            );
+            map.insert(
+                "latest_policy_version".to_string(),
+                serde_json::to_value(&phase.pre_bayes_policy_version)?,
+            );
+            map.insert(
+                "latest_filtered_assignments".to_string(),
+                serde_json::to_value(&phase.pre_bayes_filtered_assignments)?,
+            );
+            map.insert(
+                "latest_soft_evidence".to_string(),
+                serde_json::to_value(&phase.pre_bayes_soft_evidence)?,
+            );
+            map.insert(
+                "latest_canonical_structural_active_regime".to_string(),
+                serde_json::to_value(&phase.canonical_structural_active_regime)?,
+            );
+            map.insert(
+                "latest_canonical_structural_confidence".to_string(),
+                serde_json::to_value(phase.canonical_structural_confidence)?,
+            );
+            map.insert(
+                "latest_canonical_structural_probabilities".to_string(),
+                serde_json::to_value(&phase.canonical_structural_probabilities)?,
+            );
+        }
+    }
     if let Some(structural_candidate) =
         structural_execution_candidate_value_from_recommended_path_bundle(
             snapshot,
@@ -924,6 +1114,7 @@ pub struct WorkflowStatusDispatchInput<'a> {
     pub limit: Option<usize>,
     pub output_format: &'a str,
     pub stable: bool,
+    pub prefer_persisted_execution_candidate: bool,
 }
 
 #[derive(Debug, Clone)]
@@ -1567,6 +1758,16 @@ fn historical_data_candidates(snapshot: &WorkflowSnapshot) -> Vec<String> {
     candidates
 }
 
+fn evidence_review_router_active(snapshot: &WorkflowSnapshot, no_workflow_state: bool) -> bool {
+    if no_workflow_state {
+        return false;
+    }
+    matches!(
+        latest_workflow_phase(snapshot).map(|phase| phase.phase.as_str()),
+        Some("research" | "backtest" | "analyze" | "update")
+    )
+}
+
 fn latest_workflow_phase(
     snapshot: &WorkflowSnapshot,
 ) -> Option<&crate::state::WorkflowPhaseSnapshot> {
@@ -1734,7 +1935,9 @@ fn build_human_workflow_status_view_with_provider_agent_and_structural_prior_sta
             }
         })
         .unwrap_or(raw_top_level_command);
-    let historical_data_gate_active = !selected_data_candidates.is_empty()
+    let historical_data_gate_active = !hard_block_active
+        && evidence_review_guide.is_none()
+        && !selected_data_candidates.is_empty()
         && (top_level_command.contains("factor-research")
             || top_level_command.contains("factor-backtest")
             || snapshot
@@ -2867,6 +3070,8 @@ fn build_agent_workflow_status_view_with_provider_agent_and_structural_prior_sta
         "auto_quant_handoff": auto_quant_handoff_guide,
         "evidence_review": evidence_review_guide,
         "latest_structural_feedback": latest_structural_feedback,
+        "current_regime_posterior": build_current_regime_posterior_value(snapshot),
+        "regime_confidence_assets": build_regime_confidence_assets_value(snapshot, state_dir),
         "experience_prior_surface": experience_prior_surface,
         "structural_validation_summary": structural_validation_summary,
         "path_ranker_summary": build_path_ranker_summary_value(recommended_path_bundle.as_ref()),
@@ -3267,6 +3472,11 @@ pub fn dispatch_workflow_status(
         {
             return Ok(());
         }
+        let persisted_execution_candidate_value = || {
+            build_auxiliary_artifact_surfaces(snapshot)
+                .execution_candidate
+                .and_then(|candidate| serde_json::to_value(candidate).ok())
+        };
         let mut value = match phase_key.as_str() {
             "agent-bootstrap" | "bootstrap" => build_workflow_status_bootstrap_phase_value(
                 bootstrap.symbol,
@@ -3277,6 +3487,19 @@ pub fn dispatch_workflow_status(
                 bootstrap.multi_timeframe_clean_root,
                 &bootstrap.tomac_root_placeholder,
             )?,
+            "execution-candidate" if input.prefer_persisted_execution_candidate => {
+                persisted_execution_candidate_value().unwrap_or(
+                    build_workflow_status_phase_value_with_structural_prior_state_and_state_dir(
+                        snapshot,
+                        persisted_scorecards,
+                        provider_status_agent,
+                        feedback_history,
+                        structural_prior_state,
+                        Some(bootstrap.state_dir),
+                        "execution-candidate",
+                    )?,
+                )
+            }
             other => build_workflow_status_phase_value_with_structural_prior_state_and_state_dir(
                 snapshot,
                 persisted_scorecards,
@@ -3845,7 +4068,10 @@ fn workflow_status_structural_recommended_next_step_with_state_dir(
         snapshot.recommended_next_command.clone()
     };
     let selected_data_candidates = historical_data_candidates(snapshot);
-    let historical_data_gate_active = !selected_data_candidates.is_empty()
+    let no_workflow_state = workflow_status_focus_phase(snapshot) == NO_WORKFLOW_STATE;
+    let historical_data_gate_active = !hard_block_active
+        && !evidence_review_router_active(snapshot, no_workflow_state)
+        && !selected_data_candidates.is_empty()
         && (top_level_command.contains("factor-research")
             || top_level_command.contains("factor-backtest")
             || snapshot
@@ -4476,9 +4702,22 @@ pub fn build_pre_bayes_status_value(
 ) -> Result<Value> {
     let pre = build_pre_bayes_surfaces(snapshot);
     let latest_phase = latest_pre_bayes_phase(snapshot);
+    let posterior_alias = json!({
+        "active_regime": pre.canonical_structural_active_regime,
+        "confidence": pre.canonical_structural_confidence,
+        "probabilities": pre.canonical_structural_probabilities,
+    });
     Ok(
         match section.map(|value| value.trim().to_ascii_lowercase()) {
             None => serde_json::to_value(json!({
+                "posterior": posterior_alias,
+                "active_regime": pre.canonical_structural_active_regime,
+                "confidence": pre.canonical_structural_confidence,
+                "probabilities": pre.canonical_structural_probabilities,
+                "gate_status": latest_phase.map(|phase| phase.pre_bayes_gate_status.clone()),
+                "policy_version": latest_phase.map(|phase| phase.pre_bayes_policy_version.clone()),
+                "filtered_assignments": latest_phase.map(|phase| phase.pre_bayes_filtered_assignments.clone()),
+                "soft_evidence": latest_phase.map(|phase| phase.pre_bayes_soft_evidence.clone()),
                 "latest_policy": pre.pre_bayes_policy,
                 "latest_bridge": pre.pre_bayes_entry_quality_bridge,
                 "latest_bridge_diff": pre.pre_bayes_entry_quality_bridge_diff,
@@ -4492,6 +4731,10 @@ pub fn build_pre_bayes_status_value(
                 "latest_canonical_structural_active_regime": pre.canonical_structural_active_regime,
                 "latest_canonical_structural_confidence": pre.canonical_structural_confidence,
                 "latest_canonical_structural_probabilities": pre.canonical_structural_probabilities,
+                "latest_conformal_coverage_1sigma": latest_phase.and_then(|phase| phase.conformal_coverage_1sigma),
+                "latest_conformal_miscoverage_1sigma": latest_phase.and_then(|phase| phase.conformal_miscoverage_1sigma),
+                "latest_mean_prediction_interval_half_width": latest_phase.and_then(|phase| phase.mean_prediction_interval_half_width),
+                "latest_worst_window_miscoverage": latest_phase.and_then(|phase| phase.worst_window_miscoverage),
                 "latest_soft_evidence_diff": pre.pre_bayes_soft_evidence_diff,
                 "latest_soft_evidence": latest_phase.map(|phase| phase.pre_bayes_soft_evidence.clone()),
             }))?,
@@ -4518,6 +4761,10 @@ pub fn build_pre_bayes_status_value(
                 "canonical_structural_active_regime": pre.canonical_structural_active_regime,
                 "canonical_structural_confidence": pre.canonical_structural_confidence,
                 "canonical_structural_probabilities": pre.canonical_structural_probabilities,
+                "conformal_coverage_1sigma": latest_phase.and_then(|phase| phase.conformal_coverage_1sigma),
+                "conformal_miscoverage_1sigma": latest_phase.and_then(|phase| phase.conformal_miscoverage_1sigma),
+                "mean_prediction_interval_half_width": latest_phase.and_then(|phase| phase.mean_prediction_interval_half_width),
+                "worst_window_miscoverage": latest_phase.and_then(|phase| phase.worst_window_miscoverage),
             }))?,
             Some(section) if section == "soft" || section == "soft-evidence" => {
                 serde_json::to_value(
@@ -4589,6 +4836,30 @@ pub fn emit_pre_bayes_status_output(
                 .and_then(Value::as_f64)
                 .map(|value| format!("{value:.3}"))
                 .unwrap_or_else(|| "unavailable".to_string());
+            let conformal_coverage_1sigma = value
+                .get("latest_conformal_coverage_1sigma")
+                .or_else(|| value.get("conformal_coverage_1sigma"))
+                .and_then(Value::as_f64)
+                .map(|value| format!("{value:.3}"))
+                .unwrap_or_else(|| "unavailable".to_string());
+            let conformal_miscoverage_1sigma = value
+                .get("latest_conformal_miscoverage_1sigma")
+                .or_else(|| value.get("conformal_miscoverage_1sigma"))
+                .and_then(Value::as_f64)
+                .map(|value| format!("{value:.3}"))
+                .unwrap_or_else(|| "unavailable".to_string());
+            let mean_prediction_interval_half_width = value
+                .get("latest_mean_prediction_interval_half_width")
+                .or_else(|| value.get("mean_prediction_interval_half_width"))
+                .and_then(Value::as_f64)
+                .map(|value| format!("{value:.3}"))
+                .unwrap_or_else(|| "unavailable".to_string());
+            let worst_window_miscoverage = value
+                .get("latest_worst_window_miscoverage")
+                .or_else(|| value.get("worst_window_miscoverage"))
+                .and_then(Value::as_f64)
+                .map(|value| format!("{value:.3}"))
+                .unwrap_or_else(|| "unavailable".to_string());
             print_human_lines(&[
                 format!(
                     "Pre-Bayes | gate={} | policy={} | soft_evidence={}",
@@ -4602,6 +4873,13 @@ pub fn emit_pre_bayes_status_output(
                     multi_timeframe_direction_bias,
                     multi_timeframe_alignment_score,
                     multi_timeframe_entry_alignment_score
+                ),
+                format!(
+                    "Conformal: coverage_1sigma={} | miscoverage_1sigma={} | interval_half_width={} | worst_window={}",
+                    conformal_coverage_1sigma,
+                    conformal_miscoverage_1sigma,
+                    mean_prediction_interval_half_width,
+                    worst_window_miscoverage
                 ),
             ]);
             Ok(())
@@ -5474,6 +5752,10 @@ mod tests {
             pre_bayes_gate_status: "pass_neutralized".to_string(),
             pre_bayes_policy_version: "v2".to_string(),
             pre_bayes_uses_soft_evidence: true,
+            pre_bayes_filtered_assignments: std::collections::BTreeMap::from([(
+                "market_regime".to_string(),
+                "trend".to_string(),
+            )]),
             canonical_structural_active_regime: Some("trend".to_string()),
             canonical_structural_confidence: Some(0.78),
             canonical_structural_probabilities: std::collections::BTreeMap::from([
@@ -5481,6 +5763,10 @@ mod tests {
                 ("range".to_string(), 0.14),
                 ("transition".to_string(), 0.08),
             ]),
+            conformal_coverage_1sigma: Some(0.81),
+            conformal_miscoverage_1sigma: Some(0.19),
+            mean_prediction_interval_half_width: Some(0.07),
+            worst_window_miscoverage: Some(0.11),
             pre_bayes_soft_evidence: std::collections::BTreeMap::from([(
                 "node".to_string(),
                 std::collections::BTreeMap::from([("state".to_string(), 0.25)]),
@@ -5497,12 +5783,26 @@ mod tests {
         assert_eq!(value["latest_policy_version"], "v2");
         assert_eq!(value["latest_uses_soft_evidence"], true);
         assert_eq!(value["latest_soft_evidence"]["node"]["state"], 0.25);
+        assert_eq!(value["gate_status"], "pass_neutralized");
+        assert_eq!(value["policy_version"], "v2");
+        assert_eq!(value["filtered_assignments"]["market_regime"], "trend");
+        assert_eq!(value["soft_evidence"]["node"]["state"], 0.25);
+        assert_eq!(value["posterior"]["active_regime"], "trend");
+        assert_eq!(value["posterior"]["confidence"], 0.78);
+        assert_eq!(value["posterior"]["probabilities"]["trend"], 0.78);
+        assert_eq!(value["active_regime"], "trend");
+        assert_eq!(value["confidence"], 0.78);
+        assert_eq!(value["probabilities"]["trend"], 0.78);
         assert_eq!(value["latest_canonical_structural_active_regime"], "trend");
         assert_eq!(value["latest_canonical_structural_confidence"], 0.78);
         assert_eq!(
             value["latest_canonical_structural_probabilities"]["trend"],
             0.78
         );
+        assert_eq!(value["latest_conformal_coverage_1sigma"], 0.81);
+        assert_eq!(value["latest_conformal_miscoverage_1sigma"], 0.19);
+        assert_eq!(value["latest_mean_prediction_interval_half_width"], 0.07);
+        assert_eq!(value["latest_worst_window_miscoverage"], 0.11);
         assert_eq!(
             value["latest_soft_evidence_diff"].as_array().unwrap().len(),
             1
@@ -5918,6 +6218,150 @@ mod tests {
     }
 
     #[test]
+    fn full_json_status_surfaces_pre_bayes_posterior_aliases() {
+        let snapshot = WorkflowSnapshot {
+            symbol: "DEMO".to_string(),
+            latest_analyze: Some(WorkflowPhaseSnapshot {
+                phase: "analyze".to_string(),
+                pre_bayes_gate_status: "pass_neutralized".to_string(),
+                pre_bayes_policy_version: "policy-v1".to_string(),
+                pre_bayes_filtered_assignments: std::collections::BTreeMap::from([(
+                    "market_regime".to_string(),
+                    "range".to_string(),
+                )]),
+                canonical_structural_active_regime: Some("range".to_string()),
+                canonical_structural_confidence: Some(0.61),
+                canonical_structural_probabilities: std::collections::BTreeMap::from([
+                    ("range".to_string(), 0.61),
+                    ("trend".to_string(), 0.29),
+                    ("transition".to_string(), 0.10),
+                ]),
+                ..WorkflowPhaseSnapshot::default()
+            }),
+            ..WorkflowSnapshot::default()
+        };
+
+        let value = build_full_workflow_status_json_value(
+            &snapshot,
+            &sample_provider_agent_surface(),
+            &[],
+            &StructuralPriorLearningState::default(),
+            None,
+        )
+        .unwrap();
+
+        assert_eq!(value["posterior"]["active_regime"], "range");
+        assert_eq!(value["posterior"]["confidence"], 0.61);
+        assert_eq!(value["posterior"]["probabilities"]["range"], 0.61);
+        assert_eq!(value["current_regime_posterior"]["active_regime"], "range");
+        assert_eq!(value["current_regime_posterior"]["confidence"], 0.61);
+        assert_eq!(
+            value["current_regime_posterior"]["probabilities"]["range"],
+            0.61
+        );
+        assert_eq!(
+            value["current_regime_posterior"]["gate_status"],
+            "pass_neutralized"
+        );
+        assert_eq!(
+            value["current_regime_posterior"]["promotion_allowed"],
+            false
+        );
+        assert_eq!(value["active_regime"], "range");
+        assert_eq!(value["confidence"], 0.61);
+        assert_eq!(value["probabilities"]["range"], 0.61);
+        assert_eq!(value["gate_status"], "pass_neutralized");
+        assert_eq!(value["policy_version"], "policy-v1");
+        assert_eq!(value["filtered_assignments"]["market_regime"], "range");
+        assert_eq!(value["latest_canonical_structural_active_regime"], "range");
+        assert_eq!(value["latest_canonical_structural_confidence"], 0.61);
+        assert_eq!(
+            value["latest_canonical_structural_probabilities"]["range"],
+            0.61
+        );
+    }
+
+    #[test]
+    fn full_json_status_exposes_regime_confidence_asset_inventory() {
+        let temp = tempfile::tempdir().unwrap();
+        let symbol = "NQ";
+        let inventory = json!({
+            "summary": {
+                "asset_count": 18,
+                "board_a_regime_gate_count": 11,
+                "direct_event_overlay_count": 2,
+                "diagnostic_after_source_control_unlock_count": 4,
+                "contrast_evidence_count": 10,
+                "promotion_allowed": false,
+                "runtime_selection_enabled": false
+            },
+            "assets": []
+        });
+        crate::state::save_state(
+            temp.path(),
+            symbol,
+            "regime_confidence_asset_inventory.json",
+            &inventory,
+        )
+        .unwrap();
+        let inventory_path = crate::state::artifact_state_path(
+            temp.path(),
+            symbol,
+            "regime_confidence_asset_inventory.json",
+        );
+        crate::state::append_artifact_ledger_entry(
+            temp.path(),
+            symbol,
+            ArtifactLedgerEntry {
+                artifact_kind: "regime_confidence_asset_inventory".to_string(),
+                artifact_id: "regime-confidence-asset-inventory:NQ:test".to_string(),
+                symbol: symbol.to_string(),
+                path: inventory_path,
+                status: "ready_preserved".to_string(),
+                actionable: false,
+                decision_hint:
+                    "board_a_regime_confidence_assets_and_contrast_evidence_visible_to_aq_live_loop"
+                        .to_string(),
+                review_reason: "asset_count=18 board_a_gate=11 direct_event=2 contrast_evidence=10"
+                    .to_string(),
+                ..ArtifactLedgerEntry::default()
+            },
+        )
+        .unwrap();
+        let snapshot = WorkflowSnapshot {
+            symbol: symbol.to_string(),
+            ..WorkflowSnapshot::default()
+        };
+
+        let value = build_full_workflow_status_json_value(
+            &snapshot,
+            &sample_provider_agent_surface(),
+            &[],
+            &StructuralPriorLearningState::default(),
+            Some(temp.path().to_str().unwrap()),
+        )
+        .unwrap();
+
+        assert_eq!(
+            value["regime_confidence_assets"]["inventory_status"],
+            "ready"
+        );
+        assert_eq!(value["regime_confidence_assets"]["asset_count"], 18);
+        assert_eq!(
+            value["regime_confidence_assets"]["board_a_regime_gate_count"],
+            11
+        );
+        assert_eq!(
+            value["regime_confidence_assets"]["promotion_allowed"],
+            false
+        );
+        assert_eq!(
+            value["regime_confidence_assets"]["runtime_selection_enabled"],
+            false
+        );
+    }
+
+    #[test]
     fn agent_status_treats_pre_bayes_neutralized_as_blocking() {
         let snapshot = WorkflowSnapshot {
             symbol: "SRC_ROOT_CARRY_LONG_220646".to_string(),
@@ -6227,6 +6671,7 @@ mod tests {
                 limit: None,
                 output_format: "json",
                 stable: false,
+                prefer_persisted_execution_candidate: false,
             },
             WorkflowStatusBootstrapInput {
                 symbol: "NQ",
@@ -6261,6 +6706,7 @@ mod tests {
                 limit: None,
                 output_format: "json",
                 stable: false,
+                prefer_persisted_execution_candidate: false,
             },
             WorkflowStatusBootstrapInput {
                 symbol: "NQ",
@@ -6633,6 +7079,88 @@ mod tests {
             agent["evidence_review"]["structural_path_command"].as_str(),
             Some("ict-engine workflow-status --symbol NQ --state-dir /tmp/state --profile thrill3r-nq-closed-loop-v1 --phase structural-recommended-path-bundle")
         );
+    }
+
+    #[test]
+    fn human_evidence_review_router_is_not_overridden_by_historical_data_gate() {
+        let snapshot = WorkflowSnapshot {
+            symbol: "DEMO".to_string(),
+            current_focus_phase: "research".to_string(),
+            current_focus_reason: "no_previous_run".to_string(),
+            recommended_next_command: "ict-engine factor-research --symbol DEMO --data /tmp/demo.json --state-dir /tmp/state --objective expansion_manipulation".to_string(),
+            latest_research: Some(crate::state::WorkflowPhaseSnapshot {
+                phase: "research".to_string(),
+                phase_summary: "objective=expansion_manipulation best_factor=trend_momentum aggregate_return=0.0017 feedback_applied=46 execution_gate=execution_observe_only".to_string(),
+                recommended_next_command: "ict-engine factor-research --symbol DEMO --data /tmp/demo.json --state-dir /tmp/state --objective expansion_manipulation".to_string(),
+                ..crate::state::WorkflowPhaseSnapshot::default()
+            }),
+            ..WorkflowSnapshot::default()
+        };
+
+        let human = build_human_workflow_status_view_with_provider_agent_and_structural_prior_state_and_state_dir(
+            &snapshot,
+            &[],
+            &sample_provider_agent_surface(),
+            &[],
+            &StructuralPriorLearningState::default(),
+            Some("/tmp/state"),
+        );
+
+        assert_eq!(
+            human["what_you_should_do_now_source"],
+            "recommended_next_command"
+        );
+        assert_eq!(human["blocking_line"], "Block: none");
+        assert!(human["next_action_line"]
+            .as_str()
+            .unwrap()
+            .contains("--phase ensemble-vote"));
+        assert!(!human["next_action_line"]
+            .as_str()
+            .unwrap()
+            .contains("Ask the user to choose the historical dataset"));
+    }
+
+    #[test]
+    fn human_workflow_status_keeps_non_historical_hard_block_over_factor_research_data_gate() {
+        let mut snapshot = WorkflowSnapshot {
+            symbol: "DEMO".to_string(),
+            current_focus_phase: "analyze".to_string(),
+            current_focus_reason: "same_data_same_config".to_string(),
+            recommended_next_command: "ict-engine factor-research --symbol DEMO --data /tmp/demo.json --state-dir /tmp/state".to_string(),
+            latest_analyze: Some(crate::state::WorkflowPhaseSnapshot {
+                phase: "analyze".to_string(),
+                phase_summary: "selected_entry_quality=medium pre_bayes_status=pass_hard".to_string(),
+                recommended_next_command: "ict-engine factor-research --symbol DEMO --data /tmp/demo.json --state-dir /tmp/state".to_string(),
+                ..crate::state::WorkflowPhaseSnapshot::default()
+            }),
+            ..WorkflowSnapshot::default()
+        };
+        snapshot.blocking_truth.status = "bridge_needs_confirmation".to_string();
+        snapshot.blocking_truth.reason =
+            "pre_bayes passed but bridge gap 0.038 is below confirmation threshold".to_string();
+        snapshot.blocking_truth.next_command =
+            "ict-engine factor-research --symbol DEMO --data /tmp/demo.json --state-dir /tmp/state"
+                .to_string();
+
+        let human = build_human_workflow_status_view_with_provider_agent_and_structural_prior_state_and_state_dir(
+            &snapshot,
+            &[],
+            &sample_provider_agent_surface(),
+            &[],
+            &StructuralPriorLearningState::default(),
+            Some("/tmp/state"),
+        );
+
+        assert_eq!(
+            human["blocking_line"],
+            "Block: pre_bayes passed but bridge gap 0.038 is below confirmation threshold"
+        );
+        assert_eq!(human["what_you_should_do_now_source"], "blocking_truth");
+        assert!(!human["next_action_line"]
+            .as_str()
+            .unwrap()
+            .contains("Ask the user to choose the historical dataset"));
     }
 
     #[test]
@@ -8276,6 +8804,7 @@ mod tests {
             .unwrap()
             .iter()
             .any(|item| item.as_str().unwrap() == "invalidated"));
+        assert!(value["source_run_id"].is_null());
     }
 
     #[test]
@@ -10515,7 +11044,10 @@ mod tests {
         assert_eq!(first["maturity_mask"], true);
         assert_eq!(first["maturity_weight"].as_f64().unwrap(), 1.0);
         assert_eq!(first["calibrated_label"].as_f64().unwrap(), 0.0);
-        assert_eq!(first["regime_calibration_bucket"], "NQ:trend");
+        assert_eq!(
+            first["regime_calibration_bucket"],
+            "NQ:trend:path:scenario:NQ:belief_regime_node:trend:trend_follow_through:primary"
+        );
         assert!(!row_object.contains_key("raw_path_score"));
         assert!(!row_object.contains_key("calibrated_path_prob"));
         assert!(!row_object.contains_key("path_prob_lower_bound"));
@@ -12296,6 +12828,149 @@ mod tests {
                 .unwrap()
                 .get("b"),
             Some(&0.5)
+        );
+    }
+
+    #[test]
+    fn agent_workflow_status_exposes_current_regime_posterior_from_pre_bayes_phase() {
+        let snapshot = WorkflowSnapshot {
+            symbol: "NQ".to_string(),
+            current_focus_phase: "analyze".to_string(),
+            latest_analyze: Some(crate::state::WorkflowPhaseSnapshot {
+                phase: "analyze".to_string(),
+                run_id: "analyze:posterior".to_string(),
+                pre_bayes_gate_status: "pass_neutralized".to_string(),
+                pre_bayes_policy_version: "policy-v2".to_string(),
+                pre_bayes_filtered_assignments: std::collections::BTreeMap::from([(
+                    "market_regime".to_string(),
+                    "range".to_string(),
+                )]),
+                pre_bayes_soft_evidence: std::collections::BTreeMap::from([(
+                    "market_regime".to_string(),
+                    std::collections::BTreeMap::from([("range".to_string(), 0.61)]),
+                )]),
+                canonical_structural_active_regime: Some("range".to_string()),
+                canonical_structural_confidence: Some(0.61),
+                canonical_structural_probabilities: std::collections::BTreeMap::from([
+                    ("trend".to_string(), 0.22),
+                    ("range".to_string(), 0.61),
+                    ("transition".to_string(), 0.17),
+                ]),
+                execution_gate_status: Some("execution_blocked".to_string()),
+                ..crate::state::WorkflowPhaseSnapshot::default()
+            }),
+            ..WorkflowSnapshot::default()
+        };
+
+        let value = build_agent_workflow_status_view_with_provider_agent(
+            &snapshot,
+            &[],
+            &sample_provider_agent_surface(),
+            &[],
+        );
+
+        assert_eq!(value["current_regime_posterior"]["active_regime"], "range");
+        assert_eq!(value["current_regime_posterior"]["confidence"], 0.61);
+        assert_eq!(
+            value["current_regime_posterior"]["probabilities"]["range"],
+            0.61
+        );
+        assert_eq!(
+            value["current_regime_posterior"]["filtered_assignments"]["market_regime"],
+            "range"
+        );
+        assert_eq!(
+            value["current_regime_posterior"]["gate_status"],
+            "pass_neutralized"
+        );
+        assert_eq!(
+            value["current_regime_posterior"]["execution_gate_status"],
+            "execution_blocked"
+        );
+        assert_eq!(
+            value["current_regime_posterior"]["promotion_allowed"],
+            false
+        );
+    }
+
+    #[test]
+    fn agent_workflow_status_exposes_regime_confidence_asset_inventory() {
+        let temp = tempfile::tempdir().unwrap();
+        let symbol = "NQ";
+        let inventory = json!({
+            "summary": {
+                "asset_count": 18,
+                "board_a_regime_gate_count": 11,
+                "direct_event_overlay_count": 2,
+                "diagnostic_after_source_control_unlock_count": 4,
+                "contrast_evidence_count": 10,
+                "recovered_not_candidate_pack_count": 7,
+                "promotion_allowed": false,
+                "runtime_selection_enabled": false
+            },
+            "assets": []
+        });
+        crate::state::save_state(
+            temp.path(),
+            symbol,
+            "regime_confidence_asset_inventory.json",
+            &inventory,
+        )
+        .unwrap();
+        let inventory_path = crate::state::artifact_state_path(
+            temp.path(),
+            symbol,
+            "regime_confidence_asset_inventory.json",
+        );
+        crate::state::append_artifact_ledger_entry(
+            temp.path(),
+            symbol,
+            ArtifactLedgerEntry {
+                artifact_kind: "regime_confidence_asset_inventory".to_string(),
+                artifact_id: "regime-confidence-asset-inventory:NQ:test".to_string(),
+                symbol: symbol.to_string(),
+                path: inventory_path,
+                status: "ready_preserved".to_string(),
+                actionable: false,
+                decision_hint:
+                    "board_a_regime_confidence_assets_and_contrast_evidence_visible_to_aq_live_loop"
+                        .to_string(),
+                review_reason: "asset_count=18 board_a_gate=11 direct_event=2 contrast_evidence=10"
+                    .to_string(),
+                ..ArtifactLedgerEntry::default()
+            },
+        )
+        .unwrap();
+        let snapshot = WorkflowSnapshot {
+            symbol: symbol.to_string(),
+            ..WorkflowSnapshot::default()
+        };
+
+        let value = build_agent_workflow_status_view_with_provider_agent_and_structural_prior_state_and_state_dir(
+            &snapshot,
+            &[],
+            &sample_provider_agent_surface(),
+            &[],
+            &StructuralPriorLearningState::default(),
+            Some(temp.path().to_str().unwrap()),
+        );
+
+        assert_eq!(
+            value["regime_confidence_assets"]["inventory_status"],
+            "ready"
+        );
+        assert_eq!(value["regime_confidence_assets"]["asset_count"], 18);
+        assert_eq!(
+            value["regime_confidence_assets"]["board_a_regime_gate_count"],
+            11
+        );
+        assert_eq!(
+            value["regime_confidence_assets"]["promotion_allowed"],
+            false
+        );
+        assert_eq!(
+            value["regime_confidence_assets"]["runtime_selection_enabled"],
+            false
         );
     }
 

@@ -27,6 +27,19 @@ pub enum MarketStructureRegime {
     Unknown,
 }
 
+/// ATR-compressed oscillation box state.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, Default)]
+pub struct OscillationBoxState {
+    pub active: bool,
+    pub box_high: Option<f64>,
+    pub box_low: Option<f64>,
+    pub touch_count: usize,
+    pub atr_compression_ratio: f64,
+    pub spacing_consistency: f64,
+    pub confidence: f64,
+    pub exit_reason: Option<String>,
+}
+
 impl MarketStructureRegime {
     pub fn label(&self) -> &'static str {
         match self {
@@ -77,6 +90,31 @@ pub struct MarketStructureClassifier {
     thresholds: StructureThresholds,
 }
 
+/// Box-specific thresholds are intentionally strict: the box must be
+/// visibly compressed relative to ATR and have repeated boundary touches.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct OscillationBoxThresholds {
+    pub atr_period: usize,
+    pub compression_threshold: f64,
+    pub min_touch_count: usize,
+    pub max_box_range_atr: f64,
+    pub spacing_tolerance: f64,
+    pub lookback: usize,
+}
+
+impl Default for OscillationBoxThresholds {
+    fn default() -> Self {
+        Self {
+            atr_period: 14,
+            compression_threshold: 0.65,
+            min_touch_count: 3,
+            max_box_range_atr: 2.0,
+            spacing_tolerance: 0.35,
+            lookback: 48,
+        }
+    }
+}
+
 impl MarketStructureClassifier {
     pub fn new() -> Self {
         Self::with_thresholds(StructureThresholds::default())
@@ -91,6 +129,17 @@ impl MarketStructureClassifier {
         if candles.len() < self.thresholds.adx_period + 1 {
             return (MarketStructureRegime::Unknown, 0.0);
         }
+
+        let oscillation_box =
+            self.detect_oscillation_box(candles, &OscillationBoxThresholds::default());
+        let previous_box = if candles.len() > self.thresholds.adx_period + 2 {
+            self.detect_oscillation_box(
+                &candles[..candles.len() - 1],
+                &OscillationBoxThresholds::default(),
+            )
+        } else {
+            OscillationBoxState::default()
+        };
 
         // 1. 计算 ADX（趋势强度）
         let adx = self.compute_adx(candles);
@@ -108,8 +157,33 @@ impl MarketStructureClassifier {
         // 4. 检测 Wyckoff 阶段
         let wyckoff_score = self.detect_wyckoff_phase(candles);
 
+        let latest_atr = crate::indicators::atr::latest_atr(candles, 14);
+        let last_candle = candles.last().expect("checked non-empty above");
+        let breakout_buffer = latest_atr * 0.10;
+
         // 5. 综合分类
-        let (regime, confidence) = if current_adx >= self.thresholds.trend_threshold {
+        let (regime, confidence) = if previous_box.active
+            && last_candle.close
+                > previous_box.box_high.unwrap_or(last_candle.close) + breakout_buffer
+        {
+            (
+                MarketStructureRegime::Breakout,
+                (previous_box.confidence + (current_adx / 50.0).min(1.0) * 0.35).clamp(0.55, 1.0),
+            )
+        } else if previous_box.active
+            && last_candle.close
+                < previous_box.box_low.unwrap_or(last_candle.close) - breakout_buffer
+        {
+            (
+                MarketStructureRegime::Breakdown,
+                (previous_box.confidence + (current_adx / 50.0).min(1.0) * 0.35).clamp(0.55, 1.0),
+            )
+        } else if oscillation_box.active {
+            (
+                MarketStructureRegime::Ranging,
+                oscillation_box.confidence.max(range_score).clamp(0.55, 1.0),
+            )
+        } else if current_adx >= self.thresholds.trend_threshold {
             // 强趋势
             let conf = (current_adx / 50.0).min(1.0); // ADX 50 = 最高置信
             (MarketStructureRegime::Trending, conf)
@@ -128,6 +202,176 @@ impl MarketStructureClassifier {
         };
 
         (regime, confidence)
+    }
+
+    /// Detect an ATR-compressed oscillation box.
+    pub fn detect_oscillation_box(
+        &self,
+        candles: &[Candle],
+        thresholds: &OscillationBoxThresholds,
+    ) -> OscillationBoxState {
+        if candles.len() < thresholds.atr_period + 5 {
+            return OscillationBoxState {
+                exit_reason: Some("insufficient_bars".to_string()),
+                ..OscillationBoxState::default()
+            };
+        }
+
+        let lookback = thresholds.lookback.min(candles.len());
+        let min_window = (thresholds.atr_period + 2)
+            .max(thresholds.min_touch_count * 3)
+            .min(lookback);
+        let start = candles.len() - lookback;
+
+        let mut best_active: Option<(usize, OscillationBoxState)> = None;
+        let mut best_inactive: Option<(usize, OscillationBoxState)> = None;
+
+        for window_len in min_window..=lookback {
+            let window = &candles[candles.len() - window_len..];
+            let candidate = self.evaluate_oscillation_box_window(window, thresholds);
+            if candidate.active {
+                let replace = match &best_active {
+                    None => true,
+                    Some((best_len, best_state)) => {
+                        candidate.confidence > best_state.confidence
+                            || (candidate.confidence - best_state.confidence).abs() < 1e-9
+                                && window_len > *best_len
+                    }
+                };
+                if replace {
+                    best_active = Some((window_len, candidate));
+                }
+            } else {
+                let replace = match &best_inactive {
+                    None => true,
+                    Some((best_len, best_state)) => {
+                        candidate.touch_count > best_state.touch_count
+                            || (candidate.touch_count == best_state.touch_count
+                                && candidate.atr_compression_ratio
+                                    < best_state.atr_compression_ratio)
+                            || (candidate.touch_count == best_state.touch_count
+                                && (candidate.atr_compression_ratio
+                                    - best_state.atr_compression_ratio)
+                                    .abs()
+                                    < 1e-9
+                                && window_len > *best_len)
+                    }
+                };
+                if replace {
+                    best_inactive = Some((window_len, candidate));
+                }
+            }
+        }
+
+        best_active
+            .map(|(_, state)| state)
+            .or_else(|| best_inactive.map(|(_, state)| state))
+            .unwrap_or(OscillationBoxState {
+                exit_reason: Some(format!("no_candidate_window_from_{}", start)),
+                ..OscillationBoxState::default()
+            })
+    }
+
+    fn evaluate_oscillation_box_window(
+        &self,
+        window: &[Candle],
+        thresholds: &OscillationBoxThresholds,
+    ) -> OscillationBoxState {
+        let atr_series = crate::indicators::atr::compute_atr(window, thresholds.atr_period);
+        let Some(&latest_atr) = atr_series.last() else {
+            return OscillationBoxState {
+                exit_reason: Some("atr_unavailable".to_string()),
+                ..OscillationBoxState::default()
+            };
+        };
+        if latest_atr <= f64::EPSILON {
+            return OscillationBoxState {
+                exit_reason: Some("zero_atr".to_string()),
+                ..OscillationBoxState::default()
+            };
+        }
+
+        let top_k = thresholds.min_touch_count.max(2).min(window.len());
+        let mut highs = window.iter().map(|c| c.high).collect::<Vec<_>>();
+        highs.sort_by(|a, b| b.partial_cmp(a).unwrap_or(std::cmp::Ordering::Equal));
+        let mut lows = window.iter().map(|c| c.low).collect::<Vec<_>>();
+        lows.sort_by(|a, b| a.partial_cmp(b).unwrap_or(std::cmp::Ordering::Equal));
+        let box_high = highs[top_k - 1];
+        let box_low = lows[top_k - 1];
+        let box_range = box_high - box_low;
+        let atr_compression_ratio = (box_range / latest_atr).clamp(0.0, 10.0);
+
+        let mid = (box_high + box_low) / 2.0;
+        let touches = window
+            .iter()
+            .filter(|c| {
+                (c.high - box_high).abs() <= latest_atr * 0.15
+                    || (c.low - box_low).abs() <= latest_atr * 0.15
+                    || (c.close - mid).abs() <= latest_atr * 0.10
+            })
+            .count();
+        let touch_count = touches.min(window.len());
+        let spacing_consistency = self.compute_spacing_consistency(window, box_high, box_low);
+        let compressed = box_range <= latest_atr * thresholds.max_box_range_atr
+            && atr_compression_ratio <= thresholds.max_box_range_atr
+            && atr_compression_ratio <= thresholds.compression_threshold * 4.0;
+        let active = compressed && touch_count >= thresholds.min_touch_count;
+        let confidence = if active {
+            (1.0 - (atr_compression_ratio / thresholds.max_box_range_atr).min(1.0)) * 0.45
+                + (touch_count as f64 / (thresholds.min_touch_count as f64 + 2.0)).min(1.0) * 0.35
+                + spacing_consistency * 0.20
+        } else {
+            0.0
+        }
+        .clamp(0.0, 1.0);
+
+        let exit_reason = if active {
+            None
+        } else if !compressed {
+            Some("atr_not_compressed".to_string())
+        } else {
+            Some("insufficient_touches".to_string())
+        };
+
+        OscillationBoxState {
+            active,
+            box_high: Some(box_high),
+            box_low: Some(box_low),
+            touch_count,
+            atr_compression_ratio,
+            spacing_consistency,
+            confidence,
+            exit_reason,
+        }
+    }
+
+    fn compute_spacing_consistency(&self, candles: &[Candle], box_high: f64, box_low: f64) -> f64 {
+        if candles.len() < 4 {
+            return 0.0;
+        }
+        let mid = (box_high + box_low) / 2.0;
+        let mut touch_positions = Vec::new();
+        for (idx, candle) in candles.iter().enumerate() {
+            if (candle.high - box_high).abs() <= (box_high - box_low) * 0.08
+                || (candle.low - box_low).abs() <= (box_high - box_low) * 0.08
+                || (candle.close - mid).abs() <= (box_high - box_low) * 0.06
+            {
+                touch_positions.push(idx as f64);
+            }
+        }
+        if touch_positions.len() < 3 {
+            return 0.0;
+        }
+        let mut gaps = Vec::new();
+        for win in touch_positions.windows(2) {
+            gaps.push(win[1] - win[0]);
+        }
+        let mean = gaps.iter().sum::<f64>() / gaps.len() as f64;
+        if mean <= f64::EPSILON {
+            return 0.0;
+        }
+        let variance = gaps.iter().map(|gap| (gap - mean).powi(2)).sum::<f64>() / gaps.len() as f64;
+        (1.0 / (1.0 + variance.sqrt() / mean)).clamp(0.0, 1.0)
     }
 
     /// 计算 ADX（Average Directional Index）
@@ -306,6 +550,7 @@ impl Default for MarketStructureClassifier {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::indicators::atr::compute_atr;
     use chrono::{TimeZone, Utc};
 
     fn trend_candles(count: usize, direction: f64) -> Vec<Candle> {
@@ -340,6 +585,47 @@ mod tests {
             .collect()
     }
 
+    fn box_candles(count: usize) -> Vec<Candle> {
+        let template = [
+            100.00, 100.18, 100.04, 100.16, 100.02, 100.17, 100.05, 100.15, 100.03, 100.19,
+        ];
+        (0..count)
+            .map(|i| {
+                let close = template[i % template.len()];
+                Candle {
+                    timestamp: Utc.timestamp_opt(1_700_500_000 + i as i64 * 60, 0).unwrap(),
+                    open: close - 0.02,
+                    high: close + 0.03,
+                    low: close - 0.03,
+                    close,
+                    volume: 900.0 + (i % 3) as f64 * 20.0,
+                }
+            })
+            .collect()
+    }
+
+    fn box_candles_with_single_outlier(count: usize) -> Vec<Candle> {
+        let mut candles = box_candles(count);
+        let idx = count / 2;
+        candles[idx].high += 1.50;
+        candles[idx].low -= 1.20;
+        candles
+    }
+
+    fn expanding_history_then_box(count: usize) -> Vec<Candle> {
+        let mut candles = trend_candles(count / 2, 0.6);
+        let mut tail = box_candles(count - candles.len());
+        let offset = candles.last().map(|c| c.close - 100.0).unwrap_or_default();
+        for candle in &mut tail {
+            candle.open += offset;
+            candle.high += offset;
+            candle.low += offset;
+            candle.close += offset;
+        }
+        candles.extend(tail);
+        candles
+    }
+
     #[test]
     fn trending_detection() {
         let candles = trend_candles(100, 0.5); // 上涨趋势
@@ -364,5 +650,89 @@ mod tests {
                 | MarketStructureRegime::MeanReverting
                 | MarketStructureRegime::Unknown
         ));
+    }
+
+    #[test]
+    fn detects_atr_compressed_box() {
+        let candles = box_candles(80);
+        let classifier = MarketStructureClassifier::new();
+        let state =
+            classifier.detect_oscillation_box(&candles, &OscillationBoxThresholds::default());
+
+        assert!(state.active, "{state:?}");
+        assert!(state.box_high.unwrap() > state.box_low.unwrap());
+        assert!(state.touch_count >= 3);
+        assert!(state.atr_compression_ratio > 0.0);
+        assert!(state.confidence > 0.0);
+    }
+
+    #[test]
+    fn box_biases_classification_toward_ranging() {
+        let candles = box_candles(80);
+        let classifier = MarketStructureClassifier::new();
+        let (regime, conf) = classifier.classify(&candles);
+
+        assert_eq!(regime, MarketStructureRegime::Ranging);
+        assert!(conf >= 0.55, "{conf}");
+    }
+
+    #[test]
+    fn rejects_strong_trend_as_box() {
+        let candles = trend_candles(80, 0.8);
+        let classifier = MarketStructureClassifier::new();
+        let state =
+            classifier.detect_oscillation_box(&candles, &OscillationBoxThresholds::default());
+
+        assert!(!state.active);
+        assert!(matches!(
+            state.exit_reason.as_deref(),
+            Some("atr_not_compressed") | Some("insufficient_touches")
+        ));
+        assert_eq!(state.confidence, 0.0);
+        assert!(!compute_atr(&candles, 14).is_empty());
+    }
+
+    #[test]
+    fn classifies_breakout_after_atr_box_exit() {
+        let mut candles = box_candles(79);
+        candles.push(Candle {
+            timestamp: Utc.timestamp_opt(1_700_500_000 + 79 * 60, 0).unwrap(),
+            open: 100.18,
+            high: 100.62,
+            low: 100.14,
+            close: 100.58,
+            volume: 1200.0,
+        });
+        let classifier = MarketStructureClassifier::new();
+        let (regime, confidence) = classifier.classify(&candles);
+
+        assert_eq!(
+            regime,
+            MarketStructureRegime::Breakout,
+            "{regime:?} / {confidence}"
+        );
+        assert!(confidence > 0.0);
+    }
+
+    #[test]
+    fn single_outlier_does_not_destroy_box_detection() {
+        let candles = box_candles_with_single_outlier(80);
+        let classifier = MarketStructureClassifier::new();
+        let state =
+            classifier.detect_oscillation_box(&candles, &OscillationBoxThresholds::default());
+
+        assert!(state.active, "{state:?}");
+        assert!(state.confidence > 0.0);
+    }
+
+    #[test]
+    fn older_expansion_does_not_destroy_recent_box() {
+        let candles = expanding_history_then_box(80);
+        let classifier = MarketStructureClassifier::new();
+        let state =
+            classifier.detect_oscillation_box(&candles, &OscillationBoxThresholds::default());
+
+        assert!(state.active, "{state:?}");
+        assert!(state.touch_count >= 3);
     }
 }

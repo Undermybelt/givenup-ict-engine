@@ -66,6 +66,10 @@ pub struct MarketDataHarnessSymbolSpec {
     #[serde(default)]
     pub yfinance: Option<String>,
     #[serde(default)]
+    pub binance_public: Option<String>,
+    #[serde(default)]
+    pub bybit_public: Option<String>,
+    #[serde(default)]
     pub tradingview_mcp: Option<String>,
     #[serde(default)]
     pub hubble: Option<MarketDataHarnessHubbleSpec>,
@@ -116,6 +120,7 @@ impl MarketDataHarnessOperation {
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
 pub enum ProviderExecutionRequest {
     YahooFinance { symbol: String },
+    PublicExchange { provider: String, symbol: String },
     TradingViewMcp { symbol: String },
     Hubble { spec: MarketDataHarnessHubbleSpec },
     Ibkr { contract: MarketDataHarnessIbkrSpec },
@@ -124,7 +129,9 @@ pub enum ProviderExecutionRequest {
 impl ProviderExecutionRequest {
     pub fn symbol(&self) -> &str {
         match self {
-            Self::YahooFinance { symbol } | Self::TradingViewMcp { symbol } => symbol,
+            Self::YahooFinance { symbol }
+            | Self::PublicExchange { symbol, .. }
+            | Self::TradingViewMcp { symbol } => symbol,
             Self::Hubble { spec } => &spec.symbol,
             Self::Ibkr { contract } => &contract.symbol,
         }
@@ -413,6 +420,8 @@ fn display_symbol_for_spec(spec: &MarketDataHarnessSymbolSpec) -> Result<String>
     spec.display_symbol
         .clone()
         .or_else(|| spec.yfinance.clone())
+        .or_else(|| spec.binance_public.clone())
+        .or_else(|| spec.bybit_public.clone())
         .or_else(|| spec.tradingview_mcp.clone())
         .or_else(|| spec.hubble.as_ref().map(|item| item.symbol.clone()))
         .or_else(|| spec.ibkr.as_ref().map(|item| item.symbol.clone()))
@@ -429,6 +438,26 @@ fn build_provider_request(
             .clone()
             .map(|symbol| ProviderExecutionRequest::YahooFinance { symbol })
             .ok_or_else(|| anyhow!("missing yfinance symbol")),
+        "binance_public" | "binance_public_runtime" => spec
+            .binance_public
+            .clone()
+            .or_else(|| spec.yfinance.clone())
+            .or_else(|| spec.display_symbol.clone())
+            .map(|symbol| ProviderExecutionRequest::PublicExchange {
+                provider: "binance_public".to_string(),
+                symbol,
+            })
+            .ok_or_else(|| anyhow!("missing binance_public symbol")),
+        "bybit_public" | "bybit_public_runtime" => spec
+            .bybit_public
+            .clone()
+            .or_else(|| spec.yfinance.clone())
+            .or_else(|| spec.display_symbol.clone())
+            .map(|symbol| ProviderExecutionRequest::PublicExchange {
+                provider: "bybit_public".to_string(),
+                symbol,
+            })
+            .ok_or_else(|| anyhow!("missing bybit_public symbol")),
         "tradingview_mcp" => spec
             .tradingview_mcp
             .clone()
@@ -707,5 +736,40 @@ mod tests {
         };
         let result = resolve_provider_for_role("cfd_reference", &request);
         assert!(result.is_err());
+    }
+
+    #[test]
+    fn plan_supports_public_exchange_provider_symbols() {
+        let plan = build_market_data_harness_plan(MarketDataHarnessRequest {
+            market_key: "crypto".to_string(),
+            primary_data_path: None,
+            interval: Some("1h".to_string()),
+            start: Some(Utc::now() - TimeDelta::days(3)),
+            end: Some(Utc::now()),
+            count: Some(72),
+            related_roles: vec!["cfd_reference".to_string()],
+            provider_preferences: BTreeMap::from([(
+                "cfd_reference".to_string(),
+                "bybit_public".to_string(),
+            )]),
+            symbol_overrides: BTreeMap::from([(
+                "cfd_reference".to_string(),
+                MarketDataHarnessSymbolSpec {
+                    display_symbol: Some("BTCUSDT".to_string()),
+                    bybit_public: Some("BTCUSDT".to_string()),
+                    ..MarketDataHarnessSymbolSpec::default()
+                },
+            )]),
+            options_volatility_proxy_symbol: None,
+        })
+        .unwrap();
+
+        assert_eq!(plan.tasks.len(), 1);
+        assert_eq!(plan.tasks[0].provider, "bybit_public");
+        assert!(matches!(
+            &plan.tasks[0].request,
+            ProviderExecutionRequest::PublicExchange { provider, symbol }
+                if provider == "bybit_public" && symbol == "BTCUSDT"
+        ));
     }
 }

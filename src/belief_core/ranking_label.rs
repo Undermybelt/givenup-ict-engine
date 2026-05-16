@@ -11,6 +11,8 @@ use std::time::Duration;
 use crate::belief_core::beta_dirichlet_update::{beta_posterior_lower_bound, beta_posterior_mean};
 
 const STRUCTURAL_PATH_RANKING_RUNTIME_DIR: &str = "policy_training";
+const STRUCTURAL_PATH_RANKING_TARGET_SUMMARY_FILE: &str =
+    "structural_path_ranking_target_summary.json";
 pub const STRUCTURAL_PATH_RANKING_IPS_WEIGHT_CLIP: f64 = 5.0;
 pub const STRUCTURAL_PATH_RANKING_EXECUTION_GATE_MIN_PATH_PROB: f64 = 0.5;
 
@@ -283,6 +285,58 @@ pub struct StructuralPathRankingTargetRow {
     pub regime_aux_qqq_hv_pct_rank_252: Option<f64>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub regime_aux_vvix_over_vix: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub ref_previous_day_high: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub ref_previous_day_low: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub ref_previous_day_close: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub ref_current_day_open: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub ref_previous_week_high: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub ref_previous_week_low: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub ref_previous_week_close: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub ref_current_week_open: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub ref_previous_month_high: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub ref_previous_month_low: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub ref_current_day_gap_upper: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub ref_current_day_gap_lower: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub ref_current_week_gap_upper: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub ref_current_week_gap_lower: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub ref_recent_week_gap_levels: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub ob_variant: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub ob_direction: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub ob_validation_state: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub ob_high: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub ob_low: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub ob_midpoint: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub ob_mitigation_count: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub ob_breaker_confirmed: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub ob_rejection_confirmed: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub ob_confidence: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub ob_fail_closed_reason: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub score_model_family: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -784,6 +838,32 @@ fn structural_path_ranker_row_numeric_feature(
         "raw_path_score" => row.raw_path_score,
         "calibrated_path_prob" => row.calibrated_path_prob,
         "path_prob_lower_bound" => row.path_prob_lower_bound,
+        "regime_aux_qqq_hv_level" => row.regime_aux_qqq_hv_level,
+        "regime_aux_nq_vs_200d_pct" => row.regime_aux_nq_vs_200d_pct,
+        "regime_aux_vix3m_level" => row.regime_aux_vix3m_level,
+        "regime_aux_qqq_hv_pct_rank_252" => row.regime_aux_qqq_hv_pct_rank_252,
+        "regime_aux_vvix_over_vix" => row.regime_aux_vvix_over_vix,
+        "ref_previous_day_high" => row.ref_previous_day_high,
+        "ref_previous_day_low" => row.ref_previous_day_low,
+        "ref_previous_day_close" => row.ref_previous_day_close,
+        "ref_current_day_open" => row.ref_current_day_open,
+        "ref_previous_week_high" => row.ref_previous_week_high,
+        "ref_previous_week_low" => row.ref_previous_week_low,
+        "ref_previous_week_close" => row.ref_previous_week_close,
+        "ref_current_week_open" => row.ref_current_week_open,
+        "ref_previous_month_high" => row.ref_previous_month_high,
+        "ref_previous_month_low" => row.ref_previous_month_low,
+        "ref_current_day_gap_upper" => row.ref_current_day_gap_upper,
+        "ref_current_day_gap_lower" => row.ref_current_day_gap_lower,
+        "ref_current_week_gap_upper" => row.ref_current_week_gap_upper,
+        "ref_current_week_gap_lower" => row.ref_current_week_gap_lower,
+        "ob_high" => row.ob_high,
+        "ob_low" => row.ob_low,
+        "ob_midpoint" => row.ob_midpoint,
+        "ob_mitigation_count" => row.ob_mitigation_count,
+        "ob_breaker_confirmed" => row.ob_breaker_confirmed,
+        "ob_rejection_confirmed" => row.ob_rejection_confirmed,
+        "ob_confidence" => row.ob_confidence,
         _ => None,
     }
 }
@@ -805,6 +885,10 @@ fn structural_path_ranker_row_categorical_feature<'a>(
         "profit_factor" => row.profit_factor.as_deref(),
         "pending_reward_state" => Some(row.pending_reward_state.as_str()),
         "execution_gate_status" => row.execution_gate_status.as_deref(),
+        "ob_variant" => row.ob_variant.as_deref(),
+        "ob_direction" => row.ob_direction.as_deref(),
+        "ob_validation_state" => row.ob_validation_state.as_deref(),
+        "ob_fail_closed_reason" => row.ob_fail_closed_reason.as_deref(),
         _ => None,
     }
 }
@@ -1173,7 +1257,7 @@ pub fn render_structural_path_ranking_target_rows_csv(
     rows: &[StructuralPathRankingTargetRow],
 ) -> String {
     let mut out = String::from(
-        "protocol_version,symbol,generated_at,candidate_set_id,candidate_set_size,rank,path_id,scenario_id,path_label,regime_profit_branch_path,parent_regime_root,main_regime,sub_regime,sub_sub_regime_or_profit_factor,profit_factor,direction,raw_path_score,calibrated_path_prob,path_prob_lower_bound,execution_gate_status,execution_gate_min_path_prob,execution_gate_reason,pending_reward_state,maturity_mask,maturity_weight,calibrated_label,propensity_estimate,ips_weight,training_weight,regime_calibration_bucket,behavior_policy_probability,execution_propensity,target_policy_probability_confidence,target_policy_probability_lower_bound,target_policy_reward_prior,target_policy_reward_lower_bound,experience_prior,current_posterior,structural_baseline_score,regime_aux_qqq_hv_level,regime_aux_nq_vs_200d_pct,regime_aux_vix3m_level,regime_aux_qqq_hv_pct_rank_252,regime_aux_vvix_over_vix,score_model_family,score_source_kind,score_model_artifact_uri,score_generator\n",
+        "protocol_version,symbol,generated_at,candidate_set_id,candidate_set_size,rank,path_id,scenario_id,path_label,regime_profit_branch_path,parent_regime_root,main_regime,sub_regime,sub_sub_regime_or_profit_factor,profit_factor,direction,raw_path_score,calibrated_path_prob,path_prob_lower_bound,execution_gate_status,execution_gate_min_path_prob,execution_gate_reason,pending_reward_state,maturity_mask,maturity_weight,calibrated_label,propensity_estimate,ips_weight,training_weight,regime_calibration_bucket,behavior_policy_probability,execution_propensity,target_policy_probability_confidence,target_policy_probability_lower_bound,target_policy_reward_prior,target_policy_reward_lower_bound,experience_prior,current_posterior,structural_baseline_score,regime_aux_qqq_hv_level,regime_aux_nq_vs_200d_pct,regime_aux_vix3m_level,regime_aux_qqq_hv_pct_rank_252,regime_aux_vvix_over_vix,ref_previous_day_high,ref_previous_day_low,ref_previous_day_close,ref_current_day_open,ref_previous_week_high,ref_previous_week_low,ref_previous_week_close,ref_current_week_open,ref_previous_month_high,ref_previous_month_low,ref_current_day_gap_upper,ref_current_day_gap_lower,ref_current_week_gap_upper,ref_current_week_gap_lower,ref_recent_week_gap_levels,ob_variant,ob_direction,ob_validation_state,ob_high,ob_low,ob_midpoint,ob_mitigation_count,ob_breaker_confirmed,ob_rejection_confirmed,ob_confidence,ob_fail_closed_reason,score_model_family,score_source_kind,score_model_artifact_uri,score_generator\n",
     );
     for row in rows {
         let fields = [
@@ -1221,6 +1305,32 @@ pub fn render_structural_path_ranking_target_rows_csv(
             csv_optional_f64(row.regime_aux_vix3m_level),
             csv_optional_f64(row.regime_aux_qqq_hv_pct_rank_252),
             csv_optional_f64(row.regime_aux_vvix_over_vix),
+            csv_optional_f64(row.ref_previous_day_high),
+            csv_optional_f64(row.ref_previous_day_low),
+            csv_optional_f64(row.ref_previous_day_close),
+            csv_optional_f64(row.ref_current_day_open),
+            csv_optional_f64(row.ref_previous_week_high),
+            csv_optional_f64(row.ref_previous_week_low),
+            csv_optional_f64(row.ref_previous_week_close),
+            csv_optional_f64(row.ref_current_week_open),
+            csv_optional_f64(row.ref_previous_month_high),
+            csv_optional_f64(row.ref_previous_month_low),
+            csv_optional_f64(row.ref_current_day_gap_upper),
+            csv_optional_f64(row.ref_current_day_gap_lower),
+            csv_optional_f64(row.ref_current_week_gap_upper),
+            csv_optional_f64(row.ref_current_week_gap_lower),
+            csv_optional_string(row.ref_recent_week_gap_levels.as_deref()),
+            csv_optional_string(row.ob_variant.as_deref()),
+            csv_optional_string(row.ob_direction.as_deref()),
+            csv_optional_string(row.ob_validation_state.as_deref()),
+            csv_optional_f64(row.ob_high),
+            csv_optional_f64(row.ob_low),
+            csv_optional_f64(row.ob_midpoint),
+            csv_optional_f64(row.ob_mitigation_count),
+            csv_optional_f64(row.ob_breaker_confirmed),
+            csv_optional_f64(row.ob_rejection_confirmed),
+            csv_optional_f64(row.ob_confidence),
+            csv_optional_string(row.ob_fail_closed_reason.as_deref()),
             csv_optional_string(row.score_model_family.as_deref()),
             csv_optional_string(row.score_source_kind.as_deref()),
             csv_optional_string(row.score_model_artifact_uri.as_deref()),
@@ -1595,6 +1705,31 @@ pub fn structural_path_ranking_trainer_manifest() -> StructuralPathRankingTraine
             "regime_aux_vix3m_level".to_string(),
             "regime_aux_qqq_hv_pct_rank_252".to_string(),
             "regime_aux_vvix_over_vix".to_string(),
+            "ref_previous_day_high".to_string(),
+            "ref_previous_day_low".to_string(),
+            "ref_previous_day_close".to_string(),
+            "ref_current_day_open".to_string(),
+            "ref_previous_week_high".to_string(),
+            "ref_previous_week_low".to_string(),
+            "ref_previous_week_close".to_string(),
+            "ref_current_week_open".to_string(),
+            "ref_previous_month_high".to_string(),
+            "ref_previous_month_low".to_string(),
+            "ref_current_day_gap_upper".to_string(),
+            "ref_current_day_gap_lower".to_string(),
+            "ref_current_week_gap_upper".to_string(),
+            "ref_current_week_gap_lower".to_string(),
+            "ob_variant".to_string(),
+            "ob_direction".to_string(),
+            "ob_validation_state".to_string(),
+            "ob_high".to_string(),
+            "ob_low".to_string(),
+            "ob_midpoint".to_string(),
+            "ob_mitigation_count".to_string(),
+            "ob_breaker_confirmed".to_string(),
+            "ob_rejection_confirmed".to_string(),
+            "ob_confidence".to_string(),
+            "ob_fail_closed_reason".to_string(),
         ],
         calibration_columns: vec![
             "calibrated_path_prob".to_string(),
@@ -1629,6 +1764,63 @@ pub struct StructuralPathRankingTargetExportSummaryInput<'a> {
     pub history_jsonl_name: &'a str,
     pub history_rows: &'a [StructuralPathRankingTargetRow],
     pub summary_name: &'a str,
+}
+
+fn rebase_summary_artifact_path(
+    state_dir: &str,
+    symbol: &str,
+    recorded: &str,
+    fallback_file: &str,
+) -> String {
+    let local = Path::new(state_dir)
+        .join(symbol)
+        .join(STRUCTURAL_PATH_RANKING_RUNTIME_DIR)
+        .join(fallback_file);
+    if local.exists() {
+        return local.to_string_lossy().to_string();
+    }
+    if recorded.trim().is_empty() {
+        return local.to_string_lossy().to_string();
+    }
+    recorded.to_string()
+}
+
+pub fn rebase_structural_path_ranking_target_export_summary_paths(
+    state_dir: &str,
+    symbol: &str,
+    mut summary: StructuralPathRankingTargetExportSummary,
+) -> StructuralPathRankingTargetExportSummary {
+    summary.csv_path = rebase_summary_artifact_path(
+        state_dir,
+        symbol,
+        &summary.csv_path,
+        "structural_path_ranking_target.csv",
+    );
+    summary.jsonl_path = rebase_summary_artifact_path(
+        state_dir,
+        symbol,
+        &summary.jsonl_path,
+        "structural_path_ranking_target.jsonl",
+    );
+    summary.history_csv_path = rebase_summary_artifact_path(
+        state_dir,
+        symbol,
+        &summary.history_csv_path,
+        "structural_path_ranking_target_history.csv",
+    );
+    summary.history_jsonl_path = rebase_summary_artifact_path(
+        state_dir,
+        symbol,
+        &summary.history_jsonl_path,
+        "structural_path_ranking_target_history.jsonl",
+    );
+    summary.summary_path = rebase_summary_artifact_path(
+        state_dir,
+        symbol,
+        &summary.summary_path,
+        STRUCTURAL_PATH_RANKING_TARGET_SUMMARY_FILE,
+    );
+    summary
 }
 
 pub fn structural_path_ranking_target_export_summary(
@@ -1766,6 +1958,100 @@ pub fn structural_path_ranking_target_export_summary(
     }
 }
 
+#[cfg(test)]
+mod export_summary_path_tests {
+    use super::*;
+
+    #[test]
+    fn copied_state_prefers_local_target_paths_when_present() {
+        let original = tempfile::tempdir().unwrap();
+        let copied = tempfile::tempdir().unwrap();
+
+        let original_dir = original
+            .path()
+            .join("NQ")
+            .join(STRUCTURAL_PATH_RANKING_RUNTIME_DIR);
+        let copied_dir = copied
+            .path()
+            .join("NQ")
+            .join(STRUCTURAL_PATH_RANKING_RUNTIME_DIR);
+        std::fs::create_dir_all(&original_dir).unwrap();
+        std::fs::create_dir_all(&copied_dir).unwrap();
+
+        for filename in [
+            "structural_path_ranking_target.csv",
+            "structural_path_ranking_target.jsonl",
+            "structural_path_ranking_target_history.csv",
+            "structural_path_ranking_target_history.jsonl",
+            STRUCTURAL_PATH_RANKING_TARGET_SUMMARY_FILE,
+        ] {
+            std::fs::write(original_dir.join(filename), "original").unwrap();
+            std::fs::write(copied_dir.join(filename), "copied").unwrap();
+        }
+
+        let summary = StructuralPathRankingTargetExportSummary {
+            csv_path: original_dir
+                .join("structural_path_ranking_target.csv")
+                .to_string_lossy()
+                .to_string(),
+            jsonl_path: original_dir
+                .join("structural_path_ranking_target.jsonl")
+                .to_string_lossy()
+                .to_string(),
+            history_csv_path: original_dir
+                .join("structural_path_ranking_target_history.csv")
+                .to_string_lossy()
+                .to_string(),
+            history_jsonl_path: original_dir
+                .join("structural_path_ranking_target_history.jsonl")
+                .to_string_lossy()
+                .to_string(),
+            summary_path: original_dir
+                .join(STRUCTURAL_PATH_RANKING_TARGET_SUMMARY_FILE)
+                .to_string_lossy()
+                .to_string(),
+            ..StructuralPathRankingTargetExportSummary::default()
+        };
+
+        let rebased = rebase_structural_path_ranking_target_export_summary_paths(
+            copied.path().to_str().unwrap(),
+            "NQ",
+            summary,
+        );
+
+        assert_eq!(
+            rebased.csv_path,
+            copied_dir
+                .join("structural_path_ranking_target.csv")
+                .to_string_lossy()
+        );
+        assert_eq!(
+            rebased.jsonl_path,
+            copied_dir
+                .join("structural_path_ranking_target.jsonl")
+                .to_string_lossy()
+        );
+        assert_eq!(
+            rebased.history_csv_path,
+            copied_dir
+                .join("structural_path_ranking_target_history.csv")
+                .to_string_lossy()
+        );
+        assert_eq!(
+            rebased.history_jsonl_path,
+            copied_dir
+                .join("structural_path_ranking_target_history.jsonl")
+                .to_string_lossy()
+        );
+        assert_eq!(
+            rebased.summary_path,
+            copied_dir
+                .join(STRUCTURAL_PATH_RANKING_TARGET_SUMMARY_FILE)
+                .to_string_lossy()
+        );
+    }
+}
+
 pub fn clear_structural_path_ranking_target_row_outputs(row: &mut StructuralPathRankingTargetRow) {
     row.calibrated_path_prob = None;
     row.path_prob_lower_bound = None;
@@ -1865,6 +2151,32 @@ mod tests {
             regime_aux_vix3m_level: None,
             regime_aux_qqq_hv_pct_rank_252: None,
             regime_aux_vvix_over_vix: None,
+            ref_previous_day_high: None,
+            ref_previous_day_low: None,
+            ref_previous_day_close: None,
+            ref_current_day_open: None,
+            ref_previous_week_high: None,
+            ref_previous_week_low: None,
+            ref_previous_week_close: None,
+            ref_current_week_open: None,
+            ref_previous_month_high: None,
+            ref_previous_month_low: None,
+            ref_current_day_gap_upper: None,
+            ref_current_day_gap_lower: None,
+            ref_current_week_gap_upper: None,
+            ref_current_week_gap_lower: None,
+            ref_recent_week_gap_levels: None,
+            ob_variant: None,
+            ob_direction: None,
+            ob_validation_state: None,
+            ob_high: None,
+            ob_low: None,
+            ob_midpoint: None,
+            ob_mitigation_count: None,
+            ob_breaker_confirmed: None,
+            ob_rejection_confirmed: None,
+            ob_confidence: None,
+            ob_fail_closed_reason: None,
             score_model_family: None,
             score_source_kind: None,
             score_model_artifact_uri: None,
@@ -1912,6 +2224,220 @@ mod tests {
         let probability = structural_path_ranker_direct_model_probability(&model, &row);
 
         assert!((probability - 0.70).abs() < 1e-9);
+    }
+
+    #[test]
+    fn order_block_variant_fields_are_path_ranker_export_features() {
+        let mut row = test_target_row(
+            "structural-candidates:NQ:ob-variant",
+            "path:scenario:NQ:belief_regime_node:trend:ob_breaker",
+            "unobserved",
+            0.5,
+            Some(0.42),
+        );
+        row.ob_variant = Some("breaker_block".to_string());
+        row.ob_direction = Some("Bear".to_string());
+        row.ob_validation_state = Some("breaker_confirmed".to_string());
+        row.ob_high = Some(715.76);
+        row.ob_low = Some(715.39);
+        row.ob_midpoint = Some(715.575);
+        row.ob_mitigation_count = Some(805.0);
+        row.ob_breaker_confirmed = Some(1.0);
+        row.ob_rejection_confirmed = Some(0.0);
+        row.ob_confidence = Some(0.78);
+
+        let csv = render_structural_path_ranking_target_rows_csv(
+            "structural-path-ranking-target-v1",
+            "QQQ",
+            "2026-05-14T00:00:00Z",
+            std::slice::from_ref(&row),
+        );
+        let mut reader = csv::Reader::from_reader(csv.as_bytes());
+        let headers = reader.headers().unwrap().clone();
+        let record = reader.records().next().unwrap().unwrap();
+        let field = |name: &str| {
+            let index = headers
+                .iter()
+                .position(|header| header == name)
+                .unwrap_or_else(|| panic!("missing csv header {name}"));
+            record.get(index).unwrap()
+        };
+
+        assert_eq!(field("ob_variant"), "breaker_block");
+        assert_eq!(field("ob_direction"), "Bear");
+        assert_eq!(field("ob_validation_state"), "breaker_confirmed");
+        assert_eq!(field("ob_high"), "715.760000");
+        assert_eq!(field("ob_low"), "715.390000");
+        assert_eq!(field("ob_midpoint"), "715.575000");
+        assert_eq!(field("ob_mitigation_count"), "805.000000");
+        assert_eq!(field("ob_breaker_confirmed"), "1.000000");
+        assert_eq!(field("ob_rejection_confirmed"), "0.000000");
+        assert_eq!(field("ob_confidence"), "0.780000");
+
+        let jsonl =
+            render_structural_path_ranking_target_rows_jsonl(std::slice::from_ref(&row)).unwrap();
+        let json: Value = serde_json::from_str(jsonl.lines().next().unwrap()).unwrap();
+        assert_eq!(json["ob_variant"], "breaker_block");
+        assert_eq!(json["ob_direction"], "Bear");
+        assert_eq!(json["ob_validation_state"], "breaker_confirmed");
+        assert_eq!(json["ob_high"], 715.76);
+        assert_eq!(json["ob_low"], 715.39);
+        assert_eq!(json["ob_midpoint"], 715.575);
+        assert_eq!(json["ob_mitigation_count"], 805.0);
+        assert_eq!(json["ob_breaker_confirmed"], 1.0);
+        assert_eq!(json["ob_rejection_confirmed"], 0.0);
+        assert_eq!(json["ob_confidence"], 0.78);
+
+        let manifest = structural_path_ranking_trainer_manifest();
+        for column in [
+            "ob_variant",
+            "ob_direction",
+            "ob_validation_state",
+            "ob_high",
+            "ob_low",
+            "ob_midpoint",
+            "ob_mitigation_count",
+            "ob_breaker_confirmed",
+            "ob_rejection_confirmed",
+            "ob_confidence",
+            "ob_fail_closed_reason",
+        ] {
+            assert!(
+                manifest
+                    .feature_columns
+                    .iter()
+                    .any(|feature| feature == column),
+                "missing manifest feature {column}"
+            );
+        }
+
+        let model = StructuralPathRankerDirectModelArtifact {
+            output_transform: "identity".to_string(),
+            numerical_feature_weights: BTreeMap::from([
+                ("ob_confidence".to_string(), 0.10),
+                ("ob_breaker_confirmed".to_string(), 0.20),
+            ]),
+            categorical_feature_weights: BTreeMap::from([
+                (
+                    "ob_variant".to_string(),
+                    BTreeMap::from([("breaker_block".to_string(), 0.30)]),
+                ),
+                (
+                    "ob_validation_state".to_string(),
+                    BTreeMap::from([("breaker_confirmed".to_string(), 0.05)]),
+                ),
+            ]),
+            ..StructuralPathRankerDirectModelArtifact::default()
+        };
+
+        let probability = structural_path_ranker_direct_model_probability(&model, &row);
+
+        assert!((probability - 0.628).abs() < 1e-9);
+    }
+
+    #[test]
+    fn reference_liquidity_level_fields_are_path_ranker_export_features() {
+        let mut row = test_target_row(
+            "structural-candidates:NQ:reference-levels",
+            "path:scenario:NQ:belief_regime_node:trend:reference-levels",
+            "unobserved",
+            0.5,
+            Some(0.42),
+        );
+        row.ref_previous_day_high = Some(18595.0);
+        row.ref_previous_day_low = Some(18488.0);
+        row.ref_previous_day_close = Some(18510.5);
+        row.ref_current_day_open = Some(18522.0);
+        row.ref_previous_week_high = Some(18620.0);
+        row.ref_previous_week_low = Some(18390.0);
+        row.ref_previous_week_close = Some(18496.0);
+        row.ref_current_week_open = Some(18508.5);
+        row.ref_previous_month_high = Some(18840.0);
+        row.ref_previous_month_low = Some(17655.0);
+        row.ref_current_day_gap_upper = Some(18522.0);
+        row.ref_current_day_gap_lower = Some(18510.5);
+        row.ref_current_week_gap_upper = Some(18508.5);
+        row.ref_current_week_gap_lower = Some(18496.0);
+        row.ref_recent_week_gap_levels = Some(
+            r#"[{"label":"week_open_gap","period_key":"2026-W20","upper":18508.5,"lower":18496.0}]"#
+                .to_string(),
+        );
+
+        let csv = render_structural_path_ranking_target_rows_csv(
+            "structural-path-ranking-target-v1",
+            "QQQ",
+            "2026-05-15T00:00:00Z",
+            std::slice::from_ref(&row),
+        );
+        let mut reader = csv::Reader::from_reader(csv.as_bytes());
+        let headers = reader.headers().unwrap().clone();
+        let record = reader.records().next().unwrap().unwrap();
+        let field = |name: &str| {
+            let index = headers
+                .iter()
+                .position(|header| header == name)
+                .unwrap_or_else(|| panic!("missing csv header {name}"));
+            record.get(index).unwrap()
+        };
+
+        assert_eq!(field("ref_previous_day_high"), "18595.000000");
+        assert_eq!(field("ref_previous_day_low"), "18488.000000");
+        assert_eq!(field("ref_previous_week_high"), "18620.000000");
+        assert_eq!(field("ref_previous_month_low"), "17655.000000");
+        assert_eq!(field("ref_current_day_gap_upper"), "18522.000000");
+        assert_eq!(field("ref_current_week_gap_lower"), "18496.000000");
+        assert!(field("ref_recent_week_gap_levels").contains("2026-W20"));
+
+        let jsonl =
+            render_structural_path_ranking_target_rows_jsonl(std::slice::from_ref(&row)).unwrap();
+        let json: Value = serde_json::from_str(jsonl.lines().next().unwrap()).unwrap();
+        assert_eq!(json["ref_previous_day_close"], 18510.5);
+        assert_eq!(json["ref_current_day_open"], 18522.0);
+        assert_eq!(json["ref_current_week_gap_upper"], 18508.5);
+        assert_eq!(json["ref_current_week_gap_lower"], 18496.0);
+        assert!(json["ref_recent_week_gap_levels"]
+            .as_str()
+            .unwrap()
+            .contains("2026-W20"));
+
+        let manifest = structural_path_ranking_trainer_manifest();
+        for column in [
+            "ref_previous_day_high",
+            "ref_previous_day_low",
+            "ref_previous_day_close",
+            "ref_current_day_open",
+            "ref_previous_week_high",
+            "ref_previous_week_low",
+            "ref_previous_week_close",
+            "ref_current_week_open",
+            "ref_previous_month_high",
+            "ref_previous_month_low",
+            "ref_current_day_gap_upper",
+            "ref_current_day_gap_lower",
+            "ref_current_week_gap_upper",
+            "ref_current_week_gap_lower",
+        ] {
+            assert!(
+                manifest
+                    .feature_columns
+                    .iter()
+                    .any(|feature| feature == column),
+                "missing manifest feature {column}"
+            );
+        }
+
+        let model = StructuralPathRankerDirectModelArtifact {
+            output_transform: "identity".to_string(),
+            numerical_feature_weights: BTreeMap::from([
+                ("ref_previous_day_high".to_string(), 0.00001),
+                ("ref_current_week_gap_upper".to_string(), 0.00001),
+            ]),
+            ..StructuralPathRankerDirectModelArtifact::default()
+        };
+
+        let probability = structural_path_ranker_direct_model_probability(&model, &row);
+
+        assert!((probability - 0.371035).abs() < 1e-9);
     }
 
     #[test]

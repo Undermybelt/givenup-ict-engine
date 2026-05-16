@@ -1,0 +1,64 @@
+{
+  "schema_version": "transfer-score/v1",
+  "strategy_name": "LiquidityPoolTextureObservationOnly",
+  "covered_market_count": 6,
+  "covered_markets": [
+    "BTC/USD",
+    "ETH/USD",
+    "NQ",
+    "ES",
+    "EURUSD",
+    "XAUUSD"
+  ],
+  "markets_without_trade_counts": [
+    "BTC/USD",
+    "ETH/USD",
+    "NQ",
+    "ES",
+    "EURUSD",
+    "XAUUSD"
+  ],
+  "status": "observation_only_candidate",
+  "overall_transfer_score": 0.0,
+  "average_trade_count": 0,
+  "timeframe": "15m",
+  "market_evidence": {
+    "BTC/USD": {
+      "observation_count": 2,
+      "confidence": 0.65,
+      "clean_sweep_likelihood": 0.3158,
+      "evidence_source": "liquidity_pool_texture_provider_observation_packet"
+    },
+    "ETH/USD": {
+      "observation_count": 2,
+      "confidence": 0.65,
+      "clean_sweep_likelihood": 0.2975,
+      "evidence_source": "liquidity_pool_texture_provider_observation_packet"
+    },
+    "NQ": {
+      "observation_count": 1,
+      "confidence": 0.65,
+      "clean_sweep_likelihood": 0.25,
+      "evidence_source": "liquidity_pool_texture_provider_observation_packet"
+    },
+    "ES": {
+      "observation_count": 1,
+      "confidence": 0.65,
+      "clean_sweep_likelihood": 0.25,
+      "evidence_source": "liquidity_pool_texture_provider_observation_packet"
+    },
+    "EURUSD": {
+      "observation_count": 1,
+      "confidence": 0.65,
+      "clean_sweep_likelihood": 0.25,
+      "evidence_source": "liquidity_pool_texture_provider_observation_packet"
+    },
+    "XAUUSD": {
+      "observation_count": 1,
+      "confidence": 0.65,
+      "clean_sweep_likelihood": 0.25,
+      "evidence_source": "liquidity_pool_texture_provider_observation_packet"
+    }
+  },
+  "evidence_source": "provider_observation_packet_only"
+}

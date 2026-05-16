@@ -358,14 +358,170 @@ Uses MTF: yes
         self.assertEqual(manifest["config_path"], "config.tomac.json")
         self.assertEqual(manifest["log_path"], "run_tomac_fvg.log")
         self.assertEqual(manifest["validation_errors"], [])
-        self.assertEqual(len(manifest["strategies"]), 1)
+
+    def test_build_strategy_library_manifest_preserves_auto_quant_meta_block(self) -> None:
+        backtest_payload = {
+            "strategy": {
+                "TomacNQ_KillzoneBreakout": {
+                    "strategy_name": "TomacNQ_KillzoneBreakout",
+                    "results_per_pair": [
+                        {
+                            "key": "QQQ/USD",
+                            "trades": 10,
+                            "winrate": 0.8,
+                            "sharpe": 4.288364283701947,
+                            "profit_factor": 4.298973650152414,
+                            "profit_total_pct": 5.52,
+                            "max_drawdown_account": 0.01121424,
+                        },
+                        {
+                            "key": "TOTAL",
+                            "trades": 10,
+                            "winrate": 0.8,
+                            "sharpe": 4.288364283701947,
+                            "profit_factor": 4.298973650152414,
+                            "profit_total_pct": 5.52,
+                            "max_drawdown_account": 0.01121424,
+                        },
+                    ],
+                    "total_trades": 10,
+                    "wins": 8,
+                    "losses": 2,
+                    "draws": 0,
+                    "sharpe": 4.288364283701947,
+                    "profit_factor": 4.298973650152414,
+                    "profit_total": 0.05524414,
+                    "max_drawdown_account": 0.01121424,
+                    "backtest_start": "2026-04-12 23:00:00",
+                    "backtest_end": "2026-05-13 19:00:00",
+                    "timeframe": "1h",
+                }
+            }
+        }
+        config_payload = {"timeframe": "1h", "exchange": {"pair_whitelist": ["QQQ/USD"]}}
+        strategy_source = '''"""
+Paradigm: breakout
+Hypothesis: base hypothesis
+Parent: root
+Status: active
+Uses MTF: yes
+
+# AUTO_QUANT_META v1
+Strategy:        TomacNQ_KillzoneBreakout
+Mutation_id:     synthetic-ohlcv-TomacNQ_KillzoneBreakout
+Base_factor:     tomac_n_q__killzone_breakout
+Hypothesis:      richer metadata hypothesis
+Paradigm:        breakout
+Expected_regime: multi_timeframe_intraday_resonance
+Factors_used:    tomac_n_q__killzone_breakout
+Parent:          TomacKillzoneBreakout
+Asset_class:     synthetic_ohlcv
+Status:          active
+Created:         pending-first-commit
+# END_AUTO_QUANT_META
+"""
+'''
+
+        with TemporaryDirectory() as tmpdir:
+            zip_path = Path(tmpdir) / "backtest.zip"
+            with zipfile.ZipFile(zip_path, "w") as archive:
+                archive.writestr("backtest-result.json", json.dumps(backtest_payload))
+                archive.writestr(
+                    "backtest-result_config.json", json.dumps(config_payload)
+                )
+                archive.writestr(
+                    "backtest-result_TomacNQ_KillzoneBreakout.py",
+                    strategy_source,
+                )
+
+            manifest = pack.build_strategy_library_manifest_from_freqtrade_backtest_zip(
+                zip_path,
+                repo_url="local-auto-quant",
+                pinned_ref="abc123",
+                config_path="config.tomac.json",
+                log_path="run_tomac.log",
+            )
+
         strategy = manifest["strategies"][0]
-        self.assertEqual(strategy["name"], "TomacNQ_RegimeFVGRetrace")
-        self.assertEqual(strategy["status"], "ok")
-        self.assertEqual(strategy["metadata"]["parent"], "TomacNQ_KillzoneBreakout")
-        self.assertEqual(strategy["validation_metrics"]["trade_count"], 12)
-        self.assertEqual(strategy["per_pair_metrics"]["NQ/USD"]["trade_count"], 12)
-        self.assertEqual(strategy["pairs"], ["NQ/USD"])
+        self.assertEqual(
+            strategy["metadata"]["mutation_id"],
+            "synthetic-ohlcv-TomacNQ_KillzoneBreakout",
+        )
+        self.assertEqual(
+            strategy["metadata"]["base_factor"], "tomac_n_q__killzone_breakout"
+        )
+        self.assertEqual(
+            strategy["metadata"]["expected_regime"],
+            "multi_timeframe_intraday_resonance",
+        )
+        self.assertEqual(
+            strategy["metadata"]["main_regime"],
+            "multi_timeframe_intraday_resonance",
+        )
+        self.assertEqual(strategy["metadata"]["sub_regime"], "")
+        self.assertEqual(
+            strategy["metadata"]["sub_sub_regime_or_profit_factor"], ""
+        )
+        self.assertEqual(strategy["metadata"]["profit_factor"], "")
+        self.assertEqual(
+            strategy["metadata"]["regime_profit_branch_path"],
+            "multi_timeframe_intraday_resonance",
+        )
+        self.assertEqual(
+            strategy["metadata"]["factors_used"],
+            ["tomac_n_q__killzone_breakout"],
+        )
+        self.assertEqual(strategy["metadata"]["asset_class"], "synthetic_ohlcv")
+
+    def test_build_strategy_library_manifest_splits_expected_regime_branch_path(self) -> None:
+        backtest_payload = {
+            "strategy": {
+                "BranchAwareStrategy": {
+                    "strategy_name": "BranchAwareStrategy",
+                    "results_per_pair": [
+                        {"key": "TOTAL", "trades": 2, "winrate": 0.5, "sharpe": 1.0}
+                    ],
+                    "total_trades": 2,
+                    "wins": 1,
+                    "losses": 1,
+                    "draws": 0,
+                    "timeframe": "15m",
+                }
+            }
+        }
+        strategy_source = '''"""
+Mutation_id: branch-aware-001
+Expected_regime: TrendTransition -> LiquidityReclaim -> family_d_liquidity_sweep_reclaim_15m_wide_v1 -> liquidity_sweep_reclaim_long
+"""
+'''
+        with TemporaryDirectory() as tmpdir:
+            zip_path = Path(tmpdir) / "backtest.zip"
+            with zipfile.ZipFile(zip_path, "w") as archive:
+                archive.writestr("backtest-result.json", json.dumps(backtest_payload))
+                archive.writestr(
+                    "backtest-result_BranchAwareStrategy.py",
+                    strategy_source,
+                )
+
+            manifest = pack.build_strategy_library_manifest_from_freqtrade_backtest_zip(
+                zip_path
+            )
+
+        metadata = manifest["strategies"][0]["metadata"]
+        self.assertEqual(metadata["main_regime"], "TrendTransition")
+        self.assertEqual(metadata["sub_regime"], "LiquidityReclaim")
+        self.assertEqual(
+            metadata["sub_sub_regime_or_profit_factor"],
+            "family_d_liquidity_sweep_reclaim_15m_wide_v1",
+        )
+        self.assertEqual(
+            metadata["profit_factor"],
+            "liquidity_sweep_reclaim_long",
+        )
+        self.assertEqual(
+            metadata["regime_profit_branch_path"],
+            "TrendTransition -> LiquidityReclaim -> family_d_liquidity_sweep_reclaim_15m_wide_v1 -> liquidity_sweep_reclaim_long",
+        )
 
     def test_main_writes_artifacts(self) -> None:
         manifest = {

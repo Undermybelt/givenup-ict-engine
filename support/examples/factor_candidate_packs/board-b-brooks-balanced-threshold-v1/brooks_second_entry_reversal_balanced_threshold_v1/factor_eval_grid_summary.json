@@ -1,0 +1,95 @@
+{
+  "schema_version": "factor-eval-grid-summary/v1",
+  "factor_name": "brooks_price_action_context",
+  "candidate_id": "brooks_second_entry_reversal_balanced_threshold_v1",
+  "selected_strategy": "brooks_threshold_support_scan_balanced_high_winrate",
+  "timeframe": "retained_realized_rows",
+  "candidate_status": "active",
+  "promotion_state": "candidate_observation",
+  "breadth_matrix": {
+    "provider-backed direct-limit realized rows": {
+      "status": "realized_rows_threshold_scan",
+      "trade_count": 120,
+      "trade_density_label": "balanced_high_winrate_surface",
+      "provider_count": 5,
+      "regime_count": 3,
+      "evidence_source": "support/docs/experiments/actionable-regime-confidence/runs/20260514T210615+0800-codex-brooks-threshold-support-scan-v1/materials/brooks_threshold_support_scan_summary.json",
+      "win_rate_pct": 70.0,
+      "expectancy_r": 1.177698
+    }
+  },
+  "trade_density_summary": {
+    "aggregate_trade_count": 120,
+    "aggregate_label": "balanced_high_winrate_realized_rows",
+    "covered_market_count": 5
+  },
+  "aggregate_metrics": {
+    "sharpe": null,
+    "win_rate_pct": 70.0,
+    "profit_factor": null,
+    "total_profit_pct": null,
+    "max_drawdown_pct": null,
+    "trade_count": 120,
+    "expectancy_r": 1.177698
+  },
+  "per_regime_statistics": {
+    "trend": {
+      "win_rate": null,
+      "trade_count": null,
+      "expectancy": null,
+      "sample_window": "retained provider-backed realized-row source",
+      "instrument_coverage": [
+        "5 providers"
+      ],
+      "confidence": 0.7,
+      "fail_closed_reason": "regime-specific split not materialized in this candidate pack"
+    }
+  },
+  "threshold_surface": {
+    "fill_bars_after_breakout_min": 1,
+    "fill_bars_after_breakout_max": 10,
+    "breakout_range_atr_min": 1.0,
+    "breakout_body_atr_min": 0.3,
+    "breakout_body_atr_max": 1.4,
+    "close_through_level_atr_min": 0.2,
+    "close_through_level_atr_max": 0.9,
+    "pd_array_type": "ALL"
+  },
+  "field_mapping": {
+    "Structure": [
+      "brooks_context",
+      "context_secondary",
+      "trigger_level",
+      "invalidation_level"
+    ],
+    "Technicals": [
+      "fill_bars_after_breakout",
+      "breakout_range_atr",
+      "breakout_body_atr",
+      "close_through_level_atr"
+    ],
+    "Regime posterior evidence": [
+      "regime_conditioned_win_rate",
+      "expectancy",
+      "provider_count"
+    ],
+    "Execution tree": [
+      "brooks_context",
+      "trigger_level",
+      "invalidation_level",
+      "confidence"
+    ],
+    "Feedback/update": [
+      "realized_outcome",
+      "provider",
+      "regime_profit_branch_path",
+      "threshold_surface"
+    ]
+  },
+  "quality_gate": {
+    "downstream_allowed": false,
+    "promotion_allowed": false,
+    "trade_usable": false,
+    "fail_closed_reason": "candidate pack summarizes threshold support only; exact structural-feedback replay is required before promotion"
+  }
+}

@@ -1,0 +1,56 @@
+{
+  "schema_version": "factor-expression/v1",
+  "candidate_id": "liquidity_pool_texture_range_observation_v1",
+  "display_name": "Liquidity Pool Texture Range Observation V1",
+  "family": "Board B Liquidity",
+  "status": "observation_only",
+  "promotion_state": "candidate_only",
+  "strategy_name": "LiquidityPoolTextureObservationOnly",
+  "mutation_id": null,
+  "base_factor": "liquidity_pool_texture",
+  "expression_text": "range_root and repeated_liquidity_pool and texture in {smooth,mixed,jagged} and touch_count >= 2",
+  "operator_set": [
+    "range_root",
+    "repeated_liquidity_pool",
+    "texture",
+    "touch_count",
+    "spacing_consistency",
+    "clean_sweep_likelihood"
+  ],
+  "complexity": 6,
+  "paradigm": "liquidity pool texture observation",
+  "expected_regime": "Range",
+  "target_market_hypothesis": [
+    "BTC/USD",
+    "ETH/USD",
+    "NQ",
+    "ES",
+    "XAUUSD",
+    "EURUSD"
+  ],
+  "base_timeframe": "15m",
+  "context_timeframes": [
+    "15m"
+  ],
+  "regime_role": "root_conditioned_factor",
+  "evidence_window": "provider snapshots: 2026-05-12 observation packet",
+  "strategy_source": "support/docs/experiments/actionable-regime-confidence/runs/20260512T205941+0800-codex-liquidity-pool-texture-provider-observation-v1/materials/liquidity_pool_texture_provider_observation_packet.json",
+  "filter_belief_execution_mapping": {
+    "pre_bayes_targets": [
+      "liquidity_pool_observation_diagnostics"
+    ],
+    "belief_targets": [
+      "texture_detector_calibration"
+    ],
+    "path_ranking_targets": [
+      "recommended_path_bundle"
+    ],
+    "execution_tree_targets": [
+      "execution_readiness"
+    ],
+    "execution_tree_blockers_intended": [
+      "no_realized_trade_outcomes"
+    ],
+    "structural_feedback_required": true
+  }
+}

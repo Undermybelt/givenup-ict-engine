@@ -1,0 +1,57 @@
+{
+  "schema_version": "factor-expression/v1",
+  "candidate_id": "liquidity_pool_texture_tlt_trend_directional_30m_v1",
+  "display_name": "Liquidity Pool Texture TLT Trend Directional 30M V1",
+  "family": "Board B Liquidity",
+  "status": "candidate_only",
+  "promotion_state": "candidate_only",
+  "strategy_name": "LiquidityPoolTextureTltTrendDirectional30M",
+  "mutation_id": null,
+  "base_factor": "liquidity_pool_texture",
+  "expression_text": "trend_root and symbol == TLT and texture == jagged and touch_count >= 6 and clean_sweep_likelihood >= 0.55 and selected_direction == bear and realized_r > 0",
+  "operator_set": [
+    "trend_root",
+    "texture",
+    "touch_count",
+    "clean_sweep_likelihood",
+    "selected_direction",
+    "entry",
+    "stop_loss",
+    "take_profit_1",
+    "realized_r"
+  ],
+  "complexity": 7,
+  "paradigm": "liquidity pool texture directional retained bridge",
+  "expected_regime": "Trend",
+  "target_market_hypothesis": [
+    "TLT"
+  ],
+  "base_timeframe": "30m",
+  "context_timeframes": [
+    "30m",
+    "1h",
+    "1d"
+  ],
+  "regime_role": "root_conditioned_factor",
+  "evidence_window": "held-out retained split: ibkr TLT 2026-05-12T22:00:00Z -> 2026-05-15T21:30:00Z",
+  "strategy_source": "support/docs/experiments/actionable-regime-confidence/runs/20260516T124827+0800-codex-board-b-liquidity-pool-texture-ibkr-tlt-directional-split-v1/materials/liquidity_pool_texture_directional_observation_packet.json",
+  "filter_belief_execution_mapping": {
+    "pre_bayes_targets": [
+      "liquidity_pool_texture_confirmation"
+    ],
+    "belief_targets": [
+      "pool_texture_directional_evidence"
+    ],
+    "path_ranking_targets": [
+      "recommended_path_bundle"
+    ],
+    "execution_tree_targets": [
+      "execution_readiness",
+      "trap_risk"
+    ],
+    "execution_tree_blockers_intended": [
+      "single_provider_single_observation_not_ready_for_candidate_pack_or_downstream_admission"
+    ],
+    "structural_feedback_required": true
+  }
+}

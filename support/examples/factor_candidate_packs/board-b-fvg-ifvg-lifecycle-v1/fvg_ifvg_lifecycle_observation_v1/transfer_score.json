@@ -1,0 +1,53 @@
+{
+  "schema_version": "transfer-score/v1",
+  "strategy_name": "fvg_ifvg_lifecycle_observation_packet",
+  "candidate_id": "fvg_ifvg_lifecycle_observation_v1",
+  "covered_market_count": 3,
+  "covered_markets": [
+    "ibkr",
+    "kraken_public",
+    "yfinance"
+  ],
+  "markets_without_trade_counts": [
+    "TradingViewRemix",
+    "DXY",
+    "XAUUSD"
+  ],
+  "status": "provider_backed_retained_window_density",
+  "overall_transfer_score": 0.37,
+  "average_sharpe": null,
+  "average_trade_count": 10.0,
+  "timeframe": "1h",
+  "market_evidence": {
+    "ibkr": {
+      "trade_count": 10,
+      "win_rate": 0.4,
+      "expectancy": -0.156,
+      "positive_rows": 4,
+      "negative_rows": 6
+    },
+    "kraken_public": {
+      "trade_count": 10,
+      "win_rate": 0.6,
+      "expectancy": 0.156,
+      "positive_rows": 6,
+      "negative_rows": 4
+    },
+    "yfinance": {
+      "trade_count": 10,
+      "win_rate": 0.3,
+      "expectancy": -0.312,
+      "positive_rows": 3,
+      "negative_rows": 7
+    }
+  },
+  "branch_path_contract": {
+    "main_regime": "Trend",
+    "sub_regime": "FvgIfvgLifecycle",
+    "sub_sub_regime_or_profit_factor": "gap_lifecycle_state",
+    "profit_factor": "fvg_ifvg_lifecycle_observation_v1",
+    "regime_profit_branch_path": "Trend -> FvgIfvgLifecycle -> gap_lifecycle_state -> fvg_ifvg_lifecycle_observation_v1"
+  },
+  "evidence_source": "support/docs/experiments/actionable-regime-confidence/runs/20260516T195114+0800-codex-board-b-fvg-ifvg-provider-outcome-density-v1/materials/combined_fvg_ifvg_provider_observation_packet.json",
+  "fail_closed_reason": "retained_window_rows_need_native_admission_and_workflow_snapshot_before_promotion"
+}

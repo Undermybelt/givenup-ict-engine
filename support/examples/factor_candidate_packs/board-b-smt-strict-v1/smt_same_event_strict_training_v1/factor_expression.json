@@ -1,0 +1,64 @@
+{
+  "schema_version": "factor-expression/v1",
+  "candidate_id": "smt_same_event_strict_training_v1",
+  "display_name": "SMT Same-Event Strict Training V1",
+  "family": "Board B SMT Strict",
+  "status": "candidate_only",
+  "promotion_state": "candidate_only",
+  "strategy_name": "SmtSameEventStrictTraining",
+  "mutation_id": null,
+  "base_factor": "smt_relationship_resolver",
+  "expression_text": "same_timeframe and overlapping_session and same_event_swing_confirmation_failure and trade_use == confirmation_only and mss_or_cisd_confirmed and displacement_confirmed",
+  "operator_set": [
+    "same_timeframe",
+    "overlapping_session",
+    "same_event_swing_confirmation_failure",
+    "base_level",
+    "comparison_level",
+    "normalized_for_inverse_correlation",
+    "mss_or_cisd_confirmed",
+    "displacement_confirmed"
+  ],
+  "complexity": 8,
+  "paradigm": "strict same-event SMT training",
+  "expected_regime": "Transition",
+  "target_market_hypothesis": [
+    "NQ/ES",
+    "NQ/YM",
+    "EURUSD/GBPUSD",
+    "EURUSD/DXY",
+    "XAUUSD/XAGUSD",
+    "XAUUSD/DXY",
+    "BTC/ETH"
+  ],
+  "base_timeframe": "mixed",
+  "context_timeframes": [
+    "5m",
+    "15m",
+    "1h"
+  ],
+  "regime_role": "root_conditioned_factor",
+  "evidence_window": "strict training packet from 2026-05-12 223155 root",
+  "strategy_source": "support/docs/experiments/actionable-regime-confidence/runs/20260512T223155+0800-codex-smt-strict-factor-training-v1/materials/smt_strict_factor_training_packet.json",
+  "filter_belief_execution_mapping": {
+    "pre_bayes_targets": [
+      "smt_confirmation_filter",
+      "same_event_confirmation_failure"
+    ],
+    "belief_targets": [
+      "cross_market_confirmation_quality",
+      "strict_entry_context_density"
+    ],
+    "path_ranking_targets": [
+      "recommended_path_bundle"
+    ],
+    "execution_tree_targets": [
+      "execution_readiness",
+      "pda_confirmation_dependency"
+    ],
+    "execution_tree_blockers_intended": [
+      "insufficient_strict_same_event_pair_and_regime_training_rows"
+    ],
+    "structural_feedback_required": true
+  }
+}

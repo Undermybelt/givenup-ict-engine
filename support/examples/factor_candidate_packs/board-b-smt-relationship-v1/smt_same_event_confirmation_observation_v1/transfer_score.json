@@ -1,0 +1,14 @@
+{
+  "schema_version": "transfer-score/v1",
+  "candidate_id": "smt_same_event_confirmation_observation_v1",
+  "status": "observation_only",
+  "overall_transfer_score": 0.0,
+  "covered_markets": [],
+  "markets_without_trade_counts": [
+    "NQ/ES/YM",
+    "EURUSD/GBPUSD/DXY",
+    "XAUUSD/XAGUSD/DXY",
+    "BTC/ETH"
+  ],
+  "reason": "single_observation_only_not_promotable"
+}

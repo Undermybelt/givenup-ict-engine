@@ -80,6 +80,7 @@ use super::promoted::match_promoted_canonical_setups;
 use super::sessions::{is_in_zone, SessionKillZone};
 use crate::smt::Divergence;
 use crate::types::{Candle, Direction};
+use std::cmp::Ordering;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize)]
 pub enum CanonicalSetupKind {
@@ -226,7 +227,7 @@ pub fn match_all_setups(events: &[PdaEvent], horizon_bars: usize) -> Vec<SetupMa
     out.extend(match_power_of_three(events, horizon_bars));
     out.extend(match_turtle_soup_liquidity_grab(events, horizon_bars));
     out.extend(match_promoted_canonical_setups(events, horizon_bars));
-    out.sort_by_key(|m| (m.confirm_bar, m.label().to_string()));
+    out.sort_by(compare_setup_match_order);
     out
 }
 
@@ -333,7 +334,7 @@ pub fn match_all_setups_extended(
         out.extend(match_optimal_trade_entry_with_cisd(events, primary));
     }
 
-    out.sort_by_key(|m| (m.confirm_bar, m.label().to_string()));
+    out.sort_by(compare_setup_match_order);
     out
 }
 
@@ -367,6 +368,58 @@ fn find_after(
         .skip(from_idx + 1)
         .take_while(|e| e.bar_index.saturating_sub(anchor_bar) <= horizon)
         .find(|e| pred(e))
+}
+
+fn compare_setup_match_order(left: &SetupMatch, right: &SetupMatch) -> Ordering {
+    left.confirm_bar
+        .cmp(&right.confirm_bar)
+        .then_with(|| left.label().cmp(right.label()))
+}
+
+fn indices_for_kind_direction(
+    events: &[PdaEvent],
+    kind: PdaEventKind,
+    direction: Option<Direction>,
+) -> Vec<usize> {
+    events
+        .iter()
+        .enumerate()
+        .filter_map(|(idx, event)| {
+            let direction_matches = direction
+                .map(|value| event.direction == value)
+                .unwrap_or(true);
+            (event.kind == kind && direction_matches).then_some(idx)
+        })
+        .collect()
+}
+
+fn first_following_index_within_horizon(
+    events: &[PdaEvent],
+    candidate_indices: &[usize],
+    from_idx: usize,
+    anchor_bar: usize,
+    horizon: usize,
+) -> Option<usize> {
+    let start = candidate_indices.partition_point(|idx| *idx <= from_idx);
+    candidate_indices[start..]
+        .iter()
+        .copied()
+        .find(|idx| events[*idx].bar_index.saturating_sub(anchor_bar) <= horizon)
+}
+
+fn earliest_following_index_within_horizon(
+    events: &[PdaEvent],
+    candidate_index_groups: &[&[usize]],
+    from_idx: usize,
+    anchor_bar: usize,
+    horizon: usize,
+) -> Option<usize> {
+    candidate_index_groups
+        .iter()
+        .filter_map(|indices| {
+            first_following_index_within_horizon(events, indices, from_idx, anchor_bar, horizon)
+        })
+        .min()
 }
 
 fn opposite(direction: Direction) -> Direction {
@@ -650,19 +703,27 @@ fn match_cisd_after_accumulation(events: &[PdaEvent], horizon: usize) -> Vec<Set
 
 fn match_unicorn_model(events: &[PdaEvent], horizon: usize) -> Vec<SetupMatch> {
     let mut out = Vec::new();
+    let bull_fvgs =
+        indices_for_kind_direction(events, PdaEventKind::FairValueGap, Some(Direction::Bull));
+    let bear_fvgs =
+        indices_for_kind_direction(events, PdaEventKind::FairValueGap, Some(Direction::Bear));
     for (i, ev) in events.iter().enumerate() {
         if ev.kind != PdaEventKind::BreakerBlock {
             continue;
         }
+        let candidate_indices = match ev.direction {
+            Direction::Bull => &bull_fvgs,
+            Direction::Bear => &bear_fvgs,
+            Direction::Neutral => continue,
+        };
         // Look both forward and backward within horizon for a same-dir
         // FVG; either direction works because the breaker confirms
         // late and the FVG can sit on either side of the violation.
-        let neighbours = events
-            .iter()
-            .enumerate()
-            .filter(|(j, _)| *j != i)
-            .filter(|(_, other)| other.kind == PdaEventKind::FairValueGap);
-        for (_, other) in neighbours {
+        for &idx in candidate_indices {
+            if idx == i {
+                continue;
+            }
+            let other = &events[idx];
             let dt = other
                 .bar_index
                 .max(ev.bar_index)
@@ -696,6 +757,20 @@ fn match_unicorn_model(events: &[PdaEvent], horizon: usize) -> Vec<SetupMatch> {
 
 fn match_power_of_three(events: &[PdaEvent], horizon: usize) -> Vec<SetupMatch> {
     let mut out = Vec::new();
+    let bull_mss = indices_for_kind_direction(
+        events,
+        PdaEventKind::MarketStructureShift,
+        Some(Direction::Bull),
+    );
+    let bear_mss = indices_for_kind_direction(
+        events,
+        PdaEventKind::MarketStructureShift,
+        Some(Direction::Bear),
+    );
+    let bull_sb =
+        indices_for_kind_direction(events, PdaEventKind::StructureBreak, Some(Direction::Bull));
+    let bear_sb =
+        indices_for_kind_direction(events, PdaEventKind::StructureBreak, Some(Direction::Bear));
     for (i, ev) in events.iter().enumerate() {
         if ev.kind != PdaEventKind::LiquiditySweep {
             continue;
@@ -704,10 +779,19 @@ fn match_power_of_three(events: &[PdaEvent], horizon: usize) -> Vec<SetupMatch> 
         if target == Direction::Neutral {
             continue;
         }
-        if let Some(follow) = find_after(events, i, horizon, |e| {
-            (e.kind == PdaEventKind::MarketStructureShift || e.kind == PdaEventKind::StructureBreak)
-                && e.direction == target
-        }) {
+        let candidate_groups: [&[usize]; 2] = match target {
+            Direction::Bull => [&bull_mss, &bull_sb],
+            Direction::Bear => [&bear_mss, &bear_sb],
+            Direction::Neutral => continue,
+        };
+        if let Some(follow_idx) = earliest_following_index_within_horizon(
+            events,
+            &candidate_groups,
+            i,
+            ev.bar_index,
+            horizon,
+        ) {
+            let follow = &events[follow_idx];
             out.push(SetupMatch {
                 kind: CanonicalSetupKind::PowerOfThree,
                 name_override: None,
@@ -728,6 +812,16 @@ fn match_power_of_three(events: &[PdaEvent], horizon: usize) -> Vec<SetupMatch> 
 
 fn match_turtle_soup_liquidity_grab(events: &[PdaEvent], horizon: usize) -> Vec<SetupMatch> {
     let mut out = Vec::new();
+    let bull_mss = indices_for_kind_direction(
+        events,
+        PdaEventKind::MarketStructureShift,
+        Some(Direction::Bull),
+    );
+    let bear_mss = indices_for_kind_direction(
+        events,
+        PdaEventKind::MarketStructureShift,
+        Some(Direction::Bear),
+    );
     for (i, ev) in events.iter().enumerate() {
         if ev.kind != PdaEventKind::LiquiditySweep {
             continue;
@@ -736,9 +830,19 @@ fn match_turtle_soup_liquidity_grab(events: &[PdaEvent], horizon: usize) -> Vec<
         if target == Direction::Neutral {
             continue;
         }
-        if let Some(follow) = find_after(events, i, horizon, |e| {
-            e.kind == PdaEventKind::MarketStructureShift && e.direction == target
-        }) {
+        let candidate_indices = match target {
+            Direction::Bull => &bull_mss,
+            Direction::Bear => &bear_mss,
+            Direction::Neutral => continue,
+        };
+        if let Some(follow_idx) = first_following_index_within_horizon(
+            events,
+            candidate_indices,
+            i,
+            ev.bar_index,
+            horizon,
+        ) {
+            let follow = &events[follow_idx];
             out.push(SetupMatch {
                 kind: CanonicalSetupKind::TurtleSoupLiquidityGrab,
                 name_override: None,
@@ -1312,6 +1416,56 @@ mod tests {
             .find(|s| s.kind == CanonicalSetupKind::IFvgContinuation)
             .expect("expected iFvgContinuation");
         assert_eq!(setup.direction, Direction::Bear);
+    }
+
+    #[test]
+    fn unicorn_model_matches_same_direction_nearest_fvg_window() {
+        let events = vec![
+            ev(PdaEventKind::FairValueGap, 7, Direction::Bull),
+            ev(PdaEventKind::BreakerBlock, 10, Direction::Bull),
+            ev(PdaEventKind::FairValueGap, 12, Direction::Bear),
+        ];
+        let matches = match_all_setups(&events, 5);
+        let setup = matches
+            .iter()
+            .find(|s| s.kind == CanonicalSetupKind::UnicornModel)
+            .expect("expected unicorn model");
+        assert_eq!(setup.direction, Direction::Bull);
+        assert_eq!(setup.event_bars, vec![10, 7]);
+    }
+
+    #[test]
+    fn power_of_three_prefers_first_eligible_following_target() {
+        let events = vec![
+            ev(PdaEventKind::LiquiditySweep, 10, Direction::Bear),
+            ev(PdaEventKind::StructureBreak, 13, Direction::Bull),
+            ev(PdaEventKind::MarketStructureShift, 14, Direction::Bull),
+        ];
+        let matches = match_all_setups(&events, 10);
+        let setup = matches
+            .iter()
+            .find(|s| s.kind == CanonicalSetupKind::PowerOfThree)
+            .expect("expected power of three");
+        assert_eq!(setup.direction, Direction::Bull);
+        assert_eq!(setup.confirm_bar, 13);
+        assert_eq!(setup.event_bars, vec![10, 13]);
+    }
+
+    #[test]
+    fn turtle_soup_ignores_structure_break_and_requires_mss() {
+        let events = vec![
+            ev(PdaEventKind::LiquiditySweep, 10, Direction::Bear),
+            ev(PdaEventKind::StructureBreak, 12, Direction::Bull),
+            ev(PdaEventKind::MarketStructureShift, 14, Direction::Bull),
+        ];
+        let matches = match_all_setups(&events, 10);
+        let setup = matches
+            .iter()
+            .find(|s| s.kind == CanonicalSetupKind::TurtleSoupLiquidityGrab)
+            .expect("expected turtle soup");
+        assert_eq!(setup.direction, Direction::Bull);
+        assert_eq!(setup.confirm_bar, 14);
+        assert_eq!(setup.event_bars, vec![10, 14]);
     }
 
     #[test]

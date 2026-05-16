@@ -1,0 +1,488 @@
+{
+  "schema_version": "factor-eval-grid-summary/v1",
+  "factor_name": "sweep_quality",
+  "candidate_id": "sweep_quality_proxy_outcome_observation_v1",
+  "selected_strategy": "SweepQualityProxyOutcomeObservationOnly",
+  "timeframe": "mixed",
+  "candidate_status": "proxy_observation_only",
+  "promotion_state": "candidate_only",
+  "breadth_matrix": {
+    "BTC": {
+      "observation_count": 377,
+      "trade_count": 0,
+      "trade_density_label": "proxy_observation_only",
+      "proxy_target_hit_rate": 0.6714697406340058,
+      "proxy_expectancy_r": 9.20247308785788,
+      "target_hit": 233,
+      "invalidation_hit": 114,
+      "ambiguous_both_hit": 30,
+      "no_hit": 0,
+      "provider_set": [
+        "kraken",
+        "paired_provider_packet",
+        "yahoo"
+      ],
+      "symbol_coverage": [
+        "BTC"
+      ],
+      "confidence": 0.0,
+      "status": "proxy_observation_only",
+      "notes": [
+        "proxy continuation-vs-invalidation labels are not realized trades",
+        "admission must remain pending until provider-backed analyze/update rows exist"
+      ]
+    },
+    "DXY": {
+      "observation_count": 205,
+      "trade_count": 0,
+      "trade_density_label": "proxy_observation_only",
+      "proxy_target_hit_rate": 0.5875706214689266,
+      "proxy_expectancy_r": 3.8423283262652133,
+      "target_hit": 104,
+      "invalidation_hit": 73,
+      "ambiguous_both_hit": 25,
+      "no_hit": 3,
+      "provider_set": [
+        "paired_provider_packet",
+        "yahoo"
+      ],
+      "symbol_coverage": [
+        "DXY"
+      ],
+      "confidence": 0.0,
+      "status": "proxy_observation_only",
+      "notes": [
+        "proxy continuation-vs-invalidation labels are not realized trades",
+        "admission must remain pending until provider-backed analyze/update rows exist"
+      ]
+    },
+    "ES": {
+      "observation_count": 237,
+      "trade_count": 0,
+      "trade_density_label": "proxy_observation_only",
+      "proxy_target_hit_rate": 0.6303317535545023,
+      "proxy_expectancy_r": 3.853589321005587,
+      "target_hit": 133,
+      "invalidation_hit": 78,
+      "ambiguous_both_hit": 24,
+      "no_hit": 2,
+      "provider_set": [
+        "paired_provider_packet",
+        "yahoo"
+      ],
+      "symbol_coverage": [
+        "ES"
+      ],
+      "confidence": 0.0,
+      "status": "proxy_observation_only",
+      "notes": [
+        "proxy continuation-vs-invalidation labels are not realized trades",
+        "admission must remain pending until provider-backed analyze/update rows exist"
+      ]
+    },
+    "ETH": {
+      "observation_count": 335,
+      "trade_count": 0,
+      "trade_density_label": "proxy_observation_only",
+      "proxy_target_hit_rate": 0.6719242902208202,
+      "proxy_expectancy_r": 7.127880817354485,
+      "target_hit": 213,
+      "invalidation_hit": 104,
+      "ambiguous_both_hit": 18,
+      "no_hit": 0,
+      "provider_set": [
+        "kraken",
+        "paired_provider_packet",
+        "yahoo"
+      ],
+      "symbol_coverage": [
+        "ETH"
+      ],
+      "confidence": 0.0,
+      "status": "proxy_observation_only",
+      "notes": [
+        "proxy continuation-vs-invalidation labels are not realized trades",
+        "admission must remain pending until provider-backed analyze/update rows exist"
+      ]
+    },
+    "EURUSD": {
+      "observation_count": 145,
+      "trade_count": 0,
+      "trade_density_label": "proxy_observation_only",
+      "proxy_target_hit_rate": 0.627906976744186,
+      "proxy_expectancy_r": 1.7067889488757746,
+      "target_hit": 81,
+      "invalidation_hit": 48,
+      "ambiguous_both_hit": 16,
+      "no_hit": 0,
+      "provider_set": [
+        "paired_provider_packet",
+        "yahoo"
+      ],
+      "symbol_coverage": [
+        "EURUSD"
+      ],
+      "confidence": 0.0,
+      "status": "proxy_observation_only",
+      "notes": [
+        "proxy continuation-vs-invalidation labels are not realized trades",
+        "admission must remain pending until provider-backed analyze/update rows exist"
+      ]
+    },
+    "GBPUSD": {
+      "observation_count": 38,
+      "trade_count": 0,
+      "trade_density_label": "proxy_observation_only",
+      "proxy_target_hit_rate": 0.5714285714285714,
+      "proxy_expectancy_r": 6.425528294556126,
+      "target_hit": 20,
+      "invalidation_hit": 15,
+      "ambiguous_both_hit": 3,
+      "no_hit": 0,
+      "provider_set": [
+        "paired_provider_packet"
+      ],
+      "symbol_coverage": [
+        "GBPUSD"
+      ],
+      "confidence": 0.0,
+      "status": "proxy_observation_only",
+      "notes": [
+        "proxy continuation-vs-invalidation labels are not realized trades",
+        "admission must remain pending until provider-backed analyze/update rows exist"
+      ]
+    },
+    "NQ": {
+      "observation_count": 359,
+      "trade_count": 0,
+      "trade_density_label": "proxy_observation_only",
+      "proxy_target_hit_rate": 0.5644171779141104,
+      "proxy_expectancy_r": 3.814832646414027,
+      "target_hit": 184,
+      "invalidation_hit": 142,
+      "ambiguous_both_hit": 29,
+      "no_hit": 4,
+      "provider_set": [
+        "paired_provider_packet",
+        "yahoo"
+      ],
+      "symbol_coverage": [
+        "NQ"
+      ],
+      "confidence": 0.0,
+      "status": "proxy_observation_only",
+      "notes": [
+        "proxy continuation-vs-invalidation labels are not realized trades",
+        "admission must remain pending until provider-backed analyze/update rows exist"
+      ]
+    },
+    "XAGUSD": {
+      "observation_count": 151,
+      "trade_count": 0,
+      "trade_density_label": "proxy_observation_only",
+      "proxy_target_hit_rate": 0.5846153846153846,
+      "proxy_expectancy_r": 4.191949598734219,
+      "target_hit": 76,
+      "invalidation_hit": 54,
+      "ambiguous_both_hit": 18,
+      "no_hit": 3,
+      "provider_set": [
+        "paired_provider_packet",
+        "yahoo"
+      ],
+      "symbol_coverage": [
+        "XAGUSD"
+      ],
+      "confidence": 0.0,
+      "status": "proxy_observation_only",
+      "notes": [
+        "proxy continuation-vs-invalidation labels are not realized trades",
+        "admission must remain pending until provider-backed analyze/update rows exist"
+      ]
+    },
+    "XAUUSD": {
+      "observation_count": 162,
+      "trade_count": 0,
+      "trade_density_label": "proxy_observation_only",
+      "proxy_target_hit_rate": 0.6462585034013606,
+      "proxy_expectancy_r": 5.404186618877718,
+      "target_hit": 95,
+      "invalidation_hit": 52,
+      "ambiguous_both_hit": 13,
+      "no_hit": 2,
+      "provider_set": [
+        "paired_provider_packet",
+        "yahoo"
+      ],
+      "symbol_coverage": [
+        "XAUUSD"
+      ],
+      "confidence": 0.0,
+      "status": "proxy_observation_only",
+      "notes": [
+        "proxy continuation-vs-invalidation labels are not realized trades",
+        "admission must remain pending until provider-backed analyze/update rows exist"
+      ]
+    },
+    "YM": {
+      "observation_count": 79,
+      "trade_count": 0,
+      "trade_density_label": "proxy_observation_only",
+      "proxy_target_hit_rate": 0.8142857142857143,
+      "proxy_expectancy_r": 3.6561049749801224,
+      "target_hit": 57,
+      "invalidation_hit": 13,
+      "ambiguous_both_hit": 8,
+      "no_hit": 1,
+      "provider_set": [
+        "paired_provider_packet"
+      ],
+      "symbol_coverage": [
+        "YM"
+      ],
+      "confidence": 0.0,
+      "status": "proxy_observation_only",
+      "notes": [
+        "proxy continuation-vs-invalidation labels are not realized trades",
+        "admission must remain pending until provider-backed analyze/update rows exist"
+      ]
+    }
+  },
+  "trade_density_summary": {
+    "aggregate_trade_count": 0,
+    "aggregate_label": "proxy_observation_only",
+    "covered_market_count": 10,
+    "observation_row_count": 2088,
+    "proxy_labeled_rows": 2088
+  },
+  "aggregate_metrics": {
+    "trade_count": 0,
+    "observation_count": 2088,
+    "proxy_target_hit_rate": 0.6331392271042879,
+    "proxy_expectancy_r": 5.371946700877447,
+    "confidence_mean": 0.0,
+    "trade_usable": false,
+    "promotion_allowed": false
+  },
+  "per_regime_statistics": {
+    "trend": {
+      "observation_count": 998,
+      "trade_count": 0,
+      "trade_density_label": "proxy_observation_only",
+      "proxy_target_hit_rate": 0.6295081967213115,
+      "proxy_expectancy_r": 6.584496199522905,
+      "target_hit": 576,
+      "invalidation_hit": 339,
+      "ambiguous_both_hit": 77,
+      "no_hit": 6,
+      "provider_set": [
+        "kraken",
+        "paired_provider_packet",
+        "yahoo"
+      ],
+      "symbol_coverage": [
+        "BTC",
+        "DXY",
+        "ES",
+        "ETH",
+        "EURUSD",
+        "NQ",
+        "XAGUSD",
+        "XAUUSD",
+        "YM"
+      ],
+      "confidence": 0.0,
+      "status": "proxy_observation_only",
+      "notes": [
+        "proxy continuation-vs-invalidation labels are not realized trades",
+        "admission must remain pending until provider-backed analyze/update rows exist"
+      ],
+      "sample_window": "retained provider candles, horizon_bars=24",
+      "instrument_coverage": [
+        "BTC",
+        "DXY",
+        "ES",
+        "ETH",
+        "EURUSD",
+        "NQ",
+        "XAGUSD",
+        "XAUUSD",
+        "YM"
+      ],
+      "fail_closed_reason": "proxy_labels_not_realized_trades"
+    },
+    "range": {
+      "observation_count": 584,
+      "trade_count": 0,
+      "trade_density_label": "proxy_observation_only",
+      "proxy_target_hit_rate": 0.655705996131528,
+      "proxy_expectancy_r": 3.139744903886132,
+      "target_hit": 339,
+      "invalidation_hit": 178,
+      "ambiguous_both_hit": 60,
+      "no_hit": 7,
+      "provider_set": [
+        "kraken",
+        "paired_provider_packet",
+        "yahoo"
+      ],
+      "symbol_coverage": [
+        "BTC",
+        "DXY",
+        "ES",
+        "ETH",
+        "EURUSD",
+        "GBPUSD",
+        "NQ",
+        "XAGUSD",
+        "XAUUSD",
+        "YM"
+      ],
+      "confidence": 0.0,
+      "status": "proxy_observation_only",
+      "notes": [
+        "proxy continuation-vs-invalidation labels are not realized trades",
+        "admission must remain pending until provider-backed analyze/update rows exist"
+      ],
+      "sample_window": "retained provider candles, horizon_bars=24",
+      "instrument_coverage": [
+        "BTC",
+        "DXY",
+        "ES",
+        "ETH",
+        "EURUSD",
+        "GBPUSD",
+        "NQ",
+        "XAGUSD",
+        "XAUUSD",
+        "YM"
+      ],
+      "fail_closed_reason": "proxy_labels_not_realized_trades"
+    },
+    "transition": {
+      "observation_count": 433,
+      "trade_count": 0,
+      "trade_density_label": "proxy_observation_only",
+      "proxy_target_hit_rate": 0.6138107416879796,
+      "proxy_expectancy_r": 5.3839624626194125,
+      "target_hit": 240,
+      "invalidation_hit": 151,
+      "ambiguous_both_hit": 41,
+      "no_hit": 1,
+      "provider_set": [
+        "kraken",
+        "paired_provider_packet",
+        "yahoo"
+      ],
+      "symbol_coverage": [
+        "BTC",
+        "DXY",
+        "ES",
+        "ETH",
+        "EURUSD",
+        "GBPUSD",
+        "NQ",
+        "XAGUSD",
+        "XAUUSD",
+        "YM"
+      ],
+      "confidence": 0.0,
+      "status": "proxy_observation_only",
+      "notes": [
+        "proxy continuation-vs-invalidation labels are not realized trades",
+        "admission must remain pending until provider-backed analyze/update rows exist"
+      ],
+      "sample_window": "retained provider candles, horizon_bars=24",
+      "instrument_coverage": [
+        "BTC",
+        "DXY",
+        "ES",
+        "ETH",
+        "EURUSD",
+        "GBPUSD",
+        "NQ",
+        "XAGUSD",
+        "XAUUSD",
+        "YM"
+      ],
+      "fail_closed_reason": "proxy_labels_not_realized_trades"
+    },
+    "stress": {
+      "observation_count": 73,
+      "trade_count": 0,
+      "trade_density_label": "proxy_observation_only",
+      "proxy_target_hit_rate": 0.6212121212121212,
+      "proxy_expectancy_r": 6.581242933212906,
+      "target_hit": 41,
+      "invalidation_hit": 25,
+      "ambiguous_both_hit": 6,
+      "no_hit": 1,
+      "provider_set": [
+        "kraken",
+        "paired_provider_packet",
+        "yahoo"
+      ],
+      "symbol_coverage": [
+        "ETH",
+        "XAGUSD",
+        "XAUUSD"
+      ],
+      "confidence": 0.0,
+      "status": "proxy_observation_only",
+      "notes": [
+        "proxy continuation-vs-invalidation labels are not realized trades",
+        "admission must remain pending until provider-backed analyze/update rows exist"
+      ],
+      "sample_window": "retained provider candles, horizon_bars=24",
+      "instrument_coverage": [
+        "ETH",
+        "XAGUSD",
+        "XAUUSD"
+      ],
+      "fail_closed_reason": "proxy_labels_not_realized_trades"
+    },
+    "other": {
+      "observation_count": 0,
+      "trade_count": 0,
+      "proxy_target_hit_rate": null,
+      "proxy_expectancy_r": null,
+      "sample_window": null,
+      "instrument_coverage": [],
+      "confidence": 0.0,
+      "fail_closed_reason": "proxy_labels_not_realized_trades"
+    }
+  },
+  "field_mapping": {
+    "Structure": [
+      "sweep_level",
+      "entry_level",
+      "target_level",
+      "invalidation_level"
+    ],
+    "Technicals": [
+      "direction",
+      "horizon_return",
+      "realized_r_proxy"
+    ],
+    "SMT": [],
+    "Regime posterior evidence": [
+      "main_regime",
+      "sub_regime",
+      "regime_bucket",
+      "regime_profit_branch_path"
+    ],
+    "Execution tree": [
+      "proxy_target_hit_rate",
+      "proxy_expectancy_r",
+      "trade_usable",
+      "fail_closed_reason"
+    ],
+    "Feedback/update learning fields": [
+      "label_kind",
+      "outcome_label",
+      "meta_label_proxy",
+      "trade_usable"
+    ]
+  },
+  "fail_closed_reason": "proxy_labels_not_realized_trades"
+}

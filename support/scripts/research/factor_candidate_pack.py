@@ -68,15 +68,51 @@ def _docstring_metadata(source_text: str) -> dict[str, Any]:
             metadata["paradigm"] = value
         elif normalized_key == "hypothesis":
             metadata["hypothesis"] = value
+        elif normalized_key == "strategy":
+            metadata["strategy"] = value
+        elif normalized_key == "mutation_id":
+            metadata["mutation_id"] = value
+        elif normalized_key == "base_factor":
+            metadata["base_factor"] = value
+        elif normalized_key == "expected_regime":
+            metadata["expected_regime"] = value
+        elif normalized_key == "factors_used":
+            metadata["factors_used"] = [
+                item.strip() for item in value.split(",") if item.strip()
+            ] or [value]
         elif normalized_key == "parent":
             metadata["parent_strategy"] = value
+        elif normalized_key == "asset_class":
+            metadata["asset_class"] = value
         elif normalized_key == "status":
             metadata["status_hint"] = value
+        elif normalized_key == "created":
+            metadata["created"] = value
         elif normalized_key == "external_data":
             metadata["external_data"] = value
         elif normalized_key == "uses_mtf":
             metadata["uses_mtf"] = value.lower() == "yes"
     return metadata
+
+
+def _branch_path_fields(expected_regime: Any) -> dict[str, str]:
+    branch_path = str(expected_regime or "").strip()
+    if not branch_path:
+        return {
+            "main_regime": "",
+            "sub_regime": "",
+            "sub_sub_regime_or_profit_factor": "",
+            "profit_factor": "",
+            "regime_profit_branch_path": "",
+        }
+    parts = [part.strip() for part in branch_path.split("->") if part.strip()]
+    return {
+        "main_regime": parts[0] if len(parts) > 0 else "",
+        "sub_regime": parts[1] if len(parts) > 1 else "",
+        "sub_sub_regime_or_profit_factor": parts[2] if len(parts) > 2 else "",
+        "profit_factor": " -> ".join(parts[3:]) if len(parts) > 3 else "",
+        "regime_profit_branch_path": " -> ".join(parts),
+    }
 
 
 def build_manifest_from_freqtrade_backtest_zip(zip_path: Path) -> dict[str, Any]:
@@ -155,12 +191,18 @@ def build_manifest_from_freqtrade_backtest_zip(zip_path: Path) -> dict[str, Any]
                     "status": "ok",
                     "metadata": {
                         "strategy": strategy_name,
+                        "mutation_id": strategy_metadata.get("mutation_id"),
+                        "base_factor": strategy_metadata.get("base_factor"),
                         "hypothesis": strategy_metadata.get("hypothesis", ""),
                         "paradigm": strategy_metadata.get("paradigm"),
+                        "expected_regime": strategy_metadata.get("expected_regime"),
+                        "factors_used": strategy_metadata.get("factors_used", []),
                         "source_artifact": str(zip_path),
                         "strategy_source_name": strategy_source_name,
                         "parent_strategy": strategy_metadata.get("parent_strategy"),
+                        "asset_class": strategy_metadata.get("asset_class"),
                         "status_hint": strategy_metadata.get("status_hint"),
+                        "created": strategy_metadata.get("created"),
                         "uses_mtf": strategy_metadata.get("uses_mtf"),
                         "external_data": strategy_metadata.get("external_data"),
                     },
@@ -222,6 +264,7 @@ def build_strategy_library_manifest_from_freqtrade_backtest_zip(
         metadata = strategy.get("metadata", {})
         strategy_name = strategy.get("name", "")
         per_pair_metrics = strategy.get("per_pair_metrics") or {}
+        branch_fields = _branch_path_fields(metadata.get("expected_regime"))
         strategies.append(
             {
                 "name": strategy_name,
@@ -233,6 +276,15 @@ def build_strategy_library_manifest_from_freqtrade_backtest_zip(
                     "hypothesis": metadata.get("hypothesis", ""),
                     "paradigm": metadata.get("paradigm", ""),
                     "expected_regime": metadata.get("expected_regime", ""),
+                    "main_regime": branch_fields["main_regime"],
+                    "sub_regime": branch_fields["sub_regime"],
+                    "sub_sub_regime_or_profit_factor": branch_fields[
+                        "sub_sub_regime_or_profit_factor"
+                    ],
+                    "profit_factor": branch_fields["profit_factor"],
+                    "regime_profit_branch_path": branch_fields[
+                        "regime_profit_branch_path"
+                    ],
                     "factors_used": metadata.get("factors_used", []),
                     "parent": metadata.get("parent_strategy", ""),
                     "asset_class": metadata.get("asset_class", ""),

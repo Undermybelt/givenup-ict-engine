@@ -251,7 +251,54 @@ mod tests {
         assert_eq!(readiness.status, "dependency_ready_data_ready");
         assert_eq!(
             readiness.recommended_next_command,
-            format!("uv run --with ta-lib {}/run.py", status.managed_dir)
+            format!(
+                "cd {} && ./.venv/bin/python run.py",
+                crate::config::shell_quote(&status.managed_dir)
+            )
+        );
+    }
+
+    #[test]
+    fn readiness_uses_repo_local_venv_contract_for_synthetic_profile_run_tomac() {
+        let upstream = tempfile::tempdir().unwrap();
+        init_repo(upstream.path());
+        let state = tempfile::tempdir().unwrap();
+        let status = auto_quant_bootstrap(
+            state.path().to_str().unwrap(),
+            Some(upstream.path().to_str().unwrap()),
+            Some("master"),
+        )
+        .unwrap();
+        super::workspace_profile::persist_workspace_profile_selection(
+            state.path().to_str().unwrap(),
+            Some(super::workspace_profile::AUTO_QUANT_PROFILE_SYNTHETIC_OHLCV),
+            "XLK",
+            "/tmp/xlk.json",
+        )
+        .unwrap();
+        let workspace = super::handoff::auto_quant_workspace_config_for_state(
+            &status.managed_dir,
+            state.path().to_str().unwrap(),
+        );
+        std::fs::create_dir_all(&workspace.data_dir).unwrap();
+        for filename in &workspace.expected_data_files {
+            std::fs::write(Path::new(&workspace.data_dir).join(filename), "").unwrap();
+        }
+        seed_strategy(Path::new(&status.managed_dir), "SeedAlpha");
+
+        let readiness = super::readiness::auto_quant_readiness_from_status_with_state_dir(
+            &status,
+            state.path().to_str().unwrap(),
+        );
+
+        assert_eq!(readiness.status, "dependency_ready_data_ready");
+        assert_eq!(workspace.profile_name.as_deref(), Some("synthetic_ohlcv"));
+        assert_eq!(
+            readiness.recommended_next_command,
+            format!(
+                "cd {} && ./.venv/bin/python run_tomac.py",
+                crate::config::shell_quote(&status.managed_dir)
+            )
         );
     }
 
@@ -267,10 +314,12 @@ mod tests {
         )
         .unwrap();
         seed_data(Path::new(&status.managed_dir));
+        let requested_data = state.path().join("nq.json");
+        std::fs::write(&requested_data, "[]").unwrap();
         let payload = super::handoff::build_factor_research_handoff_payload(
             super::handoff::BuildFactorResearchHandoffPayloadInput {
                 symbol: "NQ",
-                data: "/tmp/nq.json",
+                data: requested_data.to_str().unwrap(),
                 objective: "generic",
                 provider_profile_selector: None,
                 paired_data: None,

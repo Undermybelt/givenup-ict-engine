@@ -1,0 +1,61 @@
+{
+  "schema_version": "factor-expression/v1",
+  "candidate_id": "sweep_quality_provider_observation_v1",
+  "display_name": "Sweep Quality Provider Observation V1",
+  "family": "Board B Sweep Quality",
+  "status": "observation_only",
+  "promotion_state": "candidate_only",
+  "strategy_name": "SweepQualityProviderObservationOnly",
+  "mutation_id": null,
+  "base_factor": "sweep_quality",
+  "expression_text": "transition_root and liquidity_sweep and reclaim_observed and sweep_event_count >= 1",
+  "operator_set": [
+    "transition_root",
+    "liquidity_sweep",
+    "reclaim_observed",
+    "sweep_event_count",
+    "sweep_level",
+    "reclaim_level"
+  ],
+  "complexity": 5,
+  "paradigm": "liquidity sweep quality observation",
+  "expected_regime": "Transition",
+  "target_market_hypothesis": [
+    "BTC/USD",
+    "ETH/USD",
+    "NQ",
+    "ES",
+    "EURUSD",
+    "GBPUSD",
+    "XAUUSD",
+    "XAGUSD"
+  ],
+  "base_timeframe": "1h",
+  "context_timeframes": [
+    "1h",
+    "15m",
+    "5m"
+  ],
+  "regime_role": "root_conditioned_factor",
+  "evidence_window": "provider snapshots: 2026-05-12 sweep_quality provider observation packet",
+  "strategy_source": "support/docs/experiments/actionable-regime-confidence/runs/20260512T210701+0800-codex-sweep-quality-provider-observation-v1/materials/sweep_quality_provider_observation_packet.json",
+  "filter_belief_execution_mapping": {
+    "pre_bayes_targets": [
+      "sweep_quality_observation_diagnostics"
+    ],
+    "belief_targets": [
+      "sweep_reclaim_calibration"
+    ],
+    "path_ranking_targets": [
+      "recommended_path_bundle"
+    ],
+    "execution_tree_targets": [
+      "execution_readiness"
+    ],
+    "execution_tree_blockers_intended": [
+      "no_realized_trade_outcomes",
+      "observation_only_factor"
+    ],
+    "structural_feedback_required": true
+  }
+}

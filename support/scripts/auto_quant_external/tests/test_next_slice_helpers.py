@@ -292,6 +292,9 @@ class StructuralFeedbackReplayHarnessTests(unittest.TestCase):
         self.assertEqual(len(candles), 1)
         self.assertEqual(candles[0]["timestamp"], "t")
 
+    def test_pnl_cli_arg_keeps_negative_value_attached(self) -> None:
+        self.assertEqual(replay.pnl_cli_arg(-0.001), "--pnl=-0.001")
+
 
 if __name__ == "__main__":
     unittest.main()

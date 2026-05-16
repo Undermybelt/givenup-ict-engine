@@ -17,6 +17,8 @@ pub enum LiveDataBackend {
     ExternalHttp,
     Yfinance,
     CryptoPublic,
+    BinancePublic,
+    BybitPublic,
     TradingViewMcp,
 }
 
@@ -26,6 +28,8 @@ impl LiveDataBackend {
             "external_http" | "external_http_runtime" => Ok(Self::ExternalHttp),
             "yfinance" => Ok(Self::Yfinance),
             "crypto_public" | "crypto_public_runtime" => Ok(Self::CryptoPublic),
+            "binance_public" | "binance_public_runtime" => Ok(Self::BinancePublic),
+            "bybit_public" | "bybit_public_runtime" => Ok(Self::BybitPublic),
             "tradingview" | "tradingview_mcp" | "tv_mcp" => Ok(Self::TradingViewMcp),
             other => bail!("unsupported live data backend '{}'", other),
         }
@@ -36,6 +40,8 @@ impl LiveDataBackend {
             Self::ExternalHttp => "external_http_runtime",
             Self::Yfinance => "yfinance",
             Self::CryptoPublic => "crypto_public_runtime",
+            Self::BinancePublic => "binance_public_runtime",
+            Self::BybitPublic => "bybit_public_runtime",
             Self::TradingViewMcp => "tradingview_mcp",
         }
     }
@@ -413,6 +419,12 @@ pub fn build_live_data_source(
         LiveDataBackend::ExternalHttp => Box::new(ExternalHttpRuntimeProvider::new(base_url, None)),
         LiveDataBackend::Yfinance => Box::new(YahooFinanceProvider::new(base_url)),
         LiveDataBackend::CryptoPublic => Box::new(CryptoPublicRuntimeProvider::new(base_url)),
+        LiveDataBackend::BinancePublic => {
+            Box::new(CryptoPublicRuntimeProvider::new_for_exchange("binance"))
+        }
+        LiveDataBackend::BybitPublic => {
+            Box::new(CryptoPublicRuntimeProvider::new_for_exchange("bybit"))
+        }
         LiveDataBackend::TradingViewMcp => Box::new(TradingViewMcpRuntimeProvider::new(base_url)),
     }
 }

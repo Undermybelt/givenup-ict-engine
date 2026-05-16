@@ -676,6 +676,8 @@ pub(crate) fn workflow_phase_snapshot_from_analyze_run(
             .as_ref()
             .map(|posterior| posterior.probabilities.clone())
             .unwrap_or_default(),
+        order_block_variant: run.order_block_variant.clone(),
+        reference_liquidity_levels: run.reference_liquidity_levels.clone(),
         pre_bayes_long_signal_probability: Some(
             run.pre_bayes_entry_quality_bridge.long_signal_probability,
         ),
@@ -703,6 +705,10 @@ pub(crate) fn workflow_phase_snapshot_from_analyze_run(
         pre_bayes_multi_timeframe_entry_alignment_score: run
             .pre_bayes_evidence_filter
             .filtered_multi_timeframe_entry_alignment_score,
+        conformal_coverage_1sigma: run.conformal_coverage_1sigma,
+        conformal_miscoverage_1sigma: run.conformal_miscoverage_1sigma,
+        mean_prediction_interval_half_width: run.mean_prediction_interval_half_width,
+        worst_window_miscoverage: run.worst_window_miscoverage,
         pda_cluster_label: run.agent_context_bundle_minimal.pda_cluster_label.clone(),
         hybrid_duration_model: run.hybrid_duration_model.clone(),
         hybrid_remaining_expected_bars: run.hybrid_remaining_expected_bars,
@@ -801,6 +807,8 @@ pub(crate) fn workflow_phase_snapshot_from_train_run(
         canonical_structural_active_regime: None,
         canonical_structural_confidence: None,
         canonical_structural_probabilities: BTreeMap::new(),
+        order_block_variant: None,
+        reference_liquidity_levels: None,
         pre_bayes_long_signal_probability: None,
         pre_bayes_short_signal_probability: None,
         pre_bayes_selected_entry_quality_probability: None,
@@ -810,6 +818,10 @@ pub(crate) fn workflow_phase_snapshot_from_train_run(
         pre_bayes_multi_timeframe_direction_bias: "direction_bias_unavailable".to_string(),
         pre_bayes_multi_timeframe_alignment_score: None,
         pre_bayes_multi_timeframe_entry_alignment_score: None,
+        conformal_coverage_1sigma: None,
+        conformal_miscoverage_1sigma: None,
+        mean_prediction_interval_half_width: None,
+        worst_window_miscoverage: None,
         pda_cluster_label: run.agent_context_bundle_minimal.pda_cluster_label.clone(),
         hybrid_duration_model: None,
         hybrid_remaining_expected_bars: None,
@@ -904,6 +916,8 @@ pub(crate) fn workflow_phase_snapshot_from_research_run(
             .as_ref()
             .map(|posterior| posterior.probabilities.clone())
             .unwrap_or_default(),
+        order_block_variant: None,
+        reference_liquidity_levels: None,
         pre_bayes_long_signal_probability: None,
         pre_bayes_short_signal_probability: None,
         pre_bayes_selected_entry_quality_probability: None,
@@ -913,6 +927,11 @@ pub(crate) fn workflow_phase_snapshot_from_research_run(
         pre_bayes_multi_timeframe_direction_bias: "direction_bias_unavailable".to_string(),
         pre_bayes_multi_timeframe_alignment_score: None,
         pre_bayes_multi_timeframe_entry_alignment_score: None,
+        conformal_coverage_1sigma: (run.backtest_conformal_coverage_1sigma > 0.0)
+            .then_some(run.backtest_conformal_coverage_1sigma),
+        conformal_miscoverage_1sigma: None,
+        mean_prediction_interval_half_width: None,
+        worst_window_miscoverage: None,
         hybrid_duration_model: None,
         hybrid_remaining_expected_bars: None,
         spectral_entropy: None,
@@ -1037,6 +1056,8 @@ pub(crate) fn workflow_phase_snapshot_from_backtest_run(
             .as_ref()
             .map(|posterior| posterior.probabilities.clone())
             .unwrap_or_default(),
+        order_block_variant: None,
+        reference_liquidity_levels: None,
         pre_bayes_long_signal_probability: None,
         pre_bayes_short_signal_probability: None,
         pre_bayes_selected_entry_quality_probability: None,
@@ -1046,6 +1067,10 @@ pub(crate) fn workflow_phase_snapshot_from_backtest_run(
         pre_bayes_multi_timeframe_direction_bias: "direction_bias_unavailable".to_string(),
         pre_bayes_multi_timeframe_alignment_score: None,
         pre_bayes_multi_timeframe_entry_alignment_score: None,
+        conformal_coverage_1sigma: Some(run.conformal_coverage_1sigma),
+        conformal_miscoverage_1sigma: Some(run.conformal_miscoverage_1sigma),
+        mean_prediction_interval_half_width: Some(run.mean_prediction_interval_half_width),
+        worst_window_miscoverage: Some(run.worst_window_miscoverage),
         hybrid_duration_model: None,
         hybrid_remaining_expected_bars: None,
         spectral_entropy: None,
@@ -1273,6 +1298,8 @@ pub(crate) fn workflow_phase_snapshot_from_update_run(
             .as_ref()
             .map(|posterior| posterior.probabilities.clone())
             .unwrap_or_default(),
+        order_block_variant: None,
+        reference_liquidity_levels: None,
         pre_bayes_long_signal_probability: None,
         pre_bayes_short_signal_probability: None,
         pre_bayes_selected_entry_quality_probability: None,
@@ -1299,6 +1326,10 @@ pub(crate) fn workflow_phase_snapshot_from_update_run(
             .consumed_pre_bayes_evidence_filter
             .as_ref()
             .and_then(|filter| filter.filtered_multi_timeframe_entry_alignment_score),
+        conformal_coverage_1sigma: None,
+        conformal_miscoverage_1sigma: None,
+        mean_prediction_interval_half_width: None,
+        worst_window_miscoverage: None,
         hybrid_duration_model: None,
         hybrid_remaining_expected_bars: None,
         spectral_entropy: None,

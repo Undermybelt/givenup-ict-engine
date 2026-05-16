@@ -1,4 +1,5 @@
 use super::*;
+use crate::analyze_shared::AnalyzeStageTrace;
 use ict_engine::application::regime::consumer_bundle_adapter::RegimeConsumerBundleAdapter;
 use std::path::Path;
 
@@ -302,6 +303,8 @@ fn resolve_live_symbol_inputs(
 }
 
 pub(crate) fn analyze_live_command(input: AnalyzeLiveCommandInput<'_>) -> Result<()> {
+    let stage_trace = AnalyzeStageTrace::maybe_from_env();
+    stage_trace.event("analyze_live_command:start");
     let AnalyzeLiveCommandInput {
         symbol,
         futures_symbol,
@@ -327,6 +330,7 @@ pub(crate) fn analyze_live_command(input: AnalyzeLiveCommandInput<'_>) -> Result
             )
         })
         .transpose()?;
+    stage_trace.event("analyze_live_command:regime_bundle_ready");
     let resolved_symbols = resolve_live_symbol_inputs(
         symbol,
         futures_symbol,
@@ -345,6 +349,7 @@ pub(crate) fn analyze_live_command(input: AnalyzeLiveCommandInput<'_>) -> Result
     let futures_provider = build_live_data_source(futures_backend, futures_base_url);
     let aux_provider = build_live_data_source(aux_backend, aux_base_url);
     let now = Utc::now();
+    stage_trace.event("analyze_live_command:providers_ready");
 
     let htf = futures_provider.fetch_futures_candles(
         futures_symbol,
@@ -382,6 +387,7 @@ pub(crate) fn analyze_live_command(input: AnalyzeLiveCommandInput<'_>) -> Result
         now - Duration::days(7),
         now,
     )?;
+    stage_trace.event("analyze_live_command:futures_candles_loaded");
     let live_multi_timeframe_summary = build_live_multi_timeframe_summary(
         "live_futures_multi_timeframe",
         &[
@@ -424,6 +430,7 @@ pub(crate) fn analyze_live_command(input: AnalyzeLiveCommandInput<'_>) -> Result
     let spot_live_price = aux_provider
         .fetch_spot_last_price(spot_kind, spot_symbol)
         .ok();
+    stage_trace.event("analyze_live_command:spot_data_loaded");
     let options_summary =
         ict_engine::application::data_sources::fetch_options_summary_with_fallback(
             aux_provider.as_ref(),
@@ -431,6 +438,7 @@ pub(crate) fn analyze_live_command(input: AnalyzeLiveCommandInput<'_>) -> Result
             options_volatility_proxy_symbol,
         )
         .unwrap_or_else(|_| neutral_options_summary(options_symbol));
+    stage_trace.event("analyze_live_command:options_summary_ready");
 
     let auxiliary = aux_provider.build_auxiliary_evidence(
         spot_kind,
@@ -443,6 +451,7 @@ pub(crate) fn analyze_live_command(input: AnalyzeLiveCommandInput<'_>) -> Result
     let params = load_or_init_hmm_params(symbol, state_dir);
     let network = load_or_init_trading_network(symbol, state_dir)?;
     let learning_state = load_learning_state(state_dir, symbol)?;
+    stage_trace.event("analyze_live_command:state_and_models_ready");
     let mut report = build_analyze_report(BuildAnalyzeReportInput {
         symbol,
         state_dir,
@@ -471,6 +480,7 @@ pub(crate) fn analyze_live_command(input: AnalyzeLiveCommandInput<'_>) -> Result
         apply_regime_bundle_bbn_soft_evidence,
         execution_focus: true,
     })?;
+    stage_trace.event("analyze_live_command:build_analyze_report_done");
 
     let trade_outcome_states = &network
         .nodes
@@ -534,6 +544,7 @@ pub(crate) fn analyze_live_command(input: AnalyzeLiveCommandInput<'_>) -> Result
         m1: &ltf_1m,
         spot_candles: &spot_candles,
     })?;
+    stage_trace.event("analyze_live_command:live_data_source_persisted");
     report.supporting.multi_timeframe_summary.extend(
         [
             live_data_source
@@ -593,14 +604,11 @@ pub(crate) fn analyze_live_command(input: AnalyzeLiveCommandInput<'_>) -> Result
         &report.supporting.raw_trade_plan,
         Some(&report.analysis.technical_price.options_hedging),
     );
-    let pending_update_file =
-        persist_pending_update_artifact_from_analyze(state_dir, &report, "analyze-live")?;
-    let _execution_candidate_file =
-        persist_execution_candidate_from_analyze(state_dir, &report, "analyze-live")?;
     let (artifact_factor_trends, artifact_family_trends) =
         artifact_trend_summaries_for_symbol(state_dir, symbol)?;
     let artifact_consumed_impact_summary =
         artifact_consumed_impact_summary_for_symbol(state_dir, symbol)?;
+    stage_trace.event("analyze_live_command:artifact_trends_loaded");
     augment_action_plan_with_artifact_trends(
         &mut report.supporting.agent_action_plan,
         symbol,
@@ -631,8 +639,15 @@ pub(crate) fn analyze_live_command(input: AnalyzeLiveCommandInput<'_>) -> Result
             );
         }
     }
+    let pending_update_file =
+        persist_pending_update_artifact_from_analyze(state_dir, &report, "analyze-live")?;
+    stage_trace.event("analyze_live_command:pending_update_persisted");
+    let _execution_candidate_file =
+        persist_execution_candidate_from_analyze(state_dir, &report, "analyze-live")?;
+    stage_trace.event("analyze_live_command:execution_candidate_persisted");
     report.supporting.artifact_decision_summary =
         artifact_decision_summary_for_symbol(state_dir, symbol)?;
+    stage_trace.event("analyze_live_command:artifact_decision_summary_ready");
     report.supporting.artifact_decision_section = artifact_decision_section_from_parts(
         &report.supporting.artifact_decision_summary,
         &report.supporting.artifact_action_summary,
@@ -657,6 +672,7 @@ pub(crate) fn analyze_live_command(input: AnalyzeLiveCommandInput<'_>) -> Result
             user_data_selection_required: true,
         },
     );
+    stage_trace.event("analyze_live_command:command_context_applied");
     report.supporting.workflow_snapshot = persist_analyze_run(
         state_dir,
         &report,
@@ -666,6 +682,7 @@ pub(crate) fn analyze_live_command(input: AnalyzeLiveCommandInput<'_>) -> Result
         None,
         Some(live_data_source),
     )?;
+    stage_trace.event("analyze_live_command:persist_analyze_run_done");
     report.supporting.artifact_decision_summary = artifact_decision_summary_from_snapshot(
         &report.supporting.workflow_snapshot,
         &report.supporting.artifact_action_summary,
@@ -682,6 +699,7 @@ pub(crate) fn analyze_live_command(input: AnalyzeLiveCommandInput<'_>) -> Result
         &mut report.supporting.promotion_decision,
         &mut report.supporting.rollback_recommendation,
     );
+    stage_trace.event("analyze_live_command:final_output_emit");
 
     ict_engine::application::reporting::dispatch_analyze_live_output(
         &report,

@@ -204,7 +204,15 @@ pub fn auto_quant_prepare_cli_command(state_dir: &str) -> String {
 }
 
 pub fn auto_quant_run_command(workspace: &AutoQuantWorkspaceConfig) -> String {
-    format!("uv run --with ta-lib {}", workspace.run_script)
+    let script_name = Path::new(&workspace.run_script)
+        .file_name()
+        .and_then(|value| value.to_str())
+        .unwrap_or("run.py");
+    format!(
+        "cd {} && ./.venv/bin/python {}",
+        shell_quote(&workspace.repo_root),
+        shell_quote(script_name)
+    )
 }
 
 pub fn auto_quant_data_ready(workspace: &AutoQuantWorkspaceConfig) -> bool {
@@ -235,6 +243,25 @@ pub fn auto_quant_data_ready(workspace: &AutoQuantWorkspaceConfig) -> bool {
         }
         Err(_) => false,
     }
+}
+
+pub fn auto_quant_handoff_data_ready(
+    workspace: &AutoQuantWorkspaceConfig,
+    data_path: &str,
+    paired_data_path: Option<&str>,
+) -> bool {
+    if !auto_quant_data_ready(workspace) {
+        return false;
+    }
+    if !Path::new(data_path).exists() {
+        return false;
+    }
+    if let Some(paired) = paired_data_path {
+        if !paired.trim().is_empty() && !Path::new(paired).exists() {
+            return false;
+        }
+    }
+    true
 }
 
 pub fn auto_quant_active_strategy_count(workspace: &AutoQuantWorkspaceConfig) -> usize {
@@ -480,7 +507,7 @@ pub fn build_factor_research_handoff_payload(
     } = input;
     let workspace =
         auto_quant_workspace_config_for_state(&dependency_status.managed_dir, state_dir);
-    let data_ready = auto_quant_data_ready(&workspace);
+    let data_ready = auto_quant_handoff_data_ready(&workspace, data, paired_data);
     let active_strategy_count = auto_quant_active_strategy_count(&workspace);
     let external_strategy_materials = discover_strategy_materials(strategy_material_root, 3);
     let readiness = auto_quant_readiness_from_status_and_data(
@@ -603,7 +630,7 @@ pub fn build_factor_autoresearch_handoff_payload(
     } = input;
     let workspace =
         auto_quant_workspace_config_for_state(&dependency_status.managed_dir, state_dir);
-    let data_ready = auto_quant_data_ready(&workspace);
+    let data_ready = auto_quant_handoff_data_ready(&workspace, data, paired_data);
     let active_strategy_count = auto_quant_active_strategy_count(&workspace);
     let external_strategy_materials = discover_strategy_materials(strategy_material_root, 3);
     let readiness = auto_quant_readiness_from_status_and_data(
@@ -885,9 +912,12 @@ mod tests {
         }
         std::fs::write(strategies_dir.join("SeedAlpha.py"), "class SeedAlpha: pass").unwrap();
 
+        let requested_data = temp.path().join("demo.json");
+        std::fs::write(&requested_data, "[]").unwrap();
+
         let ready = build_factor_research_handoff_payload(BuildFactorResearchHandoffPayloadInput {
             symbol: "NQ",
-            data: "demo.json",
+            data: requested_data.to_str().unwrap(),
             objective: "generic",
             provider_profile_selector: None,
             paired_data: None,
@@ -900,7 +930,56 @@ mod tests {
         assert!(ready
             .suggested_commands
             .iter()
-            .any(|command| command.contains("uv run --with ta-lib")));
+            .any(|command| command.contains("./.venv/bin/python run.py")));
+    }
+
+    #[test]
+    fn handoff_requires_requested_data_path_even_when_workspace_cache_is_ready() {
+        let temp = tempfile::tempdir().unwrap();
+        let managed_dir = temp.path().join("managed-auto-quant");
+        let strategies_dir = managed_dir.join("user_data/strategies");
+        let data_dir = managed_dir.join("user_data/data");
+        std::fs::create_dir_all(&strategies_dir).unwrap();
+        std::fs::create_dir_all(&data_dir).unwrap();
+        std::fs::write(managed_dir.join("program.md"), "program").unwrap();
+        std::fs::write(managed_dir.join("prepare.py"), "print('prepare')").unwrap();
+        std::fs::write(managed_dir.join("run.py"), "print('run')").unwrap();
+        std::fs::write(
+            strategies_dir.join("_template.py.example"),
+            "class Template: pass",
+        )
+        .unwrap();
+        std::fs::write(strategies_dir.join("SeedAlpha.py"), "class SeedAlpha: pass").unwrap();
+        for index in 0..15 {
+            std::fs::write(data_dir.join(format!("prepared-{index}.feather")), "ready").unwrap();
+        }
+
+        let payload =
+            build_factor_research_handoff_payload(BuildFactorResearchHandoffPayloadInput {
+                symbol: "NQ",
+                data: temp.path().join("missing-primary.json").to_str().unwrap(),
+                objective: "generic",
+                provider_profile_selector: None,
+                paired_data: None,
+                auxiliary_evidence_path: None,
+                mutation_spec_path: None,
+                strategy_material_root: None,
+                state_dir: temp.path().to_str().unwrap(),
+                dependency_status: healthy_dependency_status_for(managed_dir.to_str().unwrap()),
+            });
+
+        assert!(!payload.data_ready);
+        assert_eq!(
+            payload
+                .readiness
+                .as_ref()
+                .map(|value| value.status.as_str()),
+            Some("dependency_ready_data_missing")
+        );
+        assert!(payload
+            .suggested_commands
+            .iter()
+            .any(|command| command.contains("ict-engine auto-quant-prepare --state-dir")));
     }
 
     #[test]

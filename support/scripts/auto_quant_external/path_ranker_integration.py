@@ -85,6 +85,7 @@ def run_trainer(
     output_dir: str,
     model_family: str = "catboost",
     output_scores: str | None = None,
+    training_mode: str = "classification",
     python_runner: str = "auto",
     allow_direct_fallback: bool = False,
 ):
@@ -95,6 +96,7 @@ def run_trainer(
         "--target-csv", target_csv,
         "--output-dir", output_dir,
         "--model-family", model_family,
+        "--training-mode", training_mode,
     ]
     if output_scores:
         cmd.extend(["--output-scores", output_scores])
@@ -232,6 +234,12 @@ def main():
     parser.add_argument("--output-scores", default=None, help="Scores output path")
     parser.add_argument("--model-family", default="catboost", choices=["catboost"])
     parser.add_argument(
+        "--training-mode",
+        default="classification",
+        choices=["classification", "ranking"],
+        help="Training objective passed through to the external trainer",
+    )
+    parser.add_argument(
         "--python-runner",
         default="auto",
         choices=["auto", "uv", "system"],
@@ -317,6 +325,7 @@ def main():
             output_dir,
             args.model_family,
             output_scores,
+            training_mode=args.training_mode,
             python_runner=args.python_runner,
             allow_direct_fallback=args.allow_direct_fallback,
         )

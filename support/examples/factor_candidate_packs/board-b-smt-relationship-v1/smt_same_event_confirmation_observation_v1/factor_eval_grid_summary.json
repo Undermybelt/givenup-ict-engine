@@ -1,0 +1,98 @@
+{
+  "schema_version": "factor-eval-grid-summary/v1",
+  "factor_name": "smt_relationship_resolver",
+  "candidate_id": "smt_same_event_confirmation_observation_v1",
+  "status": "observation_only",
+  "trade_density_summary": {
+    "aggregate_trade_count": 0,
+    "aggregate_label": "invalid",
+    "downstream_allowed": false,
+    "promotion_allowed": false,
+    "fail_closed_reason": "single_observation_only_not_promotable"
+  },
+  "breadth_matrix": {
+    "NQ/ES/YM": {
+      "status": "targeted",
+      "notes": "same-event sibling futures confirmation cluster"
+    },
+    "EURUSD/GBPUSD/DXY": {
+      "status": "targeted",
+      "notes": "positive + inverse macro driver cluster"
+    },
+    "XAUUSD/XAGUSD/DXY": {
+      "status": "targeted",
+      "notes": "metals plus dollar driver cluster"
+    },
+    "BTC/ETH": {
+      "status": "targeted",
+      "notes": "crypto beta confirmation cluster"
+    }
+  },
+  "per_regime_statistics": {
+    "trend": {
+      "win_rate": null,
+      "trade_count": 0,
+      "expectancy": null,
+      "sample_window": null,
+      "instrument_coverage": [],
+      "confidence": 0.0,
+      "fail_closed_reason": "no_provider_backed_labeled_outcomes"
+    },
+    "range": {
+      "win_rate": null,
+      "trade_count": 0,
+      "expectancy": null,
+      "sample_window": null,
+      "instrument_coverage": [],
+      "confidence": 0.0,
+      "fail_closed_reason": "no_provider_backed_labeled_outcomes"
+    },
+    "transition": {
+      "win_rate": null,
+      "trade_count": 0,
+      "expectancy": null,
+      "sample_window": null,
+      "instrument_coverage": [],
+      "confidence": 0.0,
+      "fail_closed_reason": "no_provider_backed_labeled_outcomes"
+    },
+    "stress": {
+      "win_rate": null,
+      "trade_count": 0,
+      "expectancy": null,
+      "sample_window": null,
+      "instrument_coverage": [],
+      "confidence": 0.0,
+      "fail_closed_reason": "no_provider_backed_labeled_outcomes"
+    },
+    "other": {
+      "win_rate": null,
+      "trade_count": 0,
+      "expectancy": null,
+      "sample_window": null,
+      "instrument_coverage": [],
+      "confidence": 0.0,
+      "fail_closed_reason": "no_provider_backed_labeled_outcomes"
+    }
+  },
+  "field_requirements": [
+    "base_level",
+    "comparison_level",
+    "swept_side",
+    "normalized_for_inverse_correlation",
+    "trade_use=confirmation_only",
+    "fail_closed_reason"
+  ],
+  "quality_contract": {
+    "confirmation_only_required": true,
+    "stable_relationship_required": true,
+    "session_overlap_required": true,
+    "same_timeframe_required": true,
+    "required_pairs_minimum": [
+      "NQ/ES/YM",
+      "EURUSD/GBPUSD/DXY",
+      "XAUUSD/XAGUSD/DXY",
+      "BTC/ETH"
+    ]
+  }
+}

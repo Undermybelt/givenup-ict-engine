@@ -1,5 +1,5 @@
 use super::*;
-use ict_engine::application::provider_catalog::provider_status_agent_surface;
+use ict_engine::application::provider_catalog::ProviderCatalogAgentSurface;
 use ict_engine::state::ArtifactDecisionSummary;
 
 #[derive(Debug, Clone, Copy, Default)]
@@ -272,7 +272,9 @@ pub(crate) fn apply_offline_structural_prior_seed(
     support_hint: f64,
     note: &str,
 ) {
-    let provider_status_agent = provider_status_agent_surface(None, None, None).unwrap_or_default();
+    // Offline analyze persistence should not block on live provider/runtime probes.
+    // Structural prior seeding only needs a stable agent surface shape here.
+    let provider_status_agent = ProviderCatalogAgentSurface::default();
     if let Some(bundle) =
         ict_engine::application::orchestration::build_structural_recommended_path_bundle_artifact_with_prior_state(
             snapshot,
@@ -309,6 +311,41 @@ pub(crate) fn apply_offline_structural_prior_seed(
     }
 }
 
+pub(crate) struct AnalyzeStageTrace {
+    path: Option<std::path::PathBuf>,
+    started_at: std::time::Instant,
+}
+
+impl AnalyzeStageTrace {
+    pub(crate) fn maybe_from_env() -> Self {
+        let path = std::env::var("ICT_ENGINE_ANALYZE_STAGE_TRACE_FILE")
+            .ok()
+            .map(|value| value.trim().to_string())
+            .filter(|value| !value.is_empty())
+            .map(std::path::PathBuf::from);
+        Self {
+            path,
+            started_at: std::time::Instant::now(),
+        }
+    }
+
+    pub(crate) fn event<S: AsRef<str>>(&self, stage: S) {
+        let Some(path) = &self.path else {
+            return;
+        };
+        if let Some(parent) = path.parent() {
+            let _ = std::fs::create_dir_all(parent);
+        }
+        let elapsed_ms = self.started_at.elapsed().as_millis();
+        let line = format!("{}ms {}\n", elapsed_ms, stage.as_ref());
+        let _ = std::fs::OpenOptions::new()
+            .create(true)
+            .append(true)
+            .open(path)
+            .and_then(|mut file| std::io::Write::write_all(&mut file, line.as_bytes()));
+    }
+}
+
 pub(crate) fn persist_analyze_run(
     state_dir: &str,
     report: &AnalyzeReport,
@@ -321,6 +358,11 @@ pub(crate) fn persist_analyze_run(
     let previous_policy = load_pre_bayes_policy_history(state_dir, &report.symbol)?
         .last()
         .map(|record| record.policy.clone());
+    let order_block_variant = Some(order_block_variant_runtime_evidence(
+        &report.analysis.price_action.order_block_variant,
+    ));
+    let conformal_metrics =
+        analyze_conformal_metrics_from_factor_ranking(&report.supporting.factor_ranking);
     let analyze_run_record = AnalyzeRunRecord {
         run_id: format!(
             "{}:{}:{}",
@@ -349,6 +391,10 @@ pub(crate) fn persist_analyze_run(
         decision_hint: report.supporting.decision_hint.clone(),
         regime_probs: Some(report.supporting.model_state.regime_probs),
         market_state_evidence: report.supporting.market_state_evidence.clone(),
+        conformal_coverage_1sigma: conformal_metrics.conformal_coverage_1sigma,
+        conformal_miscoverage_1sigma: conformal_metrics.conformal_miscoverage_1sigma,
+        mean_prediction_interval_half_width: conformal_metrics.mean_prediction_interval_half_width,
+        worst_window_miscoverage: conformal_metrics.worst_window_miscoverage,
         canonical_structural_regime_posterior: Some(
             ict_engine::state::CanonicalStructuralRegimePosterior {
                 active_regime: report
@@ -375,6 +421,14 @@ pub(crate) fn persist_analyze_run(
                     .evidence
                     .clone(),
             },
+        ),
+        order_block_variant,
+        reference_liquidity_levels: Some(
+            report
+                .analysis
+                .price_action
+                .reference_liquidity_levels
+                .clone(),
         ),
         hybrid_regime_label: report.analysis.regime_bayesian.hybrid_regime_label.clone(),
         hybrid_regime_age_bars: report
@@ -536,6 +590,53 @@ pub(crate) fn persist_analyze_run(
         },
     )?;
     refresh_workflow_snapshot(state_dir, &report.symbol)
+}
+
+#[derive(Debug, Clone, Copy, Default)]
+struct AnalyzeConformalMetrics {
+    conformal_coverage_1sigma: Option<f64>,
+    conformal_miscoverage_1sigma: Option<f64>,
+    mean_prediction_interval_half_width: Option<f64>,
+    worst_window_miscoverage: Option<f64>,
+}
+
+fn analyze_conformal_metrics_from_factor_ranking(
+    factor_ranking: &[ict_engine::state::PersistedFactorRanking],
+) -> AnalyzeConformalMetrics {
+    let Some(ranking) = factor_ranking.iter().find(|ranking| {
+        ranking.conformal_coverage_1sigma > 0.0
+            || ranking.conformal_miscoverage_1sigma > 0.0
+            || ranking.mean_prediction_interval_half_width > 0.0
+            || ranking.worst_window_miscoverage > 0.0
+    }) else {
+        return AnalyzeConformalMetrics::default();
+    };
+
+    AnalyzeConformalMetrics {
+        conformal_coverage_1sigma: Some(ranking.conformal_coverage_1sigma),
+        conformal_miscoverage_1sigma: Some(ranking.conformal_miscoverage_1sigma),
+        mean_prediction_interval_half_width: Some(ranking.mean_prediction_interval_half_width),
+        worst_window_miscoverage: Some(ranking.worst_window_miscoverage),
+    }
+}
+
+fn order_block_variant_runtime_evidence(
+    evidence: &ict_engine::analyze_sections::OrderBlockVariantEvidence,
+) -> ict_engine::state::OrderBlockVariantRuntimeEvidence {
+    ict_engine::state::OrderBlockVariantRuntimeEvidence {
+        factor_name: evidence.factor_name.clone(),
+        variant: evidence.variant.clone(),
+        direction: evidence.direction,
+        high: evidence.high,
+        low: evidence.low,
+        midpoint: evidence.midpoint,
+        validation_state: evidence.validation_state.clone(),
+        mitigation_count: evidence.mitigation_count,
+        breaker_confirmed: evidence.breaker_confirmed,
+        rejection_confirmed: evidence.rejection_confirmed,
+        confidence: evidence.confidence,
+        fail_closed_reason: evidence.fail_closed_reason.clone(),
+    }
 }
 
 pub(crate) fn persist_pending_update_artifact_from_analyze(
@@ -983,6 +1084,282 @@ pub(crate) fn apply_command_context_to_analyze_report(
 #[cfg(test)]
 mod tests {
     use super::*;
+    use chrono::Utc;
+    use std::collections::BTreeMap;
+
+    fn sample_analyze_report_with_factor_ranking(
+        factor_ranking: Vec<ict_engine::state::PersistedFactorRanking>,
+    ) -> AnalyzeReport {
+        AnalyzeReport {
+            symbol: "NQ".to_string(),
+            timestamp: Utc::now(),
+            analysis: AnalyzeSections {
+                price_action: PriceActionSection {
+                    probability_role: "test".to_string(),
+                    structure_bias: Direction::Neutral,
+                    latest_break: None,
+                    latest_break_level: None,
+                    latest_swing_high: None,
+                    latest_swing_low: None,
+                    recent_break_count: 0,
+                    swing_highs: 0,
+                    swing_lows: 0,
+                    bull_expansion: false,
+                    bear_expansion: false,
+                    expansion_strength: 0.0,
+                    liquidity_sweeps_recent: 0,
+                    nearest_liquidity_pool_level: None,
+                    liquidity_pool_texture:
+                        ict_engine::analyze_sections::LiquidityPoolTextureEvidence::fail_closed(
+                            "missing_liquidity_pool_texture",
+                        ),
+                    latest_liquidity_sweep_level: None,
+                    reference_liquidity_levels: ict_engine::ict::ReferenceLiquidityLevelsEvidence::default(),
+                    open_fvgs: 0,
+                    nearest_open_fvg_top: None,
+                    nearest_open_fvg_bottom: None,
+                    untested_order_blocks: 0,
+                    nearest_untested_order_block_high: None,
+                    nearest_untested_order_block_low: None,
+                    order_block_variant:
+                        ict_engine::analyze_sections::OrderBlockVariantEvidence::fail_closed(
+                            "missing_order_block_variant",
+                        ),
+                    bullish_cisd: false,
+                    bearish_cisd: false,
+                    rejection_block_present: false,
+                    narrative: "test".to_string(),
+                },
+                technical_price: ict_engine::analyze_sections::TechnicalPriceSection {
+                    probability_role: "test".to_string(),
+                    last_closed_bar_close: 0.0,
+                    live_market_price: None,
+                    live_spot_price: None,
+                    ema20: None,
+                    ema50: None,
+                    rsi14: None,
+                    adx14: None,
+                    atr14: None,
+                    macd_line: None,
+                    macd_signal: None,
+                    macd_histogram: None,
+                    bollinger_upper: None,
+                    bollinger_middle: None,
+                    bollinger_lower: None,
+                    bollinger_squeeze: false,
+                    momentum_5_bar: None,
+                    options_hedging:
+                        ict_engine::analyze::options_hedging_section::build_options_hedging_section(
+                            None,
+                        ),
+                    narrative: "test".to_string(),
+                },
+                smt_correlation:
+                    ict_engine::analyze::smt_correlation_section::empty_smt_correlation_section(),
+                regime_bayesian: RegimeBayesianSection {
+                    hmm_state: "test".to_string(),
+                    regime_probs: RegimeProbs {
+                        accumulation: 0.6,
+                        manipulation_expansion: 0.3,
+                        distribution: 0.1,
+                    },
+                    regime_label: "trend".to_string(),
+                    liquidity_label: "balanced".to_string(),
+                    hybrid_regime_label: None,
+                    hybrid_transition_hazard: None,
+                    hybrid_duration_model: None,
+                    hybrid_remaining_expected_bars: None,
+                    pda_cluster_family: None,
+                    pda_hybrid_alignment: None,
+                    long_score: 0.6,
+                    short_score: 0.4,
+                    win_prob_long: 0.6,
+                    win_prob_short: 0.4,
+                    selected_direction: Direction::Bull,
+                    evidence_policy: "test".to_string(),
+                    ict_role: "test".to_string(),
+                },
+                multi_timeframe:
+                    ict_engine::analyze::multi_timeframe_section::build_analyze_multi_timeframe_section(
+                        &[],
+                        Some(&ict_engine::state::PreBayesEvidenceFilter::default()),
+                    ),
+                trade_plan: TradePlanSection {
+                    probability_role: "test".to_string(),
+                    actionable: false,
+                    direction: Direction::Neutral,
+                    entry: 0.0,
+                    stop_loss: 0.0,
+                    take_profits: Vec::new(),
+                    risk_reward: 0.0,
+                    posterior: 0.0,
+                    win_probability: 0.0,
+                    kelly_fraction: 0.0,
+                    position_size: 0.0,
+                    uncertainties: Vec::new(),
+                    narrative: "test".to_string(),
+                },
+            },
+            meta: AnalyzeMeta {
+                state_dir: String::new(),
+                bars: AnalyzeBars {
+                    htf: 1,
+                    mtf: 1,
+                    ltf: 1,
+                    observations: 1,
+                },
+                data_source: None,
+            },
+            supporting: AnalyzeSupporting {
+                model_state: AnalyzeModelState {
+                    hmm_state: "test".to_string(),
+                    log_likelihood: 0.0,
+                    viterbi_log_likelihood: 0.0,
+                    regime_probs: RegimeProbs {
+                        accumulation: 0.6,
+                        manipulation_expansion: 0.3,
+                        distribution: 0.1,
+                    },
+                    evidence_policy: "test".to_string(),
+                    canonical_belief_engine: "test".to_string(),
+                    canonical_shadow_status: "test".to_string(),
+                },
+                provenance: ict_engine::state::RunProvenance::default(),
+                promotion_decision: ict_engine::state::PromotionDecision::default(),
+                rollback_recommendation: ict_engine::state::RollbackRecommendation::default(),
+                labels: AnalyzeLabels {
+                    regime_label: "trend".to_string(),
+                    liquidity_label: "balanced".to_string(),
+                },
+                ict: AnalyzeIctSummary {
+                    total_sweeps: 0,
+                    total_fvgs: 0,
+                    mtf_open_fvgs: 0,
+                    mtf_untested_obs: 0,
+                    ict_role: "test".to_string(),
+                },
+                entry_quality: AnalyzeEntryQualitySummary {
+                    base: BTreeMap::new(),
+                    long: BTreeMap::new(),
+                    short: BTreeMap::new(),
+                    selected_state: "neutral".to_string(),
+                },
+                auxiliary: None,
+                decision: ict_engine::planner::ProbabilisticDecisionSnapshot {
+                    long_score: 0.6,
+                    short_score: 0.4,
+                    win_prob_long: 0.6,
+                    win_prob_short: 0.4,
+                    ict_support_long: 0.5,
+                    ict_support_short: 0.5,
+                    selected_direction: Direction::Bull,
+                    selected_score: 0.6,
+                    selected_win_probability: 0.6,
+                    ict_role: "test".to_string(),
+                },
+                entry_model_packets: ict_engine::application::entry_models::EntryModelPacketStore::default(),
+                trade_outcome: AnalyzeTradeOutcomeSummary {
+                    base: BTreeMap::new(),
+                    long: BTreeMap::new(),
+                    short: BTreeMap::new(),
+                },
+                factor_diagnostics: ict_engine::factor_lab::FactorDiagnostics::default(),
+                pre_bayes_evidence_filter: ict_engine::state::PreBayesEvidenceFilter {
+                    gating_status: "pass_hard".to_string(),
+                    policy: ict_engine::state::PreBayesEvidencePolicy {
+                        version: "test-policy".to_string(),
+                        ..ict_engine::state::PreBayesEvidencePolicy::default()
+                    },
+                    ..ict_engine::state::PreBayesEvidenceFilter::default()
+                },
+                market_state_evidence: vec!["test_market_state".to_string()],
+                pre_bayes_entry_quality_bridge: ict_engine::state::PreBayesEntryQualityBridge::default(),
+                objective_jump_weight: None,
+                canonical_belief_report: ict_engine::reporting::belief::BeliefReportPacket::default(),
+                decision_thresholds: ict_engine::state::DecisionThresholds::default(),
+                factor_ranking,
+                factor_iteration_queue: Vec::new(),
+                factor_family_decisions: Vec::new(),
+                factor_family_outcomes: Vec::new(),
+                factor_family_diffs: Vec::new(),
+                factor_family_history: Vec::new(),
+                decision_history_summary: ict_engine::state::DecisionHistorySummary::default(),
+                agent_action_plan: ict_engine::state::AgentActionPlan::default(),
+                workflow_state: ict_engine::state::WorkflowState {
+                    phase: "observe".to_string(),
+                    reason: "test".to_string(),
+                },
+                agent_context_bundle: ict_engine::state::AgentContextBundle::default(),
+                agent_context_bundle_minimal: ict_engine::state::AgentContextBundleMinimal::default(),
+                recommended_commands: ict_engine::state::CommandRecommendations::default(),
+                recommended_next_command: "analyze".to_string(),
+                dataset_comparability: ict_engine::state::DatasetComparability::default(),
+                decision_hint: "test".to_string(),
+                artifact_action_summary: Vec::new(),
+                artifact_decision_summary: ict_engine::state::ArtifactDecisionSummary::default(),
+                artifact_decision_section: ict_engine::state::ArtifactDecisionSection::default(),
+                agent_prompts: ict_engine::agent::AgentPromptPack::default(),
+                feedback_history_summary: ict_engine::state::FeedbackHistorySummary::default(),
+                multi_timeframe_summary: Vec::new(),
+                raw_trade_plan: TradePlan {
+                    symbol: Symbol::NQ,
+                    direction: Direction::Neutral,
+                    entry: 0.0,
+                    stop_loss: 0.0,
+                    tp1: 0.0,
+                    tp2: 0.0,
+                    tp3: 0.0,
+                    risk_reward: 0.0,
+                    kelly_fraction: 0.0,
+                    position_size: 0.0,
+                    regime: Regime::Accumulation,
+                    posterior: 0.0,
+                    win_probability: 0.0,
+                    cascade_bull: ict_engine::types::CascadeResult::default(),
+                    cascade_bear: ict_engine::types::CascadeResult::default(),
+                    uncertainties: Vec::new(),
+                },
+                workflow_snapshot: ict_engine::state::WorkflowSnapshot::default(),
+                staged_orchestration_trace: None,
+                execution_artifact: None,
+                execution_triage: None,
+            },
+        }
+    }
+
+    #[test]
+    fn persist_analyze_run_threads_top_factor_ranking_conformal_metrics_into_latest_analyze_snapshot(
+    ) {
+        let temp = tempfile::tempdir().unwrap();
+        let report = sample_analyze_report_with_factor_ranking(vec![
+            ict_engine::state::PersistedFactorRanking {
+                factor_name: "dense_kline_upbar_reclaim_tvr_qqq_5m_v1".to_string(),
+                composite_score: 0.77,
+                conformal_coverage_1sigma: 0.81,
+                conformal_miscoverage_1sigma: 0.19,
+                mean_prediction_interval_half_width: 0.07,
+                worst_window_miscoverage: 0.11,
+                ..ict_engine::state::PersistedFactorRanking::default()
+            },
+        ]);
+
+        let snapshot = persist_analyze_run(
+            temp.path().to_str().unwrap(),
+            &report,
+            "analyze",
+            Some("htf.json"),
+            Some("mtf.json"),
+            Some("ltf.json"),
+            None,
+        )
+        .unwrap();
+
+        let latest = snapshot.latest_analyze.expect("latest analyze snapshot");
+        assert_eq!(latest.conformal_coverage_1sigma, Some(0.81));
+        assert_eq!(latest.conformal_miscoverage_1sigma, Some(0.19));
+        assert_eq!(latest.mean_prediction_interval_half_width, Some(0.07));
+        assert_eq!(latest.worst_window_miscoverage, Some(0.11));
+    }
 
     #[test]
     fn test_offline_structural_support_hint_prefers_positive_comparable_high_readiness_runs() {

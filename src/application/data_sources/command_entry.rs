@@ -271,6 +271,10 @@ fn parse_symbol_specs(
         };
         match provider_preferences.get(&role).map(String::as_str) {
             Some("yfinance") => spec.yfinance = Some(symbol),
+            Some("binance_public") | Some("binance_public_runtime") => {
+                spec.binance_public = Some(symbol)
+            }
+            Some("bybit_public") | Some("bybit_public_runtime") => spec.bybit_public = Some(symbol),
             Some("tradingview_mcp") => spec.tradingview_mcp = Some(symbol),
             Some("hubble") => {
                 spec.hubble = Some(infer_hubble_spec_from_symbol(&symbol)?);

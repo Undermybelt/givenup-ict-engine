@@ -3,9 +3,13 @@ use serde::{Deserialize, Serialize};
 use serde_json::Value;
 use std::{
     collections::{BTreeMap, BTreeSet},
-    path::Path,
+    path::{Path, PathBuf},
 };
 
+use crate::application::auto_quant::results::{
+    load_strategy_library_manifest, StrategyLibraryEntry, StrategyLibraryEntryStatus,
+    StrategyLibraryManifest, STRATEGY_LIBRARY_FILE,
+};
 use crate::state::PreBayesEvidenceFilter;
 
 const EXPECTED_SCHEMA_VERSION: &str = "regime-consumer-bundle/v1";
@@ -177,6 +181,45 @@ impl RegimeConsumerBundleAdapter {
             consumer_hints,
             error: None,
         })
+    }
+
+    pub fn load_optional_or_strategy_library(
+        path: Option<&Path>,
+        strict: bool,
+        state_dir: &str,
+        symbol: &str,
+    ) -> Result<Option<Self>> {
+        if let Some(path) = path {
+            return Self::load_optional(Some(path), strict).map(Some);
+        }
+        Self::load_from_strategy_library_state(state_dir, symbol)
+    }
+
+    fn load_from_strategy_library_state(state_dir: &str, symbol: &str) -> Result<Option<Self>> {
+        for path in strategy_library_state_paths(state_dir, symbol) {
+            if !path.exists() {
+                continue;
+            }
+            let manifest = match load_strategy_library_manifest(&path) {
+                Ok(manifest) => manifest,
+                Err(err) => {
+                    return Ok(Some(Self::neutral(
+                        BundleStatus::Invalid,
+                        format!(
+                            "invalid auto_quant strategy library at {}: {err}",
+                            path.display()
+                        ),
+                    )));
+                }
+            };
+            return Ok(Self::from_strategy_library_manifest(&manifest));
+        }
+        Ok(None)
+    }
+
+    pub fn from_strategy_library_manifest(manifest: &StrategyLibraryManifest) -> Option<Self> {
+        let context = strategy_library_branch_context(manifest)?;
+        Some(strategy_library_branch_context_to_adapter(&context))
     }
 
     pub fn is_loaded(&self) -> bool {
@@ -511,8 +554,44 @@ impl RegimeConsumerBundleAdapter {
 
         filter.uses_soft_evidence = true;
         filter.filtered_market_regime_label = bbn_label.to_string();
+        filter
+            .evidence_assignments
+            .insert("market_regime".to_string(), bbn_label.to_string());
         filter.soft_market_regime_distribution =
             market_regime_distribution(bbn_label, evidence.weight);
+        if evidence.trade_usable == Some(true) {
+            let hard_floor = filter.policy.hard_pass_quality_threshold.max(0.75);
+            let neutral_floor = filter.policy.neutralized_quality_threshold.max(0.40);
+            let quality_floor = match evidence.strength {
+                RegimeBbnEvidenceStrength::Strong => hard_floor.max(0.90),
+                RegimeBbnEvidenceStrength::Moderate => hard_floor,
+                RegimeBbnEvidenceStrength::Neutral => neutral_floor,
+            };
+            if filter.evidence_quality_score < quality_floor {
+                filter.evidence_quality_score = quality_floor;
+                filter.rationale.push(format!(
+                    "regime_bundle_bbn_quality_floor_applied={:.3}",
+                    quality_floor
+                ));
+            }
+            if filter.conflict_flags.is_empty()
+                && filter.evidence_quality_score >= filter.policy.hard_pass_quality_threshold
+            {
+                filter.gating_status = "pass_hard".to_string();
+                filter.pass_to_bbn = true;
+                filter
+                    .rationale
+                    .push("regime_bundle_bbn_evidence_promoted_gate_to_pass_hard".to_string());
+            } else if filter.evidence_quality_score >= filter.policy.neutralized_quality_threshold
+                && filter.gating_status == "observe_only"
+            {
+                filter.gating_status = "pass_neutralized".to_string();
+                filter.pass_to_bbn = true;
+                filter.rationale.push(
+                    "regime_bundle_bbn_evidence_promoted_gate_to_pass_neutralized".to_string(),
+                );
+            }
+        }
         filter.evidence_assignments.insert(
             "regime_bundle_bbn_evidence_application".to_string(),
             "applied".to_string(),
@@ -540,6 +619,186 @@ impl RegimeConsumerBundleAdapter {
             consumer_hints: None,
             error: Some(error),
         }
+    }
+}
+
+#[derive(Debug, Clone)]
+struct StrategyLibraryBranchContext {
+    branch_path: String,
+    main_regime: String,
+    sub_regime: String,
+    sub_sub_regime_or_profit_factor: String,
+    profit_factor: String,
+    stable_profit_score: Option<f64>,
+    quality_score: f64,
+    strategy_name: String,
+    trade_usable: bool,
+    promotion_allowed: bool,
+}
+
+fn strategy_library_branch_context(
+    manifest: &StrategyLibraryManifest,
+) -> Option<StrategyLibraryBranchContext> {
+    let contexts = manifest
+        .strategies
+        .iter()
+        .filter(|entry| matches!(entry.status_kind(), StrategyLibraryEntryStatus::Ok))
+        .filter_map(strategy_library_entry_branch_context)
+        .collect::<Vec<_>>();
+    let unique_branch_paths = contexts
+        .iter()
+        .map(|context| context.branch_path.as_str())
+        .collect::<BTreeSet<_>>();
+    if unique_branch_paths.len() != 1 {
+        return None;
+    }
+    contexts.into_iter().max_by(|left, right| {
+        strategy_library_branch_rank_key(left).cmp(&strategy_library_branch_rank_key(right))
+    })
+}
+
+fn strategy_library_entry_branch_context(
+    entry: &StrategyLibraryEntry,
+) -> Option<StrategyLibraryBranchContext> {
+    let metadata = &entry.metadata;
+    let branch_path = first_non_empty([
+        metadata.regime_profit_branch_path.as_str(),
+        metadata.expected_regime.as_str(),
+    ])?;
+    if !branch_path.contains(" -> ") {
+        return None;
+    }
+    let segments = branch_path_segments(branch_path);
+    if segments.len() < 4 {
+        return None;
+    }
+    let profit_factor_fallback = segments[3..].join(" -> ");
+    let stable_profit_score = entry.validation_metrics.as_ref().and_then(|metrics| {
+        if metrics.win_rate_pct > 0.0 {
+            Some(metrics.win_rate_pct)
+        } else if metrics.total_profit_pct > 0.0 {
+            Some(metrics.total_profit_pct)
+        } else {
+            None
+        }
+    });
+    Some(StrategyLibraryBranchContext {
+        branch_path: branch_path.to_string(),
+        main_regime: first_non_empty([
+            metadata.main_regime.as_str(),
+            segments.first().copied().unwrap_or_default(),
+        ])?
+        .to_string(),
+        sub_regime: first_non_empty([
+            metadata.sub_regime.as_str(),
+            segments.get(1).copied().unwrap_or_default(),
+        ])?
+        .to_string(),
+        sub_sub_regime_or_profit_factor: first_non_empty([
+            metadata.sub_sub_regime_or_profit_factor.as_str(),
+            segments.get(2).copied().unwrap_or_default(),
+        ])?
+        .to_string(),
+        profit_factor: first_non_empty([
+            metadata.profit_factor.as_str(),
+            profit_factor_fallback.as_str(),
+        ])?
+        .to_string(),
+        stable_profit_score,
+        quality_score: strategy_library_quality_score(entry.validation_metrics.as_ref()),
+        strategy_name: entry.name.clone(),
+        trade_usable: metadata.trade_usable,
+        promotion_allowed: metadata.promotion_allowed,
+    })
+}
+
+fn strategy_library_quality_score(
+    metrics: Option<&crate::application::auto_quant::results::StrategyLibraryValidationMetrics>,
+) -> f64 {
+    let Some(metrics) = metrics else {
+        return f64::NEG_INFINITY;
+    };
+    metrics.sharpe * 1000.0
+        + metrics.total_profit_pct * 10.0
+        + metrics.profit_factor * 100.0
+        + metrics.win_rate_pct
+}
+
+fn strategy_library_branch_rank_key(
+    context: &StrategyLibraryBranchContext,
+) -> (i64, i64, i64, String) {
+    (
+        (context.quality_score * 1000.0).round() as i64,
+        (context.stable_profit_score.unwrap_or(f64::NEG_INFINITY) * 1000.0).round() as i64,
+        if context.trade_usable { 1 } else { 0 },
+        context.strategy_name.clone(),
+    )
+}
+
+fn strategy_library_branch_context_to_adapter(
+    context: &StrategyLibraryBranchContext,
+) -> RegimeConsumerBundleAdapter {
+    let decision_state = if context.trade_usable && context.promotion_allowed {
+        "accepted"
+    } else {
+        "auto_quant_strategy_library_branch_context"
+    };
+    RegimeConsumerBundleAdapter {
+        status: BundleStatus::Loaded,
+        latest_decision: Some(RegimeDecisionSummary {
+            timestamp: String::new(),
+            decision_state: decision_state.to_string(),
+            trade_usable: context.trade_usable,
+            final_label: format!("primary::{}", context.main_regime),
+            label_set: vec![
+                format!("primary::{}", context.main_regime),
+                context.branch_path.clone(),
+            ],
+            abstain_reasons: vec![
+                "imported_auto_quant_strategy_library".to_string(),
+                if context.promotion_allowed {
+                    "promotion_not_granted_by_runtime".to_string()
+                } else {
+                    "non_promoting_branch_trace".to_string()
+                },
+            ],
+        }),
+        consumer_hints: Some(RegimeConsumerHints {
+            execution_tree_hint: "observe_branch_context".to_string(),
+            bbn_evidence_hint: serde_json::json!({
+                "regime_decision_state": decision_state,
+                "regime_trade_usable": context.trade_usable,
+                "regime_label": format!("primary::{}", context.main_regime),
+                "regime_label_set": [
+                    format!("primary::{}", context.main_regime),
+                    context.branch_path
+                ],
+                "regime_transition_hazard": 0.0,
+                "regime_decision_reasons": [
+                    format!("strategy_name={}", context.strategy_name),
+                    "imported_auto_quant_strategy_library",
+                    if context.promotion_allowed {
+                        "promotion_not_granted_by_runtime"
+                    } else {
+                        "non_promoting_branch_trace"
+                    }
+                ]
+            }),
+            path_ranker_context: serde_json::json!({
+                "regime_profit_branch_path": context.branch_path,
+                "main_regime": context.main_regime,
+                "sub_regime": context.sub_regime,
+                "sub_sub_regime_or_profit_factor": context.sub_sub_regime_or_profit_factor,
+                "profit_factor": context.profit_factor,
+                "stable_profit_score": context.stable_profit_score
+            }),
+            user_vrp_nq_context: Value::Null,
+            trade_usable: context.trade_usable,
+        }),
+        error: Some(format!(
+            "source=auto_quant_strategy_library strategy={}",
+            context.strategy_name
+        )),
     }
 }
 
@@ -713,4 +972,258 @@ fn market_regime_distribution(selected: &str, weight: f64) -> BTreeMap<String, f
 
 fn compact_trace_value(value: &str) -> String {
     value.split_whitespace().collect::<Vec<_>>().join("_")
+}
+
+fn first_non_empty<'a>(values: impl IntoIterator<Item = &'a str>) -> Option<&'a str> {
+    values
+        .into_iter()
+        .map(str::trim)
+        .find(|value| !value.is_empty())
+}
+
+fn strategy_library_state_paths(state_dir: &str, symbol: &str) -> Vec<PathBuf> {
+    let mut paths = Vec::new();
+    paths.push(
+        Path::new(state_dir)
+            .join(symbol)
+            .join(STRATEGY_LIBRARY_FILE),
+    );
+    let auto_quant_dir = auto_quant_state_dir(state_dir);
+    let auto_quant_path = auto_quant_dir.join(symbol).join(STRATEGY_LIBRARY_FILE);
+    if !paths.iter().any(|path| path == &auto_quant_path) {
+        paths.push(auto_quant_path);
+    }
+    paths
+}
+
+fn auto_quant_state_dir(state_dir: &str) -> PathBuf {
+    let state_dir_path = Path::new(state_dir);
+    if state_dir_path.join("auto_quant_config.json").exists()
+        || state_dir_path.join(".deps").join("auto-quant").exists()
+    {
+        return state_dir_path.to_path_buf();
+    }
+    if let Some(custom) = std::env::var("ICT_ENGINE_AUTO_QUANT_OUTPUT_DIR")
+        .ok()
+        .map(|value| value.trim().to_string())
+        .filter(|value| !value.is_empty())
+    {
+        return PathBuf::from(custom);
+    }
+    state_dir_path.join("auto-quant")
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::state::PreBayesEvidencePolicy;
+
+    #[test]
+    fn strategy_library_manifest_can_become_branch_adapter() {
+        let manifest: StrategyLibraryManifest = serde_json::from_value(serde_json::json!({
+            "manifest_version": "1.0",
+            "strategies": [{
+                "name": "MarketStructureEventClassifierAtrCisdDirectLimitV1",
+                "status": "ok",
+                "metadata": {
+                    "strategy": "MarketStructureEventClassifierAtrCisdDirectLimitV1",
+                    "expected_regime": "Transition -> MarketStructureEvent -> atr_cisd_direct_limit -> market_structure_event_classifier_atr_cisd_direct_limit_v1",
+                    "main_regime": "Transition",
+                    "sub_regime": "MarketStructureEvent",
+                    "sub_sub_regime_or_profit_factor": "atr_cisd_direct_limit",
+                    "profit_factor": "market_structure_event_classifier_atr_cisd_direct_limit_v1",
+                    "regime_profit_branch_path": "Transition -> MarketStructureEvent -> atr_cisd_direct_limit -> market_structure_event_classifier_atr_cisd_direct_limit_v1",
+                    "promotion_allowed": false,
+                    "trade_usable": false
+                },
+                "validation_metrics": {
+                    "win_rate_pct": 71.95572
+                }
+            }]
+        }))
+        .unwrap();
+
+        let adapter =
+            RegimeConsumerBundleAdapter::from_strategy_library_manifest(&manifest).unwrap();
+        let assignment_map = adapter
+            .path_ranker_assignment_entries()
+            .into_iter()
+            .collect::<BTreeMap<_, _>>();
+
+        assert_eq!(
+            assignment_map.get("regime_profit_branch_path"),
+            Some(
+                &"Transition -> MarketStructureEvent -> atr_cisd_direct_limit -> market_structure_event_classifier_atr_cisd_direct_limit_v1"
+                    .to_string()
+            )
+        );
+        assert_eq!(
+            assignment_map.get("regime_bundle_stable_profit_score"),
+            Some(&"0.719557".to_string())
+        );
+        assert_eq!(
+            assignment_map.get("main_regime"),
+            Some(&"Transition".to_string())
+        );
+        assert_eq!(
+            assignment_map.get("sub_regime"),
+            Some(&"MarketStructureEvent".to_string())
+        );
+    }
+
+    #[test]
+    fn strategy_library_branch_context_prefers_profitable_strategy_over_higher_win_rate_loser() {
+        let manifest: StrategyLibraryManifest = serde_json::from_value(serde_json::json!({
+            "manifest_version": "1.0",
+            "strategies": [
+                {
+                    "name": "LosingMeanRevert",
+                    "status": "ok",
+                    "metadata": {
+                        "expected_regime": "Transition -> MarketStructureEvent -> atr_cisd_direct_limit -> market_structure_event_classifier_atr_cisd_direct_limit_v1",
+                        "main_regime": "Transition",
+                        "sub_regime": "MarketStructureEvent",
+                        "sub_sub_regime_or_profit_factor": "atr_cisd_direct_limit",
+                        "profit_factor": "LosingMeanRevert",
+                        "regime_profit_branch_path": "Transition -> MarketStructureEvent -> atr_cisd_direct_limit -> market_structure_event_classifier_atr_cisd_direct_limit_v1",
+                        "promotion_allowed": false,
+                        "trade_usable": false
+                    },
+                    "validation_metrics": {
+                        "sharpe": -0.6937,
+                        "sortino": -0.7246,
+                        "calmar": -0.9422,
+                        "total_profit_pct": -38.5,
+                        "max_drawdown_pct": -42.8407,
+                        "trade_count": 651,
+                        "win_rate_pct": 56.6820,
+                        "profit_factor": 0.7424
+                    }
+                },
+                {
+                    "name": "WinningBreakout",
+                    "status": "ok",
+                    "metadata": {
+                        "expected_regime": "Transition -> MarketStructureEvent -> atr_cisd_direct_limit -> market_structure_event_classifier_atr_cisd_direct_limit_v1",
+                        "main_regime": "Transition",
+                        "sub_regime": "MarketStructureEvent",
+                        "sub_sub_regime_or_profit_factor": "atr_cisd_direct_limit",
+                        "profit_factor": "WinningBreakout",
+                        "regime_profit_branch_path": "Transition -> MarketStructureEvent -> atr_cisd_direct_limit -> market_structure_event_classifier_atr_cisd_direct_limit_v1",
+                        "promotion_allowed": false,
+                        "trade_usable": false
+                    },
+                    "validation_metrics": {
+                        "sharpe": 0.1649,
+                        "sortino": 0.4788,
+                        "calmar": 0.5075,
+                        "total_profit_pct": 25.73,
+                        "max_drawdown_pct": -53.1883,
+                        "trade_count": 2835,
+                        "win_rate_pct": 33.8977,
+                        "profit_factor": 1.0197
+                    }
+                }
+            ]
+        }))
+        .unwrap();
+
+        let adapter =
+            RegimeConsumerBundleAdapter::from_strategy_library_manifest(&manifest).unwrap();
+        let read_only = adapter.to_read_only_bbn_soft_evidence();
+        assert!(read_only
+            .reasons
+            .iter()
+            .any(|reason| reason.contains("strategy_name=WinningBreakout")));
+        let assignment_map = adapter
+            .path_ranker_assignment_entries()
+            .into_iter()
+            .collect::<BTreeMap<_, _>>();
+        assert_eq!(
+            assignment_map.get("regime_bundle_stable_profit_score"),
+            Some(&"0.338977".to_string())
+        );
+    }
+
+    #[test]
+    fn applied_single_label_95_bundle_syncs_assignments_and_can_hard_pass_filter() {
+        let file = tempfile::NamedTempFile::new().unwrap();
+        std::fs::write(
+            file.path(),
+            serde_json::to_string(&serde_json::json!({
+                "schema_version": "regime-consumer-bundle/v1",
+                "latest_decision": {
+                    "decision_state": "single_label_95",
+                    "trade_usable": true,
+                    "final_label": "Bull",
+                    "label_set": ["Bull", "Bull -> AcceptedRecovery -> bull_sourcebacked_drawdown_volatility_v1 -> recovered_rule_replay"],
+                    "abstain_reasons": ["recovered_accepted_regime_confidence_asset"]
+                },
+                "consumer_hints": {
+                    "execution_tree_hint": "accept_regime",
+                    "bbn_evidence_hint": {
+                        "regime_decision_state": "single_label_95",
+                        "regime_trade_usable": true,
+                        "regime_label": "Bull",
+                        "regime_label_set": ["Bull", "Bull -> AcceptedRecovery -> bull_sourcebacked_drawdown_volatility_v1 -> recovered_rule_replay"],
+                        "regime_transition_hazard": 0.0,
+                        "regime_decision_reasons": ["recovered_accepted_regime_confidence_asset"]
+                    },
+                    "path_ranker_context": {
+                        "regime_profit_branch_path": "Bull -> AcceptedRecovery -> bull_sourcebacked_drawdown_volatility_v1 -> recovered_rule_replay",
+                        "main_regime": "Bull",
+                        "sub_regime": "AcceptedRecovery",
+                        "sub_sub_regime_or_profit_factor": "bull_sourcebacked_drawdown_volatility_v1",
+                        "profit_factor": "recovered_rule_replay",
+                        "stable_profit_score": 0.952516
+                    },
+                    "user_vrp_nq_context": null,
+                    "trade_usable": true
+                }
+            }))
+            .unwrap(),
+        )
+        .unwrap();
+
+        let adapter = RegimeConsumerBundleAdapter::load_optional(Some(file.path()), true).unwrap();
+        let mut filter = PreBayesEvidenceFilter {
+            policy: PreBayesEvidencePolicy {
+                hard_pass_quality_threshold: 0.75,
+                neutralized_quality_threshold: 0.40,
+                ..PreBayesEvidencePolicy::default()
+            },
+            filtered_market_regime_label: "range".to_string(),
+            filtered_liquidity_context_label: "neutral".to_string(),
+            filtered_factor_alignment: "mixed".to_string(),
+            filtered_factor_uncertainty: "low".to_string(),
+            filtered_multi_timeframe_direction_bias: "bullish".to_string(),
+            filtered_multi_timeframe_resonance_label: "aligned".to_string(),
+            evidence_quality_score: 0.624,
+            gating_status: "pass_neutralized".to_string(),
+            pass_to_bbn: true,
+            uses_soft_evidence: true,
+            evidence_assignments: BTreeMap::from([
+                ("market_regime".to_string(), "range".to_string()),
+                ("liquidity_context".to_string(), "neutral".to_string()),
+                ("factor_alignment".to_string(), "mixed".to_string()),
+                ("factor_uncertainty".to_string(), "low".to_string()),
+            ]),
+            ..PreBayesEvidenceFilter::default()
+        };
+
+        let status = adapter.apply_bbn_soft_evidence_to_pre_bayes_filter(&mut filter, true);
+
+        assert_eq!(status, RegimeBbnEvidenceApplicationStatus::Applied);
+        assert_eq!(filter.filtered_market_regime_label, "bull");
+        assert_eq!(
+            filter.evidence_assignments.get("market_regime"),
+            Some(&"bull".to_string())
+        );
+        assert!(filter.evidence_quality_score >= 0.75);
+        assert_eq!(filter.gating_status, "pass_hard");
+        assert!(filter
+            .rationale
+            .iter()
+            .any(|item| item.contains("regime_bundle_bbn_evidence_promoted_gate_to_pass_hard")));
+    }
 }

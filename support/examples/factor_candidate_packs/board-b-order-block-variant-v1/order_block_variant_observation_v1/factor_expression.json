@@ -1,0 +1,76 @@
+{
+  "schema_version": "factor-expression/v1",
+  "candidate_id": "order_block_variant_observation_v1",
+  "display_name": "Order Block Variant Observation",
+  "family": "Board B",
+  "status": "active",
+  "promotion_state": "candidate_only",
+  "strategy_name": "order_block_variant_observation_packet",
+  "mutation_id": null,
+  "base_factor": "order_block_variant_classifier",
+  "expression_text": "classify provider-backed order block variants as order block, mitigation block, breaker block, rejection block, or failed missing-evidence state; emit exact high/low/midpoint, validation state, mitigation count, breaker/rejection booleans, and retained-window realized direction agreement",
+  "operator_set": [
+    "variant",
+    "direction",
+    "high",
+    "low",
+    "midpoint",
+    "validation_state",
+    "mitigation_count",
+    "breaker_confirmed",
+    "rejection_confirmed",
+    "realized_r"
+  ],
+  "complexity": 5,
+  "paradigm": "order block lifecycle state observation",
+  "expected_regime": "Range -> OrderBlockVariant -> block_validation_state -> order_block_variant_observation_v1",
+  "target_market_hypothesis": [
+    "NQ/ES/YM/RTY",
+    "NAS100/US500/US30 CFD",
+    "DXY",
+    "XAUUSD",
+    "BTC/ETH"
+  ],
+  "base_timeframe": "1h",
+  "context_timeframes": [
+    "retained sliding windows"
+  ],
+  "regime_role": "order block variant observation evidence",
+  "evidence_window": "initial runtime packet builder with retained provider-backed windows required before promotion",
+  "strategy_source": "support/scripts/research/order_block_variant_observation_packet.py",
+  "filter_belief_execution_mapping": {
+    "pre_bayes_targets": [
+      "block_validation_state",
+      "required_order_block_levels_present",
+      "provider_backed_rows"
+    ],
+    "belief_targets": [
+      "order_block_variant_confidence",
+      "breaker_rejection_evidence",
+      "direction_agreement_realized_r"
+    ],
+    "path_ranking_targets": [
+      "regime_profit_branch_path",
+      "provider_stats",
+      "retained_window_expectancy"
+    ],
+    "execution_tree_targets": [
+      "high",
+      "low",
+      "midpoint",
+      "validation_state",
+      "mitigation_count",
+      "breaker_confirmed",
+      "rejection_confirmed",
+      "realized_r"
+    ],
+    "feedback_update_learning_fields": [
+      "realized_r",
+      "provider",
+      "timeframe",
+      "regime_profit_branch_path",
+      "observation_id"
+    ],
+    "structural_feedback_required": true
+  }
+}

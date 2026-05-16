@@ -108,33 +108,7 @@ impl FactorEngine {
         let regime = context
             .regime
             .unwrap_or(crate::types::Regime::ManipulationExpansion);
-        let total_weight: f64 = latest_signals
-            .iter()
-            .map(|signal| {
-                learning_state
-                    .and_then(|state| state.profile(&signal.factor_name))
-                    .map(|profile| profile.base_weight.max(0.0))
-                    .unwrap_or(1.0)
-            })
-            .sum();
-        let normalizer = total_weight.max(f64::EPSILON);
-
-        let signal_count = latest_signals.len();
-        for signal in &mut latest_signals {
-            let profile = learning_state.and_then(|state| state.profile(&signal.factor_name));
-            signal.weight = profile
-                .map(|profile| profile.base_weight.max(0.0) / normalizer)
-                .unwrap_or(1.0 / signal_count as f64);
-            signal.posterior_reliability = profile
-                .map(|profile| profile.posterior_reliability)
-                .unwrap_or(0.5);
-            signal.regime_multiplier = RegimeConditional::multiplier_opt(profile, regime);
-            signal.regime_adjusted_score = signal.value
-                * signal.confidence
-                * signal.weight
-                * signal.posterior_reliability
-                * signal.regime_multiplier;
-        }
+        assign_live_signal_weights(&mut latest_signals, learning_state, regime);
 
         let diagnostics = build_diagnostics(&latest_signals);
 
@@ -143,6 +117,49 @@ impl FactorEngine {
             latest_signals,
             diagnostics,
         })
+    }
+}
+
+fn assign_live_signal_weights(
+    latest_signals: &mut [FactorSignal],
+    learning_state: Option<&LearningState>,
+    regime: crate::types::Regime,
+) {
+    let signal_count = latest_signals.len();
+    if signal_count == 0 {
+        return;
+    }
+
+    let live_weight_budgets: Vec<f64> = latest_signals
+        .iter()
+        .map(|signal| {
+            let base_weight = learning_state
+                .and_then(|state| state.profile(&signal.factor_name))
+                .map(|profile| profile.base_weight.max(0.0))
+                .unwrap_or(1.0);
+            // Weak live signals should not consume the same budget share as high-confidence
+            // evidence before the factor score is even applied.
+            base_weight * signal.confidence.clamp(0.0, 1.0)
+        })
+        .collect();
+    let total_budget: f64 = live_weight_budgets.iter().sum();
+
+    for (signal, live_budget) in latest_signals.iter_mut().zip(live_weight_budgets) {
+        let profile = learning_state.and_then(|state| state.profile(&signal.factor_name));
+        signal.weight = if total_budget > f64::EPSILON {
+            live_budget / total_budget
+        } else {
+            1.0 / signal_count as f64
+        };
+        signal.posterior_reliability = profile
+            .map(|profile| profile.posterior_reliability)
+            .unwrap_or(0.5);
+        signal.regime_multiplier = RegimeConditional::multiplier_opt(profile, regime);
+        signal.regime_adjusted_score = signal.value
+            * signal.confidence
+            * signal.weight
+            * signal.posterior_reliability
+            * signal.regime_multiplier;
     }
 }
 
@@ -333,5 +350,27 @@ mod tests {
             .latest_signals
             .iter()
             .all(|signal| (signal.regime_multiplier - 1.0).abs() <= f64::EPSILON));
+    }
+
+    #[test]
+    fn test_assign_live_signal_weights_prefers_high_confidence_signals() {
+        let mut signals = vec![
+            sample_signal(Direction::Bull, 1.0),
+            sample_signal(Direction::Bear, -1.0),
+        ];
+        signals[0].factor_name = "high_confidence".to_string();
+        signals[1].factor_name = "low_confidence".to_string();
+        signals[0].confidence = 1.0;
+        signals[1].confidence = 0.10;
+
+        assign_live_signal_weights(
+            &mut signals,
+            None,
+            crate::types::Regime::ManipulationExpansion,
+        );
+
+        assert!(signals[0].weight > signals[1].weight);
+        assert!((signals[0].weight - 0.9090909090909091).abs() < 1e-9);
+        assert!((signals[1].weight - 0.09090909090909091).abs() < 1e-9);
     }
 }

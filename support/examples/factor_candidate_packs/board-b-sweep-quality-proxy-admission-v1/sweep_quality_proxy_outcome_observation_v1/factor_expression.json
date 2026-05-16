@@ -1,0 +1,71 @@
+{
+  "schema_version": "factor-expression/v1",
+  "candidate_id": "sweep_quality_proxy_outcome_observation_v1",
+  "display_name": "Sweep Quality Proxy Outcome Observation V1",
+  "family": "Board B Sweep Quality Proxy",
+  "status": "proxy_observation_only",
+  "promotion_state": "candidate_only",
+  "strategy_name": "SweepQualityProxyOutcomeObservationOnly",
+  "mutation_id": null,
+  "base_factor": "sweep_quality",
+  "expression_text": "transition_root and liquidity_sweep and proxy_continuation_vs_invalidation_label and trade_usable == false",
+  "operator_set": [
+    "liquidity_sweep",
+    "sweep_level",
+    "entry_level",
+    "target_level",
+    "invalidation_level",
+    "proxy_target_hit_rate",
+    "proxy_expectancy_r"
+  ],
+  "complexity": 6,
+  "paradigm": "liquidity_sweep_proxy_outcome_observation",
+  "expected_regime": "Transition",
+  "target_market_hypothesis": [
+    "BTC",
+    "DXY",
+    "ES",
+    "ETH",
+    "EURUSD",
+    "GBPUSD",
+    "NQ",
+    "XAGUSD",
+    "XAUUSD",
+    "YM"
+  ],
+  "base_timeframe": "mixed",
+  "context_timeframes": [
+    "15m",
+    "1h",
+    "5m"
+  ],
+  "regime_role": "root_conditioned_factor",
+  "evidence_window": "retained provider candles, horizon_bars=24",
+  "strategy_source": "support/docs/experiments/actionable-regime-confidence/runs/20260516T195000+0800-codex-board-b-sweep-quality-proxy-outcome-bridge-v1/materials/sweep_quality_proxy_outcomes.csv",
+  "branch_path_contract": {
+    "main_regime": "Transition",
+    "sub_regime": "LiquiditySweep",
+    "sub_sub_regime_or_profit_factor": "sweep_quality_confirmation_only",
+    "profit_factor": "sweep_quality_proxy_outcome_observation_v1",
+    "regime_profit_branch_path": "Transition -> LiquiditySweep -> sweep_quality_confirmation_only -> sweep_quality_proxy_outcome_observation_v1"
+  },
+  "filter_belief_execution_mapping": {
+    "pre_bayes_targets": [
+      "sweep_quality_proxy_observation_diagnostics"
+    ],
+    "belief_targets": [
+      "sweep_proxy_continuation_calibration"
+    ],
+    "path_ranking_targets": [
+      "candidate_pack_admission_pending"
+    ],
+    "execution_tree_targets": [
+      "fail_closed_proxy_observation_only"
+    ],
+    "execution_tree_blockers_intended": [
+      "proxy_labels_not_realized_trades",
+      "provider_backed_analyze_update_rows_missing"
+    ],
+    "structural_feedback_required": true
+  }
+}

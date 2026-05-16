@@ -2,6 +2,14 @@ use crate::application::orchestration::ExecutionTreeOutput;
 use crate::domain::regime::RegimeSegmentationPacket;
 use crate::types::TradePlan;
 
+fn transition_hazard_block_threshold() -> f64 {
+    std::env::var("ICT_ENGINE_TRANSITION_HAZARD_BLOCK_THRESHOLD")
+        .ok()
+        .and_then(|raw| raw.parse::<f64>().ok())
+        .filter(|value| value.is_finite())
+        .unwrap_or(0.60)
+}
+
 pub fn apply_duration_sizing_adjustment(
     mut trade_plan: TradePlan,
     market: &str,
@@ -84,7 +92,9 @@ pub fn apply_regime_execution_guardrail(
     mut output: ExecutionTreeOutput,
     hybrid_regime: &RegimeSegmentationPacket,
 ) -> ExecutionTreeOutput {
-    let high_transition_hazard = hybrid_regime.transition_hazard.unwrap_or_default() >= 0.60;
+    let transition_hazard_threshold = transition_hazard_block_threshold();
+    let high_transition_hazard =
+        hybrid_regime.transition_hazard.unwrap_or_default() >= transition_hazard_threshold;
     let pda_disagreement = hybrid_regime
         .evidence
         .iter()
@@ -111,8 +121,9 @@ pub fn apply_regime_execution_guardrail(
             "execution_guarded_due_to_high_transition_hazard".to_string()
         };
         output.split_reason_lineage.push(format!(
-            "hybrid_transition_hazard={:.3}",
-            hybrid_regime.transition_hazard.unwrap_or_default()
+            "hybrid_transition_hazard={:.3} threshold={:.3}",
+            hybrid_regime.transition_hazard.unwrap_or_default(),
+            transition_hazard_threshold
         ));
         if pda_disagreement {
             output

@@ -1,0 +1,69 @@
+{
+  "schema_version": "factor-expression/v1",
+  "candidate_id": "brooks_second_entry_reversal_balanced_threshold_v1",
+  "display_name": "Brooks Second Entry Reversal Balanced Threshold",
+  "family": "Board B",
+  "status": "active",
+  "promotion_state": "candidate_observation",
+  "strategy_name": "brooks_threshold_support_scan_balanced_high_winrate",
+  "mutation_id": null,
+  "base_factor": "brooks_price_action_context",
+  "expression_text": "provider-backed direct-limit realized rows filtered as a bounded second-entry failed-breakout Brooks context: fill bars 1..10, breakout range ATR >= 1.0, breakout body ATR 0.3..1.4, close-through ATR 0.2..0.9, all PD-array types",
+  "operator_set": [
+    "fill_bars_after_breakout",
+    "breakout_range_atr",
+    "breakout_body_atr",
+    "close_through_level_atr",
+    "pd_array_type",
+    "brooks_context",
+    "context_secondary"
+  ],
+  "complexity": 5,
+  "paradigm": "Brooks price action second-entry failed-breakout context",
+  "expected_regime": "TrendExpansion -> BrooksPriceAction -> second_entry_failed_breakout -> brooks_second_entry_reversal_balanced_threshold_v1",
+  "target_market_hypothesis": [
+    "provider-backed direct-limit realized rows",
+    "NQ/ES/YM/RTY",
+    "SPY/QQQ/DIA/IWM",
+    "Kraken/crypto proxy rows when already present in source"
+  ],
+  "base_timeframe": "retained realized-row source",
+  "context_timeframes": [
+    "provider-backed outcome rows"
+  ],
+  "regime_role": "price-action context filter for second-entry failed-breakout reversal continuation",
+  "evidence_window": "existing provider-backed direct-limit realized rows from 20260512T215828 source; no new trades invented",
+  "strategy_source": "support/docs/experiments/actionable-regime-confidence/runs/20260514T210615+0800-codex-brooks-threshold-support-scan-v1/materials/brooks_threshold_support_scan_summary.json",
+  "filter_belief_execution_mapping": {
+    "pre_bayes_targets": [
+      "win_rate",
+      "expectancy",
+      "provider_count",
+      "regime_count"
+    ],
+    "belief_targets": [
+      "brooks_context",
+      "threshold_surface",
+      "regime_conditioned_win_rate"
+    ],
+    "path_ranking_targets": [
+      "regime_profit_branch_path",
+      "provider_count",
+      "unique_trade_count",
+      "expectancy"
+    ],
+    "execution_tree_targets": [
+      "brooks_context",
+      "trigger_level",
+      "invalidation_level",
+      "confidence"
+    ],
+    "feedback_update_learning_fields": [
+      "realized_outcome",
+      "provider",
+      "regime_profit_branch_path",
+      "threshold_surface"
+    ],
+    "structural_feedback_required": true
+  }
+}

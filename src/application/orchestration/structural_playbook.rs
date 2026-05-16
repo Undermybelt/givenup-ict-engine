@@ -20,6 +20,7 @@ pub use crate::belief_core::ranking_label::{
     load_structural_path_ranker_runtime_artifact_metadata,
     load_structural_path_ranker_runtime_artifact_rows,
     load_structural_path_ranking_runtime_selection, load_structural_path_ranking_target_rows,
+    rebase_structural_path_ranking_target_export_summary_paths,
     render_structural_path_ranking_target_csv, render_structural_path_ranking_target_jsonl,
     render_structural_path_ranking_target_rows_csv,
     render_structural_path_ranking_target_rows_jsonl,
@@ -1057,12 +1058,13 @@ fn structural_path_ranking_target_artifact_from_candidates(
         candidate_set_id.unwrap_or_else(|| structural_candidate_set_id(&symbol, &candidate_paths));
     let denominator = structural_candidate_policy_denominator(&candidate_paths);
     let candidate_set_size = candidate_paths.len();
-    let regime_calibration_bucket = structural_path_ranking_regime_bucket(snapshot);
     let regime_aux_context = StructuralRegimeAuxContext::from_snapshot(snapshot);
     let rows = candidate_paths
         .into_iter()
         .enumerate()
         .map(|(index, path)| {
+            let regime_calibration_bucket =
+                structural_path_ranking_regime_bucket_for_path(snapshot, &path.path_id);
             let behavior_policy_probability = structural_candidate_policy_probability(
                 path.composite_preference_score,
                 denominator,
@@ -1111,7 +1113,7 @@ fn structural_path_ranking_target_artifact_from_candidates(
                 propensity_estimate,
                 ips_weight,
                 training_weight,
-                regime_calibration_bucket: regime_calibration_bucket.clone(),
+                regime_calibration_bucket,
                 behavior_policy_probability,
                 execution_propensity: path.execution_propensity,
                 target_policy_probability_confidence:
@@ -1132,6 +1134,32 @@ fn structural_path_ranking_target_artifact_from_candidates(
                 regime_aux_vix3m_level: None,
                 regime_aux_qqq_hv_pct_rank_252: None,
                 regime_aux_vvix_over_vix: None,
+                ref_previous_day_high: None,
+                ref_previous_day_low: None,
+                ref_previous_day_close: None,
+                ref_current_day_open: None,
+                ref_previous_week_high: None,
+                ref_previous_week_low: None,
+                ref_previous_week_close: None,
+                ref_current_week_open: None,
+                ref_previous_month_high: None,
+                ref_previous_month_low: None,
+                ref_current_day_gap_upper: None,
+                ref_current_day_gap_lower: None,
+                ref_current_week_gap_upper: None,
+                ref_current_week_gap_lower: None,
+                ref_recent_week_gap_levels: None,
+                ob_variant: None,
+                ob_direction: None,
+                ob_validation_state: None,
+                ob_high: None,
+                ob_low: None,
+                ob_midpoint: None,
+                ob_mitigation_count: None,
+                ob_breaker_confirmed: None,
+                ob_rejection_confirmed: None,
+                ob_confidence: None,
+                ob_fail_closed_reason: None,
                 score_model_family: None,
                 score_source_kind: None,
                 score_model_artifact_uri: None,
@@ -1139,6 +1167,8 @@ fn structural_path_ranking_target_artifact_from_candidates(
             };
             structural_populate_regime_profit_branch_fields(&mut row);
             regime_aux_context.apply_to_row(&mut row);
+            structural_apply_order_block_variant_context(snapshot, &mut row);
+            structural_apply_reference_liquidity_levels_context(snapshot, &mut row);
             row
         })
         .collect::<Vec<_>>();
@@ -1154,6 +1184,66 @@ fn structural_path_ranking_target_artifact_from_candidates(
     };
     apply_structural_path_probability_calibration(&mut artifact);
     artifact
+}
+
+fn structural_apply_order_block_variant_context(
+    snapshot: &WorkflowSnapshot,
+    row: &mut StructuralPathRankingTargetRow,
+) {
+    let Some(evidence) = snapshot
+        .latest_analyze
+        .as_ref()
+        .and_then(|phase| phase.order_block_variant.as_ref())
+    else {
+        return;
+    };
+    row.ob_variant = Some(evidence.variant.clone());
+    row.ob_direction = Some(format!("{:?}", evidence.direction));
+    row.ob_validation_state = Some(evidence.validation_state.clone());
+    row.ob_high = evidence.high;
+    row.ob_low = evidence.low;
+    row.ob_midpoint = evidence.midpoint;
+    row.ob_mitigation_count = Some(evidence.mitigation_count as f64);
+    row.ob_breaker_confirmed = Some(if evidence.breaker_confirmed { 1.0 } else { 0.0 });
+    row.ob_rejection_confirmed = Some(if evidence.rejection_confirmed {
+        1.0
+    } else {
+        0.0
+    });
+    row.ob_confidence = Some(evidence.confidence);
+    row.ob_fail_closed_reason = evidence.fail_closed_reason.clone();
+}
+
+fn structural_apply_reference_liquidity_levels_context(
+    snapshot: &WorkflowSnapshot,
+    row: &mut StructuralPathRankingTargetRow,
+) {
+    let Some(evidence) = snapshot
+        .latest_analyze
+        .as_ref()
+        .and_then(|phase| phase.reference_liquidity_levels.as_ref())
+    else {
+        return;
+    };
+    row.ref_previous_day_high = evidence.previous_day_high;
+    row.ref_previous_day_low = evidence.previous_day_low;
+    row.ref_previous_day_close = evidence.previous_day_close;
+    row.ref_current_day_open = evidence.current_day_open;
+    row.ref_previous_week_high = evidence.previous_week_high;
+    row.ref_previous_week_low = evidence.previous_week_low;
+    row.ref_previous_week_close = evidence.previous_week_close;
+    row.ref_current_week_open = evidence.current_week_open;
+    row.ref_previous_month_high = evidence.previous_month_high;
+    row.ref_previous_month_low = evidence.previous_month_low;
+    row.ref_current_day_gap_upper = evidence.current_day_gap.as_ref().and_then(|gap| gap.upper);
+    row.ref_current_day_gap_lower = evidence.current_day_gap.as_ref().and_then(|gap| gap.lower);
+    row.ref_current_week_gap_upper = evidence.current_week_gap.as_ref().and_then(|gap| gap.upper);
+    row.ref_current_week_gap_lower = evidence.current_week_gap.as_ref().and_then(|gap| gap.lower);
+    row.ref_recent_week_gap_levels = if evidence.recent_week_open_gaps.is_empty() {
+        None
+    } else {
+        serde_json::to_string(&evidence.recent_week_open_gaps).ok()
+    };
 }
 
 fn structural_path_ranking_pending_reward_state_from_feedback(
@@ -1213,13 +1303,13 @@ fn structural_feedback_direction_label(direction: Direction) -> &'static str {
     }
 }
 
-fn structural_feedback_regime_bucket(symbol: &str, regime: Regime) -> String {
+fn structural_feedback_regime_bucket(symbol: &str, regime: Regime, path_id: &str) -> String {
     let regime = match regime {
         Regime::Accumulation => "accumulation",
         Regime::ManipulationExpansion => "manipulation_expansion",
         Regime::Distribution => "distribution",
     };
-    format!("{symbol}:{regime}")
+    format!("{symbol}:{regime}:{path_id}")
 }
 
 fn structural_path_ranking_feedback_target_rows(
@@ -1241,14 +1331,17 @@ fn structural_path_ranking_feedback_target_rows(
                 .model_probabilities_before_trade
                 .selected_probability
                 .clamp(0.0, 1.0);
-            let raw_path_score =
-                (selected_probability > f64::EPSILON).then_some(selected_probability);
-            let calibrated_label = structural_path_ranking_reward_label(&pending_reward_state)?;
             let prior_stats = structural_prior_state.paths.get(&refs.path_id);
             let neutral_behavior_probability =
                 structural_prior_target_policy_reward_prior(prior_stats)
                     .or_else(|| prior_stats.map(|stats| stats.smoothed_prior.clamp(0.0, 1.0)))
                     .unwrap_or(0.5);
+            let raw_path_score = Some(if selected_probability > f64::EPSILON {
+                selected_probability
+            } else {
+                neutral_behavior_probability
+            });
+            let calibrated_label = structural_path_ranking_reward_label(&pending_reward_state)?;
             let behavior_policy_probability = raw_path_score
                 .unwrap_or(neutral_behavior_probability)
                 .clamp(0.01, 1.0);
@@ -1302,6 +1395,7 @@ fn structural_path_ranking_feedback_target_rows(
                 regime_calibration_bucket: structural_feedback_regime_bucket(
                     symbol,
                     record.regime_at_entry,
+                    &refs.path_id,
                 ),
                 behavior_policy_probability,
                 execution_propensity,
@@ -1323,6 +1417,32 @@ fn structural_path_ranking_feedback_target_rows(
                 regime_aux_vix3m_level: None,
                 regime_aux_qqq_hv_pct_rank_252: None,
                 regime_aux_vvix_over_vix: None,
+                ref_previous_day_high: None,
+                ref_previous_day_low: None,
+                ref_previous_day_close: None,
+                ref_current_day_open: None,
+                ref_previous_week_high: None,
+                ref_previous_week_low: None,
+                ref_previous_week_close: None,
+                ref_current_week_open: None,
+                ref_previous_month_high: None,
+                ref_previous_month_low: None,
+                ref_current_day_gap_upper: None,
+                ref_current_day_gap_lower: None,
+                ref_current_week_gap_upper: None,
+                ref_current_week_gap_lower: None,
+                ref_recent_week_gap_levels: None,
+                ob_variant: None,
+                ob_direction: None,
+                ob_validation_state: None,
+                ob_high: None,
+                ob_low: None,
+                ob_midpoint: None,
+                ob_mitigation_count: None,
+                ob_breaker_confirmed: None,
+                ob_rejection_confirmed: None,
+                ob_confidence: None,
+                ob_fail_closed_reason: None,
                 score_model_family: None,
                 score_source_kind: None,
                 score_model_artifact_uri: None,
@@ -1340,10 +1460,9 @@ fn structural_path_ranking_current_feedback_target_rows(
 ) -> Vec<StructuralPathRankingTargetRow> {
     let mut by_path = BTreeMap::new();
     for row in feedback_target_rows {
-        if current_rows
-            .iter()
-            .any(|current| current.path_id == row.path_id)
-        {
+        if current_rows.iter().any(|current| {
+            current.candidate_set_id == row.candidate_set_id && current.path_id == row.path_id
+        }) {
             continue;
         }
         by_path
@@ -1710,12 +1829,13 @@ fn structural_path_ranking_agent_material_rank_target_rows(
         .iter()
         .map(|(_, row)| structural_agent_material_rank_row_score(row).max(0.0))
         .sum::<f64>();
-    let regime_calibration_bucket = structural_path_ranking_regime_bucket(snapshot);
     let regime_aux_context = StructuralRegimeAuxContext::from_snapshot(snapshot);
     branch_paths
         .into_iter()
         .enumerate()
         .map(|(index, (branch_path, rank_row))| {
+            let regime_calibration_bucket =
+                structural_path_ranking_regime_bucket_for_path(snapshot, &branch_path);
             let row_score = structural_agent_material_rank_row_score(rank_row);
             let behavior_policy_probability =
                 structural_candidate_policy_probability(row_score, denominator, candidate_set_size);
@@ -1752,7 +1872,7 @@ fn structural_path_ranking_agent_material_rank_target_rows(
                 propensity_estimate: Some(behavior_policy_probability),
                 ips_weight: structural_path_ranking_ips_weight(Some(behavior_policy_probability)),
                 training_weight: None,
-                regime_calibration_bucket: regime_calibration_bucket.clone(),
+                regime_calibration_bucket,
                 behavior_policy_probability,
                 execution_propensity: Some(behavior_policy_probability),
                 target_policy_probability_confidence:
@@ -1773,6 +1893,32 @@ fn structural_path_ranking_agent_material_rank_target_rows(
                 regime_aux_vix3m_level: None,
                 regime_aux_qqq_hv_pct_rank_252: None,
                 regime_aux_vvix_over_vix: None,
+                ref_previous_day_high: None,
+                ref_previous_day_low: None,
+                ref_previous_day_close: None,
+                ref_current_day_open: None,
+                ref_previous_week_high: None,
+                ref_previous_week_low: None,
+                ref_previous_week_close: None,
+                ref_current_week_open: None,
+                ref_previous_month_high: None,
+                ref_previous_month_low: None,
+                ref_current_day_gap_upper: None,
+                ref_current_day_gap_lower: None,
+                ref_current_week_gap_upper: None,
+                ref_current_week_gap_lower: None,
+                ref_recent_week_gap_levels: None,
+                ob_variant: None,
+                ob_direction: None,
+                ob_validation_state: None,
+                ob_high: None,
+                ob_low: None,
+                ob_midpoint: None,
+                ob_mitigation_count: None,
+                ob_breaker_confirmed: None,
+                ob_rejection_confirmed: None,
+                ob_confidence: None,
+                ob_fail_closed_reason: None,
                 score_model_family: Some("auto_quant_agent_material_rank".to_string()),
                 score_source_kind: Some("agent_material_rank".to_string()),
                 score_model_artifact_uri: Some(rank_artifact.artifact_id.clone()),
@@ -1926,15 +2072,23 @@ pub fn export_structural_path_ranking_target_with_agent_material_rank(
     let existing_history_score_map = existing_history_rows
         .iter()
         .filter_map(|row| {
-            row.raw_path_score
-                .map(|score| (structural_path_ranking_target_row_score_key(row), score))
+            row.raw_path_score.map(|_| {
+                (
+                    structural_path_ranking_target_row_score_key(row),
+                    row.clone(),
+                )
+            })
         })
         .collect::<BTreeMap<_, _>>();
     for row in &mut artifact.rows {
-        if let Some(raw_score) =
+        if let Some(scored_row) =
             existing_history_score_map.get(&structural_path_ranking_target_row_score_key(row))
         {
-            row.raw_path_score = Some(*raw_score);
+            row.raw_path_score = scored_row.raw_path_score;
+            row.score_model_family = scored_row.score_model_family.clone();
+            row.score_source_kind = scored_row.score_source_kind.clone();
+            row.score_model_artifact_uri = scored_row.score_model_artifact_uri.clone();
+            row.score_generator = scored_row.score_generator.clone();
             clear_structural_path_ranking_target_row_outputs(row);
         }
     }
@@ -2030,7 +2184,11 @@ pub fn apply_structural_path_ranking_external_scores(
         .join(STRUCTURAL_PATH_RANKING_TARGET_EXPORT_DIR)
         .join(STRUCTURAL_PATH_RANKING_TARGET_SUMMARY_FILE);
     let raw = fs::read_to_string(&summary_path)?;
-    let summary: StructuralPathRankingTargetExportSummary = serde_json::from_str(&raw)?;
+    let summary = rebase_structural_path_ranking_target_export_summary_paths(
+        state_dir,
+        symbol,
+        serde_json::from_str::<StructuralPathRankingTargetExportSummary>(&raw)?,
+    );
     let mut current_rows =
         load_structural_path_ranking_target_rows(Path::new(&summary.jsonl_path))?;
     let history_jsonl_path = if !summary.history_jsonl_path.is_empty() {
@@ -2047,10 +2205,22 @@ pub fn apply_structural_path_ranking_external_scores(
     for row in &mut current_rows {
         if let Some(score) = score_map.get(&structural_path_ranking_target_row_score_key(row)) {
             row.raw_path_score = Some(score.raw_path_score.clamp(0.0, 1.0));
-            row.score_model_family = score.score_model_family.clone();
-            row.score_source_kind = score.score_source_kind.clone();
-            row.score_model_artifact_uri = score.score_model_artifact_uri.clone();
-            row.score_generator = score.score_generator.clone();
+            row.score_model_family = score
+                .score_model_family
+                .clone()
+                .or_else(|| row.score_model_family.clone());
+            row.score_source_kind = score
+                .score_source_kind
+                .clone()
+                .or_else(|| row.score_source_kind.clone());
+            row.score_model_artifact_uri = score
+                .score_model_artifact_uri
+                .clone()
+                .or_else(|| row.score_model_artifact_uri.clone());
+            row.score_generator = score
+                .score_generator
+                .clone()
+                .or_else(|| row.score_generator.clone());
             clear_structural_path_ranking_target_row_outputs(row);
             matched += 1;
         }
@@ -2058,10 +2228,22 @@ pub fn apply_structural_path_ranking_external_scores(
     for row in &mut history_rows {
         if let Some(score) = score_map.get(&structural_path_ranking_target_row_score_key(row)) {
             row.raw_path_score = Some(score.raw_path_score.clamp(0.0, 1.0));
-            row.score_model_family = score.score_model_family.clone();
-            row.score_source_kind = score.score_source_kind.clone();
-            row.score_model_artifact_uri = score.score_model_artifact_uri.clone();
-            row.score_generator = score.score_generator.clone();
+            row.score_model_family = score
+                .score_model_family
+                .clone()
+                .or_else(|| row.score_model_family.clone());
+            row.score_source_kind = score
+                .score_source_kind
+                .clone()
+                .or_else(|| row.score_source_kind.clone());
+            row.score_model_artifact_uri = score
+                .score_model_artifact_uri
+                .clone()
+                .or_else(|| row.score_model_artifact_uri.clone());
+            row.score_generator = score
+                .score_generator
+                .clone()
+                .or_else(|| row.score_generator.clone());
             clear_structural_path_ranking_target_row_outputs(row);
         }
     }
@@ -2212,9 +2394,12 @@ fn resolve_structural_path_ranker_runtime(
             ..StructuralPathRankerRuntimeSurface::default()
         });
     };
-    let Ok(summary) =
-        serde_json::from_str::<StructuralPathRankingTargetExportSummary>(&raw_summary)
-    else {
+    let Ok(summary) = serde_json::from_str::<StructuralPathRankingTargetExportSummary>(
+        &raw_summary,
+    )
+    .map(|summary| {
+        rebase_structural_path_ranking_target_export_summary_paths(state_dir, symbol, summary)
+    }) else {
         return Some(StructuralPathRankerRuntimeSurface {
             enabled: true,
             status: "enabled_export_invalid".to_string(),
@@ -2603,10 +2788,13 @@ fn resolve_structural_path_ranker_runtime(
     })
 }
 
-fn structural_path_ranking_regime_bucket(snapshot: &WorkflowSnapshot) -> String {
+fn structural_path_ranking_regime_bucket_for_path(
+    snapshot: &WorkflowSnapshot,
+    path_id: &str,
+) -> String {
     let symbol = structural_symbol(snapshot);
     let regime = structural_active_regime(snapshot).unwrap_or_else(|| "unknown".to_string());
-    format!("{symbol}:{regime}")
+    format!("{symbol}:{regime}:{path_id}")
 }
 
 fn structural_path_ranking_pending_reward_state(
@@ -2789,25 +2977,95 @@ fn structural_path_selection_score(path: &StructuralPathArtifact) -> f64 {
         .unwrap_or(path.composite_preference_score)
 }
 
+fn structural_branch_family_prefix(path: &StructuralPathArtifact) -> Option<(String, String)> {
+    let mut parts = path
+        .path_id
+        .split(" -> ")
+        .map(str::trim)
+        .filter(|part| !part.is_empty());
+    let first = parts.next()?.to_string();
+    let second = parts.next()?.to_string();
+    Some((first, second))
+}
+
+fn structural_is_provider_specific_exact_path(path: &StructuralPathArtifact) -> bool {
+    let lowered = path.path_id.to_ascii_lowercase();
+    lowered.contains("_tvr_")
+        || lowered.contains("_ibkr_")
+        || lowered.contains("_yf_")
+        || lowered.contains("_kraken_")
+}
+
+fn structural_should_include_feedback_paths(
+    prefer_history_runtime: bool,
+    regime_bundle_candidates: &[StructuralPathArtifact],
+    feedback_candidates: &[StructuralPathArtifact],
+) -> bool {
+    if prefer_history_runtime || regime_bundle_candidates.is_empty() {
+        return true;
+    }
+    let bundle_families = regime_bundle_candidates
+        .iter()
+        .filter_map(structural_branch_family_prefix)
+        .collect::<BTreeSet<_>>();
+    feedback_candidates.iter().any(|path| {
+        structural_branch_family_prefix(path).is_some_and(|family| {
+            bundle_families.contains(&family)
+                && (structural_exact_feedback_path_priority(path) == 0
+                    || structural_is_provider_specific_exact_path(path))
+        })
+    })
+}
+
 fn structural_path_selection_order(
     left: &StructuralPathArtifact,
     right: &StructuralPathArtifact,
     prefer_history_paths: bool,
 ) -> std::cmp::Ordering {
+    let left_score = structural_path_selection_score(left);
+    let right_score = structural_path_selection_score(right);
+    let near_tied = (left_score - right_score).abs() <= 0.01;
+    let same_branch_family =
+        structural_branch_family_prefix(left) == structural_branch_family_prefix(right);
     structural_prefer_history_path_priority(left, prefer_history_paths)
         .cmp(&structural_prefer_history_path_priority(
             right,
             prefer_history_paths,
         ))
+        .then_with(|| structural_observed_exact_path_order(left, right))
         .then_with(|| {
-            structural_path_selection_score(left).total_cmp(&structural_path_selection_score(right))
+            if near_tied && same_branch_family {
+                structural_is_provider_specific_exact_path(left)
+                    .cmp(&structural_is_provider_specific_exact_path(right))
+            } else {
+                std::cmp::Ordering::Equal
+            }
         })
+        .then_with(|| left_score.total_cmp(&right_score))
         .then_with(|| {
             left.composite_preference_score
                 .total_cmp(&right.composite_preference_score)
         })
         .then_with(|| left.path_posterior.total_cmp(&right.path_posterior))
         .then_with(|| left.path_prior.total_cmp(&right.path_prior))
+}
+
+fn structural_observed_exact_path_order(
+    left: &StructuralPathArtifact,
+    right: &StructuralPathArtifact,
+) -> std::cmp::Ordering {
+    let left_exact = structural_is_provider_specific_exact_path(left);
+    let right_exact = structural_is_provider_specific_exact_path(right);
+    if left_exact == right_exact {
+        return std::cmp::Ordering::Equal;
+    }
+    if left_exact && left.historical_total_records > right.historical_total_records {
+        return std::cmp::Ordering::Greater;
+    }
+    if right_exact && right.historical_total_records > left.historical_total_records {
+        return std::cmp::Ordering::Less;
+    }
+    std::cmp::Ordering::Equal
 }
 
 pub fn build_structural_recommended_path_bundle_artifact_with_prior_state(
@@ -3559,37 +3817,38 @@ pub(crate) fn build_structural_path_plan_artifact_with_runtime_context_and_prior
             }
         })
         .collect::<Vec<_>>();
+    let regime_bundle_candidates =
+        structural_regime_bundle_branch_path_candidates(snapshot, structural_prior_state);
+    let feedback_candidates = structural_feedback_path_candidates(
+        snapshot,
+        feedback_history,
+        path_history,
+        structural_prior_state,
+    );
     let mut seen_path_ids = paths
         .iter()
         .map(|path| path.path_id.clone())
         .collect::<BTreeSet<_>>();
-    for branch_path in
-        structural_regime_bundle_branch_path_candidates(snapshot, structural_prior_state)
-    {
+    for branch_path in regime_bundle_candidates.iter().cloned() {
         if seen_path_ids.insert(branch_path.path_id.clone()) {
             paths.push(branch_path);
         }
     }
     let prefer_history_runtime =
         structural_runtime_context_prefers_history(&runtime_context, &symbol);
-    let has_regime_bundle_branch_paths =
-        !structural_regime_bundle_branch_paths(snapshot).is_empty();
-    let prefer_exact_feedback_paths = prefer_history_runtime || !has_regime_bundle_branch_paths;
-    if prefer_exact_feedback_paths {
-        for feedback_path in structural_feedback_path_candidates(
-            snapshot,
-            feedback_history,
-            path_history,
-            structural_prior_state,
-        ) {
+    let include_feedback_paths = structural_should_include_feedback_paths(
+        prefer_history_runtime,
+        &regime_bundle_candidates,
+        &feedback_candidates,
+    );
+    if include_feedback_paths {
+        for feedback_path in feedback_candidates {
             if seen_path_ids.insert(feedback_path.path_id.clone()) {
                 paths.push(feedback_path);
             }
         }
     }
-    paths.sort_by(|left, right| {
-        structural_path_plan_order(left, right, prefer_exact_feedback_paths)
-    });
+    paths.sort_by(|left, right| structural_path_plan_order(left, right, include_feedback_paths));
     let top_candidate_paths = structural_required_candidate_paths(snapshot, paths.clone(), 3);
     let candidate_set_id = structural_candidate_set_id(&symbol, &top_candidate_paths);
     let current_candidate_rows = structural_path_ranking_target_artifact_from_candidates(
@@ -5132,7 +5391,8 @@ mod tests {
     use super::*;
     use crate::state::{
         structural_source_reliability_em_fit_from_state, FeedbackRecord, ModelProbabilitySnapshot,
-        StructuralFeedbackRefs, STRUCTURAL_SOURCE_RELIABILITY_EM_MIN_MULTI_SOURCE_ITEMS,
+        StructuralFeedbackRefs, WorkflowPhaseSnapshot,
+        STRUCTURAL_SOURCE_RELIABILITY_EM_MIN_MULTI_SOURCE_ITEMS,
     };
     use crate::types::{Direction, Regime};
     use chrono::Utc;
@@ -5199,6 +5459,32 @@ mod tests {
             regime_aux_vix3m_level: None,
             regime_aux_qqq_hv_pct_rank_252: None,
             regime_aux_vvix_over_vix: None,
+            ref_previous_day_high: None,
+            ref_previous_day_low: None,
+            ref_previous_day_close: None,
+            ref_current_day_open: None,
+            ref_previous_week_high: None,
+            ref_previous_week_low: None,
+            ref_previous_week_close: None,
+            ref_current_week_open: None,
+            ref_previous_month_high: None,
+            ref_previous_month_low: None,
+            ref_current_day_gap_upper: None,
+            ref_current_day_gap_lower: None,
+            ref_current_week_gap_upper: None,
+            ref_current_week_gap_lower: None,
+            ref_recent_week_gap_levels: None,
+            ob_variant: None,
+            ob_direction: None,
+            ob_validation_state: None,
+            ob_high: None,
+            ob_low: None,
+            ob_midpoint: None,
+            ob_mitigation_count: None,
+            ob_breaker_confirmed: None,
+            ob_rejection_confirmed: None,
+            ob_confidence: None,
+            ob_fail_closed_reason: None,
             score_model_family: None,
             score_source_kind: None,
             score_model_artifact_uri: None,
@@ -5223,6 +5509,86 @@ mod tests {
             followed_path: true,
             realized_outcome: realized_outcome.map(str::to_string),
         }
+    }
+
+    #[test]
+    fn reference_liquidity_levels_context_populates_target_row() {
+        let mut snapshot =
+            crate::application::orchestration::workflow_status::sample_human_workflow_snapshot();
+        snapshot.latest_analyze = Some(WorkflowPhaseSnapshot {
+            reference_liquidity_levels: Some(crate::ict::ReferenceLiquidityLevelsEvidence {
+                factor_name: "reference_liquidity_levels".to_string(),
+                source_frame: "mtf".to_string(),
+                timezone: "America/New_York".to_string(),
+                trading_day_rollover: "ny_1700_session_date".to_string(),
+                current_trading_day: Some("2026-05-15".to_string()),
+                current_trading_week: Some("2026-W20".to_string()),
+                current_trading_month: Some("2026-05".to_string()),
+                previous_day_high: Some(18595.0),
+                previous_day_low: Some(18488.0),
+                previous_day_close: Some(18510.5),
+                current_day_open: Some(18522.0),
+                previous_week_high: Some(18620.0),
+                previous_week_low: Some(18390.0),
+                previous_week_close: Some(18496.0),
+                current_week_open: Some(18508.5),
+                previous_month_high: Some(18840.0),
+                previous_month_low: Some(17655.0),
+                current_day_gap: Some(crate::ict::GapReferenceLevel {
+                    label: "day_open_gap".to_string(),
+                    period_key: Some("2026-05-15".to_string()),
+                    previous_close: Some(18510.5),
+                    current_open: Some(18522.0),
+                    upper: Some(18522.0),
+                    lower: Some(18510.5),
+                    midpoint: Some(18516.25),
+                    size: Some(11.5),
+                    direction: Some("up_gap".to_string()),
+                    active: true,
+                }),
+                current_week_gap: Some(crate::ict::GapReferenceLevel {
+                    label: "week_open_gap".to_string(),
+                    period_key: Some("2026-W20".to_string()),
+                    previous_close: Some(18496.0),
+                    current_open: Some(18508.5),
+                    upper: Some(18508.5),
+                    lower: Some(18496.0),
+                    midpoint: Some(18502.25),
+                    size: Some(12.5),
+                    direction: Some("up_gap".to_string()),
+                    active: true,
+                }),
+                recent_week_open_gaps: vec![crate::ict::GapReferenceLevel {
+                    label: "week_open_gap".to_string(),
+                    period_key: Some("2026-W20".to_string()),
+                    previous_close: Some(18496.0),
+                    current_open: Some(18508.5),
+                    upper: Some(18508.5),
+                    lower: Some(18496.0),
+                    midpoint: Some(18502.25),
+                    size: Some(12.5),
+                    direction: Some("up_gap".to_string()),
+                    active: true,
+                }],
+                confidence: 0.95,
+                fail_closed_reason: None,
+            }),
+            ..WorkflowPhaseSnapshot::default()
+        });
+        let mut row = calibration_row("path-live", 0.5, "unobserved");
+
+        structural_apply_reference_liquidity_levels_context(&snapshot, &mut row);
+
+        assert_eq!(row.ref_previous_day_high, Some(18595.0));
+        assert_eq!(row.ref_previous_week_low, Some(18390.0));
+        assert_eq!(row.ref_previous_month_low, Some(17655.0));
+        assert_eq!(row.ref_current_day_gap_upper, Some(18522.0));
+        assert_eq!(row.ref_current_week_gap_lower, Some(18496.0));
+        assert!(row
+            .ref_recent_week_gap_levels
+            .as_deref()
+            .unwrap_or_default()
+            .contains("2026-W20"));
     }
 
     #[test]
@@ -6129,7 +6495,7 @@ mod tests {
     }
 
     #[test]
-    fn target_export_keeps_zero_probability_feedback_as_unscored_history_rows() {
+    fn target_export_keeps_zero_probability_feedback_as_scored_history_rows() {
         let temp = tempfile::tempdir().unwrap();
         let snapshot = WorkflowSnapshot {
             symbol: "NQ".to_string(),
@@ -6162,7 +6528,7 @@ mod tests {
         assert!(zero_probability_rows.len() >= 2);
         assert!(zero_probability_rows
             .iter()
-            .all(|row| row.raw_path_score.is_none()));
+            .any(|row| row.raw_path_score.is_some()));
         assert!(zero_probability_rows
             .iter()
             .all(|row| row.training_weight.is_some()));
@@ -6173,7 +6539,7 @@ mod tests {
             .iter()
             .any(|row| row.pending_reward_state == "matured_failure"));
         assert!(summary.history_mature_rows >= 2);
-        assert_eq!(summary.history_rows_with_raw_path_score, 0);
+        assert!(summary.history_rows_with_raw_path_score >= 2);
     }
 
     #[test]
@@ -6202,13 +6568,13 @@ mod tests {
         let current_rows =
             load_structural_path_ranking_target_rows(Path::new(&summary.jsonl_path)).unwrap();
 
-        assert_eq!(
+        assert!(
             current_rows
                 .iter()
                 .filter(|row| row.path_id == branch_path)
-                .count(),
-            1,
-            "current structural path-ranking target must expose each exact feedback path id once"
+                .count()
+                >= 1,
+            "current structural path-ranking target must expose the exact feedback path id"
         );
     }
 
@@ -6408,6 +6774,77 @@ mod tests {
         assert!(
             branch_paths.contains(&bundle.path_id),
             "recommended path must preserve a regime bundle branch path"
+        );
+    }
+
+    #[test]
+    fn structural_path_selection_prefers_provider_specific_exact_path_when_calibrated_scores_are_nearly_tied(
+    ) {
+        let generic = StructuralPathArtifact {
+            path_id: "TrendExpansion -> SessionLiquidity -> dense_kline_upbar_reclaim -> dense_kline_upbar_reclaim_long_v1".to_string(),
+            path_ranker_calibrated_path_prob: Some(0.4269102990033223),
+            composite_preference_score: 0.4269102990033223,
+            ..StructuralPathArtifact::default()
+        };
+        let tvr = StructuralPathArtifact {
+            path_id: "TrendExpansion -> SessionLiquidity -> dense_kline_upbar_reclaim_tvr_5m -> dense_kline_upbar_reclaim_tvr_qqq_5m_v1".to_string(),
+            path_ranker_calibrated_path_prob: Some(0.4223107569721116),
+            composite_preference_score: 0.4223107569721116,
+            ..StructuralPathArtifact::default()
+        };
+
+        let best = vec![generic, tvr]
+            .into_iter()
+            .max_by(|left, right| structural_path_selection_order(left, right, false))
+            .expect("best path");
+
+        assert_eq!(
+            best.path_id,
+            "TrendExpansion -> SessionLiquidity -> dense_kline_upbar_reclaim_tvr_5m -> dense_kline_upbar_reclaim_tvr_qqq_5m_v1"
+        );
+    }
+
+    #[test]
+    fn feedback_paths_are_included_when_bundle_branch_is_generic_but_exact_same_family_exists() {
+        let generic_bundle = StructuralPathArtifact {
+            path_id: "TrendExpansion -> SessionLiquidity -> dense_kline_upbar_reclaim -> dense_kline_upbar_reclaim_long_v1".to_string(),
+            ..StructuralPathArtifact::default()
+        };
+        let exact_feedback = StructuralPathArtifact {
+            path_id: "TrendExpansion -> SessionLiquidity -> dense_kline_upbar_reclaim_kraken_1m -> dense_kline_upbar_reclaim_kraken_xbtusd_1m_v1".to_string(),
+            ..StructuralPathArtifact::default()
+        };
+
+        assert!(structural_should_include_feedback_paths(
+            false,
+            &[generic_bundle],
+            &[exact_feedback],
+        ));
+    }
+
+    #[test]
+    fn structural_path_selection_keeps_generic_when_calibrated_gap_is_not_near_tied() {
+        let generic = StructuralPathArtifact {
+            path_id: "TrendExpansion -> SessionLiquidity -> dense_kline_upbar_reclaim -> dense_kline_upbar_reclaim_long_v1".to_string(),
+            path_ranker_calibrated_path_prob: Some(0.60),
+            composite_preference_score: 0.60,
+            ..StructuralPathArtifact::default()
+        };
+        let tvr = StructuralPathArtifact {
+            path_id: "TrendExpansion -> SessionLiquidity -> dense_kline_upbar_reclaim_tvr_5m -> dense_kline_upbar_reclaim_tvr_qqq_5m_v1".to_string(),
+            path_ranker_calibrated_path_prob: Some(0.42),
+            composite_preference_score: 0.42,
+            ..StructuralPathArtifact::default()
+        };
+
+        let best = vec![generic, tvr]
+            .into_iter()
+            .max_by(|left, right| structural_path_selection_order(left, right, false))
+            .expect("best path");
+
+        assert_eq!(
+            best.path_id,
+            "TrendExpansion -> SessionLiquidity -> dense_kline_upbar_reclaim -> dense_kline_upbar_reclaim_long_v1"
         );
     }
 
@@ -6923,6 +7360,147 @@ mod tests {
     }
 
     #[test]
+    fn apply_external_scores_preserves_existing_metadata_when_score_file_omits_it() {
+        let temp = tempfile::tempdir().unwrap();
+        let snapshot =
+            crate::application::orchestration::workflow_status::sample_human_workflow_snapshot();
+        let summary = export_structural_path_ranking_target(
+            temp.path().to_str().unwrap(),
+            "NQ",
+            &snapshot,
+            &ProviderCatalogAgentSurface::default(),
+            &[],
+            &StructuralPriorLearningState::default(),
+        )
+        .unwrap();
+        let mut current_rows =
+            load_structural_path_ranking_target_rows(Path::new(&summary.jsonl_path)).unwrap();
+        let mut history_rows =
+            load_structural_path_ranking_target_rows(Path::new(&summary.history_jsonl_path))
+                .unwrap();
+        let target = current_rows.first_mut().expect("current target row");
+        target.raw_path_score = Some(0.42);
+        target.score_model_family = Some("catboost".to_string());
+        target.score_source_kind = Some("external_model".to_string());
+        target.score_model_artifact_uri = Some("catboost_model/current.cbm".to_string());
+        target.score_generator = Some("preexisting-current-scorer".to_string());
+        let candidate_set_id = target.candidate_set_id.clone();
+        let path_id = target.path_id.clone();
+        let target_key = format!("{candidate_set_id}|{path_id}");
+        for row in &mut history_rows {
+            if format!("{}|{}", row.candidate_set_id, row.path_id) == target_key {
+                row.raw_path_score = Some(0.42);
+                row.score_model_family = Some("catboost".to_string());
+                row.score_source_kind = Some("external_model".to_string());
+                row.score_model_artifact_uri = Some("catboost_model/current.cbm".to_string());
+                row.score_generator = Some("preexisting-current-scorer".to_string());
+            }
+        }
+        fs::write(
+            &summary.jsonl_path,
+            render_structural_path_ranking_target_rows_jsonl(&current_rows).unwrap(),
+        )
+        .unwrap();
+        fs::write(
+            &summary.history_jsonl_path,
+            render_structural_path_ranking_target_rows_jsonl(&history_rows).unwrap(),
+        )
+        .unwrap();
+
+        apply_structural_path_ranking_external_scores(
+            temp.path().to_str().unwrap(),
+            "NQ",
+            &[StructuralPathRankingExternalScoreInput {
+                candidate_set_id: candidate_set_id.clone(),
+                path_id: path_id.clone(),
+                raw_path_score: 0.91,
+                score_model_family: None,
+                score_source_kind: None,
+                score_model_artifact_uri: None,
+                score_generator: None,
+            }],
+        )
+        .unwrap();
+
+        let persisted_rows =
+            load_structural_path_ranking_target_rows(Path::new(&summary.jsonl_path)).unwrap();
+        let persisted = persisted_rows
+            .iter()
+            .find(|row| row.candidate_set_id == candidate_set_id && row.path_id == path_id)
+            .expect("updated current row");
+        assert_eq!(persisted.raw_path_score, Some(0.91));
+        assert_eq!(persisted.score_model_family.as_deref(), Some("catboost"));
+        assert_eq!(
+            persisted.score_source_kind.as_deref(),
+            Some("external_model")
+        );
+        assert_eq!(
+            persisted.score_model_artifact_uri.as_deref(),
+            Some("catboost_model/current.cbm")
+        );
+        assert_eq!(
+            persisted.score_generator.as_deref(),
+            Some("preexisting-current-scorer")
+        );
+    }
+
+    #[test]
+    fn target_export_preserves_existing_score_metadata_from_history() {
+        let temp = tempfile::tempdir().unwrap();
+        let snapshot =
+            crate::application::orchestration::workflow_status::sample_human_workflow_snapshot();
+        let summary = export_structural_path_ranking_target(
+            temp.path().to_str().unwrap(),
+            "NQ",
+            &snapshot,
+            &ProviderCatalogAgentSurface::default(),
+            &[],
+            &StructuralPriorLearningState::default(),
+        )
+        .unwrap();
+        let mut history_rows =
+            load_structural_path_ranking_target_rows(Path::new(&summary.history_jsonl_path))
+                .unwrap();
+        let target = history_rows.first_mut().expect("history target row");
+        let candidate_set_id = target.candidate_set_id.clone();
+        let path_id = target.path_id.clone();
+        target.raw_path_score = Some(0.84);
+        target.score_model_family = Some("catboost".to_string());
+        target.score_source_kind = Some("external_model".to_string());
+        target.score_model_artifact_uri = Some("catboost_model/history.cbm".to_string());
+        target.score_generator = Some("history-scorer".to_string());
+        fs::write(
+            &summary.history_jsonl_path,
+            render_structural_path_ranking_target_rows_jsonl(&history_rows).unwrap(),
+        )
+        .unwrap();
+
+        let refreshed = export_structural_path_ranking_target(
+            temp.path().to_str().unwrap(),
+            "NQ",
+            &snapshot,
+            &ProviderCatalogAgentSurface::default(),
+            &[],
+            &StructuralPriorLearningState::default(),
+        )
+        .unwrap();
+        let current_rows =
+            load_structural_path_ranking_target_rows(Path::new(&refreshed.jsonl_path)).unwrap();
+        let current = current_rows
+            .iter()
+            .find(|row| row.candidate_set_id == candidate_set_id && row.path_id == path_id)
+            .expect("refreshed current row");
+        assert_eq!(current.raw_path_score, Some(0.84));
+        assert_eq!(current.score_model_family.as_deref(), Some("catboost"));
+        assert_eq!(current.score_source_kind.as_deref(), Some("external_model"));
+        assert_eq!(
+            current.score_model_artifact_uri.as_deref(),
+            Some("catboost_model/history.cbm")
+        );
+        assert_eq!(current.score_generator.as_deref(), Some("history-scorer"));
+    }
+
+    #[test]
     fn path_ranker_runtime_rejects_stale_current_target_scores_from_prior_candidate_set() {
         let temp = tempfile::tempdir().unwrap();
         let snapshot =
@@ -7009,5 +7587,230 @@ mod tests {
             .candidate_paths
             .iter()
             .all(|path| path.path_ranker_runtime_source.is_none()));
+    }
+
+    #[test]
+    fn recommended_path_bundle_prefers_observed_exact_branch_over_unobserved_generic_scenario_when_scores_are_close(
+    ) {
+        let runtime = StructuralPathRankerRuntimeSurface {
+            enabled: true,
+            reuse_mode: Some(STRUCTURAL_PATH_RANKING_RUNTIME_MODE_CANDIDATE_SET_ONLY.to_string()),
+            status: "using_registered_model_artifact".to_string(),
+            artifact_match_count: 3,
+            candidate_set_match_count: 3,
+            history_match_count: 0,
+            applied_path_count: 3,
+            score_model_family: None,
+            score_source_kind: None,
+            score_model_artifact_uri: None,
+            score_generator: None,
+        };
+        let exact_path = StructuralPathArtifact {
+            path_id:
+                "TrendExpansion -> SessionLiquidity -> dense_kline_upbar_reclaim_kraken_1m -> dense_kline_upbar_reclaim_kraken_xbtusd_1m_v1"
+                    .to_string(),
+            scenario_id: "scenario:exact-kraken".to_string(),
+            path_label:
+                "TrendExpansion -> SessionLiquidity -> dense_kline_upbar_reclaim_kraken_1m -> dense_kline_upbar_reclaim_kraken_xbtusd_1m_v1"
+                    .to_string(),
+            direction: "bull".to_string(),
+            entry_style: "structural_feedback_path".to_string(),
+            historical_total_records: 349,
+            historical_followed_count: 349,
+            catboost_score: Some(0.5267362986603144),
+            path_ranker_execution_gate_status: Some("pass".to_string()),
+            path_ranker_runtime_source: Some("registered_artifact".to_string()),
+            path_prior: 0.35201149425287354,
+            path_posterior: 0.34770114942528735,
+            bbn_support_score: 0.34770114942528735,
+            composite_preference_score: 0.348994,
+            stop_definition: "exact-stop".to_string(),
+            target_definition: "exact-target".to_string(),
+            expected_failure_mode: "exact-fail".to_string(),
+            max_time_in_trade: "1h".to_string(),
+            ..StructuralPathArtifact::default()
+        };
+        let generic_scenario = StructuralPathArtifact {
+            path_id:
+                "path:scenario:DENSE_KLINE_BRANCH:belief_regime_node:trend:trend_follow_through:primary"
+                    .to_string(),
+            scenario_id: "scenario:generic".to_string(),
+            path_label: "trend_follow_through".to_string(),
+            direction: "bull".to_string(),
+            entry_style: "belief_regime_node".to_string(),
+            historical_total_records: 4,
+            historical_followed_count: 0,
+            catboost_score: Some(0.52),
+            path_ranker_execution_gate_status: Some("pass".to_string()),
+            path_ranker_runtime_source: Some("registered_artifact".to_string()),
+            path_prior: 0.5,
+            path_posterior: 0.36,
+            bbn_support_score: 0.36,
+            composite_preference_score: 0.355,
+            stop_definition: "generic-stop".to_string(),
+            target_definition: "generic-target".to_string(),
+            expected_failure_mode: "generic-fail".to_string(),
+            max_time_in_trade: "1h".to_string(),
+            ..StructuralPathArtifact::default()
+        };
+
+        let bundle = structural_recommended_path_bundle_from_candidates(
+            "DENSE_KLINE_BRANCH".to_string(),
+            "structural-candidates:DENSE_KLINE_BRANCH:test".to_string(),
+            Some(runtime),
+            vec![generic_scenario, exact_path.clone()],
+        )
+        .expect("recommended path bundle");
+
+        assert_eq!(bundle.path_id, exact_path.path_id);
+    }
+
+    #[test]
+    fn default_runtime_includes_same_family_regime_profit_feedback_paths() {
+        let branch_path = "Transition -> MarketStructureEvent -> atr_cisd_direct_limit -> market_structure_event_classifier_atr_cisd_direct_limit_v1";
+        let regime_bundle = vec![StructuralPathArtifact {
+            path_id: branch_path.to_string(),
+            scenario_id: "scenario:regime-bundle".to_string(),
+            path_label: branch_path.to_string(),
+            entry_style: "regime_bundle_branch_path".to_string(),
+            ..StructuralPathArtifact::default()
+        }];
+        let feedback_paths = vec![StructuralPathArtifact {
+            path_id: branch_path.to_string(),
+            scenario_id: "scenario:feedback".to_string(),
+            path_label: branch_path.to_string(),
+            entry_style: "structural_feedback_path".to_string(),
+            historical_total_records: 2,
+            ..StructuralPathArtifact::default()
+        }];
+
+        assert!(structural_should_include_feedback_paths(
+            false,
+            &regime_bundle,
+            &feedback_paths,
+        ));
+    }
+
+    #[test]
+    fn target_export_keeps_exact_split_current_rows_when_candidate_set_differs() {
+        let exact_path =
+            "TrendExpansion -> SessionLiquidity -> dense_kline_upbar_reclaim_ibkr_5m -> dense_kline_upbar_reclaim_ibkr_qqq_5m_v1";
+        let generic_path =
+            "TrendExpansion -> SessionLiquidity -> dense_kline_upbar_reclaim -> dense_kline_upbar_reclaim_long_v1";
+        let mk_row =
+            |candidate_set_id: &str,
+             path_id: &str,
+             pending_reward_state: &str,
+             current_posterior: f64,
+             raw_path_score: Option<f64>| StructuralPathRankingTargetRow {
+                rank: 1,
+                candidate_set_id: candidate_set_id.to_string(),
+                candidate_set_size: 1,
+                path_id: path_id.to_string(),
+                scenario_id: format!("scenario:{path_id}"),
+                path_label: path_id.to_string(),
+                regime_profit_branch_path: None,
+                parent_regime_root: None,
+                main_regime: None,
+                sub_regime: None,
+                sub_sub_regime_or_profit_factor: None,
+                profit_factor: None,
+                direction: "Observe".to_string(),
+                raw_path_score,
+                calibrated_path_prob: raw_path_score,
+                path_prob_lower_bound: raw_path_score.map(|score| (score - 0.1).clamp(0.0, 1.0)),
+                execution_gate_status: None,
+                execution_gate_min_path_prob: None,
+                execution_gate_reason: None,
+                pending_reward_state: pending_reward_state.to_string(),
+                maturity_mask: true,
+                maturity_weight: 1.0,
+                calibrated_label: structural_path_ranking_reward_label(pending_reward_state),
+                propensity_estimate: Some(0.5),
+                ips_weight: Some(2.0),
+                training_weight: structural_path_ranking_reward_label(pending_reward_state)
+                    .map(|_| 2.0),
+                regime_calibration_bucket: "DENSE_KLINE_BRANCH:trend".to_string(),
+                behavior_policy_probability: 0.5,
+                execution_propensity: Some(0.5),
+                target_policy_probability_confidence: Some(0.55),
+                target_policy_probability_lower_bound: Some(0.30),
+                target_policy_reward_prior: Some(0.58),
+                target_policy_reward_lower_bound: Some(0.28),
+                experience_prior: 0.5,
+                current_posterior,
+                structural_baseline_score: 0.5,
+                regime_aux_qqq_hv_level: None,
+                regime_aux_nq_vs_200d_pct: None,
+                regime_aux_vix3m_level: None,
+                regime_aux_qqq_hv_pct_rank_252: None,
+                regime_aux_vvix_over_vix: None,
+                ref_previous_day_high: None,
+                ref_previous_day_low: None,
+                ref_previous_day_close: None,
+                ref_current_day_open: None,
+                ref_previous_week_high: None,
+                ref_previous_week_low: None,
+                ref_previous_week_close: None,
+                ref_current_week_open: None,
+                ref_previous_month_high: None,
+                ref_previous_month_low: None,
+                ref_current_day_gap_upper: None,
+                ref_current_day_gap_lower: None,
+                ref_current_week_gap_upper: None,
+                ref_current_week_gap_lower: None,
+                ref_recent_week_gap_levels: None,
+                ob_variant: None,
+                ob_direction: None,
+                ob_validation_state: None,
+                ob_high: None,
+                ob_low: None,
+                ob_midpoint: None,
+                ob_mitigation_count: None,
+                ob_breaker_confirmed: None,
+                ob_rejection_confirmed: None,
+                ob_confidence: None,
+                ob_fail_closed_reason: None,
+                score_model_family: None,
+                score_source_kind: None,
+                score_model_artifact_uri: None,
+                score_generator: None,
+            };
+        let current_rows = vec![mk_row(
+            "structural-candidates:DENSE_KLINE_BRANCH:current",
+            generic_path,
+            "matured_success",
+            0.88,
+            None,
+        )];
+        let feedback_rows = vec![
+            mk_row(
+                "structural-feedback-history:DENSE_KLINE_BRANCH:exact",
+                exact_path,
+                "matured_failure",
+                0.5,
+                Some(0.5),
+            ),
+            mk_row(
+                "structural-candidates:DENSE_KLINE_BRANCH:current",
+                generic_path,
+                "matured_success",
+                0.88,
+                Some(0.75),
+            ),
+        ];
+
+        let merged =
+            structural_path_ranking_current_feedback_target_rows(&feedback_rows, &current_rows);
+
+        assert!(merged.iter().any(|row| {
+            row.candidate_set_id == "structural-feedback-history:DENSE_KLINE_BRANCH:exact"
+                && row.path_id == exact_path
+                && row.raw_path_score == Some(0.5)
+        }));
+        assert!(!merged.iter().any(|row| {
+            row.candidate_set_id == "structural-candidates:DENSE_KLINE_BRANCH:current"
+                && row.path_id == generic_path
+        }));
     }
 }

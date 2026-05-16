@@ -85,22 +85,22 @@ pub fn search_factors_for_mece_recovery(
         .map(|factor| factor.name.clone())
         .collect();
 
-    let mut best: Option<(EvalOutcome, Vec<String>, Vec<MeceRegimeLabel>)> = None;
+    let mut best: Option<(f64, Vec<String>, Vec<MeceRegimeLabel>)> = None;
     for subset_indices in non_empty_subsets(factor_names.len(), MAX_SUBSET_SIZE) {
         let subset: Vec<String> = subset_indices
             .iter()
             .map(|idx| factor_names[*idx].clone())
             .collect();
         let predicted = predict_with_factor_subset(candles, &subset);
-        let outcome = evaluate(&predicted, labels);
+        let accuracy = accuracy_of(&predicted, labels);
         match &best {
-            Some((current, _, _)) if outcome.accuracy <= current.accuracy => {}
-            _ => best = Some((outcome, subset, predicted)),
+            Some((current_accuracy, _, _)) if accuracy <= *current_accuracy => {}
+            _ => best = Some((accuracy, subset, predicted)),
         }
     }
 
-    let (outcome, best_factor_set, best_predicted) =
-        best.context("no factor subsets were evaluated")?;
+    let (_, best_factor_set, best_predicted) = best.context("no factor subsets were evaluated")?;
+    let outcome = evaluate(&best_predicted, labels);
     let execution_validity_histogram = build_execution_histogram(candles);
 
     // Sparse pruning of the best factor set. Each factor's weight is the
@@ -206,22 +206,27 @@ fn evaluate(predicted: &[MeceRegimeLabel], truth: &[MeceRegimeLabel]) -> EvalOut
         correct as f64 / total as f64
     };
 
-    let mut confusion_matrix: BTreeMap<String, BTreeMap<String, usize>> = BTreeMap::new();
-    for &truth_label in ALL_LABELS {
-        let row = confusion_matrix
-            .entry(label_str(truth_label).to_string())
-            .or_default();
-        for &predicted_label in ALL_LABELS {
-            row.entry(label_str(predicted_label).to_string())
-                .or_insert(0);
-        }
-    }
+    let label_names: Vec<&'static str> = ALL_LABELS.iter().map(|label| label_str(*label)).collect();
+    let mut confusion_counts = [[0usize; ALL_LABELS.len()]; ALL_LABELS.len()];
     for (pred, truth_label) in predicted.iter().zip(truth.iter()) {
-        let row = confusion_matrix
-            .entry(label_str(*truth_label).to_string())
-            .or_default();
-        let entry = row.entry(label_str(*pred).to_string()).or_insert(0);
-        *entry += 1;
+        let truth_idx = label_index(*truth_label);
+        let pred_idx = label_index(*pred);
+        confusion_counts[truth_idx][pred_idx] += 1;
+    }
+
+    let mut confusion_matrix: BTreeMap<String, BTreeMap<String, usize>> = BTreeMap::new();
+    for (truth_idx, truth_name) in label_names.iter().enumerate() {
+        let row = label_names
+            .iter()
+            .enumerate()
+            .map(|(pred_idx, pred_name)| {
+                (
+                    (*pred_name).to_string(),
+                    confusion_counts[truth_idx][pred_idx],
+                )
+            })
+            .collect();
+        confusion_matrix.insert((*truth_name).to_string(), row);
     }
 
     let mut f1_sum = 0.0;
@@ -265,6 +270,17 @@ fn label_str(label: MeceRegimeLabel) -> &'static str {
         MeceRegimeLabel::Compression => "compression",
         MeceRegimeLabel::TrendContinuation => "trend_continuation",
         MeceRegimeLabel::Unknown => "unknown",
+    }
+}
+
+fn label_index(label: MeceRegimeLabel) -> usize {
+    match label {
+        MeceRegimeLabel::Expansion => 0,
+        MeceRegimeLabel::Manipulation => 1,
+        MeceRegimeLabel::Reversion => 2,
+        MeceRegimeLabel::Compression => 3,
+        MeceRegimeLabel::TrendContinuation => 4,
+        MeceRegimeLabel::Unknown => 5,
     }
 }
 

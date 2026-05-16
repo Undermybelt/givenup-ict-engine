@@ -11,6 +11,7 @@ __pycache__/
 tmp_cycle_seed_spec.json
 *.log
 catboost_info/
+support/docs/experiments/actionable-regime-confidence/runs/
 
 # IBKR bridge user-local configs
 support/scripts/ibkr_bridge/my_config*

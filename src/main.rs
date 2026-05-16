@@ -171,9 +171,10 @@ use ict_engine::application::{
     provider_catalog::provider_status_command,
     reflection::{build_reflection_bundle, ReflectionBundleInput},
     regime::{
-        build_mece_recovery_artifact, build_multi_timeframe_training_observations,
-        native_frame_computations, persist_mece_recovery_artifact,
-        search_factors_for_mece_recovery, weighted_majority_label, weighted_regime_probs,
+        build_mece_recovery_artifact, build_multi_timeframe_training_observations, frame_cache_key,
+        native_frame_computations, native_frame_computations_with_feature_cache,
+        persist_mece_recovery_artifact, search_factors_for_mece_recovery, weighted_majority_label,
+        weighted_regime_probs,
     },
 };
 use ict_engine::backtest::engine::{AmbiguousBarPolicy, ExecutionRealismConfig};
@@ -210,9 +211,10 @@ use ict_engine::factors::{FactorRegistry, WeightUpdater};
 use ict_engine::hmm::{state_name, BaumWelch, ForwardBackward, Viterbi};
 use ict_engine::ict::{
     check_bear_expansion_exists, check_bull_expansion_exists, count_recent_breaks,
-    count_recent_sweeps, detect_cisd, detect_liquidity_pools, detect_liquidity_sweep,
-    detect_order_blocks, detect_structure_breaks, expansion_strength, find_swing_highs,
-    find_swing_lows, find_unfilled_fvgs, find_untested_obs, has_recent_pinbar,
+    count_recent_sweeps, detect_breaker_blocks, detect_cisd, detect_liquidity_pools,
+    detect_liquidity_sweep, detect_mitigation_blocks_default, detect_order_blocks, detect_pinbar,
+    detect_structure_breaks, expansion_strength, find_swing_highs, find_swing_lows,
+    find_unfilled_fvgs, find_untested_obs, has_recent_pinbar,
 };
 use ict_engine::indicators::compute_atr;
 use ict_engine::pda_timeline::{build_pda_timeline, PdaEvent};
@@ -3854,7 +3856,8 @@ fn build_factor_candidate_admission_target_artifact(
         .collect::<Vec<_>>();
     pack_dirs.sort();
 
-    let candidate_set_id = format!("factor-candidate-admission:{symbol}:curated-auto-quant-v1");
+    let candidate_set_root = candidate_pack_root_slug(candidate_pack_root);
+    let candidate_set_id = format!("factor-candidate-admission:{symbol}:{candidate_set_root}");
     let generated_at = Utc::now().to_rfc3339_opts(chrono::SecondsFormat::Secs, true);
     let mut rows = Vec::new();
     for pack_dir in pack_dirs.iter() {
@@ -3979,31 +3982,37 @@ fn build_factor_candidate_admission_target_artifact(
             let calibrated_path_prob = maturity_mask.then_some(raw_path_score.unwrap_or(0.5));
             let baseline = raw_path_score.unwrap_or(0.0);
             let market_key = market.replace(['/', ' '], "_").to_lowercase();
-            let sub_regime = market_key;
-            let sub_sub_regime_or_profit_factor =
+            let fallback_sub_regime = market_key;
+            let fallback_sub_sub_regime_or_profit_factor =
                 format!("{}:{}:{}", family_key, paradigm, timeframe);
-            let profit_factor = format!("{base_profit_factor}@{market}");
-            let branch_path = format!(
-                "{main_regime} -> {sub_regime} -> {sub_sub_regime_or_profit_factor} -> {profit_factor}"
+            let fallback_profit_factor = format!("{base_profit_factor}@{market}");
+            let branch_fields = resolve_factor_candidate_branch_fields(
+                &expression,
+                main_regime,
+                fallback_sub_regime,
+                fallback_sub_sub_regime_or_profit_factor,
+                fallback_profit_factor,
             );
             rows.push(
                 ict_engine::application::orchestration::StructuralPathRankingTargetRow {
                     rank: rows.len() + 1,
                     candidate_set_id: candidate_set_id.clone(),
                     candidate_set_size: 0,
-                    path_id: branch_path.clone(),
+                    path_id: branch_fields.regime_profit_branch_path.clone(),
                     scenario_id: format!("factor_candidate:{candidate_id}:{market}"),
                     path_label: format!(
                         "{} [{}]",
                         value_str(&expression, "display_name").unwrap_or(candidate_id),
                         market
                     ),
-                    regime_profit_branch_path: Some(branch_path),
-                    parent_regime_root: Some(main_regime.to_string()),
-                    main_regime: Some(main_regime.to_string()),
-                    sub_regime: Some(sub_regime),
-                    sub_sub_regime_or_profit_factor: Some(sub_sub_regime_or_profit_factor),
-                    profit_factor: Some(profit_factor),
+                    regime_profit_branch_path: Some(branch_fields.regime_profit_branch_path),
+                    parent_regime_root: Some(branch_fields.main_regime.clone()),
+                    main_regime: Some(branch_fields.main_regime),
+                    sub_regime: Some(branch_fields.sub_regime),
+                    sub_sub_regime_or_profit_factor: Some(
+                        branch_fields.sub_sub_regime_or_profit_factor,
+                    ),
+                    profit_factor: Some(branch_fields.profit_factor),
                     direction: "Observe".to_string(),
                     raw_path_score,
                     calibrated_path_prob,
@@ -4033,6 +4042,32 @@ fn build_factor_candidate_admission_target_artifact(
                     regime_aux_vix3m_level: None,
                     regime_aux_qqq_hv_pct_rank_252: None,
                     regime_aux_vvix_over_vix: None,
+                    ref_previous_day_high: None,
+                    ref_previous_day_low: None,
+                    ref_previous_day_close: None,
+                    ref_current_day_open: None,
+                    ref_previous_week_high: None,
+                    ref_previous_week_low: None,
+                    ref_previous_week_close: None,
+                    ref_current_week_open: None,
+                    ref_previous_month_high: None,
+                    ref_previous_month_low: None,
+                    ref_current_day_gap_upper: None,
+                    ref_current_day_gap_lower: None,
+                    ref_current_week_gap_upper: None,
+                    ref_current_week_gap_lower: None,
+                    ref_recent_week_gap_levels: None,
+                    ob_variant: None,
+                    ob_direction: None,
+                    ob_validation_state: None,
+                    ob_high: None,
+                    ob_low: None,
+                    ob_midpoint: None,
+                    ob_mitigation_count: None,
+                    ob_breaker_confirmed: None,
+                    ob_rejection_confirmed: None,
+                    ob_confidence: None,
+                    ob_fail_closed_reason: None,
                     score_model_family: Some("candidate_pack_transfer_score_v1".to_string()),
                     score_source_kind: Some("factor_candidate_pack_admission_seed".to_string()),
                     score_model_artifact_uri: Some(pack_dir.to_string_lossy().to_string()),
@@ -4383,6 +4418,108 @@ fn read_candidate_pack_json(pack_dir: &std::path::Path, file_name: &str) -> Resu
         .with_context(|| format!("failed to parse candidate pack file '{}'", path.display()))
 }
 
+struct FactorCandidateBranchFields {
+    main_regime: String,
+    sub_regime: String,
+    sub_sub_regime_or_profit_factor: String,
+    profit_factor: String,
+    regime_profit_branch_path: String,
+}
+
+fn resolve_factor_candidate_branch_fields(
+    expression: &Value,
+    fallback_main_regime: &str,
+    fallback_sub_regime: String,
+    fallback_sub_sub_regime_or_profit_factor: String,
+    fallback_profit_factor: String,
+) -> FactorCandidateBranchFields {
+    let contract = expression
+        .get("branch_path_contract")
+        .and_then(Value::as_object);
+    let contract_path = contract
+        .and_then(|value| value.get("regime_profit_branch_path"))
+        .and_then(Value::as_str)
+        .map(str::trim)
+        .filter(|value| !value.is_empty());
+    let parsed_segments = contract_path.and_then(|path| {
+        let parts = path
+            .split("->")
+            .map(str::trim)
+            .filter(|value| !value.is_empty())
+            .collect::<Vec<_>>();
+        (parts.len() == 4).then(|| {
+            (
+                parts[0].to_string(),
+                parts[1].to_string(),
+                parts[2].to_string(),
+                parts[3].to_string(),
+            )
+        })
+    });
+    let contract_str = |key: &str| -> Option<String> {
+        contract
+            .and_then(|value| value.get(key))
+            .and_then(Value::as_str)
+            .map(str::trim)
+            .filter(|value| !value.is_empty())
+            .map(ToString::to_string)
+    };
+    let main_regime = contract_str("main_regime")
+        .or_else(|| parsed_segments.as_ref().map(|segments| segments.0.clone()))
+        .unwrap_or_else(|| fallback_main_regime.to_string());
+    let sub_regime = contract_str("sub_regime")
+        .or_else(|| parsed_segments.as_ref().map(|segments| segments.1.clone()))
+        .unwrap_or(fallback_sub_regime);
+    let sub_sub_regime_or_profit_factor = contract_str("sub_sub_regime_or_profit_factor")
+        .or_else(|| parsed_segments.as_ref().map(|segments| segments.2.clone()))
+        .unwrap_or(fallback_sub_sub_regime_or_profit_factor);
+    let profit_factor = contract_str("profit_factor")
+        .or_else(|| parsed_segments.as_ref().map(|segments| segments.3.clone()))
+        .unwrap_or(fallback_profit_factor);
+    let regime_profit_branch_path = contract_path.map(ToString::to_string).unwrap_or_else(|| {
+        format!(
+            "{main_regime} -> {sub_regime} -> {sub_sub_regime_or_profit_factor} -> {profit_factor}"
+        )
+    });
+
+    FactorCandidateBranchFields {
+        main_regime,
+        sub_regime,
+        sub_sub_regime_or_profit_factor,
+        profit_factor,
+        regime_profit_branch_path,
+    }
+}
+
+fn candidate_pack_root_slug(candidate_pack_root: &str) -> String {
+    let root = std::path::Path::new(candidate_pack_root);
+    let raw = root
+        .file_name()
+        .and_then(|name| name.to_str())
+        .filter(|value| !value.trim().is_empty())
+        .unwrap_or(candidate_pack_root);
+    let mut slug = String::with_capacity(raw.len());
+    let mut previous_was_sep = false;
+    for ch in raw.chars() {
+        if ch.is_ascii_alphanumeric() {
+            slug.push(ch.to_ascii_lowercase());
+            previous_was_sep = false;
+        } else if matches!(ch, '-' | '_') {
+            slug.push(ch);
+            previous_was_sep = false;
+        } else if !previous_was_sep {
+            slug.push('-');
+            previous_was_sep = true;
+        }
+    }
+    let slug = slug.trim_matches('-').trim_matches('_');
+    if slug.is_empty() {
+        "candidate-pack-root".to_string()
+    } else {
+        slug.to_string()
+    }
+}
+
 fn value_str<'a>(value: &'a Value, key: &str) -> Option<&'a str> {
     value.get(key).and_then(Value::as_str)
 }
@@ -4706,6 +4843,30 @@ fn build_market_state_summary_for_candles(candles: &[Candle]) -> Vec<String> {
             .map(|line| format!("market_state_evidence={line}")),
     );
     summary
+}
+
+fn select_market_state_snapshot<'a>(
+    ltf: &'a ict_engine::market_state::MarketStateSnapshot,
+    mtf: Option<&'a ict_engine::market_state::MarketStateSnapshot>,
+    htf: Option<&'a ict_engine::market_state::MarketStateSnapshot>,
+) -> (
+    &'static str,
+    &'a ict_engine::market_state::MarketStateSnapshot,
+) {
+    if ltf.oscillation_box.active {
+        return ("ltf", ltf);
+    }
+    if let Some(snapshot) = mtf {
+        if snapshot.oscillation_box.active {
+            return ("mtf", snapshot);
+        }
+    }
+    if let Some(snapshot) = htf {
+        if snapshot.oscillation_box.active {
+            return ("htf", snapshot);
+        }
+    }
+    ("ltf", ltf)
 }
 
 fn build_structure_ict_context_events_from_native_frames(
@@ -5257,7 +5418,15 @@ fn build_analyze_report(input: BuildAnalyzeReportInput<'_>) -> Result<AnalyzeRep
     let htf_features = build_frame_features(htf)?;
     let mtf_features = build_frame_features(mtf)?;
     let ltf_features = build_frame_features(ltf)?;
-    let native_signals = native_frame_computations(params, build_context.native_frames)?;
+    let mut native_frame_feature_cache = HashMap::new();
+    native_frame_feature_cache.insert(frame_cache_key(htf), htf_features.clone());
+    native_frame_feature_cache.insert(frame_cache_key(mtf), mtf_features.clone());
+    native_frame_feature_cache.insert(frame_cache_key(ltf), ltf_features.clone());
+    let native_signals = native_frame_computations_with_feature_cache(
+        params,
+        build_context.native_frames,
+        &native_frame_feature_cache,
+    )?;
 
     let regime_label = if native_signals.is_empty() {
         combine_regime_labels(&[
@@ -5384,8 +5553,17 @@ fn build_analyze_report(input: BuildAnalyzeReportInput<'_>) -> Result<AnalyzeRep
     let pre_bayes_policy = pre_bayes_evidence_policy();
     let multi_timeframe_evidence =
         parse_multi_timeframe_evidence(build_context.multi_timeframe_summary);
-    let market_state_snapshot =
+    let ltf_market_state_snapshot =
         ict_engine::market_state::MarketStateClassifier::new().classify(native_ltf);
+    let mtf_market_state_snapshot =
+        ict_engine::market_state::MarketStateClassifier::new().classify(native_mtf);
+    let htf_market_state_snapshot =
+        ict_engine::market_state::MarketStateClassifier::new().classify(native_htf);
+    let (market_state_frame_label, market_state_snapshot) = select_market_state_snapshot(
+        &ltf_market_state_snapshot,
+        Some(&mtf_market_state_snapshot),
+        Some(&htf_market_state_snapshot),
+    );
     let market_state_evidence = market_state_evidence_lines(&market_state_snapshot);
     let structure_ict_context =
         build_structure_ict_context_events_from_native_frames(build_context.native_frames);
@@ -5467,6 +5645,9 @@ fn build_analyze_report(input: BuildAnalyzeReportInput<'_>) -> Result<AnalyzeRep
             .rationale
             .push(format!("market_state_source={line}"));
     }
+    pre_bayes_evidence_filter.rationale.push(format!(
+        "market_state_source=selected_frame={market_state_frame_label}"
+    ));
     pre_bayes_evidence_filter.evidence_assignments.insert(
         "market_state_primary_regime".to_string(),
         format!("{:?}", market_state_snapshot.primary_regime),
@@ -5612,7 +5793,8 @@ fn build_analyze_report(input: BuildAnalyzeReportInput<'_>) -> Result<AnalyzeRep
             .uncertainties
             .push(format!("hybrid_duration_model={model}"));
     }
-    let price_action = build_price_action_section(native_mtf, native_ltf, &atr_ltf, &fvgs, &obs);
+    let price_action =
+        build_price_action_section(native_htf, native_mtf, native_ltf, &atr_ltf, &fvgs, &obs);
     let technical_price =
         build_technical_price_section(native_ltf, None, None, build_context.auxiliary);
     let smt_correlation = if let Some(paired) = build_context.paired_candles {
@@ -6011,6 +6193,33 @@ fn build_analyze_report(input: BuildAnalyzeReportInput<'_>) -> Result<AnalyzeRep
                     canonical_structural_probabilities: canonical_structural_regime_posterior
                         .probabilities
                         .clone(),
+                    order_block_variant: Some(
+                        ict_engine::state::OrderBlockVariantRuntimeEvidence {
+                            factor_name: price_action.order_block_variant.factor_name.clone(),
+                            variant: price_action.order_block_variant.variant.clone(),
+                            direction: price_action.order_block_variant.direction,
+                            high: price_action.order_block_variant.high,
+                            low: price_action.order_block_variant.low,
+                            midpoint: price_action.order_block_variant.midpoint,
+                            validation_state: price_action
+                                .order_block_variant
+                                .validation_state
+                                .clone(),
+                            mitigation_count: price_action.order_block_variant.mitigation_count,
+                            breaker_confirmed: price_action.order_block_variant.breaker_confirmed,
+                            rejection_confirmed: price_action
+                                .order_block_variant
+                                .rejection_confirmed,
+                            confidence: price_action.order_block_variant.confidence,
+                            fail_closed_reason: price_action
+                                .order_block_variant
+                                .fail_closed_reason
+                                .clone(),
+                        },
+                    ),
+                    reference_liquidity_levels: Some(
+                        price_action.reference_liquidity_levels.clone(),
+                    ),
                     execution_readiness: Some(execution_artifact.features.execution_readiness),
                     execution_gate_status: Some(execution_artifact.hard_gate_status.clone()),
                     prediction_edge_share: Some(execution_artifact.features.prediction_edge_share),
@@ -6328,6 +6537,7 @@ fn build_analyze_report(input: BuildAnalyzeReportInput<'_>) -> Result<AnalyzeRep
 }
 
 fn build_price_action_section(
+    htf: &[Candle],
     mtf: &[Candle],
     ltf: &[Candle],
     atr_ltf: &[f64],
@@ -6366,6 +6576,14 @@ fn build_price_action_section(
             .unwrap_or(std::cmp::Ordering::Equal)
     });
     let latest_liquidity_sweep = sweeps.last();
+    let liquidity_pool_texture =
+        classify_liquidity_pool_texture(mtf, atr_ltf, nearest_liquidity_pool);
+    let (reference_source, reference_source_frame) =
+        select_reference_liquidity_level_source(htf, mtf, ltf);
+    let reference_liquidity_levels = ict_engine::ict::detect_reference_liquidity_levels(
+        reference_source,
+        reference_source_frame,
+    );
     let bullish_cisds = detect_cisd(ltf, &detect_order_blocks(ltf), 1);
     let bullish_cisd = bullish_cisds.iter().any(|cisd| {
         cisd.direction == Direction::Bull && cisd.confirm_bar >= ltf.len().saturating_sub(10)
@@ -6386,6 +6604,7 @@ fn build_price_action_section(
             .unwrap_or(Direction::Neutral)
     };
     let rejection_block_present = has_recent_pinbar(ltf, atr_ltf, 5);
+    let order_block_variant = classify_order_block_variant(mtf, atr_ltf, last_close, obs);
     let narrative = if structure_bias == Direction::Bull {
         "bullish_price_action_with_higher_probability_if_execution_confirms".to_string()
     } else if structure_bias == Direction::Bear {
@@ -6409,18 +6628,252 @@ fn build_price_action_section(
         expansion_strength: expansion_strength(mtf, 20),
         liquidity_sweeps_recent,
         nearest_liquidity_pool_level: nearest_liquidity_pool.map(|pool| pool.price_level),
+        liquidity_pool_texture,
         latest_liquidity_sweep_level: latest_liquidity_sweep.map(|sweep| sweep.pool_price),
+        reference_liquidity_levels,
         open_fvgs: fvgs.len(),
         nearest_open_fvg_top: nearest_open_fvg.map(|fvg| fvg.top),
         nearest_open_fvg_bottom: nearest_open_fvg.map(|fvg| fvg.bottom),
         untested_order_blocks: obs.len(),
         nearest_untested_order_block_high: nearest_untested_order_block.map(|ob| ob.high),
         nearest_untested_order_block_low: nearest_untested_order_block.map(|ob| ob.low),
+        order_block_variant,
         bullish_cisd,
         bearish_cisd,
         rejection_block_present,
         narrative,
     }
+}
+
+fn select_reference_liquidity_level_source<'a>(
+    htf: &'a [Candle],
+    mtf: &'a [Candle],
+    ltf: &'a [Candle],
+) -> (&'a [Candle], &'static str) {
+    let mut best = (ltf, "ltf", candle_time_span_seconds(ltf), ltf.len());
+    for candidate in [
+        (mtf, "mtf", candle_time_span_seconds(mtf), mtf.len()),
+        (htf, "htf", candle_time_span_seconds(htf), htf.len()),
+    ] {
+        if candidate.2 > best.2 || (candidate.2 == best.2 && candidate.3 > best.3) {
+            best = candidate;
+        }
+    }
+    (best.0, best.1)
+}
+
+fn candle_time_span_seconds(candles: &[Candle]) -> i64 {
+    match (candles.first(), candles.last()) {
+        (Some(first), Some(last)) => last
+            .timestamp
+            .signed_duration_since(first.timestamp)
+            .num_seconds()
+            .max(0),
+        _ => 0,
+    }
+}
+
+fn classify_liquidity_pool_texture(
+    candles: &[Candle],
+    atr: &[f64],
+    pool: Option<&ict_engine::types::LiquidityPool>,
+) -> ict_engine::analyze_sections::LiquidityPoolTextureEvidence {
+    let Some(pool) = pool else {
+        return ict_engine::analyze_sections::LiquidityPoolTextureEvidence::fail_closed(
+            "no_liquidity_pool_detected",
+        );
+    };
+    let Some(atr_last) = atr
+        .iter()
+        .rev()
+        .copied()
+        .find(|value| value.is_finite() && *value > 0.0)
+    else {
+        return ict_engine::analyze_sections::LiquidityPoolTextureEvidence::fail_closed(
+            "missing_atr_for_liquidity_pool_texture",
+        );
+    };
+    if candles.len() < 5 {
+        return ict_engine::analyze_sections::LiquidityPoolTextureEvidence::fail_closed(
+            "insufficient_candles_for_liquidity_pool_texture",
+        );
+    }
+
+    let tolerance = (atr_last * 0.35).max(pool.price_level.abs() * 0.0002);
+    let touch_indices = candles
+        .iter()
+        .enumerate()
+        .filter_map(|(index, candle)| {
+            let touched = match pool.pool_type {
+                Direction::Bear => (candle.high - pool.price_level).abs() <= tolerance,
+                Direction::Bull => (candle.low - pool.price_level).abs() <= tolerance,
+                Direction::Neutral => {
+                    candle.low <= pool.price_level + tolerance
+                        && candle.high >= pool.price_level - tolerance
+                }
+            };
+            touched.then_some(index)
+        })
+        .collect::<Vec<_>>();
+    let touch_count = pool.sp_count.max(touch_indices.len());
+    if touch_count < 2 {
+        return ict_engine::analyze_sections::LiquidityPoolTextureEvidence::fail_closed(
+            "insufficient_pool_touches_for_texture",
+        );
+    }
+
+    let spacing_consistency = spacing_consistency_score(&touch_indices);
+    let consistency_for_texture = spacing_consistency.unwrap_or(0.35);
+    let texture = if touch_count >= 3 && consistency_for_texture >= 0.65 {
+        "smooth"
+    } else if consistency_for_texture < 0.4 {
+        "jagged"
+    } else {
+        "mixed"
+    };
+    let touch_score = (touch_count as f64 / 6.0).min(1.0);
+    let clean_sweep_likelihood =
+        (0.20 + touch_score * 0.35 + consistency_for_texture * 0.35).clamp(0.0, 0.90);
+    let confidence = (0.32 + touch_score * 0.26 + consistency_for_texture * 0.22).clamp(0.0, 0.82);
+
+    ict_engine::analyze_sections::LiquidityPoolTextureEvidence {
+        factor_name: "liquidity_pool_texture".to_string(),
+        texture: texture.to_string(),
+        level: Some(pool.price_level),
+        high: Some(pool.price_level + tolerance),
+        low: Some(pool.price_level - tolerance),
+        touch_count,
+        spacing_consistency,
+        clean_sweep_likelihood: Some(clean_sweep_likelihood),
+        confidence,
+        fail_closed_reason: None,
+    }
+}
+
+fn spacing_consistency_score(indices: &[usize]) -> Option<f64> {
+    if indices.len() < 3 {
+        return None;
+    }
+    let gaps = indices
+        .windows(2)
+        .filter_map(|pair| pair[1].checked_sub(pair[0]))
+        .filter(|gap| *gap > 0)
+        .map(|gap| gap as f64)
+        .collect::<Vec<_>>();
+    if gaps.len() < 2 {
+        return None;
+    }
+    let mean = gaps.iter().sum::<f64>() / gaps.len() as f64;
+    if mean <= f64::EPSILON {
+        return None;
+    }
+    let variance = gaps
+        .iter()
+        .map(|gap| {
+            let diff = gap - mean;
+            diff * diff
+        })
+        .sum::<f64>()
+        / gaps.len() as f64;
+    let cv = variance.sqrt() / mean;
+    Some((1.0 - cv).clamp(0.0, 1.0))
+}
+
+fn classify_order_block_variant(
+    candles: &[Candle],
+    atr: &[f64],
+    last_close: f64,
+    obs: &[ict_engine::types::OrderBlock],
+) -> ict_engine::analyze_sections::OrderBlockVariantEvidence {
+    if candles.len() < 4 {
+        return ict_engine::analyze_sections::OrderBlockVariantEvidence::fail_closed(
+            "insufficient_candles_for_order_block_variant",
+        );
+    }
+
+    let nearest_ob = obs.iter().min_by(|left, right| {
+        order_block_distance_to_price(left, last_close)
+            .partial_cmp(&order_block_distance_to_price(right, last_close))
+            .unwrap_or(std::cmp::Ordering::Equal)
+    });
+    let breakers = detect_breaker_blocks(candles);
+    if let Some(breaker) = breakers.last() {
+        return ict_engine::analyze_sections::OrderBlockVariantEvidence {
+            factor_name: "order_block_variant_classifier".to_string(),
+            variant: "breaker_block".to_string(),
+            direction: breaker.direction,
+            high: Some(breaker.high),
+            low: Some(breaker.low),
+            midpoint: Some((breaker.high + breaker.low) / 2.0),
+            validation_state: "breaker_confirmed".to_string(),
+            mitigation_count: detect_mitigation_blocks_default(candles).len(),
+            breaker_confirmed: true,
+            rejection_confirmed: false,
+            confidence: 0.78,
+            fail_closed_reason: None,
+        };
+    }
+
+    let mitigations = detect_mitigation_blocks_default(candles);
+    if let Some(mitigation) = mitigations.last() {
+        return ict_engine::analyze_sections::OrderBlockVariantEvidence {
+            factor_name: "order_block_variant_classifier".to_string(),
+            variant: "mitigation_block".to_string(),
+            direction: mitigation.direction,
+            high: Some(mitigation.level),
+            low: Some(mitigation.level),
+            midpoint: Some(mitigation.level),
+            validation_state: "mitigation_confirmed".to_string(),
+            mitigation_count: mitigations.len(),
+            breaker_confirmed: false,
+            rejection_confirmed: false,
+            confidence: 0.64,
+            fail_closed_reason: None,
+        };
+    }
+
+    if let Some(rejection) = detect_pinbar(candles, atr).last() {
+        let candle = &candles[rejection.bar_index];
+        return ict_engine::analyze_sections::OrderBlockVariantEvidence {
+            factor_name: "order_block_variant_classifier".to_string(),
+            variant: "rejection_block".to_string(),
+            direction: rejection.direction,
+            high: Some(candle.high),
+            low: Some(candle.low),
+            midpoint: Some(candle.midpoint()),
+            validation_state: "rejection_confirmed".to_string(),
+            mitigation_count: 0,
+            breaker_confirmed: false,
+            rejection_confirmed: true,
+            confidence: 0.58,
+            fail_closed_reason: None,
+        };
+    }
+
+    if let Some(ob) = nearest_ob {
+        return ict_engine::analyze_sections::OrderBlockVariantEvidence {
+            factor_name: "order_block_variant_classifier".to_string(),
+            variant: "order_block".to_string(),
+            direction: ob.ob_type,
+            high: Some(ob.high),
+            low: Some(ob.low),
+            midpoint: Some((ob.high + ob.low) / 2.0),
+            validation_state: if ob.tested {
+                "tested_needs_followup".to_string()
+            } else {
+                "untested_active".to_string()
+            },
+            mitigation_count: 0,
+            breaker_confirmed: false,
+            rejection_confirmed: false,
+            confidence: if ob.tested { 0.38 } else { 0.46 },
+            fail_closed_reason: None,
+        };
+    }
+
+    ict_engine::analyze_sections::OrderBlockVariantEvidence::fail_closed(
+        "no_order_block_variant_detected",
+    )
 }
 
 fn fvg_distance_to_price(fvg: &ict_engine::types::FairValueGap, price: f64) -> f64 {
@@ -7438,6 +7891,48 @@ mod tests {
             output_format,
             refresh_workflow_snapshot,
         )
+    }
+
+    fn texture_test_candle(ts: i64, open: f64, high: f64, low: f64, close: f64) -> Candle {
+        Candle {
+            timestamp: chrono::Utc.timestamp_opt(ts, 0).single().unwrap(),
+            open,
+            high,
+            low,
+            close,
+            volume: 1.0,
+        }
+    }
+
+    #[test]
+    fn test_classify_liquidity_pool_texture_scores_smooth_pool() {
+        let candles = vec![
+            texture_test_candle(1, 98.0, 98.5, 97.5, 98.2),
+            texture_test_candle(2, 98.2, 100.1, 98.0, 99.3),
+            texture_test_candle(3, 99.2, 99.4, 98.4, 98.8),
+            texture_test_candle(4, 98.8, 100.0, 98.5, 99.2),
+            texture_test_candle(5, 99.2, 99.5, 98.7, 99.1),
+            texture_test_candle(6, 99.1, 100.2, 98.9, 99.4),
+            texture_test_candle(7, 99.4, 99.7, 98.8, 99.0),
+            texture_test_candle(8, 99.0, 100.1, 98.7, 99.2),
+        ];
+        let pool = ict_engine::types::LiquidityPool {
+            price_level: 100.0,
+            sp_count: 4,
+            pool_type: Direction::Bear,
+        };
+        let atr = vec![2.0; candles.len()];
+
+        let evidence = classify_liquidity_pool_texture(&candles, &atr, Some(&pool));
+
+        assert_eq!(evidence.factor_name, "liquidity_pool_texture");
+        assert_eq!(evidence.texture, "smooth");
+        assert_eq!(evidence.level, Some(100.0));
+        assert!(evidence.touch_count >= 4);
+        assert!(evidence.spacing_consistency.unwrap() > 0.9);
+        assert!(evidence.clean_sweep_likelihood.unwrap() > 0.75);
+        assert!(evidence.confidence > 0.65);
+        assert!(evidence.fail_closed_reason.is_none());
     }
 
     #[test]
@@ -8795,6 +9290,9 @@ mod tests {
             total_return: 0.07,
             trade_count: 12,
             conformal_coverage_1sigma: 0.68,
+            conformal_miscoverage_1sigma: 0.22,
+            mean_prediction_interval_half_width: 0.05,
+            worst_window_miscoverage: 0.14,
             regime_break_penalty: 0.11,
             structural_break_score: 0.18,
             structural_break_index: Some(21),
@@ -8833,6 +9331,10 @@ mod tests {
             Some("trend")
         );
         assert_eq!(snapshot.canonical_structural_confidence, Some(0.78));
+        assert_eq!(snapshot.conformal_coverage_1sigma, Some(0.68));
+        assert_eq!(snapshot.conformal_miscoverage_1sigma, Some(0.22));
+        assert_eq!(snapshot.mean_prediction_interval_half_width, Some(0.05));
+        assert_eq!(snapshot.worst_window_miscoverage, Some(0.14));
     }
 
     #[test]
@@ -8842,6 +9344,7 @@ mod tests {
             research_objective: "generic".to_string(),
             aggregate_return: 0.04,
             feedback_records_applied: 1,
+            backtest_conformal_coverage_1sigma: 0.74,
             recommended_next_command: "ict-engine factor-backtest".to_string(),
             canonical_structural_regime_posterior: Some(
                 ict_engine::state::CanonicalStructuralRegimePosterior {
@@ -8872,6 +9375,7 @@ mod tests {
                 .copied(),
             Some(0.61)
         );
+        assert_eq!(snapshot.conformal_coverage_1sigma, Some(0.74));
     }
 
     #[test]
@@ -15355,6 +15859,18 @@ mod tests {
     }
 
     #[test]
+    fn test_select_market_state_snapshot_prefers_smallest_active_box_frame() {
+        let ltf = ict_engine::market_state::MarketStateSnapshot::default();
+        let mtf = ict_engine::market_state::MarketStateSnapshot::default();
+        let mut htf = ict_engine::market_state::MarketStateSnapshot::default();
+        htf.oscillation_box.active = true;
+
+        let (label, selected) = select_market_state_snapshot(&ltf, Some(&mtf), Some(&htf));
+        assert_eq!(label, "htf");
+        assert!(selected.oscillation_box.active);
+    }
+
+    #[test]
     fn test_resolve_multi_timeframe_inputs_auto_detects_cleaned_siblings() {
         let temp = tempfile::tempdir().unwrap();
         for interval in MULTI_TIMEFRAME_INTERVALS {
@@ -16472,12 +16988,9 @@ mod tests {
         );
         assert_eq!(
             value["current_status"]["top_level_command_source"],
-            "historical_data_selection_gate"
+            "blocking_truth"
         );
-        assert_eq!(
-            value["what_you_should_do_now_source"],
-            "historical_data_selection_gate"
-        );
+        assert_eq!(value["what_you_should_do_now_source"], "blocking_truth");
         assert_eq!(value["historical_data_candidates"][0], "/tmp/a.json");
         assert!(value["historical_data_request_template"]
             .as_str()
@@ -17332,7 +17845,7 @@ mod tests {
             "support/examples/factor_candidate_packs/curated-auto-quant-v1",
         )
         .unwrap();
-        assert_eq!(payload["summary"]["candidate_pack_count"].as_u64(), Some(7));
+        assert_eq!(payload["summary"]["candidate_pack_count"].as_u64(), Some(8));
         let candidates = payload["candidates"].as_array().unwrap();
         let vrp = candidates
             .iter()
@@ -17355,7 +17868,11 @@ mod tests {
             "FACTOR_CANDIDATES",
         )
         .unwrap();
-        assert_eq!(artifact.rows.len(), 35);
+        assert_eq!(artifact.rows.len(), 41);
+        assert_eq!(
+            artifact.candidate_set_id,
+            "factor-candidate-admission:FACTOR_CANDIDATES:curated-auto-quant-v1"
+        );
         let vrp = artifact
             .rows
             .iter()
@@ -17394,6 +17911,119 @@ mod tests {
     }
 
     #[test]
+    fn test_build_factor_candidate_admission_target_artifact_prefers_branch_path_contract() {
+        let temp = tempfile::tempdir().unwrap();
+        let pack_dir = temp
+            .path()
+            .join("family_f_vrp_real_ivhv_qqq_observation_v1");
+        std::fs::create_dir(&pack_dir).unwrap();
+        std::fs::write(
+            pack_dir.join("factor_expression.json"),
+            serde_json::json!({
+                "candidate_id": "family_f_vrp_real_ivhv_qqq_observation_v1",
+                "display_name": "QQQ real IV/HV VRP observation",
+                "family": "family_f_vrp",
+                "paradigm": "real_iv_hv_vrp_observation",
+                "base_timeframe": "1d",
+                "expected_regime": "TrendExpansion",
+                "branch_path_contract": {
+                    "main_regime": "TrendExpansion",
+                    "sub_regime": "VolatilityCompression",
+                    "sub_sub_regime_or_profit_factor": "iv_hv_compression_regime",
+                    "profit_factor": "family_f_vrp_real_ivhv_qqq_observation_v1",
+                    "regime_profit_branch_path": "TrendExpansion -> VolatilityCompression -> iv_hv_compression_regime -> family_f_vrp_real_ivhv_qqq_observation_v1"
+                }
+            })
+            .to_string(),
+        )
+        .unwrap();
+        std::fs::write(
+            pack_dir.join("factor_eval_grid_summary.json"),
+            serde_json::json!({
+                "aggregate_metrics": {
+                    "sharpe": 0.25
+                },
+                "trade_density_summary": {
+                    "aggregate_label": "observation_only"
+                },
+                "breadth_matrix": {
+                    "QQQ": {
+                        "sharpe": 0.25,
+                        "trade_density_label": "observation_only"
+                    }
+                }
+            })
+            .to_string(),
+        )
+        .unwrap();
+        std::fs::write(
+            pack_dir.join("transfer_score.json"),
+            serde_json::json!({
+                "status": "single_market_observation",
+                "overall_transfer_score": 0.58,
+                "market_evidence": {
+                    "QQQ": {
+                        "sharpe": 0.25
+                    }
+                }
+            })
+            .to_string(),
+        )
+        .unwrap();
+
+        let artifact = build_factor_candidate_admission_target_artifact(
+            temp.path().to_str().unwrap(),
+            "FAMILY_F_VRP_REAL_IVHV_YF",
+        )
+        .unwrap();
+
+        let qqq = artifact
+            .rows
+            .iter()
+            .find(|row| {
+                row.scenario_id == "factor_candidate:family_f_vrp_real_ivhv_qqq_observation_v1:QQQ"
+            })
+            .unwrap();
+        assert_eq!(qqq.main_regime.as_deref(), Some("TrendExpansion"));
+        assert_eq!(qqq.sub_regime.as_deref(), Some("VolatilityCompression"));
+        assert_eq!(
+            qqq.sub_sub_regime_or_profit_factor.as_deref(),
+            Some("iv_hv_compression_regime")
+        );
+        assert_eq!(
+            qqq.profit_factor.as_deref(),
+            Some("family_f_vrp_real_ivhv_qqq_observation_v1")
+        );
+        assert_eq!(
+            qqq.regime_profit_branch_path.as_deref(),
+            Some("TrendExpansion -> VolatilityCompression -> iv_hv_compression_regime -> family_f_vrp_real_ivhv_qqq_observation_v1")
+        );
+        assert_eq!(
+            qqq.path_id,
+            qqq.regime_profit_branch_path.as_deref().unwrap()
+        );
+    }
+
+    #[test]
+    fn test_build_factor_candidate_admission_target_artifact_uses_nondefault_root_slug() {
+        let artifact = build_factor_candidate_admission_target_artifact(
+            "support/examples/factor_candidate_packs/board-b-liquidity-pool-texture-v1",
+            "LIQUIDITY_POOL_TEXTURE",
+        )
+        .unwrap();
+        assert_eq!(artifact.rows.len(), 11);
+        assert_eq!(
+            artifact.candidate_set_id,
+            "factor-candidate-admission:LIQUIDITY_POOL_TEXTURE:board-b-liquidity-pool-texture-v1"
+        );
+        assert!(artifact.rows.iter().any(|row| {
+            row.regime_profit_branch_path
+                .as_deref()
+                .is_some_and(|value| value.starts_with("Range -> "))
+        }));
+    }
+
+    #[test]
     fn test_export_factor_candidate_admission_targets_writes_policy_training_target() {
         let temp = tempfile::tempdir().unwrap();
 
@@ -17404,7 +18034,7 @@ mod tests {
         )
         .unwrap();
 
-        assert_eq!(summary.rows, 35);
+        assert_eq!(summary.rows, 41);
         assert!(summary.mature_rows >= 30);
         assert!(summary.rows_with_training_weight >= 30);
         assert!(summary.rows_with_calibrated_path_prob >= 30);
@@ -17417,9 +18047,9 @@ mod tests {
         )
         .unwrap();
         assert!(status.factor_candidate_packs.inventory_ready);
-        assert_eq!(status.factor_candidate_packs.candidate_pack_count, 7);
+        assert_eq!(status.factor_candidate_packs.candidate_pack_count, 8);
         assert!(status.structural_path_ranking_target.export_ready);
-        assert_eq!(status.structural_path_ranking_target.rows, 35);
+        assert_eq!(status.structural_path_ranking_target.rows, 41);
         assert!(status.structural_path_ranking_target.mature_rows >= 30);
         assert!(status.structural_path_ranking_target.trainer_artifact_ready);
         assert_eq!(
@@ -17552,9 +18182,9 @@ mod tests {
         )
         .unwrap();
         assert!(status.factor_candidate_packs.inventory_ready);
-        assert_eq!(status.factor_candidate_packs.candidate_pack_count, 7);
+        assert_eq!(status.factor_candidate_packs.candidate_pack_count, 8);
         assert!(status.structural_path_ranking_target.export_ready);
-        assert_eq!(status.structural_path_ranking_target.rows, 35);
+        assert_eq!(status.structural_path_ranking_target.rows, 41);
         assert!(status.regime_confidence_assets.inventory_ready);
         assert_eq!(status.regime_confidence_assets.asset_count, 18);
         assert_eq!(

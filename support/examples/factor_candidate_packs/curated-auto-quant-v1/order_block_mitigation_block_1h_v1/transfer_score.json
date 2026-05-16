@@ -1,0 +1,58 @@
+{
+  "schema_version": "transfer-score/v1",
+  "strategy_name": "OrderBlockVariantMitigationBlock1h",
+  "covered_market_count": 5,
+  "covered_markets": [
+    "Binance/BTCUSDT",
+    "Bybit/BTCUSDT",
+    "IBKR/SPY",
+    "Kraken/XBTUSD",
+    "yfinance/SPY"
+  ],
+  "markets_without_trade_counts": [],
+  "status": "cross_market_candidate",
+  "overall_transfer_score": 0.741,
+  "average_sharpe": null,
+  "average_trade_count": 68,
+  "average_expectancy_r": 1.9696,
+  "timeframe": "1h",
+  "market_evidence": {
+    "Binance/BTCUSDT": {
+      "trade_count": 226,
+      "win_rate_pct": 99.115044,
+      "expectancy_r": 1.9672,
+      "evidence_source": "order_block_variant_classifier_packet"
+    },
+    "Bybit/BTCUSDT": {
+      "trade_count": 24,
+      "win_rate_pct": 100.0,
+      "expectancy_r": 2.0,
+      "evidence_source": "order_block_variant_classifier_packet"
+    },
+    "IBKR/SPY": {
+      "trade_count": 46,
+      "win_rate_pct": 95.652174,
+      "expectancy_r": 1.8806,
+      "evidence_source": "order_block_variant_classifier_packet"
+    },
+    "Kraken/XBTUSD": {
+      "trade_count": 12,
+      "win_rate_pct": 100.0,
+      "expectancy_r": 2.0,
+      "evidence_source": "order_block_variant_classifier_packet"
+    },
+    "yfinance/SPY": {
+      "trade_count": 34,
+      "win_rate_pct": 100.0,
+      "expectancy_r": 2.0,
+      "evidence_source": "order_block_variant_classifier_packet"
+    }
+  },
+  "evidence_source": "order_block_variant_classifier_packet",
+  "known_limits": [
+    "confirmation_only_context_not_standalone_actionable",
+    "no_tradingviewremix_specific_rows_yet",
+    "generic_promotion_blocked_without_NQ_ES_YM_RTY_XAU_coverage",
+    "requires_MSS_or_CISD_plus_displacement_before_live_entry_claim"
+  ]
+}

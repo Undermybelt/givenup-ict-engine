@@ -325,6 +325,8 @@ pub struct StructuralFeedbackSubmission {
     pub protocol_version: String,
     pub recommendation_id: String,
     pub recommended_at: String,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub source_run_id: Option<String>,
     pub symbol: String,
     pub node_id: String,
     pub branch_id: String,

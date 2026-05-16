@@ -1,0 +1,42 @@
+{
+  "schema_version": "transfer-score/v1",
+  "strategy_name": "options_dealer_context_observation_packet",
+  "candidate_id": "options_dealer_context_yf_chain_observation_v1",
+  "covered_market_count": 1,
+  "covered_markets": [
+    "QQQ options chain"
+  ],
+  "markets_without_trade_counts": [
+    "NQ/ES/YM/RTY",
+    "SPY/QQQ/DIA/IWM repeated windows",
+    "BTC/ETH listed options provider"
+  ],
+  "status": "fail_closed_single_snapshot_observation_only",
+  "overall_transfer_score": 0.0,
+  "average_sharpe": null,
+  "average_trade_count": 0.0,
+  "timeframe": "options_chain_snapshot",
+  "market_evidence": {
+    "QQQ options chain": {
+      "status": "provider_backed_observation_only",
+      "source_row_count": 522,
+      "normalized_row_count": 490,
+      "gamma_wall": 730.0,
+      "put_wall": 730.0,
+      "call_wall": 715.0,
+      "dealer_gamma_regime": "positive_gamma_pin_risk",
+      "zero_dte_pressure": "none",
+      "skew_stress": 0.273875,
+      "trade_count": 0
+    }
+  },
+  "branch_path_contract": {
+    "main_regime": "RangeConsolidation",
+    "sub_regime": "OptionsDealerContext",
+    "sub_sub_regime_or_profit_factor": "yfinance_option_chain_gamma_wall",
+    "profit_factor": "options_dealer_context_yf_chain_observation_v1",
+    "regime_profit_branch_path": "RangeConsolidation -> OptionsDealerContext -> yfinance_option_chain_gamma_wall -> options_dealer_context_yf_chain_observation_v1"
+  },
+  "evidence_source": "support/docs/experiments/actionable-regime-confidence/runs/20260516T205658+0800-codex-board-b-options-dealer-yf-chain-packet-v1/materials/options_dealer_context_packet.json",
+  "fail_closed_reason": "single yfinance QQQ option-chain snapshot has no realized outcomes, no repeated windows, no cross-provider parity, and must not be learned as trade feedback"
+}

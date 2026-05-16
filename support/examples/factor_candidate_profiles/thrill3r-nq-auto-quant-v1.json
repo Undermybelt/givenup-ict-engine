@@ -242,6 +242,20 @@
       "evidence_window": "freqtrade 8Y NQ 5m: 2018-01-03 -> 2025-12-31"
     },
     {
+      "candidate_id": "order_block_mitigation_block_1h_v1",
+      "artifact_source": {
+        "candidate_pack_dir": "support/examples/factor_candidate_packs/curated-auto-quant-v1/order_block_mitigation_block_1h_v1"
+      },
+      "target_market_hypothesis": [
+        "BTCUSDT",
+        "SPY",
+        "XBTUSD"
+      ],
+      "base_timeframe": "1h",
+      "evidence_window": "2025-01..2026-05 retained provider outcome rows extracted into repo candidate pack",
+      "summary": "Transition-rooted order-block mitigation context slice extracted from retained multi-provider outcome rows; confirmation-only, not standalone actionable."
+    },
+    {
       "candidate_id": "family_a_killzone_breakout_15m_v1",
       "artifact_source": {
         "strategy_library_json": "/tmp/ict-engine-family-a-nq-15m-profile/.deps/auto-quant/strategy_library_15m.json"

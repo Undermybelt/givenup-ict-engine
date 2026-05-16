@@ -14,6 +14,7 @@ pub mod pda_state;
 pub mod propulsion;
 pub mod pythagorean_extension;
 pub mod rb;
+pub mod reference_levels;
 pub mod swing;
 pub mod volume_imbalance;
 
@@ -33,5 +34,6 @@ pub use pda_state::*;
 pub use propulsion::*;
 pub use pythagorean_extension::*;
 pub use rb::*;
+pub use reference_levels::*;
 pub use swing::*;
 pub use volume_imbalance::*;

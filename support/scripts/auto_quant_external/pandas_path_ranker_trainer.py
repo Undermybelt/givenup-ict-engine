@@ -51,6 +51,7 @@ try:
     HAS_CATBOOST = True
 except ImportError:
     HAS_CATBOOST = False
+    cb = None
 
 # 用户特定特征（VRP V2 相关）
 VRP_V2_FEATURES = [
@@ -124,7 +125,7 @@ def load_target_csv(path: str) -> pd.DataFrame:
     return df
 
 
-def prepare_features(df: pd.DataFrame) -> tuple:
+def prepare_features(df: pd.DataFrame, training_mode: str = "classification") -> tuple:
     """
     准备特征矩阵。
     返回 (X, y, weights, available_features)
@@ -199,6 +200,9 @@ def prepare_features(df: pd.DataFrame) -> tuple:
     if len(df_train) == 0:
         print(f"[features] No mature samples, using all {len(df)} samples")
         df_train = df.copy()
+
+    if training_mode == "ranking" and "candidate_set_id" not in df_train.columns:
+        raise ValueError("candidate_set_id column is required for ranking mode")
     
     # 构建特征矩阵
     if available_features:
@@ -230,7 +234,15 @@ def prepare_features(df: pd.DataFrame) -> tuple:
     return X, y, weights, available_features
 
 
-def train_catboost(X, y, weights, output_dir: Path, cat_features: list = None):
+def train_catboost(
+    X,
+    y,
+    weights,
+    output_dir: Path,
+    cat_features: list = None,
+    training_mode: str = "classification",
+    group_ids=None,
+):
     """训练 CatBoost 模型"""
     if not HAS_CATBOOST:
         raise RuntimeError(
@@ -246,16 +258,28 @@ def train_catboost(X, y, weights, output_dir: Path, cat_features: list = None):
                 cat_indices.append(i)
     
     # 训练
-    model = cb.CatBoostClassifier(
-        iterations=100,
-        depth=4,
-        learning_rate=0.1,
-        loss_function="Logloss" if len(np.unique(y)) == 2 else "MultiClass",
-        verbose=False,
-        cat_features=cat_indices if cat_indices else None,
-    )
-    
-    model.fit(X, y, sample_weight=weights)
+    if training_mode == "ranking":
+        if group_ids is None:
+            raise ValueError("group_ids are required for ranking mode")
+        model = cb.CatBoostRanker(
+            iterations=100,
+            depth=4,
+            learning_rate=0.1,
+            loss_function="YetiRankPairwise",
+            verbose=False,
+            cat_features=cat_indices if cat_indices else None,
+        )
+        model.fit(X, y, group_id=group_ids, sample_weight=weights)
+    else:
+        model = cb.CatBoostClassifier(
+            iterations=100,
+            depth=4,
+            learning_rate=0.1,
+            loss_function="Logloss" if len(np.unique(y)) == 2 else "MultiClass",
+            verbose=False,
+            cat_features=cat_indices if cat_indices else None,
+        )
+        model.fit(X, y, sample_weight=weights)
     
     # 保存
     model_path = output_dir / "catboost_model.cbm"
@@ -548,6 +572,12 @@ def main():
     parser.add_argument("--model-dir", help="Directory with existing model (for --apply)")
     parser.add_argument("--output-scores", help="Output scores CSV (for --apply or CatBoost registration metadata)")
     parser.add_argument("--model-family", default="catboost", choices=["catboost"])
+    parser.add_argument(
+        "--training-mode",
+        default="classification",
+        choices=["classification", "ranking"],
+        help="Training objective. ranking requires candidate_set_id in the target CSV",
+    )
     parser.add_argument("--create-template", action="store_true", help="Create user weights template")
     parser.add_argument(
         "--user-weights",
@@ -581,7 +611,7 @@ def main():
     
     # 训练模式
     df = load_target_csv(args.target_csv)
-    X, y, weights, features = prepare_features(df)
+    X, y, weights, features = prepare_features(df, training_mode=args.training_mode)
     
     # 保存特征列表
     features_path = output_dir / "features.json"
@@ -599,7 +629,18 @@ def main():
 
     # 训练
     if args.model_family == "catboost":
-        train_catboost(X, y, weights, output_dir, cat_features=CATEGORICAL_FEATURES)
+        group_ids = None
+        if args.training_mode == "ranking":
+            group_ids = df.loc[X.index, "candidate_set_id"].tolist()
+        train_catboost(
+            X,
+            y,
+            weights,
+            output_dir,
+            cat_features=CATEGORICAL_FEATURES,
+            training_mode=args.training_mode,
+            group_ids=group_ids,
+        )
 
     trainer_artifact_path = output_dir / "trainer_artifact.json"
     trainer_artifact = build_registered_artifact_metadata(

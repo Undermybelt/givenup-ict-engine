@@ -1,0 +1,68 @@
+{
+  "schema_version": "transfer-score/v1",
+  "strategy_name": "options_dealer_context_observation_packet",
+  "candidate_id": "options_dealer_context_etf_breadth_observation_v1",
+  "covered_market_count": 3,
+  "covered_markets": [
+    "SPY options chain",
+    "DIA options chain",
+    "IWM options chain"
+  ],
+  "markets_without_trade_counts": [
+    "repeated realized windows",
+    "IBKR option-chain parity",
+    "TradingViewRemix option-chain parity"
+  ],
+  "status": "fail_closed_multi_symbol_snapshot_observation_only",
+  "overall_transfer_score": 0.0,
+  "average_sharpe": null,
+  "average_trade_count": 0.0,
+  "timeframe": "options_chain_snapshot",
+  "market_evidence": {
+    "SPY options chain": {
+      "status": "provider_backed_observation_only",
+      "source_row_count": 473,
+      "normalized_row_count": 442,
+      "gamma_wall": 730.0,
+      "put_wall": 730.0,
+      "call_wall": 755.0,
+      "dealer_gamma_regime": "positive_gamma_pin_risk",
+      "zero_dte_pressure": "none",
+      "skew_stress": 0.069237,
+      "trade_count": 0
+    },
+    "DIA options chain": {
+      "status": "provider_backed_observation_only",
+      "source_row_count": 315,
+      "normalized_row_count": 306,
+      "gamma_wall": 525.0,
+      "put_wall": 450.0,
+      "call_wall": 525.0,
+      "dealer_gamma_regime": "positive_gamma_pin_risk",
+      "zero_dte_pressure": "none",
+      "skew_stress": 0.106038,
+      "trade_count": 0
+    },
+    "IWM options chain": {
+      "status": "provider_backed_observation_only",
+      "source_row_count": 264,
+      "normalized_row_count": 234,
+      "gamma_wall": 295.0,
+      "put_wall": 268.0,
+      "call_wall": 295.0,
+      "dealer_gamma_regime": "put_dominant_acceleration_risk",
+      "zero_dte_pressure": "none",
+      "skew_stress": 0.117447,
+      "trade_count": 0
+    }
+  },
+  "branch_path_contract": {
+    "main_regime": "RangeConsolidation",
+    "sub_regime": "OptionsDealerContext",
+    "sub_sub_regime_or_profit_factor": "etf_option_chain_gamma_wall",
+    "profit_factor": "options_dealer_context_etf_breadth_observation_v1",
+    "regime_profit_branch_path": "RangeConsolidation -> OptionsDealerContext -> etf_option_chain_gamma_wall -> options_dealer_context_etf_breadth_observation_v1"
+  },
+  "evidence_source": "support/docs/experiments/actionable-regime-confidence/runs/20260516T211000+0800-codex-board-b-options-dealer-etf-breadth-v1/summaries/options_dealer_etf_breadth_summary.json",
+  "fail_closed_reason": "multi-symbol yfinance ETF option-chain snapshots have no realized outcomes, repeated windows, or cross-provider parity and must not be learned as trade feedback"
+}

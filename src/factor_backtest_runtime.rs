@@ -115,6 +115,7 @@ pub(crate) fn run_factor_backtest(
         symbol,
         &candles,
         &FactorContext {
+            symbol: Some(symbol),
             paired_candles: paired_candles.as_deref(),
             m1_events: structure_ict_context.m1_events.as_deref(),
             m5_events: structure_ict_context.m5_events.as_deref(),
@@ -127,6 +128,7 @@ pub(crate) fn run_factor_backtest(
             auxiliary: auxiliary_override,
             regime: None,
             regime_v2_labels: Some(&regime_v2_labels),
+            ..FactorContext::default()
         },
         Some(&mut learning_state),
         &FactorBacktestConfig::default(),

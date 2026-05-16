@@ -4,8 +4,8 @@ use crate::application::multi_timeframe_inputs::{
     detected_multi_timeframe_clean_root, detected_tomac_root, detected_tomac_root_or_placeholder,
 };
 use crate::application::provider_catalog::{
-    load_provider_profile, provider_status_agent_surface, provider_status_surface,
-    ProviderCatalogAgentSurface, ProviderProfileReferenceSurface,
+    list_repo_example_profiles, load_provider_profile, provider_status_agent_surface,
+    workflow_relevant_provider_ids, ProviderCatalogAgentSurface, ProviderProfileReferenceSurface,
 };
 use crate::state::{
     load_ensemble_executor_scorecards, load_learning_state, load_workflow_snapshot,
@@ -68,12 +68,25 @@ fn attach_workflow_opt_in_profile_refs(
     if surface.selected_profile.is_some() || !surface.available_opt_in_profiles.is_empty() {
         return Ok(());
     }
-    surface.available_opt_in_profiles = provider_status_surface(None, None, None)?
-        .available_opt_in_profiles
+    surface.available_opt_in_profiles = list_repo_example_profiles()?
         .into_iter()
         .filter(|profile| profile_reference_matches_symbol(profile, symbol))
         .collect();
     Ok(())
+}
+
+fn workflow_status_needs_provider_surface(
+    provider_profile: Option<&str>,
+    phase: Option<&str>,
+    snapshot: &WorkflowSnapshot,
+) -> bool {
+    if provider_profile.is_some() {
+        return true;
+    }
+    if phase.is_some() {
+        return false;
+    }
+    true
 }
 
 pub struct WorkflowStatusCommandInput<'a> {
@@ -124,9 +137,23 @@ where
     let persisted_scorecards =
         load_ensemble_executor_scorecards(state_dir, symbol).unwrap_or_default();
     let learning_state = load_learning_state(state_dir, symbol).unwrap_or_default();
-    let mut provider_status_agent =
-        provider_status_agent_surface(None, None, provider_profile).unwrap_or_default();
-    if provider_profile.is_none() {
+    let relevant_provider_ids = workflow_relevant_provider_ids(
+        &snapshot.recommended_next_command,
+        (!snapshot.blocking_truth.reason.is_empty())
+            .then_some(snapshot.blocking_truth.reason.as_str()),
+    );
+    let provider_support_relevant = provider_profile.is_some() || phase.is_none();
+    let provider_filter = if provider_profile.is_none() && relevant_provider_ids.len() == 1 {
+        relevant_provider_ids.iter().copied().next()
+    } else {
+        None
+    };
+    let mut provider_status_agent = if provider_profile.is_some() || provider_support_relevant {
+        provider_status_agent_surface(None, provider_filter, provider_profile).unwrap_or_default()
+    } else {
+        ProviderCatalogAgentSurface::default()
+    };
+    if provider_profile.is_none() && provider_support_relevant {
         attach_workflow_opt_in_profile_refs(&mut provider_status_agent, symbol)?;
     }
     let (detected_tomac_root, multi_timeframe_clean_root, tomac_root_placeholder) =
@@ -159,6 +186,9 @@ where
             limit,
             output_format,
             stable,
+            prefer_persisted_execution_candidate: phase
+                .is_some_and(|value| value.eq_ignore_ascii_case("execution-candidate"))
+                && !refresh,
         },
         WorkflowStatusBootstrapInput {
             symbol,
@@ -204,4 +234,49 @@ where
         load_workflow_snapshot(state_dir, symbol)?
     };
     emit_pre_bayes_diff_output(&snapshot)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::workflow_status_needs_provider_surface;
+    use crate::state::WorkflowSnapshot;
+
+    #[test]
+    fn workflow_status_phase_read_skips_provider_surface_without_explicit_profile() {
+        let snapshot = WorkflowSnapshot {
+            recommended_next_command: "ict-engine analyze-live --symbol NQ --futures-symbol NQ=F"
+                .to_string(),
+            ..WorkflowSnapshot::default()
+        };
+
+        assert!(!workflow_status_needs_provider_surface(
+            None,
+            Some("execution-candidate"),
+            &snapshot,
+        ));
+    }
+
+    #[test]
+    fn workflow_status_full_snapshot_keeps_provider_surface_when_relevant() {
+        let snapshot = WorkflowSnapshot {
+            recommended_next_command: "ict-engine analyze-live --symbol NQ --futures-symbol NQ=F"
+                .to_string(),
+            ..WorkflowSnapshot::default()
+        };
+
+        assert!(workflow_status_needs_provider_surface(
+            None, None, &snapshot
+        ));
+    }
+
+    #[test]
+    fn workflow_status_explicit_profile_keeps_provider_surface_for_phase_reads() {
+        let snapshot = WorkflowSnapshot::default();
+
+        assert!(workflow_status_needs_provider_surface(
+            Some("demo-profile"),
+            Some("execution-candidate"),
+            &snapshot,
+        ));
+    }
 }

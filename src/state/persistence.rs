@@ -1,16 +1,19 @@
 use anyhow::{Context, Result};
 use chrono::Utc;
 use serde::{de::DeserializeOwned, Serialize};
+use std::fs::File;
+use std::io::BufWriter;
 use std::path::Path;
 
 use crate::state::types::{
     AnalyzeRunRecord, ArtifactLedgerEntry, BacktestRunRecord, EnsembleExecutorScorecard,
     EnsembleVoteRecord, ExecutionCandidateArtifact, FactorAutoresearchAttempt,
     FactorAutoresearchLiveSnapshot, FactorAutoresearchSession, FactorMutationRunRecord,
-    LearningState, PendingUpdateArtifact, PreBayesPolicyRecord, ResearchRunRecord, TrainRunRecord,
-    UpdateRunRecord, ANALYZE_RUNS_FILE, ARTIFACT_LEDGER_FILE, BACKTEST_RUNS_FILE,
-    ENSEMBLE_EXECUTOR_SCORECARDS_FILE, ENSEMBLE_VOTE_FILE, ENSEMBLE_VOTE_HISTORY_FILE,
-    EXECUTION_CANDIDATE_FILE, EXECUTION_CANDIDATE_HISTORY_FILE, FACTOR_AUTORESEARCH_ATTEMPTS_FILE,
+    LearningState, PendingUpdateArtifact, PreBayesPolicyRecord, ResearchRunRecord,
+    StructuralFeedbackRefs, TrainRunRecord, UpdateRunRecord, ANALYZE_RUNS_FILE,
+    ARTIFACT_LEDGER_FILE, BACKTEST_RUNS_FILE, ENSEMBLE_EXECUTOR_SCORECARDS_FILE,
+    ENSEMBLE_VOTE_FILE, ENSEMBLE_VOTE_HISTORY_FILE, EXECUTION_CANDIDATE_FILE,
+    EXECUTION_CANDIDATE_HISTORY_FILE, FACTOR_AUTORESEARCH_ATTEMPTS_FILE,
     FACTOR_AUTORESEARCH_FINAL_FILE, FACTOR_AUTORESEARCH_LIVE_FILE,
     FACTOR_AUTORESEARCH_SESSIONS_FILE, FACTOR_MUTATION_RUNS_FILE, LEARNING_STATE_FILE,
     PENDING_UPDATE_ARTIFACT_FILE, PENDING_UPDATE_HISTORY_FILE, PRE_BAYES_POLICY_HISTORY_FILE,
@@ -63,9 +66,33 @@ pub fn save_state<T: Serialize + ?Sized, P: AsRef<Path>>(
         .with_context(|| format!("Failed to create directory: {:?}", dir_path))?;
 
     let path = dir_path.join(filename);
-    let json = serde_json::to_string_pretty(data).context("Failed to serialize state")?;
-    std::fs::write(&path, json)
-        .with_context(|| format!("Failed to write state file: {:?}", path))?;
+    let file =
+        File::create(&path).with_context(|| format!("Failed to create state file: {:?}", path))?;
+    let mut writer = BufWriter::new(file);
+    serde_json::to_writer_pretty(&mut writer, data).context("Failed to serialize state")?;
+    std::io::Write::flush(&mut writer)
+        .with_context(|| format!("Failed to flush state file: {:?}", path))?;
+
+    Ok(())
+}
+
+pub fn save_state_compact<T: Serialize + ?Sized, P: AsRef<Path>>(
+    dir: P,
+    symbol: &str,
+    filename: &str,
+    data: &T,
+) -> Result<()> {
+    let dir_path = dir.as_ref().join(symbol);
+    std::fs::create_dir_all(&dir_path)
+        .with_context(|| format!("Failed to create directory: {:?}", dir_path))?;
+
+    let path = dir_path.join(filename);
+    let file =
+        File::create(&path).with_context(|| format!("Failed to create state file: {:?}", path))?;
+    let mut writer = BufWriter::new(file);
+    serde_json::to_writer(&mut writer, data).context("Failed to serialize state")?;
+    std::io::Write::flush(&mut writer)
+        .with_context(|| format!("Failed to flush state file: {:?}", path))?;
 
     Ok(())
 }
@@ -98,7 +125,7 @@ pub fn save_learning_state<P: AsRef<Path>>(
 ) -> Result<()> {
     let mut learning_state = learning_state.clone();
     learning_state.last_updated = Some(Utc::now());
-    save_state(dir, symbol, LEARNING_STATE_FILE, &learning_state)
+    save_state_compact(dir, symbol, LEARNING_STATE_FILE, &learning_state)
 }
 
 pub fn append_learning_feedback<P: AsRef<Path>>(
@@ -107,7 +134,8 @@ pub fn append_learning_feedback<P: AsRef<Path>>(
     feedback: crate::state::types::FeedbackRecord,
 ) -> Result<LearningState> {
     let mut learning_state = load_learning_state(&dir, symbol)?;
-    learning_state.merge_feedback_records(&[feedback]);
+    let new_feedback = learning_state.merge_feedback_records(&[feedback]);
+    learning_state.apply_structural_feedback(&new_feedback);
     save_learning_state(&dir, symbol, &learning_state)?;
     Ok(learning_state)
 }
@@ -118,7 +146,8 @@ pub fn append_learning_feedback_batch<P: AsRef<Path>>(
     feedback: &[crate::state::types::FeedbackRecord],
 ) -> Result<LearningState> {
     let mut learning_state = load_learning_state(&dir, symbol)?;
-    learning_state.merge_feedback_records(feedback);
+    let new_feedback = learning_state.merge_feedback_records(feedback);
+    learning_state.apply_structural_feedback(&new_feedback);
     save_learning_state(&dir, symbol, &learning_state)?;
     Ok(learning_state)
 }
@@ -634,6 +663,65 @@ mod tests {
     }
 
     #[test]
+    fn test_feedback_persistence_updates_structural_prior_state() {
+        let temp = tempfile::tempdir().unwrap();
+        let path_id = "TrendExpansion -> SessionLiquidity -> dense_kline_upbar_reclaim_kraken_1m -> dense_kline_upbar_reclaim_kraken_xbtusd_1m_v1";
+        let feedback = FeedbackRecord {
+            timestamp: Utc::now(),
+            symbol: "DENSE_KLINE_BRANCH".to_string(),
+            source: "dense_kline_kraken_xbtusd_1m_split_replay".to_string(),
+            run_id: None,
+            trade_id: Some("kraken-split-1".to_string()),
+            prompt_version: None,
+            factor_version: None,
+            data_fingerprint: None,
+            factors_used: vec![],
+            model_probabilities_before_trade: ModelProbabilitySnapshot {
+                selected_direction: Direction::Bull,
+                selected_probability: 0.0,
+                long_score: 0.0,
+                short_score: 0.0,
+                win_prob_long: 0.0,
+                win_prob_short: 0.0,
+                uncertainty: 0.0,
+            },
+            realized_outcome: "win".to_string(),
+            pnl: 0.02,
+            regime_at_entry: Regime::ManipulationExpansion,
+            structural_feedback: Some(StructuralFeedbackRefs {
+                protocol_version: "structural-feedback-v1".to_string(),
+                recommendation_id: "auto-quant-real-trade-branch:DENSE_KLINE_BRANCH:kraken-split-1"
+                    .to_string(),
+                recommended_at: "2026-05-15T14:18:02Z".to_string(),
+                node_id: "TrendExpansion".to_string(),
+                branch_id: "TrendExpansion -> SessionLiquidity".to_string(),
+                scenario_id: "SessionLiquidity".to_string(),
+                path_id: path_id.to_string(),
+                followed_path: true,
+                exit_reason: None,
+                notes: None,
+            }),
+            reflection_mismatch_tags: Vec::new(),
+        };
+
+        let learning_state =
+            append_learning_feedback(temp.path(), "DENSE_KLINE_BRANCH", feedback).unwrap();
+        assert!(learning_state
+            .structural_prior_state
+            .paths
+            .contains_key(path_id));
+
+        let restored = load_learning_state(temp.path(), "DENSE_KLINE_BRANCH").unwrap();
+        let path = restored
+            .structural_prior_state
+            .paths
+            .get(path_id)
+            .expect("persisted exact path prior");
+        assert_eq!(path.observations, 1);
+        assert_eq!(path.wins, 1);
+    }
+
+    #[test]
     fn test_load_state_or_default_works_for_trade_history() {
         let temp = tempfile::tempdir().unwrap();
         let restored: Vec<TradeRecord> =
@@ -901,7 +989,13 @@ mod tests {
             hybrid_remaining_expected_bars: None,
             market_state_evidence: Vec::new(),
             pre_bayes_evidence_filter: crate::state::PreBayesEvidenceFilter::default(),
+            conformal_coverage_1sigma: None,
+            conformal_miscoverage_1sigma: None,
+            mean_prediction_interval_half_width: None,
+            worst_window_miscoverage: None,
             canonical_structural_regime_posterior: None,
+            order_block_variant: None,
+            reference_liquidity_levels: None,
             pre_bayes_entry_quality_bridge: crate::state::PreBayesEntryQualityBridge::default(),
             factor_family_decisions: Vec::new(),
             factor_family_outcomes: Vec::new(),

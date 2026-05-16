@@ -86,6 +86,48 @@ fn append_learning_semantics_to_update_gate_prompts(
     }
 }
 
+fn reject_proxy_non_trade_feedback_content(content: &str) -> Result<()> {
+    let Ok(value) = serde_json::from_str::<serde_json::Value>(content) else {
+        return Ok(());
+    };
+    if value
+        .get("protocol_version")
+        .and_then(serde_json::Value::as_str)
+        != Some("structural-feedback-v1")
+    {
+        return Ok(());
+    }
+
+    let label_kind = value
+        .get("label_kind")
+        .and_then(serde_json::Value::as_str)
+        .unwrap_or("");
+    let exit_reason = value
+        .get("exit_reason")
+        .and_then(serde_json::Value::as_str)
+        .unwrap_or("");
+    let trade_usable = value
+        .get("trade_usable")
+        .and_then(serde_json::Value::as_bool);
+    let is_proxy_label = label_kind.to_ascii_lowercase().contains("proxy")
+        || exit_reason.to_ascii_lowercase().contains("proxy_label")
+        || exit_reason.to_ascii_lowercase().contains("not_real_trade");
+    let is_explicit_non_trade = trade_usable == Some(false);
+    if is_proxy_label || is_explicit_non_trade {
+        let trade_usable_label = trade_usable
+            .map(|value| value.to_string())
+            .unwrap_or_else(|| "missing".to_string());
+        bail!(
+            "rejecting proxy/non-trade structural feedback: label_kind='{}' trade_usable={} exit_reason='{}'; update --feedback-file requires realized trade feedback",
+            label_kind,
+            trade_usable_label,
+            exit_reason
+        );
+    }
+
+    Ok(())
+}
+
 fn consumed_analyze_context_from_structural_submission(
     submission: &ict_engine::application::orchestration::StructuralFeedbackSubmission,
 ) -> Option<ict_engine::application::artifacts::ConsumedAnalyzeContext> {
@@ -114,7 +156,10 @@ fn consumed_analyze_context_from_structural_submission(
         .clamp(0.0, 1.0);
 
     Some(ict_engine::application::artifacts::ConsumedAnalyzeContext {
-        analyze_run_id: Some(submission.recommendation_id.clone()),
+        analyze_run_id: submission
+            .source_run_id
+            .clone()
+            .or_else(|| Some(submission.recommendation_id.clone())),
         pre_bayes_evidence_filter: Some(ict_engine::state::PreBayesEvidenceFilter {
             raw_market_regime_label: submission.node_id.clone(),
             raw_liquidity_context_label: "structural_feedback".to_string(),
@@ -228,6 +273,7 @@ pub(crate) fn update_command(input: UpdateCommandInput<'_>) -> Result<()> {
     let mut structural_submission_consumed_context = None;
     let feedback = if let Some(path) = feedback_file {
         let content = std::fs::read_to_string(path)?;
+        reject_proxy_non_trade_feedback_content(&content)?;
         match serde_json::from_str::<FeedbackRecord>(&content) {
             Ok(feedback) => feedback_record_from_artifact(
                 PendingUpdateArtifact {
@@ -934,5 +980,81 @@ mod tests {
             &ict_engine::state::ArtifactDecisionSummary::default()
         )
         .is_none());
+    }
+
+    #[test]
+    fn structural_submission_consumed_context_uses_source_run_id_when_present() {
+        let submission: ict_engine::application::orchestration::StructuralFeedbackSubmission =
+            serde_json::from_value(serde_json::json!({
+                "protocol_version": "structural-feedback-v1",
+                "recommendation_id": "structural-feedback:NQ:node:path",
+                "recommended_at": "2026-05-12T00:00:00Z",
+                "source_run_id": "analyze:1",
+                "symbol": "NQ",
+                "node_id": "belief_regime_node:NQ:trend",
+                "branch_id": "branch:trend",
+                "scenario_id": "scenario:trend",
+                "path_id": "path:trend",
+                "direction": "bull",
+                "entry_style": "structural_recommended_path",
+                "pre_bayes_gate_status": "pass_hard",
+                "followed_path": true,
+                "realized_outcome": "win"
+            }))
+            .unwrap();
+
+        let context = consumed_analyze_context_from_structural_submission(&submission)
+            .expect("structural submission context");
+
+        assert_eq!(context.analyze_run_id.as_deref(), Some("analyze:1"));
+    }
+
+    #[test]
+    fn update_feedback_file_rejects_proxy_non_trade_structural_feedback() {
+        let temp_dir = tempfile::tempdir().expect("tempdir");
+        let feedback_path = temp_dir.path().join("proxy-feedback.json");
+        std::fs::write(
+            &feedback_path,
+            serde_json::json!({
+                "protocol_version": "structural-feedback-v1",
+                "recommendation_id": "structural-feedback:SWEEP_PROXY:node:path",
+                "recommended_at": "2026-05-16T13:30:00Z",
+                "source_run_id": "analyze:SWEEP_PROXY:20260516T133000.000Z",
+                "symbol": "SWEEP_PROXY",
+                "node_id": "belief_regime_node:SWEEP_PROXY:sweep",
+                "branch_id": "branch:sweep_quality_proxy",
+                "scenario_id": "scenario:sweep_quality_proxy",
+                "path_id": "TrendExpansion -> SweepQuality -> proxy_continuation -> sweep_quality_proxy_outcome_observation_v1",
+                "direction": "bull",
+                "entry_style": "structural_recommended_path",
+                "pre_bayes_gate_status": "proxy_feedback_should_fail_closed",
+                "followed_path": false,
+                "realized_outcome": "breakeven",
+                "exit_reason": "proxy_label_not_real_trade",
+                "label_kind": "proxy_continuation_vs_invalidation",
+                "trade_usable": false
+            })
+            .to_string(),
+        )
+        .expect("write feedback");
+
+        let result = update_command(UpdateCommandInput {
+            symbol: "SWEEP_PROXY",
+            outcome: "breakeven",
+            entry_signal: Some("medium"),
+            feedback_file: Some(feedback_path.to_str().expect("feedback path")),
+            state_dir: temp_dir.path().to_str().expect("state dir"),
+            pnl: Some(0.0),
+            regime: Some("trend"),
+            direction: Some("bull"),
+            ensemble: false,
+        });
+
+        let err = result.expect_err("proxy feedback must be rejected");
+        let message = format!("{err:#}");
+        assert!(
+            message.contains("proxy") && message.contains("trade_usable=false"),
+            "unexpected error: {message}"
+        );
     }
 }

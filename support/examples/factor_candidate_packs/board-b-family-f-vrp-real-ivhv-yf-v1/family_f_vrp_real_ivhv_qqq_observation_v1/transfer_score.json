@@ -1,0 +1,42 @@
+{
+  "schema_version": "transfer-score/v1",
+  "strategy_name": "FamilyFRealIvHvQqqObservationOnly",
+  "candidate_id": "family_f_vrp_real_ivhv_qqq_observation_v1",
+  "covered_market_count": 1,
+  "covered_markets": [
+    "QQQ"
+  ],
+  "markets_without_trade_counts": [
+    "QQQ"
+  ],
+  "status": "real_iv_hv_observation_only_candidate",
+  "overall_transfer_score": 0.0,
+  "average_trade_count": 0,
+  "timeframe": "1d",
+  "market_evidence": {
+    "QQQ": {
+      "observation_count": 1,
+      "provider_set": [
+        "yfinance"
+      ],
+      "evidence_source": "support/docs/experiments/actionable-regime-confidence/runs/20260516T203228+0800-codex-board-b-family-f-vrp-real-ivhv-gate1-v1/checks/qqq_yfinance_iv_hv_summary.json",
+      "near_atm_iv_rows": 80,
+      "near_atm_nonzero_open_interest_rows": 80,
+      "near_atm_nonzero_volume_rows": 80,
+      "historical_vol_20d": 0.17156024793787022,
+      "historical_vol_60d": 0.19526389920978163,
+      "near_atm_implied_vol_mean": 0.20190770024108887,
+      "vrp_iv_minus_hv20": 0.03034745230321864,
+      "vrp_iv_minus_hv60": 0.006643801031307239
+    }
+  },
+  "branch_path_contract": {
+    "main_regime": "TrendExpansion",
+    "sub_regime": "VolatilityCompression",
+    "sub_sub_regime_or_profit_factor": "iv_hv_compression_regime",
+    "profit_factor": "family_f_vrp_real_ivhv_qqq_observation_v1",
+    "regime_profit_branch_path": "TrendExpansion -> VolatilityCompression -> iv_hv_compression_regime -> family_f_vrp_real_ivhv_qqq_observation_v1"
+  },
+  "evidence_source": "support/docs/experiments/actionable-regime-confidence/runs/20260516T203228+0800-codex-board-b-family-f-vrp-real-ivhv-gate1-v1/checks/qqq_yfinance_iv_hv_summary.json",
+  "fail_closed_reason": "single_observation_no_realized_trade_rows"
+}

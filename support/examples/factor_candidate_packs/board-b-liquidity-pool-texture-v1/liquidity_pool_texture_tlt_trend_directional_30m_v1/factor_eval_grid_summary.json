@@ -1,0 +1,82 @@
+{
+  "schema_version": "factor-eval-grid-summary/v1",
+  "factor_name": "liquidity_pool_texture_tlt_trend_directional_30m_v1",
+  "candidate_id": "liquidity_pool_texture_tlt_trend_directional_30m_v1",
+  "status": "candidate_only",
+  "aggregate_metrics": {
+    "trade_count": 1,
+    "win_rate": 1.0,
+    "expectancy": 0.666667,
+    "confidence": 0.58
+  },
+  "trade_density_summary": {
+    "aggregate_trade_count": 1,
+    "aggregate_label": "anecdotal",
+    "downstream_allowed": false,
+    "promotion_allowed": false,
+    "fail_closed_reason": "single_provider_single_observation_not_ready_for_candidate_pack_or_downstream_admission"
+  },
+  "breadth_matrix": {
+    "TLT": {
+      "status": "covered",
+      "trade_count": 1,
+      "trade_density_label": "anecdotal",
+      "win_rate": 1.0,
+      "expectancy": 0.666667,
+      "confidence": 0.58,
+      "clean_sweep_likelihood": 0.55,
+      "observation_count": 1,
+      "provider_set": [
+        "ibkr"
+      ],
+      "notes": [
+        "one rooted directional retained outcome exists",
+        "single provider single observation remains fail closed"
+      ]
+    }
+  },
+  "per_regime_statistics": {
+    "trend": {
+      "trade_count": 1,
+      "win_rate": 1.0,
+      "expectancy": 0.666667,
+      "confidence": 0.58,
+      "fail_closed_reason": "single_observation_only_not_promotable"
+    },
+    "range": {
+      "trade_count": 0,
+      "win_rate": null,
+      "expectancy": null,
+      "confidence": 0.0,
+      "fail_closed_reason": "no_provider_backed_labeled_outcomes"
+    },
+    "transition": {
+      "trade_count": 0,
+      "win_rate": null,
+      "expectancy": null,
+      "confidence": 0.0,
+      "fail_closed_reason": "no_provider_backed_labeled_outcomes"
+    },
+    "stress": {
+      "trade_count": 0,
+      "win_rate": null,
+      "expectancy": null,
+      "confidence": 0.0,
+      "fail_closed_reason": "no_provider_backed_labeled_outcomes"
+    },
+    "other": {
+      "trade_count": 0,
+      "win_rate": null,
+      "expectancy": null,
+      "confidence": 0.0,
+      "fail_closed_reason": "no_provider_backed_labeled_outcomes"
+    }
+  },
+  "quality_contract": {
+    "directional_trade_plan_required": true,
+    "held_out_late_window_required": true,
+    "min_total_trade_count": 30,
+    "covered_market_count": 1,
+    "fail_closed_reason": "single_provider_single_observation_not_ready_for_candidate_pack_or_downstream_admission"
+  }
+}

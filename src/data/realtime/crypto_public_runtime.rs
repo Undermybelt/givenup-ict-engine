@@ -16,9 +16,18 @@ use super::{
 
 const COINANK_API_URL: &str = "https://api.coinank.com/api/kline/list/open";
 const HYPERLIQUID_API_URL: &str = "https://api.hyperliquid.xyz/info";
+const BINANCE_KLINES_URL: &str = "https://api.binance.com/api/v3/klines";
+const BYBIT_KLINES_URL: &str = "https://api.bybit.com/v5/market/kline";
 
 pub struct CryptoPublicRuntimeProvider {
     client: Client,
+    default_source: CryptoPublicDefaultSource,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+enum CryptoPublicDefaultSource {
+    Binance,
+    Bybit,
 }
 
 impl CryptoPublicRuntimeProvider {
@@ -29,7 +38,17 @@ impl CryptoPublicRuntimeProvider {
                 .user_agent("ict-engine/0.1")
                 .build()
                 .expect("failed to build reqwest blocking client"),
+            default_source: CryptoPublicDefaultSource::Binance,
         }
+    }
+
+    pub fn new_for_exchange(exchange: &str) -> Self {
+        let mut provider = Self::new("native://crypto-public");
+        provider.default_source = match exchange.trim().to_ascii_lowercase().as_str() {
+            "bybit" | "bybit_public" | "bybit_public_runtime" => CryptoPublicDefaultSource::Bybit,
+            _ => CryptoPublicDefaultSource::Binance,
+        };
+        provider
     }
 
     pub fn fetch_futures_candles(
@@ -39,7 +58,9 @@ impl CryptoPublicRuntimeProvider {
         _start: DateTime<Utc>,
         _end: DateTime<Utc>,
     ) -> Result<Vec<Candle>> {
-        match parse_crypto_public_source(symbol) {
+        match parse_crypto_public_source(symbol, self.default_source) {
+            CryptoPublicSource::Binance { symbol } => self.fetch_binance_candles(&symbol, interval),
+            CryptoPublicSource::Bybit { symbol } => self.fetch_bybit_candles(&symbol, interval),
             CryptoPublicSource::Hyperliquid { coin } => {
                 self.fetch_hyperliquid_candles(&coin, interval)
             }
@@ -149,6 +170,98 @@ impl CryptoPublicRuntimeProvider {
             bail!("CoinAnk returned no usable candles for '{}'", symbol);
         }
 
+        Ok(candles)
+    }
+
+    fn fetch_binance_candles(&self, symbol: &str, interval: &str) -> Result<Vec<Candle>> {
+        let rows: Vec<Vec<serde_json::Value>> = self
+            .client
+            .get(BINANCE_KLINES_URL)
+            .query(&[
+                ("symbol", symbol.trim().to_uppercase()),
+                ("interval", normalize_binance_interval(interval).to_string()),
+                ("limit", interval_limit(interval).min(1000).to_string()),
+            ])
+            .send()
+            .with_context(|| format!("failed to request Binance candles for '{}'", symbol))?
+            .error_for_status()
+            .with_context(|| format!("Binance returned error for '{}'", symbol))?
+            .json()
+            .context("failed to parse Binance candle response")?;
+
+        let candles = rows
+            .into_iter()
+            .filter(|row| row.len() >= 6)
+            .map(|row| {
+                let open_time = value_as_i64(&row[0], "Binance open time")?;
+                let timestamp = Utc
+                    .timestamp_millis_opt(open_time)
+                    .single()
+                    .ok_or_else(|| anyhow!("invalid Binance timestamp '{}'", open_time))?;
+                Ok(Candle {
+                    timestamp,
+                    open: value_as_f64(&row[1], "Binance open")?,
+                    high: value_as_f64(&row[2], "Binance high")?,
+                    low: value_as_f64(&row[3], "Binance low")?,
+                    close: value_as_f64(&row[4], "Binance close")?,
+                    volume: value_as_f64(&row[5], "Binance volume")?,
+                })
+            })
+            .collect::<Result<Vec<_>>>()?;
+        if candles.is_empty() {
+            bail!("Binance returned no usable candles for '{}'", symbol);
+        }
+        Ok(candles)
+    }
+
+    fn fetch_bybit_candles(&self, symbol: &str, interval: &str) -> Result<Vec<Candle>> {
+        let response: BybitKlineResponse = self
+            .client
+            .get(BYBIT_KLINES_URL)
+            .query(&[
+                ("category", "linear".to_string()),
+                ("symbol", symbol.trim().to_uppercase()),
+                ("interval", normalize_bybit_interval(interval).to_string()),
+                ("limit", interval_limit(interval).min(1000).to_string()),
+            ])
+            .send()
+            .with_context(|| format!("failed to request Bybit candles for '{}'", symbol))?
+            .error_for_status()
+            .with_context(|| format!("Bybit returned error for '{}'", symbol))?
+            .json()
+            .context("failed to parse Bybit candle response")?;
+        if response.ret_code != 0 {
+            bail!(
+                "Bybit reported error for '{}': {}",
+                symbol,
+                response.ret_msg.unwrap_or_default()
+            );
+        }
+        let mut candles = response
+            .result
+            .list
+            .into_iter()
+            .filter(|row| row.len() >= 6)
+            .map(|row| {
+                let open_time = row[0].parse::<i64>().context("invalid Bybit open time")?;
+                let timestamp = Utc
+                    .timestamp_millis_opt(open_time)
+                    .single()
+                    .ok_or_else(|| anyhow!("invalid Bybit timestamp '{}'", open_time))?;
+                Ok(Candle {
+                    timestamp,
+                    open: row[1].parse().context("invalid Bybit open")?,
+                    high: row[2].parse().context("invalid Bybit high")?,
+                    low: row[3].parse().context("invalid Bybit low")?,
+                    close: row[4].parse().context("invalid Bybit close")?,
+                    volume: row[5].parse().unwrap_or(0.0),
+                })
+            })
+            .collect::<Result<Vec<_>>>()?;
+        candles.sort_by_key(|candle| candle.timestamp);
+        if candles.is_empty() {
+            bail!("Bybit returned no usable candles for '{}'", symbol);
+        }
         Ok(candles)
     }
 
@@ -276,12 +389,32 @@ struct HyperliquidCandle {
     volume: String,
 }
 
+#[derive(Debug, Deserialize)]
+struct BybitKlineResponse {
+    #[serde(rename = "retCode")]
+    ret_code: i64,
+    #[serde(rename = "retMsg")]
+    ret_msg: Option<String>,
+    result: BybitKlineResult,
+}
+
+#[derive(Debug, Deserialize)]
+struct BybitKlineResult {
+    #[serde(default)]
+    list: Vec<Vec<String>>,
+}
+
 enum CryptoPublicSource {
+    Binance { symbol: String },
+    Bybit { symbol: String },
     Hyperliquid { coin: String },
     Coinank { exchange: String, symbol: String },
 }
 
-fn parse_crypto_public_source(symbol: &str) -> CryptoPublicSource {
+fn parse_crypto_public_source(
+    symbol: &str,
+    default_source: CryptoPublicDefaultSource,
+) -> CryptoPublicSource {
     let raw = symbol.trim();
     if let Some(rest) = raw.strip_prefix("hyperliquid:") {
         return CryptoPublicSource::Hyperliquid {
@@ -294,16 +427,83 @@ fn parse_crypto_public_source(symbol: &str) -> CryptoPublicSource {
         };
     }
     if let Some((exchange, base_symbol)) = raw.split_once(':') {
+        let normalized_exchange = exchange.trim().to_ascii_lowercase();
+        if normalized_exchange == "binance" {
+            return CryptoPublicSource::Binance {
+                symbol: base_symbol.to_uppercase(),
+            };
+        }
+        if normalized_exchange == "bybit" {
+            return CryptoPublicSource::Bybit {
+                symbol: base_symbol.to_uppercase(),
+            };
+        }
         return CryptoPublicSource::Coinank {
             exchange: normalize_coinank_exchange(exchange),
             symbol: base_symbol.to_uppercase(),
         };
     }
 
-    CryptoPublicSource::Coinank {
-        exchange: "Binance".to_string(),
-        symbol: raw.to_uppercase(),
+    match default_source {
+        CryptoPublicDefaultSource::Binance => CryptoPublicSource::Binance {
+            symbol: raw.to_uppercase(),
+        },
+        CryptoPublicDefaultSource::Bybit => CryptoPublicSource::Bybit {
+            symbol: raw.to_uppercase(),
+        },
     }
+}
+
+fn normalize_binance_interval(interval: &str) -> &'static str {
+    match interval {
+        "1m" => "1m",
+        "3m" => "3m",
+        "5m" => "5m",
+        "15m" => "15m",
+        "30m" => "30m",
+        "1h" => "1h",
+        "2h" => "2h",
+        "4h" => "4h",
+        "6h" => "6h",
+        "8h" => "8h",
+        "12h" => "12h",
+        "1d" => "1d",
+        "3d" => "3d",
+        "1w" => "1w",
+        _ => "1h",
+    }
+}
+
+fn normalize_bybit_interval(interval: &str) -> &'static str {
+    match interval {
+        "1m" => "1",
+        "3m" => "3",
+        "5m" => "5",
+        "15m" => "15",
+        "30m" => "30",
+        "1h" => "60",
+        "2h" => "120",
+        "4h" => "240",
+        "6h" => "360",
+        "12h" => "720",
+        "1d" => "D",
+        "1w" => "W",
+        _ => "60",
+    }
+}
+
+fn value_as_i64(value: &serde_json::Value, field: &str) -> Result<i64> {
+    value
+        .as_i64()
+        .or_else(|| value.as_str().and_then(|text| text.parse().ok()))
+        .ok_or_else(|| anyhow!("invalid {}", field))
+}
+
+fn value_as_f64(value: &serde_json::Value, field: &str) -> Result<f64> {
+    value
+        .as_f64()
+        .or_else(|| value.as_str().and_then(|text| text.parse().ok()))
+        .ok_or_else(|| anyhow!("invalid {}", field))
 }
 
 fn normalize_coinank_exchange(exchange: &str) -> String {
@@ -401,5 +601,37 @@ fn interval_duration_millis(interval: &str) -> i64 {
         "1d" => 86_400_000,
         "1w" => 604_800_000,
         _ => 3_600_000,
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn parse_crypto_public_source_defaults_to_selected_exchange() {
+        match parse_crypto_public_source("BTCUSDT", CryptoPublicDefaultSource::Binance) {
+            CryptoPublicSource::Binance { symbol } => {
+                assert_eq!(symbol, "BTCUSDT");
+            }
+            _ => panic!("expected Binance source"),
+        }
+
+        match parse_crypto_public_source("BTCUSDT", CryptoPublicDefaultSource::Bybit) {
+            CryptoPublicSource::Bybit { symbol } => {
+                assert_eq!(symbol, "BTCUSDT");
+            }
+            _ => panic!("expected Bybit source"),
+        }
+    }
+
+    #[test]
+    fn parse_crypto_public_source_honors_explicit_exchange_prefix() {
+        match parse_crypto_public_source("bybit:ETHUSDT", CryptoPublicDefaultSource::Binance) {
+            CryptoPublicSource::Bybit { symbol } => {
+                assert_eq!(symbol, "ETHUSDT");
+            }
+            _ => panic!("expected Bybit source"),
+        }
     }
 }

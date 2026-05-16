@@ -199,7 +199,57 @@ fn synthetic_ohlcv_pair_alias(symbol: &str) -> String {
         .unwrap_or(trimmed)
         .trim_end_matches("_EXT")
         .trim();
-    format!("{base}/USD")
+    let alias_base = synthetic_ohlcv_alias_base_from_symbol(base);
+    format!("{alias_base}/USD")
+}
+
+fn synthetic_ohlcv_alias_base_from_symbol(symbol: &str) -> String {
+    if !symbol.contains('_') {
+        return symbol.to_string();
+    }
+    const STOPWORDS: &[&str] = &[
+        "IBKR",
+        "YF",
+        "TVR",
+        "KRAKEN",
+        "BINANCE",
+        "BYBIT",
+        "PAXOS",
+        "PF",
+        "EXT",
+        "SYNTH",
+        "CONFORMAL",
+        "SMOKE",
+        "LOCAL",
+        "NONBTC",
+        "MTF",
+        "LTF",
+        "HTF",
+        "USD",
+        "CURRENT",
+        "PROFILE",
+        "STATE",
+        "WINDOW",
+        "EARLY",
+        "LATE",
+        "CHAIN",
+        "MKTSTRUCT",
+        "B2R",
+    ];
+    const TIMEFRAME_TOKENS: &[&str] = &["1M", "5M", "15M", "30M", "1H", "4H", "1D"];
+
+    let candidate = symbol
+        .split('_')
+        .map(str::trim)
+        .filter(|token| !token.is_empty())
+        .find(|token| {
+            let upper = token.to_ascii_uppercase();
+            !STOPWORDS.contains(&upper.as_str())
+                && !TIMEFRAME_TOKENS.contains(&upper.as_str())
+                && !upper.chars().all(|ch| ch.is_ascii_digit())
+        });
+
+    candidate.unwrap_or(symbol).to_string()
 }
 
 fn write_profile_config(
@@ -436,20 +486,30 @@ mod tests {
 
     #[test]
     fn synthetic_ohlcv_pair_alias_strips_external_runtime_suffixes() {
+        assert_eq!(synthetic_ohlcv_pair_alias("BTCUSDT_EXT_1H"), "BTCUSDT/USD");
+        assert_eq!(synthetic_ohlcv_pair_alias("ETHUSDT_EXT_4H"), "ETHUSDT/USD");
+    }
+
+    #[test]
+    fn synthetic_ohlcv_pair_alias_collapses_provider_decorated_runtime_symbol_to_ticker() {
         assert_eq!(
-            synthetic_ohlcv_pair_alias("BTCUSDT_EXT_1H"),
-            "BTCUSDT/USD"
+            synthetic_ohlcv_pair_alias("IBKR_QQQ_SYNTH_CONFORMAL_SMOKE"),
+            "QQQ/USD"
         );
+    }
+
+    #[test]
+    fn synthetic_ohlcv_pair_alias_collapses_local_nonbtc_runtime_symbol_to_ticker() {
         assert_eq!(
-            synthetic_ohlcv_pair_alias("ETHUSDT_EXT_4H"),
-            "ETHUSDT/USD"
+            synthetic_ohlcv_pair_alias("B2R_LOCAL_NONBTC_SPY_USD_MTF_124245"),
+            "SPY/USD"
         );
     }
 
     #[test]
     fn source_candle_timerange_uses_first_and_last_utc_dates() {
-        use chrono::{TimeZone, Utc};
         use crate::types::Candle;
+        use chrono::{TimeZone, Utc};
 
         let candles = vec![
             Candle {

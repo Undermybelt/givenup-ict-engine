@@ -852,8 +852,12 @@ fn human_technical_price_summary(
         structure.nearest_untested_order_block_low,
         structure.nearest_untested_order_block_high,
     );
+    let pool_texture = &structure.liquidity_pool_texture;
+    let ob_variant = &structure.order_block_variant;
+    let reference_levels =
+        human_reference_liquidity_levels_summary(&structure.reference_liquidity_levels);
     format!(
-        "last_close=({:.2}); ema20={} ema50={} rsi14={} adx14={} atr14={} bollinger=lower:{} middle:{} upper:{}; liquidity_pool={} liquidity_pool_texture/smooth_or_jagged=(n/a) latest_sweep={} sweeps_recent={}; FVG/IFVG=open_count={} nearest_fvg={}; order_block=untested_count={} nearest_OB={} variants=mitigation_requires_followup,breaker_requires_followup,rejection_block={}; narrative={}",
+        "last_close=({:.2}); ema20={} ema50={} rsi14={} adx14={} atr14={} bollinger=lower:{} middle:{} upper:{}; liquidity_pool={} liquidity_pool_texture/smooth_or_jagged={} pool_level={} pool_high={} pool_low={} touch_count={} spacing_consistency={} clean_sweep_likelihood={} confidence={:.3} fail_closed_reason={} latest_sweep={} sweeps_recent={}; reference_levels={}; FVG/IFVG=open_count={} nearest_fvg={}; order_block=untested_count={} nearest_OB={} variant={} direction={:?} high={} low={} midpoint={} validation_state={} mitigation_count={} breaker_confirmed={} rejection_confirmed={} confidence={:.3} fail_closed_reason={}; narrative={}",
         technical.last_closed_bar_close,
         format_optional_price(technical.ema20),
         format_optional_price(technical.ema50),
@@ -864,14 +868,77 @@ fn human_technical_price_summary(
         format_optional_price(technical.bollinger_middle),
         format_optional_price(technical.bollinger_upper),
         format_optional_price(structure.nearest_liquidity_pool_level),
+        pool_texture.texture,
+        format_optional_price(pool_texture.level),
+        format_optional_price(pool_texture.high),
+        format_optional_price(pool_texture.low),
+        pool_texture.touch_count,
+        format_optional_number(pool_texture.spacing_consistency),
+        format_optional_number(pool_texture.clean_sweep_likelihood),
+        pool_texture.confidence,
+        pool_texture.fail_closed_reason.as_deref().unwrap_or("none"),
         format_optional_price(structure.latest_liquidity_sweep_level),
         structure.liquidity_sweeps_recent,
+        reference_levels,
         structure.open_fvgs,
         fvg_band,
         structure.untested_order_blocks,
         ob_band,
-        structure.rejection_block_present,
+        ob_variant.variant,
+        ob_variant.direction,
+        format_optional_price(ob_variant.high),
+        format_optional_price(ob_variant.low),
+        format_optional_price(ob_variant.midpoint),
+        ob_variant.validation_state,
+        ob_variant.mitigation_count,
+        ob_variant.breaker_confirmed,
+        ob_variant.rejection_confirmed,
+        ob_variant.confidence,
+        ob_variant.fail_closed_reason.as_deref().unwrap_or("none"),
         technical.narrative
+    )
+}
+
+fn human_reference_liquidity_levels_summary(
+    evidence: &crate::analyze_sections::ReferenceLiquidityLevelsEvidence,
+) -> String {
+    let recent_week_gaps = if evidence.recent_week_open_gaps.is_empty() {
+        "none".to_string()
+    } else {
+        evidence
+            .recent_week_open_gaps
+            .iter()
+            .map(|gap| {
+                format!(
+                    "{}:{}-{}:{}",
+                    gap.period_key.as_deref().unwrap_or("n/a"),
+                    format_optional_price(gap.lower),
+                    format_optional_price(gap.upper),
+                    gap.direction.as_deref().unwrap_or("n/a")
+                )
+            })
+            .collect::<Vec<_>>()
+            .join("|")
+    };
+    format!(
+        "src={} tz={} PDH={} PDL={} PDC={} CDO={} PWH={} PWL={} PWC={} CWO={} PMH={} PML={} day_gap={} week_gap={} recent_week_gaps={} confidence={:.3} fail_closed_reason={}",
+        evidence.source_frame,
+        evidence.timezone,
+        format_optional_price(evidence.previous_day_high),
+        format_optional_price(evidence.previous_day_low),
+        format_optional_price(evidence.previous_day_close),
+        format_optional_price(evidence.current_day_open),
+        format_optional_price(evidence.previous_week_high),
+        format_optional_price(evidence.previous_week_low),
+        format_optional_price(evidence.previous_week_close),
+        format_optional_price(evidence.current_week_open),
+        format_optional_price(evidence.previous_month_high),
+        format_optional_price(evidence.previous_month_low),
+        format_gap_band(evidence.current_day_gap.as_ref()),
+        format_gap_band(evidence.current_week_gap.as_ref()),
+        recent_week_gaps,
+        evidence.confidence,
+        evidence.fail_closed_reason.as_deref().unwrap_or("none"),
     )
 }
 
@@ -890,10 +957,12 @@ fn human_smt_summary(section: &crate::analyze_sections::SmtCorrelationSection) -
     universe.sort();
     universe.dedup();
     format!(
-        "paired_market_available={}; primary_pair={}/{}; universe={}; relationship={}/confidence:{:.3} normalized_inverse={}; smt_signal={} base_swing={} base_level={} comparison_swing={} comparison_level={} raw_comparison_swing={} raw_comparison_level={} swept_side={} trade_use={}; corr20={} corr50={} legacy_divergence={:?}; cointegrated={:?}; basis_bps={}; fail_closed_reason={}; narrative={}",
+        "paired_market_available={}; primary_pair={}/{}; timeframe={}; session={}; universe={}; relationship={}/confidence:{:.3} normalized_inverse={}; smt_signal={} base_swing={} base_level={} comparison_swing={} comparison_level={} raw_comparison_swing={} raw_comparison_level={} swept_side={} near_pd_array={} pd_array_type={} mss_or_cisd_confirmed={} displacement_confirmed={} trade_use={}; corr20={} corr50={} legacy_divergence={:?}; cointegrated={:?}; basis_bps={}; fail_closed_reason={}; narrative={}",
         section.paired_market_available,
         section.futures_symbol.as_deref().unwrap_or("unprovided"),
         section.spot_symbol.as_deref().unwrap_or("unprovided"),
+        section.timeframe.as_deref().unwrap_or("n/a"),
+        section.session.as_deref().unwrap_or("n/a"),
         universe.join(","),
         section.relationship_type,
         section.relationship_confidence,
@@ -909,6 +978,10 @@ fn human_smt_summary(section: &crate::analyze_sections::SmtCorrelationSection) -
             .unwrap_or("n/a"),
         format_optional_price(section.raw_comparison_level),
         section.swept_side.as_deref().unwrap_or("none"),
+        format_optional_bool(section.near_pd_array),
+        section.pd_array_type.as_deref().unwrap_or("n/a"),
+        format_optional_bool(section.mss_or_cisd_confirmed),
+        format_optional_bool(section.displacement_confirmed),
         section.trade_use,
         format_optional_number(section.rolling_correlation_20),
         format_optional_number(section.rolling_correlation_50),
@@ -938,10 +1011,23 @@ fn format_optional_number(value: Option<f64>) -> String {
         .unwrap_or_else(|| "(n/a)".to_string())
 }
 
+fn format_optional_bool(value: Option<bool>) -> String {
+    value
+        .map(|value| value.to_string())
+        .unwrap_or_else(|| "(n/a)".to_string())
+}
+
 fn format_price_band(low: Option<f64>, high: Option<f64>) -> String {
     match (low, high) {
         (Some(low), Some(high)) => format!("({low:.2}-{high:.2})"),
         _ => "(n/a)".to_string(),
+    }
+}
+
+fn format_gap_band(gap: Option<&crate::analyze_sections::GapReferenceLevel>) -> String {
+    match gap {
+        Some(gap) => format_price_band(gap.lower, gap.upper),
+        None => "(n/a)".to_string(),
     }
 }
 
@@ -1643,13 +1729,110 @@ mod tests {
             expansion_strength: 1.25,
             liquidity_sweeps_recent: 1,
             nearest_liquidity_pool_level: Some(18580.0),
+            liquidity_pool_texture: crate::analyze_sections::LiquidityPoolTextureEvidence {
+                factor_name: "liquidity_pool_texture".to_string(),
+                texture: "smooth".to_string(),
+                level: Some(18580.0),
+                high: Some(18582.0),
+                low: Some(18578.0),
+                touch_count: 4,
+                spacing_consistency: Some(0.71),
+                clean_sweep_likelihood: Some(0.74),
+                confidence: 0.69,
+                fail_closed_reason: None,
+            },
             latest_liquidity_sweep_level: Some(18579.5),
+            reference_liquidity_levels: crate::analyze_sections::ReferenceLiquidityLevelsEvidence {
+                factor_name: "reference_liquidity_levels".to_string(),
+                source_frame: "htf".to_string(),
+                timezone: "America/New_York".to_string(),
+                trading_day_rollover: "ny_1700_session_date".to_string(),
+                current_trading_day: Some("2026-05-14".to_string()),
+                current_trading_week: Some("2026-W20".to_string()),
+                current_trading_month: Some("2026-05".to_string()),
+                previous_day_high: Some(18595.0),
+                previous_day_low: Some(18488.0),
+                previous_day_close: Some(18510.5),
+                current_day_open: Some(18522.0),
+                previous_week_high: Some(18620.0),
+                previous_week_low: Some(18390.0),
+                previous_week_close: Some(18496.0),
+                current_week_open: Some(18508.5),
+                previous_month_high: Some(18840.0),
+                previous_month_low: Some(17655.0),
+                current_day_gap: Some(crate::analyze_sections::GapReferenceLevel {
+                    label: "day_open_gap".to_string(),
+                    period_key: Some("2026-05-14".to_string()),
+                    previous_close: Some(18510.5),
+                    current_open: Some(18522.0),
+                    upper: Some(18522.0),
+                    lower: Some(18510.5),
+                    midpoint: Some(18516.25),
+                    size: Some(11.5),
+                    direction: Some("up_gap".to_string()),
+                    active: true,
+                }),
+                current_week_gap: Some(crate::analyze_sections::GapReferenceLevel {
+                    label: "week_open_gap".to_string(),
+                    period_key: Some("2026-W20".to_string()),
+                    previous_close: Some(18496.0),
+                    current_open: Some(18508.5),
+                    upper: Some(18508.5),
+                    lower: Some(18496.0),
+                    midpoint: Some(18502.25),
+                    size: Some(12.5),
+                    direction: Some("up_gap".to_string()),
+                    active: true,
+                }),
+                recent_week_open_gaps: vec![
+                    crate::analyze_sections::GapReferenceLevel {
+                        label: "week_open_gap".to_string(),
+                        period_key: Some("2026-W20".to_string()),
+                        previous_close: Some(18496.0),
+                        current_open: Some(18508.5),
+                        upper: Some(18508.5),
+                        lower: Some(18496.0),
+                        midpoint: Some(18502.25),
+                        size: Some(12.5),
+                        direction: Some("up_gap".to_string()),
+                        active: true,
+                    },
+                    crate::analyze_sections::GapReferenceLevel {
+                        label: "week_open_gap".to_string(),
+                        period_key: Some("2026-W19".to_string()),
+                        previous_close: Some(18420.0),
+                        current_open: Some(18434.0),
+                        upper: Some(18434.0),
+                        lower: Some(18420.0),
+                        midpoint: Some(18427.0),
+                        size: Some(14.0),
+                        direction: Some("up_gap".to_string()),
+                        active: true,
+                    },
+                ],
+                confidence: 0.96,
+                fail_closed_reason: None,
+            },
             open_fvgs: 1,
             nearest_open_fvg_top: Some(18510.0),
             nearest_open_fvg_bottom: Some(18492.5),
             untested_order_blocks: 1,
             nearest_untested_order_block_high: Some(18480.0),
             nearest_untested_order_block_low: Some(18460.0),
+            order_block_variant: crate::analyze_sections::OrderBlockVariantEvidence {
+                factor_name: "order_block_variant_classifier".to_string(),
+                variant: "breaker_block".to_string(),
+                direction: Direction::Bear,
+                high: Some(18480.0),
+                low: Some(18460.0),
+                midpoint: Some(18470.0),
+                validation_state: "breaker_confirmed".to_string(),
+                mitigation_count: 1,
+                breaker_confirmed: true,
+                rejection_confirmed: false,
+                confidence: 0.78,
+                fail_closed_reason: None,
+            },
             bullish_cisd: true,
             bearish_cisd: false,
             rejection_block_present: true,
@@ -1691,56 +1874,73 @@ mod tests {
         assert!(structure_summary.contains("change_in_state_of_delivery/CISD=bullish_CISD"));
         assert!(technical_summary.contains("last_close=(18520.25)"));
         assert!(technical_summary.contains("liquidity_pool=(18580.00)"));
-        assert!(technical_summary.contains("liquidity_pool_texture/smooth_or_jagged=(n/a)"));
+        assert!(technical_summary.contains("liquidity_pool_texture/smooth_or_jagged=smooth"));
+        assert!(technical_summary.contains("pool_level=(18580.00)"));
+        assert!(technical_summary.contains("pool_high=(18582.00)"));
+        assert!(technical_summary.contains("pool_low=(18578.00)"));
+        assert!(technical_summary.contains("touch_count=4"));
+        assert!(technical_summary.contains("spacing_consistency=(0.710)"));
+        assert!(technical_summary.contains("clean_sweep_likelihood=(0.740)"));
         assert!(technical_summary.contains("latest_sweep=(18579.50)"));
+        assert!(technical_summary.contains("PDH=(18595.00)"));
+        assert!(technical_summary.contains("PWH=(18620.00)"));
+        assert!(technical_summary.contains("PMH=(18840.00)"));
+        assert!(technical_summary.contains("day_gap=(18510.50-18522.00)"));
+        assert!(technical_summary.contains("week_gap=(18496.00-18508.50)"));
         assert!(technical_summary.contains("nearest_fvg=(18492.50-18510.00)"));
         assert!(technical_summary.contains("nearest_OB=(18460.00-18480.00)"));
-        assert!(technical_summary.contains(
-            "variants=mitigation_requires_followup,breaker_requires_followup,rejection_block=true"
-        ));
+        assert!(technical_summary.contains("variant=breaker_block"));
+        assert!(technical_summary.contains("high=(18480.00)"));
+        assert!(technical_summary.contains("low=(18460.00)"));
+        assert!(technical_summary.contains("midpoint=(18470.00)"));
+        assert!(technical_summary.contains("validation_state=breaker_confirmed"));
+        assert!(technical_summary.contains("breaker_confirmed=true"));
+        assert!(technical_summary.contains("confidence=0.780"));
     }
 
     #[test]
     fn analyze_human_surface_carries_ict_smt_confirmation_fields() {
-        let section = crate::analyze_sections::SmtCorrelationSection {
-            probability_role: "cross_market_confirmation_for_probability_model".to_string(),
-            paired_market_available: true,
-            futures_symbol: Some("NQ".to_string()),
-            spot_symbol: Some("ES".to_string()),
-            related_futures_symbols: vec!["YM".to_string(), "RTY".to_string()],
-            related_etf_symbols: vec!["QQQ".to_string(), "SPY".to_string()],
-            related_options_symbols: vec!["SPY".to_string()],
-            related_cfd_symbols: vec!["NAS100".to_string(), "US500".to_string()],
-            related_crypto_symbols: Vec::new(),
-            rolling_correlation_20: Some(0.82),
-            rolling_correlation_50: Some(0.76),
-            divergence_detected: Some(true),
-            cointegration_stat: Some(-2.1),
-            cointegrated: Some(false),
-            raw_basis_bps: None,
-            normalized_basis_bps: None,
-            rolling_price_ratio_mean: None,
-            smt_signal: Some("bearish_smt".to_string()),
-            base_swing_type: Some("HH_sweep".to_string()),
-            base_level: Some(18550.25),
-            comparison_swing_type: Some("failed_HH".to_string()),
-            comparison_level: Some(5320.75),
-            raw_comparison_swing_type: Some("failed_HH".to_string()),
-            raw_comparison_level: Some(5320.75),
-            swept_side: Some("buy_side_liquidity".to_string()),
-            normalized_for_inverse_correlation: false,
-            relationship_type: "positive".to_string(),
-            relationship_confidence: 0.82,
-            trade_use: "confirmation_only".to_string(),
-            fail_closed_reason: None,
-            notes: Vec::new(),
-            narrative: "ict_bearish_smt_is_confirmation_only_wait_for_pda_and_mss_or_cisd"
-                .to_string(),
-        };
+        let mut section = crate::analyze_sections::empty_smt_correlation_section();
+        section.paired_market_available = true;
+        section.futures_symbol = Some("NQ".to_string());
+        section.spot_symbol = Some("ES".to_string());
+        section.timeframe = Some("15m".to_string());
+        section.session = Some("ny_am".to_string());
+        section.related_futures_symbols = vec!["YM".to_string(), "RTY".to_string()];
+        section.related_etf_symbols = vec!["QQQ".to_string(), "SPY".to_string()];
+        section.related_options_symbols = vec!["SPY".to_string()];
+        section.related_cfd_symbols = vec!["NAS100".to_string(), "US500".to_string()];
+        section.rolling_correlation_20 = Some(0.82);
+        section.rolling_correlation_50 = Some(0.76);
+        section.divergence_detected = Some(true);
+        section.cointegration_stat = Some(-2.1);
+        section.cointegrated = Some(false);
+        section.smt_signal = Some("bearish_smt".to_string());
+        section.base_swing_type = Some("HH_sweep".to_string());
+        section.base_level = Some(18550.25);
+        section.comparison_swing_type = Some("failed_HH".to_string());
+        section.comparison_level = Some(5320.75);
+        section.raw_comparison_swing_type = Some("failed_HH".to_string());
+        section.raw_comparison_level = Some(5320.75);
+        section.swept_side = Some("buy_side_liquidity".to_string());
+        section.near_pd_array = Some(true);
+        section.pd_array_type = Some("FVG".to_string());
+        section.mss_or_cisd_confirmed = Some(true);
+        section.displacement_confirmed = Some(true);
+        section.resolver_relationship_type = "positive".to_string();
+        section.resolver_confidence = 0.82;
+        section.resolver_evidence_source = "unit_test".to_string();
+        section.relationship_type = "positive".to_string();
+        section.relationship_confidence = 0.82;
+        section.trade_use = "confirmation_only".to_string();
+        section.narrative =
+            "ict_bearish_smt_is_confirmation_only_wait_for_pda_and_mss_or_cisd".to_string();
 
         let summary = human_smt_summary(&section);
 
         assert!(summary.contains("relationship=positive/confidence:0.820"));
+        assert!(summary.contains("timeframe=15m"));
+        assert!(summary.contains("session=ny_am"));
         assert!(summary.contains("smt_signal=bearish_smt"));
         assert!(summary.contains("base_swing=HH_sweep"));
         assert!(summary.contains("base_level=(18550.25)"));
@@ -1749,6 +1949,10 @@ mod tests {
         assert!(summary.contains("raw_comparison_swing=failed_HH"));
         assert!(summary.contains("raw_comparison_level=(5320.75)"));
         assert!(summary.contains("swept_side=buy_side_liquidity"));
+        assert!(summary.contains("near_pd_array=true"));
+        assert!(summary.contains("pd_array_type=FVG"));
+        assert!(summary.contains("mss_or_cisd_confirmed=true"));
+        assert!(summary.contains("displacement_confirmed=true"));
         assert!(summary.contains("trade_use=confirmation_only"));
     }
 

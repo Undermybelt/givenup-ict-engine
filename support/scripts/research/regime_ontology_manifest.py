@@ -5,6 +5,8 @@ import json
 from pathlib import Path
 from typing import Any
 
+CONCEPT_GUIDANCE_PATH = Path(__file__).with_name("ict_concept_guidance_v1.json")
+
 PRIMARY_LABELS = [
     "TrendExpansion",
     "RangeConsolidation",
@@ -128,6 +130,24 @@ def _write_jsonl(path: Path, rows: list[dict[str, Any]]) -> None:
             handle.write(json.dumps(row, sort_keys=False) + "\n")
 
 
+def load_source_concept_guidance(path: Path = CONCEPT_GUIDANCE_PATH) -> dict[str, Any]:
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    text = json.dumps(payload, sort_keys=True)
+    forbidden_fragments = ["/Users/", "Downloads", "source_root"]
+    leaked = [fragment for fragment in forbidden_fragments if fragment in text]
+    if leaked:
+        raise ValueError(f"concept guidance contains private source references: {', '.join(leaked)}")
+    concepts = payload.get("concepts", [])
+    return {
+        "schema_version": payload["schema_version"],
+        "origin": payload["origin"],
+        "usage": payload["usage"],
+        "concept_count": len(concepts),
+        "categories": sorted({concept["category"] for concept in concepts}),
+        "concepts": concepts,
+    }
+
+
 def _confidence_contract(label: str, level: str) -> dict[str, Any]:
     is_unknown = label in {"Unknown", "Neutral"} or "Unknown" in label or "Transitional" in label
     return {
@@ -230,6 +250,7 @@ def build_manifest() -> dict[str, Any]:
             "transition": len(transition),
         },
         "expert_count": len(experts),
+        "source_concept_guidance": load_source_concept_guidance(),
         "experts": experts,
     }
 

@@ -1,0 +1,41 @@
+{
+  "schema_version": "transfer-score/v1",
+  "strategy_name": "brooks_threshold_support_scan_balanced_high_winrate",
+  "candidate_id": "brooks_second_entry_reversal_balanced_threshold_v1",
+  "covered_market_count": 5,
+  "covered_markets": [
+    "provider-backed direct-limit realized rows"
+  ],
+  "markets_without_trade_counts": [
+    "fresh low-timeframe provider-backed source packet",
+    "current live provider refetch",
+    "execution-tree promoted branch"
+  ],
+  "status": "candidate_observation_requires_replay",
+  "overall_transfer_score": 0.7,
+  "average_sharpe": null,
+  "average_trade_count": 120.0,
+  "timeframe": "retained_realized_rows",
+  "market_evidence": {
+    "balanced_high_winrate": {
+      "status": "realized_threshold_scan",
+      "unique_trade_count": 120,
+      "raw_rows": 240,
+      "provider_count": 5,
+      "regime_count": 3,
+      "wins": 84,
+      "losses": 29,
+      "win_rate": 0.7,
+      "expectancy": 1.177698
+    }
+  },
+  "branch_path_contract": {
+    "main_regime": "TrendExpansion",
+    "sub_regime": "BrooksPriceAction",
+    "sub_sub_regime_or_profit_factor": "second_entry_failed_breakout",
+    "profit_factor": "brooks_second_entry_reversal_balanced_threshold_v1",
+    "regime_profit_branch_path": "TrendExpansion -> BrooksPriceAction -> second_entry_failed_breakout -> brooks_second_entry_reversal_balanced_threshold_v1"
+  },
+  "evidence_source": "support/docs/experiments/actionable-regime-confidence/runs/20260514T210615+0800-codex-brooks-threshold-support-scan-v1/materials/brooks_threshold_support_scan_summary.json",
+  "fail_closed_reason": "summary-level candidate pack only; requires exact structural-feedback replay before Pre-Bayes/BBN/CatBoost/execution-tree promotion"
+}

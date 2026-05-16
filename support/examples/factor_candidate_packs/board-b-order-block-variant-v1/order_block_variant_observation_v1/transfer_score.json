@@ -1,0 +1,29 @@
+{
+  "schema_version": "transfer-score/v1",
+  "strategy_name": "order_block_variant_observation_packet",
+  "candidate_id": "order_block_variant_observation_v1",
+  "covered_market_count": 0,
+  "covered_markets": [],
+  "markets_without_trade_counts": [
+    "NQ/ES/YM/RTY",
+    "NAS100/US500/US30 CFD",
+    "DXY",
+    "XAUUSD",
+    "BTC/ETH"
+  ],
+  "status": "fail_closed_required_markets_not_yet_provider_backed",
+  "overall_transfer_score": 0.0,
+  "average_sharpe": null,
+  "average_trade_count": 0.0,
+  "timeframe": "1h",
+  "market_evidence": {},
+  "branch_path_contract": {
+    "main_regime": "Range",
+    "sub_regime": "OrderBlockVariant",
+    "sub_sub_regime_or_profit_factor": "block_validation_state",
+    "profit_factor": "order_block_variant_observation_v1",
+    "regime_profit_branch_path": "Range -> OrderBlockVariant -> block_validation_state -> order_block_variant_observation_v1"
+  },
+  "evidence_source": "support/scripts/research/order_block_variant_observation_packet.py",
+  "fail_closed_reason": "required provider-backed retained-window observations and cross-market/timeframe coverage missing"
+}

@@ -1,0 +1,57 @@
+{
+  "schema_version": "factor-expression/v1",
+  "candidate_id": "liquidity_pool_texture_xlf_range_directional_1h_v1",
+  "display_name": "Liquidity Pool Texture XLF Range Directional 1H V1",
+  "family": "Board B Liquidity",
+  "status": "candidate_only",
+  "promotion_state": "candidate_only",
+  "strategy_name": "LiquidityPoolTextureXlfRangeDirectional1H",
+  "mutation_id": null,
+  "base_factor": "liquidity_pool_texture",
+  "expression_text": "range_root and symbol == XLF and texture == jagged and touch_count >= 10 and clean_sweep_likelihood >= 0.55 and selected_direction == bear and realized_r > 0",
+  "operator_set": [
+    "range_root",
+    "texture",
+    "touch_count",
+    "clean_sweep_likelihood",
+    "selected_direction",
+    "entry",
+    "stop_loss",
+    "take_profit_1",
+    "realized_r"
+  ],
+  "complexity": 7,
+  "paradigm": "liquidity pool texture directional retained bridge",
+  "expected_regime": "Range",
+  "target_market_hypothesis": [
+    "XLF"
+  ],
+  "base_timeframe": "1h",
+  "context_timeframes": [
+    "1h",
+    "1d",
+    "1w"
+  ],
+  "regime_role": "root_conditioned_factor",
+  "evidence_window": "held-out retained splits: yfinance XLF 2026-03-17T11:00:00Z -> 2026-03-24T20:00:00Z, 2026-05-05T10:00:00Z -> 2026-05-12T19:30:00Z, and original 2026-05-08T14:30:00Z -> 2026-05-15T23:58:12Z",
+  "strategy_source": "support/docs/experiments/actionable-regime-confidence/runs/20260516T174106+0800-codex-liquidity-texture-xlf-rolling-support-v1/checks/rolling_packet_classification.json",
+  "filter_belief_execution_mapping": {
+    "pre_bayes_targets": [
+      "liquidity_pool_texture_confirmation"
+    ],
+    "belief_targets": [
+      "pool_texture_directional_evidence"
+    ],
+    "path_ranking_targets": [
+      "recommended_path_bundle"
+    ],
+    "execution_tree_targets": [
+      "execution_readiness",
+      "trap_risk"
+    ],
+    "execution_tree_blockers_intended": [
+      "single_market_low_observation_count_not_ready_for_candidate_pack_or_downstream_admission"
+    ],
+    "structural_feedback_required": true
+  }
+}

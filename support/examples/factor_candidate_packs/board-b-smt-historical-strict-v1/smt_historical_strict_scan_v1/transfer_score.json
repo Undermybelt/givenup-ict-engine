@@ -1,0 +1,54 @@
+{
+  "schema_version": "transfer-score/v1",
+  "candidate_id": "smt_historical_strict_scan_v1",
+  "status": "cross_market_candidate",
+  "overall_transfer_score": 0.58,
+  "covered_markets": [
+    "NQ/ES",
+    "NQ/YM",
+    "EURUSD/GBPUSD",
+    "EURUSD/DXY",
+    "XAUUSD/XAGUSD",
+    "XAUUSD/DXY",
+    "BTC/ETH"
+  ],
+  "markets_without_trade_counts": [],
+  "market_evidence": {
+    "NQ/ES": {
+      "trade_count": 1,
+      "win_rate": 0.0,
+      "expectancy": -0.000613350598016833
+    },
+    "NQ/YM": {
+      "trade_count": 2,
+      "win_rate": 1.0,
+      "expectancy": 0.006529152302829885
+    },
+    "EURUSD/GBPUSD": {
+      "trade_count": 3,
+      "win_rate": 1.0,
+      "expectancy": 0.0012925892334427025
+    },
+    "EURUSD/DXY": {
+      "trade_count": 2,
+      "win_rate": 1.0,
+      "expectancy": 0.0007613402133406987
+    },
+    "XAUUSD/XAGUSD": {
+      "trade_count": 3,
+      "win_rate": 1.0,
+      "expectancy": 0.00459519713454957
+    },
+    "XAUUSD/DXY": {
+      "trade_count": 2,
+      "win_rate": 1.0,
+      "expectancy": 0.005810254624631885
+    },
+    "BTC/ETH": {
+      "trade_count": 8,
+      "win_rate": 0.75,
+      "expectancy": 0.0035598688292745842
+    }
+  },
+  "reason": "required_pair_coverage_and_total_strict_rows_exist_but_per_regime_density_remains_fail_closed"
+}

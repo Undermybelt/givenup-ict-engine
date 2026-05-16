@@ -1,0 +1,142 @@
+{
+  "schema_version": "factor-eval-grid-summary/v1",
+  "factor_name": "smt_relationship_resolver_historical_strict_scan_v1",
+  "candidate_id": "smt_historical_strict_scan_v1",
+  "status": "candidate_only",
+  "aggregate_metrics": {
+    "trade_count": 32,
+    "win_rate": 0.84375,
+    "expectancy": 0.003043983010097082,
+    "confidence": 1.0
+  },
+  "trade_density_summary": {
+    "aggregate_trade_count": 32,
+    "aggregate_label": "strict_density_total_floor_met",
+    "downstream_allowed": false,
+    "promotion_allowed": false,
+    "fail_closed_reason": "insufficient_historical_strict_pair_or_regime_density"
+  },
+  "breadth_matrix": {
+    "NQ/ES": {
+      "status": "covered",
+      "trade_count": 1,
+      "trade_density_label": "anecdotal",
+      "win_rate": 0.0,
+      "expectancy": -0.000613350598016833,
+      "strict_trainable_present": true,
+      "confidence": 0.1
+    },
+    "NQ/YM": {
+      "status": "covered",
+      "trade_count": 2,
+      "trade_density_label": "anecdotal",
+      "win_rate": 1.0,
+      "expectancy": 0.006529152302829885,
+      "strict_trainable_present": true,
+      "confidence": 0.2
+    },
+    "EURUSD/GBPUSD": {
+      "status": "covered",
+      "trade_count": 3,
+      "trade_density_label": "anecdotal",
+      "win_rate": 1.0,
+      "expectancy": 0.0012925892334427025,
+      "strict_trainable_present": true,
+      "confidence": 0.3
+    },
+    "EURUSD/DXY": {
+      "status": "covered",
+      "trade_count": 2,
+      "trade_density_label": "anecdotal",
+      "win_rate": 1.0,
+      "expectancy": 0.0007613402133406987,
+      "strict_trainable_present": true,
+      "confidence": 0.2
+    },
+    "XAUUSD/XAGUSD": {
+      "status": "covered",
+      "trade_count": 3,
+      "trade_density_label": "anecdotal",
+      "win_rate": 1.0,
+      "expectancy": 0.00459519713454957,
+      "strict_trainable_present": true,
+      "confidence": 0.3
+    },
+    "XAUUSD/DXY": {
+      "status": "covered",
+      "trade_count": 2,
+      "trade_density_label": "anecdotal",
+      "win_rate": 1.0,
+      "expectancy": 0.005810254624631885,
+      "strict_trainable_present": true,
+      "confidence": 0.2
+    },
+    "BTC/ETH": {
+      "status": "covered",
+      "trade_count": 8,
+      "trade_density_label": "small_sample",
+      "win_rate": 0.75,
+      "expectancy": 0.0035598688292745842,
+      "strict_trainable_present": true,
+      "confidence": 0.8
+    }
+  },
+  "per_regime_statistics": {
+    "trend": {
+      "event_count": 62,
+      "trade_count": 6,
+      "win_rate": 0.8333333333333334,
+      "expectancy": 0.0032348590278528013,
+      "confidence": 0.6,
+      "fail_closed_reason": "insufficient_per_regime_strict_rows"
+    },
+    "range": {
+      "event_count": 52,
+      "trade_count": 19,
+      "win_rate": 0.8947368421052632,
+      "expectancy": 0.0028810020692167054,
+      "confidence": 1.0,
+      "fail_closed_reason": "none"
+    },
+    "transition": {
+      "event_count": 34,
+      "trade_count": 7,
+      "win_rate": 0.8571428571428571,
+      "expectancy": 0.0031479375756936524,
+      "confidence": 0.7,
+      "fail_closed_reason": "insufficient_per_regime_strict_rows"
+    },
+    "stress": {
+      "event_count": 17,
+      "trade_count": 0,
+      "win_rate": null,
+      "expectancy": null,
+      "confidence": 0.0,
+      "fail_closed_reason": "missing_strict_same_event_training_rows"
+    },
+    "other": {
+      "event_count": 0,
+      "trade_count": 0,
+      "win_rate": null,
+      "expectancy": null,
+      "confidence": 0.0,
+      "fail_closed_reason": "missing_strict_same_event_training_rows"
+    }
+  },
+  "quality_contract": {
+    "confirmation_only_required": true,
+    "stable_relationship_required": true,
+    "session_overlap_required": true,
+    "same_timeframe_required": true,
+    "strict_training_rows": 32,
+    "min_total_strict_rows": 30,
+    "inverse_normalized_rows": 45,
+    "missing_pair_lanes": [],
+    "missing_or_sparse_regimes": [
+      "other",
+      "stress",
+      "transition",
+      "trend"
+    ]
+  }
+}

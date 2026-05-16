@@ -1,0 +1,126 @@
+{
+  "schema_version": "factor-eval-grid-summary/v1",
+  "factor_name": "market_structure_event_classifier",
+  "candidate_id": "market_structure_event_classifier_direct_limit_v1",
+  "selected_strategy": "market_structure_direct_limit_seed_packet",
+  "timeframe": "1h",
+  "candidate_status": "active",
+  "promotion_state": "candidate_only",
+  "breadth_matrix": {
+    "IBKR": {
+      "status": "provider_backed_positive_seed",
+      "trade_count": 70,
+      "trade_density_label": "usable_seed",
+      "evidence_source": "support/docs/experiments/actionable-regime-confidence/runs/20260516T-current-codex-board-b-market-structure-direct-limit-seed-v1/materials/market_structure_direct_limit_seed_packet.json",
+      "win_rate_pct": 74.2857,
+      "expectancy_r": 1.184775
+    },
+    "Kraken": {
+      "status": "provider_backed_positive_seed",
+      "trade_count": 12,
+      "trade_density_label": "thin_positive_seed",
+      "evidence_source": "support/docs/experiments/actionable-regime-confidence/runs/20260516T-current-codex-board-b-market-structure-direct-limit-seed-v1/materials/market_structure_direct_limit_seed_packet.json",
+      "win_rate_pct": 83.3333,
+      "expectancy_r": 1.5
+    },
+    "yfinance/YF": {
+      "status": "provider_backed_positive_seed",
+      "trade_count": 44,
+      "trade_density_label": "usable_seed",
+      "evidence_source": "support/docs/experiments/actionable-regime-confidence/runs/20260516T-current-codex-board-b-market-structure-direct-limit-seed-v1/materials/market_structure_direct_limit_seed_packet.json",
+      "win_rate_pct": 77.2727,
+      "expectancy_r": 1.318182
+    }
+  },
+  "trade_density_summary": {
+    "aggregate_trade_count": 126,
+    "aggregate_label": "positive_seed_gate1",
+    "covered_market_count": 3
+  },
+  "aggregate_metrics": {
+    "sharpe": null,
+    "win_rate_pct": 76.1905,
+    "profit_factor": 6.549198,
+    "total_profit_pct": null,
+    "max_drawdown_pct": null,
+    "trade_count": 126,
+    "expectancy_r": 1.261383
+  },
+  "per_regime_statistics": {
+    "transition": {
+      "win_rate": 0.761905,
+      "trade_count": 126,
+      "expectancy": 1.261383,
+      "sample_window": "existing labeled outcome rows",
+      "instrument_coverage": [
+        "IBKR",
+        "Kraken",
+        "yfinance/YF"
+      ],
+      "confidence": 0.71,
+      "fail_closed_reason": "gate1_only_not_promoted"
+    },
+    "trend": {
+      "win_rate": null,
+      "trade_count": 0,
+      "expectancy": null,
+      "sample_window": null,
+      "instrument_coverage": [],
+      "confidence": 0.0,
+      "fail_closed_reason": "not_tested"
+    },
+    "range": {
+      "win_rate": null,
+      "trade_count": 0,
+      "expectancy": null,
+      "sample_window": null,
+      "instrument_coverage": [],
+      "confidence": 0.0,
+      "fail_closed_reason": "not_tested"
+    },
+    "stress": {
+      "win_rate": null,
+      "trade_count": 0,
+      "expectancy": null,
+      "sample_window": null,
+      "instrument_coverage": [],
+      "confidence": 0.0,
+      "fail_closed_reason": "not_tested"
+    },
+    "other": {
+      "win_rate": null,
+      "trade_count": 0,
+      "expectancy": null,
+      "sample_window": null,
+      "instrument_coverage": [],
+      "confidence": 0.0,
+      "fail_closed_reason": "not_tested"
+    }
+  },
+  "field_mapping": {
+    "Structure": [
+      "cisd_direction",
+      "cisd_level",
+      "near_pd_array",
+      "pd_array_type"
+    ],
+    "Technicals": [
+      "breakout_body_atr",
+      "breakout_range_atr",
+      "close_through_level_atr",
+      "atr_valid_breakout"
+    ],
+    "SMT": [],
+    "Regime posterior evidence": [
+      "main_regime",
+      "sub_regime",
+      "regime_profit_branch_path"
+    ],
+    "Execution tree": [
+      "entry_level",
+      "stop_level",
+      "target_level",
+      "realized_r"
+    ]
+  }
+}

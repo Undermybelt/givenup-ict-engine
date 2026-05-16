@@ -1,0 +1,72 @@
+{
+  "schema_version": "transfer-score/v1",
+  "strategy_name": "SweepQualityProviderObservationOnly",
+  "covered_market_count": 8,
+  "covered_markets": [
+    "BTC/USD",
+    "ETH/USD",
+    "NQ",
+    "ES",
+    "EURUSD",
+    "GBPUSD",
+    "XAUUSD",
+    "XAGUSD"
+  ],
+  "markets_without_trade_counts": [
+    "BTC/USD",
+    "ETH/USD",
+    "NQ",
+    "ES",
+    "EURUSD",
+    "GBPUSD",
+    "XAUUSD",
+    "XAGUSD"
+  ],
+  "status": "observation_only_candidate",
+  "overall_transfer_score": 0.0,
+  "average_trade_count": 0,
+  "timeframe": "mixed",
+  "market_evidence": {
+    "BTC/USD": {
+      "observation_count": 3,
+      "confidence": 0.62,
+      "evidence_source": "sweep_quality_provider_observation_packet"
+    },
+    "ETH/USD": {
+      "observation_count": 3,
+      "confidence": 0.62,
+      "evidence_source": "sweep_quality_provider_observation_packet"
+    },
+    "NQ": {
+      "observation_count": 3,
+      "confidence": 0.6,
+      "evidence_source": "sweep_quality_provider_observation_packet"
+    },
+    "ES": {
+      "observation_count": 2,
+      "confidence": 0.6,
+      "evidence_source": "sweep_quality_provider_observation_packet"
+    },
+    "EURUSD": {
+      "observation_count": 4,
+      "confidence": 0.6,
+      "evidence_source": "sweep_quality_provider_observation_packet"
+    },
+    "GBPUSD": {
+      "observation_count": 1,
+      "confidence": 0.6,
+      "evidence_source": "sweep_quality_provider_observation_packet"
+    },
+    "XAUUSD": {
+      "observation_count": 3,
+      "confidence": 0.6,
+      "evidence_source": "sweep_quality_provider_observation_packet"
+    },
+    "XAGUSD": {
+      "observation_count": 2,
+      "confidence": 0.6,
+      "evidence_source": "sweep_quality_provider_observation_packet"
+    }
+  },
+  "evidence_source": "provider_observation_packet_only"
+}

@@ -24,6 +24,7 @@ pub const IBKR_GATEWAY_PORT_CANDIDATES: [(&str, u16); 4] = [
     ("IB Gateway paper", 4002u16),
     ("IB Gateway live", 4001u16),
 ];
+const TRADINGVIEW_MCP_PROBE_TIMEOUT: Duration = Duration::from_secs(1);
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub(crate) struct IbkrGatewayCandidate {
@@ -317,7 +318,7 @@ fn ibkr_provider_status(
 }
 
 pub(crate) fn ibkr_runtime_probe_details() -> IbkrRuntimeProbeDetails {
-    let scripts_dir = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("scripts");
+    let scripts_dir = ibkr_support_scripts_dir();
     let probe = format!(
         "import sys; sys.path.insert(0, {:?}); import redis; import ib_async; import ibkr_bridge",
         scripts_dir.display().to_string()
@@ -341,6 +342,10 @@ pub(crate) fn ibkr_runtime_probe_details() -> IbkrRuntimeProbeDetails {
         stderr_excerpt: stderr,
         gateway_candidates: ibkr_gateway_candidates("127.0.0.1"),
     }
+}
+
+fn ibkr_support_scripts_dir() -> PathBuf {
+    PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("support/scripts")
 }
 
 fn ibkr_gateway_candidates(host: &str) -> Vec<IbkrGatewayCandidate> {
@@ -505,11 +510,30 @@ where
     let config = tradingview_mcp_config_from_env_or_home(env_lookup, home_dir);
     let configured_url = config.url.clone();
     let has_api_key = config.api_key.is_some();
-    let probe_details = config
-        .api_key
-        .as_deref()
-        .map(|key| probe(required, &configured_url, key))
-        .unwrap_or_else(|| TradingviewMcpProbeDetails {
+    let force_stdio = tradingview_mcp_stdio_override_from_env_lookup(env_lookup);
+    let use_remote_http = has_api_key && !force_stdio;
+    let probe_details = if use_remote_http {
+        config
+            .api_key
+            .as_deref()
+            .map(|key| probe(required, &configured_url, key))
+            .unwrap_or_else(|| TradingviewMcpProbeDetails {
+                connectivity_ok: true,
+                ohlcv_ok: None,
+                options_ok: if required.iter().any(|item| {
+                    matches!(
+                        item,
+                        ControlMatrixDataRequirement::OptionsGreeks
+                            | ControlMatrixDataRequirement::OptionsImpliedVolatility
+                    )
+                }) {
+                    Some(false)
+                } else {
+                    None
+                },
+            })
+    } else {
+        TradingviewMcpProbeDetails {
             connectivity_ok: true,
             ohlcv_ok: None,
             options_ok: if required.iter().any(|item| {
@@ -523,7 +547,8 @@ where
             } else {
                 None
             },
-        });
+        }
+    };
     let needs_ohlcv = required.iter().any(|item| {
         matches!(
             item,
@@ -539,7 +564,7 @@ where
                 | ControlMatrixDataRequirement::OptionsImpliedVolatility
         )
     });
-    let (healthy, status, reason, install_prompts) = if !has_api_key
+    let (healthy, status, reason, install_prompts) = if !use_remote_http
         && needs_options
         && !needs_ohlcv
     {
@@ -554,7 +579,7 @@ where
                 ),
             ],
         )
-    } else if !has_api_key && needs_options {
+    } else if !use_remote_http && needs_options {
         (
             true,
             "ready_degraded".to_string(),
@@ -566,7 +591,7 @@ where
                 ),
             ],
         )
-    } else if !has_api_key {
+    } else if !use_remote_http {
         (
             true,
             "ready".to_string(),
@@ -654,8 +679,14 @@ where
                 TVREMIX_MCP_API_KEY_ENV,
                 redact_secret_presence(has_api_key)
             ),
-            format!("stdio_cmd_env={}", env_presence(TRADINGVIEW_MCP_CMD_ENV)),
-            format!("stdio_args_env={}", env_presence(TRADINGVIEW_MCP_ARGS_ENV)),
+            format!(
+                "stdio_cmd_env={}",
+                env_presence_from_lookup(env_lookup, TRADINGVIEW_MCP_CMD_ENV)
+            ),
+            format!(
+                "stdio_args_env={}",
+                env_presence_from_lookup(env_lookup, TRADINGVIEW_MCP_ARGS_ENV)
+            ),
             format!("probe_connectivity={}", probe_details.connectivity_ok),
             format!(
                 "probe_ohlcv={}",
@@ -677,6 +708,20 @@ where
 
 pub(crate) fn tradingview_mcp_config_from_env_or_local() -> TradingviewMcpRuntimeConfig {
     tradingview_mcp_config_from_env_or_home(&|name| std::env::var(name).ok(), home_dir().as_deref())
+}
+
+pub(crate) fn tradingview_mcp_stdio_override_from_env() -> bool {
+    tradingview_mcp_stdio_override_from_env_lookup(&|name| std::env::var(name).ok())
+}
+
+fn tradingview_mcp_stdio_override_from_env_lookup<F>(env_lookup: &F) -> bool
+where
+    F: Fn(&str) -> Option<String>,
+{
+    env_lookup(TRADINGVIEW_MCP_CMD_ENV)
+        .map(|value| value.trim().to_string())
+        .filter(|value| !value.is_empty())
+        .is_some()
 }
 
 fn tradingview_mcp_config_from_env_or_home<F>(
@@ -799,7 +844,10 @@ fn tradingview_mcp_probe_details(
 }
 
 fn tradingview_mcp_tools_list_ok(url: &str, api_key: &str) -> bool {
-    let Ok(client) = Client::builder().timeout(Duration::from_secs(20)).build() else {
+    let Ok(client) = Client::builder()
+        .timeout(TRADINGVIEW_MCP_PROBE_TIMEOUT)
+        .build()
+    else {
         return false;
     };
     let Ok(response) = client
@@ -833,7 +881,10 @@ fn tradingview_mcp_tools_list_ok(url: &str, api_key: &str) -> bool {
 }
 
 fn tradingview_mcp_tool_success(url: &str, api_key: &str, name: &str, arguments: Value) -> bool {
-    let Ok(client) = Client::builder().timeout(Duration::from_secs(20)).build() else {
+    let Ok(client) = Client::builder()
+        .timeout(TRADINGVIEW_MCP_PROBE_TIMEOUT)
+        .build()
+    else {
         return false;
     };
     let Ok(response) = client
@@ -895,8 +946,14 @@ fn redact_secret_presence(present: bool) -> &'static str {
     }
 }
 
-fn env_presence(name: &str) -> &'static str {
-    if std::env::var_os(name).is_some() {
+fn env_presence_from_lookup<F>(env_lookup: &F, name: &str) -> &'static str
+where
+    F: Fn(&str) -> Option<String>,
+{
+    if env_lookup(name)
+        .map(|value| !value.trim().is_empty())
+        .unwrap_or(false)
+    {
         "<set>"
     } else {
         "<unset>"
@@ -1048,6 +1105,13 @@ mod tests {
     }
 
     #[test]
+    fn ibkr_runtime_probe_uses_support_scripts_directory() {
+        let scripts_dir = ibkr_support_scripts_dir();
+        assert!(scripts_dir.ends_with("support/scripts"));
+        assert!(scripts_dir.join("ibkr_bridge/__init__.py").exists());
+    }
+
+    #[test]
     fn tradingview_provider_reports_ohlcv_probe_failure_after_connectivity() {
         let required = BTreeSet::from([ControlMatrixDataRequirement::EtfReference]);
         let summary = build_provider_summary_for_requirements_with_env(
@@ -1156,5 +1220,48 @@ mod tests {
             .actionable_install_prompts
             .iter()
             .all(|prompt| !prompt.contains("TradingViewRemix MCP API key")));
+    }
+
+    #[test]
+    fn tradingview_provider_prefers_stdio_override_even_with_local_api_key() {
+        let home = tempfile::tempdir().unwrap();
+        let config_dir = home.path().join(".ict-engine");
+        std::fs::create_dir_all(&config_dir).unwrap();
+        std::fs::write(
+            config_dir.join("tvremix_mcp.json"),
+            r#"{"api_key":"local-secret-token","url":"https://tvremix.example/mcp"}"#,
+        )
+        .unwrap();
+
+        let required = BTreeSet::from([ControlMatrixDataRequirement::EtfReference]);
+        let summary = build_provider_summary_for_requirements_with_env(
+            required,
+            &|name| match name {
+                TRADINGVIEW_MCP_CMD_ENV => Some("uv".to_string()),
+                TRADINGVIEW_MCP_ARGS_ENV => {
+                    Some("--directory /tmp/tvr run tradingview-mcp".to_string())
+                }
+                _ => None,
+            },
+            Some(home.path().to_path_buf()),
+            &IbkrRuntimeProbeDetails::default,
+            &|_, _, _| panic!("remote probe should be skipped when stdio override is set"),
+        );
+        let provider = summary
+            .provider_statuses
+            .iter()
+            .find(|status| status.provider == "tradingview_mcp")
+            .unwrap();
+        assert!(provider.healthy);
+        assert_eq!(provider.status, "ready");
+        assert_eq!(provider.reason, "local_stdio_ohlcv_available");
+        assert!(provider
+            .redacted_config
+            .iter()
+            .any(|item| item == "credential_source=local_config"));
+        assert!(provider
+            .redacted_config
+            .iter()
+            .any(|item| item == "stdio_cmd_env=<set>"));
     }
 }

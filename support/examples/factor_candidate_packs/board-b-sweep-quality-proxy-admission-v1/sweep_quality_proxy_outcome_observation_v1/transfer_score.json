@@ -1,0 +1,147 @@
+{
+  "schema_version": "transfer-score/v1",
+  "strategy_name": "SweepQualityProxyOutcomeObservationOnly",
+  "candidate_id": "sweep_quality_proxy_outcome_observation_v1",
+  "covered_market_count": 10,
+  "covered_markets": [
+    "BTC",
+    "DXY",
+    "ES",
+    "ETH",
+    "EURUSD",
+    "GBPUSD",
+    "NQ",
+    "XAGUSD",
+    "XAUUSD",
+    "YM"
+  ],
+  "markets_without_trade_counts": [
+    "BTC",
+    "DXY",
+    "ES",
+    "ETH",
+    "EURUSD",
+    "GBPUSD",
+    "NQ",
+    "XAGUSD",
+    "XAUUSD",
+    "YM"
+  ],
+  "status": "proxy_observation_only_candidate",
+  "overall_transfer_score": 0.0,
+  "average_trade_count": 0,
+  "timeframe": "mixed",
+  "market_evidence": {
+    "BTC": {
+      "observation_count": 377,
+      "proxy_target_hit_rate": 0.6714697406340058,
+      "proxy_expectancy_r": 9.20247308785788,
+      "provider_set": [
+        "kraken",
+        "paired_provider_packet",
+        "yahoo"
+      ],
+      "evidence_source": "support/docs/experiments/actionable-regime-confidence/runs/20260516T195000+0800-codex-board-b-sweep-quality-proxy-outcome-bridge-v1/materials/sweep_quality_proxy_outcomes.csv"
+    },
+    "DXY": {
+      "observation_count": 205,
+      "proxy_target_hit_rate": 0.5875706214689266,
+      "proxy_expectancy_r": 3.8423283262652133,
+      "provider_set": [
+        "paired_provider_packet",
+        "yahoo"
+      ],
+      "evidence_source": "support/docs/experiments/actionable-regime-confidence/runs/20260516T195000+0800-codex-board-b-sweep-quality-proxy-outcome-bridge-v1/materials/sweep_quality_proxy_outcomes.csv"
+    },
+    "ES": {
+      "observation_count": 237,
+      "proxy_target_hit_rate": 0.6303317535545023,
+      "proxy_expectancy_r": 3.853589321005587,
+      "provider_set": [
+        "paired_provider_packet",
+        "yahoo"
+      ],
+      "evidence_source": "support/docs/experiments/actionable-regime-confidence/runs/20260516T195000+0800-codex-board-b-sweep-quality-proxy-outcome-bridge-v1/materials/sweep_quality_proxy_outcomes.csv"
+    },
+    "ETH": {
+      "observation_count": 335,
+      "proxy_target_hit_rate": 0.6719242902208202,
+      "proxy_expectancy_r": 7.127880817354485,
+      "provider_set": [
+        "kraken",
+        "paired_provider_packet",
+        "yahoo"
+      ],
+      "evidence_source": "support/docs/experiments/actionable-regime-confidence/runs/20260516T195000+0800-codex-board-b-sweep-quality-proxy-outcome-bridge-v1/materials/sweep_quality_proxy_outcomes.csv"
+    },
+    "EURUSD": {
+      "observation_count": 145,
+      "proxy_target_hit_rate": 0.627906976744186,
+      "proxy_expectancy_r": 1.7067889488757746,
+      "provider_set": [
+        "paired_provider_packet",
+        "yahoo"
+      ],
+      "evidence_source": "support/docs/experiments/actionable-regime-confidence/runs/20260516T195000+0800-codex-board-b-sweep-quality-proxy-outcome-bridge-v1/materials/sweep_quality_proxy_outcomes.csv"
+    },
+    "GBPUSD": {
+      "observation_count": 38,
+      "proxy_target_hit_rate": 0.5714285714285714,
+      "proxy_expectancy_r": 6.425528294556126,
+      "provider_set": [
+        "paired_provider_packet"
+      ],
+      "evidence_source": "support/docs/experiments/actionable-regime-confidence/runs/20260516T195000+0800-codex-board-b-sweep-quality-proxy-outcome-bridge-v1/materials/sweep_quality_proxy_outcomes.csv"
+    },
+    "NQ": {
+      "observation_count": 359,
+      "proxy_target_hit_rate": 0.5644171779141104,
+      "proxy_expectancy_r": 3.814832646414027,
+      "provider_set": [
+        "paired_provider_packet",
+        "yahoo"
+      ],
+      "evidence_source": "support/docs/experiments/actionable-regime-confidence/runs/20260516T195000+0800-codex-board-b-sweep-quality-proxy-outcome-bridge-v1/materials/sweep_quality_proxy_outcomes.csv"
+    },
+    "XAGUSD": {
+      "observation_count": 151,
+      "proxy_target_hit_rate": 0.5846153846153846,
+      "proxy_expectancy_r": 4.191949598734219,
+      "provider_set": [
+        "paired_provider_packet",
+        "yahoo"
+      ],
+      "evidence_source": "support/docs/experiments/actionable-regime-confidence/runs/20260516T195000+0800-codex-board-b-sweep-quality-proxy-outcome-bridge-v1/materials/sweep_quality_proxy_outcomes.csv"
+    },
+    "XAUUSD": {
+      "observation_count": 162,
+      "proxy_target_hit_rate": 0.6462585034013606,
+      "proxy_expectancy_r": 5.404186618877718,
+      "provider_set": [
+        "paired_provider_packet",
+        "yahoo"
+      ],
+      "evidence_source": "support/docs/experiments/actionable-regime-confidence/runs/20260516T195000+0800-codex-board-b-sweep-quality-proxy-outcome-bridge-v1/materials/sweep_quality_proxy_outcomes.csv"
+    },
+    "YM": {
+      "observation_count": 79,
+      "proxy_target_hit_rate": 0.8142857142857143,
+      "proxy_expectancy_r": 3.6561049749801224,
+      "provider_set": [
+        "paired_provider_packet"
+      ],
+      "evidence_source": "support/docs/experiments/actionable-regime-confidence/runs/20260516T195000+0800-codex-board-b-sweep-quality-proxy-outcome-bridge-v1/materials/sweep_quality_proxy_outcomes.csv"
+    }
+  },
+  "branch_path_contract": {
+    "main_regime": "Transition",
+    "sub_regime": "LiquiditySweep",
+    "sub_sub_regime_or_profit_factor": "sweep_quality_confirmation_only",
+    "profit_factor": "sweep_quality_proxy_outcome_observation_v1",
+    "regime_profit_branch_path": "Transition -> LiquiditySweep -> sweep_quality_confirmation_only -> sweep_quality_proxy_outcome_observation_v1"
+  },
+  "evidence_source": "support/docs/experiments/actionable-regime-confidence/runs/20260516T195000+0800-codex-board-b-sweep-quality-proxy-outcome-bridge-v1/materials/sweep_quality_proxy_outcomes.csv",
+  "proxy_target_hit_rate": 0.6331392271042879,
+  "proxy_expectancy_r": 5.371946700877447,
+  "fail_closed_reason": "proxy_labels_not_realized_trades"
+}

@@ -13,6 +13,7 @@ use super::harness::{
     ProviderExecutionRequest,
 };
 use super::tradingview_mcp::{fetch_tradingview_ohlcv, TradingViewMcpClient};
+use crate::data::realtime::crypto_public_runtime::CryptoPublicRuntimeProvider;
 use crate::data::realtime::market_support::{OptionsChainSummary, SpotInstrumentKind};
 use crate::data::realtime::yfinance_runtime::YahooFinanceProvider;
 use crate::types::Candle;
@@ -44,6 +45,9 @@ pub(crate) fn fetch_reference_candles_for_task(
         ProviderExecutionRequest::YahooFinance { symbol } => {
             fetch_yahoo_candles(symbol, interval, start, end)
         }
+        ProviderExecutionRequest::PublicExchange { provider, symbol } => {
+            fetch_public_exchange_candles(provider, symbol, interval, start, end)
+        }
         ProviderExecutionRequest::TradingViewMcp { symbol } => {
             fetch_tradingview_ohlcv(symbol, interval, start, end, count)
         }
@@ -72,6 +76,9 @@ pub(crate) fn fetch_options_summary_for_task(
                     }
                 }
             }
+        }
+        ProviderExecutionRequest::PublicExchange { .. } => {
+            bail!("unsupported options provider '{}'", task.provider)
         }
         ProviderExecutionRequest::TradingViewMcp { symbol } => {
             match fetch_tradingview_options_summary(symbol) {
@@ -123,6 +130,21 @@ fn fetch_yahoo_candles(
 fn fetch_yahoo_options_summary(symbol: &str) -> Result<OptionsChainSummary> {
     let provider = YahooFinanceProvider::new("native://yfinance");
     provider.fetch_options_chain_summary(symbol)
+}
+
+fn fetch_public_exchange_candles(
+    provider: &str,
+    symbol: &str,
+    interval: &str,
+    start: DateTime<Utc>,
+    end: DateTime<Utc>,
+) -> Result<Vec<Candle>> {
+    let exchange = match provider {
+        "bybit_public" | "bybit_public_runtime" => "bybit",
+        _ => "binance",
+    };
+    CryptoPublicRuntimeProvider::new_for_exchange(exchange)
+        .fetch_futures_candles(symbol, interval, start, end)
 }
 
 fn hubble_client() -> Result<(String, Client)> {

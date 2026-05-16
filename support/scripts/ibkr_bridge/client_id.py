@@ -6,6 +6,7 @@ setup, bridge, and one-shot fetchers without pulling in ib_async or Redis.
 
 from __future__ import annotations
 
+import asyncio
 import contextlib
 from collections.abc import Iterable
 
@@ -42,17 +43,29 @@ async def connect_with_client_id_fallback(
     preferred_client_id: int,
     readonly: bool = True,
     candidates: Iterable[int] | None = None,
+    connect_timeout_sec: float = 8.0,
 ) -> tuple[int, list[tuple[int, str]]]:
     attempted_conflicts: list[tuple[int, str]] = []
     for client_id in list(candidates or candidate_client_ids(preferred_client_id)):
         try:
-            await ib.connectAsync(
-                host=host,
-                port=port,
-                clientId=client_id,
-                readonly=readonly,
+            await asyncio.wait_for(
+                ib.connectAsync(
+                    host=host,
+                    port=port,
+                    clientId=client_id,
+                    readonly=readonly,
+                ),
+                timeout=connect_timeout_sec,
             )
             return client_id, attempted_conflicts
+        except (asyncio.TimeoutError, TimeoutError):
+            with contextlib.suppress(Exception):
+                if ib.isConnected():
+                    ib.disconnect()
+            attempted_conflicts.append(
+                (client_id, f"connect timed out after {connect_timeout_sec}s")
+            )
+            continue
         except Exception as exc:  # noqa: BLE001
             with contextlib.suppress(Exception):
                 if ib.isConnected():

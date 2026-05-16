@@ -6,6 +6,7 @@ use reqwest::{
     header::SET_COOKIE,
 };
 use serde::Deserialize;
+use std::time::{Duration as StdDuration, Instant};
 
 use crate::types::{Candle, Timeframe};
 
@@ -21,6 +22,8 @@ use super::{
 pub struct YahooFinanceProvider {
     client: Client,
 }
+
+const YAHOO_OPTIONS_ENRICHMENT_BUDGET: StdDuration = StdDuration::from_secs(20);
 
 impl YahooFinanceProvider {
     pub fn new(_base_url: impl Into<String>) -> Self {
@@ -75,6 +78,7 @@ impl YahooFinanceProvider {
     pub fn fetch_options_chain_summary(&self, symbol: &str) -> Result<OptionsChainSummary> {
         let symbol = resolve_options_symbol(symbol);
         let symbol_key = symbol.clone();
+        let enrichment_started_at = Instant::now();
         let mut summary = match self.fetch_options_chain_page(&symbol, None) {
             Ok(first_chain) => {
                 let underlying_price = first_chain
@@ -93,6 +97,12 @@ impl YahooFinanceProvider {
                 let mut contracts = Vec::new();
                 collect_contracts(&first_chain, &mut contracts);
                 for expiration in expirations.into_iter().skip(1).take(12) {
+                    if !yahoo_options_enrichment_budget_available(
+                        enrichment_started_at,
+                        YAHOO_OPTIONS_ENRICHMENT_BUDGET,
+                    ) {
+                        break;
+                    }
                     if let Ok(chain) = self.fetch_options_chain_page(&symbol, Some(expiration)) {
                         collect_contracts(&chain, &mut contracts);
                     }
@@ -163,6 +173,9 @@ impl YahooFinanceProvider {
                 }
             }
             Err(primary_error) => {
+                if should_skip_yahoo_options_secondary_fallback(&primary_error) {
+                    return Err(primary_error);
+                }
                 if let Ok(summary) = browser_bridge::yahoo_finance_options_summary(&symbol) {
                     summary
                 } else {
@@ -171,23 +184,28 @@ impl YahooFinanceProvider {
             }
         };
 
-        if let Ok(greeks) = self.fetch_barchart_greeks(&symbol) {
-            summary.near_atm_implied_volatility = greeks
-                .near_atm_implied_volatility
-                .or(summary.near_atm_implied_volatility);
-            summary.put_call_oi_ratio = greeks.put_call_oi_ratio.or(summary.put_call_oi_ratio);
-            summary.put_call_volume_ratio = greeks
-                .put_call_volume_ratio
-                .or(summary.put_call_volume_ratio);
-            summary.near_atm_delta = greeks.near_atm_delta;
-            summary.near_atm_gamma = greeks.near_atm_gamma;
-            summary.near_atm_vega = greeks.near_atm_vega;
-            summary.call_gamma_oi = greeks.call_gamma_oi;
-            summary.put_gamma_oi = greeks.put_gamma_oi;
-            summary.gamma_skew = greeks.gamma_skew;
-            summary.nearest_expiration_dte = greeks
-                .nearest_expiration_dte
-                .or(summary.nearest_expiration_dte);
+        if yahoo_options_enrichment_budget_available(
+            enrichment_started_at,
+            YAHOO_OPTIONS_ENRICHMENT_BUDGET,
+        ) {
+            if let Ok(greeks) = self.fetch_barchart_greeks(&symbol) {
+                summary.near_atm_implied_volatility = greeks
+                    .near_atm_implied_volatility
+                    .or(summary.near_atm_implied_volatility);
+                summary.put_call_oi_ratio = greeks.put_call_oi_ratio.or(summary.put_call_oi_ratio);
+                summary.put_call_volume_ratio = greeks
+                    .put_call_volume_ratio
+                    .or(summary.put_call_volume_ratio);
+                summary.near_atm_delta = greeks.near_atm_delta;
+                summary.near_atm_gamma = greeks.near_atm_gamma;
+                summary.near_atm_vega = greeks.near_atm_vega;
+                summary.call_gamma_oi = greeks.call_gamma_oi;
+                summary.put_gamma_oi = greeks.put_gamma_oi;
+                summary.gamma_skew = greeks.gamma_skew;
+                summary.nearest_expiration_dte = greeks
+                    .nearest_expiration_dte
+                    .or(summary.nearest_expiration_dte);
+            }
         }
 
         Ok(summary)
@@ -1091,6 +1109,14 @@ fn resolve_options_symbol(symbol: &str) -> String {
     }
 }
 
+fn should_skip_yahoo_options_secondary_fallback(error: &anyhow::Error) -> bool {
+    let message = error.to_string().to_ascii_lowercase();
+    message.contains("unauthorized")
+        || message.contains("crumb")
+        || message.contains("cookie")
+        || message.contains("401")
+}
+
 fn ratio(numerator: f64, denominator: f64) -> Option<f64> {
     if denominator.abs() <= f64::EPSILON {
         None
@@ -1172,9 +1198,14 @@ fn should_sleep_before_retry(attempt: usize, max_attempts: usize) -> bool {
     attempt + 1 < max_attempts
 }
 
+fn yahoo_options_enrichment_budget_available(started_at: Instant, budget: StdDuration) -> bool {
+    started_at.elapsed() < budget
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
+    use std::thread::sleep;
 
     #[test]
     fn resolve_futures_symbol_preserves_explicit_yahoo_symbols() {
@@ -1210,5 +1241,34 @@ mod tests {
         assert!(should_sleep_before_retry(0, 3));
         assert!(should_sleep_before_retry(1, 3));
         assert!(!should_sleep_before_retry(2, 3));
+    }
+
+    #[test]
+    fn yahoo_options_enrichment_budget_stops_after_budget_expires() {
+        let started_at = Instant::now();
+        assert!(yahoo_options_enrichment_budget_available(
+            started_at,
+            StdDuration::from_millis(50)
+        ));
+        sleep(StdDuration::from_millis(60));
+        assert!(!yahoo_options_enrichment_budget_available(
+            started_at,
+            StdDuration::from_millis(50)
+        ));
+    }
+
+    #[test]
+    fn yahoo_options_auth_failures_skip_secondary_fallback() {
+        let unauthorized = anyhow!("yahoo options returned error for 'QQQ': 401 Unauthorized");
+        assert!(should_skip_yahoo_options_secondary_fallback(&unauthorized));
+
+        let crumb = anyhow!("yahoo crumb endpoint returned error");
+        assert!(should_skip_yahoo_options_secondary_fallback(&crumb));
+    }
+
+    #[test]
+    fn yahoo_options_non_auth_failures_keep_secondary_fallback_available() {
+        let parse_error = anyhow!("failed to parse yahoo options response");
+        assert!(!should_skip_yahoo_options_secondary_fallback(&parse_error));
     }
 }

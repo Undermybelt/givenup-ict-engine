@@ -1,0 +1,146 @@
+{
+  "schema_version": "factor-eval-grid-summary/v1",
+  "factor_name": "smt_relationship_resolver_same_event_confirmation_failure_v1",
+  "candidate_id": "smt_same_event_strict_training_v1",
+  "status": "candidate_only",
+  "aggregate_metrics": {
+    "trade_count": 15,
+    "win_rate": 0.666667,
+    "expectancy": -0.004002,
+    "confidence": 0.5
+  },
+  "trade_density_summary": {
+    "aggregate_trade_count": 15,
+    "aggregate_label": "probe_only",
+    "downstream_allowed": false,
+    "promotion_allowed": false,
+    "fail_closed_reason": "insufficient_strict_same_event_pair_and_regime_training_rows"
+  },
+  "breadth_matrix": {
+    "NQ/ES": {
+      "status": "covered",
+      "trade_count": 2,
+      "trade_density_label": "anecdotal",
+      "win_rate": 1.0,
+      "expectancy": -0.0020168094615039068,
+      "strict_trainable_present": true,
+      "confidence": 0.4
+    },
+    "NQ/YM": {
+      "status": "flat",
+      "trade_count": 0,
+      "trade_density_label": "invalid",
+      "win_rate": null,
+      "expectancy": null,
+      "strict_trainable_present": false,
+      "confidence": 0.0
+    },
+    "EURUSD/GBPUSD": {
+      "status": "covered",
+      "trade_count": 1,
+      "trade_density_label": "anecdotal",
+      "win_rate": 1.0,
+      "expectancy": 0.004714787803556571,
+      "strict_trainable_present": true,
+      "confidence": 0.2
+    },
+    "EURUSD/DXY": {
+      "status": "covered",
+      "trade_count": 0,
+      "trade_density_label": "invalid",
+      "win_rate": null,
+      "expectancy": null,
+      "strict_trainable_present": false,
+      "confidence": 0.0
+    },
+    "XAUUSD/XAGUSD": {
+      "status": "covered",
+      "trade_count": 2,
+      "trade_density_label": "anecdotal",
+      "win_rate": 0.0,
+      "expectancy": -0.002497996812960334,
+      "strict_trainable_present": true,
+      "confidence": 0.4
+    },
+    "XAUUSD/DXY": {
+      "status": "covered",
+      "trade_count": 2,
+      "trade_density_label": "anecdotal",
+      "win_rate": 0.5,
+      "expectancy": -0.0008189972164292804,
+      "strict_trainable_present": true,
+      "confidence": 0.4
+    },
+    "BTC/ETH": {
+      "status": "covered",
+      "trade_count": 8,
+      "trade_density_label": "anecdotal",
+      "win_rate": 0.75,
+      "expectancy": -0.010006455103715173,
+      "strict_trainable_present": true,
+      "confidence": 1.0
+    }
+  },
+  "per_regime_statistics": {
+    "trend": {
+      "event_count": 31,
+      "trade_count": 5,
+      "win_rate": 0.6,
+      "expectancy": -0.018098369090827494,
+      "confidence": 0.5,
+      "fail_closed_reason": "insufficient_strict_same_event_pair_and_regime_training_rows"
+    },
+    "range": {
+      "event_count": 16,
+      "trade_count": 3,
+      "win_rate": 1.0,
+      "expectancy": -0.0010590821324696369,
+      "confidence": 0.3,
+      "fail_closed_reason": "insufficient_strict_same_event_pair_and_regime_training_rows"
+    },
+    "transition": {
+      "event_count": 25,
+      "trade_count": 7,
+      "win_rate": 0.5714285714285714,
+      "expectancy": 0.001094947406227788,
+      "confidence": 0.7,
+      "fail_closed_reason": "insufficient_strict_same_event_pair_and_regime_training_rows"
+    },
+    "stress": {
+      "event_count": 0,
+      "trade_count": 0,
+      "win_rate": null,
+      "expectancy": null,
+      "confidence": 0.0,
+      "fail_closed_reason": "missing_strict_same_event_training_rows"
+    },
+    "other": {
+      "event_count": 0,
+      "trade_count": 0,
+      "win_rate": null,
+      "expectancy": null,
+      "confidence": 0.0,
+      "fail_closed_reason": "missing_strict_same_event_training_rows"
+    }
+  },
+  "quality_contract": {
+    "confirmation_only_required": true,
+    "stable_relationship_required": true,
+    "session_overlap_required": true,
+    "same_timeframe_required": true,
+    "strict_training_rows": 15,
+    "min_total_strict_rows": 30,
+    "inverse_normalized_rows": 7,
+    "missing_pair_lanes": [
+      "NQ/YM",
+      "EURUSD/DXY"
+    ],
+    "missing_or_sparse_regimes": [
+      "trend",
+      "range",
+      "transition",
+      "stress",
+      "other"
+    ]
+  }
+}

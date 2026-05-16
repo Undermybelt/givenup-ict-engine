@@ -4,6 +4,9 @@ use std::collections::BTreeMap;
 use std::env;
 use std::fs;
 use std::path::{Path, PathBuf};
+use std::process::{Command, ExitStatus, Output, Stdio};
+use std::thread::sleep;
+use std::time::{Duration, Instant, SystemTime, UNIX_EPOCH};
 
 use crate::application::data_sources::control_matrix_providers::ibkr_runtime_probe_details;
 use crate::application::data_sources::{
@@ -22,6 +25,7 @@ const KRAKEN_API_SECRET_ENV: &str = "KRAKEN_API_SECRET";
 const HUBBLE_BASE_URL_ENV: &str = "ICT_ENGINE_HUBBLE_BASE_URL";
 const HUBBLE_API_KEY_ENV: &str = "ICT_ENGINE_HUBBLE_API_KEY";
 const HUBBLE_UPSTREAM_DEFAULT_KEY_COMPAT: &str = "upstream_default_key_compatible";
+const PYTHON_RUNTIME_PROBE_TIMEOUT: Duration = Duration::from_secs(2);
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 pub enum ProviderCatalogDomain {
@@ -281,6 +285,25 @@ pub trait ProviderCatalogSource {
     fn collect_items(&self) -> Result<Vec<ProviderCatalogItem>>;
 }
 
+fn provider_filter_matches_domain(
+    provider_filter: Option<&str>,
+    domain: ProviderCatalogDomain,
+) -> bool {
+    let Some(provider_id) = provider_filter else {
+        return true;
+    };
+    match provider_id {
+        "yfinance" | "hubble" | "ibkr" | "binance_public" | "bybit_public" | "kraken_public"
+        | "polymarket_public" | "tradingview_mcp" => domain == ProviderCatalogDomain::MarketData,
+        "external_http_runtime"
+        | "crypto_public_runtime"
+        | "binance_public_runtime"
+        | "bybit_public_runtime" => domain == ProviderCatalogDomain::LiveRuntime,
+        "ibkr_bridge" | "kraken_cli" => domain == ProviderCatalogDomain::LocalRuntime,
+        _ => true,
+    }
+}
+
 pub fn provider_catalog_sources() -> Vec<Box<dyn ProviderCatalogSource>> {
     vec![
         Box::new(MarketDataProviderCatalogSource),
@@ -303,6 +326,7 @@ pub fn provider_status_surface(
         if parsed_domain
             .map(|domain| domain == source.domain())
             .unwrap_or(true)
+            && provider_filter_matches_domain(provider_filter, source.domain())
         {
             providers.extend(source.collect_items()?);
         }
@@ -427,17 +451,17 @@ impl ProviderCatalogSource for MarketDataProviderCatalogSource {
         let public_fetch_runtime = probe_public_fetch_python_runtime();
         items.extend([
             hubble_provider_item(),
-            public_provider_item(
+            public_exchange_provider_item(
                 "binance_public",
-                &public_fetch_runtime,
-                vec!["ohlcv".to_string(), "options_chain".to_string()],
-                vec!["public_rest".to_string(), "no_api_key_required".to_string()],
+                vec!["ohlcv".to_string(), "replay_ohlcv".to_string()],
+                "Public no-login Binance OHLCV path backed by the native Rust crypto runtime; usable for provider-harness/backtest parity without Python or API keys.",
+                2,
             ),
-            public_provider_item(
+            public_exchange_provider_item(
                 "bybit_public",
-                &public_fetch_runtime,
-                vec!["ohlcv".to_string(), "options_chain".to_string()],
-                vec!["public_rest".to_string(), "no_api_key_required".to_string()],
+                vec!["ohlcv".to_string(), "replay_ohlcv".to_string()],
+                "Public no-login Bybit OHLCV path backed by the native Rust crypto runtime; usable for provider-harness/backtest parity without Python or API keys.",
+                1,
             ),
             public_provider_item(
                 "kraken_public",
@@ -624,12 +648,50 @@ impl ProviderCatalogSource for LiveRuntimeProviderCatalogSource {
                         .to_string(),
                 ],
             },
+            public_live_runtime_item(
+                "binance_public_runtime",
+                "Binance public no-login OHLCV runtime for crypto replay/backtest parity and explicit live crypto analysis.",
+                2,
+            ),
+            public_live_runtime_item(
+                "bybit_public_runtime",
+                "Bybit public no-login OHLCV runtime for crypto perp/spot replay/backtest parity and explicit live crypto analysis.",
+                1,
+            ),
         ])
     }
 }
 
 #[derive(Debug, Clone, Copy, Default)]
 struct LocalRuntimeProviderCatalogSource;
+
+fn public_live_runtime_item(
+    provider_id: &str,
+    summary: &str,
+    fallback_priority: u8,
+) -> ProviderCatalogItem {
+    ProviderCatalogItem {
+        provider_id: provider_id.to_string(),
+        domain: ProviderCatalogDomain::LiveRuntime.as_str().to_string(),
+        selectable_by_user: true,
+        adopted_by_default: false,
+        access_mode: "public_rest_runtime".to_string(),
+        user_access: "public_no_login".to_string(),
+        market_fit: vec!["crypto".to_string()],
+        fallback_priority: Some(fallback_priority),
+        user_summary: summary.to_string(),
+        ready: true,
+        status: "ready".to_string(),
+        reason: "native_public_exchange_runtime_available".to_string(),
+        capabilities: vec!["futures_candles".to_string(), "replay_ohlcv".to_string()],
+        notes: vec![
+            "zero_config_public_rest".to_string(),
+            "same exchange family can be selected for market-data harness and analyze-live"
+                .to_string(),
+        ],
+        install_prompts: Vec::new(),
+    }
+}
 
 impl ProviderCatalogSource for LocalRuntimeProviderCatalogSource {
     fn domain(&self) -> ProviderCatalogDomain {
@@ -808,6 +870,35 @@ fn public_provider_item(
     }
 }
 
+fn public_exchange_provider_item(
+    provider_id: &str,
+    capabilities: Vec<String>,
+    summary: &str,
+    fallback_priority: u8,
+) -> ProviderCatalogItem {
+    ProviderCatalogItem {
+        provider_id: provider_id.to_string(),
+        domain: ProviderCatalogDomain::MarketData.as_str().to_string(),
+        selectable_by_user: true,
+        adopted_by_default: false,
+        access_mode: "native_public_rest".to_string(),
+        user_access: "public_no_login".to_string(),
+        market_fit: vec!["crypto".to_string()],
+        fallback_priority: Some(fallback_priority),
+        user_summary: summary.to_string(),
+        ready: true,
+        status: "ready".to_string(),
+        reason: "native_public_exchange_runtime_available".to_string(),
+        capabilities,
+        notes: vec![
+            "public_rest".to_string(),
+            "no_api_key_required".to_string(),
+            "no_python_dependency_for_harness".to_string(),
+        ],
+        install_prompts: Vec::new(),
+    }
+}
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 struct PublicFetchPythonRuntimeProbe {
     ready: bool,
@@ -868,6 +959,82 @@ fn python3_exists() -> bool {
     command_exists(&["python3"])
 }
 
+fn command_output_with_timeout(command: &mut Command, timeout: Duration) -> Option<Output> {
+    let temp_id = SystemTime::now()
+        .duration_since(UNIX_EPOCH)
+        .ok()?
+        .as_nanos();
+    let temp_root = env::temp_dir();
+    let stdout_path = temp_root.join(format!(
+        "ict-engine-provider-probe-{}-{temp_id}.stdout",
+        std::process::id()
+    ));
+    let stderr_path = temp_root.join(format!(
+        "ict-engine-provider-probe-{}-{temp_id}.stderr",
+        std::process::id()
+    ));
+    let stdout_file = fs::File::create(&stdout_path).ok()?;
+    let stderr_file = fs::File::create(&stderr_path).ok()?;
+    command.stdout(stdout_file).stderr(stderr_file);
+    let mut child = command.spawn().ok()?;
+    let started = Instant::now();
+    let status = loop {
+        match child.try_wait() {
+            Ok(Some(status)) => break status,
+            Ok(None) => {
+                if started.elapsed() >= timeout {
+                    let _ = child.kill();
+                    let _ = child.wait();
+                    let _ = fs::remove_file(&stdout_path);
+                    let _ = fs::remove_file(&stderr_path);
+                    return None;
+                }
+                sleep(Duration::from_millis(10));
+            }
+            Err(_) => {
+                let _ = child.kill();
+                let _ = child.wait();
+                let _ = fs::remove_file(&stdout_path);
+                let _ = fs::remove_file(&stderr_path);
+                return None;
+            }
+        }
+    };
+    let stdout = fs::read(&stdout_path).ok()?;
+    let stderr = fs::read(&stderr_path).ok()?;
+    let _ = fs::remove_file(&stdout_path);
+    let _ = fs::remove_file(&stderr_path);
+    Some(Output {
+        status,
+        stdout,
+        stderr,
+    })
+}
+
+fn command_status_with_timeout(command: &mut Command, timeout: Duration) -> Option<ExitStatus> {
+    command.stdout(Stdio::null()).stderr(Stdio::null());
+    let mut child = command.spawn().ok()?;
+    let started = Instant::now();
+    loop {
+        match child.try_wait() {
+            Ok(Some(status)) => return Some(status),
+            Ok(None) => {
+                if started.elapsed() >= timeout {
+                    let _ = child.kill();
+                    let _ = child.wait();
+                    return None;
+                }
+                sleep(Duration::from_millis(10));
+            }
+            Err(_) => {
+                let _ = child.kill();
+                let _ = child.wait();
+                return None;
+            }
+        }
+    }
+}
+
 fn public_fetch_python_modules() -> &'static [&'static str] {
     &[
         "requests", "pandas", "ccxt", "ib_async", "redis", "yaml", "sklearn", "pyarrow",
@@ -875,36 +1042,28 @@ fn public_fetch_python_modules() -> &'static [&'static str] {
 }
 
 fn missing_public_fetch_python_modules() -> Vec<String> {
-    let imports = public_fetch_python_modules()
-        .iter()
-        .map(|module| format!("import {module}"))
-        .collect::<Vec<_>>()
-        .join("\n");
-    let Ok(output) = std::process::Command::new("python3")
-        .args(["-c", &imports])
-        .output()
-    else {
+    let modules = public_fetch_python_modules();
+    let probe = format!(
+        "import importlib.util\nmodules = {modules:?}\nmissing = [name for name in modules if importlib.util.find_spec(name) is None]\nprint('\\n'.join(missing))"
+    );
+    let Some(output) = command_output_with_timeout(
+        Command::new("python3").args(["-c", &probe]),
+        PYTHON_RUNTIME_PROBE_TIMEOUT,
+    ) else {
         return public_fetch_python_modules()
             .iter()
             .map(|module| (*module).to_string())
             .collect();
     };
-    if output.status.success() {
-        return Vec::new();
+    if !output.status.success() {
+        return modules.iter().map(|module| (*module).to_string()).collect();
     }
-    public_fetch_python_modules()
-        .iter()
-        .filter(|module| !python3_can_import(module))
-        .map(|module| (*module).to_string())
+    String::from_utf8_lossy(&output.stdout)
+        .lines()
+        .map(str::trim)
+        .filter(|module| !module.is_empty())
+        .map(str::to_string)
         .collect()
-}
-
-fn python3_can_import(module: &str) -> bool {
-    std::process::Command::new("python3")
-        .args(["-c", &format!("import {module}")])
-        .output()
-        .map(|output| output.status.success())
-        .unwrap_or(false)
 }
 
 fn pip_packages_for_missing_public_fetch_modules(missing_modules: &[String]) -> Vec<String> {
@@ -1137,10 +1296,10 @@ fn kraken_cli_config_present() -> bool {
 }
 
 fn kraken_cli_auth_present_from_cli() -> bool {
-    let Ok(output) = std::process::Command::new("kraken")
-        .args(["auth", "show", "-o", "json"])
-        .output()
-    else {
+    let Some(output) = command_output_with_timeout(
+        Command::new("kraken").args(["auth", "show", "-o", "json"]),
+        PYTHON_RUNTIME_PROBE_TIMEOUT,
+    ) else {
         return false;
     };
     if !output.status.success() {
@@ -1220,6 +1379,24 @@ fn apply_provider_user_semantics(item: &mut ProviderCatalogItem) {
             item.user_summary =
                 "Optional crypto-public runtime bundle for explicit live crypto observation."
                     .to_string();
+        }
+        "binance_public" | "binance_public_runtime" => {
+            item.user_access = "public_no_login".to_string();
+            item.market_fit = vec!["crypto".to_string()];
+            item.fallback_priority = Some(2);
+            item.user_summary =
+                "Zero-config Binance public crypto data for Auto-Quant/backtest and explicit live analysis parity."
+                    .to_string();
+            item.notes.push("zero_config_public_rest".to_string());
+        }
+        "bybit_public" | "bybit_public_runtime" => {
+            item.user_access = "public_no_login".to_string();
+            item.market_fit = vec!["crypto".to_string()];
+            item.fallback_priority = Some(1);
+            item.user_summary =
+                "Zero-config Bybit public crypto data for Auto-Quant/backtest and explicit live analysis parity."
+                    .to_string();
+            item.notes.push("zero_config_public_rest".to_string());
         }
         "ibkr" => {
             item.user_access = "login_and_local_runtime".to_string();
@@ -1666,7 +1843,7 @@ pub fn provider_status_agent_command(
     PROVIDER_STATUS_AGENT_COMMAND.to_string()
 }
 
-fn workflow_relevant_provider_ids(
+pub(crate) fn workflow_relevant_provider_ids(
     next_command: &str,
     blocking_reason: Option<&str>,
 ) -> std::collections::BTreeSet<&'static str> {
@@ -1705,10 +1882,7 @@ fn workflow_relevant_provider_ids(
     if haystack.contains("kraken") {
         ids.insert("kraken_cli");
     }
-    if ids.is_empty()
-        && haystack.contains("provider_runtime_required")
-        && haystack.contains("analyze-live")
-    {
+    if ids.is_empty() && haystack.contains("analyze-live") {
         ids.insert("external_http_runtime");
         ids.insert("crypto_public_runtime");
     }
@@ -1844,7 +2018,7 @@ fn resolve_provider_profile_path(selector: &str) -> Result<PathBuf> {
     )
 }
 
-fn list_repo_example_profiles() -> Result<Vec<ProviderProfileReferenceSurface>> {
+pub(crate) fn list_repo_example_profiles() -> Result<Vec<ProviderProfileReferenceSurface>> {
     let repo_root = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join(REPO_PROVIDER_PROFILE_DIR);
     if !repo_root.exists() {
         return Ok(Vec::new());
@@ -1993,6 +2167,18 @@ fn build_selected_profile_surface(
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn tradingview_mcp_provider_filter_uses_market_data_catalog() {
+        assert!(provider_filter_matches_domain(
+            Some("tradingview_mcp"),
+            ProviderCatalogDomain::MarketData
+        ));
+        assert!(!provider_filter_matches_domain(
+            Some("tradingview_mcp"),
+            ProviderCatalogDomain::LiveRuntime
+        ));
+    }
 
     fn sample_surface() -> ProviderCatalogSurface {
         ProviderCatalogSurface {
@@ -2480,5 +2666,48 @@ mod tests {
             .install_prompts
             .iter()
             .any(|prompt| prompt.contains("TradingViewRemix MCP API key")));
+    }
+
+    #[test]
+    fn command_output_with_timeout_returns_output_for_fast_child() {
+        let mut command = Command::new("sh");
+        command.args(["-c", "printf ok"]);
+        let output = command_output_with_timeout(&mut command, Duration::from_millis(200))
+            .expect("fast child should finish before timeout");
+        assert!(output.status.success());
+        assert_eq!(String::from_utf8_lossy(&output.stdout), "ok");
+    }
+
+    #[test]
+    fn command_output_with_timeout_fails_closed_for_slow_child() {
+        let started = Instant::now();
+        let mut command = Command::new("sh");
+        command.args(["-c", "sleep 2"]);
+        let output = command_output_with_timeout(&mut command, Duration::from_millis(50));
+        assert!(output.is_none());
+        assert!(started.elapsed() < Duration::from_secs(1));
+    }
+
+    #[test]
+    fn command_output_with_timeout_ignores_background_child_holding_pipes_open() {
+        let started = Instant::now();
+        let mut command = Command::new("perl");
+        command.args(["-e", "if (fork) { print \"ok\"; exit 0 } sleep 2"]);
+        let output = command_output_with_timeout(&mut command, Duration::from_millis(700))
+            .expect("fast parent should return even if background child keeps inherited pipes");
+        assert!(output.status.success());
+        assert_eq!(String::from_utf8_lossy(&output.stdout), "ok");
+        assert!(started.elapsed() < Duration::from_millis(1500));
+    }
+
+    #[test]
+    fn command_status_with_timeout_ignores_background_child_holding_pipes_open() {
+        let started = Instant::now();
+        let mut command = Command::new("sh");
+        command.args(["-c", "(sleep 2 &) ; exit 0"]);
+        let status = command_status_with_timeout(&mut command, Duration::from_millis(200))
+            .expect("fast parent should return even if background child survives");
+        assert!(status.success());
+        assert!(started.elapsed() < Duration::from_secs(1));
     }
 }

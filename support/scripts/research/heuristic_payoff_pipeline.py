@@ -90,6 +90,7 @@ def run_pipeline(
     symbol: str,
     candidate_id: str,
     profile_json: Path | None = None,
+    labels_jsonl: Path | None = None,
 ) -> dict[str, Any]:
     """Run zero-config payoff labeling into an isolated output directory."""
     profile = _load_profile(profile_json)
@@ -106,13 +107,16 @@ def run_pipeline(
         return result
 
     rows = _read_csv(input_csv)
-    labels = labeling.triple_barrier_labels(
-        rows,
-        pt_mult=float(profile["pt_mult"]),
-        sl_mult=float(profile["sl_mult"]),
-        max_holding_bars=int(profile["max_holding_bars"]),
-        cost_bps=float(profile.get("cost_bps", 0.0)),
-    )
+    if labels_jsonl is None:
+        labels = labeling.triple_barrier_labels(
+            rows,
+            pt_mult=float(profile["pt_mult"]),
+            sl_mult=float(profile["sl_mult"]),
+            max_holding_bars=int(profile["max_holding_bars"]),
+            cost_bps=float(profile.get("cost_bps", 0.0)),
+        )
+    else:
+        labels = _load_jsonl(labels_jsonl)
     report = payoff.build_payoff_shape_report(
         candidate_id=candidate_id,
         trades=labels,
@@ -147,6 +151,15 @@ def run_pipeline(
             "purged_cv_gate": purged_cv_guard.get("purged_cv_gate"),
         }
     )
+    effective_gate = str(report.get("promotion_gate", "reject"))
+    purged_gate = str(purged_cv_guard.get("purged_cv_gate", "reject"))
+    if purged_gate in {"reject", "insufficient_data"}:
+        effective_gate = "reject"
+    elif purged_gate == "probe" and effective_gate == "promote":
+        effective_gate = "probe"
+    report["promotion_gate"] = effective_gate
+    if effective_gate == "reject" and "purged_cv_reject" not in report["failure_tags"]:
+        report["failure_tags"].append("purged_cv_reject")
     _write_json(report_path, report)
     path_ranker_handoff = path_target.export_targets(
         labels_jsonl=labels_path,
@@ -214,6 +227,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--symbol", required=True)
     parser.add_argument("--candidate-id", required=True)
     parser.add_argument("--profile-json")
+    parser.add_argument("--labels-jsonl")
     return parser.parse_args(argv)
 
 
@@ -225,6 +239,7 @@ def main(argv: list[str] | None = None) -> int:
         symbol=args.symbol,
         candidate_id=args.candidate_id,
         profile_json=Path(args.profile_json).resolve() if args.profile_json else None,
+        labels_jsonl=Path(args.labels_jsonl).resolve() if args.labels_jsonl else None,
     )
     print(json.dumps(result, indent=2, sort_keys=False))
     return 0

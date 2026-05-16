@@ -1,0 +1,23 @@
+{
+  "schema_version": "transfer-score/v1",
+  "candidate_id": "liquidity_pool_texture_xlf_range_directional_1h_v1",
+  "status": "single_market_only",
+  "overall_transfer_score": 0.08,
+  "covered_markets": [
+    "XLF"
+  ],
+  "markets_without_trade_counts": [],
+  "average_trade_count": 3,
+  "timeframe": "1h",
+  "market_evidence": {
+    "XLF": {
+      "trade_count": 3,
+      "win_rate": 1.0,
+      "expectancy": 0.666667,
+      "confidence": 0.58,
+      "clean_sweep_likelihood": 0.55,
+      "evidence_source": "liquidity_pool_texture_xlf_range_directional_retained_packet_plus_rolling_support_v1"
+    }
+  },
+  "reason": "single_root_single_provider_low_observation_count"
+}

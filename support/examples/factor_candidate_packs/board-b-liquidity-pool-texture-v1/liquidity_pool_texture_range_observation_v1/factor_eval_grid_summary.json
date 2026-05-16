@@ -1,0 +1,177 @@
+{
+  "schema_version": "factor-eval-grid-summary/v1",
+  "selected_strategy": "LiquidityPoolTextureObservationOnly",
+  "timeframe": "15m",
+  "candidate_status": "observation_only",
+  "promotion_state": "candidate_only",
+  "breadth_matrix": {
+    "BTC/USD": {
+      "status": "observation_only",
+      "trade_count": 0,
+      "trade_density_label": "observation_only",
+      "confidence": 0.65,
+      "clean_sweep_likelihood": 0.3158,
+      "observation_count": 2,
+      "provider_set": [
+        "kraken_public_ohlc",
+        "yahoo_chart"
+      ],
+      "notes": [
+        "provider-backed liquidity-pool observations exist",
+        "no realized outcomes or entry model yet"
+      ]
+    },
+    "ETH/USD": {
+      "status": "observation_only",
+      "trade_count": 0,
+      "trade_density_label": "observation_only",
+      "confidence": 0.65,
+      "clean_sweep_likelihood": 0.2975,
+      "observation_count": 2,
+      "provider_set": [
+        "kraken_public_ohlc",
+        "yahoo_chart"
+      ],
+      "notes": [
+        "provider-backed liquidity-pool observations exist",
+        "no realized outcomes or entry model yet"
+      ]
+    },
+    "NQ": {
+      "status": "observation_only",
+      "trade_count": 0,
+      "trade_density_label": "observation_only",
+      "confidence": 0.65,
+      "clean_sweep_likelihood": 0.25,
+      "observation_count": 1,
+      "provider_set": [
+        "yahoo_chart"
+      ],
+      "notes": [
+        "provider-backed liquidity-pool observations exist",
+        "no realized outcomes or entry model yet"
+      ]
+    },
+    "ES": {
+      "status": "observation_only",
+      "trade_count": 0,
+      "trade_density_label": "observation_only",
+      "confidence": 0.65,
+      "clean_sweep_likelihood": 0.25,
+      "observation_count": 1,
+      "provider_set": [
+        "yahoo_chart"
+      ],
+      "notes": [
+        "provider-backed liquidity-pool observations exist",
+        "no realized outcomes or entry model yet"
+      ]
+    },
+    "EURUSD": {
+      "status": "observation_only",
+      "trade_count": 0,
+      "trade_density_label": "observation_only",
+      "confidence": 0.65,
+      "clean_sweep_likelihood": 0.25,
+      "observation_count": 1,
+      "provider_set": [
+        "yahoo_chart"
+      ],
+      "notes": [
+        "provider-backed liquidity-pool observations exist",
+        "no realized outcomes or entry model yet"
+      ]
+    },
+    "XAUUSD": {
+      "status": "observation_only",
+      "trade_count": 0,
+      "trade_density_label": "observation_only",
+      "confidence": 0.65,
+      "clean_sweep_likelihood": 0.25,
+      "observation_count": 1,
+      "provider_set": [
+        "yahoo_chart"
+      ],
+      "notes": [
+        "provider-backed liquidity-pool observations exist",
+        "no realized outcomes or entry model yet"
+      ]
+    }
+  },
+  "trade_density_summary": {
+    "aggregate_trade_count": 0,
+    "aggregate_label": "observation_only",
+    "covered_market_count": 6,
+    "observation_row_count": 8,
+    "source_packet_rows": 13
+  },
+  "aggregate_metrics": {
+    "trade_count": 0,
+    "observation_count": 8,
+    "confidence_mean": 0.65,
+    "clean_sweep_likelihood_mean": 0.2767
+  },
+  "resonance_summary": {
+    "base_timeframe": "15m",
+    "context_stack": [
+      "15m"
+    ],
+    "resonance_by_timeframe": {
+      "15m": "range_liquidity_pool_detection"
+    }
+  },
+  "autoresearch": {
+    "effective_status": "not_run",
+    "decision_counts": {},
+    "failure_tag_counts": {
+      "no_realized_trade_outcomes": 1
+    },
+    "best_attempt_score_delta": null
+  },
+  "cross_market_evidence": {
+    "BTC/USD": {
+      "observation_count": 2,
+      "provider_set": [
+        "kraken_public_ohlc",
+        "yahoo_chart"
+      ],
+      "evidence_source": "liquidity_pool_texture_provider_observation_packet"
+    },
+    "ETH/USD": {
+      "observation_count": 2,
+      "provider_set": [
+        "kraken_public_ohlc",
+        "yahoo_chart"
+      ],
+      "evidence_source": "liquidity_pool_texture_provider_observation_packet"
+    },
+    "NQ": {
+      "observation_count": 1,
+      "provider_set": [
+        "yahoo_chart"
+      ],
+      "evidence_source": "liquidity_pool_texture_provider_observation_packet"
+    },
+    "ES": {
+      "observation_count": 1,
+      "provider_set": [
+        "yahoo_chart"
+      ],
+      "evidence_source": "liquidity_pool_texture_provider_observation_packet"
+    },
+    "EURUSD": {
+      "observation_count": 1,
+      "provider_set": [
+        "yahoo_chart"
+      ],
+      "evidence_source": "liquidity_pool_texture_provider_observation_packet"
+    },
+    "XAUUSD": {
+      "observation_count": 1,
+      "provider_set": [
+        "yahoo_chart"
+      ],
+      "evidence_source": "liquidity_pool_texture_provider_observation_packet"
+    }
+  }
+}

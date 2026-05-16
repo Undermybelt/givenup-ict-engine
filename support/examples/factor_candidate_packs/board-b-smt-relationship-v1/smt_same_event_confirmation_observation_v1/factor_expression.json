@@ -1,0 +1,64 @@
+{
+  "schema_version": "factor-expression/v1",
+  "candidate_id": "smt_same_event_confirmation_observation_v1",
+  "display_name": "SMT Same-Event Confirmation Observation V1",
+  "family": "Board B SMT",
+  "status": "observation_only",
+  "promotion_state": "candidate_only",
+  "strategy_name": "SmtSameEventConfirmationObservationOnly",
+  "mutation_id": null,
+  "base_factor": "smt_relationship_resolver",
+  "expression_text": "same_timeframe and overlapping_session and stable_relationship and same_event_swing_confirmation_failure and trade_use == confirmation_only",
+  "operator_set": [
+    "same_timeframe",
+    "overlapping_session",
+    "stable_relationship",
+    "same_event_swing_confirmation_failure",
+    "base_level",
+    "comparison_level",
+    "normalized_for_inverse_correlation"
+  ],
+  "complexity": 7,
+  "paradigm": "sibling-market same-event confirmation observation",
+  "expected_regime": "Range|Trend|Transition",
+  "target_market_hypothesis": [
+    "NQ",
+    "ES",
+    "YM",
+    "RTY",
+    "EURUSD",
+    "GBPUSD",
+    "DXY",
+    "XAUUSD",
+    "XAGUSD",
+    "BTC",
+    "ETH"
+  ],
+  "base_timeframe": "15m",
+  "context_timeframes": [
+    "15m"
+  ],
+  "regime_role": "root_conditioned_factor",
+  "evidence_window": "provider-backed SMT observation packet",
+  "strategy_source": "support/scripts/research/smt_observation_packet.py",
+  "filter_belief_execution_mapping": {
+    "pre_bayes_targets": [
+      "smt_confirmation_diagnostics",
+      "same_event_confirmation_failure"
+    ],
+    "belief_targets": [
+      "cross_market_confirmation_quality"
+    ],
+    "path_ranking_targets": [
+      "recommended_path_bundle"
+    ],
+    "execution_tree_targets": [
+      "execution_readiness",
+      "pda_confirmation_dependency"
+    ],
+    "execution_tree_blockers_intended": [
+      "confirmation_only_requires_mss_cisd_displacement_pda"
+    ],
+    "structural_feedback_required": true
+  }
+}

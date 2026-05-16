@@ -215,12 +215,29 @@ impl MarketStateEvidenceMapper {
     /// 插入结构证据
     fn insert_structure_evidence(&self, evidence: &mut Evidence, snapshot: &MarketStateSnapshot) {
         let node_id: NodeId = MarketStateNodeId::StructureRegime.into();
-        let state_index = self.structure_to_index(&snapshot.structure);
+        let state_index = if snapshot.oscillation_box.active
+            && matches!(
+                snapshot.structure,
+                MarketStructureRegime::Ranging
+                    | MarketStructureRegime::MeanReverting
+                    | MarketStructureRegime::Unknown
+            ) {
+            self.structure_to_index(&MarketStructureRegime::Ranging)
+        } else {
+            self.structure_to_index(&snapshot.structure)
+        };
+        let effective_confidence = if snapshot.oscillation_box.active {
+            snapshot
+                .structure_confidence
+                .max(snapshot.oscillation_box.confidence)
+        } else {
+            snapshot.structure_confidence
+        };
 
         let evidence_type = if self.config.use_soft_evidence
-            && snapshot.structure_confidence < self.config.hard_evidence_threshold
+            && effective_confidence < self.config.hard_evidence_threshold
         {
-            self.create_soft_evidence(state_index, 5, snapshot.structure_confidence)
+            self.create_soft_evidence(state_index, 5, effective_confidence)
         } else {
             EvidenceType::Hard(state_index)
         };
@@ -487,5 +504,33 @@ mod tests {
         let summary = EvidenceSummary::from_snapshot(&snapshot);
         assert!(summary.evidence_count >= 5);
         assert!(summary.primary_confidence >= 0.0 && summary.primary_confidence <= 1.0);
+    }
+
+    #[test]
+    fn oscillation_box_reinforces_range_structure_evidence() {
+        let mapper = MarketStateEvidenceMapper::new();
+        let snapshot = MarketStateSnapshot {
+            structure: MarketStructureRegime::Ranging,
+            structure_confidence: 0.35,
+            oscillation_box: crate::market_state::OscillationBoxState {
+                active: true,
+                box_high: Some(101.0),
+                box_low: Some(99.0),
+                touch_count: 5,
+                atr_compression_ratio: 1.4,
+                spacing_consistency: 0.7,
+                confidence: 0.82,
+                exit_reason: None,
+            },
+            ..MarketStateSnapshot::default()
+        };
+
+        let evidence = mapper.map_to_evidence(&snapshot);
+        let key = NodeId::from(MarketStateNodeId::StructureRegime);
+        let value = evidence.get(&key).expect("structure evidence missing");
+        match value {
+            EvidenceType::Hard(idx) => assert_eq!(*idx, 2),
+            EvidenceType::Soft(probs) => assert!(probs[2] > 0.5, "{probs:?}"),
+        }
     }
 }

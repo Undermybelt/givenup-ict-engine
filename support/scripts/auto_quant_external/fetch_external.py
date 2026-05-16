@@ -76,8 +76,28 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
-import pandas as pd
 import requests
+
+
+class _LazyPandasModule:
+    """Import pandas only when a code path actually touches it.
+
+    Some provider-only paths such as `ibkr-historical` do not need pandas at
+    runtime. Delaying the import keeps those paths usable even when the local
+    pandas runtime is slow or unhealthy.
+    """
+
+    _module = None
+
+    def __getattr__(self, name: str):
+        if self._module is None:
+            import pandas as pandas_module  # noqa: WPS433
+
+            self._module = pandas_module
+        return getattr(self._module, name)
+
+
+pd = _LazyPandasModule()
 
 YAHOO_BASE = "https://query1.finance.yahoo.com/v8/finance/chart"
 YAHOO_INTERVAL_MAP = {
@@ -1409,6 +1429,12 @@ def _import_ibkr_bridge() -> tuple:
 
 
 def _build_ibkr_contract(args: argparse.Namespace, ib_async_mod):
+    def normalize_fut_contract_month(value: str | None) -> str:
+        raw = (value or "").strip()
+        if len(raw) == 8 and raw.isdigit():
+            return raw[:6]
+        return raw
+
     sec = args.sec_type.upper()
     if sec == "STK":
         c = ib_async_mod.Stock(args.symbol, args.exchange, args.currency)
@@ -1418,9 +1444,12 @@ def _build_ibkr_contract(args: argparse.Namespace, ib_async_mod):
     if sec == "CASH":
         return ib_async_mod.Forex(args.symbol)
     if sec == "FUT":
-        return ib_async_mod.Future(args.symbol, args.last_trade_date or "",
+        return ib_async_mod.Future(
+            args.symbol,
+            normalize_fut_contract_month(args.last_trade_date),
                                     args.exchange, currency=args.currency,
-                                    multiplier=args.multiplier or "")
+                                    multiplier=args.multiplier or "",
+        )
     if sec == "IND":
         return ib_async_mod.Index(args.symbol, args.exchange, args.currency)
     if sec == "OPT":
@@ -1471,9 +1500,14 @@ async def _ibkr_historical_async(args: argparse.Namespace) -> int:
             )
 
         try:
+            # Allow explicit delayed/frozen fallback for accounts where live
+            # entitlements are tied to another IP/session.
+            if args.market_data_type != 1:
+                await limiter.wait_for_outbound_msg()
+                ib.reqMarketDataType(args.market_data_type)
             await limiter.wait_for_outbound_msg()
             qualified = await ib.qualifyContractsAsync(contract)
-            if not qualified:
+            if not qualified or qualified[0] is None:
                 raise SystemExit(f"contract not resolved: {args.symbol}")
             contract = qualified[0]
 
@@ -1659,6 +1693,12 @@ def _bulk_expand_symbol_entry(entry: dict, defaults: dict) -> list[dict]:
 
 
 def _bulk_build_contract(task: dict, ib_async_mod):
+    def normalize_fut_contract_month(value: str | None) -> str:
+        raw = (value or "").strip()
+        if len(raw) == 8 and raw.isdigit():
+            return raw[:6]
+        return raw
+
     sec = task["sec_type"].upper()
     if sec == "STK":
         c = ib_async_mod.Stock(task["symbol"], task["exchange"], task["currency"])
@@ -1668,9 +1708,12 @@ def _bulk_build_contract(task: dict, ib_async_mod):
     if sec == "CASH":
         return ib_async_mod.Forex(task["symbol"])
     if sec == "FUT":
-        return ib_async_mod.Future(task["symbol"], task.get("last_trade_date") or "",
+        return ib_async_mod.Future(
+            task["symbol"],
+            normalize_fut_contract_month(task.get("last_trade_date")),
                                      task["exchange"], currency=task["currency"],
-                                     multiplier=task.get("multiplier") or "")
+                                     multiplier=task.get("multiplier") or "",
+        )
     if sec == "IND":
         return ib_async_mod.Index(task["symbol"], task["exchange"], task["currency"])
     if sec == "CRYPTO":
@@ -1786,7 +1829,7 @@ async def _ibkr_bulk_async(args: argparse.Namespace) -> int:
             try:
                 await limiter.wait_for_outbound_msg()
                 qualified = await ib.qualifyContractsAsync(contract)
-                if not qualified:
+                if not qualified or qualified[0] is None:
                     print(f"  [{i}/{len(tasks)}] FAIL qualify "
                           f"{task['symbol']}: contract not resolved",
                           file=sys.stderr)
@@ -1977,6 +2020,8 @@ def build_parser() -> argparse.ArgumentParser:
     ibh.add_argument("--port", type=int, default=7497, help="7497 paper, 7496 live")
     ibh.add_argument("--client-id", type=int, default=21,
                       help="Bridge uses 20; this defaults to 21 to avoid clash")
+    ibh.add_argument("--market-data-type", type=int, default=1, choices=[1, 2, 3, 4],
+                      help="1=live, 2=frozen, 3=delayed, 4=delayed-frozen; use 3 to test delayed fallback")
     ibh.add_argument("--redis-url", default="redis://localhost:6379",
                       help="Cross-process IbkrRateLimiter coordinator")
     ibh.add_argument("--output", required=True)

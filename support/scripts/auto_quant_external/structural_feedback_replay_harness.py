@@ -59,6 +59,10 @@ def outcome_from_forward_window(candles: list[dict[str, Any]], entry_index: int,
     return "breakeven", pnl, exit_close
 
 
+def pnl_cli_arg(pnl: float) -> str:
+    return f"--pnl={pnl}"
+
+
 def copy_prior_state(prior_state: Path | None, target_state: Path) -> None:
     if not prior_state:
         return
@@ -161,8 +165,7 @@ def generate_observation(
         "1",
         "--realized-outcome",
         outcome,
-        "--pnl",
-        str(pnl),
+        pnl_cli_arg(pnl),
         "--exit-reason",
         f"forward_{horizon}_bar_close",
         "--notes",

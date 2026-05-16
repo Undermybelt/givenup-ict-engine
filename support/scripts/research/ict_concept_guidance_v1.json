@@ -1,0 +1,288 @@
+{
+  "schema_version": "ict-concept-guidance/v1",
+  "origin": "absorbed_local_script_pack",
+  "absorbed_catalog_sha256": "73fe85f8ac4c555ea640a27e9f6120afed05e45dd9767d480c9ef20a9f303a5f",
+  "usage": {
+    "runtime_role": "training_guidance_only",
+    "promotion_role": "non_promoting_source_guidance",
+    "path_dependency": "none",
+    "fail_closed_policy": "concept guidance cannot create labels, trades, or promotion without provider-backed evidence"
+  },
+  "concepts": [
+    {
+      "concept": "fair_value_gap",
+      "aliases": ["FVG", "fair value gap"],
+      "category": "imbalance",
+      "inputs": ["gap_top", "gap_bottom", "gap_width", "direction", "age_bars", "mitigated"],
+      "factor_candidates": ["fvg_distance_atr", "fvg_fill_fraction", "fvg_age_bars", "fvg_direction"],
+      "bbn_node_candidates": ["imbalance_context", "entry_zone_quality"],
+      "agent_output_fields": ["ts", "symbol", "timeframe", "state", "direction", "strength", "gap_top", "gap_bottom", "gap_width", "direction"],
+      "backtestability": "high",
+      "live_trading_timeliness": "good_if_causal"
+    },
+    {
+      "concept": "inversion_fair_value_gap",
+      "aliases": ["iFVG", "IFVG", "inversion fair value gap"],
+      "category": "imbalance_reversal",
+      "inputs": ["ifvg_top", "ifvg_bottom", "flip_direction", "age_bars", "mitigated"],
+      "factor_candidates": ["ifvg_active", "ifvg_flip_age", "ifvg_distance_atr"],
+      "bbn_node_candidates": ["reversal_context", "entry_zone_quality"],
+      "agent_output_fields": ["ts", "symbol", "timeframe", "state", "direction", "strength", "ifvg_top", "ifvg_bottom", "flip_direction", "age_bars"],
+      "backtestability": "high",
+      "live_trading_timeliness": "needs_confirmed_vs_realtime_split"
+    },
+    {
+      "concept": "balanced_price_range",
+      "aliases": ["BPR", "balanced price range"],
+      "category": "imbalance_balance",
+      "inputs": ["bpr_top", "bpr_bottom", "overlap_width", "context_direction"],
+      "factor_candidates": ["bpr_width_atr", "bpr_overlap_strength", "bpr_distance_atr"],
+      "bbn_node_candidates": ["imbalance_context", "mean_reversion_context"],
+      "agent_output_fields": ["ts", "symbol", "timeframe", "state", "direction", "strength", "bpr_top", "bpr_bottom", "overlap_width", "context_direction"],
+      "backtestability": "high",
+      "live_trading_timeliness": "good_if_causal"
+    },
+    {
+      "concept": "liquidity_sweep",
+      "aliases": ["liquidity sweep", "sweep"],
+      "category": "liquidity_event",
+      "inputs": ["swept_level", "sweep_direction", "overshoot_ticks", "reclaim", "time_to_reject"],
+      "factor_candidates": ["sweep_strength", "sweep_reclaim_speed", "sweep_overshoot_atr"],
+      "bbn_node_candidates": ["liquidity_event", "reversal_readiness"],
+      "agent_output_fields": ["ts", "symbol", "timeframe", "state", "direction", "strength", "swept_level", "sweep_direction", "overshoot_ticks", "reclaim"],
+      "backtestability": "high",
+      "live_trading_timeliness": "needs_confirmed_vs_realtime_split"
+    },
+    {
+      "concept": "liquidity_pool",
+      "aliases": ["liquidity levels", "swing liquidity", "resting liquidity"],
+      "category": "liquidity_map",
+      "inputs": ["pool_price", "pool_side", "touch_count", "distance_atr"],
+      "factor_candidates": ["pool_touch_count", "pool_distance_atr", "pool_side"],
+      "bbn_node_candidates": ["liquidity_target"],
+      "agent_output_fields": ["ts", "symbol", "timeframe", "state", "direction", "strength", "pool_price", "pool_side", "touch_count", "distance_atr"],
+      "backtestability": "high",
+      "live_trading_timeliness": "needs_confirmed_vs_realtime_split"
+    },
+    {
+      "concept": "equal_highs_lows",
+      "aliases": ["EQH", "EQL", "equal highs", "equal lows"],
+      "category": "liquidity_map",
+      "inputs": ["eq_price", "eq_side", "cluster_size", "tolerance_ticks"],
+      "factor_candidates": ["eq_cluster_size", "eq_tolerance_norm", "eq_side"],
+      "bbn_node_candidates": ["liquidity_target"],
+      "agent_output_fields": ["ts", "symbol", "timeframe", "state", "direction", "strength", "eq_price", "eq_side", "cluster_size", "tolerance_ticks"],
+      "backtestability": "high",
+      "live_trading_timeliness": "needs_confirmed_vs_realtime_split"
+    },
+    {
+      "concept": "daily_bias",
+      "aliases": ["daily bias", "london bias", "new york bias"],
+      "category": "bias",
+      "inputs": ["bias_direction", "session_window", "bias_strength"],
+      "factor_candidates": ["daily_bias_dir", "daily_bias_confidence"],
+      "bbn_node_candidates": ["bias"],
+      "agent_output_fields": ["ts", "symbol", "timeframe", "state", "direction", "strength", "bias_direction", "session_window", "bias_strength"],
+      "backtestability": "high",
+      "live_trading_timeliness": "good_if_causal"
+    },
+    {
+      "concept": "market_regime",
+      "aliases": ["regime", "market regime"],
+      "category": "regime",
+      "inputs": ["regime_class", "confidence", "trend_score", "volatility_score", "range_score"],
+      "factor_candidates": ["regime_id", "regime_confidence", "trend_score", "volatility_ratio"],
+      "bbn_node_candidates": ["regime"],
+      "agent_output_fields": ["ts", "symbol", "timeframe", "state", "direction", "strength", "regime_class", "confidence", "trend_score", "volatility_score"],
+      "backtestability": "high",
+      "live_trading_timeliness": "good_if_causal"
+    },
+    {
+      "concept": "session_range",
+      "aliases": ["asian range", "london range", "session cycles", "session range"],
+      "category": "time_window",
+      "inputs": ["session_name", "range_high", "range_low", "range_width", "range_mid"],
+      "factor_candidates": ["session_range_width_atr", "session_position", "session_break_state"],
+      "bbn_node_candidates": ["execution_window", "session_context"],
+      "agent_output_fields": ["ts", "symbol", "timeframe", "state", "direction", "strength", "session_name", "range_high", "range_low", "range_width"],
+      "backtestability": "high",
+      "live_trading_timeliness": "good_if_causal"
+    },
+    {
+      "concept": "killzone",
+      "aliases": ["killzone", "kill zone"],
+      "category": "time_window",
+      "inputs": ["window_name", "is_active", "minutes_from_open"],
+      "factor_candidates": ["killzone_active", "minutes_from_kz_open"],
+      "bbn_node_candidates": ["execution_window"],
+      "agent_output_fields": ["ts", "symbol", "timeframe", "state", "direction", "strength", "window_name", "is_active", "minutes_from_open"],
+      "backtestability": "high_time_rules_only",
+      "live_trading_timeliness": "good_if_causal"
+    },
+    {
+      "concept": "macro_time_window",
+      "aliases": ["macro", "macro time", "timed macro window"],
+      "category": "time_window",
+      "inputs": ["macro_name", "is_active", "minutes_to_event"],
+      "factor_candidates": ["macro_active", "macro_bucket_id"],
+      "bbn_node_candidates": ["execution_window"],
+      "agent_output_fields": ["ts", "symbol", "timeframe", "state", "direction", "strength", "macro_name", "is_active", "minutes_to_event"],
+      "backtestability": "high_time_rules_only",
+      "live_trading_timeliness": "needs_confirmed_vs_realtime_split"
+    },
+    {
+      "concept": "institutional_order_flow",
+      "aliases": ["institutional order flow", "order flow"],
+      "category": "structure_context",
+      "inputs": ["flow_direction", "structure_state", "imbalance_state", "liquidity_state"],
+      "factor_candidates": ["orderflow_alignment_score", "orderflow_dir"],
+      "bbn_node_candidates": ["orderflow_context", "confirmation_quality"],
+      "agent_output_fields": ["ts", "symbol", "timeframe", "state", "direction", "strength", "flow_direction", "structure_state", "imbalance_state", "liquidity_state"],
+      "backtestability": "high",
+      "live_trading_timeliness": "needs_confirmed_vs_realtime_split"
+    },
+    {
+      "concept": "imbalance",
+      "aliases": ["imbalance"],
+      "category": "imbalance",
+      "inputs": ["imbalance_top", "imbalance_bottom", "imbalance_width", "direction", "filled_fraction"],
+      "factor_candidates": ["imbalance_width_atr", "imbalance_fill_fraction", "imbalance_dir"],
+      "bbn_node_candidates": ["imbalance_context"],
+      "agent_output_fields": ["ts", "symbol", "timeframe", "state", "direction", "strength", "imbalance_top", "imbalance_bottom", "imbalance_width", "direction"],
+      "backtestability": "high",
+      "live_trading_timeliness": "needs_confirmed_vs_realtime_split"
+    },
+    {
+      "concept": "volume_gap",
+      "aliases": ["volume gap", "VI", "volume imbalance"],
+      "category": "imbalance",
+      "inputs": ["vg_top", "vg_bottom", "vg_width", "direction"],
+      "factor_candidates": ["volume_gap_width_atr", "volume_gap_active"],
+      "bbn_node_candidates": ["imbalance_context"],
+      "agent_output_fields": ["ts", "symbol", "timeframe", "state", "direction", "strength", "vg_top", "vg_bottom", "vg_width", "direction"],
+      "backtestability": "high",
+      "live_trading_timeliness": "needs_confirmed_vs_realtime_split"
+    },
+    {
+      "concept": "rebalance",
+      "aliases": ["rebalance", "immediate rebalance"],
+      "category": "mean_reversion",
+      "inputs": ["rebalance_price", "rebalance_zone_top", "rebalance_zone_bottom", "reaction_state"],
+      "factor_candidates": ["rebalance_touched", "rebalance_reaction_score"],
+      "bbn_node_candidates": ["entry_zone_quality"],
+      "agent_output_fields": ["ts", "symbol", "timeframe", "state", "direction", "strength", "rebalance_price", "rebalance_zone_top", "rebalance_zone_bottom", "reaction_state"],
+      "backtestability": "high",
+      "live_trading_timeliness": "needs_confirmed_vs_realtime_split"
+    },
+    {
+      "concept": "displacement",
+      "aliases": ["displacement"],
+      "category": "impulse",
+      "inputs": ["disp_direction", "body_ratio", "range_expansion", "followthrough"],
+      "factor_candidates": ["disp_body_ratio", "disp_range_ratio", "disp_followthrough"],
+      "bbn_node_candidates": ["confirmation_quality", "impulse_state"],
+      "agent_output_fields": ["ts", "symbol", "timeframe", "state", "direction", "strength", "disp_direction", "body_ratio", "range_expansion", "followthrough"],
+      "backtestability": "high",
+      "live_trading_timeliness": "needs_confirmed_vs_realtime_split"
+    },
+    {
+      "concept": "market_structure_shift",
+      "aliases": ["MSS", "market structure shift"],
+      "category": "structure",
+      "inputs": ["mss_direction", "broken_swing_price", "swing_age"],
+      "factor_candidates": ["mss_active", "mss_dir", "mss_age_bars"],
+      "bbn_node_candidates": ["structure_state", "reversal_readiness"],
+      "agent_output_fields": ["ts", "symbol", "timeframe", "state", "direction", "strength", "mss_direction", "broken_swing_price", "swing_age"],
+      "backtestability": "high",
+      "live_trading_timeliness": "needs_confirmed_vs_realtime_split"
+    },
+    {
+      "concept": "break_of_structure",
+      "aliases": ["BOS", "break of structure"],
+      "category": "structure",
+      "inputs": ["bos_direction", "broken_level", "trend_alignment"],
+      "factor_candidates": ["bos_active", "bos_dir", "bos_strength"],
+      "bbn_node_candidates": ["structure_state", "trend_continuation"],
+      "agent_output_fields": ["ts", "symbol", "timeframe", "state", "direction", "strength", "bos_direction", "broken_level", "trend_alignment"],
+      "backtestability": "high",
+      "live_trading_timeliness": "needs_confirmed_vs_realtime_split"
+    },
+    {
+      "concept": "power_of_three",
+      "aliases": ["PO3", "power of three"],
+      "category": "regime_sequence",
+      "inputs": ["po3_phase", "accumulation_range", "manipulation_extent", "expansion_progress"],
+      "factor_candidates": ["po3_phase_id", "po3_manipulation_extent", "po3_expansion_score"],
+      "bbn_node_candidates": ["regime", "manipulation_phase"],
+      "agent_output_fields": ["ts", "symbol", "timeframe", "state", "direction", "strength", "po3_phase", "accumulation_range", "manipulation_extent", "expansion_progress"],
+      "backtestability": "high",
+      "live_trading_timeliness": "needs_confirmed_vs_realtime_split"
+    },
+    {
+      "concept": "optimal_trade_entry",
+      "aliases": ["OTE", "optimal trade entry"],
+      "category": "entry_zone",
+      "inputs": ["fib_level", "discount_premium_state", "entry_side"],
+      "factor_candidates": ["ote_in_zone", "ote_distance_mid", "premium_discount_state"],
+      "bbn_node_candidates": ["entry_zone_quality"],
+      "agent_output_fields": ["ts", "symbol", "timeframe", "state", "direction", "strength", "fib_level", "discount_premium_state", "entry_side"],
+      "backtestability": "high",
+      "live_trading_timeliness": "needs_confirmed_vs_realtime_split"
+    },
+    {
+      "concept": "open_range_gap",
+      "aliases": ["ORG", "open range gap"],
+      "category": "gap",
+      "inputs": ["org_top", "org_bottom", "gap_state", "first_fvg_state"],
+      "factor_candidates": ["org_active", "org_width_atr", "first_fvg_after_open"],
+      "bbn_node_candidates": ["session_context", "entry_zone_quality"],
+      "agent_output_fields": ["ts", "symbol", "timeframe", "state", "direction", "strength", "org_top", "org_bottom", "gap_state", "first_fvg_state"],
+      "backtestability": "high",
+      "live_trading_timeliness": "needs_confirmed_vs_realtime_split"
+    },
+    {
+      "concept": "ndog",
+      "aliases": ["NDOG"],
+      "category": "gap",
+      "inputs": ["ndog_open", "ndog_fill_state", "distance_from_price"],
+      "factor_candidates": ["ndog_distance_atr", "ndog_fill_fraction"],
+      "bbn_node_candidates": ["gap_context"],
+      "agent_output_fields": ["ts", "symbol", "timeframe", "state", "direction", "strength", "ndog_open", "ndog_fill_state", "distance_from_price"],
+      "backtestability": "high",
+      "live_trading_timeliness": "good_if_causal"
+    },
+    {
+      "concept": "nwog",
+      "aliases": ["NWOG"],
+      "category": "gap",
+      "inputs": ["nwog_open", "nwog_fill_state", "distance_from_price"],
+      "factor_candidates": ["nwog_distance_atr", "nwog_fill_fraction"],
+      "bbn_node_candidates": ["gap_context"],
+      "agent_output_fields": ["ts", "symbol", "timeframe", "state", "direction", "strength", "nwog_open", "nwog_fill_state", "distance_from_price"],
+      "backtestability": "high",
+      "live_trading_timeliness": "good_if_causal"
+    },
+    {
+      "concept": "smt_divergence",
+      "aliases": ["SMT", "smt divergence"],
+      "category": "intermarket",
+      "inputs": ["leader_symbol", "lagger_symbol", "divergence_side", "pivot_time_a", "pivot_time_b"],
+      "factor_candidates": ["smt_active", "smt_side", "smt_age_bars"],
+      "bbn_node_candidates": ["intermarket_confirmation"],
+      "agent_output_fields": ["ts", "symbol", "timeframe", "state", "direction", "strength", "leader_symbol", "lagger_symbol", "divergence_side", "pivot_time_a"],
+      "backtestability": "high",
+      "live_trading_timeliness": "needs_confirmed_vs_realtime_split"
+    },
+    {
+      "concept": "swing_failure_pattern",
+      "aliases": ["SFP", "swing failure pattern"],
+      "category": "reversal",
+      "inputs": ["sfp_level", "wick_break", "close_back_inside", "direction"],
+      "factor_candidates": ["sfp_active", "sfp_reclaim_strength"],
+      "bbn_node_candidates": ["reversal_readiness", "liquidity_event"],
+      "agent_output_fields": ["ts", "symbol", "timeframe", "state", "direction", "strength", "sfp_level", "wick_break", "close_back_inside", "direction"],
+      "backtestability": "high",
+      "live_trading_timeliness": "needs_confirmed_vs_realtime_split"
+    }
+  ]
+}

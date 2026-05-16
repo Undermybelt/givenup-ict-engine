@@ -1,0 +1,148 @@
+{
+  "schema_version": "factor-eval-grid-summary/v1",
+  "factor_name": "order_block_variant_classifier",
+  "candidate_id": "order_block_variant_observation_v1",
+  "selected_strategy": "order_block_variant_observation_packet",
+  "timeframe": "1h",
+  "candidate_status": "active",
+  "promotion_state": "candidate_only",
+  "breadth_matrix": {
+    "NQ/ES/YM/RTY": {
+      "status": "required_not_yet_provider_backed",
+      "trade_count": 0,
+      "trade_density_label": "missing_required_market",
+      "evidence_source": "support/scripts/research/order_block_variant_observation_packet.py",
+      "win_rate_pct": null,
+      "expectancy_r": null
+    },
+    "NAS100/US500/US30 CFD": {
+      "status": "required_not_yet_provider_backed",
+      "trade_count": 0,
+      "trade_density_label": "missing_required_market",
+      "evidence_source": "support/scripts/research/order_block_variant_observation_packet.py",
+      "win_rate_pct": null,
+      "expectancy_r": null
+    },
+    "DXY": {
+      "status": "required_not_yet_provider_backed",
+      "trade_count": 0,
+      "trade_density_label": "missing_required_market",
+      "evidence_source": "support/scripts/research/order_block_variant_observation_packet.py",
+      "win_rate_pct": null,
+      "expectancy_r": null
+    },
+    "XAUUSD": {
+      "status": "required_not_yet_provider_backed",
+      "trade_count": 0,
+      "trade_density_label": "missing_required_market",
+      "evidence_source": "support/scripts/research/order_block_variant_observation_packet.py",
+      "win_rate_pct": null,
+      "expectancy_r": null
+    },
+    "BTC/ETH": {
+      "status": "required_not_yet_provider_backed",
+      "trade_count": 0,
+      "trade_density_label": "missing_required_market",
+      "evidence_source": "support/scripts/research/order_block_variant_observation_packet.py",
+      "win_rate_pct": null,
+      "expectancy_r": null
+    }
+  },
+  "trade_density_summary": {
+    "aggregate_trade_count": 0,
+    "aggregate_label": "invalid",
+    "covered_market_count": 0
+  },
+  "aggregate_metrics": {
+    "sharpe": null,
+    "win_rate_pct": null,
+    "profit_factor": null,
+    "total_profit_pct": null,
+    "max_drawdown_pct": null,
+    "trade_count": 0,
+    "expectancy_r": null
+  },
+  "per_regime_statistics": {
+    "trend": {
+      "win_rate": null,
+      "trade_count": 0,
+      "expectancy": null,
+      "sample_window": null,
+      "instrument_coverage": [],
+      "confidence": 0.0,
+      "fail_closed_reason": "not_tested"
+    },
+    "range": {
+      "win_rate": null,
+      "trade_count": 0,
+      "expectancy": null,
+      "sample_window": null,
+      "instrument_coverage": [],
+      "confidence": 0.0,
+      "fail_closed_reason": "provider_backed_retained_windows_required"
+    },
+    "transition": {
+      "win_rate": null,
+      "trade_count": 0,
+      "expectancy": null,
+      "sample_window": null,
+      "instrument_coverage": [],
+      "confidence": 0.0,
+      "fail_closed_reason": "not_tested"
+    },
+    "stress": {
+      "win_rate": null,
+      "trade_count": 0,
+      "expectancy": null,
+      "sample_window": null,
+      "instrument_coverage": [],
+      "confidence": 0.0,
+      "fail_closed_reason": "not_tested"
+    },
+    "other": {
+      "win_rate": null,
+      "trade_count": 0,
+      "expectancy": null,
+      "sample_window": null,
+      "instrument_coverage": [],
+      "confidence": 0.0,
+      "fail_closed_reason": "not_tested"
+    }
+  },
+  "field_mapping": {
+    "Structure": [
+      "variant",
+      "direction",
+      "high",
+      "low",
+      "validation_state"
+    ],
+    "Technicals": [
+      "variant",
+      "direction",
+      "high",
+      "low",
+      "midpoint",
+      "mitigation_count",
+      "breaker_confirmed",
+      "rejection_confirmed"
+    ],
+    "SMT": [],
+    "Regime posterior evidence": [
+      "main_regime",
+      "session",
+      "validation_state",
+      "confidence"
+    ],
+    "Execution tree": [
+      "high",
+      "low",
+      "midpoint",
+      "validation_state",
+      "mitigation_count",
+      "breaker_confirmed",
+      "rejection_confirmed",
+      "realized_r"
+    ]
+  }
+}

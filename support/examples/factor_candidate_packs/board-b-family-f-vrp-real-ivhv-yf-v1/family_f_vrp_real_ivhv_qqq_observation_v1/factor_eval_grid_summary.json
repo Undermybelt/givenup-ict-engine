@@ -1,0 +1,98 @@
+{
+  "schema_version": "factor-eval-grid-summary/v1",
+  "factor_name": "family_f_vrp_compression_15m_v1",
+  "candidate_id": "family_f_vrp_real_ivhv_qqq_observation_v1",
+  "selected_strategy": "FamilyFRealIvHvQqqObservationOnly",
+  "timeframe": "1d",
+  "candidate_status": "observation_only",
+  "promotion_state": "candidate_only",
+  "breadth_matrix": {
+    "QQQ": {
+      "observation_count": 1,
+      "trade_count": 0,
+      "trade_density_label": "real_iv_hv_observation_only",
+      "provider_set": [
+        "yfinance"
+      ],
+      "symbol_coverage": [
+        "QQQ"
+      ],
+      "confidence": 0.0,
+      "status": "observation_only",
+      "near_atm_sample_rows": 80,
+      "near_atm_iv_rows": 80,
+      "near_atm_nonzero_open_interest_rows": 80,
+      "near_atm_nonzero_volume_rows": 80,
+      "historical_vol_20d": 0.17156024793787022,
+      "historical_vol_60d": 0.19526389920978163,
+      "near_atm_implied_vol_mean": 0.20190770024108887,
+      "vrp_iv_minus_hv20": 0.03034745230321864,
+      "vrp_iv_minus_hv60": 0.006643801031307239,
+      "notes": [
+        "real option-chain IV/OI/volume and historical HV acquired",
+        "no realized trade rows or Auto-Quant backtest yet",
+        "admission must remain pending until dated feature/trade outcomes exist"
+      ]
+    }
+  },
+  "trade_density_summary": {
+    "aggregate_trade_count": 0,
+    "aggregate_label": "real_iv_hv_observation_only",
+    "covered_market_count": 1,
+    "observation_row_count": 1,
+    "real_iv_hv_observation_rows": 1
+  },
+  "aggregate_metrics": {
+    "trade_count": 0,
+    "observation_count": 1,
+    "confidence_mean": 0.0,
+    "trade_usable": false,
+    "promotion_allowed": false
+  },
+  "per_regime_statistics": {
+    "trend_expansion": {
+      "observation_count": 1,
+      "trade_count": 0,
+      "trade_density_label": "real_iv_hv_observation_only",
+      "provider_set": [
+        "yfinance"
+      ],
+      "symbol_coverage": [
+        "QQQ"
+      ],
+      "confidence": 0.0,
+      "status": "observation_only",
+      "sample_window": "QQQ yfinance option-chain snapshot plus 6mo 1d realized volatility",
+      "fail_closed_reason": "single_observation_no_realized_trade_rows"
+    }
+  },
+  "field_mapping": {
+    "Structure": [
+      "regime_profit_branch_path"
+    ],
+    "Technicals": [
+      "historical_vol_20d",
+      "historical_vol_60d",
+      "near_atm_implied_vol_mean",
+      "vrp_iv_minus_hv20",
+      "vrp_iv_minus_hv60"
+    ],
+    "SMT": [],
+    "Regime posterior evidence": [
+      "main_regime",
+      "sub_regime",
+      "sub_sub_regime_or_profit_factor",
+      "profit_factor",
+      "regime_profit_branch_path"
+    ],
+    "Execution tree": [
+      "trade_usable",
+      "fail_closed_reason"
+    ],
+    "Feedback/update learning fields": [
+      "label_kind",
+      "trade_usable"
+    ]
+  },
+  "fail_closed_reason": "single_observation_no_realized_trade_rows"
+}

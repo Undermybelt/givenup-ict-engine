@@ -1,0 +1,23 @@
+{
+  "schema_version": "transfer-score/v1",
+  "candidate_id": "liquidity_pool_texture_tlt_trend_directional_30m_v1",
+  "status": "single_market_only",
+  "overall_transfer_score": 0.08,
+  "covered_markets": [
+    "TLT"
+  ],
+  "markets_without_trade_counts": [],
+  "average_trade_count": 1,
+  "timeframe": "30m",
+  "market_evidence": {
+    "TLT": {
+      "trade_count": 1,
+      "win_rate": 1.0,
+      "expectancy": 0.666667,
+      "confidence": 0.58,
+      "clean_sweep_likelihood": 0.55,
+      "evidence_source": "liquidity_pool_texture_tlt_trend_directional_retained_packet"
+    }
+  },
+  "reason": "single_root_single_provider_directional_observation_only"
+}

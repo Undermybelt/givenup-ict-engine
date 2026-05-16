@@ -3,6 +3,7 @@ use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 use std::collections::BTreeMap;
 
+use crate::analyze::smt_correlation_section::resolve_smt_relationships;
 use crate::data::realtime::market_support::AuxiliaryMarketEvidence;
 use crate::ict::{
     check_bear_expansion_exists, check_bull_expansion_exists, detect_cisd, detect_liquidity_pools,
@@ -136,6 +137,9 @@ impl FactorUsagePhase {
 
 #[derive(Debug, Clone, Default, Serialize)]
 pub struct FactorContext<'a> {
+    pub symbol: Option<&'a str>,
+    pub paired_symbol: Option<&'a str>,
+    pub available_symbols: Option<&'a [String]>,
     pub paired_candles: Option<&'a [Candle]>,
     pub m1_events: Option<&'a [PdaEvent]>,
     pub m5_events: Option<&'a [PdaEvent]>,
@@ -1423,6 +1427,7 @@ impl FactorDefinition {
     ) -> Vec<FactorSignal> {
         let lookback = self.parameter("lookback", 20.0) as usize;
         let signal_lookback = lookback.max(31);
+        let resolver_explanation = smt_relationship_resolver_explanation(context);
         let Some(paired) = context.paired_candles else {
             return candles
                 .iter()
@@ -1433,7 +1438,7 @@ impl FactorDefinition {
                         candle.timestamp,
                         0.0,
                         0.05,
-                        "paired_market_unavailable".to_string(),
+                        format!("paired_market_unavailable;{resolver_explanation}"),
                     )
                 })
                 .collect();
@@ -1458,7 +1463,7 @@ impl FactorDefinition {
                         candle.timestamp,
                         0.0,
                         0.05,
-                        "waiting_for_aligned_cross_market_history".to_string(),
+                        format!("waiting_for_aligned_cross_market_history;{resolver_explanation}"),
                     );
                 }
 
@@ -1470,7 +1475,7 @@ impl FactorDefinition {
                         candle.timestamp,
                         0.0,
                         0.0,
-                        pair_quality_explanation.clone(),
+                        format!("{};{}", pair_quality_explanation, resolver_explanation),
                     );
                 }
                 if aligned_index < signal_lookback {
@@ -1481,8 +1486,8 @@ impl FactorDefinition {
                         0.0,
                         0.10,
                         format!(
-                            "insufficient_cross_market_lookback;{}",
-                            pair_quality_explanation
+                            "insufficient_cross_market_lookback;{};{}",
+                            pair_quality_explanation, resolver_explanation
                         ),
                     );
                 }
@@ -1506,8 +1511,8 @@ impl FactorDefinition {
                         0.0,
                         0.05,
                         format!(
-                            "insufficient_aligned_cross_market_samples;{}",
-                            pair_quality_explanation
+                            "insufficient_aligned_cross_market_samples;{};{}",
+                            pair_quality_explanation, resolver_explanation
                         ),
                     );
                 }
@@ -1554,8 +1559,8 @@ impl FactorDefinition {
                         0.0,
                         0.05,
                         format!(
-                            "insufficient_aligned_cross_market_returns;{}",
-                            window_quality_explanation
+                            "insufficient_aligned_cross_market_returns;{};{}",
+                            window_quality_explanation, resolver_explanation
                         ),
                     );
                 }
@@ -1582,8 +1587,8 @@ impl FactorDefinition {
                         0.0,
                         0.0,
                         format!(
-                            "relationship_uncertain;corr={:.4};trade_use=confirmation_only;standalone_actionable=false;{}",
-                            correlation, window_quality_explanation
+                            "relationship_uncertain;corr={:.4};trade_use=confirmation_only;standalone_actionable=false;{};{}",
+                            correlation, window_quality_explanation, resolver_explanation
                         ),
                         Some(window_quality),
                     );
@@ -1610,12 +1615,13 @@ impl FactorDefinition {
                     value,
                     confidence,
                     format!(
-                        "corr={:.4};relationship_type={};relationship_confidence={:.4};{};trade_use=confirmation_only;standalone_actionable=false;{}",
+                        "corr={:.4};relationship_type={};relationship_confidence={:.4};{};trade_use=confirmation_only;standalone_actionable=false;{};{}",
                         correlation,
                         relationship_type,
                         correlation.abs().min(1.0),
                         smt_explanation,
-                        window_quality_explanation
+                        window_quality_explanation,
+                        resolver_explanation
                     ),
                     Some(window_quality),
                 )
@@ -1821,7 +1827,11 @@ fn collect_structure_ict_setup_matches(
             deduped.push(item);
         }
     }
-    deduped.sort_by_key(|item| (item.confirm_bar, item.label().to_string()));
+    deduped.sort_by(|left, right| {
+        left.confirm_bar
+            .cmp(&right.confirm_bar)
+            .then_with(|| left.label().cmp(right.label()))
+    });
     deduped
 }
 
@@ -2084,6 +2094,48 @@ fn normalize_signed(value: f64, cap: f64) -> f64 {
     } else {
         (value / cap).clamp(-1.0, 1.0)
     }
+}
+
+fn smt_relationship_resolver_explanation(context: &FactorContext<'_>) -> String {
+    let Some(symbol) = context.symbol else {
+        return "resolver_base_symbol=unknown;resolver_relationship_type=unknown;resolver_relationship_confidence=0.0000;resolver_primary_related_symbols=n/a;resolver_session_leaders=n/a;comparison_symbol=unknown;comparison_in_resolver_candidates=false".to_string();
+    };
+    let resolved = resolve_smt_relationships(symbol, context.available_symbols);
+    let comparison_symbol = context
+        .paired_symbol
+        .or_else(|| context.auxiliary.map(|aux| aux.spot_symbol.as_str()))
+        .unwrap_or("unknown");
+    let candidate_symbols = resolved
+        .primary_related_symbols
+        .iter()
+        .chain(resolved.futures_peers.iter())
+        .chain(resolved.cfd_proxies.iter())
+        .chain(resolved.etf_proxies.iter())
+        .chain(resolved.sector_or_industry_peers.iter())
+        .chain(resolved.currency_macro_drivers.iter())
+        .chain(resolved.session_leaders.iter())
+        .map(|value| value.to_ascii_uppercase())
+        .collect::<std::collections::BTreeSet<_>>();
+    let comparison_in_candidates = comparison_symbol != "unknown"
+        && candidate_symbols.contains(&comparison_symbol.to_ascii_uppercase());
+    format!(
+        "resolver_base_symbol={};resolver_relationship_type={};resolver_relationship_confidence={:.4};resolver_primary_related_symbols={};resolver_session_leaders={};comparison_symbol={};comparison_in_resolver_candidates={}",
+        resolved.symbol,
+        resolved.relationship_type,
+        resolved.confidence,
+        if resolved.primary_related_symbols.is_empty() {
+            "n/a".to_string()
+        } else {
+            resolved.primary_related_symbols.join("|")
+        },
+        if resolved.session_leaders.is_empty() {
+            "n/a".to_string()
+        } else {
+            resolved.session_leaders.join("|")
+        },
+        comparison_symbol,
+        comparison_in_candidates
+    )
 }
 
 // --- Hot-plug compute stubs for Families E, F, H ---

@@ -1,4 +1,5 @@
 import unittest
+import asyncio
 
 from support.scripts.ibkr_bridge import client_id
 from support.scripts.ibkr_bridge import setup
@@ -48,6 +49,41 @@ class GatewaySetupTests(unittest.TestCase):
 
 
 class ProbeFallbackTests(unittest.IsolatedAsyncioTestCase):
+    async def test_connect_with_client_id_fallback_skips_hung_candidate(self):
+        class FakeIB:
+            def __init__(self):
+                self.connected = False
+
+            async def connectAsync(self, host, port, clientId, readonly):
+                del host, port, readonly
+                if clientId == 99:
+                    await asyncio.sleep(60)
+                self.connected = True
+
+            def isConnected(self):
+                return self.connected
+
+            def disconnect(self):
+                self.connected = False
+
+        selected_client_id, attempted_conflicts = await asyncio.wait_for(
+            client_id.connect_with_client_id_fallback(
+                FakeIB(),
+                host="127.0.0.1",
+                port=4002,
+                preferred_client_id=99,
+                readonly=True,
+                candidates=[99, 199],
+                connect_timeout_sec=0.01,
+            ),
+            timeout=0.2,
+        )
+
+        self.assertEqual(selected_client_id, 199)
+        self.assertEqual(len(attempted_conflicts), 1)
+        self.assertEqual(attempted_conflicts[0][0], 99)
+        self.assertIn("timed out", attempted_conflicts[0][1])
+
     async def test_probe_fallback_tries_next_client_id(self):
         candidates = [setup.GatewayCandidate("TWS paper", 7497, True, "reachable")]
 

@@ -2669,6 +2669,41 @@ pub struct CanonicalStructuralRegimePosterior {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct OrderBlockVariantRuntimeEvidence {
+    pub factor_name: String,
+    pub variant: String,
+    pub direction: Direction,
+    pub high: Option<f64>,
+    pub low: Option<f64>,
+    pub midpoint: Option<f64>,
+    pub validation_state: String,
+    pub mitigation_count: usize,
+    pub breaker_confirmed: bool,
+    pub rejection_confirmed: bool,
+    pub confidence: f64,
+    pub fail_closed_reason: Option<String>,
+}
+
+impl Default for OrderBlockVariantRuntimeEvidence {
+    fn default() -> Self {
+        Self {
+            factor_name: "order_block_variant_classifier".to_string(),
+            variant: "none".to_string(),
+            direction: Direction::Neutral,
+            high: None,
+            low: None,
+            midpoint: None,
+            validation_state: "fail_closed".to_string(),
+            mitigation_count: 0,
+            breaker_confirmed: false,
+            rejection_confirmed: false,
+            confidence: 0.0,
+            fail_closed_reason: Some("missing_order_block_variant_evidence".to_string()),
+        }
+    }
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct AnalyzeRunRecord {
     pub run_id: String,
     pub timestamp: DateTime<Utc>,
@@ -2709,7 +2744,19 @@ pub struct AnalyzeRunRecord {
     #[serde(default)]
     pub pre_bayes_entry_quality_bridge: PreBayesEntryQualityBridge,
     #[serde(default)]
+    pub conformal_coverage_1sigma: Option<f64>,
+    #[serde(default)]
+    pub conformal_miscoverage_1sigma: Option<f64>,
+    #[serde(default)]
+    pub mean_prediction_interval_half_width: Option<f64>,
+    #[serde(default)]
+    pub worst_window_miscoverage: Option<f64>,
+    #[serde(default)]
     pub canonical_structural_regime_posterior: Option<CanonicalStructuralRegimePosterior>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub order_block_variant: Option<OrderBlockVariantRuntimeEvidence>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub reference_liquidity_levels: Option<crate::ict::ReferenceLiquidityLevelsEvidence>,
     pub factor_family_decisions: Vec<FactorFamilyDecision>,
     pub factor_family_outcomes: Vec<FactorFamilyOutcome>,
     pub factor_family_diffs: Vec<FactorFamilyDiff>,
@@ -2778,7 +2825,13 @@ impl Default for AnalyzeRunRecord {
             hybrid_remaining_expected_bars: None,
             pre_bayes_evidence_filter: PreBayesEvidenceFilter::default(),
             pre_bayes_entry_quality_bridge: PreBayesEntryQualityBridge::default(),
+            conformal_coverage_1sigma: None,
+            conformal_miscoverage_1sigma: None,
+            mean_prediction_interval_half_width: None,
+            worst_window_miscoverage: None,
             canonical_structural_regime_posterior: None,
+            order_block_variant: None,
+            reference_liquidity_levels: None,
             factor_family_decisions: Vec::new(),
             factor_family_outcomes: Vec::new(),
             factor_family_diffs: Vec::new(),
@@ -3336,6 +3389,10 @@ pub struct WorkflowPhaseSnapshot {
     pub canonical_structural_confidence: Option<f64>,
     #[serde(default)]
     pub canonical_structural_probabilities: BTreeMap<String, f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub order_block_variant: Option<OrderBlockVariantRuntimeEvidence>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub reference_liquidity_levels: Option<crate::ict::ReferenceLiquidityLevelsEvidence>,
     #[serde(default)]
     pub pre_bayes_long_signal_probability: Option<f64>,
     #[serde(default)]
@@ -3354,6 +3411,14 @@ pub struct WorkflowPhaseSnapshot {
     pub pre_bayes_multi_timeframe_alignment_score: Option<f64>,
     #[serde(default)]
     pub pre_bayes_multi_timeframe_entry_alignment_score: Option<f64>,
+    #[serde(default)]
+    pub conformal_coverage_1sigma: Option<f64>,
+    #[serde(default)]
+    pub conformal_miscoverage_1sigma: Option<f64>,
+    #[serde(default)]
+    pub mean_prediction_interval_half_width: Option<f64>,
+    #[serde(default)]
+    pub worst_window_miscoverage: Option<f64>,
     #[serde(default)]
     pub realized_outcome: Option<String>,
     #[serde(default)]
@@ -3437,6 +3502,8 @@ impl Default for WorkflowPhaseSnapshot {
             canonical_structural_active_regime: None,
             canonical_structural_confidence: None,
             canonical_structural_probabilities: BTreeMap::new(),
+            order_block_variant: None,
+            reference_liquidity_levels: None,
             pre_bayes_long_signal_probability: None,
             pre_bayes_short_signal_probability: None,
             pre_bayes_selected_entry_quality_probability: None,
@@ -3446,6 +3513,10 @@ impl Default for WorkflowPhaseSnapshot {
             pre_bayes_multi_timeframe_direction_bias: String::new(),
             pre_bayes_multi_timeframe_alignment_score: None,
             pre_bayes_multi_timeframe_entry_alignment_score: None,
+            conformal_coverage_1sigma: None,
+            conformal_miscoverage_1sigma: None,
+            mean_prediction_interval_half_width: None,
+            worst_window_miscoverage: None,
             realized_outcome: None,
             structural_learning_credit_class: None,
             structural_learning_success_credit: None,
@@ -4909,7 +4980,21 @@ fn structural_feedback_behavior_policy_probability(record: &FeedbackRecord) -> O
         .model_probabilities_before_trade
         .selected_probability
         .clamp(0.0, 1.0);
-    (probability > f64::EPSILON).then_some(probability)
+    if probability > f64::EPSILON {
+        Some(probability)
+    } else {
+        let fallback = match record.model_probabilities_before_trade.selected_direction {
+            Direction::Bull => record.model_probabilities_before_trade.win_prob_long,
+            Direction::Bear => record.model_probabilities_before_trade.win_prob_short,
+            Direction::Neutral => record.model_probabilities_before_trade.selected_probability,
+        }
+        .clamp(0.0, 1.0);
+        if fallback > f64::EPSILON {
+            Some(fallback)
+        } else {
+            Some(probability)
+        }
+    }
 }
 
 fn structural_feedback_reward_baseline(record: &FeedbackRecord) -> f64 {

@@ -48,6 +48,14 @@ pub fn parse_cleaned_continuous_identity(path: &str) -> Option<(String, String)>
     Some((market.to_string(), interval.to_string()))
 }
 
+fn parse_interval_from_filename_tokens(path: &str) -> Option<String> {
+    let file_name = std::path::Path::new(path).file_name()?.to_str()?;
+    let stem = file_name.strip_suffix(".json").unwrap_or(file_name);
+    stem.split(['_', '-', '.'])
+        .find(|token| MULTI_TIMEFRAME_INTERVALS.contains(token))
+        .map(str::to_string)
+}
+
 pub fn auto_resolve_multi_timeframe_inputs(primary_data: &str) -> ResolvedMultiTimeframeInputs {
     let mut resolved = ResolvedMultiTimeframeInputs::default();
     let primary_path = std::path::Path::new(primary_data);
@@ -132,7 +140,24 @@ pub fn resolve_multi_timeframe_inputs(
 pub fn infer_interval_for_analyze_frame(path: &str, fallback: &str) -> String {
     parse_cleaned_continuous_identity(path)
         .map(|(_, interval)| interval)
+        .or_else(|| parse_interval_from_filename_tokens(path))
         .unwrap_or_else(|| fallback.to_string())
+}
+
+fn interval_rank(interval: &str) -> Option<usize> {
+    MULTI_TIMEFRAME_INTERVALS
+        .iter()
+        .position(|candidate| candidate == &interval)
+}
+
+pub fn resolve_interval_for_analyze_slot(path: &str, fallback: &str) -> String {
+    let inferred = infer_interval_for_analyze_frame(path, fallback);
+    match (interval_rank(&inferred), interval_rank(fallback)) {
+        (Some(inferred_rank), Some(fallback_rank)) if inferred_rank > fallback_rank => {
+            fallback.to_string()
+        }
+        _ => inferred,
+    }
 }
 
 pub fn resolve_analyze_multi_timeframe_inputs(
@@ -143,7 +168,7 @@ pub fn resolve_analyze_multi_timeframe_inputs(
     let mut resolved =
         resolve_multi_timeframe_inputs(data_ltf, MultiTimeframeInputPaths::default());
     for (path, fallback) in [(data_htf, "1d"), (data_mtf, "1h"), (data_ltf, "15m")] {
-        let interval = infer_interval_for_analyze_frame(path, fallback);
+        let interval = resolve_interval_for_analyze_slot(path, fallback);
         resolved.paths.insert(interval, path.to_string());
     }
     resolved.source = match resolved.source.as_str() {
@@ -423,4 +448,59 @@ pub fn detected_multi_timeframe_clean_root(tomac_root: Option<&str>) -> Option<S
         .map(|entry| entry.path())
         .find(|path| path.is_dir() && is_multi_timeframe_clean_root(path))
         .map(|path| path.to_string_lossy().to_string())
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn infer_interval_for_analyze_frame_accepts_provider_style_filenames() {
+        assert_eq!(
+            infer_interval_for_analyze_frame("ibkr_iwm_small_cap_30m.json", "1d"),
+            "30m"
+        );
+        assert_eq!(
+            infer_interval_for_analyze_frame("yfinance_qqq_growth_5m.json", "1h"),
+            "5m"
+        );
+        assert_eq!(
+            infer_interval_for_analyze_frame("kraken_pf_xbtusd_1h.json", "15m"),
+            "1h"
+        );
+        assert_eq!(
+            infer_interval_for_analyze_frame("yfinance_nq_5m.clean.json", "15m"),
+            "5m"
+        );
+        assert_eq!(
+            infer_interval_for_analyze_frame("support/examples/demo/demo-15m.json", "1d"),
+            "15m"
+        );
+    }
+
+    #[test]
+    fn resolve_analyze_multi_timeframe_inputs_keeps_low_tf_provider_intervals() {
+        let resolved = resolve_analyze_multi_timeframe_inputs(
+            "ibkr_iwm_small_cap_30m.json",
+            "ibkr_iwm_small_cap_15m.json",
+            "ibkr_iwm_small_cap_5m.json",
+        );
+        assert_eq!(resolved.source, "analyze_explicit_frames");
+        assert_eq!(resolved.get("30m"), Some("ibkr_iwm_small_cap_30m.json"));
+        assert_eq!(resolved.get("15m"), Some("ibkr_iwm_small_cap_15m.json"));
+        assert_eq!(resolved.get("5m"), Some("ibkr_iwm_small_cap_5m.json"));
+    }
+
+    #[test]
+    fn resolve_analyze_multi_timeframe_inputs_preserves_explicit_replay_roles() {
+        let resolved = resolve_analyze_multi_timeframe_inputs(
+            "yf_spy_1w.clean.json",
+            "yf_spy_1d.clean.json",
+            "yf_spy_1h.clean.json",
+        );
+        assert_eq!(resolved.source, "analyze_explicit_frames");
+        assert_eq!(resolved.get("1d"), Some("yf_spy_1w.clean.json"));
+        assert_eq!(resolved.get("1h"), Some("yf_spy_1d.clean.json"));
+        assert_eq!(resolved.get("15m"), Some("yf_spy_1h.clean.json"));
+    }
 }

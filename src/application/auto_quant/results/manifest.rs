@@ -78,6 +78,16 @@ pub struct StrategyLibraryMetadata {
     #[serde(default)]
     pub expected_regime: String,
     #[serde(default)]
+    pub main_regime: String,
+    #[serde(default)]
+    pub sub_regime: String,
+    #[serde(default)]
+    pub sub_sub_regime_or_profit_factor: String,
+    #[serde(default)]
+    pub profit_factor: String,
+    #[serde(default)]
+    pub regime_profit_branch_path: String,
+    #[serde(default)]
     pub factors_used: Vec<String>,
     #[serde(default)]
     pub parent: String,
@@ -87,6 +97,10 @@ pub struct StrategyLibraryMetadata {
     pub status: String,
     #[serde(default)]
     pub created: String,
+    #[serde(default)]
+    pub promotion_allowed: bool,
+    #[serde(default)]
+    pub trade_usable: bool,
 }
 
 /// Aggregate (and per-pair) backtest metrics. All fields default to 0.0
@@ -294,5 +308,52 @@ mod tests {
             e.status_kind(),
             StrategyLibraryEntryStatus::Other("weird".into())
         );
+    }
+
+    #[test]
+    fn loads_regime_profit_branch_metadata_fields() {
+        let f = write_tmp(
+            r#"{
+              "manifest_version":"1.0",
+              "strategies":[{
+                "name":"BranchAware",
+                "file_path":"user_data/strategies_ibkr/BranchAware.py",
+                "metadata":{
+                  "strategy":"BranchAware",
+                  "mutation_id":"branch-aware-001",
+                  "base_factor":"market_structure_event_classifier",
+                  "hypothesis":"branch fields survive import",
+                  "paradigm":"regime_rooted_market_structure_event",
+                  "expected_regime":"Transition -> MarketStructureEvent -> atr_cisd_direct_limit -> market_structure_event_classifier_atr_cisd_direct_limit_v1",
+                  "main_regime":"Transition",
+                  "sub_regime":"MarketStructureEvent",
+                  "sub_sub_regime_or_profit_factor":"atr_cisd_direct_limit",
+                  "profit_factor":"market_structure_event_classifier_atr_cisd_direct_limit_v1",
+                  "regime_profit_branch_path":"Transition -> MarketStructureEvent -> atr_cisd_direct_limit -> market_structure_event_classifier_atr_cisd_direct_limit_v1",
+                  "promotion_allowed":false,
+                  "trade_usable":false
+                },
+                "status":"ok"
+              }]
+            }"#,
+        );
+        let manifest = load_strategy_library_manifest(f.path()).unwrap();
+        let metadata = &manifest.strategies[0].metadata;
+        assert_eq!(metadata.main_regime, "Transition");
+        assert_eq!(metadata.sub_regime, "MarketStructureEvent");
+        assert_eq!(
+            metadata.sub_sub_regime_or_profit_factor,
+            "atr_cisd_direct_limit"
+        );
+        assert_eq!(
+            metadata.profit_factor,
+            "market_structure_event_classifier_atr_cisd_direct_limit_v1"
+        );
+        assert_eq!(
+            metadata.regime_profit_branch_path,
+            "Transition -> MarketStructureEvent -> atr_cisd_direct_limit -> market_structure_event_classifier_atr_cisd_direct_limit_v1"
+        );
+        assert!(!metadata.promotion_allowed);
+        assert!(!metadata.trade_usable);
     }
 }

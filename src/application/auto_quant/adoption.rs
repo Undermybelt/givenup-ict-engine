@@ -9,7 +9,7 @@ use crate::state::{
 };
 
 use super::handoff::{
-    auto_quant_active_strategy_count, auto_quant_data_ready, base_suggested_commands,
+    auto_quant_active_strategy_count, auto_quant_handoff_data_ready, base_suggested_commands,
     suggested_next_steps_for_handoff, AutoQuantResearchHandoffPayload,
 };
 use super::readiness::auto_quant_readiness_from_status_and_data;
@@ -76,7 +76,11 @@ pub fn build_auto_quant_adoption_review(
             .ok_or_else(|| anyhow!("no auto-quant handoff artifact found for '{}'", symbol))?
     };
     let payload = load_handoff_payload(state_dir, symbol, entry)?;
-    let data_ready = auto_quant_data_ready(&payload.workspace);
+    let data_ready = auto_quant_handoff_data_ready(
+        &payload.workspace,
+        &payload.data_path,
+        payload.paired_data_path.as_deref(),
+    );
     let active_strategy_count = auto_quant_active_strategy_count(&payload.workspace);
     let readiness = auto_quant_readiness_from_status_and_data(
         &payload.dependency_status,
@@ -242,10 +246,11 @@ mod tests {
     fn review_uses_current_data_readiness_after_handoff_is_prepared() {
         let temp = tempfile::tempdir().unwrap();
         let managed = temp.path().join("auto-quant");
+        let data_path = temp.path().join("demo.json");
         let payload =
             build_factor_research_handoff_payload(BuildFactorResearchHandoffPayloadInput {
                 symbol: "NQ",
-                data: "demo.json",
+                data: data_path.to_str().unwrap(),
                 objective: "expansion_manipulation",
                 provider_profile_selector: None,
                 paired_data: None,
@@ -258,6 +263,7 @@ mod tests {
         assert!(!payload.data_ready);
         persist_handoff_payload(temp.path().to_str().unwrap(), &payload).unwrap();
 
+        std::fs::write(&data_path, "[]").unwrap();
         std::fs::create_dir_all(&payload.workspace.data_dir).unwrap();
         for index in 0..15 {
             std::fs::write(
@@ -343,6 +349,48 @@ mod tests {
             std::fs::read_to_string(temp.path().join("NQ").join(ARTIFACT_LEDGER_FILE)).unwrap();
         assert!(ledger.contains("auto_quant_adoption_decision"));
         assert!(ledger.contains(AUTO_QUANT_ADOPTION_DECISION_REVIEW_RULE_VERSION));
+    }
+
+    #[test]
+    fn adoption_review_requires_requested_data_path_even_when_workspace_cache_exists() {
+        let temp = tempfile::tempdir().unwrap();
+        let managed_dir = temp.path().join("managed-auto-quant");
+        let strategies_dir = managed_dir.join("user_data/strategies");
+        let data_dir = managed_dir.join("user_data/data");
+        std::fs::create_dir_all(&strategies_dir).unwrap();
+        std::fs::create_dir_all(&data_dir).unwrap();
+        std::fs::write(managed_dir.join("program.md"), "program").unwrap();
+        std::fs::write(managed_dir.join("prepare.py"), "print('prepare')").unwrap();
+        std::fs::write(managed_dir.join("run.py"), "print('run')").unwrap();
+        std::fs::write(
+            strategies_dir.join("_template.py.example"),
+            "class Template: pass",
+        )
+        .unwrap();
+        std::fs::write(strategies_dir.join("SeedAlpha.py"), "class SeedAlpha: pass").unwrap();
+        for index in 0..15 {
+            std::fs::write(data_dir.join(format!("prepared-{index}.feather")), "ready").unwrap();
+        }
+
+        let payload =
+            build_factor_research_handoff_payload(BuildFactorResearchHandoffPayloadInput {
+                symbol: "NQ",
+                data: temp.path().join("missing-primary.json").to_str().unwrap(),
+                objective: "expansion_manipulation",
+                provider_profile_selector: None,
+                paired_data: None,
+                auxiliary_evidence_path: None,
+                mutation_spec_path: None,
+                strategy_material_root: None,
+                state_dir: temp.path().to_str().unwrap(),
+                dependency_status: healthy_dependency_status_for(managed_dir.to_str().unwrap()),
+            });
+        persist_handoff_payload(temp.path().to_str().unwrap(), &payload).unwrap();
+
+        let review =
+            build_auto_quant_adoption_review("NQ", temp.path().to_str().unwrap(), None).unwrap();
+        assert_eq!(review.review_status, "prepare_required");
+        assert!(!review.data_ready);
     }
 
     fn healthy_dependency_status() -> AutoQuantDependencyStatus {

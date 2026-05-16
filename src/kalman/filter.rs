@@ -47,13 +47,23 @@ impl KalmanFilter {
     /// x_pred = F * x
     /// P_pred = F * P * F^T + Q
     pub fn predict(&mut self) {
-        // x_pred = F * x
-        self.state.x = self.params.f.dot(&self.state.x);
+        // Closed-form predict for the fixed 2-state model [price, velocity].
+        let price = self.state.x[0];
+        let velocity = self.state.x[1];
+        self.state.x[0] = price + velocity;
+        self.state.x[1] = velocity;
 
-        // P_pred = F * P * F^T + Q
-        let fp = self.params.f.dot(&self.state.p);
-        let fpf = fp.dot(&self.params.f.t());
-        self.state.p = fpf + &self.params.q;
+        let p00 = self.state.p[[0, 0]];
+        let p01 = self.state.p[[0, 1]];
+        let p10 = self.state.p[[1, 0]];
+        let p11 = self.state.p[[1, 1]];
+        let q00 = self.params.q[[0, 0]];
+        let q11 = self.params.q[[1, 1]];
+
+        self.state.p[[0, 0]] = p00 + p01 + p10 + p11 + q00;
+        self.state.p[[0, 1]] = p01 + p11;
+        self.state.p[[1, 0]] = p10 + p11;
+        self.state.p[[1, 1]] = p11 + q11;
     }
 
     /// Update step with measurement
@@ -61,30 +71,31 @@ impl KalmanFilter {
     /// x = x_pred + K * (z - H * x_pred)
     /// P = (I - K * H) * P_pred
     pub fn update(&mut self, measurement: f64) {
-        let z = Array1::from_vec(vec![measurement]);
+        // Closed-form update for scalar observation z = price.
+        let y = measurement - self.state.x[0];
+        let s = self.state.p[[0, 0]] + self.params.r[[0, 0]];
 
-        // Innovation: y = z - H * x_pred
-        let hx = self.params.h.dot(&self.state.x);
-        let y = &z - &hx;
+        let (k0, k1) = if s.abs() > 1e-10 {
+            (self.state.p[[0, 0]] / s, self.state.p[[1, 0]] / s)
+        } else {
+            (0.0, 0.0)
+        };
 
-        // Innovation covariance: S = H * P_pred * H^T + R
-        let hp = self.params.h.dot(&self.state.p);
-        let hph = hp.dot(&self.params.h.t());
-        let s = hph + &self.params.r;
+        self.state.x[0] += k0 * y;
+        self.state.x[1] += k1 * y;
 
-        // Kalman gain: K = P_pred * H^T * S^{-1}
-        let pht = self.state.p.dot(&self.params.h.t());
-        let s_inv = self.pseudo_inverse(&s);
-        let k = pht.dot(&s_inv);
+        let p00 = self.state.p[[0, 0]];
+        let p01 = self.state.p[[0, 1]];
+        let p11 = self.state.p[[1, 1]];
 
-        // State update: x = x_pred + K * y
-        self.state.x = &self.state.x + k.dot(&y);
+        let new_p00 = (1.0 - k0) * p00;
+        let new_p01 = (1.0 - k0) * p01;
+        let new_p11 = p11 - k1 * p01;
 
-        // Covariance update: P = (I - K * H) * P_pred
-        let kh = k.dot(&self.params.h);
-        let i = Array2::<f64>::eye(2);
-        let ikh = &i - &kh;
-        self.state.p = ikh.dot(&self.state.p);
+        self.state.p[[0, 0]] = new_p00;
+        self.state.p[[0, 1]] = new_p01;
+        self.state.p[[1, 0]] = new_p01;
+        self.state.p[[1, 1]] = new_p11;
     }
 
     /// Complete step: predict + update
@@ -161,6 +172,65 @@ impl KalmanFilter {
                 )
                 .unwrap()
             }
+        }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::KalmanFilter;
+    use ndarray::{Array1, Array2};
+
+    fn reference_smooth_series(prices: &[f64]) -> Vec<(f64, f64, f64)> {
+        let f = Array2::from_shape_vec((2, 2), vec![1.0, 1.0, 0.0, 1.0]).unwrap();
+        let h = Array2::from_shape_vec((1, 2), vec![1.0, 0.0]).unwrap();
+        let q = Array2::from_shape_vec((2, 2), vec![1e-3, 0.0, 0.0, 1e-4]).unwrap();
+        let r = Array2::from_shape_vec((1, 1), vec![1e-2]).unwrap();
+        let mut x = Array1::from_vec(vec![prices[0], 0.0]);
+        let mut p = Array2::from_shape_vec((2, 2), vec![1.0, 0.0, 0.0, 1.0]).unwrap();
+        let mut out = Vec::with_capacity(prices.len());
+
+        for &measurement in prices {
+            x = f.dot(&x);
+            let fp = f.dot(&p);
+            p = fp.dot(&f.t()) + &q;
+
+            let z = Array1::from_vec(vec![measurement]);
+            let hx = h.dot(&x);
+            let y = &z - &hx;
+            let hp = h.dot(&p);
+            let s = hp.dot(&h.t()) + &r;
+            let pht = p.dot(&h.t());
+            let s_inv = if s[[0, 0]].abs() > 1e-10 {
+                Array2::from_shape_vec((1, 1), vec![1.0 / s[[0, 0]]]).unwrap()
+            } else {
+                Array2::zeros((1, 1))
+            };
+            let k = pht.dot(&s_inv);
+            x = &x + k.dot(&y);
+            let kh = k.dot(&h);
+            let i = Array2::<f64>::eye(2);
+            p = (&i - &kh).dot(&p);
+
+            out.push((x[0], x[1], p[[0, 0]].sqrt()));
+        }
+
+        out
+    }
+
+    #[test]
+    fn smooth_series_matches_reference_matrix_math() {
+        let prices = vec![100.0, 100.5, 99.8, 101.2, 100.9, 102.0];
+        let mut filter = KalmanFilter::new(prices[0], 1e-3, 1e-4, 1e-2);
+
+        let actual = filter.smooth_series(&prices);
+        let expected = reference_smooth_series(&prices);
+
+        assert_eq!(actual.len(), expected.len());
+        for (actual_step, expected_step) in actual.iter().zip(expected.iter()) {
+            assert!((actual_step.0 - expected_step.0).abs() < 1e-9);
+            assert!((actual_step.1 - expected_step.1).abs() < 1e-9);
+            assert!((actual_step.2 - expected_step.2).abs() < 1e-9);
         }
     }
 }

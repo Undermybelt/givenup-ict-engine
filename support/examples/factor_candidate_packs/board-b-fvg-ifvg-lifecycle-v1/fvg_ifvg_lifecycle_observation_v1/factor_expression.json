@@ -1,0 +1,74 @@
+{
+  "schema_version": "factor-expression/v1",
+  "candidate_id": "fvg_ifvg_lifecycle_observation_v1",
+  "display_name": "FVG / IFVG Lifecycle Observation",
+  "family": "Board B",
+  "status": "active",
+  "promotion_state": "candidate_only",
+  "strategy_name": "fvg_ifvg_lifecycle_observation_packet",
+  "mutation_id": null,
+  "base_factor": "fvg_ifvg_lifecycle",
+  "expression_text": "classify provider-backed FVG/IFVG lifecycle states across retained windows, including inversion/respect/failure, exact top/bottom/midpoint/fill-ratio fields, and realized retained-window direction agreement",
+  "operator_set": [
+    "fvg_type",
+    "direction",
+    "top",
+    "bottom",
+    "midpoint",
+    "fill_ratio",
+    "inverted",
+    "respected",
+    "validation_state",
+    "realized_r"
+  ],
+  "complexity": 4,
+  "paradigm": "gap lifecycle state observation",
+  "expected_regime": "Trend -> FvgIfvgLifecycle -> gap_lifecycle_state -> fvg_ifvg_lifecycle_observation_v1",
+  "target_market_hypothesis": [
+    "yfinance QQQ 1h",
+    "IBKR QQQ 1h",
+    "Kraken PF_XBTUSD 1h"
+  ],
+  "base_timeframe": "1h",
+  "context_timeframes": [
+    "retained sliding windows"
+  ],
+  "regime_role": "Trend gap lifecycle observation evidence",
+  "evidence_window": "30 retained provider-backed sliding-window observations; incubation only",
+  "strategy_source": "support/docs/experiments/actionable-regime-confidence/runs/20260516T195114+0800-codex-board-b-fvg-ifvg-provider-outcome-density-v1/materials/combined_fvg_ifvg_provider_observation_packet.json",
+  "filter_belief_execution_mapping": {
+    "pre_bayes_targets": [
+      "gap_lifecycle_state",
+      "required_gap_levels_present",
+      "provider_backed_rows"
+    ],
+    "belief_targets": [
+      "imbalance_lifecycle_confidence",
+      "ifvg_inversion_evidence",
+      "direction_agreement_realized_r"
+    ],
+    "path_ranking_targets": [
+      "regime_profit_branch_path",
+      "provider_stats",
+      "retained_window_expectancy"
+    ],
+    "execution_tree_targets": [
+      "top",
+      "bottom",
+      "midpoint",
+      "fill_ratio",
+      "inverted",
+      "failed",
+      "validation_state",
+      "realized_r"
+    ],
+    "feedback_update_learning_fields": [
+      "realized_r",
+      "provider",
+      "timeframe",
+      "regime_profit_branch_path",
+      "observation_id"
+    ],
+    "structural_feedback_required": true
+  }
+}

@@ -53,17 +53,33 @@ class FactorCandidateResolverTests(unittest.TestCase):
         bundle = resolver.build_candidate_registry(repo_root=REPO_ROOT)
 
         self.assertEqual(bundle["summary"]["selection_mode"], "generic_zero_config")
-        self.assertEqual(bundle["summary"]["candidate_count"], 13)
-        self.assertEqual(bundle["summary"]["buildable_count"], 7)
+        self.assertEqual(bundle["summary"]["candidate_count"], 14)
+        self.assertEqual(bundle["summary"]["buildable_count"], 8)
         self.assertEqual(
             bundle["summary"]["naming_contract_version"],
             "factor-artifact-naming/v1",
         )
         self.assertIsNone(bundle["selected_profile"])
         buildable = [candidate for candidate in bundle["candidates"] if candidate["artifact_ready"]]
-        self.assertEqual(len(buildable), 7)
+        self.assertEqual(len(buildable), 8)
         self.assertTrue(
             all(candidate["artifact_kind"] == "candidate_pack_dir" for candidate in buildable)
+        )
+        order_block = next(
+            item
+            for item in bundle["candidates"]
+            if item["candidate_id"] == "order_block_mitigation_block_1h_v1"
+        )
+        self.assertTrue(order_block["artifact_ready"])
+        self.assertEqual(order_block["artifact_kind"], "candidate_pack_dir")
+        self.assertEqual(order_block["evidence_status"], "buildable")
+        self.assertTrue(
+            any(
+                ref.endswith(
+                    "support/examples/factor_candidate_packs/curated-auto-quant-v1/order_block_mitigation_block_1h_v1"
+                )
+                for ref in order_block["reusable_input_refs"]
+            )
         )
         deferred = next(
             item
@@ -411,7 +427,7 @@ class FactorCandidateResolverTests(unittest.TestCase):
             candidates=registry["candidates"],
         )
 
-        self.assertEqual(payload["summary"]["buildable_count"], 7)
+        self.assertEqual(payload["summary"]["buildable_count"], 8)
         vrp = next(
             item
             for item in payload["buildable_candidates"]
@@ -423,6 +439,14 @@ class FactorCandidateResolverTests(unittest.TestCase):
         self.assertTrue(
             vrp["reusable_input_refs"][0].startswith("support/examples/factor_candidate_packs/")
         )
+        order_block = next(
+            item
+            for item in payload["buildable_candidates"]
+            if item["candidate_id"] == "order_block_mitigation_block_1h_v1"
+        )
+        self.assertEqual(order_block["aggregate_trade_count"], 342)
+        self.assertEqual(order_block["aggregate_label"], "preferred_density")
+        self.assertEqual(order_block["transfer_status"], "cross_market_candidate")
 
     def test_build_candidate_packs_supports_regime_benchmark_bundle(self) -> None:
         nq = {

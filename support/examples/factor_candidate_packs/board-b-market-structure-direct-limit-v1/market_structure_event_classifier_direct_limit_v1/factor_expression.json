@@ -1,0 +1,72 @@
+{
+  "schema_version": "factor-expression/v1",
+  "candidate_id": "market_structure_event_classifier_direct_limit_v1",
+  "display_name": "Market Structure Direct-Limit Classifier",
+  "family": "Board B",
+  "status": "active",
+  "promotion_state": "candidate_only",
+  "strategy_name": "market_structure_direct_limit_seed_packet",
+  "mutation_id": null,
+  "base_factor": "market_structure_event_classifier",
+  "expression_text": "classify CISD/displacement-valid transition events where direct-limit entry is structurally available near a PDA and preserve the rooted direct_limit branch for profitability feedback",
+  "operator_set": [
+    "cisd_direction",
+    "cisd_level",
+    "atr_valid_breakout",
+    "near_pd_array",
+    "mss_or_cisd_confirmed",
+    "displacement_confirmed",
+    "entry_level",
+    "stop_level",
+    "target_level",
+    "realized_r"
+  ],
+  "complexity": 5,
+  "paradigm": "transition market-structure event direct-limit entry",
+  "expected_regime": "Transition -> CisdDisplacementValidity -> direct_limit -> market_structure_event_classifier_direct_limit_v1",
+  "target_market_hypothesis": [
+    "IBKR equities/futures proxies",
+    "yfinance/YF tradfi proxies",
+    "Kraken crypto spot/perp proxies",
+    "TradingViewRemix pending provider recovery"
+  ],
+  "base_timeframe": "1h",
+  "context_timeframes": [
+    "provider supplied source outcome rows"
+  ],
+  "regime_role": "Transition direct-limit profitability seed",
+  "evidence_window": "existing provider-backed outcome labeling packet; Gate 1 only",
+  "strategy_source": "support/docs/experiments/actionable-regime-confidence/runs/20260516T-current-codex-board-b-market-structure-direct-limit-seed-v1/materials/market_structure_direct_limit_seed_packet.json",
+  "filter_belief_execution_mapping": {
+    "pre_bayes_targets": [
+      "atr_valid_breakout",
+      "near_pd_array",
+      "mss_or_cisd_confirmed",
+      "displacement_confirmed"
+    ],
+    "belief_targets": [
+      "direct_limit_event_quality",
+      "transition_structure_follow_through"
+    ],
+    "path_ranking_targets": [
+      "regime_profit_branch_path",
+      "provider_stats",
+      "expectancy",
+      "win_rate"
+    ],
+    "execution_tree_targets": [
+      "entry_level",
+      "stop_level",
+      "target_level",
+      "cisd_level",
+      "realized_r"
+    ],
+    "feedback_update_learning_fields": [
+      "realized_r",
+      "provider",
+      "timeframe",
+      "regime_profit_branch_path"
+    ],
+    "structural_feedback_required": true
+  }
+}

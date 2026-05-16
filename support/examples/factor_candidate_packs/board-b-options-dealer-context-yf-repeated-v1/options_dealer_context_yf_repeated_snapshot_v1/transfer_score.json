@@ -1,0 +1,49 @@
+{
+  "schema_version": "transfer-score/v1",
+  "strategy_name": "options_dealer_context_observation_packet",
+  "candidate_id": "options_dealer_context_yf_repeated_snapshot_v1",
+  "covered_market_count": 4,
+  "covered_markets": [
+    "QQQ options chain",
+    "SPY options chain",
+    "IWM options chain",
+    "DIA options chain"
+  ],
+  "markets_without_trade_counts": [
+    "QQQ/SPY/IWM/DIA forward outcomes",
+    "IBKR option-chain parity",
+    "listed crypto options provider"
+  ],
+  "status": "fail_closed_repeated_snapshot_observation_only",
+  "overall_transfer_score": 0.0,
+  "average_sharpe": null,
+  "average_trade_count": 0.0,
+  "timeframe": "options_chain_snapshot",
+  "market_evidence": {
+    "QQQ options chain": {
+      "status": "provider_backed_observation_only",
+      "trade_count": 0
+    },
+    "SPY options chain": {
+      "status": "provider_backed_observation_only",
+      "trade_count": 0
+    },
+    "IWM options chain": {
+      "status": "provider_backed_observation_only",
+      "trade_count": 0
+    },
+    "DIA options chain": {
+      "status": "provider_backed_observation_only",
+      "trade_count": 0
+    }
+  },
+  "branch_path_contract": {
+    "main_regime": "RangeConsolidation",
+    "sub_regime": "OptionsDealerContext",
+    "sub_sub_regime_or_profit_factor": "yfinance_option_chain_gamma_wall",
+    "profit_factor": "options_dealer_context_yf_repeated_snapshot_v1",
+    "regime_profit_branch_path": "RangeConsolidation -> OptionsDealerContext -> yfinance_option_chain_gamma_wall -> options_dealer_context_yf_repeated_snapshot_v1"
+  },
+  "evidence_source": "support/docs/experiments/actionable-regime-confidence/runs/20260516T211004+0800-codex-options-dealer-repeated-yf-snapshot-v1/materials/options_dealer_repeated_snapshot_panel.json",
+  "fail_closed_reason": "repeated option-chain snapshots exist, but no forward outcome horizon has matured and no provider parity exists"
+}

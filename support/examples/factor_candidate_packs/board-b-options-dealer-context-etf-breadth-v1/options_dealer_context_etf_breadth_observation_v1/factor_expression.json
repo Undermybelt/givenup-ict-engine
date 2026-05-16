@@ -1,0 +1,72 @@
+{
+  "schema_version": "factor-expression/v1",
+  "candidate_id": "options_dealer_context_etf_breadth_observation_v1",
+  "display_name": "Options Dealer Context ETF Breadth Observation",
+  "family": "Board B",
+  "status": "active",
+  "promotion_state": "observation_only",
+  "strategy_name": "options_dealer_context_observation_packet",
+  "mutation_id": null,
+  "base_factor": "options_dealer_context",
+  "expression_text": "extend the yfinance option-chain dealer context observation surface from QQQ to SPY, DIA, and IWM; derive gamma wall, put wall, call wall, dealer gamma regime, 0DTE pressure, skew stress, and pin-or-acceleration risk from IV/open-interest/volume rows",
+  "operator_set": [
+    "gamma_wall",
+    "put_wall",
+    "call_wall",
+    "dealer_gamma_regime",
+    "zero_dte_pressure",
+    "skew_stress",
+    "expected_pin_or_acceleration",
+    "confidence"
+  ],
+  "complexity": 6,
+  "paradigm": "multi-symbol options dealer context observation",
+  "expected_regime": "RangeConsolidation -> OptionsDealerContext -> etf_option_chain_gamma_wall -> options_dealer_context_etf_breadth_observation_v1",
+  "target_market_hypothesis": [
+    "SPY options chain",
+    "DIA options chain",
+    "IWM options chain",
+    "QQQ options chain"
+  ],
+  "base_timeframe": "options_chain_snapshot",
+  "context_timeframes": [
+    "near expirations"
+  ],
+  "regime_role": "dealer positioning breadth and pin or acceleration pressure evidence",
+  "evidence_window": "single yfinance ETF option-chain snapshots from 2026-05-16; fail closed until repeated windows and realized outcomes exist",
+  "strategy_source": "support/scripts/research/options_dealer_context_observation_packet.py",
+  "filter_belief_execution_mapping": {
+    "pre_bayes_targets": [
+      "dealer_gamma_regime",
+      "zero_dte_pressure",
+      "skew_stress"
+    ],
+    "belief_targets": [
+      "gamma_wall",
+      "put_wall",
+      "call_wall",
+      "pin_or_acceleration_pressure"
+    ],
+    "path_ranking_targets": [
+      "regime_profit_branch_path",
+      "provider_stats",
+      "realized_outcome_required_before_learning"
+    ],
+    "execution_tree_targets": [
+      "gamma_wall",
+      "put_wall",
+      "call_wall",
+      "dealer_gamma_regime",
+      "expected_pin_or_acceleration",
+      "skew_stress"
+    ],
+    "feedback_update_learning_fields": [
+      "provider",
+      "snapshot_time",
+      "spot_price",
+      "regime_profit_branch_path",
+      "realized_outcome_required_before_learning"
+    ],
+    "structural_feedback_required": true
+  }
+}
