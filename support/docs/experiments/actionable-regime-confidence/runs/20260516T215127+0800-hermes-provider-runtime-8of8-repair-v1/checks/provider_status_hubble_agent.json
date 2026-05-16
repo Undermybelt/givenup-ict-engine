@@ -1,0 +1,37 @@
+{
+  "summary_line": "market_data:1/1 ready",
+  "ready_by_domain": {
+    "market_data": "1/1"
+  },
+  "providers": [
+    {
+      "provider_id": "hubble",
+      "domain": "market_data",
+      "selectable_by_user": true,
+      "adopted_by_default": false,
+      "ready": true,
+      "access_mode": "hubble_v2_http_api",
+      "user_access": "operator_runtime_optional",
+      "market_fit": [
+        "tradfi",
+        "crypto",
+        "indices",
+        "options"
+      ],
+      "fallback_priority": 12,
+      "status": "ready",
+      "reason": "hubble_base_url_env_configured_with_upstream_default_key",
+      "summary": "Opt-in Hubble V2 market-data API path for OHLCV, realtime quote, indicator, options, and cross-market context when the user supplies a base URL; a custom API key is optional and otherwise falls back to the upstream-compatible default."
+    }
+  ],
+  "ready_providers": [
+    "hubble"
+  ],
+  "pending_providers": [],
+  "pending_provider_details": [],
+  "selectable_providers": [
+    "hubble"
+  ],
+  "default_enabled_providers": [],
+  "install_prompts": []
+}

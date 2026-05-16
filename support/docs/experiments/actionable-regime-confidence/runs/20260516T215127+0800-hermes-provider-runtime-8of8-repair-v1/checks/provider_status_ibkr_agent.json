@@ -1,0 +1,34 @@
+{
+  "summary_line": "market_data:1/1 ready",
+  "ready_by_domain": {
+    "market_data": "1/1"
+  },
+  "providers": [
+    {
+      "provider_id": "ibkr",
+      "domain": "market_data",
+      "selectable_by_user": true,
+      "adopted_by_default": false,
+      "ready": true,
+      "access_mode": "public_or_env_ready",
+      "user_access": "login_and_local_runtime",
+      "market_fit": [
+        "tradfi"
+      ],
+      "fallback_priority": 30,
+      "status": "ready",
+      "reason": "local_ibkr_runtime_ready",
+      "summary": "Setup-required IBKR market-data path for broker-linked futures and equities workflows."
+    }
+  ],
+  "ready_providers": [
+    "ibkr"
+  ],
+  "pending_providers": [],
+  "pending_provider_details": [],
+  "selectable_providers": [
+    "ibkr"
+  ],
+  "default_enabled_providers": [],
+  "install_prompts": []
+}
