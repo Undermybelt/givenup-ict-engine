@@ -817,8 +817,12 @@ pub fn build_pre_bayes_evidence_filter(
         };
         let family_disagreement = regime_family
             .zip(summary.primary_cluster_family.as_deref())
-            .map(|(left, right)| left != right && right != "transition")
+            .map(|(left, right)| left != right)
             .unwrap_or(false);
+        let missing_directional_confirmation = summary
+            .primary_cluster_directional_confirmation_ratio
+            .unwrap_or_default()
+            <= 0.0;
         let strong_cluster = summary.primary_cluster_confidence.unwrap_or_default() >= 0.80
             && summary.consistency_ratio >= 0.70
             && summary.ensemble_mean_confidence >= 0.70;
@@ -833,7 +837,18 @@ pub fn build_pre_bayes_evidence_filter(
                 regime_family.unwrap_or("unknown")
             ));
         }
-        if weak_confidence || weak_consistency || sparse_sessions {
+        if missing_directional_confirmation {
+            conflict_flags.push("pda_missing_directional_confirmation".to_string());
+            rationale.push(
+                "PDA structure has no CISD/MSS directional confirmation, so it cannot reinforce execution direction"
+                    .to_string(),
+            );
+        }
+        if weak_confidence
+            || weak_consistency
+            || sparse_sessions
+            || missing_directional_confirmation
+        {
             conflict_flags.push("pda_sequence_cluster_weak".to_string());
             if weak_confidence {
                 conflict_flags.push("pda_sequence_low_confidence".to_string());

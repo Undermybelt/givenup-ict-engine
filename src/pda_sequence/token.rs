@@ -1,5 +1,7 @@
 use serde::{Deserialize, Serialize};
 
+use crate::types::Direction;
+
 /// Discrete PDA (Premium/Discount Array) "word" types used as the vocabulary
 /// for `PdaSequence` clustering.
 ///
@@ -41,6 +43,12 @@ pub struct PdaToken {
     pub kind: PdaTokenKind,
     /// Bar index in the underlying candle series (for backtracking, not used by DTW).
     pub bar_index: usize,
+    /// Direction carried by the underlying detector, when the event is directional.
+    #[serde(default)]
+    pub direction: Option<Direction>,
+    /// True only for events that can confirm direction by themselves (CISD/MSS).
+    #[serde(default)]
+    pub directional_confirmation: bool,
     /// Fraction of this token's span that overlaps with an active prior token.
     pub overlap: f64,
     /// Liquidity was swept within or immediately after this token.
@@ -54,10 +62,22 @@ impl PdaToken {
         Self {
             kind,
             bar_index,
+            direction: None,
+            directional_confirmation: false,
             overlap: 0.0,
             liquidity_swept: false,
             volume_imbalance_ratio: 0.0,
         }
+    }
+
+    pub fn with_direction(mut self, direction: Direction) -> Self {
+        self.direction = Some(direction);
+        self
+    }
+
+    pub fn with_directional_confirmation(mut self, confirmed: bool) -> Self {
+        self.directional_confirmation = confirmed;
+        self
     }
 
     pub fn with_overlap(mut self, overlap: f64) -> Self {
@@ -87,9 +107,20 @@ pub fn pda_token_cost(a: &PdaToken, b: &PdaToken) -> f64 {
     } else {
         0.5
     };
+    let direction_cost = if a.direction == b.direction { 0.0 } else { 0.5 };
+    let confirmation_cost = if a.directional_confirmation == b.directional_confirmation {
+        0.0
+    } else {
+        0.5
+    };
     let volume_cost = (a.volume_imbalance_ratio - b.volume_imbalance_ratio).abs() / 2.0;
     // Weights sum to 1.0 at the extremes (kind=1 dominates single-metadata deltas).
-    0.60 * kind_cost + 0.15 * overlap_cost + 0.15 * swept_cost + 0.10 * volume_cost
+    0.60 * kind_cost
+        + 0.10 * overlap_cost
+        + 0.10 * swept_cost
+        + 0.08 * direction_cost
+        + 0.02 * confirmation_cost
+        + 0.10 * volume_cost
 }
 
 #[cfg(test)]

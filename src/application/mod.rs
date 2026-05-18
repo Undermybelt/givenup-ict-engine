@@ -18,3 +18,4 @@ pub mod reflection;
 pub mod regime;
 pub mod release_closure;
 pub mod reporting;
+pub mod structure_direction_hotplug;

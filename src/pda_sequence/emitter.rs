@@ -12,13 +12,14 @@
 //!   own `PdaToken` pipeline rather than mutate these constants
 
 use crate::ict::{
-    detect_cisd, detect_fvg, detect_liquidity_pools, detect_liquidity_sweep, detect_order_blocks,
-    detect_propulsion_blocks, detect_rb, detect_structure_breaks, find_swing_highs,
-    find_swing_lows, DEFAULT_PROPULSION_BODY_RANGE_MIN, DEFAULT_PROPULSION_RANGE_ATR_MIN,
+    detect_cisd, detect_fvg, detect_liquidity_pools, detect_liquidity_sweep,
+    detect_market_structure_shifts_default, detect_order_blocks, detect_propulsion_blocks,
+    detect_rb, detect_structure_breaks, find_swing_highs, find_swing_lows,
+    DEFAULT_PROPULSION_BODY_RANGE_MIN, DEFAULT_PROPULSION_RANGE_ATR_MIN,
     DEFAULT_PROPULSION_VOLUME_WINDOW, DEFAULT_PROPULSION_VOLUME_Z_MIN,
 };
 use crate::indicators::compute_atr;
-use crate::types::{Candle, LiquiditySweep};
+use crate::types::{Candle, Direction, LiquiditySweep};
 
 use super::token::{PdaToken, PdaTokenKind};
 
@@ -52,6 +53,7 @@ pub fn emit_pda_sequence_from_candles(candles: &[Candle]) -> Vec<PdaToken> {
     );
     let sweeps = detect_liquidity_sweep(candles, &pools, EMITTER_LIQUIDITY_SWEEP_RETURN_BARS);
     let breaks = detect_structure_breaks(candles, &swing_highs, &swing_lows);
+    let mss = detect_market_structure_shifts_default(candles);
     let cisds = detect_cisd(candles, &obs, EMITTER_CISD_MIN_STRENGTH);
     let rbs = detect_rb(
         candles,
@@ -65,6 +67,8 @@ pub fn emit_pda_sequence_from_candles(candles: &[Candle]) -> Vec<PdaToken> {
         tokens.push(make_token(
             PdaTokenKind::FairValueGap,
             fvg.start_bar,
+            Some(fvg.direction),
+            false,
             candles,
             &sweeps,
         ));
@@ -73,6 +77,8 @@ pub fn emit_pda_sequence_from_candles(candles: &[Candle]) -> Vec<PdaToken> {
         tokens.push(make_token(
             PdaTokenKind::OrderBlock,
             ob.bar_index,
+            Some(ob.ob_type),
+            false,
             candles,
             &sweeps,
         ));
@@ -81,6 +87,8 @@ pub fn emit_pda_sequence_from_candles(candles: &[Candle]) -> Vec<PdaToken> {
         tokens.push(make_token(
             PdaTokenKind::LiquiditySweep,
             sweep.sweep_bar,
+            Some(sweep.sweep_direction),
+            false,
             candles,
             &sweeps,
         ));
@@ -89,6 +97,18 @@ pub fn emit_pda_sequence_from_candles(candles: &[Candle]) -> Vec<PdaToken> {
         tokens.push(make_token(
             PdaTokenKind::StructureBreak,
             sb.bar_index,
+            Some(sb.direction),
+            false,
+            candles,
+            &sweeps,
+        ));
+    }
+    for shift in &mss {
+        tokens.push(make_token(
+            PdaTokenKind::StructureBreak,
+            shift.bar_index,
+            Some(shift.direction),
+            true,
             candles,
             &sweeps,
         ));
@@ -97,6 +117,8 @@ pub fn emit_pda_sequence_from_candles(candles: &[Candle]) -> Vec<PdaToken> {
         tokens.push(make_token(
             PdaTokenKind::RejectionBlock,
             rb.bar_index,
+            Some(rb.direction),
+            false,
             candles,
             &sweeps,
         ));
@@ -105,6 +127,8 @@ pub fn emit_pda_sequence_from_candles(candles: &[Candle]) -> Vec<PdaToken> {
         tokens.push(make_token(
             PdaTokenKind::Cisd,
             cisd.confirm_bar,
+            Some(cisd.direction),
+            true,
             candles,
             &sweeps,
         ));
@@ -121,6 +145,8 @@ pub fn emit_pda_sequence_from_candles(candles: &[Candle]) -> Vec<PdaToken> {
         tokens.push(make_token(
             PdaTokenKind::PropulsionBlock,
             pb.bar_index,
+            Some(pb.direction),
+            false,
             candles,
             &sweeps,
         ));
@@ -136,12 +162,20 @@ pub fn emit_pda_sequence_from_candles(candles: &[Candle]) -> Vec<PdaToken> {
 fn make_token(
     kind: PdaTokenKind,
     bar_index: usize,
+    direction: Option<Direction>,
+    directional_confirmation: bool,
     candles: &[Candle],
     sweeps: &[LiquiditySweep],
 ) -> PdaToken {
-    PdaToken::new(kind, bar_index)
+    let token = PdaToken::new(kind, bar_index)
         .with_liquidity_swept(is_near_sweep(bar_index, sweeps))
         .with_volume_imbalance(candle_body_ratio(candles, bar_index))
+        .with_directional_confirmation(directional_confirmation);
+    if let Some(direction) = direction {
+        token.with_direction(direction)
+    } else {
+        token
+    }
 }
 
 fn is_near_sweep(bar_index: usize, sweeps: &[LiquiditySweep]) -> bool {

@@ -145,10 +145,13 @@ fn hybrid_regime_packet_marks_pda_disagreement_in_evidence() {
             primary_cluster: Some(1),
             primary_cluster_label: Some("cluster_1".to_string()),
             primary_cluster_family: Some("trend".to_string()),
+            primary_cluster_direction: Some("bull".to_string()),
+            primary_cluster_directional_confirmation_ratio: Some(0.25),
             primary_cluster_confidence: Some(0.88),
             consistency_ratio: 0.75,
             ensemble_mean_confidence: 0.83,
             valid_sessions: 8,
+            total_sessions: 10,
             kmer_k: 2,
         }),
     )
@@ -160,6 +163,93 @@ fn hybrid_regime_packet_marks_pda_disagreement_in_evidence() {
     assert!(packet.transition_hazard.unwrap_or_default() > 0.25);
     assert_eq!(packet.duration_elapsed_bars, Some(1));
     assert_eq!(packet.duration_model.as_deref(), Some("geometric"));
+}
+
+#[test]
+fn hybrid_regime_packet_does_not_treat_transition_pda_as_directional_alignment() {
+    let lower = sample_frame("bull", "neutral", 1, 7, 8_500.0, 80.0, 3.75);
+    let packet = build_hybrid_regime_packet(
+        None,
+        &lower,
+        None,
+        None,
+        None,
+        &[],
+        Some(&PdaSequenceArtifactSummary {
+            method: "pda_sequence_analysis_v2".to_string(),
+            primary_cluster: Some(1),
+            primary_cluster_label: Some("cluster_1".to_string()),
+            primary_cluster_family: Some("transition".to_string()),
+            primary_cluster_direction: Some("mixed".to_string()),
+            primary_cluster_directional_confirmation_ratio: Some(0.25),
+            primary_cluster_confidence: Some(0.88),
+            consistency_ratio: 0.75,
+            ensemble_mean_confidence: 0.83,
+            valid_sessions: 8,
+            total_sessions: 10,
+            kmer_k: 2,
+        }),
+    )
+    .unwrap();
+    assert_eq!(packet.wasserstein_label.as_deref(), Some("trend_impulse"));
+    assert!(packet
+        .evidence
+        .iter()
+        .any(|line| line == "pda_cluster_family=transition"));
+    assert!(packet
+        .evidence
+        .iter()
+        .any(|line| line == "pda_hybrid_alignment=false"));
+    assert!(packet
+        .evidence
+        .iter()
+        .any(|line| line == "structure_direction_confirmed=false"));
+    assert!(packet.transition_hazard.unwrap_or_default() > 0.25);
+}
+
+#[test]
+fn hybrid_regime_packet_requires_directional_pda_confirmation_for_alignment() {
+    let lower = sample_frame("bull", "neutral", 1, 7, 8_500.0, 80.0, 3.75);
+    let packet = build_hybrid_regime_packet(
+        None,
+        &lower,
+        None,
+        None,
+        None,
+        &[],
+        Some(&PdaSequenceArtifactSummary {
+            method: "pda_sequence_analysis_v2".to_string(),
+            primary_cluster: Some(1),
+            primary_cluster_label: Some("cluster_1".to_string()),
+            primary_cluster_family: Some("trend".to_string()),
+            primary_cluster_direction: None,
+            primary_cluster_directional_confirmation_ratio: Some(0.0),
+            primary_cluster_confidence: Some(0.88),
+            consistency_ratio: 0.75,
+            ensemble_mean_confidence: 0.83,
+            valid_sessions: 8,
+            total_sessions: 10,
+            kmer_k: 2,
+        }),
+    )
+    .unwrap();
+    assert_eq!(packet.wasserstein_label.as_deref(), Some("trend_impulse"));
+    assert!(packet
+        .evidence
+        .iter()
+        .any(|line| line == "pda_cluster_family=trend"));
+    assert!(packet
+        .evidence
+        .iter()
+        .any(|line| line == "pda_directional_confirmation_ratio=0.0000"));
+    assert!(packet
+        .evidence
+        .iter()
+        .any(|line| line == "pda_hybrid_alignment=false"));
+    assert!(packet
+        .evidence
+        .iter()
+        .any(|line| line == "structure_direction_confirmed=false"));
 }
 
 #[test]

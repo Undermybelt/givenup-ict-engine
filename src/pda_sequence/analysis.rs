@@ -60,11 +60,44 @@ pub struct PdaSequenceArtifactSummary {
     pub primary_cluster: Option<usize>,
     pub primary_cluster_label: Option<String>,
     pub primary_cluster_family: Option<String>,
+    #[serde(default)]
+    pub primary_cluster_direction: Option<String>,
+    #[serde(default)]
+    pub primary_cluster_directional_confirmation_ratio: Option<f64>,
     pub primary_cluster_confidence: Option<f64>,
     pub consistency_ratio: f64,
     pub ensemble_mean_confidence: f64,
     pub valid_sessions: usize,
+    #[serde(default)]
+    pub total_sessions: usize,
     pub kmer_k: usize,
+}
+
+pub fn ordered_second_expansion_h1_h0_support(
+    family: Option<&str>,
+    consistency_ratio: f64,
+    ensemble_mean_confidence: f64,
+    valid_sessions: usize,
+    total_sessions: usize,
+) -> (f64, f64) {
+    let session_density = if total_sessions == 0 {
+        0.0
+    } else {
+        valid_sessions as f64 / total_sessions as f64
+    }
+    .clamp(0.0, 1.0);
+    let ordered_footprint_strength =
+        (consistency_ratio * ensemble_mean_confidence * session_density).clamp(0.0, 1.0);
+
+    let h1_second_expansion = match family {
+        Some("trend") => 0.5 + ordered_footprint_strength * 0.5,
+        Some("range") => 0.5 - ordered_footprint_strength * 0.35,
+        Some("transition") => 0.5,
+        _ => 0.5 + ordered_footprint_strength * 0.15,
+    }
+    .clamp(0.0, 1.0);
+    let h0_no_second_expansion = (1.0 - h1_second_expansion).clamp(0.0, 1.0);
+    (h1_second_expansion, h0_no_second_expansion)
 }
 
 fn infer_pda_cluster_family_from_tokens(tokens: &[PdaToken]) -> Option<String> {
@@ -96,29 +129,72 @@ fn infer_pda_cluster_family_from_tokens(tokens: &[PdaToken]) -> Option<String> {
     )
 }
 
+fn infer_pda_cluster_direction_from_tokens(tokens: &[PdaToken]) -> Option<String> {
+    let mut bull_score = 0usize;
+    let mut bear_score = 0usize;
+    for token in tokens.iter().filter(|token| token.directional_confirmation) {
+        match token.direction {
+            Some(crate::types::Direction::Bull) => bull_score += 1,
+            Some(crate::types::Direction::Bear) => bear_score += 1,
+            _ => {}
+        }
+    }
+    if bull_score == 0 && bear_score == 0 {
+        return None;
+    }
+    Some(
+        if bull_score > bear_score {
+            "bull"
+        } else if bear_score > bull_score {
+            "bear"
+        } else {
+            "mixed"
+        }
+        .to_string(),
+    )
+}
+
+fn directional_confirmation_ratio(tokens: &[PdaToken]) -> Option<f64> {
+    if tokens.is_empty() {
+        return None;
+    }
+    Some(
+        tokens
+            .iter()
+            .filter(|token| token.directional_confirmation)
+            .count() as f64
+            / tokens.len() as f64,
+    )
+}
+
 pub fn summarize_pda_sequence_artifact(
     artifact: &PdaSequenceAnalysisArtifact,
 ) -> PdaSequenceArtifactSummary {
     let latest_packet = artifact.ensemble_packets.last();
     let primary_cluster = latest_packet.map(|packet| packet.primary_cluster);
+    let primary_cluster_medoid = primary_cluster.and_then(|cluster_id| {
+        artifact
+            .dtw_packets
+            .iter()
+            .find(|packet| packet.regime_cluster == cluster_id)
+            .map(|packet| packet.medoid_pda_sequence.as_slice())
+    });
     PdaSequenceArtifactSummary {
         method: artifact.method.clone(),
         primary_cluster,
         primary_cluster_label: latest_packet
             .map(|packet| format!("cluster_{}", packet.primary_cluster)),
-        primary_cluster_family: primary_cluster.and_then(|cluster_id| {
-            artifact
-                .dtw_packets
-                .iter()
-                .find(|packet| packet.regime_cluster == cluster_id)
-                .and_then(|packet| {
-                    infer_pda_cluster_family_from_tokens(&packet.medoid_pda_sequence)
-                })
-        }),
+        primary_cluster_family: primary_cluster_medoid
+            .and_then(infer_pda_cluster_family_from_tokens),
+        primary_cluster_direction: primary_cluster_medoid
+            .and_then(infer_pda_cluster_direction_from_tokens),
+        primary_cluster_directional_confirmation_ratio: primary_cluster_medoid
+            .and_then(directional_confirmation_ratio),
         primary_cluster_confidence: latest_packet.map(|packet| packet.confidence),
         consistency_ratio: artifact.consistency_ratio,
         ensemble_mean_confidence: artifact.ensemble_mean_confidence,
         valid_sessions: artifact.valid_sessions,
+        total_sessions: artifact.total_sessions,
         kmer_k: artifact.kmer_k,
     }
 }

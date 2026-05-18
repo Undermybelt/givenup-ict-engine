@@ -2,7 +2,7 @@ use anyhow::Result;
 use std::collections::BTreeMap;
 
 use crate::config::{regime_feature_vector, FrameFeatures};
-use crate::pda_sequence::PdaSequenceArtifactSummary;
+use crate::pda_sequence::{ordered_second_expansion_h1_h0_support, PdaSequenceArtifactSummary};
 
 use super::{
     estimate_duration_state, geometric_duration, negative_binomial_duration, timeframe_alignment,
@@ -91,7 +91,14 @@ pub fn build_hybrid_regime_packet(
     let pda_alignment = pda_sequence_summary.and_then(|summary| {
         summary.primary_cluster_family.as_deref().map(|family| {
             let hybrid_family = regime_family_from_label(&decision.selected_label);
-            (family == hybrid_family) || family == "transition"
+            let has_directional_confirmation = matches!(
+                summary.primary_cluster_direction.as_deref(),
+                Some("bull") | Some("bear")
+            ) && summary
+                .primary_cluster_directional_confirmation_ratio
+                .unwrap_or_default()
+                > 0.0;
+            family == hybrid_family && family != "transition" && has_directional_confirmation
         })
     });
     let elapsed_bars = current_regime_age_bars.unwrap_or(1).max(1);
@@ -128,6 +135,13 @@ pub fn build_hybrid_regime_packet(
     ];
     evidence.extend(decision.evidence.clone());
     if let Some(summary) = pda_sequence_summary {
+        let (h1_second_expansion, h0_no_second_expansion) = ordered_second_expansion_h1_h0_support(
+            summary.primary_cluster_family.as_deref(),
+            summary.consistency_ratio,
+            summary.ensemble_mean_confidence,
+            summary.valid_sessions,
+            summary.total_sessions,
+        );
         evidence.push(format!(
             "pda_cluster_family={}",
             summary
@@ -143,8 +157,38 @@ pub fn build_hybrid_regime_packet(
                 .unwrap_or("unknown")
         ));
         evidence.push(format!(
+            "pda_cluster_direction={}",
+            summary
+                .primary_cluster_direction
+                .as_deref()
+                .unwrap_or("unknown")
+        ));
+        evidence.push(format!(
+            "pda_directional_confirmation_ratio={:.4}",
+            summary
+                .primary_cluster_directional_confirmation_ratio
+                .unwrap_or_default()
+        ));
+        evidence.push(format!(
+            "structure_direction_confirmed={}",
+            matches!(
+                summary.primary_cluster_direction.as_deref(),
+                Some("bull") | Some("bear")
+            ) && summary
+                .primary_cluster_directional_confirmation_ratio
+                .unwrap_or_default()
+                > 0.0
+        ));
+        evidence.push("structure_direction_confirmation_source=cisd_mss".to_string());
+        evidence.push(format!(
             "pda_hybrid_alignment={}",
             pda_alignment.unwrap_or(false)
+        ));
+        evidence.push(format!(
+            "pda_sequence_h1_second_expansion_support={h1_second_expansion:.4}"
+        ));
+        evidence.push(format!(
+            "pda_sequence_h0_no_second_expansion_support={h0_no_second_expansion:.4}"
         ));
     }
     if let Some(alignment) = &alignment {

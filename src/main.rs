@@ -575,6 +575,11 @@ enum Commands {
             help = "Opt in to applying strong/moderate regime bundle BBN soft evidence to the pre-Bayes filter"
         )]
         apply_regime_bundle_bbn_soft_evidence: bool,
+        #[arg(
+            long,
+            help = "Optional structure-events JSON hotplug; confirms direction only from CISD/MSS-style multi-timeframe events"
+        )]
+        structure_events: Option<String>,
     },
     /// Analyze live futures with integrated backends and spot/options auxiliary evidence
     AnalyzeLive {
@@ -2221,6 +2226,7 @@ fn main() -> Result<()> {
             regime_consumer_bundle,
             regime_consumer_bundle_strict,
             apply_regime_bundle_bbn_soft_evidence,
+            structure_events,
         } => {
             ensure_state_dir_ready(&state_dir)?;
             let (data_htf, data_mtf, data_ltf) = resolve_analyze_cli_inputs(
@@ -2244,6 +2250,7 @@ fn main() -> Result<()> {
                 regime_consumer_bundle.as_deref(),
                 regime_consumer_bundle_strict,
                 apply_regime_bundle_bbn_soft_evidence,
+                structure_events.as_deref(),
             )?
         }
         Commands::AnalyzeLive {
@@ -9175,6 +9182,7 @@ mod tests {
             None,
             false,
             false,
+            None,
         )
         .unwrap();
         ict_engine::application::entry_models::export_structural_path_ranking_target_command(
@@ -9249,6 +9257,7 @@ mod tests {
             None,
             false,
             false,
+            None,
         )
         .unwrap();
 
@@ -10234,6 +10243,7 @@ mod tests {
             None,
             false,
             false,
+            None,
         )
         .unwrap();
 
@@ -10846,6 +10856,7 @@ mod tests {
             None,
             false,
             false,
+            None,
         )
         .unwrap();
 
@@ -11017,6 +11028,7 @@ mod tests {
             None,
             false,
             false,
+            None,
         )
         .unwrap();
 
@@ -11067,6 +11079,7 @@ mod tests {
             None,
             false,
             false,
+            None,
         )
         .unwrap();
         analyze_command(
@@ -11081,6 +11094,7 @@ mod tests {
             None,
             false,
             false,
+            None,
         )
         .unwrap();
 
@@ -11123,6 +11137,7 @@ mod tests {
             None,
             false,
             false,
+            None,
         )
         .unwrap();
 
@@ -11212,6 +11227,7 @@ mod tests {
             Some(bundle.to_str().unwrap()),
             true,
             true,
+            None,
         )
         .unwrap();
 
@@ -13035,6 +13051,7 @@ mod tests {
             None,
             false,
             false,
+            None,
         )
         .unwrap();
         crate::update_command::update_command(UpdateCommandInput {
@@ -15099,10 +15116,13 @@ mod tests {
                 primary_cluster: Some(1),
                 primary_cluster_label: Some("cluster_1".to_string()),
                 primary_cluster_family: Some("range".to_string()),
+                primary_cluster_direction: None,
+                primary_cluster_directional_confirmation_ratio: Some(0.0),
                 primary_cluster_confidence: Some(0.41),
                 consistency_ratio: 0.45,
                 ensemble_mean_confidence: 0.50,
                 valid_sessions: 8,
+                total_sessions: 10,
                 kmer_k: 2,
             }),
             &PreBayesEvidenceFilter {
@@ -15122,10 +15142,13 @@ mod tests {
                 primary_cluster: Some(1),
                 primary_cluster_label: Some("cluster_1".to_string()),
                 primary_cluster_family: Some("trend".to_string()),
+                primary_cluster_direction: Some("bull".to_string()),
+                primary_cluster_directional_confirmation_ratio: Some(0.25),
                 primary_cluster_confidence: Some(0.88),
                 consistency_ratio: 0.75,
                 ensemble_mean_confidence: 0.83,
                 valid_sessions: 8,
+                total_sessions: 10,
                 kmer_k: 2,
             }),
             &PreBayesEvidenceFilter::default(),
@@ -15142,10 +15165,13 @@ mod tests {
                 primary_cluster: Some(0),
                 primary_cluster_label: Some("cluster_0".to_string()),
                 primary_cluster_family: Some("trend".to_string()),
+                primary_cluster_direction: Some("bull".to_string()),
+                primary_cluster_directional_confirmation_ratio: Some(0.25),
                 primary_cluster_confidence: Some(0.92),
                 consistency_ratio: 0.82,
                 ensemble_mean_confidence: 0.85,
                 valid_sessions: 8,
+                total_sessions: 10,
                 kmer_k: 2,
             }),
             &PreBayesEvidenceFilter {
@@ -16189,10 +16215,13 @@ mod tests {
                 primary_cluster: Some(1),
                 primary_cluster_label: Some("cluster_1".to_string()),
                 primary_cluster_family: Some("trend".to_string()),
+                primary_cluster_direction: Some("bull".to_string()),
+                primary_cluster_directional_confirmation_ratio: Some(0.25),
                 primary_cluster_confidence: Some(0.88),
                 consistency_ratio: 0.75,
                 ensemble_mean_confidence: 0.83,
                 valid_sessions: 8,
+                total_sessions: 10,
                 kmer_k: 2,
             }),
         );
@@ -16208,10 +16237,13 @@ mod tests {
                 primary_cluster: Some(1),
                 primary_cluster_label: Some("cluster_1".to_string()),
                 primary_cluster_family: Some("range".to_string()),
+                primary_cluster_direction: None,
+                primary_cluster_directional_confirmation_ratio: Some(0.0),
                 primary_cluster_confidence: Some(0.40),
                 consistency_ratio: 0.45,
                 ensemble_mean_confidence: 0.52,
                 valid_sessions: 8,
+                total_sessions: 10,
                 kmer_k: 2,
             }),
         );
@@ -16251,10 +16283,13 @@ mod tests {
                 primary_cluster: Some(0),
                 primary_cluster_label: Some("cluster_0".to_string()),
                 primary_cluster_family: Some("trend".to_string()),
+                primary_cluster_direction: None,
+                primary_cluster_directional_confirmation_ratio: Some(0.0),
                 primary_cluster_confidence: Some(0.90),
                 consistency_ratio: 0.88,
                 ensemble_mean_confidence: 0.84,
                 valid_sessions: 2,
+                total_sessions: 10,
                 kmer_k: 2,
             }),
         );
@@ -16292,10 +16327,13 @@ mod tests {
                 primary_cluster: Some(0),
                 primary_cluster_label: Some("cluster_0".to_string()),
                 primary_cluster_family: Some("trend".to_string()),
+                primary_cluster_direction: Some("bull".to_string()),
+                primary_cluster_directional_confirmation_ratio: Some(0.25),
                 primary_cluster_confidence: Some(0.92),
                 consistency_ratio: 0.52,
                 ensemble_mean_confidence: 0.85,
                 valid_sessions: 8,
+                total_sessions: 10,
                 kmer_k: 2,
             }),
         );
@@ -16333,10 +16371,13 @@ mod tests {
                 primary_cluster: Some(0),
                 primary_cluster_label: Some("cluster_0".to_string()),
                 primary_cluster_family: Some("trend".to_string()),
+                primary_cluster_direction: Some("bull".to_string()),
+                primary_cluster_directional_confirmation_ratio: Some(0.25),
                 primary_cluster_confidence: Some(0.92),
                 consistency_ratio: 0.82,
                 ensemble_mean_confidence: 0.85,
                 valid_sessions: 8,
+                total_sessions: 10,
                 kmer_k: 2,
             }),
         );
@@ -17394,10 +17435,13 @@ mod tests {
                     primary_cluster: Some(1),
                     primary_cluster_label: Some("cluster_1".to_string()),
                     primary_cluster_family: Some("trend".to_string()),
+                    primary_cluster_direction: Some("bull".to_string()),
+                    primary_cluster_directional_confirmation_ratio: Some(0.25),
                     primary_cluster_confidence: Some(0.88),
                     consistency_ratio: 0.75,
                     ensemble_mean_confidence: 0.83,
                     valid_sessions: 8,
+                    total_sessions: 10,
                     kmer_k: 2,
                 }),
                 factor_mutation_evaluation: None,
@@ -17474,10 +17518,13 @@ mod tests {
                     primary_cluster: Some(0),
                     primary_cluster_label: Some("cluster_0".to_string()),
                     primary_cluster_family: Some("trend".to_string()),
+                    primary_cluster_direction: Some("bull".to_string()),
+                    primary_cluster_directional_confirmation_ratio: Some(0.25),
                     primary_cluster_confidence: Some(0.67),
                     consistency_ratio: 0.70,
                     ensemble_mean_confidence: 0.72,
                     valid_sessions: 6,
+                    total_sessions: 10,
                     kmer_k: 2,
                 }),
                 factor_mutation_evaluation: None,

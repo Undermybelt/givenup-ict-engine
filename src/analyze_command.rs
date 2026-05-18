@@ -2,6 +2,10 @@ use super::*;
 use crate::analyze_shared::AnalyzeStageTrace;
 use ict_engine::application::multi_timeframe_inputs::resolve_interval_for_analyze_slot;
 use ict_engine::application::regime::consumer_bundle_adapter::RegimeConsumerBundleAdapter;
+use ict_engine::application::structure_direction_hotplug::{
+    evaluate_structure_direction_confirmation, load_structure_direction_event_bundle,
+    structure_direction_summary_lines, structure_event_bundle_summary_line,
+};
 use std::path::Path;
 
 #[allow(clippy::too_many_arguments)]
@@ -17,6 +21,7 @@ pub(crate) fn analyze_command(
     regime_consumer_bundle: Option<&str>,
     regime_consumer_bundle_strict: bool,
     apply_regime_bundle_bbn_soft_evidence: bool,
+    structure_events: Option<&str>,
 ) -> Result<()> {
     let stage_trace = AnalyzeStageTrace::maybe_from_env();
     stage_trace.event("analyze_command:start");
@@ -33,6 +38,8 @@ pub(crate) fn analyze_command(
     let mtf = load_candles(data_mtf)?;
     let ltf = load_candles(data_ltf)?;
     stage_trace.event("analyze_command:primary_candles_loaded");
+    persist_pda_sequence_artifact_from_analyze_frames(symbol, state_dir, &htf, &mtf, &ltf)?;
+    stage_trace.event("analyze_command:pda_sequence_artifact_ready");
     let resolved_multi_timeframe_inputs =
         resolve_analyze_multi_timeframe_inputs(data_htf, data_mtf, data_ltf);
     let d1_owned = resolved_multi_timeframe_inputs
@@ -79,6 +86,16 @@ pub(crate) fn analyze_command(
         .chain(multi_timeframe_signal.summary.iter())
         .cloned()
         .collect::<Vec<_>>();
+    let analyze_multi_timeframe_summary = if let Some(path) = structure_events {
+        let bundle = load_structure_direction_event_bundle(path)?;
+        let confirmation = evaluate_structure_direction_confirmation(&bundle);
+        let mut summary = analyze_multi_timeframe_summary;
+        summary.push(structure_event_bundle_summary_line(&bundle));
+        summary.extend(structure_direction_summary_lines(&confirmation));
+        summary
+    } else {
+        analyze_multi_timeframe_summary
+    };
     let params = load_or_init_hmm_params(symbol, state_dir);
     let network = load_or_init_trading_network(symbol, state_dir)?;
     let learning_state = load_learning_state(state_dir, symbol)?;
@@ -282,6 +299,68 @@ pub(crate) fn analyze_command(
     emit_analyze_output(&report, output_format, inline_ledger)
 }
 
+fn persist_pda_sequence_artifact_from_analyze_frames(
+    symbol: &str,
+    state_dir: &str,
+    htf: &[Candle],
+    mtf: &[Candle],
+    ltf: &[Candle],
+) -> Result<()> {
+    let sessions = pda_sequence_sessions_from_analyze_frames(&[htf, mtf, ltf]);
+    let provenance = ict_engine::state::RunProvenance {
+        prompt_version: "analyze_pda_sequence_artifact_v1".to_string(),
+        factor_version: "pda_sequence_analysis_v2".to_string(),
+        config_hash: format!(
+            "explicit_htf_mtf_ltf:rolling_sessions:k2:n3:kmer{}",
+            ict_engine::pda_sequence::PDA_SEQUENCE_DEFAULT_KMER_K
+        ),
+        data_fingerprint: format!(
+            "htf_len={};mtf_len={};ltf_len={};pda_sessions={}",
+            htf.len(),
+            mtf.len(),
+            ltf.len(),
+            sessions.len()
+        ),
+    };
+    let artifact = match ict_engine::pda_sequence::analyze_pda_sequences(
+        symbol,
+        &sessions,
+        2,
+        3,
+        ict_engine::pda_sequence::PDA_SEQUENCE_DEFAULT_KMER_K,
+        provenance,
+    ) {
+        Ok(artifact) => artifact,
+        Err(_) => return Ok(()),
+    };
+    ict_engine::pda_sequence::persist_pda_sequence_analysis(state_dir, &artifact, "analyze", None)
+}
+
+fn pda_sequence_sessions_from_analyze_frames(frames: &[&[Candle]]) -> Vec<Vec<Candle>> {
+    let mut sessions = Vec::new();
+    for frame in frames {
+        if frame.is_empty() {
+            continue;
+        }
+        sessions.push((*frame).to_vec());
+        if frame.len() < 48 {
+            continue;
+        }
+        let window = frame.len().min(96);
+        let step = (window / 2).max(1);
+        let mut start = 0;
+        while start + window <= frame.len() {
+            sessions.push(frame[start..start + window].to_vec());
+            start += step;
+        }
+        let tail_start = frame.len().saturating_sub(window);
+        if tail_start > 0 && (start < tail_start || (start - step) != tail_start) {
+            sessions.push(frame[tail_start..].to_vec());
+        }
+    }
+    sessions
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -309,6 +388,83 @@ mod tests {
 
     fn write_test_candles(path: &Path, count: usize) {
         std::fs::write(path, serde_json::to_string(&sample_candles(count)).unwrap()).unwrap();
+    }
+
+    fn pda_test_candle(index: i64, open: f64, high: f64, low: f64, close: f64) -> Candle {
+        Candle {
+            timestamp: Utc.with_ymd_and_hms(2024, 1, 1, 0, 0, 0).unwrap()
+                + Duration::minutes(index),
+            open,
+            high,
+            low,
+            close,
+            volume: 1_000.0,
+        }
+    }
+
+    fn pda_trending_up_series(len: usize, seed: usize) -> Vec<Candle> {
+        let mut candles = Vec::with_capacity(len);
+        let mut base = 100.0 + seed as f64 * 0.5;
+        for index in 0..len {
+            let gap = if index % 6 == 3 { 1.5 } else { 0.0 };
+            let open = base + gap;
+            let close = open + 1.0;
+            candles.push(pda_test_candle(
+                index as i64,
+                open,
+                close + 0.2,
+                open - 0.2,
+                close,
+            ));
+            base = close;
+        }
+        candles
+    }
+
+    fn pda_trending_down_series(len: usize, seed: usize) -> Vec<Candle> {
+        let mut candles = Vec::with_capacity(len);
+        let mut base = 200.0 + seed as f64 * 0.5;
+        for index in 0..len {
+            let gap = if index % 6 == 3 { -1.5 } else { 0.0 };
+            let open = base + gap;
+            let close = open - 1.0;
+            candles.push(pda_test_candle(
+                index as i64,
+                open,
+                open + 0.2,
+                close - 0.2,
+                close,
+            ));
+            base = close;
+        }
+        candles
+    }
+
+    #[test]
+    fn explicit_analyze_frames_persist_pda_sequence_artifact() {
+        let temp = tempfile::tempdir().unwrap();
+        let htf = pda_trending_up_series(80, 0);
+        let mtf = pda_trending_down_series(82, 1);
+        let ltf = pda_trending_up_series(84, 2);
+
+        persist_pda_sequence_artifact_from_analyze_frames(
+            "NQ",
+            temp.path().to_str().unwrap(),
+            &htf,
+            &mtf,
+            &ltf,
+        )
+        .unwrap();
+
+        let artifact =
+            ict_engine::pda_sequence::load_pda_sequence_analysis(temp.path(), "NQ").unwrap();
+        let summary = ict_engine::pda_sequence::summarize_pda_sequence_artifact(&artifact);
+        assert!(
+            artifact.total_sessions > 3,
+            "explicit analyze frames should be split into multiple PDA sessions"
+        );
+        assert!(artifact.valid_sessions > 3);
+        assert!(summary.primary_cluster_label.is_some());
     }
 
     #[test]
@@ -369,6 +525,7 @@ mod tests {
             None,
             false,
             false,
+            None,
         )
         .unwrap();
 
@@ -410,5 +567,71 @@ mod tests {
         let target_csv = std::fs::read_to_string(&target_summary.csv_path).unwrap();
         assert!(target_csv.contains(branch_path));
         assert!(!snapshot.recommended_next_command.contains("ask-user:"));
+    }
+
+    #[test]
+    fn analyze_command_appends_opt_in_structure_direction_hotplug_summary() {
+        let temp = tempfile::tempdir().unwrap();
+        let htf = temp.path().join("htf.json");
+        let mtf = temp.path().join("mtf.json");
+        let ltf = temp.path().join("ltf.json");
+        let structure_events = temp.path().join("structure_events.json");
+
+        write_test_candles(&htf, 220);
+        write_test_candles(&mtf, 180);
+        write_test_candles(&ltf, 140);
+        std::fs::write(
+            &structure_events,
+            serde_json::to_string(&serde_json::json!({
+                "symbol": "NQ",
+                "source_profile": "local_ict_scripts",
+                "require_multi_timeframe": true,
+                "events": [
+                    {"timeframe": "5m", "kind": "cisd", "direction": "bull"},
+                    {"timeframe": "15m", "kind": "mss", "direction": "bull"},
+                    {"timeframe": "15m", "kind": "fair_value_gap", "direction": "bull"},
+                    {"timeframe": "15m", "kind": "order_block", "direction": "bull"}
+                ]
+            }))
+            .unwrap(),
+        )
+        .unwrap();
+
+        analyze_command(
+            "NQ",
+            htf.to_str().unwrap(),
+            mtf.to_str().unwrap(),
+            ltf.to_str().unwrap(),
+            temp.path().to_str().unwrap(),
+            OutputFormat::Json,
+            false,
+            true,
+            None,
+            false,
+            false,
+            Some(structure_events.to_str().unwrap()),
+        )
+        .unwrap();
+
+        let candidate: ExecutionCandidateArtifact = load_state(
+            temp.path(),
+            "NQ",
+            ict_engine::state::EXECUTION_CANDIDATE_FILE,
+        )
+        .unwrap();
+        let summary = &candidate.multi_timeframe_summary;
+        assert!(summary
+            .iter()
+            .any(|line| line == "structure_direction_confirmed=true"));
+        assert!(summary
+            .iter()
+            .any(|line| line == "structure_direction=bull"));
+        assert!(summary
+            .iter()
+            .any(|line| line == "structure_direction_confirmation_source=cisd_mss"));
+        assert!(summary.iter().any(|line| {
+            line == "structure_direction_confirming_timeframes=15m,5m"
+                || line == "structure_direction_confirming_timeframes=5m,15m"
+        }));
     }
 }
