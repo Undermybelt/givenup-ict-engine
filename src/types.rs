@@ -503,6 +503,63 @@ pub struct VolumeImbalance {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct VolumeImbalanceGap {
+    pub top: f64,
+    pub bottom: f64,
+    pub direction: Direction,
+    pub start_bar: usize,
+    pub filled: bool,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+pub enum LiquidityPoolTextureKind {
+    None,
+    Smooth,
+    Jagged,
+    Mixed,
+}
+
+impl LiquidityPoolTextureKind {
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::None => "none",
+            Self::Smooth => "smooth",
+            Self::Jagged => "jagged",
+            Self::Mixed => "mixed",
+        }
+    }
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct LiquidityPoolTextureClassification {
+    pub texture: LiquidityPoolTextureKind,
+    pub level: Option<f64>,
+    pub high: Option<f64>,
+    pub low: Option<f64>,
+    pub touch_count: usize,
+    pub spacing_consistency: Option<f64>,
+    pub clean_sweep_likelihood: Option<f64>,
+    pub confidence: f64,
+    pub fail_closed_reason: Option<String>,
+}
+
+impl LiquidityPoolTextureClassification {
+    pub fn fail_closed(reason: impl Into<String>) -> Self {
+        Self {
+            texture: LiquidityPoolTextureKind::None,
+            level: None,
+            high: None,
+            low: None,
+            touch_count: 0,
+            spacing_consistency: None,
+            clean_sweep_likelihood: None,
+            confidence: 0.0,
+            fail_closed_reason: Some(reason.into()),
+        }
+    }
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct MarketStructureShift {
     pub bar_index: usize,
     pub direction: Direction,

@@ -9,7 +9,7 @@
 //! Forward-leak: baseline window is `[i - window .. i)` — excludes
 //! the current bar so the z-score is unbiased.
 
-use crate::types::{Candle, Direction, VolumeImbalance};
+use crate::types::{Candle, Direction, VolumeImbalance, VolumeImbalanceGap};
 
 pub const DEFAULT_VOLUME_IMBALANCE_WINDOW: usize = 20;
 pub const DEFAULT_VOLUME_IMBALANCE_Z_MIN: f64 = 2.5;
@@ -59,6 +59,61 @@ pub fn detect_volume_imbalances_default(candles: &[Candle]) -> Vec<VolumeImbalan
         DEFAULT_VOLUME_IMBALANCE_WINDOW,
         DEFAULT_VOLUME_IMBALANCE_Z_MIN,
     )
+}
+
+/// Detect ICT-style volume imbalance gaps.
+///
+/// This is the delivery-gap variant: the untraded price band between
+/// the previous candle close and the current candle open. It is a
+/// separate geometry from the rolling volume z-score anomaly above.
+pub fn detect_volume_imbalance_gaps(candles: &[Candle], min_gap: f64) -> Vec<VolumeImbalanceGap> {
+    if candles.len() < 2 {
+        return Vec::new();
+    }
+
+    let mut out = Vec::new();
+    for i in 1..candles.len() {
+        let prev_close = candles[i - 1].close;
+        let curr_open = candles[i].open;
+        let gap = (curr_open - prev_close).abs();
+        if gap <= min_gap.max(0.0) {
+            continue;
+        }
+
+        let direction = if curr_open > prev_close {
+            Direction::Bull
+        } else {
+            Direction::Bear
+        };
+        let top = curr_open.max(prev_close);
+        let bottom = curr_open.min(prev_close);
+        let mut imbalance = VolumeImbalanceGap {
+            top,
+            bottom,
+            direction,
+            start_bar: i,
+            filled: false,
+        };
+        imbalance.filled = check_volume_imbalance_gap_filled(candles, &imbalance);
+        out.push(imbalance);
+    }
+    out
+}
+
+pub fn detect_volume_imbalance_gaps_default(candles: &[Candle]) -> Vec<VolumeImbalanceGap> {
+    detect_volume_imbalance_gaps(candles, f64::EPSILON)
+}
+
+pub fn check_volume_imbalance_gap_filled(
+    candles: &[Candle],
+    imbalance: &VolumeImbalanceGap,
+) -> bool {
+    for candle in candles.iter().skip(imbalance.start_bar + 1) {
+        if candle.low <= imbalance.top && candle.high >= imbalance.bottom {
+            return true;
+        }
+    }
+    false
 }
 
 fn volume_stats(window: &[Candle]) -> (f64, f64) {
@@ -159,5 +214,53 @@ mod tests {
         if !f35.is_empty() {
             assert!((f35[0].z_score - p35[0].z_score).abs() < 1e-9);
         }
+    }
+
+    #[test]
+    fn detects_bullish_delivery_gap_volume_imbalance() {
+        let candles = vec![
+            candle(0, 100.0, 1_000.0),
+            Candle {
+                timestamp: ts(1),
+                open: 101.0,
+                high: 101.5,
+                low: 100.8,
+                close: 101.2,
+                volume: 1_000.0,
+            },
+        ];
+        let out = detect_volume_imbalance_gaps_default(&candles);
+        assert_eq!(out.len(), 1);
+        assert_eq!(out[0].direction, Direction::Bull);
+        assert_eq!(out[0].start_bar, 1);
+        assert!((out[0].top - 101.0).abs() < 1e-9);
+        assert!((out[0].bottom - 100.0).abs() < 1e-9);
+        assert!(!out[0].filled);
+    }
+
+    #[test]
+    fn marks_delivery_gap_filled_on_later_overlap() {
+        let candles = vec![
+            candle(0, 100.0, 1_000.0),
+            Candle {
+                timestamp: ts(1),
+                open: 101.0,
+                high: 101.5,
+                low: 100.9,
+                close: 101.2,
+                volume: 1_000.0,
+            },
+            Candle {
+                timestamp: ts(2),
+                open: 101.2,
+                high: 101.3,
+                low: 100.5,
+                close: 100.7,
+                volume: 1_000.0,
+            },
+        ];
+        let out = detect_volume_imbalance_gaps_default(&candles);
+        assert_eq!(out.len(), 1);
+        assert!(out[0].filled);
     }
 }
