@@ -130,6 +130,9 @@ Primary user corrections preserved:
     manifest, preserving the public/consumer-safe default.
 - Added a sanitized opt-in consumer example for the detector GA/search bundle:
   - `support/examples/factor_hotplug/detector-ga-search-v1.yaml`
+  - `support/examples/factor_hotplug/README.md` documents explicit opt-in
+    usage by copying the example into `<state-dir>/factor_hotplug.yaml` or by
+    setting `ICT_ENGINE_FACTOR_HOTPLUG_CONFIG` for a single run.
   - all factor families remain enabled by default in the example.
   - selected detector fields are limited to the candle-only columns surfaced in
     this lane: `vi_mitigation_pct`, `fvg_mitigation_pct`,
@@ -138,6 +141,8 @@ Primary user corrections preserved:
     `regime_conditioned_win_rate` and `cost_adjusted_expectancy`.
   - validation windows are public compact labels only; no local path, broker,
     credential marker, account id, or personal dataset appears in the example.
+  - README text keeps docs as examples only; runtime still consumes typed YAML
+    config/helper APIs and does not parse markdown.
 - Added a compact reusable detector GA/search manifest prepare status helper:
   - `prepare_detector_ga_feature_manifest(state_dir)` remains opt-in and
     zero-config safe.
@@ -258,6 +263,11 @@ Primary user corrections preserved:
     passed, proving the helper is no-op safe, distinguishes absent config from
     absent bundle, exports explicit bundles, returns only compact counts, and
     does not expose unsafe validation-window values in the debug/status surface.
+- Current example README continuation:
+  - Added `support/examples/factor_hotplug/README.md` as a consumer-facing
+    opt-in usage note only. It contains no maintainer-local path, broker id,
+    account id, token, secret, or API key, and it points generated state to
+    `/tmp/ict-engine-detector-ga-demo`.
 - Residual formatting note:
   - `CARGO_INCREMENTAL=0 cargo fmt --check` currently fails on pre-existing
     unrelated formatting in
@@ -271,7 +281,10 @@ Primary user corrections preserved:
    prepare-status helper once the dirty CLI command files can be touched safely.
    The wrapper should print only the manifest path, schema, field count,
    objective count, validation-window count, warning count, and no-op reason.
-2. Keep all GA/search results as candidate/admission evidence. Do not allow a
+2. If command files remain dirty, prefer a clean temporary worktree for the
+   command wrapper so unrelated `main.rs` / `auto_quant_command.rs` work stays
+   out of the slice.
+3. Keep all GA/search results as candidate/admission evidence. Do not allow a
    GA bundle alone to promote trading execution without the existing Pre-Bayes,
    BBN, path-ranker, cost/slippage, and execution-tree gates.
 
@@ -292,3 +305,4 @@ Last updated: 2026-05-20 00:33:00 +0800.
 Last updated: 2026-05-20 00:49:00 +0800.
 Last updated: 2026-05-20 01:08:00 +0800.
 Last updated: 2026-05-20 01:42:00 +0800.
+Last updated: 2026-05-20 02:31:00 +0800.
