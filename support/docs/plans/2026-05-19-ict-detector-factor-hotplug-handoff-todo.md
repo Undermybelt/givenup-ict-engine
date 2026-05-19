@@ -52,10 +52,10 @@ Primary user corrections preserved:
 - Added token-friendly summary behavior for opt-in detector context:
   - `FactorHotplugConfig::summary_line()` reports only which context fields are
     present, not their values.
-  - `policy-training-status` / training export reuse is not committed in this
-    slice because `src/application/entry_models/training_export.rs` already has
-    broad unrelated dirty work. Stage that single hook only in a later coherent
-    slice.
+- Threaded `policy-training-status` / training export factor-hotplug readback
+  through that redacted summary in a later narrow slice, staged as only the
+  single summary hook plus its regression test despite broad unrelated dirty
+  work in `src/application/entry_models/training_export.rs`.
 
 ## Verification
 
@@ -78,6 +78,9 @@ Primary user corrections preserved:
   - Shared target was busy with another active run, so an isolated verification
     was also started with `CARGO_TARGET_DIR=/tmp/ict-engine-target-hotplug-context
     CARGO_INCREMENTAL=0 cargo test --lib factors::hotplug::tests:: -- --nocapture`.
+  - `CARGO_TARGET_DIR=/tmp/ict-engine-target-training-hotplug CARGO_INCREMENTAL=0 cargo test --lib policy_training_status_redacts_opt_in_detector_hotplug_context_values -- --nocapture`
+    passed, proving policy-training-status exposes opt-in detector context field
+    names without leaking configured values.
 - Residual formatting note:
   - `CARGO_INCREMENTAL=0 cargo fmt --check` currently fails on pre-existing
     unrelated formatting in
@@ -108,4 +111,4 @@ Primary user corrections preserved:
   only this detector slice if committing. Several touched files already carried
   prior uncommitted detector changes, so a casual commit would mix authorship.
 
-Last updated: 2026-05-19 03:05:00 +0800.
+Last updated: 2026-05-19 03:16:00 +0800.

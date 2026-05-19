@@ -1043,21 +1043,7 @@ pub fn policy_training_status(
     );
     let factor_hotplug_summary = crate::factors::hotplug::FactorHotplugConfig::load(state_dir)
         .map(|config| match config {
-            Some(config) => {
-                let disabled = config
-                    .families
-                    .iter()
-                    .filter_map(|(name, enabled)| (!enabled).then_some(name.as_str()))
-                    .collect::<Vec<_>>();
-                if disabled.is_empty() {
-                    "Factor hotplug: config=present disabled=[]".to_string()
-                } else {
-                    format!(
-                        "Factor hotplug: config=present disabled=[{}]",
-                        disabled.join(",")
-                    )
-                }
-            }
+            Some(config) => config.summary_line(),
             None => "Factor hotplug: config=absent all_default_enabled".to_string(),
         })
         .unwrap_or_else(|err| format!("Factor hotplug: config=invalid error={}", err));
@@ -3953,6 +3939,38 @@ mod tests {
         assert!(status
             .summary_line
             .contains("structural path ranking target export missing"));
+    }
+
+    #[test]
+    fn policy_training_status_redacts_opt_in_detector_hotplug_context_values() {
+        let temp = tempfile::tempdir().unwrap();
+        std::fs::write(
+            temp.path()
+                .join(crate::factors::hotplug::FACTOR_HOTPLUG_CONFIG_FILE),
+            r#"
+families:
+  structure_ict: true
+detector_context:
+  session_label: ny_open
+  source_profile: private_profile_label
+  volume_quality: broker_reported
+"#,
+        )
+        .unwrap();
+
+        let status = policy_training_status(temp.path().to_str().unwrap(), "NQ", None).unwrap();
+
+        assert!(status
+            .factor_hotplug_summary
+            .contains("detector_context=opt_in"));
+        assert!(status.factor_hotplug_summary.contains("session_label"));
+        assert!(status.factor_hotplug_summary.contains("source_profile"));
+        assert!(status.factor_hotplug_summary.contains("volume_quality"));
+        assert!(!status.factor_hotplug_summary.contains("ny_open"));
+        assert!(!status
+            .factor_hotplug_summary
+            .contains("private_profile_label"));
+        assert!(!status.factor_hotplug_summary.contains("broker_reported"));
     }
 
     #[test]
