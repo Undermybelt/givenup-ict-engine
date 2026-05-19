@@ -107,8 +107,9 @@ Primary user corrections preserved:
 
 - No trading promotion was attempted from this detector slice.
 - No Board B downstream chain was run.
-- No commit was made yet because the repo has a broad dirty worktree; stage
-  only this detector slice if committing. Several touched files already carried
-  prior uncommitted detector changes, so a casual commit would mix authorship.
+- Committed detector hotplug context and redacted policy-training-status
+  readback as narrow slices (`b9a41f6a`, `feb5575c`). The repo still has a broad
+  dirty worktree from other lanes, so future commits must continue staging only
+  coherent hunk/path sets.
 
 Last updated: 2026-05-19 03:16:00 +0800.
