@@ -114,6 +114,20 @@ Primary user corrections preserved:
   - intended initial bundle fields are the newly surfaced candle-only detector
     columns such as `vi_mitigation_pct`, `fvg_mitigation_pct`,
     `ob_mitigation_pct`, `liquidity_pool_subtype`, and `sweep_quality`.
+- Added a reusable opt-in detector GA/search manifest exporter without touching
+  the dirty CLI command surface:
+  - `persist_detector_ga_feature_manifest(state_dir)` loads only explicit
+    `factor_hotplug.yaml` / `ICT_ENGINE_FACTOR_HOTPLUG_CONFIG` input.
+  - absent config or absent `detector_ga_bundle` is a no-op and creates no
+    `auto-quant/` output.
+  - explicit bundles write
+    `<state-dir>/auto-quant/ga_optimizer/detector_feature_manifest.json`.
+  - manifest schema is `ict_detector_ga_feature_manifest_v1` and carries only
+    compact public tokens: `bundle_id`, `target_consumer`, `selected_fields`,
+    `optimizer_objectives`, `validation_windows`, plus warnings for dropped
+    duplicate/unsafe tokens.
+  - path-like or private-looking validation-window values are dropped from the
+    manifest, preserving the public/consumer-safe default.
 
 ## Verification
 
@@ -195,6 +209,13 @@ Primary user corrections preserved:
   - `CARGO_TARGET_DIR=/tmp/ict-engine-target-detector-ga-green CARGO_INCREMENTAL=0 cargo test --lib factors::hotplug::tests:: -- --nocapture`
     passed with 9 hotplug tests, proving default-off behavior, explicit YAML
     load, and redacted token-friendly summary for the detector GA/search bundle.
+- Current detector GA/search manifest continuation GREEN:
+  - RED first: `CARGO_TARGET_DIR=/tmp/ict-engine-target-detector-ga-manifest-red CARGO_INCREMENTAL=0 cargo test --lib factors::hotplug::tests::test_detector_ga_manifest_export -- --nocapture`
+    failed on missing `persist_detector_ga_feature_manifest`, proving the tests
+    guarded a new artifact export behavior.
+  - `CARGO_TARGET_DIR=/tmp/ict-engine-target-detector-ga-manifest-green CARGO_INCREMENTAL=0 cargo test --lib factors::hotplug::tests::test_detector_ga_manifest_export -- --nocapture`
+    passed with 2 tests, proving no-op default behavior and sanitized manifest
+    export to `<state-dir>/auto-quant/ga_optimizer/` for explicit bundles.
 - Residual formatting note:
   - `CARGO_INCREMENTAL=0 cargo fmt --check` currently fails on pre-existing
     unrelated formatting in
@@ -204,12 +225,13 @@ Primary user corrections preserved:
 
 ## Next
 
-1. Add a sanitized example `factor_hotplug.yaml` or manifest exporter that
-   selects the detector GA/search bundle fields for Auto-Quant admission/search,
-   still default-off and safe for consumers.
+1. Add a sanitized example `factor_hotplug.yaml` that selects the detector
+   GA/search bundle fields for Auto-Quant admission/search, still default-off
+   and safe for consumers.
 2. Consider a follow-up `auto-quant-ga-prepare` / manifest-prep command that
    exports only selected detector feature names and objective names into
-   `<state-dir>/auto-quant/ga_optimizer/`, not repo root.
+   `<state-dir>/auto-quant/ga_optimizer/`, not repo root. Command files are
+   currently dirty from other lanes, so helper-first avoided accidental staging.
 3. Keep all GA/search results as candidate/admission evidence. Do not allow a
    GA bundle alone to promote trading execution without the existing Pre-Bayes,
    BBN, path-ranker, cost/slippage, and execution-tree gates.
@@ -228,3 +250,4 @@ Last updated: 2026-05-19 11:02:00 +0800.
 Last updated: 2026-05-19 11:34:00 +0800.
 Last updated: 2026-05-20 00:00:00 +0800.
 Last updated: 2026-05-20 00:33:00 +0800.
+Last updated: 2026-05-20 00:49:00 +0800.

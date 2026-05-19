@@ -7,6 +7,8 @@ use crate::factors::registry::FactorRegistry;
 
 pub const FACTOR_HOTPLUG_CONFIG_FILE: &str = "factor_hotplug.yaml";
 pub const FACTOR_HOTPLUG_ENV_VAR: &str = "ICT_ENGINE_FACTOR_HOTPLUG_CONFIG";
+pub const DETECTOR_GA_FEATURE_MANIFEST_SCHEMA_VERSION: &str = "ict_detector_ga_feature_manifest_v1";
+pub const DETECTOR_GA_FEATURE_MANIFEST_FILE: &str = "detector_feature_manifest.json";
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 pub struct FactorHotplugConfig {
@@ -50,6 +52,17 @@ pub struct DetectorGaFeatureBundle {
     pub optimizer_objectives: Vec<String>,
     #[serde(default)]
     pub validation_windows: Vec<String>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+pub struct DetectorGaFeatureManifest {
+    pub schema_version: String,
+    pub bundle_id: String,
+    pub target_consumer: String,
+    pub selected_fields: Vec<String>,
+    pub optimizer_objectives: Vec<String>,
+    pub validation_windows: Vec<String>,
+    pub warnings: Vec<String>,
 }
 
 impl Default for FactorHotplugConfig {
@@ -169,13 +182,9 @@ impl DetectorHotplugContext {
 
 impl DetectorGaFeatureBundle {
     pub fn summary_suffix(&self) -> String {
-        let mut fields = self.selected_fields.clone();
-        fields.sort();
-        fields.dedup();
+        let fields = sorted_unique_public_tokens(&self.selected_fields);
 
-        let mut objectives = self.optimizer_objectives.clone();
-        objectives.sort();
-        objectives.dedup();
+        let objectives = sorted_unique_public_tokens(&self.optimizer_objectives);
 
         let bundle = if self.bundle_id.as_deref().unwrap_or_default().is_empty() {
             "unset"
@@ -193,6 +202,63 @@ impl DetectorGaFeatureBundle {
     }
 }
 
+impl DetectorGaFeatureManifest {
+    pub fn from_bundle(bundle: &DetectorGaFeatureBundle) -> Self {
+        let selected_fields = sorted_unique_public_tokens(&bundle.selected_fields);
+        let optimizer_objectives = sorted_unique_public_tokens(&bundle.optimizer_objectives);
+        let validation_windows = sorted_unique_public_tokens(&bundle.validation_windows);
+        let mut warnings = Vec::new();
+
+        if validation_windows.len() != bundle.validation_windows.len() {
+            warnings.push("dropped_unsafe_validation_window_tokens".to_string());
+        }
+        if selected_fields.len() != bundle.selected_fields.len() {
+            warnings.push("dropped_duplicate_or_unsafe_selected_fields".to_string());
+        }
+        if optimizer_objectives.len() != bundle.optimizer_objectives.len() {
+            warnings.push("dropped_duplicate_or_unsafe_optimizer_objectives".to_string());
+        }
+
+        Self {
+            schema_version: DETECTOR_GA_FEATURE_MANIFEST_SCHEMA_VERSION.to_string(),
+            bundle_id: compact_public_token(bundle.bundle_id.as_deref())
+                .unwrap_or("unset")
+                .to_string(),
+            target_consumer: compact_public_token(bundle.target_consumer.as_deref())
+                .unwrap_or("unset")
+                .to_string(),
+            selected_fields,
+            optimizer_objectives,
+            validation_windows,
+            warnings,
+        }
+    }
+}
+
+pub fn persist_detector_ga_feature_manifest(state_dir: &str) -> Result<Option<PathBuf>> {
+    let Some(config) = FactorHotplugConfig::load(state_dir)? else {
+        return Ok(None);
+    };
+    let Some(bundle) = config.detector_ga_bundle.as_ref() else {
+        return Ok(None);
+    };
+
+    let manifest = DetectorGaFeatureManifest::from_bundle(bundle);
+    let output_dir = Path::new(state_dir).join("auto-quant").join("ga_optimizer");
+    std::fs::create_dir_all(&output_dir).with_context(|| {
+        format!(
+            "creating detector GA manifest dir '{}'",
+            output_dir.display()
+        )
+    })?;
+    let output_path = output_dir.join(DETECTOR_GA_FEATURE_MANIFEST_FILE);
+    let content =
+        serde_json::to_string_pretty(&manifest).context("serializing detector GA manifest")?;
+    std::fs::write(&output_path, content)
+        .with_context(|| format!("writing detector GA manifest '{}'", output_path.display()))?;
+    Ok(Some(output_path))
+}
+
 fn compact_public_token(value: Option<&str>) -> Option<&str> {
     value.and_then(|raw| {
         let trimmed = raw.trim();
@@ -207,6 +273,16 @@ fn compact_public_token(value: Option<&str>) -> Option<&str> {
             Some(trimmed)
         }
     })
+}
+
+fn sorted_unique_public_tokens(values: &[String]) -> Vec<String> {
+    let mut out = values
+        .iter()
+        .filter_map(|value| compact_public_token(Some(value.as_str())).map(str::to_string))
+        .collect::<Vec<_>>();
+    out.sort();
+    out.dedup();
+    out
 }
 
 #[cfg(test)]
@@ -393,5 +469,83 @@ detector_ga_bundle:
         assert!(!summary.contains("local/private"));
         assert!(!summary.contains("private"));
         assert!(!summary.contains("window.json"));
+    }
+
+    #[test]
+    fn test_detector_ga_manifest_export_is_noop_without_bundle() {
+        let temp = tempfile::tempdir().unwrap();
+
+        let exported = persist_detector_ga_feature_manifest(temp.path().to_str().unwrap()).unwrap();
+
+        assert!(exported.is_none());
+        assert!(!temp.path().join("auto-quant").exists());
+    }
+
+    #[test]
+    fn test_detector_ga_manifest_export_writes_sanitized_feature_manifest() {
+        let temp = tempfile::tempdir().unwrap();
+        let config_path = temp.path().join(FACTOR_HOTPLUG_CONFIG_FILE);
+        std::fs::write(
+            &config_path,
+            r#"
+families:
+  structure_ict: true
+detector_ga_bundle:
+  bundle_id: ict_detector_ga_v1
+  target_consumer: auto_quant_search
+  selected_fields:
+    - vi_mitigation_pct
+    - ob_mitigation_pct
+    - vi_mitigation_pct
+  optimizer_objectives:
+    - cost_adjusted_expectancy
+    - regime_conditioned_win_rate
+  validation_windows:
+    - train_60d_validate_20d
+    - local/private/window.json
+"#,
+        )
+        .unwrap();
+
+        let exported = persist_detector_ga_feature_manifest(temp.path().to_str().unwrap())
+            .unwrap()
+            .unwrap();
+        let expected = temp
+            .path()
+            .join("auto-quant")
+            .join("ga_optimizer")
+            .join("detector_feature_manifest.json");
+
+        assert_eq!(exported, expected);
+        let manifest: serde_json::Value =
+            serde_json::from_str(&std::fs::read_to_string(expected).unwrap()).unwrap();
+
+        assert_eq!(
+            manifest["schema_version"],
+            "ict_detector_ga_feature_manifest_v1"
+        );
+        assert_eq!(manifest["target_consumer"], "auto_quant_search");
+        assert_eq!(manifest["bundle_id"], "ict_detector_ga_v1");
+        assert_eq!(
+            manifest["selected_fields"],
+            serde_json::json!(["ob_mitigation_pct", "vi_mitigation_pct"])
+        );
+        assert_eq!(
+            manifest["optimizer_objectives"],
+            serde_json::json!(["cost_adjusted_expectancy", "regime_conditioned_win_rate"])
+        );
+        assert_eq!(
+            manifest["validation_windows"],
+            serde_json::json!(["train_60d_validate_20d"])
+        );
+        assert!(manifest["warnings"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .any(|warning| warning == "dropped_unsafe_validation_window_tokens"));
+
+        let raw = serde_json::to_string(&manifest).unwrap();
+        assert!(!raw.contains("local/private"));
+        assert!(!raw.contains("window.json"));
     }
 }
