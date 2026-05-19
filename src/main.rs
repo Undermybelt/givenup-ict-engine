@@ -210,11 +210,13 @@ use ict_engine::factor_lab::{
 use ict_engine::factors::{FactorRegistry, WeightUpdater};
 use ict_engine::hmm::{state_name, BaumWelch, ForwardBackward, Viterbi};
 use ict_engine::ict::{
-    check_bear_expansion_exists, check_bull_expansion_exists, count_recent_breaks,
+    check_bear_expansion_exists, check_bull_expansion_exists,
+    classify_liquidity_pool_texture as classify_liquidity_pool_texture_core,
+    classify_liquidity_sweep_quality as classify_liquidity_sweep_quality_core, count_recent_breaks,
     count_recent_sweeps, detect_breaker_blocks, detect_cisd, detect_liquidity_pools,
     detect_liquidity_sweep, detect_mitigation_blocks_default, detect_order_blocks, detect_pinbar,
-    detect_structure_breaks, expansion_strength, find_swing_highs, find_swing_lows,
-    find_unfilled_fvgs, find_untested_obs, has_recent_pinbar,
+    detect_structure_breaks, detect_volume_imbalance_gaps_default, expansion_strength,
+    find_swing_highs, find_swing_lows, find_unfilled_fvgs, find_untested_obs, has_recent_pinbar,
 };
 use ict_engine::indicators::compute_atr;
 use ict_engine::pda_timeline::{build_pda_timeline, PdaEvent};
@@ -6585,11 +6587,19 @@ fn build_price_action_section(
     let latest_liquidity_sweep = sweeps.last();
     let liquidity_pool_texture =
         classify_liquidity_pool_texture(mtf, atr_ltf, nearest_liquidity_pool);
+    let liquidity_sweep_quality =
+        classify_liquidity_sweep_quality(mtf, atr_ltf, latest_liquidity_sweep);
     let (reference_source, reference_source_frame) =
         select_reference_liquidity_level_source(htf, mtf, ltf);
     let reference_liquidity_levels = ict_engine::ict::detect_reference_liquidity_levels(
         reference_source,
         reference_source_frame,
+    );
+    let volume_imbalance_gap = classify_volume_imbalance_gap(
+        mtf,
+        atr_ltf,
+        last_close,
+        &detect_volume_imbalance_gaps_default(mtf),
     );
     let bullish_cisds = detect_cisd(ltf, &detect_order_blocks(ltf), 1);
     let bullish_cisd = bullish_cisds.iter().any(|cisd| {
@@ -6637,7 +6647,9 @@ fn build_price_action_section(
         nearest_liquidity_pool_level: nearest_liquidity_pool.map(|pool| pool.price_level),
         liquidity_pool_texture,
         latest_liquidity_sweep_level: latest_liquidity_sweep.map(|sweep| sweep.pool_price),
+        liquidity_sweep_quality,
         reference_liquidity_levels,
+        volume_imbalance_gap,
         open_fvgs: fvgs.len(),
         nearest_open_fvg_top: nearest_open_fvg.map(|fvg| fvg.top),
         nearest_open_fvg_bottom: nearest_open_fvg.map(|fvg| fvg.bottom),
@@ -6685,105 +6697,77 @@ fn classify_liquidity_pool_texture(
     atr: &[f64],
     pool: Option<&ict_engine::types::LiquidityPool>,
 ) -> ict_engine::analyze_sections::LiquidityPoolTextureEvidence {
-    let Some(pool) = pool else {
-        return ict_engine::analyze_sections::LiquidityPoolTextureEvidence::fail_closed(
-            "no_liquidity_pool_detected",
+    let classification = classify_liquidity_pool_texture_core(candles, atr, pool);
+    ict_engine::analyze_sections::LiquidityPoolTextureEvidence {
+        factor_name: "liquidity_pool_texture".to_string(),
+        texture: classification.texture.as_str().to_string(),
+        subtype: classification.subtype.as_str().to_string(),
+        level: classification.level,
+        high: classification.high,
+        low: classification.low,
+        touch_count: classification.touch_count,
+        spacing_consistency: classification.spacing_consistency,
+        clean_sweep_likelihood: classification.clean_sweep_likelihood,
+        confidence: classification.confidence,
+        fail_closed_reason: classification.fail_closed_reason,
+    }
+}
+
+fn classify_liquidity_sweep_quality(
+    candles: &[Candle],
+    atr: &[f64],
+    sweep: Option<&ict_engine::types::LiquiditySweep>,
+) -> ict_engine::analyze_sections::LiquiditySweepQualityEvidence {
+    let classification = classify_liquidity_sweep_quality_core(candles, atr, sweep);
+    ict_engine::analyze_sections::LiquiditySweepQualityEvidence {
+        factor_name: "liquidity_sweep_quality".to_string(),
+        quality: classification.quality.as_str().to_string(),
+        sweep_bar: classification.sweep_bar,
+        return_bar: classification.return_bar,
+        pool_price: classification.pool_price,
+        displacement_atr: classification.displacement_atr,
+        return_bars: classification.return_bars,
+        close_reclaim: classification.close_reclaim,
+        confidence: classification.confidence,
+        fail_closed_reason: classification.fail_closed_reason,
+    }
+}
+
+fn classify_volume_imbalance_gap(
+    _candles: &[Candle],
+    atr: &[f64],
+    last_close: f64,
+    gaps: &[ict_engine::types::VolumeImbalanceGap],
+) -> ict_engine::analyze_sections::VolumeImbalanceGapEvidence {
+    let Some(gap) = gaps.iter().filter(|gap| !gap.filled).min_by(|left, right| {
+        volume_imbalance_gap_distance_to_price(left, last_close)
+            .partial_cmp(&volume_imbalance_gap_distance_to_price(right, last_close))
+            .unwrap_or(std::cmp::Ordering::Equal)
+    }) else {
+        return ict_engine::analyze_sections::VolumeImbalanceGapEvidence::fail_closed(
+            "no_active_volume_imbalance_gap",
         );
     };
-    let Some(atr_last) = atr
+    let width = (gap.top - gap.bottom).abs();
+    let atr_last = atr
         .iter()
         .rev()
         .copied()
         .find(|value| value.is_finite() && *value > 0.0)
-    else {
-        return ict_engine::analyze_sections::LiquidityPoolTextureEvidence::fail_closed(
-            "missing_atr_for_liquidity_pool_texture",
-        );
-    };
-    if candles.len() < 5 {
-        return ict_engine::analyze_sections::LiquidityPoolTextureEvidence::fail_closed(
-            "insufficient_candles_for_liquidity_pool_texture",
-        );
-    }
-
-    let tolerance = (atr_last * 0.35).max(pool.price_level.abs() * 0.0002);
-    let touch_indices = candles
-        .iter()
-        .enumerate()
-        .filter_map(|(index, candle)| {
-            let touched = match pool.pool_type {
-                Direction::Bear => (candle.high - pool.price_level).abs() <= tolerance,
-                Direction::Bull => (candle.low - pool.price_level).abs() <= tolerance,
-                Direction::Neutral => {
-                    candle.low <= pool.price_level + tolerance
-                        && candle.high >= pool.price_level - tolerance
-                }
-            };
-            touched.then_some(index)
-        })
-        .collect::<Vec<_>>();
-    let touch_count = pool.sp_count.max(touch_indices.len());
-    if touch_count < 2 {
-        return ict_engine::analyze_sections::LiquidityPoolTextureEvidence::fail_closed(
-            "insufficient_pool_touches_for_texture",
-        );
-    }
-
-    let spacing_consistency = spacing_consistency_score(&touch_indices);
-    let consistency_for_texture = spacing_consistency.unwrap_or(0.35);
-    let texture = if touch_count >= 3 && consistency_for_texture >= 0.65 {
-        "smooth"
-    } else if consistency_for_texture < 0.4 {
-        "jagged"
-    } else {
-        "mixed"
-    };
-    let touch_score = (touch_count as f64 / 6.0).min(1.0);
-    let clean_sweep_likelihood =
-        (0.20 + touch_score * 0.35 + consistency_for_texture * 0.35).clamp(0.0, 0.90);
-    let confidence = (0.32 + touch_score * 0.26 + consistency_for_texture * 0.22).clamp(0.0, 0.82);
-
-    ict_engine::analyze_sections::LiquidityPoolTextureEvidence {
-        factor_name: "liquidity_pool_texture".to_string(),
-        texture: texture.to_string(),
-        level: Some(pool.price_level),
-        high: Some(pool.price_level + tolerance),
-        low: Some(pool.price_level - tolerance),
-        touch_count,
-        spacing_consistency,
-        clean_sweep_likelihood: Some(clean_sweep_likelihood),
+        .unwrap_or(width.max(1.0));
+    let confidence = (0.36 + (width / atr_last).clamp(0.0, 2.0) * 0.14).clamp(0.0, 0.68);
+    ict_engine::analyze_sections::VolumeImbalanceGapEvidence {
+        factor_name: "volume_imbalance_gap".to_string(),
+        direction: gap.direction,
+        top: Some(gap.top),
+        bottom: Some(gap.bottom),
+        midpoint: Some((gap.top + gap.bottom) * 0.5),
+        start_bar: Some(gap.start_bar),
+        filled: gap.filled,
+        active: !gap.filled,
         confidence,
         fail_closed_reason: None,
     }
-}
-
-fn spacing_consistency_score(indices: &[usize]) -> Option<f64> {
-    if indices.len() < 3 {
-        return None;
-    }
-    let gaps = indices
-        .windows(2)
-        .filter_map(|pair| pair[1].checked_sub(pair[0]))
-        .filter(|gap| *gap > 0)
-        .map(|gap| gap as f64)
-        .collect::<Vec<_>>();
-    if gaps.len() < 2 {
-        return None;
-    }
-    let mean = gaps.iter().sum::<f64>() / gaps.len() as f64;
-    if mean <= f64::EPSILON {
-        return None;
-    }
-    let variance = gaps
-        .iter()
-        .map(|gap| {
-            let diff = gap - mean;
-            diff * diff
-        })
-        .sum::<f64>()
-        / gaps.len() as f64;
-    let cv = variance.sqrt() / mean;
-    Some((1.0 - cv).clamp(0.0, 1.0))
 }
 
 fn classify_order_block_variant(
@@ -6885,6 +6869,13 @@ fn classify_order_block_variant(
 
 fn fvg_distance_to_price(fvg: &ict_engine::types::FairValueGap, price: f64) -> f64 {
     ((fvg.top + fvg.bottom) / 2.0 - price).abs()
+}
+
+fn volume_imbalance_gap_distance_to_price(
+    gap: &ict_engine::types::VolumeImbalanceGap,
+    price: f64,
+) -> f64 {
+    ((gap.top + gap.bottom) / 2.0 - price).abs()
 }
 
 fn order_block_distance_to_price(ob: &ict_engine::types::OrderBlock, price: f64) -> f64 {

@@ -361,6 +361,15 @@ pub(crate) fn persist_analyze_run(
     let order_block_variant = Some(order_block_variant_runtime_evidence(
         &report.analysis.price_action.order_block_variant,
     ));
+    let liquidity_pool_texture = Some(liquidity_pool_texture_runtime_evidence(
+        &report.analysis.price_action.liquidity_pool_texture,
+    ));
+    let liquidity_sweep_quality = Some(liquidity_sweep_quality_runtime_evidence(
+        &report.analysis.price_action.liquidity_sweep_quality,
+    ));
+    let volume_imbalance_gap = Some(volume_imbalance_gap_runtime_evidence(
+        &report.analysis.price_action.volume_imbalance_gap,
+    ));
     let conformal_metrics =
         analyze_conformal_metrics_from_factor_ranking(&report.supporting.factor_ranking);
     let analyze_run_record = AnalyzeRunRecord {
@@ -423,6 +432,9 @@ pub(crate) fn persist_analyze_run(
             },
         ),
         order_block_variant,
+        liquidity_pool_texture,
+        liquidity_sweep_quality,
+        volume_imbalance_gap,
         reference_liquidity_levels: Some(
             report
                 .analysis
@@ -634,6 +646,58 @@ fn order_block_variant_runtime_evidence(
         mitigation_count: evidence.mitigation_count,
         breaker_confirmed: evidence.breaker_confirmed,
         rejection_confirmed: evidence.rejection_confirmed,
+        confidence: evidence.confidence,
+        fail_closed_reason: evidence.fail_closed_reason.clone(),
+    }
+}
+
+fn liquidity_pool_texture_runtime_evidence(
+    evidence: &ict_engine::analyze_sections::LiquidityPoolTextureEvidence,
+) -> ict_engine::state::LiquidityPoolTextureRuntimeEvidence {
+    ict_engine::state::LiquidityPoolTextureRuntimeEvidence {
+        factor_name: evidence.factor_name.clone(),
+        texture: evidence.texture.clone(),
+        subtype: evidence.subtype.clone(),
+        level: evidence.level,
+        high: evidence.high,
+        low: evidence.low,
+        touch_count: evidence.touch_count,
+        spacing_consistency: evidence.spacing_consistency,
+        clean_sweep_likelihood: evidence.clean_sweep_likelihood,
+        confidence: evidence.confidence,
+        fail_closed_reason: evidence.fail_closed_reason.clone(),
+    }
+}
+
+fn liquidity_sweep_quality_runtime_evidence(
+    evidence: &ict_engine::analyze_sections::LiquiditySweepQualityEvidence,
+) -> ict_engine::state::LiquiditySweepQualityRuntimeEvidence {
+    ict_engine::state::LiquiditySweepQualityRuntimeEvidence {
+        factor_name: evidence.factor_name.clone(),
+        quality: evidence.quality.clone(),
+        sweep_bar: evidence.sweep_bar,
+        return_bar: evidence.return_bar,
+        pool_price: evidence.pool_price,
+        displacement_atr: evidence.displacement_atr,
+        return_bars: evidence.return_bars,
+        close_reclaim: evidence.close_reclaim,
+        confidence: evidence.confidence,
+        fail_closed_reason: evidence.fail_closed_reason.clone(),
+    }
+}
+
+fn volume_imbalance_gap_runtime_evidence(
+    evidence: &ict_engine::analyze_sections::VolumeImbalanceGapEvidence,
+) -> ict_engine::state::VolumeImbalanceGapRuntimeEvidence {
+    ict_engine::state::VolumeImbalanceGapRuntimeEvidence {
+        factor_name: evidence.factor_name.clone(),
+        direction: evidence.direction,
+        top: evidence.top,
+        bottom: evidence.bottom,
+        midpoint: evidence.midpoint,
+        start_bar: evidence.start_bar,
+        filled: evidence.filled,
+        active: evidence.active,
         confidence: evidence.confidence,
         fail_closed_reason: evidence.fail_closed_reason.clone(),
     }
@@ -1114,7 +1178,15 @@ mod tests {
                             "missing_liquidity_pool_texture",
                         ),
                     latest_liquidity_sweep_level: None,
+                    liquidity_sweep_quality:
+                        ict_engine::analyze_sections::LiquiditySweepQualityEvidence::fail_closed(
+                            "missing_liquidity_sweep_quality",
+                        ),
                     reference_liquidity_levels: ict_engine::ict::ReferenceLiquidityLevelsEvidence::default(),
+                    volume_imbalance_gap:
+                        ict_engine::analyze_sections::VolumeImbalanceGapEvidence::fail_closed(
+                            "missing_volume_imbalance_gap",
+                        ),
                     open_fvgs: 0,
                     nearest_open_fvg_top: None,
                     nearest_open_fvg_bottom: None,

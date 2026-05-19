@@ -2669,6 +2669,102 @@ pub struct CanonicalStructuralRegimePosterior {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct LiquidityPoolTextureRuntimeEvidence {
+    pub factor_name: String,
+    pub texture: String,
+    #[serde(default)]
+    pub subtype: String,
+    pub level: Option<f64>,
+    pub high: Option<f64>,
+    pub low: Option<f64>,
+    pub touch_count: usize,
+    pub spacing_consistency: Option<f64>,
+    pub clean_sweep_likelihood: Option<f64>,
+    pub confidence: f64,
+    pub fail_closed_reason: Option<String>,
+}
+
+impl Default for LiquidityPoolTextureRuntimeEvidence {
+    fn default() -> Self {
+        Self {
+            factor_name: "liquidity_pool_texture".to_string(),
+            texture: "none".to_string(),
+            subtype: "none".to_string(),
+            level: None,
+            high: None,
+            low: None,
+            touch_count: 0,
+            spacing_consistency: None,
+            clean_sweep_likelihood: None,
+            confidence: 0.0,
+            fail_closed_reason: Some("missing_liquidity_pool_texture_evidence".to_string()),
+        }
+    }
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct LiquiditySweepQualityRuntimeEvidence {
+    pub factor_name: String,
+    pub quality: String,
+    pub sweep_bar: Option<usize>,
+    pub return_bar: Option<usize>,
+    pub pool_price: Option<f64>,
+    pub displacement_atr: Option<f64>,
+    pub return_bars: Option<usize>,
+    pub close_reclaim: Option<bool>,
+    pub confidence: f64,
+    pub fail_closed_reason: Option<String>,
+}
+
+impl Default for LiquiditySweepQualityRuntimeEvidence {
+    fn default() -> Self {
+        Self {
+            factor_name: "liquidity_sweep_quality".to_string(),
+            quality: "none".to_string(),
+            sweep_bar: None,
+            return_bar: None,
+            pool_price: None,
+            displacement_atr: None,
+            return_bars: None,
+            close_reclaim: None,
+            confidence: 0.0,
+            fail_closed_reason: Some("missing_liquidity_sweep_quality_evidence".to_string()),
+        }
+    }
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct VolumeImbalanceGapRuntimeEvidence {
+    pub factor_name: String,
+    pub direction: Direction,
+    pub top: Option<f64>,
+    pub bottom: Option<f64>,
+    pub midpoint: Option<f64>,
+    pub start_bar: Option<usize>,
+    pub filled: bool,
+    pub active: bool,
+    pub confidence: f64,
+    pub fail_closed_reason: Option<String>,
+}
+
+impl Default for VolumeImbalanceGapRuntimeEvidence {
+    fn default() -> Self {
+        Self {
+            factor_name: "volume_imbalance_gap".to_string(),
+            direction: Direction::Neutral,
+            top: None,
+            bottom: None,
+            midpoint: None,
+            start_bar: None,
+            filled: false,
+            active: false,
+            confidence: 0.0,
+            fail_closed_reason: Some("missing_volume_imbalance_gap_evidence".to_string()),
+        }
+    }
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct OrderBlockVariantRuntimeEvidence {
     pub factor_name: String,
     pub variant: String,
@@ -2756,6 +2852,12 @@ pub struct AnalyzeRunRecord {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub order_block_variant: Option<OrderBlockVariantRuntimeEvidence>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub liquidity_pool_texture: Option<LiquidityPoolTextureRuntimeEvidence>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub liquidity_sweep_quality: Option<LiquiditySweepQualityRuntimeEvidence>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub volume_imbalance_gap: Option<VolumeImbalanceGapRuntimeEvidence>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub reference_liquidity_levels: Option<crate::ict::ReferenceLiquidityLevelsEvidence>,
     pub factor_family_decisions: Vec<FactorFamilyDecision>,
     pub factor_family_outcomes: Vec<FactorFamilyOutcome>,
@@ -2831,6 +2933,9 @@ impl Default for AnalyzeRunRecord {
             worst_window_miscoverage: None,
             canonical_structural_regime_posterior: None,
             order_block_variant: None,
+            liquidity_pool_texture: None,
+            liquidity_sweep_quality: None,
+            volume_imbalance_gap: None,
             reference_liquidity_levels: None,
             factor_family_decisions: Vec::new(),
             factor_family_outcomes: Vec::new(),
@@ -3392,6 +3497,12 @@ pub struct WorkflowPhaseSnapshot {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub order_block_variant: Option<OrderBlockVariantRuntimeEvidence>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub liquidity_pool_texture: Option<LiquidityPoolTextureRuntimeEvidence>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub liquidity_sweep_quality: Option<LiquiditySweepQualityRuntimeEvidence>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub volume_imbalance_gap: Option<VolumeImbalanceGapRuntimeEvidence>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub reference_liquidity_levels: Option<crate::ict::ReferenceLiquidityLevelsEvidence>,
     #[serde(default)]
     pub pre_bayes_long_signal_probability: Option<f64>,
@@ -3503,6 +3614,9 @@ impl Default for WorkflowPhaseSnapshot {
             canonical_structural_confidence: None,
             canonical_structural_probabilities: BTreeMap::new(),
             order_block_variant: None,
+            liquidity_pool_texture: None,
+            liquidity_sweep_quality: None,
+            volume_imbalance_gap: None,
             reference_liquidity_levels: None,
             pre_bayes_long_signal_probability: None,
             pre_bayes_short_signal_probability: None,

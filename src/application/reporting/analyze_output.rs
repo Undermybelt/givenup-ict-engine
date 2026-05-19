@@ -878,11 +878,22 @@ fn human_technical_price_summary(
         structure.nearest_untested_order_block_high,
     );
     let pool_texture = &structure.liquidity_pool_texture;
+    let sweep_quality = &structure.liquidity_sweep_quality;
+    let volume_imbalance_gap = &structure.volume_imbalance_gap;
     let ob_variant = &structure.order_block_variant;
     let reference_levels =
         human_reference_liquidity_levels_summary(&structure.reference_liquidity_levels);
+    let volume_imbalance_gap_band =
+        format_price_band(volume_imbalance_gap.bottom, volume_imbalance_gap.top);
+    let volume_imbalance_gap_state = if volume_imbalance_gap.active {
+        "active"
+    } else if volume_imbalance_gap.filled {
+        "filled"
+    } else {
+        "none"
+    };
     format!(
-        "last_close=({:.2}); ema20={} ema50={} rsi14={} adx14={} atr14={} bollinger=lower:{} middle:{} upper:{}; liquidity_pool={} liquidity_pool_texture/smooth_or_jagged={} pool_level={} pool_high={} pool_low={} touch_count={} spacing_consistency={} clean_sweep_likelihood={} confidence={:.3} fail_closed_reason={} latest_sweep={} sweeps_recent={}; reference_levels={}; FVG/IFVG=open_count={} nearest_fvg={}; order_block=untested_count={} nearest_OB={} variant={} direction={:?} high={} low={} midpoint={} validation_state={} mitigation_count={} breaker_confirmed={} rejection_confirmed={} confidence={:.3} fail_closed_reason={}; narrative={}",
+        "last_close=({:.2}); ema20={} ema50={} rsi14={} adx14={} atr14={} bollinger=lower:{} middle:{} upper:{}; liquidity_pool={} liquidity_pool_texture/smooth_or_jagged={} liquidity_pool_subtype={} pool_level={} pool_high={} pool_low={} touch_count={} spacing_consistency={} clean_sweep_likelihood={} confidence={:.3} fail_closed_reason={} latest_sweep={} sweep_quality/clean_or_dirty={} displacement_atr={} return_bars={} close_reclaim={} confidence={:.3} fail_closed_reason={} sweeps_recent={}; reference_levels={}; volume_imbalance_gap={} vi_gap={} vi_direction={:?} vi_start_bar={} vi_filled={} confidence={:.3} fail_closed_reason={}; FVG/IFVG=open_count={} nearest_fvg={}; order_block=untested_count={} nearest_OB={} variant={} direction={:?} high={} low={} midpoint={} validation_state={} mitigation_count={} breaker_confirmed={} rejection_confirmed={} confidence={:.3} fail_closed_reason={}; narrative={}",
         technical.last_closed_bar_close,
         format_optional_price(technical.ema20),
         format_optional_price(technical.ema50),
@@ -894,6 +905,7 @@ fn human_technical_price_summary(
         format_optional_price(technical.bollinger_upper),
         format_optional_price(structure.nearest_liquidity_pool_level),
         pool_texture.texture,
+        pool_texture.subtype,
         format_optional_price(pool_texture.level),
         format_optional_price(pool_texture.high),
         format_optional_price(pool_texture.low),
@@ -903,8 +915,33 @@ fn human_technical_price_summary(
         pool_texture.confidence,
         pool_texture.fail_closed_reason.as_deref().unwrap_or("none"),
         format_optional_price(structure.latest_liquidity_sweep_level),
+        sweep_quality.quality,
+        format_optional_number(sweep_quality.displacement_atr),
+        sweep_quality
+            .return_bars
+            .map(|value| value.to_string())
+            .unwrap_or_else(|| "none".to_string()),
+        sweep_quality
+            .close_reclaim
+            .map(|value| value.to_string())
+            .unwrap_or_else(|| "none".to_string()),
+        sweep_quality.confidence,
+        sweep_quality.fail_closed_reason.as_deref().unwrap_or("none"),
         structure.liquidity_sweeps_recent,
         reference_levels,
+        volume_imbalance_gap_state,
+        volume_imbalance_gap_band,
+        volume_imbalance_gap.direction,
+        volume_imbalance_gap
+            .start_bar
+            .map(|value| value.to_string())
+            .unwrap_or_else(|| "none".to_string()),
+        volume_imbalance_gap.filled,
+        volume_imbalance_gap.confidence,
+        volume_imbalance_gap
+            .fail_closed_reason
+            .as_deref()
+            .unwrap_or("none"),
         structure.open_fvgs,
         fvg_band,
         structure.untested_order_blocks,
@@ -1760,6 +1797,7 @@ mod tests {
             liquidity_pool_texture: crate::analyze_sections::LiquidityPoolTextureEvidence {
                 factor_name: "liquidity_pool_texture".to_string(),
                 texture: "smooth".to_string(),
+                subtype: "equal_high_pool".to_string(),
                 level: Some(18580.0),
                 high: Some(18582.0),
                 low: Some(18578.0),
@@ -1770,6 +1808,18 @@ mod tests {
                 fail_closed_reason: None,
             },
             latest_liquidity_sweep_level: Some(18579.5),
+            liquidity_sweep_quality: crate::analyze_sections::LiquiditySweepQualityEvidence {
+                factor_name: "liquidity_sweep_quality".to_string(),
+                quality: "clean".to_string(),
+                sweep_bar: Some(3),
+                return_bar: Some(4),
+                pool_price: Some(18580.0),
+                displacement_atr: Some(1.2),
+                return_bars: Some(1),
+                close_reclaim: Some(true),
+                confidence: 0.72,
+                fail_closed_reason: None,
+            },
             reference_liquidity_levels: crate::analyze_sections::ReferenceLiquidityLevelsEvidence {
                 factor_name: "reference_liquidity_levels".to_string(),
                 source_frame: "htf".to_string(),
@@ -1841,6 +1891,18 @@ mod tests {
                 confidence: 0.96,
                 fail_closed_reason: None,
             },
+            volume_imbalance_gap: crate::analyze_sections::VolumeImbalanceGapEvidence {
+                factor_name: "volume_imbalance_gap".to_string(),
+                direction: Direction::Bull,
+                top: Some(18522.0),
+                bottom: Some(18510.5),
+                midpoint: Some(18516.25),
+                start_bar: Some(42),
+                filled: false,
+                active: true,
+                confidence: 0.64,
+                fail_closed_reason: None,
+            },
             open_fvgs: 1,
             nearest_open_fvg_top: Some(18510.0),
             nearest_open_fvg_bottom: Some(18492.5),
@@ -1903,6 +1965,7 @@ mod tests {
         assert!(technical_summary.contains("last_close=(18520.25)"));
         assert!(technical_summary.contains("liquidity_pool=(18580.00)"));
         assert!(technical_summary.contains("liquidity_pool_texture/smooth_or_jagged=smooth"));
+        assert!(technical_summary.contains("liquidity_pool_subtype=equal_high_pool"));
         assert!(technical_summary.contains("pool_level=(18580.00)"));
         assert!(technical_summary.contains("pool_high=(18582.00)"));
         assert!(technical_summary.contains("pool_low=(18578.00)"));
@@ -1910,11 +1973,19 @@ mod tests {
         assert!(technical_summary.contains("spacing_consistency=(0.710)"));
         assert!(technical_summary.contains("clean_sweep_likelihood=(0.740)"));
         assert!(technical_summary.contains("latest_sweep=(18579.50)"));
+        assert!(technical_summary.contains("sweep_quality/clean_or_dirty=clean"));
+        assert!(technical_summary.contains("displacement_atr=(1.200)"));
+        assert!(technical_summary.contains("return_bars=1"));
+        assert!(technical_summary.contains("close_reclaim=true"));
         assert!(technical_summary.contains("PDH=(18595.00)"));
         assert!(technical_summary.contains("PWH=(18620.00)"));
         assert!(technical_summary.contains("PMH=(18840.00)"));
         assert!(technical_summary.contains("day_gap=(18510.50-18522.00)"));
         assert!(technical_summary.contains("week_gap=(18496.00-18508.50)"));
+        assert!(technical_summary.contains("volume_imbalance_gap=active"));
+        assert!(technical_summary.contains("vi_gap=(18510.50-18522.00)"));
+        assert!(technical_summary.contains("vi_direction=Bull"));
+        assert!(technical_summary.contains("vi_filled=false"));
         assert!(technical_summary.contains("nearest_fvg=(18492.50-18510.00)"));
         assert!(technical_summary.contains("nearest_OB=(18460.00-18480.00)"));
         assert!(technical_summary.contains("variant=breaker_block"));

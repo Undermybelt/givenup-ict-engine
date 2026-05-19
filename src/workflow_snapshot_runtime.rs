@@ -677,6 +677,9 @@ pub(crate) fn workflow_phase_snapshot_from_analyze_run(
             .map(|posterior| posterior.probabilities.clone())
             .unwrap_or_default(),
         order_block_variant: run.order_block_variant.clone(),
+        liquidity_pool_texture: run.liquidity_pool_texture.clone(),
+        liquidity_sweep_quality: run.liquidity_sweep_quality.clone(),
+        volume_imbalance_gap: run.volume_imbalance_gap.clone(),
         reference_liquidity_levels: run.reference_liquidity_levels.clone(),
         pre_bayes_long_signal_probability: Some(
             run.pre_bayes_entry_quality_bridge.long_signal_probability,
@@ -808,6 +811,9 @@ pub(crate) fn workflow_phase_snapshot_from_train_run(
         canonical_structural_confidence: None,
         canonical_structural_probabilities: BTreeMap::new(),
         order_block_variant: None,
+        liquidity_pool_texture: None,
+        liquidity_sweep_quality: None,
+        volume_imbalance_gap: None,
         reference_liquidity_levels: None,
         pre_bayes_long_signal_probability: None,
         pre_bayes_short_signal_probability: None,
@@ -917,6 +923,9 @@ pub(crate) fn workflow_phase_snapshot_from_research_run(
             .map(|posterior| posterior.probabilities.clone())
             .unwrap_or_default(),
         order_block_variant: None,
+        liquidity_pool_texture: None,
+        liquidity_sweep_quality: None,
+        volume_imbalance_gap: None,
         reference_liquidity_levels: None,
         pre_bayes_long_signal_probability: None,
         pre_bayes_short_signal_probability: None,
@@ -1057,6 +1066,9 @@ pub(crate) fn workflow_phase_snapshot_from_backtest_run(
             .map(|posterior| posterior.probabilities.clone())
             .unwrap_or_default(),
         order_block_variant: None,
+        liquidity_pool_texture: None,
+        liquidity_sweep_quality: None,
+        volume_imbalance_gap: None,
         reference_liquidity_levels: None,
         pre_bayes_long_signal_probability: None,
         pre_bayes_short_signal_probability: None,
@@ -1299,6 +1311,9 @@ pub(crate) fn workflow_phase_snapshot_from_update_run(
             .map(|posterior| posterior.probabilities.clone())
             .unwrap_or_default(),
         order_block_variant: None,
+        liquidity_pool_texture: None,
+        liquidity_sweep_quality: None,
+        volume_imbalance_gap: None,
         reference_liquidity_levels: None,
         pre_bayes_long_signal_probability: None,
         pre_bayes_short_signal_probability: None,
@@ -2460,6 +2475,58 @@ mod tests {
         assert!(snapshot
             .phase_summary
             .contains("regime_bundle_bbn=applied:bull"));
+    }
+
+    #[test]
+    fn analyze_snapshot_maps_liquidity_pool_texture_runtime_evidence() {
+        let snapshot = workflow_phase_snapshot_from_analyze_run(&AnalyzeRunRecord {
+            run_id: "analyze:liquidity-texture".to_string(),
+            source_command: "analyze".to_string(),
+            liquidity_pool_texture: Some(ict_engine::state::LiquidityPoolTextureRuntimeEvidence {
+                factor_name: "liquidity_pool_texture".to_string(),
+                texture: "jagged".to_string(),
+                subtype: "relative_equal_high".to_string(),
+                level: Some(101.5),
+                high: Some(102.0),
+                low: Some(101.0),
+                touch_count: 4,
+                spacing_consistency: Some(0.41),
+                clean_sweep_likelihood: Some(0.66),
+                confidence: 0.58,
+                fail_closed_reason: None,
+            }),
+            liquidity_sweep_quality: Some(
+                ict_engine::state::LiquiditySweepQualityRuntimeEvidence {
+                    factor_name: "liquidity_sweep_quality".to_string(),
+                    quality: "dirty".to_string(),
+                    sweep_bar: Some(9),
+                    return_bar: Some(15),
+                    pool_price: Some(101.5),
+                    displacement_atr: Some(1.9),
+                    return_bars: Some(6),
+                    close_reclaim: Some(false),
+                    confidence: 0.62,
+                    fail_closed_reason: None,
+                },
+            ),
+            ..AnalyzeRunRecord::default()
+        });
+
+        let texture = snapshot
+            .liquidity_pool_texture
+            .expect("liquidity texture evidence");
+        assert_eq!(texture.factor_name, "liquidity_pool_texture");
+        assert_eq!(texture.texture, "jagged");
+        assert_eq!(texture.subtype, "relative_equal_high");
+        assert_eq!(texture.level, Some(101.5));
+        assert_eq!(texture.confidence, 0.58);
+        let sweep_quality = snapshot
+            .liquidity_sweep_quality
+            .expect("liquidity sweep quality evidence");
+        assert_eq!(sweep_quality.factor_name, "liquidity_sweep_quality");
+        assert_eq!(sweep_quality.quality, "dirty");
+        assert_eq!(sweep_quality.displacement_atr, Some(1.9));
+        assert_eq!(sweep_quality.close_reclaim, Some(false));
     }
 
     #[test]

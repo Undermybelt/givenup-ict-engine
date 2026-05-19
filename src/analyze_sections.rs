@@ -38,7 +38,9 @@ pub struct PriceActionSection {
     pub nearest_liquidity_pool_level: Option<f64>,
     pub liquidity_pool_texture: LiquidityPoolTextureEvidence,
     pub latest_liquidity_sweep_level: Option<f64>,
+    pub liquidity_sweep_quality: LiquiditySweepQualityEvidence,
     pub reference_liquidity_levels: ReferenceLiquidityLevelsEvidence,
+    pub volume_imbalance_gap: VolumeImbalanceGapEvidence,
     pub open_fvgs: usize,
     pub nearest_open_fvg_top: Option<f64>,
     pub nearest_open_fvg_bottom: Option<f64>,
@@ -56,6 +58,7 @@ pub struct PriceActionSection {
 pub struct LiquidityPoolTextureEvidence {
     pub factor_name: String,
     pub texture: String,
+    pub subtype: String,
     pub level: Option<f64>,
     pub high: Option<f64>,
     pub low: Option<f64>,
@@ -71,12 +74,75 @@ impl LiquidityPoolTextureEvidence {
         Self {
             factor_name: "liquidity_pool_texture".to_string(),
             texture: "none".to_string(),
+            subtype: "none".to_string(),
             level: None,
             high: None,
             low: None,
             touch_count: 0,
             spacing_consistency: None,
             clean_sweep_likelihood: None,
+            confidence: 0.0,
+            fail_closed_reason: Some(reason.into()),
+        }
+    }
+}
+
+#[derive(Debug, Clone, Serialize)]
+pub struct LiquiditySweepQualityEvidence {
+    pub factor_name: String,
+    pub quality: String,
+    pub sweep_bar: Option<usize>,
+    pub return_bar: Option<usize>,
+    pub pool_price: Option<f64>,
+    pub displacement_atr: Option<f64>,
+    pub return_bars: Option<usize>,
+    pub close_reclaim: Option<bool>,
+    pub confidence: f64,
+    pub fail_closed_reason: Option<String>,
+}
+
+impl LiquiditySweepQualityEvidence {
+    pub fn fail_closed(reason: impl Into<String>) -> Self {
+        Self {
+            factor_name: "liquidity_sweep_quality".to_string(),
+            quality: "none".to_string(),
+            sweep_bar: None,
+            return_bar: None,
+            pool_price: None,
+            displacement_atr: None,
+            return_bars: None,
+            close_reclaim: None,
+            confidence: 0.0,
+            fail_closed_reason: Some(reason.into()),
+        }
+    }
+}
+
+#[derive(Debug, Clone, Serialize)]
+pub struct VolumeImbalanceGapEvidence {
+    pub factor_name: String,
+    pub direction: Direction,
+    pub top: Option<f64>,
+    pub bottom: Option<f64>,
+    pub midpoint: Option<f64>,
+    pub start_bar: Option<usize>,
+    pub filled: bool,
+    pub active: bool,
+    pub confidence: f64,
+    pub fail_closed_reason: Option<String>,
+}
+
+impl VolumeImbalanceGapEvidence {
+    pub fn fail_closed(reason: impl Into<String>) -> Self {
+        Self {
+            factor_name: "volume_imbalance_gap".to_string(),
+            direction: Direction::Neutral,
+            top: None,
+            bottom: None,
+            midpoint: None,
+            start_bar: None,
+            filled: false,
+            active: false,
             confidence: 0.0,
             fail_closed_reason: Some(reason.into()),
         }

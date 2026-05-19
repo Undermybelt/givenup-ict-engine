@@ -72,6 +72,17 @@ Primary user corrections preserved:
     smooth/jagged/mixed texture.
   - no provider profile, broker data, local path, or personal dataset is read
     by default.
+- Isolated and staged the runtime/reporting surfacing slice from a clean
+  temporary worktree so unrelated PDA/path-ranker hunks in the dirty checkout
+  stayed out of the commit:
+  - `PriceActionSection` now carries `liquidity_sweep_quality` and
+    `volume_imbalance_gap` alongside `liquidity_pool_texture.subtype`.
+  - `analyze` builds those detector fields from ordinary candle data.
+  - analyze-run persistence and workflow snapshot mapping carry the runtime
+    evidence forward.
+  - compact human output includes `liquidity_pool_subtype`,
+    `sweep_quality/clean_or_dirty`, `displacement_atr`, `return_bars`,
+    `close_reclaim`, and VI delivery-gap state fields.
 
 ## Verification
 
@@ -121,6 +132,19 @@ Primary user corrections preserved:
     passed, proving subtype survives analyze-run persistence.
   - `CARGO_TARGET_DIR=/tmp/ict-engine-target-liquidity-subtype CARGO_INCREMENTAL=0 cargo test --bin ict-engine analyze_snapshot_maps_liquidity_pool_texture_runtime_evidence -- --nocapture`
     passed, proving subtype survives workflow snapshot mapping.
+  - `CARGO_TARGET_DIR=/tmp/ict-engine-target-detector-runtime-real CARGO_INCREMENTAL=0 cargo test --lib analyze_human_surface_carries_ict_template_with_price_levels -- --nocapture`
+    passed, proving the real-checkout staged runtime/reporting slice surfaces
+    the detector fields in the compact human summary.
+  - `CARGO_TARGET_DIR=/tmp/ict-engine-target-detector-runtime-real CARGO_INCREMENTAL=0 cargo test --bin ict-engine analyze_snapshot_maps_liquidity_pool_texture_runtime_evidence -- --nocapture`
+    passed, proving the real-checkout staged runtime/reporting slice maps the
+    detector runtime evidence into workflow snapshots.
+  - `rustfmt --edition 2021 --check` passed on the staged detector runtime files:
+    `src/analyze_sections.rs`, `src/analyze_shared.rs`,
+    `src/application/reporting/analyze_output.rs`, `src/main.rs`,
+    `src/state/types.rs`, `src/state/persistence.rs`, and
+    `src/workflow_snapshot_runtime.rs`.
+  - Cached diff checks passed and a cached scan confirmed the staged slice has
+    no PDA/path-ranker terms or private-path/credential additions.
 - Residual formatting note:
   - `CARGO_INCREMENTAL=0 cargo fmt --check` currently fails on pre-existing
     unrelated formatting in
@@ -133,13 +157,7 @@ Primary user corrections preserved:
 1. Add gap/OB mitigation percentage:
    `mitigation_pct`, `failed_mitigation`, and `partial_fill_state` for FVG,
    VI gap, and OB variants.
-2. Isolate the already-started runtime/reporting surfacing for
-   `liquidity_pool_subtype`, `liquidity_sweep_quality`, and
-   `volume_imbalance_gap` from unrelated PDA/path-ranker work before committing
-   the next slice. Current worktree has useful detector plumbing, but `main.rs`,
-   `analyze_shared.rs`, and `structural_playbook.rs` contain mixed hunks that
-   must not be staged whole-file.
-3. If this evidence is used by Auto-Quant later, keep it as opt-in feature
+2. If this evidence is used by Auto-Quant later, keep it as opt-in feature
    columns or a selected detector bundle. Do not make personal data or richer
    provider context a default runtime dependency.
 
@@ -154,3 +172,4 @@ Primary user corrections preserved:
 
 Last updated: 2026-05-19 04:28:00 +0800.
 Last updated: 2026-05-19 11:02:00 +0800.
+Last updated: 2026-05-19 11:34:00 +0800.
