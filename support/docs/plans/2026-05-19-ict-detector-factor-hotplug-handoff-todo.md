@@ -56,6 +56,13 @@ Primary user corrections preserved:
   through that redacted summary in a later narrow slice, staged as only the
   single summary hook plus its regression test despite broad unrelated dirty
   work in `src/application/entry_models/training_export.rs`.
+- Threaded `DetectorHotplugContext` into the analyze human/report adapter as an
+  opt-in redacted detector-context suffix:
+  - default analyze technical summaries are unchanged when no explicit
+    hotplug config exists or no detector context is configured.
+  - configured values are not printed; only field names are exposed.
+  - detector execution remains candle-only; the context is reporting/admission
+    metadata only.
 
 ## Verification
 
@@ -81,6 +88,9 @@ Primary user corrections preserved:
   - `CARGO_TARGET_DIR=/tmp/ict-engine-target-training-hotplug CARGO_INCREMENTAL=0 cargo test --lib policy_training_status_redacts_opt_in_detector_hotplug_context_values -- --nocapture`
     passed, proving policy-training-status exposes opt-in detector context field
     names without leaking configured values.
+  - `CARGO_TARGET_DIR=/tmp/ict-engine-target-analyze-hotplug CARGO_INCREMENTAL=0 cargo test --lib detector_hotplug_context_adapter_ -- --nocapture`
+    passed, proving the analyze report adapter appends redacted context only
+    when an opt-in detector context is present.
 - Residual formatting note:
   - `CARGO_INCREMENTAL=0 cargo fmt --check` currently fails on pre-existing
     unrelated formatting in
@@ -90,16 +100,13 @@ Primary user corrections preserved:
 
 ## Next
 
-1. Thread `DetectorHotplugContext` into one concrete detector/report adapter
-   only when a selected config/profile is present; default detector execution
-   must remain candle-only.
-2. Add equal-high/equal-low liquidity subtype labels:
+1. Add equal-high/equal-low liquidity subtype labels:
    `equal_high_pool`, `equal_low_pool`, `relative_equal_high`,
    `relative_equal_low`.
-3. Add gap/OB mitigation percentage:
+2. Add gap/OB mitigation percentage:
    `mitigation_pct`, `failed_mitigation`, and `partial_fill_state` for FVG,
    VI gap, and OB variants.
-4. If this evidence is used by Auto-Quant later, keep it as opt-in feature
+3. If this evidence is used by Auto-Quant later, keep it as opt-in feature
    columns or a selected detector bundle. Do not make personal data or richer
    provider context a default runtime dependency.
 
@@ -112,4 +119,4 @@ Primary user corrections preserved:
   dirty worktree from other lanes, so future commits must continue staging only
   coherent hunk/path sets.
 
-Last updated: 2026-05-19 03:16:00 +0800.
+Last updated: 2026-05-19 03:42:00 +0800.

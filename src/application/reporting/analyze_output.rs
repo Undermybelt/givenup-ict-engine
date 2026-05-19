@@ -374,9 +374,12 @@ pub fn dispatch_analyze_output(
     );
     let trade_plan_summary = human_trade_plan_summary(&report.analysis.trade_plan);
     let price_structure_summary = human_price_structure_summary(&report.analysis.price_action);
-    let technical_price_summary = human_technical_price_summary(
-        &report.analysis.technical_price,
-        &report.analysis.price_action,
+    let technical_price_summary = append_detector_hotplug_context_summary(
+        human_technical_price_summary(
+            &report.analysis.technical_price,
+            &report.analysis.price_action,
+        ),
+        load_detector_hotplug_context(report.meta.state_dir.as_str()).as_ref(),
     );
     let smt_summary = human_smt_summary(&report.analysis.smt_correlation);
     let (mut compact_report, mut agent_report, mut human_report) =
@@ -513,9 +516,12 @@ pub fn build_analyze_live_reporting_bundle(
         combine_human_suffixes(&regime_probability_suffix, &regime_companion_suffix);
     let trade_plan_summary = human_trade_plan_summary(&report.analysis.trade_plan);
     let price_structure_summary = human_price_structure_summary(&report.analysis.price_action);
-    let technical_price_summary = human_technical_price_summary(
-        &report.analysis.technical_price,
-        &report.analysis.price_action,
+    let technical_price_summary = append_detector_hotplug_context_summary(
+        human_technical_price_summary(
+            &report.analysis.technical_price,
+            &report.analysis.price_action,
+        ),
+        load_detector_hotplug_context(report.meta.state_dir.as_str()).as_ref(),
     );
     let smt_summary = human_smt_summary(&report.analysis.smt_correlation);
     let (mut compact_report, mut agent_report, mut human_report) =
@@ -807,6 +813,25 @@ fn combine_human_suffixes(first: &str, second: &str) -> String {
         (only, "") | ("", only) => only.to_string(),
         (left, right) => format!("{left} {right}"),
     }
+}
+
+fn load_detector_hotplug_context(
+    state_dir: &str,
+) -> Option<crate::factors::hotplug::DetectorHotplugContext> {
+    crate::factors::hotplug::FactorHotplugConfig::load(state_dir)
+        .ok()
+        .flatten()
+        .and_then(|config| config.detector_context)
+}
+
+fn append_detector_hotplug_context_summary(
+    summary: String,
+    context: Option<&crate::factors::hotplug::DetectorHotplugContext>,
+) -> String {
+    let Some(context) = context else {
+        return summary;
+    };
+    format!("{};{}", summary, context.summary_suffix())
 }
 
 fn human_price_structure_summary(section: &crate::analyze_sections::PriceActionSection) -> String {
@@ -1899,6 +1924,67 @@ mod tests {
         assert!(technical_summary.contains("validation_state=breaker_confirmed"));
         assert!(technical_summary.contains("breaker_confirmed=true"));
         assert!(technical_summary.contains("confidence=0.780"));
+    }
+
+    #[test]
+    fn detector_hotplug_context_adapter_reports_fields_without_values() {
+        let base = "last_close=(18520.25)".to_string();
+        let context = crate::factors::hotplug::DetectorHotplugContext {
+            session_label: Some("ny_open".to_string()),
+            source_profile: Some("private_profile_label".to_string()),
+            volume_quality: Some("broker_reported".to_string()),
+            symbol_context: None,
+            calendar_context: None,
+        };
+
+        let summary = append_detector_hotplug_context_summary(base, Some(&context));
+
+        assert!(summary.contains("detector_context=opt_in"));
+        assert!(summary.contains("session_label"));
+        assert!(summary.contains("source_profile"));
+        assert!(summary.contains("volume_quality"));
+        assert!(!summary.contains("ny_open"));
+        assert!(!summary.contains("private_profile_label"));
+        assert!(!summary.contains("broker_reported"));
+    }
+
+    #[test]
+    fn detector_hotplug_context_adapter_keeps_default_summary_unchanged() {
+        let base = "last_close=(18520.25)".to_string();
+
+        let summary = append_detector_hotplug_context_summary(base.clone(), None);
+
+        assert_eq!(summary, base);
+        assert!(!summary.contains("detector_context"));
+    }
+
+    #[test]
+    fn detector_hotplug_context_adapter_loads_only_explicit_config() {
+        let temp = tempfile::tempdir().unwrap();
+
+        assert!(load_detector_hotplug_context(temp.path().to_str().unwrap()).is_none());
+
+        std::fs::write(
+            temp.path()
+                .join(crate::factors::hotplug::FACTOR_HOTPLUG_CONFIG_FILE),
+            r#"
+families:
+  structure_ict: true
+detector_context:
+  session_label: ny_open
+  source_profile: private_profile_label
+"#,
+        )
+        .unwrap();
+
+        let context = load_detector_hotplug_context(temp.path().to_str().unwrap()).unwrap();
+        let summary = append_detector_hotplug_context_summary("base".to_string(), Some(&context));
+
+        assert!(summary.contains("detector_context=opt_in"));
+        assert!(summary.contains("session_label"));
+        assert!(summary.contains("source_profile"));
+        assert!(!summary.contains("ny_open"));
+        assert!(!summary.contains("private_profile_label"));
     }
 
     #[test]
