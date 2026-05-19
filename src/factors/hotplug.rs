@@ -548,4 +548,57 @@ detector_ga_bundle:
         assert!(!raw.contains("local/private"));
         assert!(!raw.contains("window.json"));
     }
+
+    #[test]
+    fn test_sanitized_example_detector_ga_bundle_parses_and_exports_manifest() {
+        let repo_root = Path::new(env!("CARGO_MANIFEST_DIR"));
+        let example = repo_root
+            .join("support")
+            .join("examples")
+            .join("factor_hotplug")
+            .join("detector-ga-search-v1.yaml");
+        let temp = tempfile::tempdir().unwrap();
+        let config_path = temp.path().join(FACTOR_HOTPLUG_CONFIG_FILE);
+        std::fs::copy(&example, &config_path).unwrap();
+
+        let config = FactorHotplugConfig::load(temp.path().to_str().unwrap())
+            .unwrap()
+            .unwrap();
+        let summary = config.summary_line();
+
+        assert!(summary.contains("detector_ga_bundle=opt_in"));
+        assert!(summary.contains("target=auto_quant_search"));
+        assert!(!summary.contains("/Users"));
+        assert!(!summary.contains("credential_marker"));
+        assert!(!summary.contains("token"));
+
+        let manifest_path = persist_detector_ga_feature_manifest(temp.path().to_str().unwrap())
+            .unwrap()
+            .unwrap();
+        let manifest: DetectorGaFeatureManifest =
+            serde_json::from_str(&std::fs::read_to_string(manifest_path).unwrap()).unwrap();
+
+        assert_eq!(
+            manifest.schema_version,
+            DETECTOR_GA_FEATURE_MANIFEST_SCHEMA_VERSION
+        );
+        assert_eq!(manifest.target_consumer, "auto_quant_search");
+        assert_eq!(manifest.bundle_id, "ict_detector_ga_search_v1");
+        assert_eq!(
+            manifest.selected_fields,
+            vec![
+                "fvg_mitigation_pct",
+                "liquidity_pool_subtype",
+                "ob_mitigation_pct",
+                "sweep_quality",
+                "vi_mitigation_pct"
+            ]
+        );
+        assert!(manifest.warnings.is_empty());
+
+        let raw = serde_json::to_string(&manifest).unwrap();
+        assert!(!raw.contains("/Users"));
+        assert!(!raw.contains("credential_marker"));
+        assert!(!raw.contains("token"));
+    }
 }

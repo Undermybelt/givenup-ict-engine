@@ -1,0 +1,24 @@
+families:
+  trend_momentum: true
+  volatility_mean_reversion: true
+  structure_ict: true
+  cross_market_smt: true
+  options_hedging: true
+  crowding_herding: true
+  spectral_rhythm: true
+  session_liquidity: true
+detector_ga_bundle:
+  bundle_id: ict_detector_ga_search_v1
+  target_consumer: auto_quant_search
+  selected_fields:
+    - vi_mitigation_pct
+    - fvg_mitigation_pct
+    - ob_mitigation_pct
+    - liquidity_pool_subtype
+    - sweep_quality
+  optimizer_objectives:
+    - regime_conditioned_win_rate
+    - cost_adjusted_expectancy
+  validation_windows:
+    - train_60d_validate_20d
+    - walk_forward_quarterly
