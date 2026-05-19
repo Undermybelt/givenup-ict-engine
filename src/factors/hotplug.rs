@@ -17,6 +17,11 @@ pub struct FactorHotplugConfig {
     /// when a user explicitly selects a hotplug config/profile.
     #[serde(default)]
     pub detector_context: Option<DetectorHotplugContext>,
+    /// Optional detector feature bundle for downstream search/GA optimizers.
+    /// This is a field-name contract only; default runtime detector execution
+    /// remains candle-only and independent of external optimizer tooling.
+    #[serde(default)]
+    pub detector_ga_bundle: Option<DetectorGaFeatureBundle>,
 }
 
 #[derive(Debug, Clone, Default, Serialize, Deserialize, PartialEq)]
@@ -31,6 +36,20 @@ pub struct DetectorHotplugContext {
     pub symbol_context: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub calendar_context: Option<String>,
+}
+
+#[derive(Debug, Clone, Default, Serialize, Deserialize, PartialEq)]
+pub struct DetectorGaFeatureBundle {
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub bundle_id: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub target_consumer: Option<String>,
+    #[serde(default)]
+    pub selected_fields: Vec<String>,
+    #[serde(default)]
+    pub optimizer_objectives: Vec<String>,
+    #[serde(default)]
+    pub validation_windows: Vec<String>,
 }
 
 impl Default for FactorHotplugConfig {
@@ -51,6 +70,7 @@ impl Default for FactorHotplugConfig {
         Self {
             families,
             detector_context: None,
+            detector_ga_bundle: None,
         }
     }
 }
@@ -110,7 +130,14 @@ impl FactorHotplugConfig {
             .as_ref()
             .map(DetectorHotplugContext::summary_suffix)
             .unwrap_or_default();
-        format!("Factor hotplug: config=present {disabled_summary}{detector_summary}")
+        let detector_ga_summary = self
+            .detector_ga_bundle
+            .as_ref()
+            .map(DetectorGaFeatureBundle::summary_suffix)
+            .unwrap_or_default();
+        format!(
+            "Factor hotplug: config=present {disabled_summary}{detector_summary}{detector_ga_summary}"
+        )
     }
 }
 
@@ -138,6 +165,48 @@ impl DetectorHotplugContext {
             format!(" detector_context=opt_in fields=[{}]", fields.join(","))
         }
     }
+}
+
+impl DetectorGaFeatureBundle {
+    pub fn summary_suffix(&self) -> String {
+        let mut fields = self.selected_fields.clone();
+        fields.sort();
+        fields.dedup();
+
+        let mut objectives = self.optimizer_objectives.clone();
+        objectives.sort();
+        objectives.dedup();
+
+        let bundle = if self.bundle_id.as_deref().unwrap_or_default().is_empty() {
+            "unset"
+        } else {
+            "set"
+        };
+        let target = compact_public_token(self.target_consumer.as_deref()).unwrap_or("unset");
+
+        format!(
+            " detector_ga_bundle=opt_in bundle={bundle} target={target} fields=[{}] objectives=[{}] validation_windows={}",
+            fields.join(","),
+            objectives.join(","),
+            self.validation_windows.len()
+        )
+    }
+}
+
+fn compact_public_token(value: Option<&str>) -> Option<&str> {
+    value.and_then(|raw| {
+        let trimmed = raw.trim();
+        if trimmed.is_empty()
+            || trimmed.contains('/')
+            || trimmed.contains('\\')
+            || trimmed.contains('=')
+            || trimmed.contains(':')
+        {
+            None
+        } else {
+            Some(trimmed)
+        }
+    })
 }
 
 #[cfg(test)]
@@ -233,5 +302,96 @@ detector_context:
             summary,
             "Factor hotplug: config=present disabled=[] detector_context=opt_in fields=[calendar_context,session_label,source_profile,symbol_context,volume_quality]"
         );
+    }
+
+    #[test]
+    fn test_default_config_has_no_detector_ga_bundle() {
+        let config = FactorHotplugConfig::default();
+
+        assert!(config.detector_ga_bundle.is_none());
+    }
+
+    #[test]
+    fn test_loads_optional_detector_ga_bundle_from_explicit_config() {
+        let temp = tempfile::tempdir().unwrap();
+        let config_path = temp.path().join(FACTOR_HOTPLUG_CONFIG_FILE);
+        std::fs::write(
+            &config_path,
+            r#"
+families:
+  structure_ict: true
+detector_ga_bundle:
+  bundle_id: ict_detector_ga_v1
+  target_consumer: auto_quant_search
+  selected_fields:
+    - vi_mitigation_pct
+    - fvg_mitigation_pct
+    - ob_mitigation_pct
+    - liquidity_pool_subtype
+    - sweep_quality
+  optimizer_objectives:
+    - regime_conditioned_win_rate
+    - cost_adjusted_expectancy
+  validation_windows:
+    - train_60d_validate_20d
+    - walk_forward_quarterly
+"#,
+        )
+        .unwrap();
+
+        let config = FactorHotplugConfig::load(temp.path().to_str().unwrap())
+            .unwrap()
+            .unwrap();
+        let bundle = config.detector_ga_bundle.unwrap();
+
+        assert_eq!(bundle.bundle_id.as_deref(), Some("ict_detector_ga_v1"));
+        assert_eq!(bundle.target_consumer.as_deref(), Some("auto_quant_search"));
+        assert_eq!(
+            bundle.selected_fields,
+            vec![
+                "vi_mitigation_pct",
+                "fvg_mitigation_pct",
+                "ob_mitigation_pct",
+                "liquidity_pool_subtype",
+                "sweep_quality"
+            ]
+        );
+        assert_eq!(
+            bundle.optimizer_objectives,
+            vec!["regime_conditioned_win_rate", "cost_adjusted_expectancy"]
+        );
+        assert_eq!(
+            bundle.validation_windows,
+            vec!["train_60d_validate_20d", "walk_forward_quarterly"]
+        );
+    }
+
+    #[test]
+    fn test_summary_reports_detector_ga_bundle_without_private_values() {
+        let mut config = FactorHotplugConfig::default();
+        config.detector_ga_bundle = Some(DetectorGaFeatureBundle {
+            bundle_id: Some("local/private/ga-bundle".to_string()),
+            target_consumer: Some("auto_quant_search".to_string()),
+            selected_fields: vec![
+                "vi_mitigation_pct".to_string(),
+                "fvg_mitigation_pct".to_string(),
+                "ob_mitigation_pct".to_string(),
+            ],
+            optimizer_objectives: vec![
+                "regime_conditioned_win_rate".to_string(),
+                "cost_adjusted_expectancy".to_string(),
+            ],
+            validation_windows: vec!["local/private/window.json".to_string()],
+        });
+
+        let summary = config.summary_line();
+
+        assert_eq!(
+            summary,
+            "Factor hotplug: config=present disabled=[] detector_ga_bundle=opt_in bundle=set target=auto_quant_search fields=[fvg_mitigation_pct,ob_mitigation_pct,vi_mitigation_pct] objectives=[cost_adjusted_expectancy,regime_conditioned_win_rate] validation_windows=1"
+        );
+        assert!(!summary.contains("local/private"));
+        assert!(!summary.contains("private"));
+        assert!(!summary.contains("window.json"));
     }
 }

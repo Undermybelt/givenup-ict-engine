@@ -98,6 +98,22 @@ Primary user corrections preserved:
     workflow snapshot mapping.
   - no provider profile, broker data, local path, API key, or personal dataset
     is read by default.
+- Added the first opt-in detector GA/search feature bundle carrier for later
+  Auto-Quant or genetic-optimizer use, without adding NextTrade or any external
+  runtime dependency:
+  - `DetectorGaFeatureBundle` in `src/factors/hotplug.rs`
+  - optional `FactorHotplugConfig.detector_ga_bundle`
+  - fields: `bundle_id`, `target_consumer`, `selected_fields`,
+    `optimizer_objectives`, `validation_windows`
+  - default remains `None`; no detector, Auto-Quant, broker, local path, or
+    personal data source is read unless a user explicitly points
+    `factor_hotplug.yaml` / `ICT_ENGINE_FACTOR_HOTPLUG_CONFIG` at a config.
+  - summary is token-friendly and redacted: it reports bundle presence,
+    sanitized target name, sorted selected field names, sorted objective names,
+    and validation-window count, not configured path/value contents.
+  - intended initial bundle fields are the newly surfaced candle-only detector
+    columns such as `vi_mitigation_pct`, `fvg_mitigation_pct`,
+    `ob_mitigation_pct`, `liquidity_pool_subtype`, and `sweep_quality`.
 
 ## Verification
 
@@ -171,6 +187,14 @@ Primary user corrections preserved:
   - `CARGO_TARGET_DIR=/tmp/ict-engine-target-detector-mitigation-green CARGO_INCREMENTAL=0 cargo test --bin ict-engine analyze_snapshot_maps_liquidity_pool_texture_runtime_evidence -- --nocapture`
     passed, proving runtime snapshot mapping carries VI and OB mitigation
     fields alongside existing detector evidence.
+- Current detector GA/search bundle continuation GREEN:
+  - RED first: `CARGO_TARGET_DIR=/tmp/ict-engine-target-detector-ga-red CARGO_INCREMENTAL=0 cargo test --lib factors::hotplug::tests:: -- --nocapture`
+    failed on missing `DetectorGaFeatureBundle` and
+    `FactorHotplugConfig.detector_ga_bundle`, proving the tests were guarding a
+    new opt-in schema contract.
+  - `CARGO_TARGET_DIR=/tmp/ict-engine-target-detector-ga-green CARGO_INCREMENTAL=0 cargo test --lib factors::hotplug::tests:: -- --nocapture`
+    passed with 9 hotplug tests, proving default-off behavior, explicit YAML
+    load, and redacted token-friendly summary for the detector GA/search bundle.
 - Residual formatting note:
   - `CARGO_INCREMENTAL=0 cargo fmt --check` currently fails on pre-existing
     unrelated formatting in
@@ -180,11 +204,15 @@ Primary user corrections preserved:
 
 ## Next
 
-1. If this evidence is used by Auto-Quant later, keep it as opt-in feature
-   columns or a selected detector bundle. Do not make personal data or richer
-   provider context a default runtime dependency.
-2. Consider a follow-up Auto-Quant detector bundle/profile that selects these
-   mitigation fields explicitly for search/admission, still default-off.
+1. Add a sanitized example `factor_hotplug.yaml` or manifest exporter that
+   selects the detector GA/search bundle fields for Auto-Quant admission/search,
+   still default-off and safe for consumers.
+2. Consider a follow-up `auto-quant-ga-prepare` / manifest-prep command that
+   exports only selected detector feature names and objective names into
+   `<state-dir>/auto-quant/ga_optimizer/`, not repo root.
+3. Keep all GA/search results as candidate/admission evidence. Do not allow a
+   GA bundle alone to promote trading execution without the existing Pre-Bayes,
+   BBN, path-ranker, cost/slippage, and execution-tree gates.
 
 ## Not Yet
 
@@ -199,3 +227,4 @@ Last updated: 2026-05-19 04:28:00 +0800.
 Last updated: 2026-05-19 11:02:00 +0800.
 Last updated: 2026-05-19 11:34:00 +0800.
 Last updated: 2026-05-20 00:00:00 +0800.
+Last updated: 2026-05-20 00:33:00 +0800.
