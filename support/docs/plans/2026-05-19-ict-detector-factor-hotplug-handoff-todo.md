@@ -83,6 +83,21 @@ Primary user corrections preserved:
   - compact human output includes `liquidity_pool_subtype`,
     `sweep_quality/clean_or_dirty`, `displacement_atr`, `return_bars`,
     `close_reclaim`, and VI delivery-gap state fields.
+- Added candle-only mitigation/fill-state evidence for the gap/OB detector
+  slice from a clean temporary worktree:
+  - shared price-band mitigation classifier derives `mitigation_pct`,
+    `failed_mitigation`, and `partial_fill_state` from ordinary candles only.
+  - VI delivery gaps carry `vi_mitigation_pct`, `vi_failed_mitigation`, and
+    `vi_partial_fill_state` through human output, analyze-run persistence, and
+    workflow snapshot mapping.
+  - nearest open FVG carries compact `fvg_mitigation_pct`,
+    `fvg_failed_mitigation`, and `fvg_partial_fill_state` on the analyze human
+    surface.
+  - OB variants carry `ob_mitigation_pct`, `ob_failed_mitigation`, and
+    `ob_partial_fill_state` through human output, analyze-run persistence, and
+    workflow snapshot mapping.
+  - no provider profile, broker data, local path, API key, or personal dataset
+    is read by default.
 
 ## Verification
 
@@ -145,6 +160,17 @@ Primary user corrections preserved:
     `src/workflow_snapshot_runtime.rs`.
   - Cached diff checks passed and a cached scan confirmed the staged slice has
     no PDA/path-ranker terms or private-path/credential additions.
+- Current mitigation/fill-state continuation GREEN:
+  - RED first: `CARGO_TARGET_DIR=/tmp/ict-engine-target-detector-mitigation-red CARGO_INCREMENTAL=0 cargo test --bin ict-engine price_band_mitigation_classifies -- --nocapture`
+    failed because `classify_price_band_mitigation` did not exist.
+  - `CARGO_TARGET_DIR=/tmp/ict-engine-target-detector-mitigation-green CARGO_INCREMENTAL=0 cargo test --bin ict-engine price_band_mitigation_classifies -- --nocapture`
+    passed, proving partial and failed mitigation states are classified from
+    candle-only price-band interaction.
+  - `CARGO_TARGET_DIR=/tmp/ict-engine-target-detector-mitigation-green CARGO_INCREMENTAL=0 cargo test --lib analyze_human_surface_carries_ict_template_with_price_levels -- --nocapture`
+    passed, proving compact human output carries VI/FVG/OB mitigation fields.
+  - `CARGO_TARGET_DIR=/tmp/ict-engine-target-detector-mitigation-green CARGO_INCREMENTAL=0 cargo test --bin ict-engine analyze_snapshot_maps_liquidity_pool_texture_runtime_evidence -- --nocapture`
+    passed, proving runtime snapshot mapping carries VI and OB mitigation
+    fields alongside existing detector evidence.
 - Residual formatting note:
   - `CARGO_INCREMENTAL=0 cargo fmt --check` currently fails on pre-existing
     unrelated formatting in
@@ -154,12 +180,11 @@ Primary user corrections preserved:
 
 ## Next
 
-1. Add gap/OB mitigation percentage:
-   `mitigation_pct`, `failed_mitigation`, and `partial_fill_state` for FVG,
-   VI gap, and OB variants.
-2. If this evidence is used by Auto-Quant later, keep it as opt-in feature
+1. If this evidence is used by Auto-Quant later, keep it as opt-in feature
    columns or a selected detector bundle. Do not make personal data or richer
    provider context a default runtime dependency.
+2. Consider a follow-up Auto-Quant detector bundle/profile that selects these
+   mitigation fields explicitly for search/admission, still default-off.
 
 ## Not Yet
 
@@ -173,3 +198,4 @@ Primary user corrections preserved:
 Last updated: 2026-05-19 04:28:00 +0800.
 Last updated: 2026-05-19 11:02:00 +0800.
 Last updated: 2026-05-19 11:34:00 +0800.
+Last updated: 2026-05-20 00:00:00 +0800.

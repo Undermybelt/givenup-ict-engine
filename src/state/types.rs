@@ -2743,6 +2743,12 @@ pub struct VolumeImbalanceGapRuntimeEvidence {
     pub start_bar: Option<usize>,
     pub filled: bool,
     pub active: bool,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub mitigation_pct: Option<f64>,
+    #[serde(default)]
+    pub failed_mitigation: bool,
+    #[serde(default)]
+    pub partial_fill_state: String,
     pub confidence: f64,
     pub fail_closed_reason: Option<String>,
 }
@@ -2758,6 +2764,9 @@ impl Default for VolumeImbalanceGapRuntimeEvidence {
             start_bar: None,
             filled: false,
             active: false,
+            mitigation_pct: None,
+            failed_mitigation: false,
+            partial_fill_state: "none".to_string(),
             confidence: 0.0,
             fail_closed_reason: Some("missing_volume_imbalance_gap_evidence".to_string()),
         }
@@ -2774,6 +2783,12 @@ pub struct OrderBlockVariantRuntimeEvidence {
     pub midpoint: Option<f64>,
     pub validation_state: String,
     pub mitigation_count: usize,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub mitigation_pct: Option<f64>,
+    #[serde(default)]
+    pub failed_mitigation: bool,
+    #[serde(default)]
+    pub partial_fill_state: String,
     pub breaker_confirmed: bool,
     pub rejection_confirmed: bool,
     pub confidence: f64,
@@ -2791,6 +2806,9 @@ impl Default for OrderBlockVariantRuntimeEvidence {
             midpoint: None,
             validation_state: "fail_closed".to_string(),
             mitigation_count: 0,
+            mitigation_pct: None,
+            failed_mitigation: false,
+            partial_fill_state: "none".to_string(),
             breaker_confirmed: false,
             rejection_confirmed: false,
             confidence: 0.0,

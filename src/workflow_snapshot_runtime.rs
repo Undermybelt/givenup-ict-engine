@@ -2482,6 +2482,23 @@ mod tests {
         let snapshot = workflow_phase_snapshot_from_analyze_run(&AnalyzeRunRecord {
             run_id: "analyze:liquidity-texture".to_string(),
             source_command: "analyze".to_string(),
+            order_block_variant: Some(ict_engine::state::OrderBlockVariantRuntimeEvidence {
+                factor_name: "order_block_variant_classifier".to_string(),
+                variant: "breaker_block".to_string(),
+                direction: ict_engine::types::Direction::Bear,
+                high: Some(102.0),
+                low: Some(100.0),
+                midpoint: Some(101.0),
+                validation_state: "breaker_confirmed".to_string(),
+                mitigation_count: 2,
+                mitigation_pct: Some(0.5),
+                failed_mitigation: false,
+                partial_fill_state: "partial".to_string(),
+                breaker_confirmed: true,
+                rejection_confirmed: false,
+                confidence: 0.78,
+                fail_closed_reason: None,
+            }),
             liquidity_pool_texture: Some(ict_engine::state::LiquidityPoolTextureRuntimeEvidence {
                 factor_name: "liquidity_pool_texture".to_string(),
                 texture: "jagged".to_string(),
@@ -2509,6 +2526,21 @@ mod tests {
                     fail_closed_reason: None,
                 },
             ),
+            volume_imbalance_gap: Some(ict_engine::state::VolumeImbalanceGapRuntimeEvidence {
+                factor_name: "volume_imbalance_gap".to_string(),
+                direction: ict_engine::types::Direction::Bull,
+                top: Some(102.0),
+                bottom: Some(100.0),
+                midpoint: Some(101.0),
+                start_bar: Some(4),
+                filled: false,
+                active: true,
+                mitigation_pct: Some(0.25),
+                failed_mitigation: false,
+                partial_fill_state: "partial".to_string(),
+                confidence: 0.54,
+                fail_closed_reason: None,
+            }),
             ..AnalyzeRunRecord::default()
         });
 
@@ -2527,6 +2559,20 @@ mod tests {
         assert_eq!(sweep_quality.quality, "dirty");
         assert_eq!(sweep_quality.displacement_atr, Some(1.9));
         assert_eq!(sweep_quality.close_reclaim, Some(false));
+        let vi_gap = snapshot
+            .volume_imbalance_gap
+            .expect("volume imbalance gap evidence");
+        assert_eq!(vi_gap.factor_name, "volume_imbalance_gap");
+        assert_eq!(vi_gap.mitigation_pct, Some(0.25));
+        assert_eq!(vi_gap.partial_fill_state, "partial");
+        assert!(!vi_gap.failed_mitigation);
+        let ob_variant = snapshot
+            .order_block_variant
+            .expect("order block variant evidence");
+        assert_eq!(ob_variant.variant, "breaker_block");
+        assert_eq!(ob_variant.mitigation_pct, Some(0.5));
+        assert_eq!(ob_variant.partial_fill_state, "partial");
+        assert!(!ob_variant.failed_mitigation);
     }
 
     #[test]

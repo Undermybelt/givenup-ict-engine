@@ -6215,6 +6215,14 @@ fn build_analyze_report(input: BuildAnalyzeReportInput<'_>) -> Result<AnalyzeRep
                                 .validation_state
                                 .clone(),
                             mitigation_count: price_action.order_block_variant.mitigation_count,
+                            mitigation_pct: price_action.order_block_variant.mitigation_pct,
+                            failed_mitigation: price_action
+                                .order_block_variant
+                                .failed_mitigation,
+                            partial_fill_state: price_action
+                                .order_block_variant
+                                .partial_fill_state
+                                .clone(),
                             breaker_confirmed: price_action.order_block_variant.breaker_confirmed,
                             rejection_confirmed: price_action
                                 .order_block_variant
@@ -6569,6 +6577,22 @@ fn build_price_action_section(
             .partial_cmp(&fvg_distance_to_price(right, last_close))
             .unwrap_or(std::cmp::Ordering::Equal)
     });
+    let nearest_fvg_mitigation = nearest_open_fvg
+        .map(|fvg| {
+            classify_price_band_mitigation(
+                mtf,
+                Some(fvg.top),
+                Some(fvg.bottom),
+                fvg.direction,
+                Some(fvg.start_bar),
+                fvg.filled,
+            )
+        })
+        .unwrap_or_else(|| PriceBandMitigationEvidence {
+            mitigation_pct: None,
+            failed_mitigation: false,
+            partial_fill_state: "none".to_string(),
+        });
     let nearest_untested_order_block = obs.iter().min_by(|left, right| {
         order_block_distance_to_price(left, last_close)
             .partial_cmp(&order_block_distance_to_price(right, last_close))
@@ -6653,6 +6677,9 @@ fn build_price_action_section(
         open_fvgs: fvgs.len(),
         nearest_open_fvg_top: nearest_open_fvg.map(|fvg| fvg.top),
         nearest_open_fvg_bottom: nearest_open_fvg.map(|fvg| fvg.bottom),
+        fvg_mitigation_pct: nearest_fvg_mitigation.mitigation_pct,
+        fvg_failed_mitigation: nearest_fvg_mitigation.failed_mitigation,
+        fvg_partial_fill_state: nearest_fvg_mitigation.partial_fill_state,
         untested_order_blocks: obs.len(),
         nearest_untested_order_block_high: nearest_untested_order_block.map(|ob| ob.high),
         nearest_untested_order_block_low: nearest_untested_order_block.map(|ob| ob.low),
@@ -6733,8 +6760,94 @@ fn classify_liquidity_sweep_quality(
     }
 }
 
+#[derive(Debug, Clone, PartialEq)]
+struct PriceBandMitigationEvidence {
+    mitigation_pct: Option<f64>,
+    failed_mitigation: bool,
+    partial_fill_state: String,
+}
+
+fn classify_price_band_mitigation(
+    candles: &[Candle],
+    top: Option<f64>,
+    bottom: Option<f64>,
+    direction: Direction,
+    start_bar: Option<usize>,
+    filled: bool,
+) -> PriceBandMitigationEvidence {
+    let Some(top) = top else {
+        return PriceBandMitigationEvidence {
+            mitigation_pct: None,
+            failed_mitigation: false,
+            partial_fill_state: "none".to_string(),
+        };
+    };
+    let Some(bottom) = bottom else {
+        return PriceBandMitigationEvidence {
+            mitigation_pct: None,
+            failed_mitigation: false,
+            partial_fill_state: "none".to_string(),
+        };
+    };
+    let high = top.max(bottom);
+    let low = top.min(bottom);
+    let width = high - low;
+    if !width.is_finite() || width <= f64::EPSILON || direction == Direction::Neutral {
+        return PriceBandMitigationEvidence {
+            mitigation_pct: None,
+            failed_mitigation: false,
+            partial_fill_state: "none".to_string(),
+        };
+    }
+
+    let mut mitigation_pct = 0.0_f64;
+    let mut entered = false;
+    let mut failed_mitigation = false;
+    let mut previous_inside_or_above = false;
+    let start = start_bar.unwrap_or(0).saturating_add(1);
+    for candle in candles.iter().skip(start) {
+        let penetration = match direction {
+            Direction::Bull => (high - candle.low) / width,
+            Direction::Bear => (candle.high - low) / width,
+            Direction::Neutral => 0.0,
+        }
+        .clamp(0.0, 1.0);
+        if penetration > 0.0 {
+            entered = true;
+            mitigation_pct = mitigation_pct.max(penetration);
+        }
+
+        let close_failed = match direction {
+            Direction::Bull => candle.close < low,
+            Direction::Bear => candle.close > high,
+            Direction::Neutral => false,
+        };
+        if entered && close_failed {
+            failed_mitigation = true;
+        }
+
+        previous_inside_or_above = entered;
+    }
+
+    let partial_fill_state = if filled || mitigation_pct >= 1.0 && !failed_mitigation {
+        "filled"
+    } else if failed_mitigation {
+        "failed_mitigation"
+    } else if mitigation_pct > 0.0 || previous_inside_or_above {
+        "partial"
+    } else {
+        "untouched"
+    };
+
+    PriceBandMitigationEvidence {
+        mitigation_pct: Some(mitigation_pct.clamp(0.0, 1.0)),
+        failed_mitigation,
+        partial_fill_state: partial_fill_state.to_string(),
+    }
+}
+
 fn classify_volume_imbalance_gap(
-    _candles: &[Candle],
+    candles: &[Candle],
     atr: &[f64],
     last_close: f64,
     gaps: &[ict_engine::types::VolumeImbalanceGap],
@@ -6756,6 +6869,14 @@ fn classify_volume_imbalance_gap(
         .find(|value| value.is_finite() && *value > 0.0)
         .unwrap_or(width.max(1.0));
     let confidence = (0.36 + (width / atr_last).clamp(0.0, 2.0) * 0.14).clamp(0.0, 0.68);
+    let mitigation = classify_price_band_mitigation(
+        candles,
+        Some(gap.top),
+        Some(gap.bottom),
+        gap.direction,
+        Some(gap.start_bar),
+        gap.filled,
+    );
     ict_engine::analyze_sections::VolumeImbalanceGapEvidence {
         factor_name: "volume_imbalance_gap".to_string(),
         direction: gap.direction,
@@ -6765,6 +6886,9 @@ fn classify_volume_imbalance_gap(
         start_bar: Some(gap.start_bar),
         filled: gap.filled,
         active: !gap.filled,
+        mitigation_pct: mitigation.mitigation_pct,
+        failed_mitigation: mitigation.failed_mitigation,
+        partial_fill_state: mitigation.partial_fill_state,
         confidence,
         fail_closed_reason: None,
     }
@@ -6789,6 +6913,14 @@ fn classify_order_block_variant(
     });
     let breakers = detect_breaker_blocks(candles);
     if let Some(breaker) = breakers.last() {
+        let mitigation = classify_price_band_mitigation(
+            candles,
+            Some(breaker.high),
+            Some(breaker.low),
+            breaker.direction,
+            Some(breaker.origin_bar),
+            false,
+        );
         return ict_engine::analyze_sections::OrderBlockVariantEvidence {
             factor_name: "order_block_variant_classifier".to_string(),
             variant: "breaker_block".to_string(),
@@ -6798,6 +6930,9 @@ fn classify_order_block_variant(
             midpoint: Some((breaker.high + breaker.low) / 2.0),
             validation_state: "breaker_confirmed".to_string(),
             mitigation_count: detect_mitigation_blocks_default(candles).len(),
+            mitigation_pct: mitigation.mitigation_pct,
+            failed_mitigation: mitigation.failed_mitigation,
+            partial_fill_state: mitigation.partial_fill_state,
             breaker_confirmed: true,
             rejection_confirmed: false,
             confidence: 0.78,
@@ -6816,6 +6951,9 @@ fn classify_order_block_variant(
             midpoint: Some(mitigation.level),
             validation_state: "mitigation_confirmed".to_string(),
             mitigation_count: mitigations.len(),
+            mitigation_pct: Some(1.0),
+            failed_mitigation: false,
+            partial_fill_state: "filled".to_string(),
             breaker_confirmed: false,
             rejection_confirmed: false,
             confidence: 0.64,
@@ -6825,6 +6963,14 @@ fn classify_order_block_variant(
 
     if let Some(rejection) = detect_pinbar(candles, atr).last() {
         let candle = &candles[rejection.bar_index];
+        let mitigation = classify_price_band_mitigation(
+            candles,
+            Some(candle.high),
+            Some(candle.low),
+            rejection.direction,
+            Some(rejection.bar_index),
+            false,
+        );
         return ict_engine::analyze_sections::OrderBlockVariantEvidence {
             factor_name: "order_block_variant_classifier".to_string(),
             variant: "rejection_block".to_string(),
@@ -6834,6 +6980,9 @@ fn classify_order_block_variant(
             midpoint: Some(candle.midpoint()),
             validation_state: "rejection_confirmed".to_string(),
             mitigation_count: 0,
+            mitigation_pct: mitigation.mitigation_pct,
+            failed_mitigation: mitigation.failed_mitigation,
+            partial_fill_state: mitigation.partial_fill_state,
             breaker_confirmed: false,
             rejection_confirmed: true,
             confidence: 0.58,
@@ -6842,6 +6991,14 @@ fn classify_order_block_variant(
     }
 
     if let Some(ob) = nearest_ob {
+        let mitigation = classify_price_band_mitigation(
+            candles,
+            Some(ob.high),
+            Some(ob.low),
+            ob.ob_type,
+            Some(ob.bar_index),
+            false,
+        );
         return ict_engine::analyze_sections::OrderBlockVariantEvidence {
             factor_name: "order_block_variant_classifier".to_string(),
             variant: "order_block".to_string(),
@@ -6855,6 +7012,9 @@ fn classify_order_block_variant(
                 "untested_active".to_string()
             },
             mitigation_count: 0,
+            mitigation_pct: mitigation.mitigation_pct,
+            failed_mitigation: mitigation.failed_mitigation,
+            partial_fill_state: mitigation.partial_fill_state,
             breaker_confirmed: false,
             rejection_confirmed: false,
             confidence: if ob.tested { 0.38 } else { 0.46 },
@@ -7931,6 +8091,52 @@ mod tests {
         assert!(evidence.clean_sweep_likelihood.unwrap() > 0.75);
         assert!(evidence.confidence > 0.65);
         assert!(evidence.fail_closed_reason.is_none());
+    }
+
+    #[test]
+    fn price_band_mitigation_classifies_partial_fill_without_private_context() {
+        let candles = vec![
+            texture_test_candle(1, 100.0, 101.0, 99.5, 100.5),
+            texture_test_candle(2, 103.0, 104.0, 102.0, 103.5),
+            texture_test_candle(3, 103.5, 104.2, 101.0, 103.8),
+            texture_test_candle(4, 103.8, 104.5, 101.5, 104.2),
+        ];
+
+        let evidence = classify_price_band_mitigation(
+            &candles,
+            Some(102.0),
+            Some(100.0),
+            Direction::Bull,
+            Some(1),
+            false,
+        );
+
+        assert_eq!(evidence.partial_fill_state, "partial");
+        assert_eq!(evidence.failed_mitigation, false);
+        assert!((evidence.mitigation_pct.unwrap() - 0.5).abs() < 1e-9);
+    }
+
+    #[test]
+    fn price_band_mitigation_classifies_failed_partial_retest() {
+        let candles = vec![
+            texture_test_candle(1, 100.0, 101.0, 99.5, 100.5),
+            texture_test_candle(2, 103.0, 104.0, 102.0, 103.5),
+            texture_test_candle(3, 103.5, 104.2, 101.0, 101.2),
+            texture_test_candle(4, 101.2, 101.5, 98.7, 99.2),
+        ];
+
+        let evidence = classify_price_band_mitigation(
+            &candles,
+            Some(102.0),
+            Some(100.0),
+            Direction::Bull,
+            Some(1),
+            false,
+        );
+
+        assert_eq!(evidence.partial_fill_state, "failed_mitigation");
+        assert_eq!(evidence.failed_mitigation, true);
+        assert_eq!(evidence.mitigation_pct, Some(1.0));
     }
 
     #[test]

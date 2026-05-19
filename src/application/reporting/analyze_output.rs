@@ -893,7 +893,7 @@ fn human_technical_price_summary(
         "none"
     };
     format!(
-        "last_close=({:.2}); ema20={} ema50={} rsi14={} adx14={} atr14={} bollinger=lower:{} middle:{} upper:{}; liquidity_pool={} liquidity_pool_texture/smooth_or_jagged={} liquidity_pool_subtype={} pool_level={} pool_high={} pool_low={} touch_count={} spacing_consistency={} clean_sweep_likelihood={} confidence={:.3} fail_closed_reason={} latest_sweep={} sweep_quality/clean_or_dirty={} displacement_atr={} return_bars={} close_reclaim={} confidence={:.3} fail_closed_reason={} sweeps_recent={}; reference_levels={}; volume_imbalance_gap={} vi_gap={} vi_direction={:?} vi_start_bar={} vi_filled={} confidence={:.3} fail_closed_reason={}; FVG/IFVG=open_count={} nearest_fvg={}; order_block=untested_count={} nearest_OB={} variant={} direction={:?} high={} low={} midpoint={} validation_state={} mitigation_count={} breaker_confirmed={} rejection_confirmed={} confidence={:.3} fail_closed_reason={}; narrative={}",
+        "last_close=({:.2}); ema20={} ema50={} rsi14={} adx14={} atr14={} bollinger=lower:{} middle:{} upper:{}; liquidity_pool={} liquidity_pool_texture/smooth_or_jagged={} liquidity_pool_subtype={} pool_level={} pool_high={} pool_low={} touch_count={} spacing_consistency={} clean_sweep_likelihood={} confidence={:.3} fail_closed_reason={} latest_sweep={} sweep_quality/clean_or_dirty={} displacement_atr={} return_bars={} close_reclaim={} confidence={:.3} fail_closed_reason={} sweeps_recent={}; reference_levels={}; volume_imbalance_gap={} vi_gap={} vi_direction={:?} vi_start_bar={} vi_filled={} vi_mitigation_pct={} vi_partial_fill_state={} vi_failed_mitigation={} confidence={:.3} fail_closed_reason={}; FVG/IFVG=open_count={} nearest_fvg={} fvg_mitigation_pct={} fvg_partial_fill_state={} fvg_failed_mitigation={}; order_block=untested_count={} nearest_OB={} variant={} direction={:?} high={} low={} midpoint={} validation_state={} mitigation_count={} ob_mitigation_pct={} ob_partial_fill_state={} ob_failed_mitigation={} breaker_confirmed={} rejection_confirmed={} confidence={:.3} fail_closed_reason={}; narrative={}",
         technical.last_closed_bar_close,
         format_optional_price(technical.ema20),
         format_optional_price(technical.ema50),
@@ -937,6 +937,9 @@ fn human_technical_price_summary(
             .map(|value| value.to_string())
             .unwrap_or_else(|| "none".to_string()),
         volume_imbalance_gap.filled,
+        format_optional_number(volume_imbalance_gap.mitigation_pct),
+        volume_imbalance_gap.partial_fill_state,
+        volume_imbalance_gap.failed_mitigation,
         volume_imbalance_gap.confidence,
         volume_imbalance_gap
             .fail_closed_reason
@@ -944,6 +947,9 @@ fn human_technical_price_summary(
             .unwrap_or("none"),
         structure.open_fvgs,
         fvg_band,
+        format_optional_number(structure.fvg_mitigation_pct),
+        structure.fvg_partial_fill_state,
+        structure.fvg_failed_mitigation,
         structure.untested_order_blocks,
         ob_band,
         ob_variant.variant,
@@ -953,6 +959,9 @@ fn human_technical_price_summary(
         format_optional_price(ob_variant.midpoint),
         ob_variant.validation_state,
         ob_variant.mitigation_count,
+        format_optional_number(ob_variant.mitigation_pct),
+        ob_variant.partial_fill_state,
+        ob_variant.failed_mitigation,
         ob_variant.breaker_confirmed,
         ob_variant.rejection_confirmed,
         ob_variant.confidence,
@@ -1900,12 +1909,18 @@ mod tests {
                 start_bar: Some(42),
                 filled: false,
                 active: true,
+                mitigation_pct: Some(0.43),
+                failed_mitigation: false,
+                partial_fill_state: "partial".to_string(),
                 confidence: 0.64,
                 fail_closed_reason: None,
             },
             open_fvgs: 1,
             nearest_open_fvg_top: Some(18510.0),
             nearest_open_fvg_bottom: Some(18492.5),
+            fvg_mitigation_pct: Some(0.58),
+            fvg_failed_mitigation: false,
+            fvg_partial_fill_state: "partial".to_string(),
             untested_order_blocks: 1,
             nearest_untested_order_block_high: Some(18480.0),
             nearest_untested_order_block_low: Some(18460.0),
@@ -1918,6 +1933,9 @@ mod tests {
                 midpoint: Some(18470.0),
                 validation_state: "breaker_confirmed".to_string(),
                 mitigation_count: 1,
+                mitigation_pct: Some(0.62),
+                failed_mitigation: false,
+                partial_fill_state: "partial".to_string(),
                 breaker_confirmed: true,
                 rejection_confirmed: false,
                 confidence: 0.78,
@@ -1986,13 +2004,22 @@ mod tests {
         assert!(technical_summary.contains("vi_gap=(18510.50-18522.00)"));
         assert!(technical_summary.contains("vi_direction=Bull"));
         assert!(technical_summary.contains("vi_filled=false"));
+        assert!(technical_summary.contains("vi_mitigation_pct=(0.430)"));
+        assert!(technical_summary.contains("vi_partial_fill_state=partial"));
+        assert!(technical_summary.contains("vi_failed_mitigation=false"));
         assert!(technical_summary.contains("nearest_fvg=(18492.50-18510.00)"));
+        assert!(technical_summary.contains("fvg_mitigation_pct=(0.580)"));
+        assert!(technical_summary.contains("fvg_partial_fill_state=partial"));
+        assert!(technical_summary.contains("fvg_failed_mitigation=false"));
         assert!(technical_summary.contains("nearest_OB=(18460.00-18480.00)"));
         assert!(technical_summary.contains("variant=breaker_block"));
         assert!(technical_summary.contains("high=(18480.00)"));
         assert!(technical_summary.contains("low=(18460.00)"));
         assert!(technical_summary.contains("midpoint=(18470.00)"));
         assert!(technical_summary.contains("validation_state=breaker_confirmed"));
+        assert!(technical_summary.contains("ob_mitigation_pct=(0.620)"));
+        assert!(technical_summary.contains("ob_partial_fill_state=partial"));
+        assert!(technical_summary.contains("ob_failed_mitigation=false"));
         assert!(technical_summary.contains("breaker_confirmed=true"));
         assert!(technical_summary.contains("confidence=0.780"));
     }
