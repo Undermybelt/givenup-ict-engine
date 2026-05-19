@@ -1,6 +1,7 @@
 use crate::types::{
-    Candle, Direction, LiquidityPool, LiquidityPoolTextureClassification, LiquidityPoolTextureKind,
-    LiquiditySweep,
+    Candle, Direction, LiquidityPool, LiquidityPoolSubtypeKind, LiquidityPoolTextureClassification,
+    LiquidityPoolTextureKind, LiquiditySweep, LiquiditySweepQualityClassification,
+    LiquiditySweepQualityKind,
 };
 
 /// Detect liquidity pools (areas where multiple swing points cluster)
@@ -155,6 +156,110 @@ pub fn count_recent_sweeps(
     sweeps.iter().filter(|s| s.sweep_bar >= threshold).count()
 }
 
+pub fn classify_liquidity_sweep_quality(
+    candles: &[Candle],
+    atr: &[f64],
+    sweep: Option<&LiquiditySweep>,
+) -> LiquiditySweepQualityClassification {
+    let Some(sweep) = sweep else {
+        return LiquiditySweepQualityClassification::fail_closed("no_liquidity_sweep_detected");
+    };
+    if sweep.sweep_bar >= candles.len() || sweep.return_bar >= candles.len() {
+        return LiquiditySweepQualityClassification::fail_closed(
+            "liquidity_sweep_index_out_of_range",
+        );
+    }
+    let Some(atr_at_sweep) = atr_value_for_bar(candles, atr, sweep.sweep_bar) else {
+        return LiquiditySweepQualityClassification::fail_closed(
+            "missing_atr_for_liquidity_sweep_quality",
+        );
+    };
+    if sweep.return_bar < sweep.sweep_bar {
+        return LiquiditySweepQualityClassification::fail_closed(
+            "liquidity_sweep_return_before_sweep",
+        );
+    }
+
+    let sweep_candle = &candles[sweep.sweep_bar];
+    let return_candle = &candles[sweep.return_bar];
+    let displacement = match sweep.sweep_direction {
+        Direction::Bear => (sweep_candle.high - sweep.pool_price).max(0.0),
+        Direction::Bull => (sweep.pool_price - sweep_candle.low).max(0.0),
+        Direction::Neutral => 0.0,
+    };
+    let displacement_atr = displacement / atr_at_sweep;
+    let return_bars = sweep.return_bar.saturating_sub(sweep.sweep_bar);
+    let close_reclaim = match sweep.sweep_direction {
+        Direction::Bear => return_candle.close < sweep.pool_price,
+        Direction::Bull => return_candle.close > sweep.pool_price,
+        Direction::Neutral => false,
+    };
+    let wick_only = match sweep.sweep_direction {
+        Direction::Bear => sweep_candle.close <= sweep.pool_price,
+        Direction::Bull => sweep_candle.close >= sweep.pool_price,
+        Direction::Neutral => false,
+    };
+    let follow_through = post_sweep_contamination(candles, sweep);
+    let fast_return = return_bars <= 3;
+    let adequate_displacement = (0.05..=1.25).contains(&displacement_atr);
+
+    let quality = if close_reclaim && fast_return && adequate_displacement && wick_only {
+        LiquiditySweepQualityKind::Clean
+    } else if !close_reclaim || return_bars > 8 || displacement_atr > 1.75 || follow_through {
+        LiquiditySweepQualityKind::Dirty
+    } else {
+        LiquiditySweepQualityKind::Mixed
+    };
+    let confidence = match quality {
+        LiquiditySweepQualityKind::Clean => (0.45
+            + (1.0 - (return_bars as f64 / 8.0)).max(0.0) * 0.20
+            + (1.25 - displacement_atr).max(0.0).min(1.0) * 0.15)
+            .clamp(0.0, 0.82),
+        LiquiditySweepQualityKind::Dirty => {
+            (0.42 + (return_bars as f64 / 10.0).min(0.25) + (displacement_atr / 4.0).min(0.20))
+                .clamp(0.0, 0.78)
+        }
+        LiquiditySweepQualityKind::Mixed => 0.48,
+        LiquiditySweepQualityKind::None => 0.0,
+    };
+
+    LiquiditySweepQualityClassification {
+        quality,
+        sweep_bar: Some(sweep.sweep_bar),
+        return_bar: Some(sweep.return_bar),
+        pool_price: Some(sweep.pool_price),
+        displacement_atr: Some(displacement_atr),
+        return_bars: Some(return_bars),
+        close_reclaim: Some(close_reclaim),
+        confidence,
+        fail_closed_reason: None,
+    }
+}
+
+fn atr_value_for_bar(candles: &[Candle], atr: &[f64], bar: usize) -> Option<f64> {
+    if candles.is_empty() || atr.is_empty() {
+        return None;
+    }
+    let atr_idx = bar.saturating_sub(candles.len().saturating_sub(atr.len()));
+    atr.get(atr_idx.min(atr.len() - 1))
+        .copied()
+        .filter(|value| value.is_finite() && *value > 0.0)
+}
+
+fn post_sweep_contamination(candles: &[Candle], sweep: &LiquiditySweep) -> bool {
+    let end = (sweep.return_bar + 3).min(candles.len().saturating_sub(1));
+    if sweep.return_bar >= end {
+        return false;
+    }
+    candles[sweep.return_bar + 1..=end]
+        .iter()
+        .any(|candle| match sweep.sweep_direction {
+            Direction::Bear => candle.close > sweep.pool_price,
+            Direction::Bull => candle.close < sweep.pool_price,
+            Direction::Neutral => false,
+        })
+}
+
 pub fn classify_liquidity_pool_texture(
     candles: &[Candle],
     atr: &[f64],
@@ -211,6 +316,7 @@ pub fn classify_liquidity_pool_texture(
     } else {
         LiquidityPoolTextureKind::Mixed
     };
+    let subtype = classify_liquidity_pool_subtype(pool.pool_type, texture);
     let touch_score = (touch_count as f64 / 6.0).min(1.0);
     let clean_sweep_likelihood =
         (0.20 + touch_score * 0.35 + consistency_for_texture * 0.35).clamp(0.0, 0.90);
@@ -218,6 +324,7 @@ pub fn classify_liquidity_pool_texture(
 
     LiquidityPoolTextureClassification {
         texture,
+        subtype,
         level: Some(pool.price_level),
         high: Some(pool.price_level + tolerance),
         low: Some(pool.price_level - tolerance),
@@ -226,6 +333,27 @@ pub fn classify_liquidity_pool_texture(
         clean_sweep_likelihood: Some(clean_sweep_likelihood),
         confidence,
         fail_closed_reason: None,
+    }
+}
+
+fn classify_liquidity_pool_subtype(
+    pool_type: Direction,
+    texture: LiquidityPoolTextureKind,
+) -> LiquidityPoolSubtypeKind {
+    match (pool_type, texture) {
+        (Direction::Bear, LiquidityPoolTextureKind::Smooth) => {
+            LiquidityPoolSubtypeKind::EqualHighPool
+        }
+        (Direction::Bull, LiquidityPoolTextureKind::Smooth) => {
+            LiquidityPoolSubtypeKind::EqualLowPool
+        }
+        (Direction::Bear, LiquidityPoolTextureKind::Jagged | LiquidityPoolTextureKind::Mixed) => {
+            LiquidityPoolSubtypeKind::RelativeEqualHigh
+        }
+        (Direction::Bull, LiquidityPoolTextureKind::Jagged | LiquidityPoolTextureKind::Mixed) => {
+            LiquidityPoolSubtypeKind::RelativeEqualLow
+        }
+        _ => LiquidityPoolSubtypeKind::None,
     }
 }
 
@@ -311,8 +439,34 @@ mod tests {
         let evidence =
             classify_liquidity_pool_texture(&candles, &vec![1.0; candles.len()], Some(&pool));
         assert_eq!(evidence.texture, LiquidityPoolTextureKind::Smooth);
+        assert_eq!(evidence.subtype, LiquidityPoolSubtypeKind::EqualHighPool);
         assert!(evidence.spacing_consistency.unwrap() >= 0.65);
         assert!(evidence.clean_sweep_likelihood.unwrap() > 0.65);
+    }
+
+    #[test]
+    fn classify_liquidity_pool_texture_labels_equal_low_pool() {
+        let candles = vec![
+            candle(1, 101.5, 102.0, 100.1, 101.0),
+            candle(2, 101.0, 101.4, 100.0, 100.8),
+            candle(3, 100.8, 101.2, 100.2, 101.0),
+            candle(4, 101.0, 101.3, 100.1, 100.9),
+            candle(5, 100.9, 101.5, 100.3, 101.1),
+            candle(6, 101.1, 101.4, 100.0, 100.7),
+            candle(7, 100.7, 101.3, 100.2, 101.0),
+            candle(8, 101.0, 101.4, 100.1, 100.9),
+        ];
+        let pool = LiquidityPool {
+            price_level: 100.0,
+            sp_count: 4,
+            pool_type: Direction::Bull,
+        };
+
+        let evidence =
+            classify_liquidity_pool_texture(&candles, &vec![1.0; candles.len()], Some(&pool));
+
+        assert_eq!(evidence.texture, LiquidityPoolTextureKind::Smooth);
+        assert_eq!(evidence.subtype, LiquidityPoolSubtypeKind::EqualLowPool);
     }
 
     #[test]
@@ -336,6 +490,55 @@ mod tests {
         let evidence =
             classify_liquidity_pool_texture(&candles, &vec![1.0; candles.len()], Some(&pool));
         assert_eq!(evidence.texture, LiquidityPoolTextureKind::Jagged);
+        assert_eq!(
+            evidence.subtype,
+            LiquidityPoolSubtypeKind::RelativeEqualHigh
+        );
         assert!(evidence.spacing_consistency.unwrap() < 0.4);
+    }
+
+    #[test]
+    fn classify_liquidity_sweep_quality_clean_wick_reclaim() {
+        let candles = vec![
+            candle(1, 99.5, 100.0, 99.2, 99.8),
+            candle(2, 99.8, 100.3, 99.4, 99.9),
+            candle(3, 99.9, 100.1, 99.5, 99.7),
+        ];
+        let sweep = LiquiditySweep {
+            sweep_bar: 1,
+            return_bar: 2,
+            pool_price: 100.0,
+            sweep_direction: Direction::Bear,
+        };
+
+        let evidence =
+            classify_liquidity_sweep_quality(&candles, &vec![1.0; candles.len()], Some(&sweep));
+
+        assert_eq!(evidence.quality, LiquiditySweepQualityKind::Clean);
+        assert_eq!(evidence.return_bars, Some(1));
+        assert_eq!(evidence.close_reclaim, Some(true));
+        assert!(evidence.confidence > 0.55);
+    }
+
+    #[test]
+    fn classify_liquidity_sweep_quality_dirty_continuation() {
+        let candles = vec![
+            candle(1, 99.5, 100.0, 99.2, 99.8),
+            candle(2, 99.8, 102.4, 99.4, 101.8),
+            candle(3, 101.8, 102.2, 100.7, 101.4),
+            candle(4, 101.4, 101.8, 99.7, 99.8),
+        ];
+        let sweep = LiquiditySweep {
+            sweep_bar: 1,
+            return_bar: 3,
+            pool_price: 100.0,
+            sweep_direction: Direction::Bear,
+        };
+
+        let evidence =
+            classify_liquidity_sweep_quality(&candles, &vec![1.0; candles.len()], Some(&sweep));
+
+        assert_eq!(evidence.quality, LiquiditySweepQualityKind::Dirty);
+        assert!(evidence.displacement_atr.unwrap() > 1.75);
     }
 }

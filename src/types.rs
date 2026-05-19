@@ -318,6 +318,60 @@ pub struct OrderBlock {
     pub tested: bool,
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+pub enum OrderBlockVariantKind {
+    None,
+    OrderBlock,
+    BreakerBlock,
+    MitigationBlock,
+    RejectionBlock,
+}
+
+impl OrderBlockVariantKind {
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::None => "none",
+            Self::OrderBlock => "order_block",
+            Self::BreakerBlock => "breaker_block",
+            Self::MitigationBlock => "mitigation_block",
+            Self::RejectionBlock => "rejection_block",
+        }
+    }
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct OrderBlockVariantClassification {
+    pub variant: OrderBlockVariantKind,
+    pub direction: Direction,
+    pub high: Option<f64>,
+    pub low: Option<f64>,
+    pub midpoint: Option<f64>,
+    pub validation_state: String,
+    pub mitigation_count: usize,
+    pub breaker_confirmed: bool,
+    pub rejection_confirmed: bool,
+    pub confidence: f64,
+    pub fail_closed_reason: Option<String>,
+}
+
+impl OrderBlockVariantClassification {
+    pub fn fail_closed(reason: impl Into<String>) -> Self {
+        Self {
+            variant: OrderBlockVariantKind::None,
+            direction: Direction::Neutral,
+            high: None,
+            low: None,
+            midpoint: None,
+            validation_state: "fail_closed".to_string(),
+            mitigation_count: 0,
+            breaker_confirmed: false,
+            rejection_confirmed: false,
+            confidence: 0.0,
+            fail_closed_reason: Some(reason.into()),
+        }
+    }
+}
+
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct PriceLevelBand {
     pub top: f64,
@@ -411,6 +465,54 @@ pub struct LiquiditySweep {
     pub return_bar: usize,
     pub pool_price: f64,
     pub sweep_direction: Direction,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+pub enum LiquiditySweepQualityKind {
+    None,
+    Clean,
+    Dirty,
+    Mixed,
+}
+
+impl LiquiditySweepQualityKind {
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::None => "none",
+            Self::Clean => "clean",
+            Self::Dirty => "dirty",
+            Self::Mixed => "mixed",
+        }
+    }
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct LiquiditySweepQualityClassification {
+    pub quality: LiquiditySweepQualityKind,
+    pub sweep_bar: Option<usize>,
+    pub return_bar: Option<usize>,
+    pub pool_price: Option<f64>,
+    pub displacement_atr: Option<f64>,
+    pub return_bars: Option<usize>,
+    pub close_reclaim: Option<bool>,
+    pub confidence: f64,
+    pub fail_closed_reason: Option<String>,
+}
+
+impl LiquiditySweepQualityClassification {
+    pub fn fail_closed(reason: impl Into<String>) -> Self {
+        Self {
+            quality: LiquiditySweepQualityKind::None,
+            sweep_bar: None,
+            return_bar: None,
+            pool_price: None,
+            displacement_atr: None,
+            return_bars: None,
+            close_reclaim: None,
+            confidence: 0.0,
+            fail_closed_reason: Some(reason.into()),
+        }
+    }
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -530,9 +632,31 @@ impl LiquidityPoolTextureKind {
     }
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+pub enum LiquidityPoolSubtypeKind {
+    None,
+    EqualHighPool,
+    EqualLowPool,
+    RelativeEqualHigh,
+    RelativeEqualLow,
+}
+
+impl LiquidityPoolSubtypeKind {
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::None => "none",
+            Self::EqualHighPool => "equal_high_pool",
+            Self::EqualLowPool => "equal_low_pool",
+            Self::RelativeEqualHigh => "relative_equal_high",
+            Self::RelativeEqualLow => "relative_equal_low",
+        }
+    }
+}
+
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct LiquidityPoolTextureClassification {
     pub texture: LiquidityPoolTextureKind,
+    pub subtype: LiquidityPoolSubtypeKind,
     pub level: Option<f64>,
     pub high: Option<f64>,
     pub low: Option<f64>,
@@ -547,6 +671,7 @@ impl LiquidityPoolTextureClassification {
     pub fn fail_closed(reason: impl Into<String>) -> Self {
         Self {
             texture: LiquidityPoolTextureKind::None,
+            subtype: LiquidityPoolSubtypeKind::None,
             level: None,
             high: None,
             low: None,
