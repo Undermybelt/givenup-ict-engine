@@ -65,6 +65,20 @@ pub struct DetectorGaFeatureManifest {
     pub warnings: Vec<String>,
 }
 
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+pub struct DetectorGaFeatureManifestExportStatus {
+    pub exported: bool,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub reason: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub path: Option<PathBuf>,
+    pub schema_version: &'static str,
+    pub selected_field_count: usize,
+    pub optimizer_objective_count: usize,
+    pub validation_window_count: usize,
+    pub warning_count: usize,
+}
+
 impl Default for FactorHotplugConfig {
     fn default() -> Self {
         let mut families = BTreeMap::new();
@@ -257,6 +271,57 @@ pub fn persist_detector_ga_feature_manifest(state_dir: &str) -> Result<Option<Pa
     std::fs::write(&output_path, content)
         .with_context(|| format!("writing detector GA manifest '{}'", output_path.display()))?;
     Ok(Some(output_path))
+}
+
+pub fn prepare_detector_ga_feature_manifest(
+    state_dir: &str,
+) -> Result<DetectorGaFeatureManifestExportStatus> {
+    let Some(config) = FactorHotplugConfig::load(state_dir)? else {
+        return Ok(detector_ga_feature_manifest_noop_status("config_absent"));
+    };
+    let Some(bundle) = config.detector_ga_bundle.as_ref() else {
+        return Ok(detector_ga_feature_manifest_noop_status(
+            "detector_ga_bundle_absent",
+        ));
+    };
+
+    let manifest = DetectorGaFeatureManifest::from_bundle(bundle);
+    let output_dir = Path::new(state_dir).join("auto-quant").join("ga_optimizer");
+    std::fs::create_dir_all(&output_dir).with_context(|| {
+        format!(
+            "creating detector GA manifest dir '{}'",
+            output_dir.display()
+        )
+    })?;
+    let output_path = output_dir.join(DETECTOR_GA_FEATURE_MANIFEST_FILE);
+    let content =
+        serde_json::to_string_pretty(&manifest).context("serializing detector GA manifest")?;
+    std::fs::write(&output_path, content)
+        .with_context(|| format!("writing detector GA manifest '{}'", output_path.display()))?;
+
+    Ok(DetectorGaFeatureManifestExportStatus {
+        exported: true,
+        reason: None,
+        path: Some(output_path),
+        schema_version: DETECTOR_GA_FEATURE_MANIFEST_SCHEMA_VERSION,
+        selected_field_count: manifest.selected_fields.len(),
+        optimizer_objective_count: manifest.optimizer_objectives.len(),
+        validation_window_count: manifest.validation_windows.len(),
+        warning_count: manifest.warnings.len(),
+    })
+}
+
+fn detector_ga_feature_manifest_noop_status(reason: &str) -> DetectorGaFeatureManifestExportStatus {
+    DetectorGaFeatureManifestExportStatus {
+        exported: false,
+        reason: Some(reason.to_string()),
+        path: None,
+        schema_version: DETECTOR_GA_FEATURE_MANIFEST_SCHEMA_VERSION,
+        selected_field_count: 0,
+        optimizer_objective_count: 0,
+        validation_window_count: 0,
+        warning_count: 0,
+    }
 }
 
 fn compact_public_token(value: Option<&str>) -> Option<&str> {
@@ -479,6 +544,92 @@ detector_ga_bundle:
 
         assert!(exported.is_none());
         assert!(!temp.path().join("auto-quant").exists());
+    }
+
+    #[test]
+    fn test_detector_ga_manifest_export_status_is_compact_and_noop_safe() {
+        let temp = tempfile::tempdir().unwrap();
+
+        let status = prepare_detector_ga_feature_manifest(temp.path().to_str().unwrap()).unwrap();
+
+        assert!(!status.exported);
+        assert_eq!(status.reason.as_deref(), Some("config_absent"));
+        assert!(status.path.is_none());
+        assert_eq!(
+            status.schema_version,
+            DETECTOR_GA_FEATURE_MANIFEST_SCHEMA_VERSION
+        );
+        assert_eq!(status.selected_field_count, 0);
+        assert_eq!(status.optimizer_objective_count, 0);
+        assert_eq!(status.validation_window_count, 0);
+        assert_eq!(status.warning_count, 0);
+        assert!(!temp.path().join("auto-quant").exists());
+
+        let config_path = temp.path().join(FACTOR_HOTPLUG_CONFIG_FILE);
+        std::fs::write(
+            &config_path,
+            r#"
+families:
+  structure_ict: true
+"#,
+        )
+        .unwrap();
+
+        let status = prepare_detector_ga_feature_manifest(temp.path().to_str().unwrap()).unwrap();
+
+        assert!(!status.exported);
+        assert_eq!(status.reason.as_deref(), Some("detector_ga_bundle_absent"));
+        assert!(status.path.is_none());
+        assert_eq!(status.selected_field_count, 0);
+        assert_eq!(status.optimizer_objective_count, 0);
+        assert_eq!(status.validation_window_count, 0);
+        assert_eq!(status.warning_count, 0);
+        assert!(!temp.path().join("auto-quant").exists());
+
+        std::fs::write(
+            &config_path,
+            r#"
+families:
+  structure_ict: true
+detector_ga_bundle:
+  bundle_id: ict_detector_ga_v1
+  target_consumer: auto_quant_search
+  selected_fields:
+    - vi_mitigation_pct
+    - ob_mitigation_pct
+  optimizer_objectives:
+    - cost_adjusted_expectancy
+  validation_windows:
+    - train_60d_validate_20d
+    - local/private/window.json
+"#,
+        )
+        .unwrap();
+
+        let status = prepare_detector_ga_feature_manifest(temp.path().to_str().unwrap()).unwrap();
+
+        assert!(status.exported);
+        assert!(status.reason.is_none());
+        assert_eq!(
+            status.path,
+            Some(
+                temp.path()
+                    .join("auto-quant")
+                    .join("ga_optimizer")
+                    .join(DETECTOR_GA_FEATURE_MANIFEST_FILE)
+            )
+        );
+        assert_eq!(
+            status.schema_version,
+            DETECTOR_GA_FEATURE_MANIFEST_SCHEMA_VERSION
+        );
+        assert_eq!(status.selected_field_count, 2);
+        assert_eq!(status.optimizer_objective_count, 1);
+        assert_eq!(status.validation_window_count, 1);
+        assert_eq!(status.warning_count, 1);
+        let raw = format!("{status:?}");
+        assert!(!raw.contains("local/private"));
+        assert!(!raw.contains("window.json"));
     }
 
     #[test]

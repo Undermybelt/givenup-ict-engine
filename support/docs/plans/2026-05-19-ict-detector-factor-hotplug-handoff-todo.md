@@ -138,6 +138,18 @@ Primary user corrections preserved:
     `regime_conditioned_win_rate` and `cost_adjusted_expectancy`.
   - validation windows are public compact labels only; no local path, broker,
     credential marker, account id, or personal dataset appears in the example.
+- Added a compact reusable detector GA/search manifest prepare status helper:
+  - `prepare_detector_ga_feature_manifest(state_dir)` remains opt-in and
+    zero-config safe.
+  - absent config reports `config_absent` and writes nothing.
+  - config present without `detector_ga_bundle` reports
+    `detector_ga_bundle_absent` and writes nothing.
+  - explicit bundles write the same sanitized manifest under
+    `<state-dir>/auto-quant/ga_optimizer/` and return only compact counts:
+    schema version, path, selected-field count, objective count,
+    validation-window count, and warning count.
+  - the status helper does not echo configured detector field values, objective
+    names, validation-window labels, broker data, local paths, or credentials.
 
 ## Verification
 
@@ -234,6 +246,18 @@ Primary user corrections preserved:
     passed, proving the sanitized example parses, exports a detector GA/search
     manifest, and contains no `/Users` or credential-marker strings in the
     summary or manifest.
+- Current detector GA/search prepare-status continuation GREEN:
+  - RED first: `CARGO_TARGET_DIR=/tmp/ict-engine-target-detector-ga-status-red CARGO_INCREMENTAL=0 cargo test --lib factors::hotplug::tests::test_detector_ga_manifest_export_status_is_compact_and_noop_safe -- --nocapture`
+    failed on missing `prepare_detector_ga_feature_manifest`, proving the test
+    guarded a new reusable helper rather than existing manifest persistence.
+  - Initial GREEN exposed a test setup mismatch: absent config correctly
+    returned `config_absent`, while the test had expected
+    `detector_ga_bundle_absent`. The test was tightened to cover both no-op
+    states explicitly.
+  - `CARGO_TARGET_DIR=/tmp/ict-engine-target-detector-ga-status-green CARGO_INCREMENTAL=0 cargo test --lib factors::hotplug::tests::test_detector_ga_manifest_export_status_is_compact_and_noop_safe -- --nocapture`
+    passed, proving the helper is no-op safe, distinguishes absent config from
+    absent bundle, exports explicit bundles, returns only compact counts, and
+    does not expose unsafe validation-window values in the debug/status surface.
 - Residual formatting note:
   - `CARGO_INCREMENTAL=0 cargo fmt --check` currently fails on pre-existing
     unrelated formatting in
@@ -243,10 +267,10 @@ Primary user corrections preserved:
 
 ## Next
 
-1. Consider a follow-up `auto-quant-ga-prepare` / manifest-prep command that
-   exports only selected detector feature names and objective names into
-   `<state-dir>/auto-quant/ga_optimizer/`, not repo root. Command files are
-   currently dirty from other lanes, so helper-first avoided accidental staging.
+1. Consider a follow-up `auto-quant-ga-prepare` command wrapper around the new
+   prepare-status helper once the dirty CLI command files can be touched safely.
+   The wrapper should print only the manifest path, schema, field count,
+   objective count, validation-window count, warning count, and no-op reason.
 2. Keep all GA/search results as candidate/admission evidence. Do not allow a
    GA bundle alone to promote trading execution without the existing Pre-Bayes,
    BBN, path-ranker, cost/slippage, and execution-tree gates.
@@ -267,3 +291,4 @@ Last updated: 2026-05-20 00:00:00 +0800.
 Last updated: 2026-05-20 00:33:00 +0800.
 Last updated: 2026-05-20 00:49:00 +0800.
 Last updated: 2026-05-20 01:08:00 +0800.
+Last updated: 2026-05-20 01:42:00 +0800.
