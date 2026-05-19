@@ -22,8 +22,9 @@ pub mod persistence;
 pub mod token;
 
 pub use analysis::{
-    analyze_pda_sequences, summarize_pda_sequence_artifact, PdaSequenceAnalysisArtifact,
-    PdaSequenceArtifactSummary, PDA_SEQUENCE_ANALYSIS_METHOD, PDA_SEQUENCE_DEFAULT_KMER_K,
+    analyze_pda_sequences, ordered_second_expansion_h1_h0_support, summarize_pda_sequence_artifact,
+    PdaSequenceAnalysisArtifact, PdaSequenceArtifactSummary, PDA_SEQUENCE_ANALYSIS_METHOD,
+    PDA_SEQUENCE_DEFAULT_KMER_K,
 };
 pub use cluster::{cluster_pda_sequences, PdaDtwClusterPacket, PDA_DTW_CLUSTER_METHOD};
 pub use dtw::{dtw_alignment, dtw_distance, dtw_distance_matrix, DtwAlignment};
