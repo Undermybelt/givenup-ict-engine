@@ -24,6 +24,10 @@
 - [x] Run opt-in PA_Agent-root compact smoke.
 - [x] Inspect generated artifacts for trade_usable=false and no default private path leak.
 - [x] Commit only this coherent slice if verification passes.
+- [x] Add token-friendly `artifact_index.json` with relative artifact names only.
+- [x] Run focused tests for artifact index slice.
+- [x] Run compact smoke and inspect index for no private path leak.
+- [x] Commit artifact-index slice if verification passes.
 
 ## Verification log
 - `python3 -m unittest support.scripts.research.tests.test_pa_agent_intake` -> OK, 3 tests.
@@ -33,6 +37,10 @@
 - Local macOS permission note: direct script read of the Downloads PA_Agent source was blocked by host permissions; artifact records `source_access_warnings=[schemas.py_unreadable, router.py_unreadable]` and safely falls back to embedded defaults.
 - `python3 -m py_compile support/scripts/research/pa_agent_intake.py support/scripts/research/tests/test_pa_agent_intake.py` -> OK.
 - `python3 -m ruff check ...` blocked because this Python has no `ruff` module installed.
+- Artifact index slice: `python3 -m unittest support.scripts.research.tests.test_pa_agent_intake` -> OK, 3 tests.
+- Artifact index smoke: `python3 support/scripts/research/pa_agent_intake.py --compact --output-dir /tmp/ict-engine-pa-agent-intake-index` -> `status=ok trade_usable=false mode=embedded_defaults taxonomy=9 rules=7`; emitted `artifact_index.json`.
+- Artifact index inspection: `trade_usable=false`, `taxonomy_count=9`, artifact names are relative, no `/Users/` or `Downloads` leakage.
+- Artifact index py_compile: `python3 -m py_compile support/scripts/research/pa_agent_intake.py support/scripts/research/tests/test_pa_agent_intake.py` -> OK.
 
 ## Artifact plan
 - Script: `support/scripts/research/pa_agent_intake.py`

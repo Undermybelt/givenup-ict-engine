@@ -237,6 +237,30 @@ def _artifact_bundle(config: IntakeConfig) -> dict[str, Any]:
     return bundle
 
 
+def _artifact_index(config: IntakeConfig, bundle: dict[str, Any]) -> dict[str, Any]:
+    source = bundle["source"]
+    candidate = bundle["candidate_pack_template"]
+    return {
+        "schema_version": "pa-agent-intake-index/v1",
+        "mode": config.source_mode,
+        "trade_usable": False,
+        "promotion_state": bundle["consumer_contract"]["promotion_state"],
+        "taxonomy_count": len(bundle["regime_taxonomy"]),
+        "router_rule_count": len(bundle["router_rules"]),
+        "base_timeframe": candidate["base_timeframe"],
+        "context_timeframes": candidate["context_timeframes"],
+        "candidate_id": candidate["candidate_id"],
+        "source_access_warnings": source.get("source_access_warnings", []),
+        "artifacts": {
+            "bundle": "pa_agent_intake_bundle.json",
+            "regime_taxonomy": "regime_taxonomy.json",
+            "decision_trace_schema": "decision_trace_schema.json",
+            "router_rules": "router_rules.json",
+            "candidate_pack_template": "candidate_pack_template.json",
+        },
+    }
+
+
 def _candidate_pack_template(profile: dict[str, Any]) -> dict[str, Any]:
     return {
         "schema_version": "factor-expression/v1",
@@ -282,12 +306,17 @@ def write_artifacts(config: IntakeConfig) -> dict[str, Path]:
     config.output_dir.mkdir(parents=True, exist_ok=True)
     bundle = _artifact_bundle(config)
     paths = {
+        "artifact_index": config.output_dir / "artifact_index.json",
         "bundle": config.output_dir / "pa_agent_intake_bundle.json",
         "regime_taxonomy": config.output_dir / "regime_taxonomy.json",
         "decision_trace_schema": config.output_dir / "decision_trace_schema.json",
         "router_rules": config.output_dir / "router_rules.json",
         "candidate_pack_template": config.output_dir / "candidate_pack_template.json",
     }
+    paths["artifact_index"].write_text(
+        json.dumps(_artifact_index(config, bundle), indent=2, sort_keys=True) + "\n",
+        encoding="utf-8",
+    )
     paths["bundle"].write_text(json.dumps(bundle, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     paths["regime_taxonomy"].write_text(json.dumps(bundle["regime_taxonomy"], indent=2, sort_keys=True) + "\n", encoding="utf-8")
     paths["decision_trace_schema"].write_text(json.dumps(bundle["decision_trace_schema"], indent=2, sort_keys=True) + "\n", encoding="utf-8")
@@ -329,7 +358,7 @@ def main(argv: list[str] | None = None) -> int:
         print(
             "pa_agent_intake status=ok trade_usable=false mode={} artifacts={} taxonomy={} rules={}".format(
                 config.source_mode,
-                paths["bundle"],
+                paths["artifact_index"],
                 len(_taxonomy_from_source(config.pa_agent_root)),
                 len(DEFAULT_ROUTER_RULES),
             )

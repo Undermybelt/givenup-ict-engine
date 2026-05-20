@@ -25,10 +25,15 @@ class PaAgentIntakeTests(unittest.TestCase):
 
             paths = intake.write_artifacts(config)
             bundle = json.loads(paths["bundle"].read_text(encoding="utf-8"))
+            index = json.loads(paths["artifact_index"].read_text(encoding="utf-8"))
 
         self.assertTrue(bundle["consumer_contract"]["zero_config"])
         self.assertTrue(bundle["consumer_contract"]["hotplug_config_supported"])
         self.assertFalse(bundle["consumer_contract"]["trade_usable"])
+        self.assertFalse(index["trade_usable"])
+        self.assertEqual(index["taxonomy_count"], 9)
+        self.assertEqual(index["artifacts"]["bundle"], "pa_agent_intake_bundle.json")
+        self.assertNotIn("/", index["artifacts"]["bundle"])
         self.assertEqual(bundle["personal_profile"]["base_timeframe"], "1m")
         self.assertIn("4h", bundle["personal_profile"]["context_timeframes"])
         self.assertEqual(len(bundle["regime_taxonomy"]), 9)
