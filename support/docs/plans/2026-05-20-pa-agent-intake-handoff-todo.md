@@ -28,19 +28,25 @@
 - [x] Run focused tests for artifact index slice.
 - [x] Run compact smoke and inspect index for no private path leak.
 - [x] Commit artifact-index slice if verification passes.
+- [x] Add consumer discovery docs pointing to `artifact_index.json`.
+- [x] Verify docs have no private path leak and commands still smoke.
+- [x] Commit consumer-doc slice if verification passes.
 
 ## Verification log
 - `python3 -m unittest support.scripts.research.tests.test_pa_agent_intake` -> OK, 3 tests.
 - `python3 support/scripts/research/pa_agent_intake.py --compact --output-dir /tmp/ict-engine-pa-agent-intake-zero` -> `status=ok trade_usable=false mode=embedded_defaults taxonomy=9 rules=7`.
-- `python3 support/scripts/research/pa_agent_intake.py --compact --pa-agent-root /Users/thrill3r/Downloads/PA_Agent --include-prompt-inventory --output-dir /tmp/ict-engine-pa-agent-intake-optin` -> `status=ok trade_usable=false mode=opt_in taxonomy=9 rules=7`.
-- Artifact inspection: zero-config and opt-in bundles both have `trade_usable=false`; no `/Users/` or `Downloads` leaked into generated JSON.
-- Local macOS permission note: direct script read of the Downloads PA_Agent source was blocked by host permissions; artifact records `source_access_warnings=[schemas.py_unreadable, router.py_unreadable]` and safely falls back to embedded defaults.
+- `python3 support/scripts/research/pa_agent_intake.py --compact --pa-agent-root /path/to/PA_Agent --include-prompt-inventory --output-dir /tmp/ict-engine-pa-agent-intake-optin` -> `status=ok trade_usable=false mode=opt_in taxonomy=9 rules=7`.
+- Artifact inspection: zero-config and opt-in bundles both have `trade_usable=false`; no private absolute paths leaked into generated JSON.
+- Local permission note: direct script read of an opt-in PA_Agent source may be blocked by host permissions; artifact records `source_access_warnings=[schemas.py_unreadable, router.py_unreadable]` and safely falls back to embedded defaults.
 - `python3 -m py_compile support/scripts/research/pa_agent_intake.py support/scripts/research/tests/test_pa_agent_intake.py` -> OK.
 - `python3 -m ruff check ...` blocked because this Python has no `ruff` module installed.
 - Artifact index slice: `python3 -m unittest support.scripts.research.tests.test_pa_agent_intake` -> OK, 3 tests.
 - Artifact index smoke: `python3 support/scripts/research/pa_agent_intake.py --compact --output-dir /tmp/ict-engine-pa-agent-intake-index` -> `status=ok trade_usable=false mode=embedded_defaults taxonomy=9 rules=7`; emitted `artifact_index.json`.
-- Artifact index inspection: `trade_usable=false`, `taxonomy_count=9`, artifact names are relative, no `/Users/` or `Downloads` leakage.
+- Artifact index inspection: `trade_usable=false`, `taxonomy_count=9`, artifact names are relative, no private absolute path leakage.
 - Artifact index py_compile: `python3 -m py_compile support/scripts/research/pa_agent_intake.py support/scripts/research/tests/test_pa_agent_intake.py` -> OK.
+- Consumer docs slice: `support/examples/README.md` now lists `pa_agent_intake/` and the opt-in profile; `support/examples/pa_agent_intake/README.md` documents zero-config, local-source opt-in, profile opt-in, and observation-only output contract.
+- Consumer docs privacy check: support examples README, PA Agent intake README, and this handoff contain no private absolute path markers; all point consumers to `artifact_index.json`.
+- Consumer docs smoke: `python3 -m unittest support.scripts.research.tests.test_pa_agent_intake` -> OK, 3 tests; `python3 support/scripts/research/pa_agent_intake.py --compact --output-dir /tmp/ict-engine-pa-agent-intake-doc-smoke` -> `status=ok trade_usable=false mode=embedded_defaults taxonomy=9 rules=7`.
 
 ## Artifact plan
 - Script: `support/scripts/research/pa_agent_intake.py`

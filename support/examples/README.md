@@ -10,11 +10,17 @@ Zero-config smoke fixtures:
 - `factor_signal_diagnostics/` — stdlib Python diagnostics and candidate-pack
   demo composition. Writes outputs to `/tmp/...` in examples and keeps
   `trade_usable=false` until downstream gates promote later.
+- `pa_agent_intake/` — PA Agent price-action taxonomy intake. The consumer entry
+  is the compact `artifact_index.json`; full bundles remain observation-only and
+  `trade_usable=false`.
 
 Hot-plug inputs:
 
 - `factor_hotplug/` — optional detector/GA feature configs selected by explicit
   path or `ICT_ENGINE_FACTOR_HOTPLUG_CONFIG`.
+- `pa_agent_intake_profile.example.json` — optional profile override for PA Agent
+  intake; select with `--profile` only when you want to reuse that ladder/gate
+  policy.
 - `provider_profiles/` — optional provider profile examples; not default runtime
   input.
 
