@@ -11,6 +11,7 @@ SCRIPT_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(SCRIPT_ROOT))
 
 import factor_candidate_pack as pack  # noqa: E402
+import factor_signal_diagnostics as diagnostics  # noqa: E402
 
 
 class FactorCandidatePackTests(unittest.TestCase):
@@ -1001,6 +1002,42 @@ Expected_regime: TrendTransition -> LiquidityReclaim -> family_d_liquidity_sweep
         self.assertEqual(expression["base_timeframe"], "1m")
         self.assertEqual(grid["trade_density_summary"]["aggregate_trade_count"], 40)
         self.assertEqual(transfer["covered_markets"], ["DEMO/USD"])
+
+    def test_main_demo_can_attach_demo_signal_diagnostics(self) -> None:
+        with TemporaryDirectory() as tmpdir:
+            root = Path(tmpdir)
+            diagnostics_path = root / "signal_diagnostics.json"
+            output_dir = root / "pack"
+
+            diag_exit = diagnostics.main(
+                ["--demo", "--output", str(diagnostics_path), "--compact"]
+            )
+            pack_exit = pack.main(
+                [
+                    "--demo",
+                    "--signal-diagnostics-json",
+                    str(diagnostics_path),
+                    "--output-dir",
+                    str(output_dir),
+                ]
+            )
+
+            self.assertEqual(diag_exit, 0)
+            self.assertEqual(pack_exit, 0)
+            grid = json.loads(
+                (output_dir / "factor_eval_grid_summary.json").read_text(
+                    encoding="utf-8"
+                )
+            )
+
+        evidence = grid["signal_diagnostics_evidence"]
+        self.assertEqual(
+            evidence["schema_version"],
+            "candidate-pack-signal-diagnostics-evidence/v1",
+        )
+        self.assertTrue(evidence["diagnostic_only"])
+        self.assertFalse(evidence["trade_usable"])
+        self.assertEqual(evidence["best_bucket"]["regime"], "Transition")
 
 
 if __name__ == "__main__":
