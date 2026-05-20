@@ -1,6 +1,6 @@
 # Factor Signal Diagnostics Hotplug Handoff TODO
 
-Updated: 2026-05-20 12:11 CST
+Updated: 2026-05-20 12:21 CST
 
 ## Route
 
@@ -13,6 +13,7 @@ Updated: 2026-05-20 12:11 CST
 - Added `support/scripts/research/factor_signal_diagnostics.py`.
 - Added tests in `support/scripts/research/tests/test_factor_signal_diagnostics.py`.
 - Added optional profile example in `support/examples/factor_signal_diagnostics/personal_hotplug_profile.example.json`.
+- Added consumer README/example at `support/examples/factor_signal_diagnostics/README.md`.
 
 ## Consumer Commands
 
@@ -81,9 +82,9 @@ timestamp,asset,horizon,regime,signal,forward_return
 - Converter tests cover `--rank-rows-csv` aggregate AQ rows and `--real-trades-jsonl` trade feedback rows.
 - Timeframe ladder test covers caller-selected 1m/5m/15m/30m/1h/4h/1d coverage/missing reporting.
 - Candidate-pack test covers `--signal-diagnostics-json` embedding into `factor_eval_grid_summary.json` without changing default behavior.
+- README commands are documentation-only and point outputs to `/tmp/...`.
 
 ## Next TODO
 
 1. Add a Rust CLI wrapper only after the dirty `src/main.rs` lane is clear, or route through an existing script command surface.
 2. If adopted downstream, persist artifacts under caller-supplied `/tmp/...` or explicit `--state-dir`, never repo root.
-3. Add a tiny README/example invocation for composing diagnostics JSON into a candidate pack if consumer docs need it.
