@@ -1,6 +1,6 @@
 # Factor Signal Diagnostics Hotplug Handoff TODO
 
-Updated: 2026-05-20
+Updated: 2026-05-20 12:11 CST
 
 ## Route
 
@@ -69,18 +69,21 @@ timestamp,asset,horizon,regime,signal,forward_return
 - Full JSON is optional via `--json` or `--output`.
 - `trade_usable` remains `false`; this is Gate 1/2 diagnostic evidence only.
 - When the profile includes `timeframe_ladder`, JSON includes `timeframe_ladder_summary` with covered/missing/passed horizons; no private ladder is assumed by default.
+- Candidate packs can opt in via `--signal-diagnostics-json`; the script writes `signal_diagnostics_evidence` into `factor_eval_grid_summary.json` as diagnostic-only metadata.
 - Promotion still requires downstream Pre-Bayes, BBN, CatBoost/path-ranker, execution-tree, feedback/update, and strict cost/density gates.
 
 ## Verification
 
 - `python3 -m unittest support/scripts/research/tests/test_factor_signal_diagnostics.py` -> OK, 6 tests.
+- `python3 -m unittest support/scripts/research/tests/test_factor_candidate_pack.py` -> OK, 11 tests.
 - `python3 support/scripts/research/factor_signal_diagnostics.py --demo --compact` -> one-line token-friendly smoke output.
 - `python3 support/scripts/research/factor_signal_diagnostics.py --demo --output /tmp/ict-engine-factor-signal-diagnostics/report.json --compact` -> JSON artifact written outside repo; `trade_usable=false` retained.
 - Converter tests cover `--rank-rows-csv` aggregate AQ rows and `--real-trades-jsonl` trade feedback rows.
 - Timeframe ladder test covers caller-selected 1m/5m/15m/30m/1h/4h/1d coverage/missing reporting.
+- Candidate-pack test covers `--signal-diagnostics-json` embedding into `factor_eval_grid_summary.json` without changing default behavior.
 
 ## Next TODO
 
 1. Add a Rust CLI wrapper only after the dirty `src/main.rs` lane is clear, or route through an existing script command surface.
-2. Feed best-bucket diagnostics into candidate-pack metadata as optional evidence, not as a hard default.
-3. If adopted downstream, persist artifacts under caller-supplied `/tmp/...` or explicit `--state-dir`, never repo root.
+2. If adopted downstream, persist artifacts under caller-supplied `/tmp/...` or explicit `--state-dir`, never repo root.
+3. Add a tiny README/example invocation for composing diagnostics JSON into a candidate pack if consumer docs need it.

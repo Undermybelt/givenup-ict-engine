@@ -30,6 +30,155 @@ def _market_status(metrics: dict[str, Any]) -> str:
     return "covered" if trade_count > 0 else "flat"
 
 
+def _branch_path_parts(branch_path: str) -> list[str]:
+    return [part.strip() for part in branch_path.split("->") if part.strip()]
+
+
+def _training_timeframe(base_timeframe: str | None, context_timeframes: list[Any]) -> str | None:
+    if not base_timeframe:
+        return None
+    if context_timeframes and str(context_timeframes[0]) != str(base_timeframe):
+        return f"{base_timeframe}_and_{context_timeframes[0]}"
+    return str(base_timeframe)
+
+
+def _timeframe_roles(candidate_spec: dict[str, Any], manifest: dict[str, Any]) -> dict[str, Any]:
+    base_timeframe = candidate_spec.get("base_timeframe") or manifest.get("timeframe")
+    context_timeframes = candidate_spec.get("context_timeframes") or []
+    return {
+        "training_timeframe": _training_timeframe(base_timeframe, context_timeframes),
+        "neutralization_timeframe": (
+            str(context_timeframes[1])
+            if len(context_timeframes) >= 3
+            else (str(context_timeframes[0]) if context_timeframes else None)
+        ),
+        "confirmation_timeframe": (
+            str(context_timeframes[-1]) if context_timeframes else None
+        ),
+    }
+
+
+def _branch_path_contract(
+    candidate_spec: dict[str, Any],
+    manifest: dict[str, Any],
+) -> dict[str, Any] | None:
+    explicit = candidate_spec.get("branch_path_contract")
+    if isinstance(explicit, dict):
+        return explicit
+    branch_path = candidate_spec.get("expected_regime")
+    if not isinstance(branch_path, str) or "->" not in branch_path:
+        return None
+    parts = _branch_path_parts(branch_path)
+    if len(parts) < 4:
+        return None
+    roles = _timeframe_roles(candidate_spec, manifest)
+    contract = {
+        "main_regime": parts[0],
+        "sub_regime": parts[1],
+        "sub_sub_regime_or_profit_factor": parts[2],
+        "profit_factor": parts[3],
+        "regime_profit_branch_path": branch_path,
+    }
+    for key, value in roles.items():
+        if value:
+            contract[key] = value
+    return contract
+
+
+def _timeframe_ladder_evidence(
+    candidate_spec: dict[str, Any],
+    manifest: dict[str, Any],
+) -> dict[str, Any] | None:
+    explicit = candidate_spec.get("timeframe_ladder_evidence")
+    if isinstance(explicit, dict):
+        return explicit
+    resonance = candidate_spec.get("resonance_summary")
+    branch_path = candidate_spec.get("expected_regime")
+    if not isinstance(resonance, dict) or not isinstance(branch_path, str):
+        return None
+    roles = _timeframe_roles(candidate_spec, manifest)
+    return {
+        "schema_version": "board-b-factor-refinement-timeframe-ladder/v1",
+        "branch_path": branch_path,
+        **{key: value for key, value in roles.items() if value},
+        "resonance_summary": resonance,
+        "promotion_state": candidate_spec.get("promotion_state"),
+        "promotion_blocker": candidate_spec.get("promotion_blocker"),
+    }
+
+
+def _timeframe_ladder_transfer(
+    candidate_spec: dict[str, Any],
+) -> dict[str, Any] | None:
+    explicit = candidate_spec.get("timeframe_ladder_transfer")
+    if isinstance(explicit, dict):
+        return explicit
+    resonance = candidate_spec.get("resonance_summary")
+    if not isinstance(resonance, dict):
+        return None
+    by_timeframe = resonance.get("resonance_by_timeframe") or {}
+    confirmation = by_timeframe.get("4h") or by_timeframe.get("confirmation") or {}
+    confirmation_decision = (
+        confirmation.get("decision") if isinstance(confirmation, dict) else None
+    )
+    high_tf_result = (
+        f"{confirmation_decision}_not_promotion"
+        if confirmation_decision
+        else "not_promoted"
+    )
+    return {
+        "small_cycle_decision": (
+            by_timeframe.get("5m", {}).get("decision")
+            if isinstance(by_timeframe.get("5m"), dict)
+            else None
+        ),
+        "medium_neutralization_result": (
+            by_timeframe.get("1h", {}).get("decision")
+            if isinstance(by_timeframe.get("1h"), dict)
+            else None
+        ),
+        "high_timeframe_confirmation_result": high_tf_result,
+        "promotion_allowed": False,
+        "trade_usable": False,
+        "promotion_blocker": candidate_spec.get("promotion_blocker"),
+    }
+
+
+def _signal_diagnostics_evidence(candidate_spec: dict[str, Any]) -> dict[str, Any] | None:
+    explicit = candidate_spec.get("signal_diagnostics_evidence")
+    if isinstance(explicit, dict):
+        return explicit
+    return None
+
+
+def _signal_diagnostics_metadata(candidate_spec: dict[str, Any]) -> dict[str, Any] | None:
+    evidence = _signal_diagnostics_evidence(candidate_spec)
+    if not evidence:
+        return None
+    best_bucket = evidence.get("best_bucket") or {}
+    ladder = evidence.get("timeframe_ladder_summary") or {}
+    return {
+        "schema_version": "candidate-pack-signal-diagnostics-evidence/v1",
+        "source_schema_version": evidence.get("schema_version"),
+        "diagnostic_only": True,
+        "promotion_allowed": bool(evidence.get("promotion_allowed")),
+        "trade_usable": bool(evidence.get("trade_usable")),
+        "trade_usable_reason": evidence.get("trade_usable_reason"),
+        "best_bucket": {
+            "horizon": best_bucket.get("horizon"),
+            "regime": best_bucket.get("regime"),
+            "n": best_bucket.get("n"),
+            "t_stat": best_bucket.get("t_stat"),
+            "ic_spearman": best_bucket.get("ic_spearman"),
+            "mean_signed_return_bps_after_cost": best_bucket.get(
+                "mean_signed_return_bps_after_cost"
+            ),
+            "candidate_passed_gate": bool(best_bucket.get("candidate_passed_gate")),
+        },
+        "timeframe_ladder_summary": ladder if ladder else None,
+    }
+
+
 def _win_rate_pct(value: Any) -> float | None:
     if value is None:
         return None
@@ -337,6 +486,7 @@ def _candidate_expression(
 ) -> dict[str, Any]:
     metadata = strategy.get("metadata", {})
     operator_set = candidate_spec.get("operator_set") or metadata.get("factors_used", [])
+    branch_path_contract = _branch_path_contract(candidate_spec, manifest)
     return {
         "schema_version": "factor-expression/v1",
         "candidate_id": candidate_spec.get("candidate_id"),
@@ -360,6 +510,7 @@ def _candidate_expression(
         ),
         "base_timeframe": candidate_spec.get("base_timeframe", manifest.get("timeframe")),
         "context_timeframes": candidate_spec.get("context_timeframes", []),
+        "branch_path_contract": branch_path_contract,
         "regime_role": candidate_spec.get("regime_role", "mixed"),
         "evidence_window": candidate_spec.get("evidence_window"),
         "strategy_source": candidate_spec.get("strategy_source"),
@@ -419,12 +570,16 @@ def _eval_grid_summary(
             "notes": metrics.get("notes", []),
         }
     aggregate_trade_count = int(aggregate.get("trade_count", 0) or 0)
+    timeframe_ladder_evidence = _timeframe_ladder_evidence(candidate_spec, manifest)
+    signal_diagnostics = _signal_diagnostics_metadata(candidate_spec)
     return {
         "schema_version": "factor-eval-grid-summary/v1",
         "selected_strategy": strategy.get("name"),
         "timeframe": manifest.get("timeframe"),
         "candidate_status": candidate_spec.get("status"),
         "promotion_state": candidate_spec.get("promotion_state"),
+        "timeframe_ladder_evidence": timeframe_ladder_evidence,
+        "signal_diagnostics_evidence": signal_diagnostics,
         "breadth_matrix": breadth_matrix,
         "trade_density_summary": {
             "aggregate_trade_count": aggregate_trade_count,
@@ -526,6 +681,8 @@ def _transfer_score(
         "average_trade_count": round(mean(trade_counts), 6) if trade_counts else 0.0,
         "timeframe": manifest.get("timeframe"),
         "market_evidence": market_evidence,
+        "branch_path_contract": _branch_path_contract(candidate_spec, manifest),
+        "timeframe_ladder_transfer": _timeframe_ladder_transfer(candidate_spec),
         "evidence_source": (
             "manifest+candidate_spec"
             if candidate_spec.get("cross_market_metrics")
@@ -570,6 +727,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     source_group.add_argument("--freqtrade-backtest-zip")
     parser.add_argument("--strategy-name")
     parser.add_argument("--candidate-spec-json")
+    parser.add_argument("--signal-diagnostics-json")
     parser.add_argument("--autoresearch-status-json")
     parser.add_argument("--emit-strategy-library-json")
     parser.add_argument("--repo-url", default="")
@@ -592,6 +750,11 @@ def main(argv: list[str] | None = None) -> int:
     candidate_spec = (
         _load_json(Path(args.candidate_spec_json)) if args.candidate_spec_json else {}
     )
+    if args.signal_diagnostics_json:
+        candidate_spec = {
+            **candidate_spec,
+            "signal_diagnostics_evidence": _load_json(Path(args.signal_diagnostics_json)),
+        }
     autoresearch_status = (
         _load_json(Path(args.autoresearch_status_json))
         if args.autoresearch_status_json

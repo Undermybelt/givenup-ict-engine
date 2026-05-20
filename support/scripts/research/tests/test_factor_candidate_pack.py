@@ -227,6 +227,115 @@ Uses MTF: yes
         self.assertIn("GLD/USD", bundle["transfer_score"]["covered_markets"])
         self.assertEqual(bundle["transfer_score"]["markets_without_trade_counts"], [])
 
+    def test_build_candidate_pack_projects_regime_ladder_contract_fields(self) -> None:
+        manifest = {
+            "manifest_version": "1.0",
+            "timeframe": "15m_with_4h_confirmation",
+            "strategies": [
+                {
+                    "name": "SweepReclaim15mWide4hConfirm",
+                    "status": "ok",
+                    "metadata": {
+                        "mutation_id": "sweep-ladder",
+                        "base_factor": "sweep_quality",
+                        "hypothesis": "15m sweep reclaim with 4h confirmation",
+                        "paradigm": "regime-rooted liquidity sweep",
+                        "expected_regime": "Transition",
+                        "factors_used": ["liquidity_sweep_reclaim"],
+                    },
+                    "validation_metrics": {
+                        "sharpe": 0.2452,
+                        "trade_count": 62,
+                        "win_rate_pct": 48.3871,
+                        "profit_factor": 1.7157,
+                        "total_profit_pct": 8.67,
+                        "max_drawdown_pct": -1.9231,
+                    },
+                    "per_pair_metrics": {
+                        "NQ/USD": {
+                            "sharpe": 0.2452,
+                            "trade_count": 62,
+                            "win_rate_pct": 48.3871,
+                            "profit_factor": 1.7157,
+                        }
+                    },
+                }
+            ],
+        }
+        branch_path = (
+            "Transition -> LiquiditySweep -> sweep_reclaim_small_cycle -> "
+            "liquidity_sweep_reclaim_15m_wide_v1"
+        )
+        candidate_spec = {
+            "candidate_id": "liquidity_sweep_reclaim_ladder_v1",
+            "family": "sweep_quality",
+            "base_timeframe": "15m",
+            "context_timeframes": ["5m", "1h", "4h"],
+            "expected_regime": branch_path,
+            "resonance_summary": {
+                "base_timeframe": "15m",
+                "context_stack": ["5m", "1h", "4h"],
+                "resonance_by_timeframe": {
+                    "5m": {"decision": "incubate", "trade_count": 100},
+                    "15m": {"decision": "keep_small_cycle", "trade_count": 62},
+                    "1h": {"decision": "lift_to_confirmation", "trade_count": 18},
+                    "4h": {"decision": "handoff_confirmed", "trade_count": 62},
+                },
+            },
+        }
+
+        bundle = pack.build_factor_candidate_pack(
+            manifest=manifest,
+            strategy_name="SweepReclaim15mWide4hConfirm",
+            candidate_spec=candidate_spec,
+        )
+
+        self.assertEqual(
+            bundle["factor_expression"]["branch_path_contract"][
+                "regime_profit_branch_path"
+            ],
+            branch_path,
+        )
+        self.assertEqual(
+            bundle["factor_expression"]["branch_path_contract"]["main_regime"],
+            "Transition",
+        )
+        self.assertEqual(
+            bundle["factor_expression"]["branch_path_contract"]["profit_factor"],
+            "liquidity_sweep_reclaim_15m_wide_v1",
+        )
+        self.assertEqual(
+            bundle["factor_expression"]["branch_path_contract"]["training_timeframe"],
+            "15m_and_5m",
+        )
+        self.assertEqual(
+            bundle["factor_eval_grid_summary"]["timeframe_ladder_evidence"][
+                "branch_path"
+            ],
+            branch_path,
+        )
+        self.assertEqual(
+            bundle["factor_eval_grid_summary"]["timeframe_ladder_evidence"][
+                "neutralization_timeframe"
+            ],
+            "1h",
+        )
+        self.assertEqual(
+            bundle["transfer_score"]["branch_path_contract"][
+                "regime_profit_branch_path"
+            ],
+            branch_path,
+        )
+        self.assertEqual(
+            bundle["transfer_score"]["timeframe_ladder_transfer"][
+                "high_timeframe_confirmation_result"
+            ],
+            "handoff_confirmed_not_promotion",
+        )
+        self.assertFalse(
+            bundle["transfer_score"]["timeframe_ladder_transfer"]["promotion_allowed"]
+        )
+
     def test_build_candidate_pack_falls_back_to_manifest_hypothesis(self) -> None:
         manifest = {
             "manifest_version": "1.0",
@@ -779,6 +888,96 @@ Expected_regime: TrendTransition -> LiquidityReclaim -> family_d_liquidity_sweep
             self.assertEqual(manifest["manifest_version"], "1.0")
             self.assertEqual(manifest["auto_quant_repo_url"], "local-auto-quant")
             self.assertEqual(manifest["strategies"][0]["name"], "TomacNQ_RegimeFVGRetrace")
+
+    def test_main_accepts_signal_diagnostics_evidence(self) -> None:
+        manifest = {
+            "manifest_version": "1.0",
+            "timeframe": "1m",
+            "strategies": [
+                {
+                    "name": "DiagnosticAware",
+                    "status": "ok",
+                    "metadata": {
+                        "strategy": "DiagnosticAware",
+                        "mutation_id": "diag-001",
+                        "base_factor": "vwap_reclaim",
+                        "hypothesis": "diagnostic evidence intake",
+                        "paradigm": "transition",
+                        "expected_regime": "Transition",
+                        "factors_used": ["vwap", "rvol"],
+                    },
+                    "validation_metrics": {"sharpe": 1.0, "trade_count": 40},
+                    "per_pair_metrics": {
+                        "DEMO/USD": {"sharpe": 1.0, "trade_count": 40}
+                    },
+                }
+            ],
+        }
+        signal_diagnostics = {
+            "schema_version": "ict-engine-factor-signal-diagnostics/v1",
+            "promotion_allowed": True,
+            "trade_usable": False,
+            "trade_usable_reason": "diagnostic_only_hotplug; downstream gates still required",
+            "best_bucket": {
+                "horizon": "1m",
+                "regime": "Transition",
+                "n": 40,
+                "t_stat": 3.2,
+                "ic_spearman": 0.12,
+                "mean_signed_return_bps_after_cost": 4.5,
+                "candidate_passed_gate": True,
+            },
+            "timeframe_ladder_summary": {
+                "expected_ladder": ["1m", "5m", "15m", "30m", "1h", "4h", "1d"],
+                "covered_timeframes": ["1m", "5m"],
+                "missing_timeframes": ["15m", "30m", "1h", "4h", "1d"],
+                "passed_timeframes": ["1m"],
+                "all_expected_timeframes_covered": False,
+                "all_expected_timeframes_passed": False,
+            },
+        }
+
+        with TemporaryDirectory() as tmpdir:
+            root = Path(tmpdir)
+            manifest_path = root / "manifest.json"
+            diagnostics_path = root / "signal_diagnostics.json"
+            output_dir = root / "out"
+            manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
+            diagnostics_path.write_text(json.dumps(signal_diagnostics), encoding="utf-8")
+
+            exit_code = pack.main(
+                [
+                    "--manifest-json",
+                    str(manifest_path),
+                    "--strategy-name",
+                    "DiagnosticAware",
+                    "--signal-diagnostics-json",
+                    str(diagnostics_path),
+                    "--output-dir",
+                    str(output_dir),
+                ]
+            )
+
+            self.assertEqual(exit_code, 0)
+            grid = json.loads(
+                (output_dir / "factor_eval_grid_summary.json").read_text(
+                    encoding="utf-8"
+                )
+            )
+
+        evidence = grid["signal_diagnostics_evidence"]
+        self.assertEqual(
+            evidence["schema_version"],
+            "candidate-pack-signal-diagnostics-evidence/v1",
+        )
+        self.assertTrue(evidence["diagnostic_only"])
+        self.assertTrue(evidence["promotion_allowed"])
+        self.assertFalse(evidence["trade_usable"])
+        self.assertEqual(evidence["best_bucket"]["horizon"], "1m")
+        self.assertEqual(
+            evidence["timeframe_ladder_summary"]["missing_timeframes"],
+            ["15m", "30m", "1h", "4h", "1d"],
+        )
 
 
 if __name__ == "__main__":
