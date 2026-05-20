@@ -31,6 +31,9 @@
 - [x] Add consumer discovery docs pointing to `artifact_index.json`.
 - [x] Verify docs have no private path leak and commands still smoke.
 - [x] Commit consumer-doc slice if verification passes.
+- [x] Add the PA Agent intake consumer entry to the top-level docs map.
+- [x] Verify top-level docs map privacy and focused intake smoke.
+- [x] Commit docs-map slice if verification passes.
 
 ## Verification log
 - `python3 -m unittest support.scripts.research.tests.test_pa_agent_intake` -> OK, 3 tests.
@@ -47,6 +50,11 @@
 - Consumer docs slice: `support/examples/README.md` now lists `pa_agent_intake/` and the opt-in profile; `support/examples/pa_agent_intake/README.md` documents zero-config, local-source opt-in, profile opt-in, and observation-only output contract.
 - Consumer docs privacy check: support examples README, PA Agent intake README, and this handoff contain no private absolute path markers; all point consumers to `artifact_index.json`.
 - Consumer docs smoke: `python3 -m unittest support.scripts.research.tests.test_pa_agent_intake` -> OK, 3 tests; `python3 support/scripts/research/pa_agent_intake.py --compact --output-dir /tmp/ict-engine-pa-agent-intake-doc-smoke` -> `status=ok trade_usable=false mode=embedded_defaults taxonomy=9 rules=7`.
+- Docs map slice: `support/docs/README.md` now links consumers to the PA Agent intake README and states the `artifact_index.json` / `trade_usable=false` boundary.
+- Docs map privacy check: `rg -n '/Users/|Downloads' support/docs/README.md support/docs/plans/2026-05-20-pa-agent-intake-handoff-todo.md support/examples/pa_agent_intake/README.md support/examples/README.md || true` -> no matches.
+- Docs map smoke: `python3 -m unittest support.scripts.research.tests.test_pa_agent_intake` -> OK, 3 tests; `python3 support/scripts/research/pa_agent_intake.py --compact --output-dir /tmp/ict-engine-pa-agent-intake-docs-map-smoke` -> `status=ok trade_usable=false mode=embedded_defaults taxonomy=9 rules=7`.
+- Docs map index inspection: generated `artifact_index.json` has `trade_usable=false`, relative artifact names only, and no `/Users/` or `Downloads` leakage.
+- Docs map diff check: `git diff --check -- support/docs/README.md support/docs/plans/2026-05-20-pa-agent-intake-handoff-todo.md` -> OK.
 
 ## Artifact plan
 - Script: `support/scripts/research/pa_agent_intake.py`

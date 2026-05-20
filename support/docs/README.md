@@ -51,6 +51,10 @@ Public and contributor-facing:
 - `support/docs/environment-variables.md`: env var precedence and meanings.
 - `support/docs/state-directory-lifecycle.md`: state directory behavior and
   comparability guidance.
+- `support/examples/pa_agent_intake/README.md`: optional PA Agent price-action
+  intake. Consumers should read generated `artifact_index.json` first; generated
+  bundles stay observation-only and `trade_usable=false` until ict-engine gates
+  promote them.
 
 Internal and operator-facing:
 
