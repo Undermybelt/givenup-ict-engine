@@ -39,6 +39,24 @@ python3 support/scripts/research/factor_signal_diagnostics.py \
   --compact
 ```
 
+Auto-Quant aggregate rank rows:
+
+```bash
+python3 support/scripts/research/factor_signal_diagnostics.py \
+  --rank-rows-csv /tmp/rank_rows.csv \
+  --cost-bps-side 2 \
+  --compact
+```
+
+Real/simulated trade feedback rows:
+
+```bash
+python3 support/scripts/research/factor_signal_diagnostics.py \
+  --real-trades-jsonl /tmp/real_trades.jsonl \
+  --cost-bps-side 2 \
+  --compact
+```
+
 Input CSV contract:
 
 ```text
@@ -54,14 +72,14 @@ timestamp,asset,horizon,regime,signal,forward_return
 
 ## Verification
 
-- `python3 -m unittest support/scripts/research/tests/test_factor_signal_diagnostics.py` -> OK, 3 tests.
+- `python3 -m unittest support/scripts/research/tests/test_factor_signal_diagnostics.py` -> OK, 5 tests.
 - `python3 support/scripts/research/factor_signal_diagnostics.py --demo --compact` -> one-line token-friendly smoke output.
 - `python3 support/scripts/research/factor_signal_diagnostics.py --demo --output /tmp/ict-engine-factor-signal-diagnostics/report.json --compact` -> JSON artifact written outside repo; `trade_usable=false` retained.
+- Converter tests cover `--rank-rows-csv` aggregate AQ rows and `--real-trades-jsonl` trade feedback rows.
 
 ## Next TODO
 
 1. Add a Rust CLI wrapper only after the dirty `src/main.rs` lane is clear, or route through an existing script command surface.
-2. Add a converter from Auto-Quant rank rows / real-trade rows into the `timestamp,asset,horizon,regime,signal,forward_return` panel.
-3. Feed best-bucket diagnostics into candidate-pack metadata as optional evidence, not as a hard default.
-4. Extend diagnostics to compare 1m/5m/15m/30m/1h/4h/1d ladders from one profile without loading private user paths by default.
-5. If adopted downstream, persist artifacts under caller-supplied `/tmp/...` or explicit `--state-dir`, never repo root.
+2. Feed best-bucket diagnostics into candidate-pack metadata as optional evidence, not as a hard default.
+3. Extend diagnostics to compare 1m/5m/15m/30m/1h/4h/1d ladders from one profile without loading private user paths by default.
+4. If adopted downstream, persist artifacts under caller-supplied `/tmp/...` or explicit `--state-dir`, never repo root.

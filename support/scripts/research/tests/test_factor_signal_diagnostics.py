@@ -71,6 +71,44 @@ class FactorSignalDiagnosticsTests(unittest.TestCase):
             self.assertEqual(payload["rows"], 40)
             self.assertFalse((Path(tmpdir) / "state").exists())
 
+    def test_rank_rows_csv_converts_aggregate_auto_quant_rows(self) -> None:
+        with TemporaryDirectory() as tmpdir:
+            csv_path = Path(tmpdir) / "rank_rows.csv"
+            csv_path.write_text(
+                "label,trade_count,2bps_per_side_total_profit_pct,branch_path\n"
+                "demo,4,0.40,FUTURES -> equity_index -> NQ -> 1m -> Transition -> Sweep -> demo_factor\n"
+            )
+
+            rows = diag._read_rank_rows_csv(str(csv_path))
+            report = diag.build_diagnostics(rows, cost_bps_side=0.0)
+
+            self.assertEqual(len(rows), 4)
+            self.assertEqual(rows[0].horizon, "1m")
+            self.assertEqual(rows[0].regime, "Transition")
+            self.assertGreater(report["best_bucket"]["mean_signed_return_bps_after_cost"], 0.0)
+
+    def test_real_trades_jsonl_converts_trade_rows(self) -> None:
+        with TemporaryDirectory() as tmpdir:
+            jsonl_path = Path(tmpdir) / "trades.jsonl"
+            jsonl_path.write_text(
+                json.dumps(
+                    {
+                        "symbol": "NQ",
+                        "side": "long",
+                        "pnl_bps": 12,
+                        "regime_profit_branch_path": "FUTURES -> equity_index -> NQ -> 5m -> Range -> Reclaim -> demo_factor",
+                    }
+                )
+                + "\n"
+            )
+
+            rows = diag._read_real_trades_jsonl(str(jsonl_path))
+
+            self.assertEqual(len(rows), 1)
+            self.assertEqual(rows[0].horizon, "5m")
+            self.assertEqual(rows[0].regime, "Range")
+            self.assertAlmostEqual(rows[0].forward_return, 0.0012)
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -87,6 +87,123 @@ def _read_rows(path: str | None, demo: bool = False) -> list[DiagnosticRow]:
     return rows
 
 
+def _branch_parts(branch_path: str | None) -> list[str]:
+    return [part.strip() for part in (branch_path or "").split("->") if part.strip()]
+
+
+def _timeframe_from_branch(branch_path: str | None) -> str:
+    for part in _branch_parts(branch_path):
+        lowered = part.lower()
+        if lowered.endswith(("m", "h", "d")) and lowered[:-1].isdigit():
+            return lowered
+    return "1"
+
+
+def _regime_from_branch(branch_path: str | None) -> str:
+    parts = _branch_parts(branch_path)
+    for idx, part in enumerate(parts):
+        lowered = part.lower()
+        if lowered.endswith(("m", "h", "d")) and lowered[:-1].isdigit():
+            return parts[idx + 1] if idx + 1 < len(parts) else "root_agnostic"
+    return parts[0] if parts else "root_agnostic"
+
+
+def _first_present(record: dict[str, Any], keys: Iterable[str]) -> Any:
+    for key in keys:
+        value = record.get(key)
+        if value not in (None, ""):
+            return value
+    return None
+
+
+def _read_rank_rows_csv(path: str) -> list[DiagnosticRow]:
+    rows: list[DiagnosticRow] = []
+    with Path(path).open(newline="") as handle:
+        for idx, record in enumerate(csv.DictReader(handle)):
+            trade_count = int(float(_first_present(record, ["trade_count", "trades", "n"]) or 0))
+            if trade_count <= 0:
+                continue
+            total_pct = _safe_float(
+                _first_present(
+                    record,
+                    [
+                        "2bps_per_side_total_profit_pct",
+                        "1bps_per_side_total_profit_pct",
+                        "raw_total_profit_pct",
+                        "total_profit_pct",
+                        "profit_total_pct",
+                    ],
+                ),
+                "rank_rows_total_profit_pct",
+            )
+            branch_path = str(_first_present(record, ["branch_path", "regime_profit_branch_path"]) or "")
+            per_trade_return = (total_pct / 100.0) / trade_count
+            signal = 1.0 if per_trade_return >= 0 else -1.0
+            forward_return = abs(per_trade_return)
+            for trade_idx in range(trade_count):
+                rows.append(
+                    DiagnosticRow(
+                        timestamp=f"rank-row:{idx}:{trade_idx}",
+                        asset=str(_first_present(record, ["asset", "symbol", "label"]) or "rank_row"),
+                        horizon=str(_first_present(record, ["horizon", "timeframe"]) or _timeframe_from_branch(branch_path)),
+                        regime=_regime_from_branch(branch_path),
+                        signal=signal,
+                        forward_return=forward_return,
+                    )
+                )
+    return rows
+
+
+def _direction_to_signal(value: Any) -> float:
+    text = str(value or "").lower()
+    if any(token in text for token in ["short", "sell", "bear", "down"]):
+        return -1.0
+    return 1.0
+
+
+def _return_from_trade(record: dict[str, Any]) -> float | None:
+    value = _first_present(record, ["forward_return", "realized_return", "return", "return_pct"])
+    if value is not None:
+        out = _safe_float(value, "trade_return")
+        return out / 100.0 if abs(out) > 1.0 else out
+    bps = _first_present(record, ["pnl_bps", "realized_pnl_bps", "outcome_pnl_bps"])
+    if bps is not None:
+        return _safe_float(bps, "trade_pnl_bps") / 10_000.0
+    pct = _first_present(record, ["pnl_pct", "realized_pnl_pct", "profit_pct"])
+    if pct is not None:
+        return _safe_float(pct, "trade_pnl_pct") / 100.0
+    return None
+
+
+def _read_real_trades_jsonl(path: str) -> list[DiagnosticRow]:
+    rows: list[DiagnosticRow] = []
+    with Path(path).open() as handle:
+        for idx, line in enumerate(handle):
+            if not line.strip():
+                continue
+            record = json.loads(line)
+            feedback = record.get("structural_feedback") if isinstance(record.get("structural_feedback"), dict) else {}
+            branch_path = str(
+                _first_present(record, ["regime_profit_branch_path", "branch_path"])
+                or feedback.get("path_id")
+                or ""
+            )
+            forward_return = _return_from_trade(record)
+            if forward_return is None:
+                continue
+            rows.append(
+                DiagnosticRow(
+                    timestamp=str(_first_present(record, ["timestamp", "opened_at", "closed_at"]) or f"real-trade:{idx}"),
+                    asset=str(_first_present(record, ["asset", "symbol", "instrument"]) or "real_trade"),
+                    horizon=str(_first_present(record, ["horizon", "timeframe"]) or _timeframe_from_branch(branch_path)),
+                    regime=_regime_from_branch(branch_path),
+                    signal=_direction_to_signal(_first_present(record, ["direction", "side", "action"])),
+                    forward_return=forward_return,
+                )
+            )
+    return rows
+
+
 def _rank(values: list[float]) -> list[float]:
     indexed = sorted(enumerate(values), key=lambda item: item[1])
     ranks = [0.0] * len(values)
@@ -254,6 +371,8 @@ def _compact_line(report: dict[str, Any]) -> str:
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Zero-config factor signal diagnostics")
     parser.add_argument("--input", help="CSV with timestamp,asset,horizon,regime,signal,forward_return")
+    parser.add_argument("--rank-rows-csv", help="Optional Auto-Quant rank_rows.csv aggregate input")
+    parser.add_argument("--real-trades-jsonl", help="Optional real/simulated trade JSONL input")
     parser.add_argument("--profile", help="Optional hotplug profile JSON")
     parser.add_argument("--demo", action="store_true", help="Run bundled zero-config demo rows")
     parser.add_argument("--cost-bps-side", type=float, default=1.0)
@@ -263,7 +382,15 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
 
     profile = _load_profile(args.profile)
-    rows = _read_rows(args.input, args.demo)
+    input_modes = [bool(args.input), bool(args.rank_rows_csv), bool(args.real_trades_jsonl), bool(args.demo)]
+    if sum(input_modes) != 1:
+        raise ValueError("choose exactly one of --input, --rank-rows-csv, --real-trades-jsonl, or --demo")
+    if args.rank_rows_csv:
+        rows = _read_rank_rows_csv(args.rank_rows_csv)
+    elif args.real_trades_jsonl:
+        rows = _read_real_trades_jsonl(args.real_trades_jsonl)
+    else:
+        rows = _read_rows(args.input, args.demo)
     report = build_diagnostics(rows, cost_bps_side=args.cost_bps_side, profile=profile)
 
     if args.output:
