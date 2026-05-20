@@ -1,0 +1,23 @@
+{
+  "profile_version": "ict-engine-factor-signal-diagnostics-profile/v1",
+  "description": "Optional operator profile. Copy outside the repo and edit with personal markets/data roots if desired; this file is not loaded by default.",
+  "market": "FUTURES",
+  "product": "index",
+  "symbol": "NQ",
+  "timeframe": "1m",
+  "root_regime": "Transition",
+  "regime_profit_branch_path": "FUTURES -> index -> NQ -> 1m -> Transition -> LiquiditySweep -> example_profit_factor",
+  "timeframe_ladder": ["1m", "5m", "15m", "30m", "1h", "4h", "1d"],
+  "thresholds": {
+    "min_n": 30,
+    "min_abs_t_stat": 2.0,
+    "min_abs_ic_spearman": 0.03,
+    "min_cost_stressed_mean_return_bps": 0.0,
+    "min_root_delta_bps": 0.0
+  },
+  "privacy": {
+    "loads_by_default": false,
+    "contains_private_paths": false,
+    "recommended_private_copy": "/tmp/ict-engine-factor-signal-profile.json"
+  }
+}
