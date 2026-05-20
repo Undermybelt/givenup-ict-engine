@@ -109,6 +109,33 @@ class FactorSignalDiagnosticsTests(unittest.TestCase):
             self.assertEqual(rows[0].regime, "Range")
             self.assertAlmostEqual(rows[0].forward_return, 0.0012)
 
+    def test_profile_timeframe_ladder_marks_covered_and_missing_horizons(self) -> None:
+        rows = []
+        for horizon in ["1m", "5m"]:
+            for idx in range(32):
+                rows.append(
+                    diag.DiagnosticRow(
+                        timestamp=f"{horizon}:{idx}",
+                        asset="NQ",
+                        horizon=horizon,
+                        regime="Transition",
+                        signal=1.0 if idx % 2 == 0 else -1.0,
+                        forward_return=0.001 if idx % 2 == 0 else -0.001,
+                    )
+                )
+        profile = {
+            "timeframe_ladder": ["1m", "5m", "15m", "30m", "1h", "4h", "1d"],
+            "thresholds": {"min_n": 30},
+        }
+
+        report = diag.build_diagnostics(rows, cost_bps_side=0.0, profile=profile)
+        ladder = report["timeframe_ladder_summary"]
+
+        self.assertEqual(ladder["covered_timeframes"], ["1m", "5m"])
+        self.assertEqual(ladder["missing_timeframes"], ["15m", "30m", "1h", "4h", "1d"])
+        self.assertEqual(ladder["passed_timeframes"], ["1m", "5m"])
+        self.assertFalse(ladder["all_expected_timeframes_covered"])
+
 
 if __name__ == "__main__":
     unittest.main()

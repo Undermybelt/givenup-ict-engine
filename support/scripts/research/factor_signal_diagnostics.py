@@ -293,6 +293,57 @@ def _passes(metrics: dict[str, Any], thresholds: dict[str, Any], root_delta_bps:
     return all(checks)
 
 
+def _best_bucket_for_horizon(buckets: list[dict[str, Any]], horizon: str) -> dict[str, Any] | None:
+    candidates = [bucket for bucket in buckets if bucket.get("horizon") == horizon]
+    if not candidates:
+        return None
+    return max(
+        candidates,
+        key=lambda item: (
+            item["candidate_passed_gate"],
+            item.get("mean_signed_return_bps_after_cost") or -math.inf,
+            abs(item.get("t_stat") or 0.0),
+        ),
+    )
+
+
+def _timeframe_ladder_summary(
+    buckets: list[dict[str, Any]], profile: dict[str, Any]
+) -> dict[str, Any] | None:
+    ladder = [str(item) for item in profile.get("timeframe_ladder", []) if str(item)]
+    if not ladder:
+        return None
+    best_by_horizon = []
+    for horizon in ladder:
+        best = _best_bucket_for_horizon(buckets, horizon)
+        best_by_horizon.append(
+            {
+                "horizon": horizon,
+                "covered": best is not None,
+                "best_regime": best.get("regime") if best else None,
+                "n": best.get("n") if best else 0,
+                "candidate_passed_gate": bool(best and best.get("candidate_passed_gate")),
+                "mean_signed_return_bps_after_cost": (
+                    best.get("mean_signed_return_bps_after_cost") if best else None
+                ),
+                "t_stat": best.get("t_stat") if best else None,
+                "ic_spearman": best.get("ic_spearman") if best else None,
+            }
+        )
+    covered = [item["horizon"] for item in best_by_horizon if item["covered"]]
+    passed = [item["horizon"] for item in best_by_horizon if item["candidate_passed_gate"]]
+    return {
+        "schema_version": "ict-engine-timeframe-ladder-diagnostics/v1",
+        "expected_ladder": ladder,
+        "covered_timeframes": covered,
+        "missing_timeframes": [horizon for horizon in ladder if horizon not in covered],
+        "passed_timeframes": passed,
+        "best_by_horizon": best_by_horizon,
+        "all_expected_timeframes_covered": len(covered) == len(ladder),
+        "all_expected_timeframes_passed": len(passed) == len(ladder),
+    }
+
+
 def build_diagnostics(
     rows: list[DiagnosticRow],
     *,
@@ -339,6 +390,7 @@ def build_diagnostics(
         ),
         default=None,
     )
+    ladder_summary = _timeframe_ladder_summary(buckets, profile)
     return {
         "schema_version": "ict-engine-factor-signal-diagnostics/v1",
         "source_inspiration": "QuantInvestStrats/qis.perfstats.signal_diagnostics",
@@ -350,6 +402,7 @@ def build_diagnostics(
         "rows": len(rows),
         "bucket_count": len(buckets),
         "buckets": buckets,
+        "timeframe_ladder_summary": ladder_summary,
         "best_bucket": best,
         "promotion_allowed": bool(best and best["candidate_passed_gate"]),
         "trade_usable": False,
