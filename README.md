@@ -154,6 +154,7 @@ cargo run -- policy-training-status --symbol DEMO --state-dir /tmp/ict-engine-fi
 - 🔓 no private provider profile required
 - 🚫 no maintainer-local dataset reused by default
 - 🌐 zero-config falls back to Yahoo/yfinance-compatible paths when live data is needed
+- 🧩 pandas-datareader is available only as an explicit hot-plug bridge for FRED macro, Fama-French style factors, Stooq/Yahoo reference data, and corporate-action checks
 - 🔌 IBKR / TradingView-MCP / crypto adapters / local trainer artifacts → **opt-in**
 
 ---
@@ -306,7 +307,7 @@ cargo run -- workflow-status --symbol DEMO --state-dir /tmp/ict-engine-first-run
 | Path | Purpose |
 |---|---|
 | `src/` | 🦀 Rust CLI, analysis, orchestration, provider, training surfaces |
-| `support/examples/` | 📦 public demo / provider / factor-candidate examples |
+| `support/examples/` | 📦 public demo / provider / factor-candidate examples; see `support/examples/README.md` |
 | `config/` | ⚙️ small public fixture / config surfaces |
 | `support/scripts/` | 🐍 optional Python research wrappers and helpers |
 | `support/docs/README.md` | 📚 documentation trust map and folder policy |

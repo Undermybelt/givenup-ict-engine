@@ -154,6 +154,7 @@ cargo run -- policy-training-status --symbol DEMO --state-dir /tmp/ict-engine-fi
 - 🔓 不要求私有 provider profile
 - 🚫 不默认复用维护者本地数据集
 - 🌐 需要 live data 时零配置回退 Yahoo/yfinance 兼容路径
+- 🧩 pandas-datareader 只作为显式热插拔桥接使用：FRED 宏观、Fama-French 风格因子、Stooq/Yahoo 参考数据、公司行动检查
 - 🔌 IBKR / TradingView-MCP / crypto / 本地训练器 → **opt-in**
 
 ---
@@ -303,7 +304,7 @@ cargo run -- workflow-status --symbol DEMO --state-dir /tmp/ict-engine-first-run
 | 路径 | 干啥的 |
 |---|---|
 | `src/` | 🦀 Rust CLI / 分析 / 编排 / provider / 训练表面 |
-| `support/examples/` | 📦 公开 demo / provider / factor candidate 示例 |
+| `support/examples/` | 📦 公开 demo / provider / factor candidate 示例；见 `support/examples/README.md` |
 | `config/` | ⚙️ 小型公开 fixture / config |
 | `support/scripts/` | 🐍 可选 Python research wrapper 和 helper |
 | `support/docs/README.md` | 📚 文档信任地图和文件夹策略 |

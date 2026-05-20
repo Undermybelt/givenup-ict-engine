@@ -294,7 +294,9 @@ fn provider_filter_matches_domain(
     };
     match provider_id {
         "yfinance" | "hubble" | "ibkr" | "binance_public" | "bybit_public" | "kraken_public"
-        | "polymarket_public" | "tradingview_mcp" => domain == ProviderCatalogDomain::MarketData,
+        | "polymarket_public" | "tradingview_mcp" | "pandas_datareader" => {
+            domain == ProviderCatalogDomain::MarketData
+        }
         "external_http_runtime"
         | "crypto_public_runtime"
         | "binance_public_runtime"
@@ -451,6 +453,7 @@ impl ProviderCatalogSource for MarketDataProviderCatalogSource {
         let public_fetch_runtime = probe_public_fetch_python_runtime();
         items.extend([
             hubble_provider_item(),
+            pandas_datareader_provider_item(),
             public_exchange_provider_item(
                 "binance_public",
                 vec!["ohlcv".to_string(), "replay_ohlcv".to_string()],
@@ -488,6 +491,69 @@ impl ProviderCatalogSource for MarketDataProviderCatalogSource {
             apply_provider_user_semantics(item);
         }
         Ok(items)
+    }
+}
+
+fn pandas_datareader_provider_item() -> ProviderCatalogItem {
+    let script_present = pandas_datareader_hotplug_script_exists();
+    let python_present = python3_exists();
+    let module_present = pandas_datareader_python_module_available();
+    let ready = script_present && python_present;
+    let (status, reason) = if ready && module_present {
+        ("ready", "hotplug_script_and_optional_module_available")
+    } else if ready {
+        (
+            "ready_degraded",
+            "hotplug_script_available_module_optional_missing",
+        )
+    } else if !python_present {
+        ("install_required", "python3_missing")
+    } else {
+        ("install_required", "hotplug_script_missing")
+    };
+    let mut install_prompts = Vec::new();
+    if ready && !module_present {
+        install_prompts.push(
+            "Optional pandas-datareader hotplug fetches need pandas-datareader installed; zero-config capability/demo modes still work. Low-pollution fetch path: python -m pip install pandas-datareader in the chosen project/runtime environment."
+                .to_string(),
+        );
+    }
+    if !ready {
+        install_prompts.push(
+            "Restore support/scripts/research/pandas_datareader_hotplug.py and python3 before using the pandas-datareader hotplug bridge."
+                .to_string(),
+        );
+    }
+
+    ProviderCatalogItem {
+        provider_id: "pandas_datareader".to_string(),
+        domain: ProviderCatalogDomain::MarketData.as_str().to_string(),
+        selectable_by_user: true,
+        adopted_by_default: false,
+        access_mode: "optional_python_json_bridge".to_string(),
+        user_access: "explicit_opt_in_optional_dependency".to_string(),
+        market_fit: vec!["tradfi".to_string(), "macro".to_string(), "style_factor".to_string()],
+        fallback_priority: Some(40),
+        user_summary: "Hot-pluggable pandas-datareader bridge for FRED macro regime covariates, Fama-French style factors, Stooq/Yahoo reference OHLCV, and Yahoo corporate-action checks; not adopted by default and not trade-ready.".to_string(),
+        ready,
+        status: status.to_string(),
+        reason: reason.to_string(),
+        capabilities: vec![
+            "fred_macro".to_string(),
+            "famafrench_style_factors".to_string(),
+            "stooq_daily_reference_ohlcv".to_string(),
+            "yahoo_actions_dividends_splits".to_string(),
+        ],
+        notes: vec![
+            "opt_in_only".to_string(),
+            "zero_config_capabilities_and_demo".to_string(),
+            "trade_usable=false".to_string(),
+            format!("script_present={}", script_present),
+            format!("python3_present={}", python_present),
+            format!("pandas_datareader_module={}", module_present),
+            "stdout_or_explicit_output_path_only".to_string(),
+        ],
+        install_prompts,
     }
 }
 
@@ -953,6 +1019,25 @@ fn provider_fetch_script_exists() -> bool {
     Path::new(env!("CARGO_MANIFEST_DIR"))
         .join("support/scripts/auto_quant_external/fetch_external.py")
         .exists()
+}
+
+fn pandas_datareader_hotplug_script_exists() -> bool {
+    Path::new(env!("CARGO_MANIFEST_DIR"))
+        .join("support/scripts/research/pandas_datareader_hotplug.py")
+        .exists()
+}
+
+fn pandas_datareader_python_module_available() -> bool {
+    let Some(output) = command_output_with_timeout(
+        Command::new("python3").args([
+            "-c",
+            "import importlib.util; raise SystemExit(0 if importlib.util.find_spec('pandas_datareader') else 1)",
+        ]),
+        PYTHON_RUNTIME_PROBE_TIMEOUT,
+    ) else {
+        return false;
+    };
+    output.status.success()
 }
 
 fn python3_exists() -> bool {
