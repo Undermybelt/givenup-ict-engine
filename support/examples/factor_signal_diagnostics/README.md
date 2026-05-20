@@ -50,7 +50,8 @@ Candidate-pack zero-config smoke:
 ```bash
 python3 support/scripts/research/factor_candidate_pack.py \
   --demo \
-  --output-dir /tmp/ict-engine-candidate-pack-demo
+  --output-dir /tmp/ict-engine-candidate-pack-demo \
+  --compact
 ```
 
 End-to-end demo composition:
@@ -63,7 +64,8 @@ python3 support/scripts/research/factor_signal_diagnostics.py \
 python3 support/scripts/research/factor_candidate_pack.py \
   --demo \
   --signal-diagnostics-json /tmp/ict-engine-factor-signal-diagnostics/report.json \
-  --output-dir /tmp/ict-engine-candidate-pack-demo
+  --output-dir /tmp/ict-engine-candidate-pack-demo \
+  --compact
 ```
 
 Output rule: `signal_diagnostics_evidence` is diagnostic-only metadata. It does not make a factor trade-usable. Promotion still requires Pre-Bayes, BBN, path-ranker/CatBoost, execution tree, feedback/update, and strict cost/density gates.

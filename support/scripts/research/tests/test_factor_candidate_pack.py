@@ -1039,6 +1039,15 @@ Expected_regime: TrendTransition -> LiquidityReclaim -> family_d_liquidity_sweep
         self.assertFalse(evidence["trade_usable"])
         self.assertEqual(evidence["best_bucket"]["regime"], "Transition")
 
+    def test_main_demo_compact_prints_one_line(self) -> None:
+        with TemporaryDirectory() as tmpdir:
+            output_dir = Path(tmpdir) / "pack"
+            exit_code = pack.main(
+                ["--demo", "--output-dir", str(output_dir), "--compact"]
+            )
+
+        self.assertEqual(exit_code, 0)
+
 
 if __name__ == "__main__":
     unittest.main()

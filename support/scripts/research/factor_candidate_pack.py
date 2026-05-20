@@ -757,6 +757,16 @@ def _write_json(path: Path, payload: dict[str, Any]) -> None:
     path.write_text(json.dumps(payload, indent=2, sort_keys=False) + "\n", encoding="utf-8")
 
 
+def _compact_line(summary: dict[str, Any]) -> str:
+    return (
+        "factor_candidate_pack "
+        f"ok={str(summary['ok']).lower()} "
+        f"strategy={summary['strategy_name']} "
+        f"artifacts={len(summary['artifacts'])} "
+        f"output_dir={summary['output_dir']}"
+    )
+
+
 def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description="Build a white-box factor candidate pack from Auto-Quant manifest evidence."
@@ -775,6 +785,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--config-path", default="")
     parser.add_argument("--log-path", default="")
     parser.add_argument("--output-dir", required=True)
+    parser.add_argument("--compact", action="store_true", help="Print one token-friendly summary line")
     return parser.parse_args(argv)
 
 
@@ -822,17 +833,16 @@ def main(argv: list[str] | None = None) -> int:
             log_path=args.log_path,
         )
         _write_json(Path(args.emit_strategy_library_json).resolve(), strategy_manifest)
-    print(
-        json.dumps(
-            {
-                "ok": True,
-                "output_dir": str(output_dir),
-                "strategy_name": bundle["factor_expression"]["strategy_name"],
-                "artifacts": [f"{name}.json" for name in bundle],
-            },
-            indent=2,
-        )
-    )
+    summary = {
+        "ok": True,
+        "output_dir": str(output_dir),
+        "strategy_name": bundle["factor_expression"]["strategy_name"],
+        "artifacts": [f"{name}.json" for name in bundle],
+    }
+    if args.compact:
+        print(_compact_line(summary))
+    else:
+        print(json.dumps(summary, indent=2))
     return 0
 
 
