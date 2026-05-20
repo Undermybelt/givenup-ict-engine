@@ -2,6 +2,8 @@
 
 Updated: 2026-05-20 12:21 CST
 
+Current slice: candidate-pack `--demo` zero-config smoke added.
+
 ## Route
 
 - Primary route: `sd/ict-engine-surface-intgr`.
@@ -82,6 +84,7 @@ timestamp,asset,horizon,regime,signal,forward_return
 - Converter tests cover `--rank-rows-csv` aggregate AQ rows and `--real-trades-jsonl` trade feedback rows.
 - Timeframe ladder test covers caller-selected 1m/5m/15m/30m/1h/4h/1d coverage/missing reporting.
 - Candidate-pack test covers `--signal-diagnostics-json` embedding into `factor_eval_grid_summary.json` without changing default behavior.
+- Candidate-pack demo test covers `python3 support/scripts/research/factor_candidate_pack.py --demo --output-dir /tmp/...`.
 - README commands are documentation-only and point outputs to `/tmp/...`.
 
 ## Next TODO

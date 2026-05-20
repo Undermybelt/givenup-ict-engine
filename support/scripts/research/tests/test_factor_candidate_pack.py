@@ -979,6 +979,29 @@ Expected_regime: TrendTransition -> LiquidityReclaim -> family_d_liquidity_sweep
             ["15m", "30m", "1h", "4h", "1d"],
         )
 
+    def test_main_demo_writes_zero_config_candidate_pack(self) -> None:
+        with TemporaryDirectory() as tmpdir:
+            output_dir = Path(tmpdir) / "pack"
+            exit_code = pack.main(["--demo", "--output-dir", str(output_dir)])
+
+            self.assertEqual(exit_code, 0)
+            expression = json.loads(
+                (output_dir / "factor_expression.json").read_text(encoding="utf-8")
+            )
+            grid = json.loads(
+                (output_dir / "factor_eval_grid_summary.json").read_text(
+                    encoding="utf-8"
+                )
+            )
+            transfer = json.loads(
+                (output_dir / "transfer_score.json").read_text(encoding="utf-8")
+            )
+
+        self.assertEqual(expression["strategy_name"], "DemoSignalDiagnosticsCandidate")
+        self.assertEqual(expression["base_timeframe"], "1m")
+        self.assertEqual(grid["trade_density_summary"]["aggregate_trade_count"], 40)
+        self.assertEqual(transfer["covered_markets"], ["DEMO/USD"])
+
 
 if __name__ == "__main__":
     unittest.main()

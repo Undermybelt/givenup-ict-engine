@@ -710,6 +710,45 @@ def build_factor_candidate_pack(
     }
 
 
+def _demo_manifest() -> dict[str, Any]:
+    return {
+        "manifest_version": "1.0",
+        "timeframe": "1m",
+        "strategies": [
+            {
+                "name": "DemoSignalDiagnosticsCandidate",
+                "status": "ok",
+                "metadata": {
+                    "strategy": "DemoSignalDiagnosticsCandidate",
+                    "mutation_id": "demo-signal-diagnostics-v1",
+                    "base_factor": "demo_signal",
+                    "hypothesis": "zero-config candidate-pack smoke path",
+                    "paradigm": "diagnostic_demo",
+                    "expected_regime": "Transition -> Demo -> demo_signal -> demo_signal_v1",
+                    "factors_used": ["demo_signal"],
+                    "asset_class": "demo",
+                },
+                "validation_metrics": {
+                    "sharpe": 1.0,
+                    "trade_count": 40,
+                    "win_rate_pct": 55.0,
+                    "profit_factor": 1.2,
+                    "total_profit_pct": 1.0,
+                    "max_drawdown_pct": 1.0,
+                },
+                "per_pair_metrics": {
+                    "DEMO/USD": {
+                        "sharpe": 1.0,
+                        "trade_count": 40,
+                        "win_rate_pct": 55.0,
+                        "profit_factor": 1.2,
+                    }
+                },
+            }
+        ],
+    }
+
+
 def _load_json(path: Path) -> dict[str, Any]:
     return json.loads(path.read_text(encoding="utf-8"))
 
@@ -725,6 +764,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     source_group = parser.add_mutually_exclusive_group(required=True)
     source_group.add_argument("--manifest-json")
     source_group.add_argument("--freqtrade-backtest-zip")
+    source_group.add_argument("--demo", action="store_true", help="Use bundled zero-config demo manifest")
     parser.add_argument("--strategy-name")
     parser.add_argument("--candidate-spec-json")
     parser.add_argument("--signal-diagnostics-json")
@@ -740,13 +780,14 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
 
 def main(argv: list[str] | None = None) -> int:
     args = parse_args(argv)
-    manifest = (
-        _load_json(Path(args.manifest_json))
-        if args.manifest_json
-        else build_manifest_from_freqtrade_backtest_zip(
+    if args.manifest_json:
+        manifest = _load_json(Path(args.manifest_json))
+    elif args.freqtrade_backtest_zip:
+        manifest = build_manifest_from_freqtrade_backtest_zip(
             Path(args.freqtrade_backtest_zip)
         )
-    )
+    else:
+        manifest = _demo_manifest()
     candidate_spec = (
         _load_json(Path(args.candidate_spec_json)) if args.candidate_spec_json else {}
     )
