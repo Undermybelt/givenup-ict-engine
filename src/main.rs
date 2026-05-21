@@ -95,6 +95,7 @@ use ict_engine::application::{
         AutoQuantIngestRealTradesInput, AutoQuantPdaUnitBatchCommandInput,
         AutoQuantPdaUnitDispatchCommandInput, AutoQuantPriorInitCommandInput,
     },
+    auto_quant::FuturesCostCatalog,
     auto_quant::{AutoQuantFactorAutoresearchCommandInput, AutoQuantFactorResearchCommandInput},
     backtest::{
         apply_feedback_to_trade_outcome_network, artifact_consumed_decision_gate,
@@ -1160,6 +1161,31 @@ enum Commands {
             help = "State directory holding Auto-Quant dependency metadata"
         )]
         state_dir: String,
+        #[arg(
+            long,
+            default_value = "",
+            help = "Output format: json (default), compact, or human. `--compact` and `--human` are aliases; do not combine them with `--output-format`."
+        )]
+        output_format: String,
+        #[arg(long, help = "Alias for --output-format compact")]
+        compact: bool,
+        #[arg(long, help = "Alias for --output-format human")]
+        human: bool,
+    },
+    /// Show zero-config instrument-aware futures cost assumptions used by Auto-Quant gates
+    AutoQuantFuturesCost {
+        #[arg(long, help = "Futures root or contract symbol, e.g. ES, NQH6, MESM6")]
+        symbol: String,
+        #[arg(
+            long,
+            help = "Representative futures price used to convert points into percent cost"
+        )]
+        price: f64,
+        #[arg(
+            long,
+            help = "Optional JSON profile override containing a FuturesCostCatalog payload"
+        )]
+        profile: Option<String>,
         #[arg(
             long,
             default_value = "",
@@ -2728,6 +2754,24 @@ fn main() -> Result<()> {
             human,
         } => auto_quant_status_shell(
             &state_dir,
+            match resolve_output_format(&output_format, compact, false, human)? {
+                OutputFormat::Json => "json",
+                OutputFormat::Compact => "compact",
+                OutputFormat::Agent => "json",
+                OutputFormat::Human => "human",
+            },
+        )?,
+        Commands::AutoQuantFuturesCost {
+            symbol,
+            price,
+            profile,
+            output_format,
+            compact,
+            human,
+        } => auto_quant_futures_cost_shell(
+            &symbol,
+            price,
+            profile.as_deref(),
             match resolve_output_format(&output_format, compact, false, human)? {
                 OutputFormat::Json => "json",
                 OutputFormat::Compact => "compact",
@@ -4558,6 +4602,85 @@ fn value_u64(value: &Value, key: &str) -> Option<u64> {
 fn env_command() -> Result<()> {
     println!("{}", serde_json::to_string_pretty(&build_env_report())?);
     Ok(())
+}
+
+fn auto_quant_futures_cost_shell(
+    symbol: &str,
+    price: f64,
+    profile_path: Option<&str>,
+    output_format: &str,
+) -> Result<()> {
+    let mut catalog = FuturesCostCatalog::default();
+    if let Some(path) = profile_path
+        .map(str::trim)
+        .filter(|value| !value.is_empty())
+    {
+        let json = std::fs::read_to_string(path)
+            .with_context(|| format!("reading futures cost profile override '{}'", path))?;
+        catalog = catalog.with_json_overrides(&json)?;
+    }
+    let profile = catalog.profile_for(symbol).ok_or_else(|| {
+        anyhow!(
+            "unknown futures cost profile: {}",
+            futures_root_for_error(symbol)
+        )
+    })?;
+    let round_trip_cost_pct = profile.round_trip_cost_percent(price)?;
+    let report = serde_json::json!({
+        "command": "auto-quant-futures-cost",
+        "symbol": profile.root_symbol,
+        "input_symbol": symbol,
+        "profile_id": profile.profile_id,
+        "exchange": profile.exchange,
+        "representative_price": price,
+        "tick_size": profile.tick_size,
+        "tick_value": profile.tick_value,
+        "point_value": profile.point_value(),
+        "round_trip_cost_points": profile.round_trip_cost_points(),
+        "round_trip_cost_pct": round_trip_cost_pct,
+        "commission_per_contract_side": profile.commission_per_contract_side,
+        "exchange_fees_per_contract_side": profile.exchange_fees_per_contract_side,
+        "regulatory_fees_per_contract_side": profile.regulatory_fees_per_contract_side,
+        "assumed_spread_ticks": profile.assumed_spread_ticks,
+        "assumed_slippage_ticks_per_side": profile.assumed_slippage_ticks_per_side,
+        "source": profile.source,
+        "notes": profile.notes,
+        "gate_note": "fixed_bps_is_diagnostic_only; futures_gate_uses_instrument_cost_profile",
+        "override": profile_path.is_some(),
+    });
+    match output_format {
+        "json" => println!("{}", serde_json::to_string_pretty(&report)?),
+        "compact" => println!(
+            "symbol={} profile={} price={} round_trip_cost_pct={:.6} round_trip_cost_points={:.6} spread_ticks={} slippage_ticks_side={} source={} fixed_bps_is_diagnostic_only",
+            profile.root_symbol,
+            profile.profile_id,
+            price,
+            round_trip_cost_pct,
+            profile.round_trip_cost_points(),
+            profile.assumed_spread_ticks,
+            profile.assumed_slippage_ticks_per_side,
+            profile.source,
+        ),
+        "human" => {
+            println!("Futures cost | {} | {}", profile.root_symbol, profile.profile_id);
+            println!("Exchange: {}", profile.exchange);
+            println!("Tick: size={} value={} point_value={}", profile.tick_size, profile.tick_value, profile.point_value());
+            println!("Round trip: {:.6}% ({:.6} points)", round_trip_cost_pct, profile.round_trip_cost_points());
+            println!("Assumptions: commission_side={} exchange_fees_side={} regulatory_side={} spread_ticks={} slippage_ticks_side={}", profile.commission_per_contract_side, profile.exchange_fees_per_contract_side, profile.regulatory_fees_per_contract_side, profile.assumed_spread_ticks, profile.assumed_slippage_ticks_per_side);
+            println!("Gate: fixed_bps_is_diagnostic_only; use instrument profile or hotplug override for futures.");
+        }
+        other => bail!("unsupported auto-quant-futures-cost output format '{}'", other),
+    }
+    Ok(())
+}
+
+fn futures_root_for_error(symbol: &str) -> String {
+    symbol
+        .trim()
+        .chars()
+        .take_while(|ch| ch.is_ascii_alphabetic())
+        .collect::<String>()
+        .to_ascii_uppercase()
 }
 
 fn multi_timeframe_phase_hint(summary: &[String]) -> String {

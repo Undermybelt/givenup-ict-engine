@@ -479,6 +479,55 @@ fn auto_quant_status_help_and_human_surface_expose_consumer_output_modes() {
 }
 
 #[test]
+fn auto_quant_futures_cost_cli_is_zero_config_and_token_friendly() {
+    let binary = env!("CARGO_BIN_EXE_ict-engine");
+
+    let help = Command::new(binary)
+        .args(["auto-quant-futures-cost", "--help"])
+        .output()
+        .unwrap();
+    assert!(help.status.success());
+    let help = String::from_utf8(help.stdout).unwrap();
+    assert!(help.contains("--symbol"));
+    assert!(help.contains("--price"));
+
+    let output = Command::new(binary)
+        .args([
+            "auto-quant-futures-cost",
+            "--symbol",
+            "NQH6",
+            "--price",
+            "18000",
+            "--compact",
+        ])
+        .output()
+        .unwrap();
+    assert!(output.status.success());
+    let stdout = String::from_utf8(output.stdout).unwrap();
+    assert!(stdout.contains("symbol=NQ"));
+    assert!(stdout.contains("profile=CME_NQ_default_v1"));
+    assert!(stdout.contains("round_trip_cost_pct="));
+    assert!(stdout.contains("fixed_bps_is_diagnostic_only"));
+    assert!(!stdout.contains(concat!("/", "Users", "/")));
+    assert!(!stdout.contains("Downloads"));
+
+    let error = Command::new(binary)
+        .args([
+            "auto-quant-futures-cost",
+            "--symbol",
+            "ZZZ",
+            "--price",
+            "100",
+            "--compact",
+        ])
+        .output()
+        .unwrap();
+    assert!(!error.status.success());
+    let stderr = String::from_utf8(error.stderr).unwrap();
+    assert!(stderr.contains("unknown futures cost profile: ZZZ"));
+}
+
+#[test]
 fn workflow_status_human_empty_state_suppresses_validation_noise() {
     let binary = env!("CARGO_BIN_EXE_ict-engine");
     let state = TempDir::new().unwrap();
