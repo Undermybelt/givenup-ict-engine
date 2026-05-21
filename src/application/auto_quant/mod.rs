@@ -2,6 +2,7 @@ mod adoption;
 pub mod agent_material;
 pub mod command_entry;
 mod config;
+mod futures_cost;
 pub mod handoff;
 mod health;
 pub mod live;
@@ -26,6 +27,7 @@ pub use agent_material::{
     AgentMaterialRankArtifact, AgentMaterialRankRow, AUTO_QUANT_AGENT_MATERIAL_BATCH_RULE_VERSION,
     AUTO_QUANT_AGENT_MATERIAL_DISPATCH_RULE_VERSION, AUTO_QUANT_AGENT_MATERIAL_RANK_RULE_VERSION,
 };
+pub use futures_cost::{FuturesCostCatalog, FuturesCostProfile};
 pub use handoff::{
     AutoQuantFactorAutoresearchCommandInput, AutoQuantFactorResearchCommandInput,
     BuildFactorAutoresearchHandoffPayloadInput, BuildFactorResearchHandoffPayloadInput,
