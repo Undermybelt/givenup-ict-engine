@@ -917,3 +917,44 @@ Actionability:
   partial fetch failures, live processes, or existing older sibling evidence.
 - Next valid action is to re-read terminal artifacts after the live wrappers
   exit, then terminalize or externalize each claim from its own evidence.
+
+## 2026-05-23 05:25 CST Final Readback Before Handoff
+
+Fresh factor-claim audit:
+
+- `/tmp/ict-engine-factor-claims-final-readback-20260523.json` exited `1`.
+- `summary.status=needs_attention`.
+- `active_claims=1`.
+- `terminalized_claims=65`.
+- `total_claims=66`.
+- `missing_run_roots=0`.
+- `live_factor_processes=1`.
+- `promotion_allowed_true=0`.
+- `trade_usable_true=0`.
+- `blocking_reasons=["active_claims","live_factor_processes"]`.
+
+Current remaining factor blocker:
+
+- The only active claim is
+  `20260523T051745+0800-codex-tomac-psar-arooncci-repair-readback.claim`.
+- The only live factor process is TOMAC PSAR/Aroon-CCI worker PID `93988`
+  under parent PID `93976`, run root
+  `/tmp/ict-engine-tomac-psar-arooncci-gate1-repair-20260523T0500+0800`.
+- `checks/01_full_repair.exit` is still missing.
+
+Release readiness readback:
+
+- `/tmp/ict-engine-release-readiness-final-readback-20260523.json` exited `1`.
+- `summary.status=needs_fix`.
+- Unresolved gates:
+  `worktree_clean_for_release`,
+  `release_docs_fresh_for_selected_tag`.
+- Worktree readback reported `77` tracked dirty entries and `782` untracked
+  entries; no release/tag/push is authorized from this checkout.
+
+Actionability:
+
+- The audit-tooling repair slice is committed.
+- The full objective is not complete: wait for or read the TOMAC terminal
+  artifacts, then terminalize from its own evidence only.
+- No current evidence supports `promotion_allowed=true` or `trade_usable=true`.
