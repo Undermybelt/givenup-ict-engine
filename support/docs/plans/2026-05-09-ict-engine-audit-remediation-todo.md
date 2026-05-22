@@ -5403,3 +5403,61 @@ Observed untracked files before cleanup:
 - This closes one repo-hygiene/no-pollution pain point only.
 - It does not prove release readiness, full dirty-tree cleanliness, or
   trade-usable factor promotion.
+
+## Root Scratch And Local Agent-Material Classification
+
+Claim: done for focused scratch cleanup and classification, owner Codex
+current turn, claimed 2026-05-22 20:33:28 +0800.
+
+### Finding
+
+The root worktree still has three different untracked classes:
+
+- empty scratch file: `0.5201009511947632`;
+- local Aegis workspace: `docs/aegis/**`;
+- local agent-skill material: `skills/**`.
+
+`git ls-files docs skills 0.5201009511947632` returned no tracked paths, so
+none of these are currently versioned release/runtime inputs.
+
+### Classification
+
+- `0.5201009511947632` is a zero-byte scratch file. The value is meaningful in
+  historical text as a CatBoost split threshold, but the root file itself has no
+  content and no consumer/runtime role.
+- `docs/aegis/**` contains indexed design/work artifacts with real Board A/B
+  evidence references. It is untracked local agent material, not immediate
+  release source.
+- `skills/**` contains optional agent-facing skill docs and a manifest stating
+  `runtime_consumed_by_ict_engine=false`. It is useful reference material, but
+  not a typed runtime contract.
+
+### Remediation
+
+- Deleted the empty root scratch file `0.5201009511947632`.
+- Deleted already-ignored local metadata:
+  - `docs/.DS_Store`
+  - `docs/aegis/.DS_Store`
+  - `skills/.DS_Store`
+- Preserved `docs/aegis/**` and `skills/**` content for a later explicit
+  decision: either migrate durable pieces into `support/docs/...`, or ignore
+  the local agent-material roots if they must stay outside release source.
+
+### Verification
+
+- `git status --short -- 0.5201009511947632 docs/.DS_Store docs/aegis/.DS_Store skills/.DS_Store docs skills`
+  - no longer shows `0.5201009511947632` or any `.DS_Store`;
+  - still shows preserved `docs/aegis/**` and `skills/**` as untracked local
+    agent material.
+- `git diff --check -- support/docs/plans/2026-05-09-ict-engine-audit-remediation-todo.md`
+  - passed.
+- `test ! -e 0.5201009511947632 && test ! -e docs/.DS_Store && test ! -e docs/aegis/.DS_Store && test ! -e skills/.DS_Store`
+  - passed.
+
+### Remaining Decision
+
+- Decide later whether `docs/aegis/**` and `skills/**` should be:
+  - migrated into `support/docs/...` as durable repo artifacts, or
+  - ignored as local agent workspace material.
+- Do not silently delete them; they contain indexed design/evidence content and
+  optional agent-skill contracts.
