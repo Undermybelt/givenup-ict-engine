@@ -11,6 +11,82 @@
 
 ---
 
+### Live Audit Loop - 2026-05-22 23:23 +0800
+
+Owner: Codex current turn.
+Claim: continuing the full-audit/remediation loop after the release-doc
+actionability slice. Completion remains disproven by current release,
+heavy-gate, and factor-claim evidence. This slice improves compact factor-claim
+readback so the next lane can be selected without scanning every claim by hand.
+
+Problem found:
+
+- `support/scripts/factor_claim_terminalization_audit.py --compact` emitted a
+  sanitized attention claim list, but no grouped counts.
+- With live external state showing dozens of active claims, the next user/agent
+  still had to manually scan the list to understand whether attention was
+  concentrated by owner, missing run roots, or active status before choosing a
+  non-colliding Board B/TOMAC lane.
+
+Fix applied:
+
+- Add compact `attention_groups` with deterministic grouped counts:
+  `by_owner`, `by_run_root_state`, and `by_status`.
+- Keep the existing compact `attention_claims` drilldown list unchanged and
+  sanitized.
+- Update `support/scripts/SCRIPTS.md` so contributors know compact mode emits
+  grouped counts, not only a flat attention summary.
+
+Fresh evidence so far:
+
+- `python3 -m unittest support.scripts.tests.test_factor_claim_terminalization_audit.FactorClaimTerminalizationAuditTest.test_format_report_compact_keeps_only_attention_claim_summaries -v`
+  first failed with `KeyError: 'attention_groups'`, then passed after adding
+  grouped counts.
+- `python3 -m unittest support.scripts.tests.test_factor_claim_terminalization_audit -v`
+  passed `7` tests.
+- `python3 -m py_compile support/scripts/factor_claim_terminalization_audit.py support/scripts/tests/test_factor_claim_terminalization_audit.py`
+  passed.
+- `python3 support/scripts/check_script_manifest.py` passed with `entries=21`.
+- `python3 support/scripts/factor_claim_terminalization_audit.py --compact --output /tmp/ict-engine-factor-claim-terminalization-audit-groups-after.json`
+  exited `1` as expected because live claims still need attention.
+- The compact report now includes:
+  `attention_groups.by_owner={"codex":30,"unknown":4}`,
+  `attention_groups.by_run_root_state={"missing":2,"none":19,"present":13}`,
+  and `attention_groups.by_status={"active":34}`.
+- `python3 support/scripts/done_definition_audit.py --compact --output /tmp/ict-engine-done-definition-audit-factor-groups-after.json`
+  passed light gates with `pass_count=4`, `skip_count=4`.
+- `python3 support/scripts/release_readiness_audit.py --compact --check-remotes --output /tmp/ict-engine-release-readiness-audit-factor-groups-after.json`
+  exited `1` as expected because release blockers remain.
+- `rg -n "/Users|repo_root|claim_path|\"run_root\"" /tmp/ict-engine-factor-claim-terminalization-audit-groups-after.json /tmp/ict-engine-done-definition-audit-factor-groups-after.json`
+  returned no matches.
+
+Current factor blocker readback:
+
+- `summary.status=needs_attention`
+- `active_claims=34`, `missing_run_roots=2`,
+  `terminalized_claims=66`, `total_claims=100`,
+  `promotion_allowed_true=0`, `trade_usable_true=0`.
+- Grouped counts show the immediate collision-safe triage shape:
+  most active claims are owner `codex`, `4` have unknown owner, `2` point at
+  missing run roots, `19` have no run root recorded, and all attention claims
+  are currently `active`.
+
+Current release/done readback:
+
+- Release readiness remains `needs_fix` with unresolved
+  `worktree_clean_for_release`, `release_docs_fresh_for_selected_tag`,
+  `source_origin_matches_selected_source`, and `release_version_tag_available`.
+- Done-definition compact is still not a completion proof because all heavy
+  gates are skipped.
+
+Next safe action:
+
+- Use the grouped factor readback to choose a non-colliding factor cleanup lane,
+  or continue release-readiness actionability. Do not claim factor diffusion,
+  release readiness, or full audit completion.
+
+---
+
 ### Live Audit Loop - 2026-05-22 23:18 +0800
 
 Owner: Codex current turn.

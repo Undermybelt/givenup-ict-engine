@@ -179,6 +179,14 @@ run_root=/tmp/missing-run-root-for-test
         self.assertNotIn("repo_root", compact)
         self.assertEqual(compact["summary"], full_report["summary"])
         self.assertEqual(compact["attention_claim_count"], 2)
+        self.assertEqual(
+            compact["attention_groups"],
+            {
+                "by_owner": {"codex": 2},
+                "by_run_root_state": {"missing": 1, "present": 1},
+                "by_status": {"active": 1, "terminalized": 1},
+            },
+        )
         self.assertEqual([claim["claim_file"] for claim in compact["attention_claims"]], ["active.claim", "positive.claim"])
         self.assertEqual(compact["attention_claims"][0]["run_root_state"], "missing")
         self.assertNotIn("claim_path", compact["attention_claims"][0])

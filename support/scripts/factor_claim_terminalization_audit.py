@@ -215,6 +215,7 @@ def format_report(report: dict[str, Any], compact: bool = False) -> dict[str, An
         "claims_dir": report.get("claims_dir"),
         "summary": report.get("summary"),
         "attention_claim_count": len(attention_claims),
+        "attention_groups": _attention_groups(attention_claims),
         "attention_claims": attention_claims,
     }
 
@@ -253,6 +254,23 @@ def _compact_claim(claim: dict[str, Any], root: str) -> dict[str, Any]:
         "trade_usable": claim.get("trade_usable"),
         "summary_files": claim.get("summary_files", []),
     }
+
+
+def _attention_groups(claims: list[dict[str, Any]]) -> dict[str, dict[str, int]]:
+    return {
+        "by_owner": _count_by(claims, "owner"),
+        "by_run_root_state": _count_by(claims, "run_root_state"),
+        "by_status": _count_by(claims, "status"),
+    }
+
+
+def _count_by(claims: list[dict[str, Any]], key: str) -> dict[str, int]:
+    counts: dict[str, int] = {}
+    for claim in claims:
+        raw_value = claim.get(key)
+        value = str(raw_value) if raw_value not in (None, "") else "unknown"
+        counts[value] = counts.get(value, 0) + 1
+    return dict(sorted(counts.items()))
 
 
 def parse_args(argv: list[str]) -> argparse.Namespace:
