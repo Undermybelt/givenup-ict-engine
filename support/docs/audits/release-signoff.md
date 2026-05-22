@@ -6,6 +6,21 @@ publish only the verified export slice, not the broad dirty working tree. Public
 package-manager publication is blocked in this release flow pending a PolyForm
 Noncommercial 1.0.0 channel-compliance review.
 
+## 2026-05-22 audit update
+
+This signoff is historical `v0.1.3` evidence, not current release permission.
+
+Do not publish from the current checkout. The 2026-05-22 done-definition gate
+passes for the current tree, including the smoke path-ranker fail-closed audit,
+but release completion is still blocked by the broad dirty worktree, source
+branch drift from `origin/main`, release-mirror drift, and the absence of a
+fresh export-specific signoff for a selected tag.
+
+Before any new mirror/tag/GitHub release action, create a fresh sanitized export
+from the intended commit, rerun fmt, Clippy, full tests, zero-config smoke, and
+privacy scans from that export, then replace this file and
+`support/docs/release-notes-draft.md` with evidence for the selected tag.
+
 ## Final verdict
 
 Do not publish the whole dirty working tree.

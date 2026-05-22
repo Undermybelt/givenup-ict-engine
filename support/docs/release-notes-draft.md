@@ -5,6 +5,17 @@ Status: sanitized release candidate prepared for mirror publication, drafted
 2026-05-18; package-manager publication remains blocked under the PolyForm
 Noncommercial 1.0.0 release policy.
 
+## 2026-05-22 status
+
+These notes are historical `v0.1.3` draft notes. They are not valid release
+notes for the current source branch.
+
+The current audit state is blocked for release publication: the done-definition
+and zero-config smoke gates have fresh passing evidence, but the checkout still
+has broad dirty state and no fresh sanitized export, release tag, mirror sync,
+privacy scan, or operator publish confirmation for a new release. Refresh this
+file from the selected export before any tag or GitHub release action.
+
 ## Highlights (v0.1.3 — gate-rigidity audit slice)
 
 - Two factor-iteration hard gates that were empirically unreachable on real
