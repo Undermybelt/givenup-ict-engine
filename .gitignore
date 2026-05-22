@@ -1,5 +1,5 @@
 /target
-/.DS_Store
+**/.DS_Store
 /.pytest_cache/
 /path_ranker_model/
 /state

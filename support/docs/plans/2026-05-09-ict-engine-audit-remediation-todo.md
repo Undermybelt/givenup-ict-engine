@@ -5357,3 +5357,49 @@ captured outputs and state artifacts against the release-gate checklist:
 - This still is not a release-ready or trade-ready claim: structural
   path-ranker runtime remains disabled/not ready until mature validation rows
   reach the configured threshold, and DEMO `breakeven` is smoke-only feedback.
+
+## Pollution Cleanup - Nested macOS Metadata
+
+Claim: done for focused cleanup, owner Codex current turn, claimed
+2026-05-22 20:28:08 +0800.
+
+### Finding
+
+`git status --short` still surfaced nested macOS `.DS_Store` files under
+`src/` and `support/` even though the root `.gitignore` ignored only
+`/.DS_Store`. This is a low-level repo hygiene bug: it keeps recurring local
+Finder metadata in the working tree and makes audit/commit boundaries noisier.
+
+Observed untracked files before cleanup:
+
+- `src/.DS_Store`
+- `src/application/.DS_Store`
+- `src/bbn/.DS_Store`
+- `src/domain/.DS_Store`
+- `support/.DS_Store`
+- `support/docs/.DS_Store`
+- `support/paper2code/.DS_Store`
+
+### Remediation
+
+- Changed `.gitignore` from root-only `/.DS_Store` to recursive
+  `**/.DS_Store`.
+- Deleted only the seven untracked `.DS_Store` files listed above.
+- No source, docs, run roots, or tagged artifacts were deleted.
+
+### Verification
+
+- `git status --short -- .gitignore .DS_Store src/.DS_Store src/application/.DS_Store src/bbn/.DS_Store src/domain/.DS_Store support/.DS_Store support/docs/.DS_Store support/paper2code/.DS_Store`
+  - showed only `.gitignore` and this plan doc as modified; the seven nested
+    `.DS_Store` paths no longer appear.
+- `git diff --check -- .gitignore support/docs/plans/2026-05-09-ict-engine-audit-remediation-todo.md`
+  - passed.
+- `git status --ignored --short -- src/.DS_Store src/application/.DS_Store src/bbn/.DS_Store src/domain/.DS_Store support/.DS_Store support/docs/.DS_Store support/paper2code/.DS_Store`
+  - returned no tracked/untracked rows after deletion; future nested files will
+    match `**/.DS_Store`.
+
+### Boundary
+
+- This closes one repo-hygiene/no-pollution pain point only.
+- It does not prove release readiness, full dirty-tree cleanliness, or
+  trade-usable factor promotion.
