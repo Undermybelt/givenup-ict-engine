@@ -6801,3 +6801,64 @@ network that can reach the mirror, then rerun with `--check-remotes`.
 - This slice does not publish, tag, push, or create a GitHub Release.
 - Practical factor diffusion remains unproven until current claims satisfy hard
   promotion and trade-usable gates.
+
+## 2026-05-23 continuation - factor claim audit actionability
+
+Current answer remains: no, there is still work to do. Release and full-heavy
+completion are separate blockers, and the factor-claim audit still reports
+`needs_attention`. This slice makes that factor blocker more actionable without
+editing any claim files, run roots, Board rows, or factor evidence.
+
+### Remediation
+
+- Added summary-level `blocking_reasons` to
+  `support/scripts/factor_claim_terminalization_audit.py`.
+- Added summary-level `next_action` derived from:
+  active claims, missing run roots, `trade_usable=true`, and
+  `promotion_allowed=true`.
+- Kept `needs_attention` fail-closed behavior unchanged.
+- Added regression coverage in
+  `support/scripts/tests/test_factor_claim_terminalization_audit.py`.
+- Added live handoff board:
+  `support/docs/plans/2026-05-23-factor-claim-audit-actionability-handoff-todo.md`.
+
+### Verification
+
+- RED:
+  `python3 -m unittest support.scripts.tests.test_factor_claim_terminalization_audit.FactorClaimTerminalizationAuditTest.test_summarize_marks_needs_attention_for_active_or_positive_claims -v`
+  failed before implementation with `KeyError: 'blocking_reasons'`.
+- GREEN targeted:
+  the same test passed after adding `blocking_reasons` and `next_action`.
+- Full factor-claim audit tests:
+  `python3 -m unittest support.scripts.tests.test_factor_claim_terminalization_audit -v`
+  passed `7` tests.
+- Compile:
+  `python3 -m py_compile support/scripts/factor_claim_terminalization_audit.py support/scripts/tests/test_factor_claim_terminalization_audit.py`
+  passed.
+- Script manifest:
+  `python3 support/scripts/check_script_manifest.py`
+  passed with `entries=21`.
+- Real compact audit:
+  `python3 support/scripts/factor_claim_terminalization_audit.py --compact --output /tmp/ict-engine-factor-claims-actionability-20260523.json`
+  exited `1` as expected.
+
+### Current Factor Claim Readback
+
+- `status=needs_attention`
+- `total_claims=25`
+- `terminalized_claims=17`
+- `active_claims=8`
+- `missing_run_roots=0`
+- `trade_usable_true=0`
+- `promotion_allowed_true=0`
+- `blocking_reasons=["active_claims"]`
+- `next_action=terminalize or externalize active claims`
+
+### Remaining Broad Blockers
+
+- Eight active claims still need terminalization or explicit externalization.
+- This slice does not promote a factor or mark anything trade-usable.
+- Release readiness remains blocked by dirty worktree, stale release docs,
+  source-origin drift, and version/tag reuse.
+- Done-definition completion remains light-only until a fresh `--run-all-heavy`
+  pass is rerun after the current source changes.

@@ -178,6 +178,21 @@ def summarize(claims: list[dict[str, Any]]) -> dict[str, Any]:
     trade_usable_true = sum(1 for claim in claims if claim.get("trade_usable") is True)
     promotion_allowed_true = sum(1 for claim in claims if claim.get("promotion_allowed") is True)
     needs_attention = bool(active_claims or missing_run_roots or trade_usable_true or promotion_allowed_true)
+    blocking_reasons: list[str] = []
+    next_actions: list[str] = []
+    if active_claims:
+        blocking_reasons.append("active_claims")
+        next_actions.append("terminalize or externalize active claims")
+    if missing_run_roots:
+        blocking_reasons.append("missing_run_roots")
+        next_actions.append("restore or terminalize missing run roots")
+    if trade_usable_true:
+        blocking_reasons.append("trade_usable_true")
+        next_actions.append("review positive trade/promotion flags")
+    if promotion_allowed_true:
+        blocking_reasons.append("promotion_allowed_true")
+        if "review positive trade/promotion flags" not in next_actions:
+            next_actions.append("review positive trade/promotion flags")
     return {
         "status": "needs_attention" if needs_attention else "pass",
         "total_claims": len(claims),
@@ -186,6 +201,8 @@ def summarize(claims: list[dict[str, Any]]) -> dict[str, Any]:
         "missing_run_roots": missing_run_roots,
         "trade_usable_true": trade_usable_true,
         "promotion_allowed_true": promotion_allowed_true,
+        "blocking_reasons": blocking_reasons,
+        "next_action": "; ".join(next_actions) if next_actions else "no claim terminalization blockers found",
     }
 
 

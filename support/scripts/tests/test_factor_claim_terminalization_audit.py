@@ -114,6 +114,18 @@ run_root=/tmp/missing-run-root-for-test
         self.assertEqual(summary["missing_run_roots"], 1)
         self.assertEqual(summary["trade_usable_true"], 1)
         self.assertEqual(summary["promotion_allowed_true"], 1)
+        self.assertEqual(
+            summary["blocking_reasons"],
+            [
+                "active_claims",
+                "missing_run_roots",
+                "trade_usable_true",
+                "promotion_allowed_true",
+            ],
+        )
+        self.assertIn("terminalize or externalize active claims", summary["next_action"])
+        self.assertIn("restore or terminalize missing run roots", summary["next_action"])
+        self.assertIn("review positive trade/promotion flags", summary["next_action"])
 
     def test_format_report_compact_keeps_only_attention_claim_summaries(self) -> None:
         full_report = {
