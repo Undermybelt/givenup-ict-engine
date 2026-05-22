@@ -20,6 +20,19 @@ cargo check
 cargo test
 ```
 
+零配置脚本入口：
+
+```bash
+STATE_DIR=/tmp/ict-engine-smoke-state bash support/scripts/smoke_acceptance.sh
+```
+
+该脚本默认使用 `SYMBOL=DEMO`，并用
+`SMOKE_UPDATE_OUTCOME=breakeven SMOKE_UPDATE_PNL=0` 跑一笔仅用于 smoke
+的 realized update，证明 `analyze -> update -> workflow-status ->
+policy-training-status` 学习链路可写入 `/tmp` state。真实回放或实盘结果应
+显式覆盖 `SMOKE_UPDATE_OUTCOME` / `SMOKE_UPDATE_PNL`，不要把默认
+breakeven 当作交易结论。
+
 ## 2. 准备 smoke 数据
 
 可用任意满足最小 bar 数要求的数据。

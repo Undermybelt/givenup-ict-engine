@@ -5176,3 +5176,184 @@ No `support/scripts/**` helper consolidated Done Definition gates with:
   Definition gates green.
 - Full closure still needs periodic heavy gate refresh on the current tree,
   plus continued `main.rs` extraction and P0 closed-loop verification slices.
+
+---
+
+## 2026-05-22 continuation - Done Definition heavy gates closed on current tree
+
+Current answer to "is this 100% complete?": no release claim. This slice closes
+the current Done Definition audit helper's full gate set and records the exact
+remaining boundary: release readiness still depends on the broader release
+contract, but this maintenance gate is green on the live tree.
+
+### Problem
+
+The first full run of
+`python3 support/scripts/done_definition_audit.py --run-all-heavy --output /tmp/ict-engine-done-definition-audit-heavy.json`
+found unresolved heavy gates:
+
+- `cargo_clippy_all_targets_deny_warnings`
+- `cargo_test`
+
+Those failures meant the new repeatable auditor was useful, but the repo still
+could not honestly treat the Done Definition gate set as closed.
+
+### Root Cause
+
+- Two status shell adapters still used long argument lists after nearby shell
+  adapters had moved to input structs:
+  - `provider_status_shell`
+  - `factor_mutation_status_shell`
+- Structural path-ranker explicit artifact validation had one error branch that
+  did not include the required flag/schema/recovery context.
+- Registered-artifact runtime score selection could prefer a stale duplicate
+  row sharing a `path_id` over the exact row for the current
+  `candidate_set_id`.
+
+### Fix
+
+- Added `ProviderStatusShellInput` and `FactorMutationStatusShellInput` in
+  `src/status_command.rs`, then updated the two `src/main.rs` call sites.
+- Kept `FactorMutationStatusCommandInput` at the application command boundary
+  so the shell adapter and application command both stay token-friendly and
+  clippy-clean.
+- Tightened structural path-ranker explicit artifact validation and test
+  expectation for the required schema/recovery wording.
+- Updated registered-artifact runtime row selection to prefer the current
+  candidate set before falling back to same-`path_id` artifact rows.
+
+### Verification
+
+- `cargo clippy --all-targets -- -D warnings`
+  - passed.
+- `cargo test application::entry_models::training_export::tests::register_structural_path_ranking_trainer_artifact_requires_rule_or_tree_for_explicit_family -- --nocapture`
+  - passed.
+- `cargo test application::orchestration::structural_playbook::tests::path_ranker_runtime_prefers_current_candidate_row_over_stale_duplicate_artifact_row -- --nocapture`
+  - passed.
+- `python3 support/scripts/done_definition_audit.py --run-all-heavy --output /tmp/ict-engine-done-definition-audit-heavy.json`
+  - `summary.status=pass`
+  - `pass_count=8`
+  - `fail_count=0`
+  - `skip_count=0`
+  - `unresolved=[]`
+  - passed heavy gates include `cargo_check_all_targets`,
+    `cargo_clippy_all_targets_deny_warnings`, `cargo_test`, and
+    `smoke_acceptance_tmp_state`.
+
+### Remaining Gaps
+
+- Done Definition auditor closure is green for the current tree, but this is
+  not a release-ready claim.
+- Continue using the auditor after future maintenance slices so heavy-gate
+  drift is caught before handoff.
+- Broader closed-loop/release criteria from repo `AGENT.md` still require
+  separate fresh evidence before any publish/tag/release statement.
+
+---
+
+## 2026-05-22 continuation - zero-config closed-loop/privacy release-gate audit
+
+Current answer to "is this 100% complete?": no. The Done Definition helper is
+green, but the broader repo `AGENT.md` release gate still requires fresh
+evidence that a clean consumer can inspect the chain without private paths,
+keys, maintainer datasets, or hidden profile assumptions.
+
+Dedicated handoff TODO for this slice:
+`support/docs/plans/2026-05-22-zero-config-closed-loop-smoke-handoff-todo.md`.
+
+### Active Slice
+
+Run a fresh zero-config consumer smoke from `/tmp`, then inspect the actual
+captured outputs and state artifacts against the release-gate checklist:
+
+- no-profile provider behavior falls back to public/default data surfaces;
+- human/agent outputs stay compact and token-friendly;
+- outputs do not leak private paths, keys, tokens, or maintainer-local data;
+- regime posterior and uncertainty are visible before claiming readiness;
+- Pre-Bayes/filter, BBN/workflow snapshot, structural path-ranker/training
+  status, execution tree trace, and feedback/update learning surfaces are
+  inspectable or explicitly marked missing;
+- any missing evidence becomes a concrete next remediation item, not a
+  release-ready claim.
+
+### Planned Evidence
+
+- `STATE_DIR=/tmp/ict-engine-closed-loop-privacy-audit-20260522T1800Z`
+- `OUT_DIR=/tmp/ict-engine-closed-loop-privacy-audit-20260522T1800Z/smoke-output`
+- `bash support/scripts/smoke_acceptance.sh`
+- targeted `jq` / `rg` readback over captured output and state files.
+
+### Status
+
+- fresh zero-config smoke passed under
+  `/tmp/ict-engine-closed-loop-privacy-audit-20260522T1800Z`.
+- inspected outputs:
+  - `provider_status.out`: no-profile public fallback visible;
+  - `analyze_demo.out`: compact human output and observe-only decision;
+  - `workflow_agent.out`: regime/filter/BBN surfaces visible, but
+    `latest_structural_feedback=null`;
+  - `policy_training_agent.out`: structural path-ranker stays fail-closed with
+    `update_runs=0` and `0/30` maturity shortfalls.
+- ran explicit demo-safe learning update:
+  `cargo run --quiet -- update --symbol DEMO --state-dir /tmp/ict-engine-closed-loop-privacy-audit-20260522T1800Z --outcome breakeven --pnl 0`
+  with output captured in `smoke-output/update_demo.out`.
+- post-update evidence:
+  - `DEMO/update_runs.json`: `update_runs_len=1`,
+    `feedback_records_applied=1`,
+    `structural_learning_credit_class=fractional_breakeven`,
+    `execution_gate_status=execution_blocked`;
+  - `DEMO/learning_state.json`: `feedback_history_len=1`,
+    latest feedback `realized_outcome=breakeven`;
+  - `smoke-output/workflow_agent_after_update.out`: source phase moved to
+    `update` while execution remains blocked;
+  - `smoke-output/policy_training_agent_after_update.out`: `update_runs=1`,
+    target export ready, ranker runtime still disabled/not ready because
+    mature validation rows remain `0/30`.
+- privacy scan after update over `smoke-output` produced no matches for
+  private path/secret patterns.
+- remediation applied in this slice: `support/scripts/smoke_acceptance.sh` now
+  includes a zero-config demo update step using
+  `SMOKE_UPDATE_OUTCOME=breakeven` and `SMOKE_UPDATE_PNL=0` defaults, followed
+  by after-update workflow/policy status readback. The script now asserts
+  `feedback_records_applied=1`, `source_phase=update`, and `update_runs=1`
+  before passing. The defaults are smoke-only and can be overridden by
+  consumers.
+
+### Verification
+
+- `bash -n support/scripts/smoke_acceptance.sh`
+  - passed.
+- `python3 -m unittest support.scripts.tests.test_smoke_acceptance -v`
+  - `Ran 3 tests`; `OK`.
+- `git diff --check -- support/scripts/smoke_acceptance.sh support/scripts/tests/test_smoke_acceptance.py support/docs/smoke-acceptance.md support/docs/plans/2026-05-09-ict-engine-audit-remediation-todo.md`
+  - passed.
+- `STATE_DIR=/tmp/ict-engine-smoke-acceptance-after-update-20260522T1819Z OUT_DIR=/tmp/ict-engine-smoke-acceptance-after-update-20260522T1819Z/smoke-output bash support/scripts/smoke_acceptance.sh`
+  - passed.
+  - `DEMO/update_runs.json`: `update_runs_len=1`,
+    `realized_outcome=breakeven`, `feedback_records_applied=1`,
+    `structural_learning_credit_class=fractional_breakeven`.
+  - `policy_training_agent.out`: `update_runs=1`,
+    `structural_path_ranking_target.export_ready=true`,
+    `trainer_manifest_ready=true`.
+  - `workflow_agent_after_update.out`: source phase `update`,
+    `execution_gate_status=execution_blocked`,
+    `blocking_status=bridge_needs_confirmation`.
+- `python3 support/scripts/done_definition_audit.py --output /tmp/ict-engine-done-definition-audit-light-after-smoke-update.json`
+  - `summary.status=pass`, `pass_count=4`, `fail_count=0`,
+    `skip_count=4`, `unresolved=[]`.
+- after adding smoke assertions:
+  - `bash -n support/scripts/smoke_acceptance.sh` passed.
+  - `python3 -m unittest support.scripts.tests.test_smoke_acceptance -v`
+    passed 3/3.
+  - `STATE_DIR=/tmp/ict-engine-smoke-acceptance-asserted-update-20260522T1825Z OUT_DIR=/tmp/ict-engine-smoke-acceptance-asserted-update-20260522T1825Z/smoke-output bash support/scripts/smoke_acceptance.sh`
+    passed with the built-in assertions active.
+  - `python3 support/scripts/done_definition_audit.py --output /tmp/ict-engine-done-definition-audit-light-after-smoke-assertions.json`
+    passed with `summary.status=pass`, `pass_count=4`, `fail_count=0`,
+    `skip_count=4`, `unresolved=[]`.
+
+### Remaining Boundary
+
+- The reusable zero-config smoke now proves the demo update/writeback path.
+- This still is not a release-ready or trade-ready claim: structural
+  path-ranker runtime remains disabled/not ready until mature validation rows
+  reach the configured threshold, and DEMO `breakeven` is smoke-only feedback.
