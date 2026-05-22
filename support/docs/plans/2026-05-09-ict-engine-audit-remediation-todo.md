@@ -5561,3 +5561,65 @@ Before any release/mirror completion claim:
 
 - Updated `support/docs/audits/release-signoff.md` with this readback.
 - This is a blocker record only, not a release-prep or publish action.
+
+## 2026-05-22 continuation - release readiness audit helper
+
+Current answer to "is this 100% complete?": no. This slice converts the release
+blocker from ad hoc manual readback into a repeatable, zero-config, read-only
+audit helper.
+
+### Finding
+
+The release blocker had four separate current-state facts that were easy to
+miss if checked manually:
+
+- the checkout is still broad and dirty;
+- `support/docs/audits/release-signoff.md` and
+  `support/docs/release-notes-draft.md` are historical, not fresh tag/export
+  evidence;
+- source `HEAD`, source `origin/main`, and mirror `main` do not match;
+- `Cargo.toml` reports `version = "0.1.3"` while the release mirror already has
+  tag `v0.1.3` and `v0.1.4`.
+
+### Remediation
+
+- Added `support/scripts/release_readiness_audit.py`.
+- Added focused tests in
+  `support/scripts/tests/test_release_readiness_audit.py`.
+- Registered the helper in `support/scripts/SCRIPTS.md` and
+  `support/scripts/script_manifest.json`.
+- Updated `support/scripts/check_script_manifest.py` so this public release
+  helper remains part of the required script surface.
+
+### Verification
+
+- `python3 -m unittest support.scripts.tests.test_release_readiness_audit -v`
+  - passed `6` tests.
+- `python3 -m py_compile support/scripts/release_readiness_audit.py support/scripts/tests/test_release_readiness_audit.py`
+  - passed.
+- `python3 support/scripts/release_readiness_audit.py --output /tmp/ict-engine-release-readiness-audit-offline.json`
+  - exited `1` as expected for current blockers;
+  - `summary.status=needs_fix`;
+  - unresolved: `worktree_clean_for_release`,
+    `release_docs_fresh_for_selected_tag`;
+  - remote readback skipped unless `--check-remotes` is explicitly enabled.
+- `python3 support/scripts/release_readiness_audit.py --check-remotes --output /tmp/ict-engine-release-readiness-audit-remote.json`
+  - exited `1` as expected for current blockers;
+  - `summary.status=needs_fix`;
+  - unresolved: `worktree_clean_for_release`,
+    `release_docs_fresh_for_selected_tag`,
+    `source_origin_matches_selected_source`,
+    `release_version_tag_available`;
+  - observed mirror tags: `v0.0.1`, `v0.1.0`, `v0.1.1`, `v0.1.2`,
+    `v0.1.3`, `v0.1.4`.
+- Corrected the remote gate semantics during verification: the helper now fails
+  on source `origin/main` drift, but does not require the release mirror commit
+  SHA to equal source `HEAD`, because the mirror flow may rebuild commits from a
+  sanitized archive.
+
+### Remaining Broad Blockers
+
+- This helper proves release is not ready; it does not publish or prepare a
+  release.
+- Practical factor diffusion still has no `trade_usable=true` /
+  `promotion_allowed=true` evidence.

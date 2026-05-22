@@ -32,6 +32,14 @@
     "test_command": "python3 support/scripts/done_definition_audit.py"
   },
   {
+    "name": "release_readiness_audit",
+    "stability": "audit_helper",
+    "entrypoint": "support/scripts/release_readiness_audit.py",
+    "safe_default": true,
+    "requires_data": false,
+    "test_command": "python3 -m unittest support.scripts.tests.test_release_readiness_audit -v"
+  },
+  {
     "name": "check_factor_truth_map",
     "stability": "docs_guard",
     "entrypoint": "support/scripts/check_factor_truth_map.py",
