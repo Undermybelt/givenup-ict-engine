@@ -11,6 +11,62 @@
 
 ---
 
+### Live Audit Loop - 2026-05-22 21:58 +0800
+
+Owner: Codex current turn.
+Claim: continuing the full-audit/remediation loop; current answer to
+"所以无事可做了" is no.
+
+Fresh evidence:
+
+- Routing was refreshed before repo work:
+  - `~/.hermes/routing/skill-router.md`
+  - `~/.hermes/routing/project-router.md`
+  - repo `CLAUDE.md`
+  - repo `AGENT.md`
+  - installed runtime skill
+    `/Users/thrill3r/.hermes/skills/software-development/ict-engine-maintenance-loop/SKILL.md`
+- `git status --short` still reports a broad dirty worktree, including many
+  tracked Rust/source/doc changes and hundreds of untracked experiment scripts;
+  do not treat the tree as release-ready or stage broadly.
+- `python3 support/scripts/release_readiness_audit.py --compact --check-remotes --output /tmp/ict-engine-release-readiness-audit-current.json`
+  exited `1` with:
+  - `summary.status=needs_fix`
+  - `pass_count=1`
+  - `fail_count=4`
+  - unresolved:
+    `worktree_clean_for_release`,
+    `release_docs_fresh_for_selected_tag`,
+    `source_origin_matches_selected_source`,
+    `release_version_tag_available`
+- `python3 support/scripts/factor_claim_terminalization_audit.py --output /tmp/ict-engine-factor-claim-terminalization-audit-current.json --compact`
+  exited `1` by design with:
+  - `summary.status=needs_attention`
+  - `total_claims=42`
+  - `terminalized_claims=28`
+  - `active_claims=14`
+  - `missing_run_roots=0`
+  - `trade_usable_true=0`
+  - `promotion_allowed_true=0`
+- `python3 support/scripts/done_definition_audit.py --output /tmp/ict-engine-done-definition-audit-current.json`
+  passed light gates only:
+  - `summary.status=pass`
+  - `pass_count=4`
+  - `fail_count=0`
+  - `skip_count=4`
+  - heavy gates were intentionally skipped in this quick readback.
+
+Next safe actions:
+
+1. Release lane: fix or document the four release-readiness blockers without
+   publishing, tagging, pushing, or using the dirty tree as an export source.
+2. Factor lane: continue claim terminalization / same-root repair triage from
+   active claims without taking over another active Board B lane.
+3. Consumer lane: keep zero-config defaults intact and keep maintainer-specific
+   data/profile reuse opt-in through the hot-plug adoption bundle.
+
+---
+
 ### Live Audit Loop - 2026-05-21 22:21 +0800
 
 Owner: Codex current turn.

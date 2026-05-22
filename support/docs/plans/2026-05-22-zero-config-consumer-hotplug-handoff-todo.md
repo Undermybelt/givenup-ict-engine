@@ -90,6 +90,26 @@ Status legend: `done`, `active`, `next`, `blocked`, `not_yet`.
 
 ## Live Notes
 
+- 2026-05-22 21:58 +0800 live readback for "所以无事可做了":
+  - Deterministic answer: no. Current repo evidence still has unresolved work.
+  - `python3 support/scripts/release_readiness_audit.py --compact --check-remotes --output /tmp/ict-engine-release-readiness-audit-current.json`
+    exited `1` with `summary.status=needs_fix`, `pass_count=1`,
+    `fail_count=4`, unresolved gates:
+    `worktree_clean_for_release`, `release_docs_fresh_for_selected_tag`,
+    `source_origin_matches_selected_source`, and
+    `release_version_tag_available`.
+  - `python3 support/scripts/factor_claim_terminalization_audit.py --output /tmp/ict-engine-factor-claim-terminalization-audit-current.json --compact`
+    exited `1` by design with `summary.status=needs_attention`,
+    `total_claims=42`, `terminalized_claims=28`, `active_claims=14`,
+    `missing_run_roots=0`, `trade_usable_true=0`, and
+    `promotion_allowed_true=0`.
+  - `python3 support/scripts/done_definition_audit.py --output /tmp/ict-engine-done-definition-audit-current.json`
+    passed the light gate with `pass_count=4`, `fail_count=0`, `skip_count=4`;
+    this is not a current full-heavy completion claim.
+  - Next safe target: continue from release readiness or factor claim
+    terminalization without taking over active Board B lanes; keep zero-config
+    defaults and personal/profile reuse as opt-in.
+
 - RED evidence:
   - `python3 -m unittest support/scripts/research/tests/test_external_history_adoption.py -v`
   - failure surface: missing `default_choice_id`, missing `command_choices`, no explicit zero-config / opt-in split
