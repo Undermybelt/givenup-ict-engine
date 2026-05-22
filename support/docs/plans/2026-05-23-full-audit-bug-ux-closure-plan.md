@@ -42,7 +42,7 @@ complete.
 | R3 | Default provider behavior is zero-config and fallback-oriented | `provider-status --compact` and `workflow-status` evidence, no required private profile | smoke provider output passed; `provider_status.out` reports yfinance live zero-config and public crypto runtimes ready |
 | R4 | Closed-loop surfaces are inspectable end-to-end | provider -> regime posterior -> Pre-Bayes -> BBN -> path-ranker/CatBoost visibility -> execution tree -> feedback/training readbacks | smoke passed through analyze/update/workflow/pre-Bayes/policy-training readbacks; practical factor promotion remains unproven |
 | R5 | Release readiness is clear | `support/scripts/release_readiness_audit.py --compact --check-remotes` exits `0` | fresh fail: worktree dirty, stale release docs, source origin mismatch, reused `v0.1.3` |
-| R6 | Factor claim/process hygiene is clear | `support/scripts/factor_claim_terminalization_audit.py --compact` exits `0` | fresh fail: active claims and live factor processes |
+| R6 | Factor claim/process hygiene is clear | `support/scripts/factor_claim_terminalization_audit.py --compact` exits `0` | post-`49c2bc31` pass: active claims, live factor processes, and missing run roots are all `0` |
 | R7 | At least one practical factor is truly promotion/trade usable if the objective claims practical factor closure | downstream evidence has `promotion_allowed=true` and `trade_usable=true` with cost/sample/provider gates | known zero positives in latest handoff |
 | R8 | Docs do not become runtime inputs | `support/scripts/ci/check_docs_runtime_isolation.py` exits `0` | fresh pass |
 | R9 | Script governance surfaces are consistent | `support/scripts/check_script_manifest.py` exits `0`; relevant script tests pass | fresh pass for manifest; focused script tests still per-slice |
@@ -62,7 +62,7 @@ baseline scan.
   `source_origin_matches_selected_source`, and `release_version_tag_available`
   were unresolved in the latest release-readiness audit.
 - Practical factor closure is not proven:
-  the latest factor handoff had `promotion_allowed_true=0` and
+  the latest factor audit has `promotion_allowed_true=0` and
   `trade_usable_true=0`.
 - The worktree is broad and dirty; release must not publish directly from it.
 - Fresh consumer smoke, privacy scan, docs/runtime isolation, script manifest,
@@ -111,7 +111,7 @@ Repeat until all requirements are proven:
   staged paths.
 - [x] Patch the factor-claim audit parser so `pending_*` run-root placeholders
   do not become false `missing_run_roots` blockers.
-- [ ] Terminalize or externalize current active factor claims without
+- [x] Terminalize or externalize current active factor claims without
   interrupting live provider/AQ processes.
 - [ ] Keep release readiness blocked until a clean selected export, fresh
   release docs/signoff, unused version/tag, remote parity, and explicit
@@ -452,3 +452,52 @@ Decision:
   detection.
 - It does not clear the objective. Real active claims/live wrappers can still
   exist and must terminalize or be externalized by evidence.
+
+### 2026-05-23 07:40 CST Post-Classifier Claim Hygiene Readback
+
+Commits landed since the previous drift readback:
+
+- `7fb46d2a fix: ignore pending factor run roots`
+  - prevents `pending_*` run-root placeholders from becoming false missing-root
+    blockers.
+- `49c2bc31 fix: filter factor audit readback probes`
+  - filters read-only `ps auxww | rg/grep` and `sed -n` probes while preserving
+    real wrapper/fetch/TOMAC helper process detection.
+
+Fresh factor claim/process audit:
+
+- `python3 support/scripts/factor_claim_terminalization_audit.py --compact --output /tmp/ict-engine-full-audit-20260523-codex-refresh/factor_claim_terminalization_after_process_exit_probe.json`
+  - exit `0`.
+  - status `pass`.
+  - summary: `active_claims=0`, `live_factor_processes=0`,
+    `missing_run_roots=0`, `terminalized_claims=103`, `total_claims=103`,
+    `promotion_allowed_true=0`, `trade_usable_true=0`.
+  - attention claims/processes: none.
+- NTNX run-root evidence:
+  `support/docs/experiments/actionable-regime-confidence/runs/20260523T072352+0800-codex-ibkr-ntnx-bayesian-markov-trend-detector-1m-mtf-gate1-v1/`
+  - terminal decision: `provider_or_aq_blocked_no_gate1_verdict`.
+  - provider rows acquired: `0`; material count: `0`; rank rows: `0`.
+  - `promotion_allowed=false`, `trade_usable=false`.
+
+Fresh release-readiness audit:
+
+- `python3 support/scripts/release_readiness_audit.py --compact --check-remotes --output /tmp/ict-engine-full-audit-20260523-codex-refresh/release_readiness_after_commit_49c2bc31.json`
+  - exit `1`.
+  - status `needs_fix`, `fail_count=4`, `pass_count=1`.
+  - `HEAD=49c2bc31a4a5aa8acf9817994c9112620ea90754`.
+  - unresolved gates:
+    `worktree_clean_for_release`,
+    `release_docs_fresh_for_selected_tag`,
+    `source_origin_matches_selected_source`,
+    `release_version_tag_available`.
+  - current version remains `0.1.3`; existing mirror tags include `v0.1.3`
+    and `v0.1.4`; audit still suggests `0.1.5` / `v0.1.5`.
+
+Decision:
+
+- Factor claim/process hygiene is now clear for the current audit snapshot.
+- Practical factor completion is still not proven because there are zero
+  `promotion_allowed=true` and zero `trade_usable=true` results.
+- Release remains blocked by dirty source state, stale release docs/signoff,
+  source remote mismatch, reused current version/tag, and missing explicit
+  operator release approval.
