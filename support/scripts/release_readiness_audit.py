@@ -192,14 +192,22 @@ def suggest_next_patch_version(version: str | None, release_tags: set[str]) -> s
 
 
 def evaluate_version_tag_unknown(reason: str) -> dict[str, Any]:
+    details: dict[str, Any] = {
+        "reason": reason,
+        "enable_with": "--check-remotes",
+        "rule": "release tag availability must be checked against release mirror tags, not local tags",
+    }
+    if reason == "release_mirror_tags_unavailable":
+        details.update(
+            {
+                "blocked_by_gate": "remote_readback",
+                "next_action": "resolve remote_readback, then rerun release readiness audit with --check-remotes",
+            }
+        )
     return {
         "id": "release_version_tag_available",
         "status": "skip",
-        "details": {
-            "reason": reason,
-            "enable_with": "--check-remotes",
-            "rule": "release tag availability must be checked against release mirror tags, not local tags",
-        },
+        "details": details,
     }
 
 

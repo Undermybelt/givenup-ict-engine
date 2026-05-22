@@ -106,6 +106,14 @@ R  old.rs -> new.rs
         self.assertEqual(gate["details"]["reason"], "network_check_not_enabled")
         self.assertEqual(gate["details"]["enable_with"], "--check-remotes")
 
+    def test_version_tag_skip_points_to_remote_readback_when_mirror_tags_unavailable(self) -> None:
+        gate = evaluate_version_tag_unknown("release_mirror_tags_unavailable")
+
+        self.assertEqual(gate["id"], "release_version_tag_available")
+        self.assertEqual(gate["status"], "skip")
+        self.assertEqual(gate["details"]["blocked_by_gate"], "remote_readback")
+        self.assertIn("remote_readback", gate["details"]["next_action"])
+
     def test_remote_readback_failure_names_blocked_tag_gate(self) -> None:
         gate = evaluate_remote_readback(
             origin_state="pass",

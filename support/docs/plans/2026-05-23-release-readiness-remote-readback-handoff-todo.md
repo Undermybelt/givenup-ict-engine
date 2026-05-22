@@ -32,6 +32,8 @@ mirror.
 - [x] Run a fresh real `--check-remotes` compact audit.
 - [x] Compress compact command-output details so `git ls-remote` stdout/stderr
   do not flood token-friendly output.
+- [x] Make `release_version_tag_available=skip` point back to
+  `remote_readback` when release mirror tags are unavailable.
 
 ### Next
 
@@ -92,6 +94,27 @@ mirror.
   exited `1` as expected and emitted `stdout_line_count`,
   `stderr_line_count`, and short `stderr_excerpt` fields instead of raw remote
   ref lists.
+- Version-tag skip actionability RED:
+  `python3 -m unittest support.scripts.tests.test_release_readiness_audit.ReleaseReadinessAuditTest.test_version_tag_skip_points_to_remote_readback_when_mirror_tags_unavailable -v`
+  failed before implementation with `KeyError: 'blocked_by_gate'`.
+- Version-tag skip actionability GREEN:
+  the same targeted test passed after
+  `evaluate_version_tag_unknown("release_mirror_tags_unavailable")` began
+  emitting `blocked_by_gate=remote_readback` plus a rerun action.
+- Full release-audit tests after version-tag skip actionability:
+  `python3 -m unittest support.scripts.tests.test_release_readiness_audit -v`
+  passed `15` tests.
+- Compile after version-tag skip actionability:
+  `python3 -m py_compile support/scripts/release_readiness_audit.py support/scripts/tests/test_release_readiness_audit.py`
+  passed.
+- Script manifest after version-tag skip actionability:
+  `python3 support/scripts/check_script_manifest.py`
+  passed with `entries=21`.
+- Real compact remote audit after version-tag skip actionability:
+  `python3 support/scripts/release_readiness_audit.py --compact --check-remotes --output /tmp/ict-engine-release-readiness-version-skip-actionability-20260523.json`
+  exited `1` as expected. The mirror was reachable in that run, so
+  `release_version_tag_available` failed on existing `v0.1.3` rather than
+  exercising the skip branch live.
 
 ## Current Readback
 
@@ -111,6 +134,10 @@ The follow-up compact-output slice then removed raw command output from compact
 JSON. Current compact readback still reports `summary.status=needs_fix`, but
 remote command details now expose counts and excerpts rather than full
 `ls-remote` output.
+
+The version-tag skip path is now self-explanatory when mirror tags are
+unavailable: it keeps `status=skip`, still refuses local-tag authority, and
+points consumers back to `remote_readback` as the blocked upstream gate.
 
 Unresolved gates from
 `/tmp/ict-engine-release-readiness-remote-actionability-20260523.json`:
