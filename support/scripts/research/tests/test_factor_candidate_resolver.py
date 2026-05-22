@@ -114,6 +114,10 @@ class FactorCandidateResolverTests(unittest.TestCase):
 
         self.assertEqual(bundle["summary"]["selection_mode"], "profile_opt_in")
         self.assertEqual(bundle["selected_profile"]["profile_id"], "thrill3r_nq_auto_quant_v1")
+        self.assertEqual(
+            bundle["selected_profile"]["selector"],
+            "thrill3r-nq-auto-quant-v1",
+        )
         self.assertGreaterEqual(bundle["summary"]["buildable_count"], 5)
         vrp = next(
             item

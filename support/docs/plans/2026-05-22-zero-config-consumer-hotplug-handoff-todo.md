@@ -70,7 +70,9 @@ Status legend: `done`, `active`, `next`, `blocked`, `not_yet`.
 | done | Update adoption helper to emit dual-lane bundle + shell file | `support/scripts/research/external_history_adoption.py` now emits `command_choices`, `default_choice_id=keep_zero_config`, top-level zero-config commands, and separate opt-in commands. |
 | done | Fix repo profile selector propagation for emitted `--profile` commands | `support/scripts/research/market_data_resolver.py` now exposes `selected_profile.selector`, and the adoption helper now uses `thrill3r-nq-external-history-v1` rather than the invalid underscore profile id. |
 | done | Verify helper tests and shell artifact shape | Unit tests and real `/tmp` smoke passed; emitted JSON and shell now show both `keep_zero_config` and `reuse_saved_profile`. |
-| active | Decide whether this slice is coherent enough for a narrow commit | Only stage the new handoff doc, helper, tests, resolver update, and directly related doc updates. |
+| done | Commit the dual-lane adoption slice narrowly | Commit `7deca84b` staged only helper/resolver/tests/handoff-doc files. |
+| done | Keep adjacent resolver profile surfaces consistent | `support/scripts/research/factor_candidate_resolver.py` now also exposes `selected_profile.selector`; dedicated tests passed. |
+| active | Choose the next consumer-safe hot-plug surface after resolver consistency | Current likely target: remaining token-friendly adoption/readback surfaces rather than busy Rust command files. |
 
 ## Verification Checklist
 
@@ -92,6 +94,14 @@ Status legend: `done`, `active`, `next`, `blocked`, `not_yet`.
   - `python3 -m py_compile support/scripts/research/market_data_resolver.py support/scripts/research/external_history_adoption.py support/scripts/research/tests/test_market_data_resolver.py support/scripts/research/tests/test_external_history_adoption.py`
   - `python3 -m unittest support/scripts/research/tests/test_market_data_resolver.py support/scripts/research/tests/test_external_history_adoption.py -v`
     - passed: `6` tests
+- Adjacent consistency follow-up:
+  - RED:
+    - `python3 -m unittest support/scripts/research/tests/test_factor_candidate_resolver.py -v`
+    - failed on missing `selected_profile.selector`
+  - GREEN:
+    - `python3 -m py_compile support/scripts/research/factor_candidate_resolver.py support/scripts/research/tests/test_factor_candidate_resolver.py`
+    - `python3 -m unittest support/scripts/research/tests/test_factor_candidate_resolver.py -v`
+    - passed: `9` tests
 - Real smoke:
   - run root: `/tmp/ict-engine-external-history-adoption-rRPMTB`
   - `python3 support/scripts/research/external_history_adoption.py --repo-root . --market NQ --symbol BTCUSDT_EXT_1H --input 1h=/tmp/ict-engine-external-history-adoption-rRPMTB/btc-1h.json --output-dir /tmp/ict-engine-external-history-adoption-rRPMTB/out`
@@ -105,6 +115,7 @@ Status legend: `done`, `active`, `next`, `blocked`, `not_yet`.
     - section `# keep_zero_config (recommended)`
     - section `# reuse_saved_profile`
     - opt-in commands use `--profile thrill3r-nq-external-history-v1`
-- No commit created yet in this continuation slice.
+ - Narrow checkpoint already committed:
+  - `7deca84b` `feat: split external history adoption into zero-config and opt-in lanes`
 - The dirty worktree is large; this board stays scoped to the external-history
   adoption helper unless new evidence forces a narrower or safer target.

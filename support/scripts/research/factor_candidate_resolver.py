@@ -87,6 +87,7 @@ def _selected_profile_surface(profile: dict[str, Any] | None) -> dict[str, Any] 
         return None
     return {
         "profile_id": profile["profile_id"],
+        "selector": profile.get("_source_stem", profile["profile_id"]),
         "display_name": profile["display_name"],
         "opt_in_only": profile.get("opt_in_only", False),
         "summary": profile.get("summary", ""),
