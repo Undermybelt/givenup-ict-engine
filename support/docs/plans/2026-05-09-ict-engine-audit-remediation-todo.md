@@ -5690,3 +5690,47 @@ large dirty tree.
 - Release readiness remains blocked by the prior release-readiness audit helper.
 - This helper only reduces audit ambiguity; it does not repair factor gates or
   authorize release/publish.
+
+## 2026-05-22 continuation - release readiness compact output
+
+Current answer to "is the full audit/pain-removal plan complete?": no. A fresh
+resume probe found an ergonomic/token-footprint bug in the release-readiness
+helper: `support/scripts/release_readiness_audit.py --compact` failed at
+argument parsing, while adjacent audit helpers already support compact JSON for
+agent readback.
+
+### Remediation
+
+- Added `format_report(report, compact)` to
+  `support/scripts/release_readiness_audit.py`.
+- Added `--compact` to emit single-line JSON with compact separators.
+- Kept the default pretty JSON unchanged.
+- Kept fail-closed semantics unchanged: current release blockers still return
+  exit `1`.
+- Added regression coverage in
+  `support/scripts/tests/test_release_readiness_audit.py`.
+
+### Verification
+
+- RED:
+  - `python3 support/scripts/release_readiness_audit.py --compact --output /tmp/ict-engine-release-readiness-audit-resume-offline.json`
+  - failed with `error: unrecognized arguments: --compact`.
+  - `python3 -m unittest support.scripts.tests.test_release_readiness_audit -v`
+  - failed when importing missing `format_report`.
+- GREEN:
+  - `python3 -m unittest support.scripts.tests.test_release_readiness_audit -v`
+  - passed `7` tests.
+  - `python3 -m py_compile support/scripts/release_readiness_audit.py support/scripts/tests/test_release_readiness_audit.py`
+  - passed.
+  - `python3 support/scripts/release_readiness_audit.py --compact --output /tmp/ict-engine-release-readiness-audit-resume-offline-compact-v2.json`
+  - exited `1` as expected for current release blockers while writing
+    single-line compact JSON.
+
+### Current Release Blocker Readback
+
+- Offline compact report summary:
+  `status=needs_fix`, `pass_count=2`, `fail_count=2`, `skip_count=1`.
+- Unresolved offline gates:
+  `worktree_clean_for_release`, `release_docs_fresh_for_selected_tag`.
+- Remote readback remains opt-in through `--check-remotes`; this compact-output
+  slice does not publish, tag, or prepare a release.

@@ -13,6 +13,7 @@ from release_readiness_audit import (  # noqa: E402
     evaluate_docs_freshness,
     evaluate_source_origin_alignment,
     evaluate_version_tag,
+    format_report,
     parse_cargo_metadata,
     parse_ls_remote,
     summarize,
@@ -82,6 +83,13 @@ ghi789\trefs/tags/v0.1.4^{}
         )
         self.assertEqual(summary["status"], "needs_fix")
         self.assertEqual(summary["unresolved"], ["c"])
+
+    def test_format_report_compact_emits_single_line_json(self) -> None:
+        report = {"summary": {"status": "pass"}, "gates": [{"id": "a", "status": "pass"}]}
+        text = format_report(report, compact=True)
+        self.assertTrue(text.endswith("\n"))
+        self.assertNotIn("\n  ", text)
+        self.assertIn('"summary":{"status":"pass"}', text)
 
 
 if __name__ == "__main__":

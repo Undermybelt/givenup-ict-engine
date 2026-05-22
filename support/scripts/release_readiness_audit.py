@@ -274,19 +274,26 @@ def build_report(root: Path, check_remotes: bool) -> dict[str, Any]:
     }
 
 
+def format_report(report: dict[str, Any], compact: bool) -> str:
+    indent = None if compact else 2
+    separators = (",", ":") if compact else None
+    return json.dumps(report, indent=indent, separators=separators, sort_keys=True) + "\n"
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="Read-only ict-engine release readiness audit")
     parser.add_argument("--check-remotes", action="store_true", help="Run git ls-remote against source origin and release mirror")
     parser.add_argument("--output", type=Path, help="Optional JSON output path")
+    parser.add_argument("--compact", action="store_true", help="Emit single-line JSON for token-friendly agent use")
     args = parser.parse_args()
 
     root = repo_root(Path(__file__).resolve())
     report = build_report(root, check_remotes=args.check_remotes)
-    text = json.dumps(report, indent=2, sort_keys=True)
+    text = format_report(report, compact=args.compact)
     if args.output:
         args.output.parent.mkdir(parents=True, exist_ok=True)
-        args.output.write_text(text + "\n", encoding="utf-8")
-    print(text)
+        args.output.write_text(text, encoding="utf-8")
+    sys.stdout.write(text)
     return 0 if report["summary"]["status"] == "pass" else 1
 
 
