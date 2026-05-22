@@ -11,6 +11,100 @@
 
 ---
 
+### Live Audit Loop - 2026-05-23 00:34 +0800
+
+Owner: Codex current turn.
+Claim: continuing the full-audit/remediation loop from current worktree
+evidence. Answer to "so there is nothing left to do": no. Current evidence still
+disproves full completion and release readiness.
+
+Fresh current-state commands:
+
+- `git status --short --untracked-files=all`
+- `python3 support/scripts/release_readiness_audit.py --compact --check-remotes --output /tmp/ict-engine-release-readiness-current.json`
+- `python3 support/scripts/done_definition_audit.py --compact --output /tmp/ict-engine-done-current.json`
+- `python3 support/scripts/factor_claim_terminalization_audit.py --compact --output /tmp/ict-engine-factor-claims-current.json`
+
+Current findings:
+
+- Release readiness remains `needs_fix` with unresolved gates:
+  `worktree_clean_for_release`, `release_docs_fresh_for_selected_tag`,
+  `source_origin_matches_selected_source`, and
+  `release_version_tag_available`.
+- Release audit details:
+  current `Cargo.toml` version is `0.1.3`; candidate tag `v0.1.3` is already
+  used by the release mirror; audit suggests next patch `0.1.5` / `v0.1.5`.
+  Source `HEAD=956a1c3e1907483953024c2d4ba9ecb23036442d` is `79` commits
+  ahead of `origin/main=79d9579ea38685bd8c798dc80c1f5177e3c220b6`.
+- Current worktree is not release-clean:
+  `status_entries=854`, `tracked_entries=77`, `untracked_entries=777`.
+  Do not publish from this checkout or stage broadly.
+- Done-definition compact audit is only light evidence:
+  `summary.status=pass`, `completion_ready=false`,
+  `evidence_level=partial_skipped_gates`, `pass_count=4`, `skip_count=4`.
+  Skipped heavy gates are `cargo_check_all_targets`,
+  `cargo_clippy_all_targets_deny_warnings`, `cargo_test`, and
+  `smoke_acceptance_tmp_state`.
+- Factor-claim compact audit still needs attention:
+  `active_claims=7`, `terminalized_claims=2`, `trade_usable_true=0`,
+  `promotion_allowed_true=0`. All attention claims have
+  `run_root_state=none`, so this turn must not collide with those active
+  Board B/TOMAC lanes.
+
+Immediate next safe action:
+
+- Run the current-tree heavy done-definition audit before making any stronger
+  completion statement. If it fails, fix only a narrow owned slice; if it
+  passes, keep release and factor blockers explicit because heavy pass alone is
+  not a release or trade-usability proof.
+
+Follow-up repair from the heavy gate:
+
+- Full-heavy readback:
+  `python3 support/scripts/done_definition_audit.py --run-all-heavy --compact --output /tmp/ict-engine-done-current-heavy.json`
+  exited `1` with `summary.status=needs_fix`, `pass_count=7`, `fail_count=1`,
+  and unresolved `smoke_acceptance_tmp_state`.
+- Root cause 1:
+  the auditor defaulted every smoke run to the same
+  `/tmp/ict-engine-done-definition-audit-smoke` state. Repeated heavy runs
+  accumulated smoke history, so `policy-training-status` reported
+  `update_runs=2` while `support/scripts/smoke_acceptance.sh` correctly expects
+  one update in a fresh smoke state.
+- Root cause 2:
+  timeout handling used `subprocess.run(... timeout=...)`, which could report a
+  timeout while leaving child `smoke_acceptance.sh` / `cargo run` processes
+  alive.
+- Fix applied:
+  `support/scripts/done_definition_audit.py` now uses a fresh
+  `/tmp/ict-engine-done-definition-audit-smoke-<timestamp>-<pid>` state by
+  default for smoke gates, preserves explicit `--smoke-state-dir` for debugging,
+  and runs commands in a new process group so timeout cleanup kills child
+  processes.
+- Regression coverage:
+  `support/scripts/tests/test_done_definition_audit.py` now covers fresh default
+  smoke state, explicit state preservation, JSON-serializable timeout details,
+  and timeout child-process cleanup.
+- Fresh evidence:
+  `python3 -m unittest support.scripts.tests.test_done_definition_audit -v`
+  passed `13` tests; `python3 -m py_compile support/scripts/done_definition_audit.py support/scripts/tests/test_done_definition_audit.py`
+  passed; `python3 support/scripts/check_script_manifest.py` passed.
+- Smoke evidence after the fix:
+  `python3 support/scripts/done_definition_audit.py --run-smoke --compact --heavy-timeout-seconds 1800 --output /tmp/ict-engine-done-current-smoke-after-timeout-cleanup-20260523.json`
+  exited `0`; compact summary has `status=pass`, `pass_count=5`,
+  `skip_count=3`, `smoke_acceptance_tmp_state=pass`, and
+  `completion_ready=false` because cargo check/clippy/test were intentionally
+  skipped in this smoke-only rerun.
+- Cleanup evidence:
+  process readback after the timeout-cleanup probe showed no remaining
+  `done_definition_audit`, `smoke_acceptance`, or smoke `cargo run` child chain.
+
+Next safe action:
+
+- Rerun `python3 support/scripts/done_definition_audit.py --run-all-heavy --compact`
+  when the shared checkout is quiet enough to spend the full cargo/check/test
+  budget. Do not claim completion until full-heavy coverage, release readiness,
+  and factor-claim terminalization all have fresh matching evidence.
+
 ### Live Audit Loop - 2026-05-22 23:44 +0800
 
 Owner: Codex current turn.

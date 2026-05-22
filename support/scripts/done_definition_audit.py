@@ -5,6 +5,7 @@ import argparse
 import json
 import os
 import re
+import signal
 import subprocess
 import sys
 from datetime import datetime, timezone
@@ -22,7 +23,7 @@ SCRIPTS_GUIDE_PATH = ROOT / "support" / "scripts" / "SCRIPTS.md"
 SCRIPT_MANIFEST_PATH = ROOT / "support" / "scripts" / "script_manifest.json"
 HELP_AUDIT_PATH = ROOT / "support" / "scripts" / "help_audit.py"
 SMOKE_SCRIPT_PATH = ROOT / "support" / "scripts" / "smoke_acceptance.sh"
-DEFAULT_SMOKE_STATE_DIR = "/tmp/ict-engine-done-definition-audit-smoke"
+DEFAULT_SMOKE_STATE_PREFIX = "/tmp/ict-engine-done-definition-audit-smoke"
 
 
 def _utc_now() -> str:
@@ -128,32 +129,40 @@ def run_command(
     timeout: int,
     env: dict[str, str] | None = None,
 ) -> tuple[str, dict]:
+    process = subprocess.Popen(
+        cmd,
+        cwd=cwd,
+        text=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        env=env,
+        start_new_session=True,
+    )
     try:
-        result = subprocess.run(
-            cmd,
-            cwd=cwd,
-            text=True,
-            capture_output=True,
-            check=False,
-            timeout=timeout,
-            env=env,
-        )
+        stdout, stderr = process.communicate(timeout=timeout)
     except subprocess.TimeoutExpired as exc:
+        try:
+            os.killpg(process.pid, signal.SIGKILL)
+        except ProcessLookupError:
+            pass
+        except PermissionError:
+            process.kill()
+        stdout, stderr = process.communicate()
         return "fail", {
             "command": cmd,
             "timeout_seconds": timeout,
             "error": "timeout",
-            "stdout": _completed_stream_text(exc.stdout).strip(),
-            "stderr": _completed_stream_text(exc.stderr).strip(),
+            "stdout": _completed_stream_text(stdout or exc.stdout).strip(),
+            "stderr": _completed_stream_text(stderr or exc.stderr).strip(),
         }
 
     return (
-        "pass" if result.returncode == 0 else "fail",
+        "pass" if process.returncode == 0 else "fail",
         {
             "command": cmd,
-            "returncode": result.returncode,
-            "stdout": result.stdout.strip(),
-            "stderr": result.stderr.strip(),
+            "returncode": process.returncode,
+            "stdout": stdout.strip(),
+            "stderr": stderr.strip(),
         },
     )
 
@@ -218,6 +227,25 @@ def evaluate_help_audit_policy(timeout_seconds: int) -> dict:
 
 def _env_flag(name: str) -> bool:
     return os.environ.get(name, "").strip().lower() in {"1", "true", "yes", "on"}
+
+
+def _fresh_smoke_state_dir() -> str:
+    timestamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S%fZ")
+    return f"{DEFAULT_SMOKE_STATE_PREFIX}-{timestamp}-{os.getpid()}"
+
+
+def build_smoke_environment(
+    args: argparse.Namespace,
+    *,
+    base_env: dict[str, str] | None = None,
+) -> dict[str, str]:
+    env = dict(base_env if base_env is not None else os.environ)
+    state_dir = str(getattr(args, "smoke_state_dir", "") or "").strip()
+    if not state_dir:
+        state_dir = _fresh_smoke_state_dir()
+    env["STATE_DIR"] = state_dir
+    env.setdefault("OUT_DIR", f"{state_dir}-out")
+    return env
 
 
 def evaluate_heavy_checks(args: argparse.Namespace) -> list[dict]:
@@ -289,9 +317,7 @@ def evaluate_heavy_checks(args: argparse.Namespace) -> list[dict]:
             )
         )
     else:
-        env = os.environ.copy()
-        env["STATE_DIR"] = args.smoke_state_dir
-        env.setdefault("OUT_DIR", "/tmp/ict-engine-done-definition-audit-smoke-out")
+        env = build_smoke_environment(args)
         status, details = run_command(
             ["bash", str(SMOKE_SCRIPT_PATH)],
             cwd=ROOT,
@@ -414,8 +440,11 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
     )
     parser.add_argument(
         "--smoke-state-dir",
-        default=DEFAULT_SMOKE_STATE_DIR,
-        help=f"STATE_DIR for smoke script (default: {DEFAULT_SMOKE_STATE_DIR}).",
+        default="",
+        help=(
+            "STATE_DIR for smoke script. Defaults to a fresh /tmp path per audit run; "
+            "set explicitly only when debugging a chosen state directory."
+        ),
     )
     parser.add_argument(
         "--help-audit-timeout-seconds",

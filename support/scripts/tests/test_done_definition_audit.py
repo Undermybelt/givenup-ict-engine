@@ -2,6 +2,8 @@
 from __future__ import annotations
 
 import sys
+import tempfile
+import time
 import unittest
 from pathlib import Path
 import json
@@ -11,6 +13,7 @@ if str(SCRIPTS_ROOT) not in sys.path:
     sys.path.insert(0, str(SCRIPTS_ROOT))
 
 from done_definition_audit import (  # noqa: E402
+    build_smoke_environment,
     evaluate_main_rs_guardrail,
     format_report,
     parse_main_rs_baseline,
@@ -96,6 +99,59 @@ Measured on 2026-05-22:
         self.assertIsInstance(details["stdout"], str)
         self.assertIsInstance(details["stderr"], str)
         json.dumps(details)
+
+    def test_run_command_timeout_kills_child_process_group(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            marker = Path(tmp) / "child-survived.txt"
+            child = (
+                "import pathlib, time; "
+                "time.sleep(2); "
+                f"pathlib.Path({str(marker)!r}).write_text('survived')"
+            )
+            parent = (
+                "import subprocess, sys, time; "
+                f"subprocess.Popen([sys.executable, '-c', {child!r}]); "
+                "time.sleep(5)"
+            )
+            status, details = run_command(
+                [sys.executable, "-c", parent],
+                cwd=SCRIPTS_ROOT,
+                timeout=1,
+            )
+            time.sleep(2.5)
+            child_survived = marker.exists()
+
+        self.assertEqual(status, "fail")
+        self.assertEqual(details["error"], "timeout")
+        self.assertFalse(child_survived)
+
+    def test_build_smoke_environment_uses_fresh_default_state(self) -> None:
+        class Args:
+            smoke_state_dir = ""
+
+        base_env = {"OUT_DIR": "/tmp/operator-smoke-out"}
+        first = build_smoke_environment(Args(), base_env=base_env)
+        second = build_smoke_environment(Args(), base_env=base_env)
+
+        self.assertRegex(
+            first["STATE_DIR"],
+            r"^/tmp/ict-engine-done-definition-audit-smoke-[0-9]{8}T[0-9]{6}[0-9]{6}Z-[0-9]+$",
+        )
+        self.assertRegex(
+            second["STATE_DIR"],
+            r"^/tmp/ict-engine-done-definition-audit-smoke-[0-9]{8}T[0-9]{6}[0-9]{6}Z-[0-9]+$",
+        )
+        self.assertNotEqual(first["STATE_DIR"], second["STATE_DIR"])
+        self.assertEqual(first["OUT_DIR"], "/tmp/operator-smoke-out")
+
+    def test_build_smoke_environment_preserves_explicit_state_and_default_out_dir(self) -> None:
+        class Args:
+            smoke_state_dir = "/tmp/explicit-smoke-state"
+
+        env = build_smoke_environment(Args(), base_env={})
+
+        self.assertEqual(env["STATE_DIR"], "/tmp/explicit-smoke-state")
+        self.assertEqual(env["OUT_DIR"], "/tmp/explicit-smoke-state-out")
 
     def test_format_report_compact_omits_repo_root_and_pass_details(self) -> None:
         report = {
