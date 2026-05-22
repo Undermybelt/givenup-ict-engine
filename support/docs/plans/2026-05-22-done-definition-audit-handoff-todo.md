@@ -217,6 +217,14 @@ Required next fixes before any completion claim:
 Completion remains unproven until all three lanes have fresh, matching
 authoritative evidence.
 
+Post-writeback check:
+
+- `git diff --check -- support/docs/plans/2026-05-22-done-definition-audit-handoff-todo.md support/docs/plans/2026-05-12-hotplug-personal-data-release-handoff-todo.md`
+  passed.
+- `python3 support/scripts/done_definition_audit.py --output /tmp/ict-engine-done-definition-audit-20260522-after-doc-update-light.json`
+  passed the read-only/default gates with `summary.status=pass`,
+  `pass_count=4`, `fail_count=0`, `skip_count=4`.
+
 ## Notes
 
 - Default path is read-only and no-network except local `help_audit` probe,
