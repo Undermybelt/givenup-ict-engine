@@ -858,3 +858,62 @@ Actionability:
   slice was being committed.
 - Treat the latest blocker set as active work by other/current agents. Do not
   terminalize or promote ASTS, FTNT, DASH, or TOMAC from this audit alone.
+
+## 2026-05-23 05:21 CST Superseding Live Queue Readback
+
+Latest compact audit:
+
+- `/tmp/ict-engine-factor-claims-refresh-20260523T052140+0800.json` exited `1`.
+- `summary.status=needs_attention`.
+- `active_claims=4`.
+- `terminalized_claims=61`.
+- `total_claims=65`.
+- `missing_run_roots=1`.
+- `live_factor_processes=5`.
+- `promotion_allowed_true=0`.
+- `trade_usable_true=0`.
+- `blocking_reasons=["active_claims","live_factor_processes","missing_run_roots"]`.
+
+Current active claims:
+
+- `20260523T-current-codex-ibkr-asts-space-satellite-gap-continuation-1m-mtf-gate1.claim`.
+  Run root is present:
+  `support/docs/experiments/actionable-regime-confidence/runs/20260523T051704+0800-codex-ibkr-asts-space-satellite-gap-continuation-1m-mtf-gate1-v1`.
+  The wrapper is still live; fetch exits observed so far are
+  `01/02/03/04=3`, so no terminal metrics or Gate-1 decision exists yet.
+- `20260523T051521+0800-codex-ibkr-dash-delivery-platform-initial-balance-range-expansion-1m-mtf-gate1.claim`.
+  Run root is present:
+  `support/docs/experiments/actionable-regime-confidence/runs/20260523T051716+0800-codex-ibkr-dash-delivery-platform-initial-balance-range-expansion-1m-mtf-gate1-v1`.
+  The wrapper is still live; fetch exits observed so far are `01/02/03=3`,
+  so no terminal metrics or Gate-1 decision exists yet.
+- `20260523T-current-codex-ibkr-ftnt15m-cybersecurity-pda-mtf-template-transfer-gate1.claim`.
+  It remains `status=active` with `run_root=pending`; the audit reports
+  `run_root_state=missing`.
+- `20260523T051745+0800-codex-tomac-psar-arooncci-repair-readback.claim`.
+  It watches the TOMAC repair run
+  `/tmp/ict-engine-tomac-psar-arooncci-gate1-repair-20260523T0500+0800`,
+  which is still live.
+
+Current live processes:
+
+- ASTS Gate-1 wrapper PID `34449`.
+- DASH Gate-1 wrapper PID `34651`.
+- Active ASTS/DASH `fetch_external.py` children.
+- TOMAC PSAR/Aroon-CCI worker PID `93988` under parent PID `93976`.
+
+TOMAC repair status:
+
+- At the 05:21 CST readback, `checks/01_full_repair.exit` was still absent.
+- No terminal TOMAC artifacts were found under the repair `full/` tree.
+- Stdout remains at YM simulation start after NQ full scoring:
+  latest durable lines include `score-progress NQ 11500/11664`, then
+  `load YM`, `indicators YM rows=1754351`, `simulate YM`, and
+  `simulate-day YM day=1`.
+
+Actionability:
+
+- Do not count this queue as closure or practical-factor proof.
+- Do not promote ASTS, DASH, FTNT, or TOMAC by inference from provider-status,
+  partial fetch failures, live processes, or existing older sibling evidence.
+- Next valid action is to re-read terminal artifacts after the live wrappers
+  exit, then terminalize or externalize each claim from its own evidence.
