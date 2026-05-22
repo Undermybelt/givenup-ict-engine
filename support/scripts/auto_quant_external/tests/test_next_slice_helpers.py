@@ -260,6 +260,96 @@ class StructuralFeedbackEnricherTests(unittest.TestCase):
         self.assertNotIn("104902", enriched["symbol"])
 
 
+class StructuralFeedbackReplayHarnessTargetTests(unittest.TestCase):
+    def test_generate_observation_passes_exact_branch_path_to_probe_emitter(self) -> None:
+        with TemporaryDirectory() as tmpdir:
+            tmp = Path(tmpdir)
+            symbol = "NQ"
+            branch_path = (
+                "TrendExpansion -> EnergyRotation -> pullback_reclaim_continuation -> "
+                "energy_rotation_pullback_reclaim_ibkr_xle_1m_v1"
+            )
+            candles = [
+                {
+                    "timestamp": f"2026-05-01T00:{minute:02d}:00Z",
+                    "open": 100 + minute,
+                    "high": 101 + minute,
+                    "low": 99 + minute,
+                    "close": 100 + minute,
+                    "volume": 1000,
+                }
+                for minute in range(8)
+            ]
+            emit_probe_cmds: list[list[str]] = []
+            original_run = replay.run
+
+            def fake_run(cmd: list[str], *, cwd: Path = replay.REPO_ROOT):
+                target_csv = (
+                    tmp
+                    / "state"
+                    / symbol
+                    / "policy_training"
+                    / "structural_path_ranking_target.csv"
+                )
+                target_csv.parent.mkdir(parents=True, exist_ok=True)
+                target_csv.write_text(
+                    "symbol,candidate_set_id,candidate_set_size,rank,path_id,regime_profit_branch_path,"
+                    "main_regime,sub_regime,sub_sub_regime_or_profit_factor,profit_factor,direction,"
+                    "generated_at,behavior_policy_probability,current_posterior,raw_path_score\n"
+                    "NQ,set-1,2,1,Transition -> OrderBlockVariant -> ob_mitigation_breaker_rejection -> "
+                    "order_block_variant_classifier_v1,Transition -> OrderBlockVariant -> "
+                    "ob_mitigation_breaker_rejection -> order_block_variant_classifier_v1,Transition,"
+                    "OrderBlockVariant,ob_mitigation_breaker_rejection,order_block_variant_classifier_v1,"
+                    "Bull,2026-05-09T00:00:00Z,0.37,0.46,0.47\n"
+                    f"NQ,set-1,2,2,{branch_path},{branch_path},TrendExpansion,EnergyRotation,"
+                    "pullback_reclaim_continuation,energy_rotation_pullback_reclaim_ibkr_xle_1m_v1,"
+                    "Bull,2026-05-09T00:00:00Z,0.33,0.44,0.45\n",
+                    encoding="utf-8",
+                )
+                if str(replay.ENRICHER) in cmd and "emit-probe" in cmd:
+                    emit_probe_cmds.append(cmd)
+                    output_path = Path(cmd[cmd.index("--output") + 1])
+                    path_id = cmd[cmd.index("--path-id") + 1]
+                    enricher.emit_structural_feedback_probe(
+                        target_csv=target_csv,
+                        output_path=output_path,
+                        path_id=path_id,
+                        realized_outcome="win",
+                    )
+
+                class Result:
+                    stdout = '{"mature_rows": 1, "history_mature_rows": 1, "summary_line": "ok"}'
+
+                return Result()
+
+            try:
+                replay.run = fake_run
+                observation = replay.generate_observation(
+                    symbol=symbol,
+                    candles=candles,
+                    output_root=tmp,
+                    prior_state=None,
+                    index=3,
+                    lookback=3,
+                    horizon=2,
+                    threshold=0.001,
+                    observation_id=1,
+                    branch_path=branch_path,
+                )
+            finally:
+                replay.run = original_run
+
+            self.assertEqual(observation["outcome"], "win")
+            self.assertTrue(emit_probe_cmds, "emit-probe should be called")
+            self.assertIn("--path-id", emit_probe_cmds[0])
+            payload = __import__("json").loads(
+                (tmp / "feedback" / "structural_feedback_obs_01.json").read_text(
+                    encoding="utf-8"
+                )
+            )
+            self.assertEqual(payload["path_id"], branch_path)
+
+
 class StructuralFeedbackReplayHarnessTests(unittest.TestCase):
     def test_outcome_from_forward_window_labels_directional_move(self) -> None:
         candles = [

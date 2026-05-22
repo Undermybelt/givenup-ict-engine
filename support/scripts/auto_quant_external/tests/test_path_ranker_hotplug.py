@@ -152,9 +152,43 @@ class ReuseModelFlowTests(unittest.TestCase):
                 )
 
             register_cmd = run.call_args_list[0].args[0]
-            self.assertIn(str(companion_path), register_cmd)
+            artifact_index = register_cmd.index("--artifact-uri") + 1
+            self.assertEqual(
+                Path(register_cmd[artifact_index]).resolve(),
+                companion_path.resolve(),
+            )
             family_index = register_cmd.index("--model-family") + 1
             self.assertEqual(register_cmd[family_index], "catboost")
+
+    def test_register_runtime_artifact_uses_policy_relative_uri_for_state_local_model(self) -> None:
+        with tempfile.TemporaryDirectory() as tmpdir:
+            state_dir = Path(tmpdir) / "state"
+            policy_dir = state_dir / "NQ" / "policy_training"
+            model_dir = policy_dir / "path_ranker_model"
+            model_dir.mkdir(parents=True)
+            target_csv = policy_dir / "structural_path_ranking_target.csv"
+            target_csv.write_text("candidate_set_id,path_id\nset1,path1\n", encoding="utf-8")
+            artifact_path = model_dir / "path_ranker_direct_model.json"
+            artifact_path.write_text(
+                json.dumps({"model_family": "weighted_feature_sum_v1"}),
+                encoding="utf-8",
+            )
+
+            completed = subprocess_result()
+            with mock.patch.object(integration.subprocess, "run", return_value=completed) as run:
+                integration.register_runtime_artifact(
+                    state_dir=str(state_dir),
+                    symbol="NQ",
+                    model_dir=str(model_dir),
+                    target_csv=str(target_csv),
+                )
+
+            register_cmd = run.call_args_list[0].args[0]
+            artifact_index = register_cmd.index("--artifact-uri") + 1
+            self.assertEqual(
+                register_cmd[artifact_index],
+                "path_ranker_model/path_ranker_direct_model.json",
+            )
 
     def test_register_runtime_artifact_backfills_direct_model_for_legacy_model_dir(self) -> None:
         with tempfile.TemporaryDirectory() as tmpdir:
@@ -277,6 +311,39 @@ class DirectModelArtifactTests(unittest.TestCase):
 
 
 class RankingTrainerModeTests(unittest.TestCase):
+    def test_training_main_uses_direct_fallback_when_catboost_cannot_fit(self) -> None:
+        with tempfile.TemporaryDirectory() as tmpdir:
+            target_csv = Path(tmpdir) / "target.csv"
+            target_csv.write_text(
+                "candidate_set_id,path_id,current_posterior,calibrated_label,training_weight\n"
+                "set1,path1,0.7,1.0,1.0\n"
+                "set1,path2,0.7,1.0,1.0\n",
+                encoding="utf-8",
+            )
+            output_dir = Path(tmpdir) / "model"
+
+            argv = [
+                "pandas_path_ranker_trainer.py",
+                "--target-csv",
+                str(target_csv),
+                "--output-dir",
+                str(output_dir),
+                "--allow-direct-fallback",
+            ]
+            with mock.patch.object(sys, "argv", argv), mock.patch.object(
+                trainer,
+                "train_catboost",
+                side_effect=RuntimeError("CatBoost cannot train constant labels"),
+            ):
+                trainer.main()
+
+            direct_model = output_dir / "path_ranker_direct_model.json"
+            trainer_artifact = output_dir / "trainer_artifact.json"
+            self.assertTrue(direct_model.exists())
+            self.assertTrue(trainer_artifact.exists())
+            metadata = json.loads(trainer_artifact.read_text(encoding="utf-8"))
+            self.assertEqual(metadata["model_family"], "weighted_feature_sum_v1")
+
     def test_train_catboost_ranking_uses_candidate_set_groups(self) -> None:
         class FakeRanker:
             last_init = None

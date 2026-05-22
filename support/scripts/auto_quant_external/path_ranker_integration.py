@@ -44,12 +44,12 @@ def find_target_csv(state_dir: str, symbol: str) -> Path:
     target_path = Path(state_dir) / symbol / "policy_training" / "structural_path_ranking_target.csv"
     if target_path.exists():
         return target_path
-    
+
     # 备用路径
     alt_path = Path(state_dir) / symbol / "structural_path_ranking_target.csv"
     if alt_path.exists():
         return alt_path
-    
+
     raise FileNotFoundError(f"No target CSV found in {state_dir}/{symbol}")
 
 
@@ -180,6 +180,16 @@ def runtime_artifact_model_family(artifact_path: str) -> str:
     return family or "weighted_feature_sum_v1"
 
 
+def runtime_artifact_uri_for_repo(artifact_path: str, state_dir: str, symbol: str) -> str:
+    """Return the URI shape expected by ict-engine's policy-training loader."""
+    artifact = Path(artifact_path).expanduser().resolve()
+    policy_dir = (Path(state_dir).expanduser().resolve() / symbol / "policy_training")
+    try:
+        return str(artifact.relative_to(policy_dir))
+    except ValueError:
+        return str(artifact)
+
+
 def register_runtime_artifact(
     state_dir: str,
     symbol: str,
@@ -190,6 +200,11 @@ def register_runtime_artifact(
 ):
     """Opt in to repo-side runtime reuse using the emitted direct-model artifact."""
     artifact_path = ensure_runtime_artifact(model_dir=model_dir, target_csv=target_csv)
+    artifact_uri = runtime_artifact_uri_for_repo(
+        artifact_path=artifact_path,
+        state_dir=state_dir,
+        symbol=symbol,
+    )
     model_family = runtime_artifact_model_family(artifact_path)
     register_cmd = [
         str(ICT_ENGINE_BIN),
@@ -199,7 +214,7 @@ def register_runtime_artifact(
         "--state-dir",
         state_dir,
         "--artifact-uri",
-        str(artifact_path),
+        artifact_uri,
         "--model-family",
         model_family,
         "--score-column",
@@ -270,9 +285,9 @@ def main():
         default="candidate_set_only",
         help="Runtime reuse mode used with --register-runtime-artifact",
     )
-    
+
     args = parser.parse_args()
-    
+
     # 确定路径
     if args.target_csv:
         target_csv = args.target_csv
@@ -281,21 +296,21 @@ def main():
     else:
         print("ERROR: Need --state-dir or --target-csv")
         sys.exit(1)
-    
+
     if args.output_dir:
         output_dir = args.output_dir
     elif args.state_dir:
         output_dir = str(Path(args.state_dir) / args.symbol / "policy_training" / "path_ranker_model")
     else:
         output_dir = "./path_ranker_model"
-    
+
     if args.output_scores:
         output_scores = args.output_scores
     elif args.state_dir:
         output_scores = str(Path(args.state_dir) / args.symbol / "policy_training" / "scores.csv")
     else:
         output_scores = "./scores.csv"
-    
+
     # 执行
     if args.apply_only:
         model_dir = args.model_dir or output_dir
@@ -354,7 +369,7 @@ def main():
             score_column="raw_path_score",
             reuse_mode=args.reuse_mode,
         )
-    
+
     print(f"\n[done] Model: {output_dir}")
     print(f"[done] Scores: {output_scores}")
     print(f"\n[next] Apply to runtime:")

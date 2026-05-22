@@ -839,7 +839,7 @@ fn materialize_material_workspace(
             .join("user_data/strategies_external")
             .join(material_strategy_filename(package)),
     )?;
-    let pair = format!("{}/USD", package.symbol);
+    let pair = agent_material_pair_alias(&package.symbol);
     let material_timeframes = effective_material_timeframes_csv(package);
     let prepare = run_workspace_python_script(
         runtime_python,
@@ -878,7 +878,8 @@ fn write_material_config(path: &Path, package: &AgentMaterialPackage) -> Result<
     if let Some(timerange) = effective_material_timerange(package)? {
         config["timerange"] = serde_json::Value::String(timerange.to_string());
     }
-    config["exchange"]["pair_whitelist"] = serde_json::json!([format!("{}/USD", package.symbol)]);
+    config["exchange"]["pair_whitelist"] =
+        serde_json::json!([agent_material_pair_alias(&package.symbol)]);
     if package.direction == "short" {
         config["trading_mode"] = serde_json::Value::String("futures".to_string());
         config["margin_mode"] = serde_json::Value::String("isolated".to_string());
@@ -899,6 +900,19 @@ fn write_material_config(path: &Path, package: &AgentMaterialPackage) -> Result<
     }
     fs::write(path, serde_json::to_string_pretty(&config)?)?;
     Ok(())
+}
+
+fn agent_material_pair_alias(symbol: &str) -> String {
+    let base: String = symbol
+        .chars()
+        .filter(|ch| ch.is_ascii_alphanumeric())
+        .collect();
+    let base = if base.trim().is_empty() {
+        "SYNTH"
+    } else {
+        base.as_str()
+    };
+    format!("{base}/USD")
 }
 
 fn effective_material_timerange(package: &AgentMaterialPackage) -> Result<Option<String>> {
@@ -1355,6 +1369,83 @@ mod tests {
             serde_json::from_str(&fs::read_to_string(config_path).unwrap()).unwrap();
         assert_eq!(config["timerange"], "20260101-20260512");
         assert_eq!(config["exchange"]["pair_whitelist"][0], "NQ/USD");
+    }
+
+    #[test]
+    fn write_material_config_derives_timerange_from_ibkr_ts_header() {
+        let dir = TempDir::new().unwrap();
+        let config_path = dir.path().join("config.tomac.json");
+        let data_path = dir.path().join("ibkr_material.csv");
+        fs::write(
+            &config_path,
+            serde_json::json!({
+                "timeframe": "1m",
+                "timerange": "20230101-20251231",
+                "trading_mode": "spot",
+                "entry_pricing": {"use_order_book": false},
+                "exit_pricing": {"use_order_book": false},
+                "exchange": {
+                    "pair_whitelist": ["M2K/USD"],
+                    "_ft_has_params": {"uses_leverage_tiers": false}
+                }
+            })
+            .to_string(),
+        )
+        .unwrap();
+        fs::write(
+            &data_path,
+            "ts,open,high,low,close,volume,wap,count\n\
+             2026-05-01T13:30:00Z,1,2,1,2,10,1.5,3\n\
+             2026-05-12T20:00:00Z,2,3,2,3,12,2.5,4\n",
+        )
+        .unwrap();
+        let mut package = sample_package("/tmp/strategy.py");
+        package.data_path = data_path.to_string_lossy().to_string();
+        package.timerange = None;
+
+        write_material_config(&config_path, &package).unwrap();
+
+        let config: serde_json::Value =
+            serde_json::from_str(&fs::read_to_string(config_path).unwrap()).unwrap();
+        assert_eq!(config["timerange"], "20260501-20260512");
+    }
+
+    #[test]
+    fn agent_material_pair_alias_strips_provider_futures_punctuation() {
+        assert_eq!(agent_material_pair_alias("GC=F"), "GCF/USD");
+        assert_eq!(agent_material_pair_alias("SI=F"), "SIF/USD");
+        assert_eq!(agent_material_pair_alias("ES=F"), "ESF/USD");
+        assert_eq!(agent_material_pair_alias("^VIX"), "VIX/USD");
+    }
+
+    #[test]
+    fn write_material_config_uses_pair_alias_for_yahoo_futures_symbols() {
+        let dir = TempDir::new().unwrap();
+        let config_path = dir.path().join("config.tomac.json");
+        fs::write(
+            &config_path,
+            serde_json::json!({
+                "timeframe": "5m",
+                "trading_mode": "spot",
+                "entry_pricing": {"use_order_book": false},
+                "exit_pricing": {"use_order_book": false},
+                "exchange": {
+                    "pair_whitelist": ["NQ/USD"],
+                    "_ft_has_params": {"uses_leverage_tiers": false}
+                }
+            })
+            .to_string(),
+        )
+        .unwrap();
+        let mut package = sample_package("/tmp/strategy.py");
+        package.symbol = "GC=F".to_string();
+        package.timerange = Some("20260325-20260519".to_string());
+
+        write_material_config(&config_path, &package).unwrap();
+
+        let config: serde_json::Value =
+            serde_json::from_str(&fs::read_to_string(config_path).unwrap()).unwrap();
+        assert_eq!(config["exchange"]["pair_whitelist"][0], "GCF/USD");
     }
 
     #[test]

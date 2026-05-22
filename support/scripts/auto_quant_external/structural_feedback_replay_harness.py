@@ -84,6 +84,7 @@ def generate_observation(
     horizon: int,
     threshold: float,
     observation_id: int,
+    branch_path: str | None = None,
 ) -> dict[str, Any]:
     state_dir = output_root / "state"
     copy_prior_state(prior_state, state_dir)
@@ -153,7 +154,7 @@ def generate_observation(
             str(state_dir),
         ])
     outcome, pnl, exit_close = outcome_from_forward_window(candles, index, horizon, threshold)
-    run([
+    emit_cmd = [
         sys.executable,
         str(ENRICHER),
         "emit-probe",
@@ -170,7 +171,10 @@ def generate_observation(
         f"forward_{horizon}_bar_close",
         "--notes",
         f"semi_auto_replay observation={observation_id} data_index={index} threshold={threshold}",
-    ])
+    ]
+    if branch_path:
+        emit_cmd.extend(["--path-id", branch_path])
+    run(emit_cmd)
     update = run([
         str(ICT_ENGINE_BIN),
         "update",
@@ -223,6 +227,7 @@ def run_replay(
     horizon: int,
     threshold: float,
     prior_state: Path | None,
+    branch_path: str | None = None,
 ) -> dict[str, Any]:
     candles = load_candles(candles_path)
     output_root.mkdir(parents=True, exist_ok=True)
@@ -245,6 +250,7 @@ def run_replay(
                 horizon=horizon,
                 threshold=threshold,
                 observation_id=obs_id,
+                branch_path=branch_path,
             )
         )
     summary = {
@@ -256,6 +262,7 @@ def run_replay(
         "lookback": lookback,
         "horizon": horizon,
         "threshold": threshold,
+        "branch_path": branch_path,
         "final_mature_rows": observations[-1]["mature_rows"] if observations else None,
         "observations": observations,
     }
@@ -273,6 +280,10 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--horizon", type=int, default=16)
     parser.add_argument("--threshold", type=float, default=0.001)
     parser.add_argument("--prior-state")
+    parser.add_argument(
+        "--branch-path",
+        help="Exact regime_profit_branch_path/path_id to emit feedback for instead of rank 1.",
+    )
     return parser.parse_args(argv)
 
 
@@ -287,6 +298,7 @@ def main(argv: list[str] | None = None) -> int:
         horizon=args.horizon,
         threshold=args.threshold,
         prior_state=Path(args.prior_state) if args.prior_state else None,
+        branch_path=args.branch_path,
     )
     print(json.dumps({k: v for k, v in summary.items() if k != "observations"}, indent=2))
     print(f"[done] observations={len(summary['observations'])} final_mature_rows={summary['final_mature_rows']}")

@@ -120,8 +120,22 @@ TRAINER_SCHEMA_VERSION = "structural-path-ranking-trainer-manifest-v1"
 
 def load_target_csv(path: str) -> pd.DataFrame:
     """加载导出的 target CSV"""
-    df = pd.read_csv(path)
-    print(f"[load] {path}: {len(df)} rows, {len(df.columns)} columns")
+    target_path = Path(path)
+    if not target_path.exists():
+        raise FileNotFoundError(f"target CSV does not exist: {target_path}")
+    try:
+        df = pd.read_csv(target_path)
+    except Exception as exc:
+        raise ValueError(f"failed to read target CSV {target_path}: {exc}") from exc
+    required_columns = {"candidate_set_id", "path_id"}
+    missing = sorted(required_columns - set(df.columns))
+    if missing:
+        raise ValueError(
+            f"target CSV {target_path} missing required columns: {', '.join(missing)}"
+        )
+    if df.empty:
+        raise ValueError(f"target CSV {target_path} has no rows")
+    print(f"[load] {target_path}: {len(df)} rows, {len(df.columns)} columns")
     return df
 
 
@@ -632,15 +646,26 @@ def main():
         group_ids = None
         if args.training_mode == "ranking":
             group_ids = df.loc[X.index, "candidate_set_id"].tolist()
-        train_catboost(
-            X,
-            y,
-            weights,
-            output_dir,
-            cat_features=CATEGORICAL_FEATURES,
-            training_mode=args.training_mode,
-            group_ids=group_ids,
-        )
+        try:
+            train_catboost(
+                X,
+                y,
+                weights,
+                output_dir,
+                cat_features=CATEGORICAL_FEATURES,
+                training_mode=args.training_mode,
+                group_ids=group_ids,
+            )
+        except Exception as exc:
+            if not args.allow_direct_fallback:
+                raise
+            direct_model_path = output_dir / "path_ranker_direct_model.json"
+            if not direct_model_path.exists():
+                create_direct_model_artifact(output_dir, features, len(X))
+            print(
+                "[train] CatBoost unavailable or not trainable; "
+                f"using direct fallback artifact: {exc}"
+            )
 
     trainer_artifact_path = output_dir / "trainer_artifact.json"
     trainer_artifact = build_registered_artifact_metadata(
