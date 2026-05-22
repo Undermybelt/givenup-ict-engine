@@ -55,6 +55,14 @@ ghi789\trefs/tags/v0.1.4^{}
         gate = evaluate_version_tag("0.1.4", {"v0.1.3", "v0.1.4"})
         self.assertEqual(gate["status"], "fail")
         self.assertIn("v0.1.4", gate["details"]["blocking_tags"])
+        self.assertEqual(gate["details"]["suggested_next_patch_version"], "0.1.5")
+        self.assertEqual(gate["details"]["suggested_next_patch_tag"], "v0.1.5")
+
+    def test_version_tag_suggestion_skips_multiple_existing_patch_tags(self) -> None:
+        gate = evaluate_version_tag("0.1.3", {"v0.1.3", "v0.1.4", "v0.1.5"})
+        self.assertEqual(gate["status"], "fail")
+        self.assertEqual(gate["details"]["suggested_next_patch_version"], "0.1.6")
+        self.assertEqual(gate["details"]["suggested_next_patch_tag"], "v0.1.6")
 
     def test_version_tag_is_skipped_without_release_mirror_tags(self) -> None:
         gate = evaluate_version_tag_unknown("network_check_not_enabled")

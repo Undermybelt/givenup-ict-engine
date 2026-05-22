@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 import subprocess
 import sys
 import tomllib
@@ -104,6 +105,7 @@ def evaluate_worktree_clean(status_text: str) -> dict[str, Any]:
 def evaluate_version_tag(version: str | None, release_tags: set[str]) -> dict[str, Any]:
     tag = f"v{version}" if version else None
     blocking = sorted([tag] if tag and tag in release_tags else [])
+    suggested = suggest_next_patch_version(version, release_tags)
     return {
         "id": "release_version_tag_available",
         "status": "pass" if tag and not blocking else "fail",
@@ -111,10 +113,26 @@ def evaluate_version_tag(version: str | None, release_tags: set[str]) -> dict[st
             "version": version,
             "candidate_tag": tag,
             "blocking_tags": blocking,
+            "suggested_next_patch_version": suggested,
+            "suggested_next_patch_tag": f"v{suggested}" if suggested else None,
             "known_release_tags": sorted(release_tags),
             "rule": "never reuse an existing release mirror tag",
         },
     }
+
+
+def suggest_next_patch_version(version: str | None, release_tags: set[str]) -> str | None:
+    if not version:
+        return None
+    match = re.fullmatch(r"(\d+)\.(\d+)\.(\d+)", version)
+    if not match:
+        return None
+    major, minor, patch = (int(part) for part in match.groups())
+    while True:
+        patch += 1
+        candidate = f"{major}.{minor}.{patch}"
+        if f"v{candidate}" not in release_tags:
+            return candidate
 
 
 def evaluate_version_tag_unknown(reason: str) -> dict[str, Any]:

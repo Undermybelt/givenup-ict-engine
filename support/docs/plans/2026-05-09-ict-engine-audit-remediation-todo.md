@@ -11,6 +11,65 @@
 
 ---
 
+### Live Audit Loop - 2026-05-22 22:39 +0800
+
+Owner: Codex current turn.
+Claim: continuing the full-audit/remediation loop; completion remains
+unproven. This slice improves release-readiness blocker actionability without
+publishing, tagging, pushing, or changing release metadata.
+
+Problem found:
+
+- `support/scripts/release_readiness_audit.py --compact --check-remotes`
+  correctly failed when `Cargo.toml` version `0.1.3` mapped to existing release
+  tag `v0.1.3`, but it did not name the next unused patch candidate.
+- A user or agent had to manually compare known release tags and infer that
+  `v0.1.4` is also already taken, making the release blocker less actionable.
+
+Fix applied:
+
+- Added `suggest_next_patch_version(version, release_tags)`.
+- `release_version_tag_available` details now include
+  `suggested_next_patch_version` and `suggested_next_patch_tag` when the current
+  version is semver-like and mirror tags are available.
+- This is advisory evidence only; it does not edit `Cargo.toml`, create a tag,
+  update the mirror, or grant release permission.
+
+Fresh evidence:
+
+- `python3 -m unittest support.scripts.tests.test_release_readiness_audit -v`
+  passed `10` tests, including the multiple-existing-tags skip regression.
+- `python3 -m py_compile support/scripts/release_readiness_audit.py support/scripts/tests/test_release_readiness_audit.py`
+  passed.
+- `python3 support/scripts/release_readiness_audit.py --compact --check-remotes --output /tmp/ict-engine-release-readiness-audit-next-tag-suggestion.json`
+  exited `1` as expected because release blockers remain.
+- The compact report now includes:
+  `suggested_next_patch_version=0.1.5` and
+  `suggested_next_patch_tag=v0.1.5`.
+- `python3 support/scripts/check_script_manifest.py` passed with
+  `entries=21`.
+- `git diff --check -- support/scripts/release_readiness_audit.py support/scripts/tests/test_release_readiness_audit.py support/docs/plans/2026-05-09-ict-engine-audit-remediation-todo.md`
+  passed.
+
+Current blocker readback:
+
+- `summary.status=needs_fix`
+- `fail_count=4`
+- unresolved:
+  `worktree_clean_for_release`,
+  `release_docs_fresh_for_selected_tag`,
+  `source_origin_matches_selected_source`,
+  `release_version_tag_available`.
+
+Next safe action:
+
+- If release prep becomes the next lane, do it as a separate explicit release
+  slice: pick/verify a new version such as `0.1.5`, build a clean sanitized
+  export, refresh signoff/release notes, rerun full gates, then wait for
+  operator confirmation before mirror/tag/GitHub Release actions.
+
+---
+
 ### Live Audit Loop - 2026-05-22 22:31 +0800
 
 Owner: Codex current turn.
