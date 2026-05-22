@@ -584,3 +584,68 @@ Decision:
 - Next safe actions are limited to waiting for live factor lanes to terminalize,
   externalizing abandoned claims from evidence, or cutting a narrow verified
   docs/audit slice that does not touch unrelated dirty source.
+
+### 2026-05-23 07:53 CST Resume Readback
+
+Trigger:
+
+- The operator asked whether there is nothing left to do. Fresh audits were
+  rerun instead of answering from the prior snapshot.
+
+Routing:
+
+- route alias: `sd/ict-engine-maintenance-loop`.
+- routing files read:
+  `~/.hermes/routing/skill-router.md`,
+  `~/.hermes/routing/project-router.md`, repo `CLAUDE.md`, and repo
+  `AGENT.md`.
+- `project-router.md` supplied the ict-engine maintenance override.
+- runtime skill path:
+  `~/.hermes/skills/software-development/ict-engine-maintenance-loop/SKILL.md`.
+- installed runtime skill used; no upstream fallback.
+
+Fresh factor claim/process audit:
+
+- `python3 support/scripts/factor_claim_terminalization_audit.py --compact --output /tmp/factor_claim_terminalization_resume_20260523.json`
+  - exit `1`.
+  - status `needs_attention`.
+  - summary: `active_claims=3`, `live_factor_processes=4`,
+    `missing_run_roots=0`, `terminalized_claims=106`, `total_claims=109`,
+    `promotion_allowed_true=0`, `trade_usable_true=0`.
+  - active claims:
+    TOMAC TOD cap65 exact AQ rebuild, Bybit WOO/CFX PGO reclaim Gate 1, and
+    Bybit ALGO/XTZ Choppiness breakout/reclaim Gate 1.
+  - live processes:
+    XBI IBKR wrapper/fetch, TOMAC cap65 exact-AQ child, and Bybit WOO/CFX
+    wrapper work.
+
+Fresh release-readiness audit:
+
+- `python3 support/scripts/release_readiness_audit.py --compact --check-remotes --output /tmp/release_readiness_resume_20260523.json`
+  - exit `1`.
+  - status `needs_fix`, `fail_count=4`, `pass_count=1`.
+  - `HEAD=90ead16f9eca60e9b8eb54aaea2bb3e24c4d372b`.
+  - unresolved gates:
+    `worktree_clean_for_release`,
+    `release_docs_fresh_for_selected_tag`,
+    `source_origin_matches_selected_source`,
+    `release_version_tag_available`.
+  - current version remains `0.1.3`; existing mirror tags include `v0.1.3`
+    and `v0.1.4`; audit suggests `0.1.5` / `v0.1.5` for a future selected
+    release.
+
+Current answer:
+
+- There is still work to do.
+- Do not claim the full audit/UX/release objective is complete.
+- Do not claim practical factor trade usability: current positives remain
+  zero for both `promotion_allowed=true` and `trade_usable=true`.
+- Do not release, tag, or push from this state.
+
+Next safe actions:
+
+- Recheck factor claims after the live XBI/TOMAC/Bybit processes finish, then
+  terminalize or externalize only from evidence.
+- Keep release readiness blocked until the dirty source is cut into a clean
+  selected export, release docs/signoff are refreshed for an unused version/tag,
+  remote parity is proven, and the operator explicitly approves release action.
