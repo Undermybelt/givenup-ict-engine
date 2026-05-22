@@ -22,10 +22,16 @@ LIVE_FACTOR_PROCESS_MARKERS = (
     "run_local_nq_csv_regime_rooted",
     "run_local_xau_csv_regime_rooted",
     "run_ibkr_",
+    "run_bybit_",
+    "run_yf_",
+    "run_binance_",
+    "run_kraken_",
+    "run_external_",
     "auto-quant-agent-material",
     "fetch_external.py",
     "prepare_external.py",
 )
+RUN_ROOT_SENTINELS = {"none", "pending", "n/a", "na", "null", "-"}
 
 
 def repo_root(anchor: Path) -> Path:
@@ -81,6 +87,8 @@ def _extract_bool(name: str, text: str) -> bool | None:
 
 def _resolved_run_root(value: str | None, root: Path) -> Path | None:
     if not value:
+        return None
+    if str(value).strip().lower() in RUN_ROOT_SENTINELS:
         return None
     path = Path(value).expanduser()
     if not path.is_absolute():

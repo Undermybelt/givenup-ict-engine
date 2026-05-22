@@ -220,3 +220,51 @@ Next:
   factor promotion/trade usability still has zero positives, and release
   readiness still needs clean/exported source, fresh release docs/signoff,
   unused version/tag, remote parity, and explicit operator approval.
+
+### 2026-05-23 07:07 CST Factor Claim Audit Classifier Slice
+
+Scope:
+
+- Improve the claim terminalization auditor's current-state accuracy without
+  changing any factor verdicts.
+- Do not terminalize live claims or interrupt live factor processes.
+
+Patch:
+
+- `support/scripts/factor_claim_terminalization_audit.py`
+  - detects current public/provider wrapper families in live process scans:
+    `run_bybit_`, `run_yf_`, `run_binance_`, `run_kraken_`, and
+    `run_external_`;
+  - treats non-path `run_root` sentinels (`none`, `pending`, `n/a`, `na`,
+    `null`, `-`) as absent run roots rather than missing filesystem roots.
+- `support/scripts/tests/test_factor_claim_terminalization_audit.py`
+  - adds regression coverage for all supported sentinel run roots;
+  - adds live-process classifier coverage for Bybit, yfinance, Binance,
+    Kraken, and external wrapper names.
+
+Verification:
+
+- `python3 -m unittest support.scripts.tests.test_factor_claim_terminalization_audit -v > /tmp/ict-engine-full-audit-20260523-codex/factor_claim_audit_unittest_refined.stdout 2> /tmp/ict-engine-full-audit-20260523-codex/factor_claim_audit_unittest_refined.stderr`
+  - exit `0`, `15` tests passed.
+- `python3 -m py_compile support/scripts/factor_claim_terminalization_audit.py support/scripts/tests/test_factor_claim_terminalization_audit.py`
+  - exit `0`.
+- `python3 support/scripts/check_script_manifest.py`
+  - exit `0`, `script_manifest status=pass entries=21`.
+- `python3 support/scripts/ci/check_docs_runtime_isolation.py`
+  - exit `0`, `docs runtime isolation ok`.
+- `git diff --check -- support/scripts/factor_claim_terminalization_audit.py support/scripts/tests/test_factor_claim_terminalization_audit.py support/docs/plans/2026-05-23-full-audit-bug-ux-closure-plan.md`
+  - exit `0`.
+- `python3 support/scripts/factor_claim_terminalization_audit.py --compact --output /tmp/ict-engine-full-audit-20260523-codex/factor_claim_terminalization_after_classifier_refined.json`
+  - exit `0`.
+  - current summary: `active_claims=0`, `live_factor_processes=0`,
+    `missing_run_roots=0`, `terminalized_claims=93`, `total_claims=93`,
+    `promotion_allowed_true=0`, `trade_usable_true=0`.
+
+Decision:
+
+- The classifier slice is useful because it catches live non-IBKR/YF/Bybit
+  wrapper drift and avoids false missing-root noise from explicit placeholder
+  values.
+- It clears the current claim/process hygiene blocker only. It does not clear
+  factor readiness because there are still zero promotion/trade-usable
+  positives.

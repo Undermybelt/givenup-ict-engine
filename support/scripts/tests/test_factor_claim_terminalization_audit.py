@@ -107,6 +107,31 @@ run_root=/tmp/missing-run-root-for-test
             self.assertEqual(report["summary"]["active_claims"], 0)
             self.assertEqual(report["claims"][0]["decision"], "continue_goal_active; no promotion_allowed/trade_usable evidence found")
 
+    def test_build_report_ignores_none_and_pending_run_root_sentinels(self) -> None:
+        with tempfile.TemporaryDirectory() as repo_tmp, tempfile.TemporaryDirectory() as claims_tmp:
+            repo_root = Path(repo_tmp)
+            claims_dir = Path(claims_tmp)
+            for index, sentinel in enumerate(["none", "pending", "n/a", "na", "null", "-"]):
+                (claims_dir / f"sentinel-{index}.claim").write_text(
+                    f"""
+owner=codex
+status=externalized_not_launched
+decision=externalized_pending_backend_clear_no_factor_verdict
+run_root={sentinel}
+promotion_allowed=false
+trade_usable=false
+""",
+                    encoding="utf-8",
+                )
+
+            report = build_report(claims_dir=claims_dir, repo_root=repo_root)
+
+            self.assertEqual(report["summary"]["total_claims"], 6)
+            self.assertEqual(report["summary"]["terminalized_claims"], 6)
+            self.assertEqual(report["summary"]["active_claims"], 0)
+            self.assertEqual(report["summary"]["missing_run_roots"], 0)
+            self.assertTrue(all(claim["run_root"] is None for claim in report["claims"]))
+
     def test_build_report_treats_terminal_status_and_markdown_bullets_as_terminal(self) -> None:
         with tempfile.TemporaryDirectory() as repo_tmp, tempfile.TemporaryDirectory() as claims_tmp:
             project_root = Path(repo_tmp)
@@ -238,6 +263,33 @@ trade_usable=false
         )
 
         self.assertFalse(_is_live_factor_command(command))
+
+    def test_live_process_classifier_detects_bybit_factor_wrappers(self) -> None:
+        command = (
+            "/opt/homebrew/bin/python3 "
+            "/tmp/run_bybit_hype_pengu_stoprun_reclaim_1m_full_ladder_20260523.py"
+        )
+
+        self.assertTrue(_is_live_factor_command(command))
+
+    def test_live_process_classifier_detects_yfinance_factor_wrappers(self) -> None:
+        command = (
+            "/opt/homebrew/bin/python3 "
+            "/tmp/run_yf_crwd5m_late_session_hazard_trim_fresh_gate1_20260523.py"
+        )
+
+        self.assertTrue(_is_live_factor_command(command))
+
+    def test_live_process_classifier_detects_public_provider_wrapper_families(self) -> None:
+        commands = [
+            "/opt/homebrew/bin/python3 /tmp/run_binance_altcoin_rsi_reclaim_1m_mtf_v1.py",
+            "/opt/homebrew/bin/python3 /tmp/run_kraken_btc_tsmom_rsi2_aq_v1.py",
+            "/opt/homebrew/bin/python3 /tmp/run_external_seed_intraday_momentum_qqq_yf_1m_origin_aq_v1.py",
+        ]
+
+        for command in commands:
+            with self.subTest(command=command):
+                self.assertTrue(_is_live_factor_command(command))
 
     def test_format_report_compact_keeps_only_attention_claim_summaries(self) -> None:
         full_report = {
