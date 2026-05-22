@@ -24,6 +24,9 @@ governance only; no script was moved or promoted by this document.
 | `support/scripts/search_cluster.py` | public wrapper | yes, shows help unless `--run` is passed | Refuses execution without a ready cleaned-data root |
 | `support/scripts/evaluate_bottleneck.py` | public wrapper | yes, shows help unless `--run` is passed | Refuses execution without a ready cleaned-data root |
 | `support/scripts/research_verdict.py` | read-only utility | yes, requires explicit paths | Emits compact JSON from result/state directories |
+| `support/scripts/research/market_data_resolver.py` | read-only adoption utility | yes, requires explicit output path | Resolves generic zero-config market data lanes and optional profile selectors |
+| `support/scripts/research/external_history_adoption.py` | adoption utility | yes, requires explicit input/output paths | Emits zero-config default commands plus opt-in profile reuse commands |
+| `support/scripts/research/factor_candidate_resolver.py` | adoption utility | yes, requires explicit output path for writes | Lists/builds explicit factor candidate packs without reading board docs |
 
 ## Active External Bridge
 

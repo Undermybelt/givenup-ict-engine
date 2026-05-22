@@ -72,7 +72,10 @@ Status legend: `done`, `active`, `next`, `blocked`, `not_yet`.
 | done | Verify helper tests and shell artifact shape | Unit tests and real `/tmp` smoke passed; emitted JSON and shell now show both `keep_zero_config` and `reuse_saved_profile`. |
 | done | Commit the dual-lane adoption slice narrowly | Commit `7deca84b` staged only helper/resolver/tests/handoff-doc files. |
 | done | Keep adjacent resolver profile surfaces consistent | `support/scripts/research/factor_candidate_resolver.py` now also exposes `selected_profile.selector`; dedicated tests passed. |
-| active | Choose the next consumer-safe hot-plug surface after resolver consistency | Current likely target: remaining token-friendly adoption/readback surfaces rather than busy Rust command files. |
+| done | Choose the next consumer-safe hot-plug surface after resolver consistency | Chosen and implemented as script-governance registration for the three consumer adoption/readback helpers. |
+| done | Register adoption/readback helpers in script governance | `SCRIPTS.md` and `script_manifest.json` now list `market_data_resolver.py`, `external_history_adoption.py`, and `factor_candidate_resolver.py` with safe-default posture and focused test commands. |
+| done | Re-verify script governance and focused helper tests | `check_script_manifest.py` passed with `entries=19`; helper `py_compile` passed; focused resolver/adoption unit tests passed 15/15; `git diff --check` passed. |
+| done | Decide checkpoint commit boundary | Verification is green; commit boundary is exactly `support/scripts/SCRIPTS.md`, `support/scripts/script_manifest.json`, and this handoff doc. |
 
 ## Verification Checklist
 
@@ -119,3 +122,40 @@ Status legend: `done`, `active`, `next`, `blocked`, `not_yet`.
   - `7deca84b` `feat: split external history adoption into zero-config and opt-in lanes`
 - The dirty worktree is large; this board stays scoped to the external-history
   adoption helper unless new evidence forces a narrower or safer target.
+
+## 2026-05-22 Script-Governance Registration Continuation
+
+Status:
+- done for implementation and focused verification, owner Codex current turn,
+  claimed 2026-05-22 20:21:31 +0800.
+
+Current deterministic answer to "所以无事可做了":
+- no. The latest completion boards still mark release completion and factor
+  diffusion as unproven, and this board had an active consumer hot-plug follow-up.
+
+Implemented narrow slice:
+- Registered the already-tested adoption/readback helpers in
+  `support/scripts/SCRIPTS.md`.
+- Added machine-readable manifest entries in
+  `support/scripts/script_manifest.json`.
+- Kept the helpers classified as safe-default/read-only-style utilities:
+  they require explicit output paths, and personal/profile reuse remains opt-in.
+
+Verification:
+- `python3 support/scripts/check_script_manifest.py`
+  - passed with `script_manifest status=pass entries=19`.
+- `python3 -m py_compile support/scripts/research/market_data_resolver.py support/scripts/research/external_history_adoption.py support/scripts/research/factor_candidate_resolver.py`
+  - passed.
+- `python3 -m unittest support.scripts.research.tests.test_market_data_resolver support.scripts.research.tests.test_external_history_adoption support.scripts.research.tests.test_factor_candidate_resolver -v`
+  - passed 15 tests.
+- `git diff --check -- support/scripts/SCRIPTS.md support/scripts/script_manifest.json support/docs/plans/2026-05-22-zero-config-consumer-hotplug-handoff-todo.md`
+  - passed.
+
+Commit boundary selected:
+- stage only:
+  - `support/scripts/SCRIPTS.md`
+  - `support/scripts/script_manifest.json`
+  - `support/docs/plans/2026-05-22-zero-config-consumer-hotplug-handoff-todo.md`
+- do not stage unrelated dirty source, Board A/B docs, run roots, or generated
+  experiment scripts.
+- checkpoint commit message: `docs: register hotplug adoption helpers`.

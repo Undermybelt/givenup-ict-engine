@@ -80,6 +80,30 @@
     "test_command": "python3 support/scripts/research_verdict.py --help"
   },
   {
+    "name": "market_data_resolver",
+    "stability": "read_only_utility",
+    "entrypoint": "support/scripts/research/market_data_resolver.py",
+    "safe_default": true,
+    "requires_data": false,
+    "test_command": "python3 -m unittest support.scripts.research.tests.test_market_data_resolver -v"
+  },
+  {
+    "name": "external_history_adoption",
+    "stability": "read_only_utility",
+    "entrypoint": "support/scripts/research/external_history_adoption.py",
+    "safe_default": true,
+    "requires_data": true,
+    "test_command": "python3 -m unittest support.scripts.research.tests.test_external_history_adoption -v"
+  },
+  {
+    "name": "factor_candidate_resolver",
+    "stability": "read_only_utility",
+    "entrypoint": "support/scripts/research/factor_candidate_resolver.py",
+    "safe_default": true,
+    "requires_data": false,
+    "test_command": "python3 -m unittest support.scripts.research.tests.test_factor_candidate_resolver -v"
+  },
+  {
     "name": "pandas_path_ranker_trainer",
     "stability": "active_bridge",
     "entrypoint": "support/scripts/auto_quant_external/pandas_path_ranker_trainer.py",
