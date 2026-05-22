@@ -42,7 +42,7 @@ complete.
 | R3 | Default provider behavior is zero-config and fallback-oriented | `provider-status --compact` and `workflow-status` evidence, no required private profile | smoke provider output passed; `provider_status.out` reports yfinance live zero-config and public crypto runtimes ready |
 | R4 | Closed-loop surfaces are inspectable end-to-end | provider -> regime posterior -> Pre-Bayes -> BBN -> path-ranker/CatBoost visibility -> execution tree -> feedback/training readbacks | smoke passed through analyze/update/workflow/pre-Bayes/policy-training readbacks; practical factor promotion remains unproven |
 | R5 | Release readiness is clear | `support/scripts/release_readiness_audit.py --compact --check-remotes` exits `0` | fresh fail: worktree dirty, stale release docs, source origin mismatch, reused `v0.1.3` |
-| R6 | Factor claim/process hygiene is clear | `support/scripts/factor_claim_terminalization_audit.py --compact` exits `0` | post-`49c2bc31` pass: active claims, live factor processes, and missing run roots are all `0` |
+| R6 | Factor claim/process hygiene is clear | `support/scripts/factor_claim_terminalization_audit.py --compact` exits `0` | live-drift sensitive: passed at 07:39, reopened after `4f54a6bf` with active claims, live processes, and one missing run root |
 | R7 | At least one practical factor is truly promotion/trade usable if the objective claims practical factor closure | downstream evidence has `promotion_allowed=true` and `trade_usable=true` with cost/sample/provider gates | known zero positives in latest handoff |
 | R8 | Docs do not become runtime inputs | `support/scripts/ci/check_docs_runtime_isolation.py` exits `0` | fresh pass |
 | R9 | Script governance surfaces are consistent | `support/scripts/check_script_manifest.py` exits `0`; relevant script tests pass | fresh pass for manifest; focused script tests still per-slice |
@@ -111,7 +111,7 @@ Repeat until all requirements are proven:
   staged paths.
 - [x] Patch the factor-claim audit parser so `pending_*` run-root placeholders
   do not become false `missing_run_roots` blockers.
-- [x] Terminalize or externalize current active factor claims without
+- [ ] Terminalize or externalize current active factor claims without
   interrupting live provider/AQ processes.
 - [ ] Keep release readiness blocked until a clean selected export, fresh
   release docs/signoff, unused version/tag, remote parity, and explicit
@@ -501,3 +501,45 @@ Decision:
 - Release remains blocked by dirty source state, stale release docs/signoff,
   source remote mismatch, reused current version/tag, and missing explicit
   operator release approval.
+
+### 2026-05-23 07:44 CST Post-Handoff Drift Reopened
+
+Trigger:
+
+- After commit `4f54a6bf docs: record factor hygiene pass`, fresh audits were
+  rerun because claim/process state is live-drift sensitive.
+
+Fresh factor claim/process audit:
+
+- `python3 support/scripts/factor_claim_terminalization_audit.py --compact --output /tmp/ict-engine-full-audit-20260523-codex-refresh/factor_claim_terminalization_after_commit_4f54a6bf.json`
+  - exit `1`.
+  - status `needs_attention`.
+  - summary: `active_claims=3`, `live_factor_processes=5`,
+    `missing_run_roots=1`, `terminalized_claims=103`, `total_claims=106`,
+    `promotion_allowed_true=0`, `trade_usable_true=0`.
+  - active claims:
+    APEUSDT 5m Elder Ray exact Gate 1, APEUSDT exact downstream replay, and
+    TOMAC TOD BalancedAdaptiveSlotPortfolio exact AQ broad replay.
+  - live processes:
+    USDCHF and XBI IBKR wrapper/fetch work, APEUSDT Bybit downstream replay,
+    and a USDCHF Auto-Quant/TOMAC child.
+
+Fresh release-readiness audit:
+
+- `python3 support/scripts/release_readiness_audit.py --compact --check-remotes --output /tmp/ict-engine-full-audit-20260523-codex-refresh/release_readiness_after_commit_4f54a6bf.json`
+  - exit `1`.
+  - status `needs_fix`, `fail_count=4`, `pass_count=1`.
+  - `HEAD=4f54a6bf9f9481a533b28ae99cd646d5c27484c9`.
+  - unresolved gates:
+    `worktree_clean_for_release`,
+    `release_docs_fresh_for_selected_tag`,
+    `source_origin_matches_selected_source`,
+    `release_version_tag_available`.
+
+Decision:
+
+- The previous factor hygiene pass remains valid only for its audit timestamp.
+- Current state is not clean: active/live factor lanes reopened after that
+  snapshot.
+- Do not mark full objective complete, do not publish a release, and do not
+  claim practical factor usability.
