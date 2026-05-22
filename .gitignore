@@ -13,6 +13,12 @@ tmp_cycle_seed_spec.json
 catboost_info/
 support/docs/experiments/actionable-regime-confidence/runs/
 
+# Local agent workspaces and optional agent-facing skill drafts.
+# Durable repo docs belong under support/docs/; runtime rules must be typed
+# config, command flags, schemas, fixtures, or tests.
+/docs/
+/skills/
+
 # IBKR bridge user-local configs
 support/scripts/ibkr_bridge/my_config*
 support/scripts/ibkr_bridge/__pycache__/

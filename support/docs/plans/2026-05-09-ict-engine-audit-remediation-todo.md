@@ -5461,3 +5461,54 @@ none of these are currently versioned release/runtime inputs.
   - ignored as local agent workspace material.
 - Do not silently delete them; they contain indexed design/evidence content and
   optional agent-skill contracts.
+
+## 2026-05-22 continuation - root agent material boundary
+
+Current answer to "is this 100% complete?": no. This slice closes one concrete
+repo-hygiene gap, but factor promotion, clean release export, and full
+dirty-tree closure remain unproven.
+
+### Finding
+
+The preserved untracked roots `docs/aegis/**` and `skills/**` were still visible
+in `git status --short`. Current readback showed:
+
+- `git check-ignore -v docs/aegis/README.md skills/README.md` had no match.
+- `docs/aegis/README.md` describes a local Aegis workspace for durable
+  design/spec artifacts.
+- `skills/manifest.json` declares `runtime_consumed_by_ict_engine=false`.
+- `skills/README.md` says these skills are optional agent-facing contracts, not
+  runtime inputs.
+
+### Remediation
+
+- Added `.gitignore` entries for root `/docs/` and `/skills/`.
+- Added `support/docs/local-agent-material-boundary.md` as the versioned public
+  boundary:
+  - public docs belong under `support/docs/`;
+  - root local agent material is opt-in operator context;
+  - release exports and zero-config consumers must not depend on those roots;
+  - behavior changes must move into typed config, flags, schemas, fixtures, or
+    tests.
+- Did not delete `docs/aegis/**` or `skills/**`; user-local content is preserved
+  but no longer pollutes default source/release status.
+
+### Verification
+
+- `git check-ignore -v docs/aegis/README.md docs/aegis/INDEX.md skills/README.md skills/manifest.json`
+  - all four paths now match root `/docs/` or `/skills/` rules in
+    `.gitignore`.
+- `git diff --check -- .gitignore support/docs/local-agent-material-boundary.md support/docs/plans/2026-05-09-ict-engine-audit-remediation-todo.md`
+  - passed.
+- `python3 support/scripts/done_definition_audit.py --output /tmp/ict-engine-done-definition-audit-after-agent-boundary-light.json`
+  - passed with `summary.status=pass`, `pass_count=4`, `fail_count=0`,
+    `skip_count=4`.
+
+### Remaining Broad Blockers
+
+- Practical factor diffusion is still unproven: latest readback had
+  `trade_usable=true: 0` and `promotion_allowed=true: 0`.
+- Release mirror completion is still unproven: a clean sanitized export and
+  explicit publish/tag confirmation are still required.
+- The worktree remains broadly dirty from other lanes; commit only this narrow
+  boundary slice if verification passes.
