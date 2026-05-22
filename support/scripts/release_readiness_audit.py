@@ -444,12 +444,34 @@ def _repo_relative_text(value: str, root: str) -> str:
     return result.replace(root, ".")
 
 
+def _line_count(value: str) -> int:
+    if not value:
+        return 0
+    return len(value.splitlines())
+
+
+def _compact_command_details(value: dict[str, Any], root: str) -> dict[str, Any]:
+    compacted = {
+        key: _compact_value(nested, root)
+        for key, nested in value.items()
+        if key not in {"stdout", "stderr"}
+    }
+    for stream_name in ["stdout", "stderr"]:
+        stream_text = _repo_relative_text(str(value.get(stream_name) or ""), root)
+        compacted[f"{stream_name}_line_count"] = _line_count(stream_text)
+        if stream_text.strip():
+            compacted[f"{stream_name}_excerpt"] = stream_text.splitlines()[0][:200]
+    return compacted
+
+
 def _compact_value(value: Any, root: str) -> Any:
     if isinstance(value, str):
         return _repo_relative_text(value, root)
     if isinstance(value, list):
         return [_compact_value(item, root) for item in value]
     if isinstance(value, dict):
+        if "argv" in value and ("stdout" in value or "stderr" in value):
+            return _compact_command_details(value, root)
         return {key: _compact_value(nested, root) for key, nested in value.items()}
     return value
 

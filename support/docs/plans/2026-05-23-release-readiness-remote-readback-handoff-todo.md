@@ -30,6 +30,8 @@ mirror.
 - [x] Run targeted and full release-audit unit tests.
 - [x] Run py_compile and script manifest verification.
 - [x] Run a fresh real `--check-remotes` compact audit.
+- [x] Compress compact command-output details so `git ls-remote` stdout/stderr
+  do not flood token-friendly output.
 
 ### Next
 
@@ -69,6 +71,27 @@ mirror.
 - Real compact remote audit:
   `python3 support/scripts/release_readiness_audit.py --compact --check-remotes --output /tmp/ict-engine-release-readiness-remote-actionability-20260523.json`
   exited `1` as expected.
+- Compact command-output summary RED:
+  `python3 -m unittest support.scripts.tests.test_release_readiness_audit.ReleaseReadinessAuditTest.test_format_report_compact_summarizes_command_outputs -v`
+  failed before implementation because raw `refs/heads/green-baseline` remained
+  in compact output.
+- Compact command-output summary GREEN:
+  the same targeted test passed after compact mode began replacing command
+  `stdout` / `stderr` with line counts and first-line excerpts.
+- Full release-audit tests after compact command summary:
+  `python3 -m unittest support.scripts.tests.test_release_readiness_audit -v`
+  passed `14` tests.
+- Compile after compact command summary:
+  `python3 -m py_compile support/scripts/release_readiness_audit.py support/scripts/tests/test_release_readiness_audit.py`
+  passed.
+- Script manifest after compact command summary:
+  `python3 support/scripts/check_script_manifest.py`
+  passed with `entries=21`.
+- Real compact remote audit after compact command summary:
+  `python3 support/scripts/release_readiness_audit.py --compact --check-remotes --output /tmp/ict-engine-release-readiness-compact-command-summary-20260523.json`
+  exited `1` as expected and emitted `stdout_line_count`,
+  `stderr_line_count`, and short `stderr_excerpt` fields instead of raw remote
+  ref lists.
 
 ## Current Readback
 
@@ -76,6 +99,18 @@ The latest real remote audit read the release mirror successfully this time, so
 the new `remote_readback` failure details are covered by unit regression rather
 than the live environment. Current release readiness still reports
 `summary.status=needs_fix`.
+
+Post-commit readback after commit `baf8572c` reproduced a live
+`remote_readback` failure. The enriched details worked as intended:
+`blocked_gate=release_version_tag_available`, `origin_status=pass`,
+`release_mirror_status=fail`, and the `next_action` pointed to restoring release
+mirror git/network/auth readback or rerunning from a reachable network with
+`--check-remotes`.
+
+The follow-up compact-output slice then removed raw command output from compact
+JSON. Current compact readback still reports `summary.status=needs_fix`, but
+remote command details now expose counts and excerpts rather than full
+`ls-remote` output.
 
 Unresolved gates from
 `/tmp/ict-engine-release-readiness-remote-actionability-20260523.json`:

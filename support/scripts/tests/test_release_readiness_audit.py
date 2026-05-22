@@ -207,6 +207,48 @@ R  old.rs -> new.rs
         self.assertEqual(parsed["gates"][0]["details"]["stderr"], "failed at support/docs/release-notes-draft.md")
         self.assertNotIn("/Users/example", text)
 
+    def test_format_report_compact_summarizes_command_outputs(self) -> None:
+        report = {
+            "timestamp_utc": "2026-05-22T00:00:00Z",
+            "head": "abc123",
+            "cargo": {"version": "0.1.3"},
+            "remote_details": {
+                "enabled": True,
+                "origin": {
+                    "argv": ["git", "ls-remote", "--heads", "--tags", "origin"],
+                    "returncode": 0,
+                    "stdout": (
+                        "abc\trefs/heads/main\n"
+                        "def\trefs/heads/green-baseline\n"
+                        "123\trefs/tags/v0.0.1\n"
+                    ),
+                    "stderr": "",
+                },
+                "release_mirror": {
+                    "argv": ["git", "ls-remote", "--heads", "--tags", "release"],
+                    "returncode": 128,
+                    "stdout": "",
+                    "stderr": "Connection closed by 198.18.1.114 port 22\nfatal: Could not read from remote repository.\n",
+                },
+            },
+            "summary": {"status": "needs_fix"},
+            "gates": [],
+        }
+
+        text = format_report(report, compact=True)
+        parsed = json.loads(text)
+        origin = parsed["remote_details"]["origin"]
+        mirror = parsed["remote_details"]["release_mirror"]
+
+        self.assertNotIn("green-baseline", text)
+        self.assertNotIn("refs/tags", text)
+        self.assertNotIn("stdout", origin)
+        self.assertNotIn("stderr", mirror)
+        self.assertEqual(origin["stdout_line_count"], 3)
+        self.assertEqual(origin["stderr_line_count"], 0)
+        self.assertEqual(mirror["stderr_line_count"], 2)
+        self.assertIn("Connection closed", mirror["stderr_excerpt"])
+
 
 if __name__ == "__main__":
     unittest.main()
