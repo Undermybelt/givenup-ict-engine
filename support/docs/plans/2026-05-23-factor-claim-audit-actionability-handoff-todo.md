@@ -1219,6 +1219,74 @@ Actionability:
   lanes after their wrappers exit, followed by claim terminalization or explicit
   externalization from their own evidence.
 
+## 2026-05-23 05:47 CST Superseding Live-Queue Drift After TOMAC Smoke Terminalization
+
+Fresh superseding factor-claim audit:
+
+- `/tmp/ict-engine-factor-claims-refresh-20260523T054654+0800.json` exited `1`.
+- `summary.status=needs_attention`.
+- `active_claims=2`.
+- `terminalized_claims=70`.
+- `total_claims=72`.
+- `missing_run_roots=0`.
+- `live_factor_processes=5`.
+- `promotion_allowed_true=0`.
+- `trade_usable_true=0`.
+- `blocking_reasons=["active_claims","live_factor_processes"]`.
+- `next_action="terminalize or externalize active claims; wait for live factor
+  processes to exit or claim them before closure"`.
+
+Active claims now:
+
+- `20260523T053853+0800-codex-ibkr-gbpjpy-fx-volatility-breakout-reclaim-1m-mtf-gate1.claim`
+  remains active with no terminal decision.
+- `20260523T0540+0800-codex-ibkr-jpm-money-center-bank-dmi-adx-pullback-1m-mtf-gate1.claim`
+  remains active with no terminal decision. Two JPM wrappers are still live:
+  PIDs `60693` and `65615`.
+
+TOMAC KAMA/Vortex nuance:
+
+- `20260523T0545+0800-codex-tomac-kama-vortex-gate1.claim` now has smoke
+  terminal evidence at
+  `/tmp/ict-engine-tomac-kama-vortex-gate1-smoke-20260523T0545+0800/terminal_metrics.json`.
+- Smoke decision:
+  `drop_gate1_no_hard_5bps_density_quality_survivor`.
+- Smoke metrics: `candidate_count=1296`, `gate1_survivor_count=0`,
+  `downstream_allowed=false`, `promotion_allowed=false`,
+  `trade_usable=false`, `extension_complete=false`, and `update_goal=false`.
+- The full TOMAC worker PID `66220` is still live under
+  `/tmp/ict-engine-tomac-kama-vortex-gate1-20260523T0545+0800`, so closure
+  remains blocked by live process state even though the smoke claim evidence is
+  fail-closed.
+
+FTNT 15m downstream root-cause readback:
+
+- Completed downstream root:
+  `support/docs/experiments/actionable-regime-confidence/runs/20260523T052155+0800-codex-ibkr-ftnt15m-cybersecurity-pda-mtf-template-transfer-gate1-v1/downstream-exact-ibkr-ftnt-15m-pda-mtf-template-transfer-20260523T053112+0800`.
+- FTNT is strong but still fail-closed:
+  `all_command_exits_zero=true`, `exact_branch_survived=true`,
+  `execution_candidate_status=execution_ready`, execution tree `ready` /
+  `fill_viable`, path-ranker visible and used, and
+  `ranker_validation_ready=true`.
+- Root cause for non-promotion is deterministic in the exact downstream wrapper:
+  base branch-local admission requires `mature_rows >= 30`, but FTNT current
+  target has only `mature_rows=3`; the wrapper then applies
+  `extension_complete=false`, so final `promotion_allowed=false` and
+  `trade_usable=false`.
+- Do not promote FTNT from `execution_ready`, `downstream_allowed=true`,
+  `review_status=promote_latest`, or ranker visibility/use alone.
+
+Actionability:
+
+- The 05:39 clean snapshot and 05:45 drift snapshot are superseded for closure
+  claims by this readback.
+- Current blocker set is: two active claims, live JPM wrappers/fetches, one live
+  full TOMAC process, zero promotion/trade positives, and release readiness still
+  blocked.
+- Next safe action is terminal readback for GBPJPY/JPM and the full TOMAC
+  process after they exit; only then terminalize/externalize claims from their
+  own artifacts.
+
 ## 2026-05-23 05:46 CST Precommit Handoff Readback
 
 Fresh precommit factor-claim audit:
@@ -1258,3 +1326,283 @@ Actionability:
 - No factor is promotion-allowed or trade-usable in this readback.
 - This checkpoint is handoff evidence only. It is not release readiness, not a
   practical-factor proof, and not a publish/tag/push authorization.
+
+## 2026-05-23 05:56 CST GBPJPY Terminalized, JPM Still Live
+
+Fresh factor-claim audit after GBPJPY terminal readback:
+
+- `/tmp/ict-engine-factor-claims-after-gbpjpy-readback.json` exited `1`.
+- `summary.status=needs_attention`.
+- `active_claims=1`.
+- `terminalized_claims=72`.
+- `total_claims=73`.
+- `missing_run_roots=0`.
+- `live_factor_processes=2`.
+- `promotion_allowed_true=0`.
+- `trade_usable_true=0`.
+- `blocking_reasons=["active_claims","live_factor_processes"]`.
+- `next_action="terminalize or externalize active claims; wait for live factor
+  processes to exit or claim them before closure"`.
+
+GBPJPY terminal evidence:
+
+- Claim:
+  `/tmp/ict-engine-agent-claims/board-b-factor-refinement/20260523T053853+0800-codex-ibkr-gbpjpy-fx-volatility-breakout-reclaim-1m-mtf-gate1.claim`.
+- Run root:
+  `support/docs/experiments/actionable-regime-confidence/runs/20260523T054916+0800-codex-ibkr-gbpjpy-fx-volatility-breakout-reclaim-1m-mtf-gate1-v1`.
+- Decision: `drop_gate1_no_exact_1m_5bps_density_survivor`.
+- Provider data acquired for `7` ladder legs; `material_count=14`,
+  `rank_rows=14`, and `rank_total_trade_count=1114`.
+- The exact 1m best row had `16` trades, `1.333333/day`, raw `-0.29%`, and
+  `5bps/side=-1.89%`.
+- `downstream_allowed=false`, `promotion_allowed=false`,
+  `trade_usable=false`, `extension_complete=false`, and `update_goal=false`.
+
+Remaining active blocker:
+
+- `20260523T0540+0800-codex-ibkr-jpm-money-center-bank-dmi-adx-pullback-1m-mtf-gate1.claim`
+  remains active with no terminal decision.
+- JPM wrapper PID `60693` is still live. Its latest observed child was an IBKR
+  JPM daily fetch under
+  `support/docs/experiments/actionable-regime-confidence/runs/20260523T054054+0800-codex-ibkr-jpm-money-center-bank-dmi-adx-pullback-1m-mtf-gate1-v1`.
+- JPM fetch exits observed so far are still provider timeout/empty-data exits
+  (`exit=3`) across the checked `1m/5m/15m/30m/1h/4h/1d` windows; no
+  `terminal_metrics.json`, `terminal_decision_summary.md`, or cost-stress table
+  has materialized yet.
+
+Actionability:
+
+- GBPJPY is fail-closed observation evidence only.
+- The current factor-claim closure blocker is JPM plus its live process.
+- Do not call factor-claim hygiene clean until JPM either terminalizes or is
+  explicitly externalized from its own evidence.
+- Release readiness remains separate and still blocked by the release audit.
+
+## 2026-05-23 06:02 CST JPM Terminalized, TOMAC Choppiness Reopened Queue
+
+Fresh factor-claim audit after JPM terminalization:
+
+- `/tmp/ict-engine-factor-claims-after-jpm-terminalization-20260523T060019+0800.json`
+  exited `1`.
+- `summary.status=needs_attention`.
+- `active_claims=1`.
+- `terminalized_claims=73`.
+- `total_claims=74`.
+- `missing_run_roots=1`.
+- `live_factor_processes=0`.
+- `promotion_allowed_true=0`.
+- `trade_usable_true=0`.
+- `blocking_reasons=["active_claims","missing_run_roots"]`.
+- `next_action="terminalize or externalize active claims; restore or
+  terminalize missing run roots"`.
+
+JPM terminal evidence:
+
+- Claim:
+  `/tmp/ict-engine-agent-claims/board-b-factor-refinement/20260523T0540+0800-codex-ibkr-jpm-money-center-bank-dmi-adx-pullback-1m-mtf-gate1.claim`.
+- Run root:
+  `support/docs/experiments/actionable-regime-confidence/runs/20260523T054054+0800-codex-ibkr-jpm-money-center-bank-dmi-adx-pullback-1m-mtf-gate1-v1`.
+- Decision: `blocked_provider_runtime_no_candles`.
+- Terminal metrics:
+  `support/docs/experiments/actionable-regime-confidence/runs/20260523T054054+0800-codex-ibkr-jpm-money-center-bank-dmi-adx-pullback-1m-mtf-gate1-v1/checks/terminal_metrics.json`.
+- Terminal summary:
+  `support/docs/experiments/actionable-regime-confidence/runs/20260523T054054+0800-codex-ibkr-jpm-money-center-bank-dmi-adx-pullback-1m-mtf-gate1-v1/summaries/terminal_decision_summary.md`.
+- Provider rows by timeframe are all zero:
+  `1m=0`, `5m=0`, `15m=0`, `30m=0`, `1h=0`, `4h=0`, `1d=0`.
+- Command exits are `00_provider_status_ibkr=0` and all selected fetch windows
+  `=3`.
+- `ranked_row_count=0`, `downstream_allowed=false`,
+  `pre_bayes_allowed=false`, `bbn_allowed=false`, `catboost_allowed=false`,
+  `execution_tree_allowed=false`, `promotion_allowed=false`,
+  `trade_usable=false`, and `update_goal=false`.
+
+New active blocker:
+
+- `20260523T055929+0800-codex-tomac-choppiness-gate1.claim`.
+- Scope: local TOMAC NQ/YM/XAU choppiness breakout and retest/reclaim Gate 1.
+- Claimed roots:
+  `/tmp/ict-engine-tomac-choppiness-gate1-20260523T055929+0800` and
+  `/tmp/ict-engine-tomac-choppiness-gate1-smoke-20260523T055929+0800`.
+- The compact audit marks the run root as missing and the claim as active.
+- Targeted live-process readback at 06:01 CST found no matching TOMAC
+  choppiness worker, but no terminal evidence exists in the claim yet.
+
+Actionability:
+
+- JPM is provider/runtime-blocked observation evidence, not a factor economics
+  verdict and not promotion/trade evidence.
+- The factor-claim queue is not clean because TOMAC choppiness is active with a
+  missing run root in the current audit.
+- Do not call the active goal complete: current promotion/trade positives remain
+  zero, and release readiness remains blocked.
+
+## 2026-05-23 06:04 CST Final Verification Drift Supersedes 06:02
+
+Fresh final factor-claim audit:
+
+- `/tmp/ict-engine-factor-claims-final-refresh-20260523T060423+0800.json`
+  exited `1`.
+- `summary.status=needs_attention`.
+- `active_claims=2`.
+- `terminalized_claims=74`.
+- `total_claims=76`.
+- `missing_run_roots=1`.
+- `live_factor_processes=2`.
+- `promotion_allowed_true=0`.
+- `trade_usable_true=0`.
+- `blocking_reasons=["active_claims","live_factor_processes","missing_run_roots"]`.
+- `next_action="terminalize or externalize active claims; wait for live factor
+  processes to exit or claim them before closure; restore or terminalize
+  missing run roots"`.
+
+Superseding attention claims:
+
+- `20260523T055929+0800-codex-tomac-choppiness-gate1.claim` is now
+  terminalized as
+  `blocked_missing_run_root_self_test_failure_no_terminal_metrics`, but remains
+  an attention item because its declared run root is missing. It has
+  `promotion_allowed=false` and `trade_usable=false`.
+- `20260523T055947+0800-codex-ibkr-eurusd-fx-london-orb-retest-1m-mtf-gate1.claim`
+  is active/claimed, with `promotion_allowed=false` and
+  `trade_usable=false` until Gate 1 proves otherwise.
+- `20260523T0602+0800-codex-ibkr-usdjpy-fx-dmi-adx-pullback-1m-mtf-gate1.claim`
+  is active. Live process readback shows USDJPY wrapper PID `95345` and IBKR
+  child fetch PID `96849` under
+  `support/docs/experiments/actionable-regime-confidence/runs/20260523T060301+0800-codex-ibkr-usdjpy-fx-dmi-adx-pullback-1m-mtf-gate1-v1`.
+
+Actionability:
+
+- The 06:02 queue state is superseded by the final verification drift above.
+- Claim/process hygiene is not green.
+- There is still no current `promotion_allowed=true` or `trade_usable=true`
+  factor evidence, so the practical-factor diffusion objective remains open.
+
+## 2026-05-23 05:59 CST JPM Terminalized, Claim Hygiene Pass
+
+Fresh factor-claim audit after JPM terminalization:
+
+- `/tmp/ict-engine-factor-claims-post-jpm-terminal.json` exited `0`.
+- `summary.status=pass`.
+- `active_claims=0`.
+- `terminalized_claims=73`.
+- `total_claims=73`.
+- `missing_run_roots=0`.
+- `live_factor_processes=0`.
+- `promotion_allowed_true=0`.
+- `trade_usable_true=0`.
+- `next_action="no claim terminalization blockers found"`.
+
+JPM terminal evidence:
+
+- Claim:
+  `/tmp/ict-engine-agent-claims/board-b-factor-refinement/20260523T0540+0800-codex-ibkr-jpm-money-center-bank-dmi-adx-pullback-1m-mtf-gate1.claim`.
+- Run root:
+  `support/docs/experiments/actionable-regime-confidence/runs/20260523T054054+0800-codex-ibkr-jpm-money-center-bank-dmi-adx-pullback-1m-mtf-gate1-v1`.
+- Decision: `blocked_provider_runtime_no_candles`.
+- Provider status exited `0`, but every JPM historical fetch window exited `3`
+  and produced `0` rows across `1m/5m/15m/30m/1h/4h/1d`.
+- `ranked_row_count=0`, `branch_fields_preserved=false`, and there are no
+  `5bps+density` survivors.
+- `downstream_allowed=false`, `pre_bayes_allowed=false`, `bbn_allowed=false`,
+  `catboost_allowed=false`, `execution_tree_allowed=false`,
+  `promotion_allowed=false`, `trade_usable=false`, and `update_goal=false`.
+
+Fresh release-readiness audit:
+
+- `/tmp/ict-engine-release-readiness-post-jpm-terminal.json` exited `1`.
+- `summary.status=needs_fix`.
+- `fail_count=4`, `pass_count=1`, `skip_count=0`.
+- `HEAD=88ccea762ceefc764fdb31845adfa6d60f26b384`.
+- Source is ahead of `origin/main` by `93` commits.
+- Current version remains `0.1.3`; known release tags include `v0.1.3` and
+  `v0.1.4`; suggested next patch is `0.1.5` / `v0.1.5`.
+
+Unresolved release gates:
+
+- `worktree_clean_for_release`: `78` tracked dirty entries and `782` untracked
+  entries remain in the broad checkout.
+- `release_docs_fresh_for_selected_tag`: release signoff and release notes are
+  still historical/stale for the selected export.
+- `source_origin_matches_selected_source`: selected source commit is not on
+  `origin/main`.
+- `release_version_tag_available`: `v0.1.3` is already used.
+
+Actionability:
+
+- Factor-claim/process hygiene is currently clean.
+- This does not complete the full audit goal: promotion/trade positives remain
+  zero, and release readiness still fails.
+- No release, tag, push, GitHub Release, or trade/promotion language is
+  authorized from this state.
+- Next useful work is a release-readiness cleanup/export slice or a new
+  practical-factor proof lane with explicit `promotion_allowed=true` and
+  `trade_usable=true` from downstream gates.
+
+## 2026-05-23 06:25 CST Bybit Terminalized, Claim Hygiene Pass, Release Still Blocked
+
+Fresh factor-claim audit after the live EURUSD, USDJPY, TOMAC Choppiness, and
+Bybit public crypto lanes exited and were terminalized:
+
+- `/tmp/ict-engine-factor-claims-after-bybit-terminalization.json` exited `0`.
+- `summary.status=pass`.
+- `active_claims=0`.
+- `terminalized_claims=78`.
+- `total_claims=78`.
+- `missing_run_roots=0`.
+- `live_factor_processes=0`.
+- `promotion_allowed_true=0`.
+- `trade_usable_true=0`.
+- `next_action="no claim terminalization blockers found"`.
+
+Terminalized evidence since the 06:04 drift checkpoint:
+
+- USDJPY:
+  `support/docs/experiments/actionable-regime-confidence/runs/20260523T060301+0800-codex-ibkr-usdjpy-fx-dmi-adx-pullback-1m-mtf-gate1-v1`,
+  decision `drop_gate1_no_exact_1m_5bps_density_survivor`.
+- EURUSD:
+  `support/docs/experiments/actionable-regime-confidence/runs/20260523T061001+0800-codex-ibkr-eurusd-fx-london-orb-retest-1m-mtf-gate1-v1`,
+  decision `drop_gate1_no_exact_1m_5bps_density_survivor`.
+- TOMAC Choppiness:
+  `/tmp/ict-engine-tomac-choppiness-gate1-20260523T055929+0800`,
+  decision `drop_gate1_no_hard_5bps_density_quality_survivor`.
+- Bybit public crypto volatility pullback/reclaim:
+  `support/docs/experiments/actionable-regime-confidence/runs/20260523T061432+0800-codex-bybit-crypto-vol-pullback-reclaim-1m-full-ladder-gate1-v1`,
+  decision `higher_timeframe_subclass_only_origin_blocked`.
+
+Bybit nuance:
+
+- The Bybit run had high-timeframe/subclass rows that survived cost stress, for
+  example SOLUSDT `1h` and `4h`, but the claimed 1m-origin branch did not meet
+  the exact origin plus hard 5bps/density gate.
+- The Bybit claim is therefore observation/subclass evidence only:
+  `downstream_allowed=false`, `promotion_allowed=false`, `trade_usable=false`,
+  and `update_goal=false`.
+
+Fresh release-readiness audit:
+
+- `/tmp/ict-engine-release-readiness-after-bybit-terminalization.json` exited
+  `1`.
+- `summary.status=needs_fix`.
+- `fail_count=4`, `pass_count=1`, `skip_count=0`.
+- `HEAD=88ccea762ceefc764fdb31845adfa6d60f26b384`.
+- Source is ahead of `origin/main` by `93` commits.
+- Current version remains `0.1.3`; known release tags include `v0.1.3` and
+  `v0.1.4`; suggested next patch remains `0.1.5` / `v0.1.5`.
+
+Unresolved release gates remain unchanged:
+
+- `worktree_clean_for_release`.
+- `release_docs_fresh_for_selected_tag`.
+- `source_origin_matches_selected_source`.
+- `release_version_tag_available`.
+
+Actionability:
+
+- The superseding claim/process hygiene state is clean at 06:25 CST.
+- The practical-factor objective is still open because
+  `promotion_allowed_true=0` and `trade_usable_true=0`.
+- Release is still blocked by readiness gates and broad dirty worktree state.
+- Do not release, tag, push, promote, or describe any factor as trade-usable
+  from this state.
+- Next coherent slices are either release cleanup/export readiness or a new
+  isolated practical-factor proof lane.
