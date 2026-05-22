@@ -1,8 +1,8 @@
 # Factor Signal Diagnostics Hotplug Handoff TODO
 
-Updated: 2026-05-20 12:48 CST
+Updated: 2026-05-20 12:50 CST
 
-Current slice: support examples index added.
+Current slice: root README discoverability added.
 
 ## Route
 
@@ -17,6 +17,7 @@ Current slice: support examples index added.
 - Added optional profile example in `support/examples/factor_signal_diagnostics/personal_hotplug_profile.example.json`.
 - Added consumer README/example at `support/examples/factor_signal_diagnostics/README.md`.
 - Added examples index at `support/examples/README.md` so consumers can discover optional fixtures without enabling them by default.
+- Linked `support/examples/README.md` from `README.md` and `README.zh-CN.md` repository maps.
 
 ## Consumer Commands
 
@@ -89,6 +90,7 @@ timestamp,asset,horizon,regime,signal,forward_return
 - End-to-end demo composition test covers `factor_signal_diagnostics.py --demo --output /tmp/...` feeding `factor_candidate_pack.py --demo --signal-diagnostics-json /tmp/...`.
 - README commands are documentation-only and point outputs to `/tmp/...`.
 - `support/examples/README.md` states examples are opt-in and generated artifacts belong in `/tmp/...` or explicit `--state-dir`.
+- Root English/Chinese README maps now point consumers to `support/examples/README.md`.
 
 ## Next TODO
 

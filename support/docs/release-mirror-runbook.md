@@ -11,6 +11,14 @@ Status note (2026-05-10):
 - `Cargo.toml` and release metadata point at `Undermybelt/ict-engine-release`
 - confirm the source repo, mirror repo, and release tag before publishing
 
+Current source metadata note (2026-05-22):
+- `Cargo.toml` currently reports `version = "0.1.3"`.
+- `Cargo.toml` uses `repository = "https://github.com/Undermybelt/ict-engine-release"`.
+- Treat the development checkout as the active source/research tree and the
+  release mirror as a sanitized private transport surface only.
+- Do not infer release readiness from the version field; rerun the clean-export,
+  privacy, fmt, clippy, test, and smoke gates for the exact release slice.
+
 License note (2026-05-13):
 - `LICENSE` is PolyForm Noncommercial License 1.0.0, not MIT/Apache/open
   source.

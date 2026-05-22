@@ -73,6 +73,22 @@ The core CLI runs with **Rust only** ✨ Python, Auto-Quant, richer providers, a
 
 > ٩(•́へ•́٩) **Iron rule**: use a `/tmp` state directory for your first run. **Do not dirty the repo!**
 
+Detailed paths:
+
+- Consumer quickstart: `support/docs/consumer-quickstart.md`
+- Contributor quickstart: `support/docs/contributor-quickstart.md`
+- Contribution guide: `CONTRIBUTING.md`
+- Command output contract: `support/docs/command-output-contract.md`
+
+Scripted smoke check:
+
+```bash
+bash support/scripts/smoke_acceptance.sh
+```
+
+The smoke script defaults to `/tmp/...` state and refuses repo-local `STATE_DIR`
+unless you explicitly set `ICT_ENGINE_ALLOW_REPO_STATE=1`.
+
 ```bash
 cargo check
 cargo run -- --help

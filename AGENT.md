@@ -238,14 +238,14 @@ TimesFM is an optional forecast bridge (`src/python_bridge/timesfm.rs` and
 
 | Rust Enum Variant | snake_case key | Family (TODO doc) | Code Location | Status |
 |---|---|---|---|---|
-| `TrendMomentum` | `trend_momentum` | Family B | `src/factor_lab/factor_definition.rs:365` | active |
-| `VolatilityMeanReversion` | `volatility_mean_reversion` | Family D (partial) | `src/factor_lab/factor_definition.rs:380` | active |
-| `StructureIct` | `structure_ict` | Family A | `src/factor_lab/factor_definition.rs:396` | active |
-| `CrossMarketSmt` | `cross_market_smt` | Family C | `src/factor_lab/factor_definition.rs:420` | active |
-| `OptionsHedging` | `options_hedging` | Family G (partial) | `src/factor_lab/factor_definition.rs:431` | active |
-| `CrowdingHerding` | `crowding_herding` | Family E | `src/factor_lab/factor_definition.rs` | active (compute stub) |
-| `SpectralRhythm` | `spectral_rhythm` | Family F | `src/factor_lab/factor_definition.rs` | active (compute stub) |
-| `SessionLiquidity` | `session_liquidity` | Family H | `src/factor_lab/factor_definition.rs` | active (compute stub) |
+| `TrendMomentum` | `trend_momentum` | Family B | `src/factor_lab/factor_definition.rs::FactorDefinition::trend_momentum` | active |
+| `VolatilityMeanReversion` | `volatility_mean_reversion` | Family D (partial) | `src/factor_lab/factor_definition.rs::FactorDefinition::volatility_mean_reversion` | active |
+| `StructureIct` | `structure_ict` | Family A | `src/factor_lab/factor_definition.rs::FactorDefinition::structure_ict` | active |
+| `CrossMarketSmt` | `cross_market_smt` | Family C | `src/factor_lab/factor_definition.rs::FactorDefinition::cross_market_smt` | active |
+| `OptionsHedging` | `options_hedging` | Family G (partial) | `src/factor_lab/factor_definition.rs::FactorDefinition::options_hedging` | active |
+| `CrowdingHerding` | `crowding_herding` | Family E | `src/factor_lab/factor_definition.rs::FactorDefinition::crowding_herding` | active partial |
+| `SpectralRhythm` | `spectral_rhythm` | Family F | `src/factor_lab/factor_definition.rs::FactorDefinition::spectral_rhythm` | active partial |
+| `SessionLiquidity` | `session_liquidity` | Family H | `src/factor_lab/factor_definition.rs::FactorDefinition::session_liquidity` | active partial |
 
 ### Design-Level Factor Families (from execution-tree TODO)
 
@@ -255,10 +255,10 @@ TimesFM is an optional forecast bridge (`src/python_bridge/timesfm.rs` and
 | B | Directionality / Persistence | `TrendMomentum` | Family B | code covers EMA+RSI+ADX; no continuation-failure/exhaustion subfactors |
 | C | Cross-Market Confirmation | `CrossMarketSmt` | Family C | code covers SMT; no leader-laggard/correlation-consistency subfactors |
 | D | Stretch / Reversion Feasibility | `VolatilityMeanReversion` | Family D | code covers Bollinger+ATR; no OU-reversion/exhaustion subfactors |
-| E | Crowding / Herding Execution Risk | `CrowdingHerding` | Family E | compute stub exists; no subfactors beyond stub |
-| F | Spectral Rhythm / Chaos | `SpectralRhythm` | Family F | compute stub exists; spectral_entropy in execution tree inputs but stub only |
+| E | Crowding / Herding Execution Risk | `CrowdingHerding` | Family E | active partial compute path exists; richer crowding persistence/collapse subfactors still missing |
+| F | Spectral Rhythm / Chaos | `SpectralRhythm` | Family F | active partial compute path exists; richer spectral/rhythm validation still missing |
 | G | Options / Dealer Positioning | `OptionsHedging` | Family G | compute path exists but requires `--auxiliary-evidence` data |
-| H | Session / Liquidity Window Quality | `SessionLiquidity` | Family H | compute stub exists; no subfactors beyond stub |
+| H | Session / Liquidity Window Quality | `SessionLiquidity` | Family H | active partial compute path exists; richer session-transition validation still missing |
 
 ### Key Source Paths
 
@@ -280,7 +280,7 @@ All state dirs are `/tmp/...` by default via `--state-dir` flag. Zero-config: `c
 
 1. No AGENTS.md existed before this file — agents had no entry map
 2. Factor families A-H are documented only in `support/docs/plans/2026-05-05-execution-tree-factor-auto-quant-todo.md` (5590 lines) — agents cannot scan a 436KB doc efficiently
-3. Families E, F, H now have `FactorCategory` enum variants and compute stubs — previously missing
+3. Families E, F, H now have `FactorCategory` enum variants and active partial compute paths — previously missing
 4. Factor compute paths are split across `factor_lab/` and `factors/` — grep for "factor" hits 20+ files with no index
 
 ## Hot-Plug Convention

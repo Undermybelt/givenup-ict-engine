@@ -44,6 +44,20 @@ Any PR that adds a nontrivial helper or shell to `main.rs` must justify why it c
 
 Default reviewer answer should be: move it out.
 
+## Current Debt Baseline
+
+Measured on 2026-05-22 during the full-audit remediation loop:
+
+- `src/main.rs`: 19,202 lines
+- `src/artifact_cli_args.rs`: 149 lines
+- `src/application/artifacts.rs`: 3,217 lines
+- `src/status_command.rs`: 252 lines
+
+The near-term remediation target is continuous shrinkage of `src/main.rs` in
+small verified batches. The long-term target remains `src/main.rs < 5,000`
+lines, with command bodies, DTOs, report builders, and orchestration helpers
+living in library modules.
+
 ## Test Rule
 
 When extracting a helper from `main.rs`:

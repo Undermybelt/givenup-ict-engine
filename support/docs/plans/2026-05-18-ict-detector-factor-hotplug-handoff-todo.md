@@ -34,16 +34,30 @@ Done in this slice:
 - Added typed liquidity texture output:
   `LiquidityPoolTextureKind::{None,Smooth,Jagged,Mixed}` and
   `LiquidityPoolTextureClassification`.
+- Added typed liquidity sweep quality output:
+  `LiquiditySweepQualityKind::{None,Clean,Dirty,Mixed}` and
+  `LiquiditySweepQualityClassification`, surfaced as compact
+  `sweep_quality/clean_or_dirty=<value>` evidence with displacement, return
+  bars, close reclaim, confidence, and fail-closed reason.
 - Moved smooth/jagged classifier logic into `src/ict/liquidity.rs` so core ICT
   detector code, not `main.rs`, owns the factor.
+- Moved order-block variant classification into `src/ict/ob.rs` as typed
+  `OrderBlockVariantKind::{None,OrderBlock,BreakerBlock,MitigationBlock,RejectionBlock}`
+  evidence; `main.rs` now acts as a report adapter instead of owning the
+  detector logic.
 - Kept analyze/reporting adapter compact: human output still emits
-  `liquidity_pool_texture/smooth_or_jagged=<value>`.
+  `liquidity_pool_texture/smooth_or_jagged=<value>` and
+  `sweep_quality/clean_or_dirty=<value>`.
 
 Validation evidence:
 - `cargo test --lib volume_imbalance` passed.
 - `cargo test --lib liquidity_pool_texture` passed.
 - `cargo test --bin ict-engine test_classify_liquidity_pool_texture_scores_smooth_pool`
   passed.
+- `cargo test --lib liquidity_sweep_quality` passed.
+- `cargo test --lib order_block_variant` passed.
+- `cargo test --bin ict-engine test_classify_liquidity_pool_texture_scores_smooth_pool`
+  passed again after the sweep-quality/OB-core follow-up.
 
 ## Detector Completeness Matrix
 
@@ -58,14 +72,19 @@ Liquidity family:
   recent sweep count.
 - Added: smooth/jagged/mixed texture classifier with spacing consistency and
   clean-sweep likelihood.
-- Still useful next: clean/dirty sweep subtype, freshness/age score, touch
-  dispersion in ATR units, and equal-high/equal-low subtype labels.
+- Added: clean/dirty/mixed sweep-quality subtype with displacement in ATR,
+  return bars, close reclaim, confidence, and fail-closed reason.
+- Still useful next: freshness/age score, touch dispersion in ATR units, and
+  equal-high/equal-low subtype labels.
 
 Order-block family:
 - Present: bullish/bearish OB, tested/untested, breaker/mitigation/rejection
   variant adapter.
-- Still useful next: move all OB variant classification out of `main.rs` into
-  `src/ict/ob.rs` with typed variants and tests.
+- Added: OB variant classification moved out of `main.rs` into `src/ict/ob.rs`
+  with typed variants and focused tests.
+- Still useful next: mitigation percentage / failed mitigation state as compact
+  typed detector outputs, plus optional structure-direction hotplug enrichment
+  when explicitly selected.
 
 ## Hotplug Personal Data Plan
 
@@ -90,4 +109,7 @@ Next implementation options:
 
 1. Add gap-VI to any compact detector inventory/report surface only if it can be
    done without expanding default output noisily.
-2. Consider a small follow-up for clean/dirty sweep and OB typed variants.
+2. Add optional detector context/profile only when a concrete consumer selects
+   it; do not make personal data, broker data, sessions, or watchlists default.
+3. Consider equal-high/equal-low subtype labels and mitigation percentage as the
+   next detector-only slice.
