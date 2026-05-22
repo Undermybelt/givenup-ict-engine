@@ -203,6 +203,39 @@ def evaluate_version_tag_unknown(reason: str) -> dict[str, Any]:
     }
 
 
+def evaluate_remote_readback(
+    origin_state: str,
+    origin_details: dict[str, Any],
+    mirror_state: str,
+    mirror_details: dict[str, Any],
+) -> dict[str, Any]:
+    status = "pass" if origin_state == "pass" and mirror_state == "pass" else "fail"
+    details: dict[str, Any] = {
+        "enabled": True,
+        "origin_status": origin_state,
+        "release_mirror_status": mirror_state,
+        "origin": origin_details,
+        "release_mirror": mirror_details,
+    }
+    if status != "pass":
+        details.update(
+            {
+                "blocked_gate": "release_version_tag_available",
+                "next_action": (
+                    "restore release mirror git/network/auth readback, or rerun from a network "
+                    "that can reach the release mirror, then rerun release readiness audit with "
+                    "--check-remotes"
+                ),
+                "rule": "release mirror heads and tags must be readable before tag availability can be trusted",
+            }
+        )
+    return {
+        "id": "remote_readback",
+        "status": status,
+        "details": details,
+    }
+
+
 def evaluate_cargo_release_policy(metadata: dict[str, Any]) -> dict[str, Any]:
     publish = metadata.get("publish")
     license_name = metadata.get("license")
@@ -372,14 +405,9 @@ def build_report(root: Path, check_remotes: bool) -> dict[str, Any]:
                 )
             )
         else:
-            remote_details.update({"origin": origin_details, "release_mirror": mirror_details})
-            gates.append(
-                {
-                    "id": "remote_readback",
-                    "status": "fail",
-                    "details": remote_details,
-                }
-            )
+            remote_readback = evaluate_remote_readback(origin_state, origin_details, mirror_state, mirror_details)
+            remote_details.update(remote_readback["details"])
+            gates.append(remote_readback)
     else:
         gates.append(
             {

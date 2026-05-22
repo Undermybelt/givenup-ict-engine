@@ -6734,3 +6734,70 @@ about release mirror tags.
   release docs, or publish anything.
 - Practical factor diffusion remains unproven until a current branch satisfies
   hard promotion and trade-usable gates.
+
+## 2026-05-23 continuation - release remote readback actionability
+
+Current answer to "is there nothing left to do?": no. The release-readiness
+surface still blocks release, but this slice makes one blocker path more
+operator-actionable: if release mirror readback fails, the `remote_readback`
+gate now explicitly names `blocked_gate=release_version_tag_available` and tells
+the operator to restore release mirror git/network/auth readback or rerun from a
+network that can reach the mirror, then rerun with `--check-remotes`.
+
+### Remediation
+
+- Added `evaluate_remote_readback(...)` to
+  `support/scripts/release_readiness_audit.py`.
+- Kept `remote_readback` fail-closed when either origin or release mirror
+  readback fails.
+- Preserved release tag authority: tag availability still comes only from
+  release mirror tags, not local tags.
+- Added regression coverage in
+  `support/scripts/tests/test_release_readiness_audit.py`.
+- Added live handoff board:
+  `support/docs/plans/2026-05-23-release-readiness-remote-readback-handoff-todo.md`.
+
+### Verification
+
+- RED:
+  `python3 -m unittest support.scripts.tests.test_release_readiness_audit.ReleaseReadinessAuditTest.test_remote_readback_failure_names_blocked_tag_gate -v`
+  failed before implementation because `evaluate_remote_readback` was missing.
+- GREEN targeted:
+  the same test passed after adding the helper.
+- Full release-audit tests:
+  `python3 -m unittest support.scripts.tests.test_release_readiness_audit -v`
+  passed `13` tests.
+- Compile:
+  `python3 -m py_compile support/scripts/release_readiness_audit.py support/scripts/tests/test_release_readiness_audit.py`
+  passed.
+- Script manifest:
+  `python3 support/scripts/check_script_manifest.py`
+  passed with `entries=21`.
+- Real remote audit:
+  `python3 support/scripts/release_readiness_audit.py --compact --check-remotes --output /tmp/ict-engine-release-readiness-remote-actionability-20260523.json`
+  exited `1` as expected.
+
+### Current Release Blocker Readback
+
+- The release mirror was reachable in the fresh real audit, so
+  `remote_readback` did not fail live this time; the failure branch is protected
+  by the unit regression.
+- Current summary:
+  `status=needs_fix`, `pass_count=1`, `fail_count=4`, `skip_count=0`.
+- Current unresolved gates:
+  `worktree_clean_for_release`, `release_docs_fresh_for_selected_tag`,
+  `source_origin_matches_selected_source`, and
+  `release_version_tag_available`.
+- Source is still ahead of `origin/main` by `81` commits.
+- Current version `0.1.3` still maps to existing release mirror tag `v0.1.3`;
+  audit suggests unused next patch `0.1.5`.
+
+### Remaining Broad Blockers
+
+- This slice does not choose a new release version/tag.
+- This slice does not clean the broad dirty worktree or create a sanitized
+  export.
+- This slice does not refresh release signoff or release notes.
+- This slice does not publish, tag, push, or create a GitHub Release.
+- Practical factor diffusion remains unproven until current claims satisfy hard
+  promotion and trade-usable gates.

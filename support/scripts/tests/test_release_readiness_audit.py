@@ -12,6 +12,7 @@ if str(SCRIPTS_ROOT) not in sys.path:
 
 from release_readiness_audit import (  # noqa: E402
     evaluate_docs_freshness,
+    evaluate_remote_readback,
     evaluate_source_origin_alignment,
     evaluate_worktree_clean,
     evaluate_version_tag,
@@ -104,6 +105,26 @@ R  old.rs -> new.rs
         self.assertEqual(gate["status"], "skip")
         self.assertEqual(gate["details"]["reason"], "network_check_not_enabled")
         self.assertEqual(gate["details"]["enable_with"], "--check-remotes")
+
+    def test_remote_readback_failure_names_blocked_tag_gate(self) -> None:
+        gate = evaluate_remote_readback(
+            origin_state="pass",
+            origin_details={"returncode": 0, "stdout": "abc\trefs/heads/main\n", "stderr": ""},
+            mirror_state="fail",
+            mirror_details={
+                "returncode": 128,
+                "stdout": "",
+                "stderr": "Connection closed by 198.18.1.114 port 22\nfatal: Could not read from remote repository.\n",
+            },
+        )
+
+        self.assertEqual(gate["id"], "remote_readback")
+        self.assertEqual(gate["status"], "fail")
+        self.assertEqual(gate["details"]["blocked_gate"], "release_version_tag_available")
+        self.assertIn("release mirror", gate["details"]["next_action"])
+        self.assertIn("--check-remotes", gate["details"]["next_action"])
+        self.assertEqual(gate["details"]["origin_status"], "pass")
+        self.assertEqual(gate["details"]["release_mirror_status"], "fail")
 
     def test_source_origin_alignment_does_not_compare_mirror_commit_to_source_head(self) -> None:
         gate = evaluate_source_origin_alignment(
