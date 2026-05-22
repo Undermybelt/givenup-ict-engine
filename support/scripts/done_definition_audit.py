@@ -309,13 +309,28 @@ def summarize(gates: list[dict]) -> dict:
     skip_count = sum(1 for gate in gates if gate["status"] == "skip")
     status = "pass" if fail_count == 0 else "needs_fix"
     unresolved = [gate["id"] for gate in gates if gate["status"] == "fail"]
+    skipped = [gate["id"] for gate in gates if gate["status"] == "skip"]
+    completion_ready = fail_count == 0 and skip_count == 0
+    if fail_count:
+        evidence_level = "failing_gates"
+        next_action = "fix failing gates, then rerun done-definition audit"
+    elif skip_count:
+        evidence_level = "partial_skipped_gates"
+        next_action = "rerun with --run-all-heavy before treating done-definition as completion proof"
+    else:
+        evidence_level = "full_enabled_gate_coverage"
+        next_action = "done-definition gates have full enabled coverage"
     return {
         "status": status,
+        "completion_ready": completion_ready,
+        "evidence_level": evidence_level,
         "pass_count": pass_count,
         "fail_count": fail_count,
         "skip_count": skip_count,
+        "skipped_gates": skipped,
         "total_gates": len(gates),
         "unresolved": unresolved,
+        "next_action": next_action,
     }
 
 

@@ -68,6 +68,17 @@ Measured on 2026-05-22:
         summary = summarize(gates)
         self.assertEqual(summary["status"], "pass")
         self.assertEqual(summary["unresolved"], [])
+        self.assertFalse(summary["completion_ready"])
+        self.assertEqual(summary["evidence_level"], "partial_skipped_gates")
+        self.assertEqual(summary["skipped_gates"], ["b"])
+        self.assertIn("--run-all-heavy", summary["next_action"])
+
+    def test_summarize_marks_completion_ready_when_no_failures_or_skips(self) -> None:
+        summary = summarize([{"id": "a", "status": "pass"}])
+        self.assertEqual(summary["status"], "pass")
+        self.assertTrue(summary["completion_ready"])
+        self.assertEqual(summary["evidence_level"], "full_enabled_gate_coverage")
+        self.assertEqual(summary["skipped_gates"], [])
 
     def test_run_command_timeout_details_are_json_serializable(self) -> None:
         status, details = run_command(

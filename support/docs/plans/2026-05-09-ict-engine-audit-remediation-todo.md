@@ -11,6 +11,86 @@
 
 ---
 
+### Live Audit Loop - 2026-05-22 23:44 +0800
+
+Owner: Codex current turn.
+Claim: continuing the full-audit/remediation loop after the release-version
+blocker slice. Completion remains disproven by current release, heavy-gate, and
+factor-claim evidence. This slice fixes a done-definition evidence ambiguity:
+lightweight gate pass must not be mistaken for full completion proof when heavy
+gates are skipped.
+
+Problem found:
+
+- `support/scripts/done_definition_audit.py --compact` returned
+  `summary.status=pass` when all lightweight checks passed, even though all
+  heavy gates were skipped.
+- The text in this plan correctly treated that as light-only evidence, but the
+  machine summary did not explicitly say `completion_ready=false`, which made
+  downstream completion audits too easy to overclaim.
+
+Fix applied:
+
+- Keep zero-config/lightweight behavior and `status=pass` for enabled gates with
+  no failures.
+- Add explicit summary fields:
+  `completion_ready`, `evidence_level`, `skipped_gates`, and `next_action`.
+- Light-only evidence now reports `completion_ready=false`,
+  `evidence_level=partial_skipped_gates`, the exact skipped heavy gate ids, and
+  `next_action=rerun with --run-all-heavy before treating done-definition as
+  completion proof`.
+- Full enabled coverage without failures reports `completion_ready=true` and
+  `evidence_level=full_enabled_gate_coverage`.
+- Updated `support/scripts/SCRIPTS.md` so contributors know compact output
+  marks skipped-heavy evidence as not completion-ready.
+
+Fresh evidence so far:
+
+- `python3 -m unittest support.scripts.tests.test_done_definition_audit.DoneDefinitionAuditTest.test_summarize_marks_pass_without_failures support.scripts.tests.test_done_definition_audit.DoneDefinitionAuditTest.test_summarize_marks_completion_ready_when_no_failures_or_skips -v`
+  first failed with `KeyError: 'completion_ready'`, then passed after the
+  summary contract change.
+- `python3 -m unittest support.scripts.tests.test_done_definition_audit -v`
+  passed `10` tests.
+- `python3 -m py_compile support/scripts/done_definition_audit.py support/scripts/tests/test_done_definition_audit.py`
+  passed.
+- `python3 support/scripts/check_script_manifest.py` passed with `entries=21`.
+- `python3 support/scripts/done_definition_audit.py --compact --output /tmp/ict-engine-done-definition-audit-completion-ready-after.json`
+  exited `0` and reported `completion_ready=false`,
+  `evidence_level=partial_skipped_gates`, `pass_count=4`, `skip_count=4`, and
+  skipped gates `cargo_check_all_targets`,
+  `cargo_clippy_all_targets_deny_warnings`, `cargo_test`, and
+  `smoke_acceptance_tmp_state`.
+- `python3 support/scripts/done_definition_audit.py --compact --output /tmp/ict-engine-done-definition-audit-completion-ready-final.json`
+  again exited `0` and reported:
+  `completion_ready=false`, `evidence_level=partial_skipped_gates`,
+  `pass_count=4`, `skip_count=4`, and the four skipped heavy gates.
+- `python3 support/scripts/release_readiness_audit.py --compact --check-remotes --output /tmp/ict-engine-release-readiness-audit-completion-ready-final.json`
+  exited `1` as expected because release blockers remain.
+- `python3 support/scripts/factor_claim_terminalization_audit.py --compact --output /tmp/ict-engine-factor-claim-terminalization-audit-completion-ready-final.json`
+  exited `1` as expected because factor claims still need attention.
+- `rg -n "/Users|repo_root|claim_path|\"run_root\"" /tmp/ict-engine-done-definition-audit-completion-ready-final.json /tmp/ict-engine-release-readiness-audit-completion-ready-final.json /tmp/ict-engine-factor-claim-terminalization-audit-completion-ready-final.json`
+  returned no matches.
+
+Current release/factor readback:
+
+- Release readiness remains `needs_fix` with unresolved:
+  `worktree_clean_for_release`, `release_docs_fresh_for_selected_tag`,
+  `source_origin_matches_selected_source`, and
+  `release_version_tag_available`.
+- Factor-claim compact remains unresolved:
+  `status=needs_attention`, `active_claims=35`,
+  `missing_run_roots=2`, `terminalized_claims=74`,
+  `trade_usable_true=0`.
+
+Next safe action:
+
+- Do not treat lightweight done-definition success as completion. Run
+  `python3 support/scripts/done_definition_audit.py --run-all-heavy --compact`
+  only when ready to spend the full cargo/smoke budget; otherwise keep
+  improving release and factor blockers in narrow slices.
+
+---
+
 ### Live Audit Loop - 2026-05-22 23:31 +0800
 
 Owner: Codex current turn.
