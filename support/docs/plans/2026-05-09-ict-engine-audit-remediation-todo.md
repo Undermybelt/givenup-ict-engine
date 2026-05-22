@@ -5734,3 +5734,54 @@ agent readback.
   `worktree_clean_for_release`, `release_docs_fresh_for_selected_tag`.
 - Remote readback remains opt-in through `--check-remotes`; this compact-output
   slice does not publish, tag, or prepare a release.
+
+## 2026-05-22 continuation - release tag authority audit
+
+Current answer to "is the full audit/pain-removal plan complete?": no. A fresh
+offline readback found a release-audit evidence weakness: without
+`--check-remotes`, `support/scripts/release_readiness_audit.py` could mark
+`release_version_tag_available=pass` from local tags even though the rule is
+about release mirror tags.
+
+### Remediation
+
+- Added `evaluate_version_tag_unknown(reason)` to represent "not proven" as
+  `skip`, not `pass`.
+- Changed `build_report` so release tag availability is evaluated only after
+  successful release mirror tag readback.
+- Offline/no-network mode now reports `release_version_tag_available=skip` with
+  `enable_with=--check-remotes`.
+- Remote mode still fails closed when the mirror already has the candidate tag.
+
+### Verification
+
+- `python3 -m unittest support.scripts.tests.test_release_readiness_audit -v`
+  - passed `8` tests, including the no-mirror-tags skip regression.
+- `python3 -m py_compile support/scripts/release_readiness_audit.py support/scripts/tests/test_release_readiness_audit.py`
+  - passed.
+- Offline readback:
+  - `python3 support/scripts/release_readiness_audit.py --compact --output /tmp/ict-engine-release-readiness-audit-tag-authority-offline.json`
+  - exited `1` as expected.
+  - summary: `status=needs_fix`, `pass_count=1`, `fail_count=2`,
+    `skip_count=2`.
+  - `release_version_tag_available=skip`, not pass.
+- Remote readback:
+  - `python3 support/scripts/release_readiness_audit.py --compact --check-remotes --output /tmp/ict-engine-release-readiness-audit-tag-authority-remote.json`
+  - exited `1` as expected.
+  - summary: `status=needs_fix`, `pass_count=1`, `fail_count=4`,
+    `skip_count=0`.
+  - unresolved: `worktree_clean_for_release`,
+    `release_docs_fresh_for_selected_tag`,
+    `source_origin_matches_selected_source`,
+    `release_version_tag_available`.
+  - mirror tags read: `v0.0.1`, `v0.1.0`, `v0.1.1`, `v0.1.2`,
+    `v0.1.3`, `v0.1.4`; current `Cargo.toml` version `0.1.3` maps to
+    blocked candidate tag `v0.1.3`.
+
+### Remaining Broad Blockers
+
+- Release readiness is still blocked and now has stricter evidence semantics.
+- This slice does not choose a new version/tag, clean the dirty worktree, refresh
+  release docs, or publish anything.
+- Practical factor diffusion remains unproven until a current branch satisfies
+  hard promotion and trade-usable gates.

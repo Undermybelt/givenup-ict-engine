@@ -117,6 +117,18 @@ def evaluate_version_tag(version: str | None, release_tags: set[str]) -> dict[st
     }
 
 
+def evaluate_version_tag_unknown(reason: str) -> dict[str, Any]:
+    return {
+        "id": "release_version_tag_available",
+        "status": "skip",
+        "details": {
+            "reason": reason,
+            "enable_with": "--check-remotes",
+            "rule": "release tag availability must be checked against release mirror tags, not local tags",
+        },
+    }
+
+
 def evaluate_cargo_release_policy(metadata: dict[str, Any]) -> dict[str, Any]:
     publish = metadata.get("publish")
     license_name = metadata.get("license")
@@ -197,13 +209,7 @@ def build_report(root: Path, check_remotes: bool) -> dict[str, Any]:
         raise RuntimeError(head_details["stderr"] or "git rev-parse HEAD failed")
 
     metadata = parse_cargo_metadata((root / "Cargo.toml").read_text(encoding="utf-8"))
-    local_tags_state, local_tags_details = run_command(
-        ["git", "tag", "--list", "v*", "--sort=version:refname"],
-        root,
-    )
-    if local_tags_state != "pass":
-        raise RuntimeError(local_tags_details["stderr"] or "git tag failed")
-    release_tags = set(local_tags_details["stdout"].split())
+    release_tags: set[str] | None = None
 
     gates = [
         evaluate_worktree_clean(status_details["stdout"]),
@@ -261,7 +267,11 @@ def build_report(root: Path, check_remotes: bool) -> dict[str, Any]:
             }
         )
 
-    gates.append(evaluate_version_tag(str(metadata.get("version") or ""), release_tags))
+    if release_tags is None:
+        reason = "network_check_not_enabled" if not check_remotes else "release_mirror_tags_unavailable"
+        gates.append(evaluate_version_tag_unknown(reason))
+    else:
+        gates.append(evaluate_version_tag(str(metadata.get("version") or ""), release_tags))
 
     return {
         "timestamp_utc": datetime.now(timezone.utc).isoformat(),

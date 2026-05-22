@@ -13,6 +13,7 @@ from release_readiness_audit import (  # noqa: E402
     evaluate_docs_freshness,
     evaluate_source_origin_alignment,
     evaluate_version_tag,
+    evaluate_version_tag_unknown,
     format_report,
     parse_cargo_metadata,
     parse_ls_remote,
@@ -53,6 +54,13 @@ ghi789\trefs/tags/v0.1.4^{}
         gate = evaluate_version_tag("0.1.4", {"v0.1.3", "v0.1.4"})
         self.assertEqual(gate["status"], "fail")
         self.assertIn("v0.1.4", gate["details"]["blocking_tags"])
+
+    def test_version_tag_is_skipped_without_release_mirror_tags(self) -> None:
+        gate = evaluate_version_tag_unknown("network_check_not_enabled")
+        self.assertEqual(gate["id"], "release_version_tag_available")
+        self.assertEqual(gate["status"], "skip")
+        self.assertEqual(gate["details"]["reason"], "network_check_not_enabled")
+        self.assertEqual(gate["details"]["enable_with"], "--check-remotes")
 
     def test_source_origin_alignment_does_not_compare_mirror_commit_to_source_head(self) -> None:
         gate = evaluate_source_origin_alignment(
