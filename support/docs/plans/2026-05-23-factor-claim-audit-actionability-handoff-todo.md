@@ -499,6 +499,13 @@ Actionability:
   downstream candidate only; practical/live admission still requires the actual
   downstream chain and `extension_complete=true` / promotion / trade usability
   evidence.
+- Claim-audit blind spot: a live unclaimed TOMAC repair scan exists outside the
+  `/tmp` claim audit at
+  `/tmp/ict-engine-tomac-psar-arooncci-gate1-repair-20260523T0500+0800`. At
+  04:50 CST, PID `93988` was still running the full `NQ,YM,XAU` repair scan and
+  no `checks/01_full_repair.exit` or terminal metrics existed. Do not infer
+  terminalization, survivor state, or promotion/trade usability from this
+  process until its own artifacts land.
 - The broader active goal remains incomplete, and mirror release remains
   blocked.
 
@@ -535,3 +542,224 @@ Actionability:
 - Next valid step is to re-read the repair exit/artifacts when it finishes, or
   continue release-readiness work from a separate clean source slice. No mirror
   release, tag, or GitHub Release is authorized by this checkpoint.
+
+## 2026-05-23 05:01 CST Live-Process Detection Repair
+
+Problem:
+
+- The compact factor-claim audit could report a clean claim-board pass while a
+  live factor runner existed outside the claim files.
+- The concrete reproducer was the TOMAC repair process under
+  `/tmp/ict-engine-tomac-psar-arooncci-gate1-repair-20260523T0500+0800`: the
+  claim board could be clear, but PID `93988` was still running and had no exit
+  file or terminal metrics.
+
+Implementation:
+
+- `support/scripts/factor_claim_terminalization_audit.py` now reads live factor
+  processes via `ps -axo pid,ppid,etime,command`.
+- It reports unclaimed live factor work as `live_factor_processes` and includes
+  compact `attention_live_processes` entries with PID, run-root state,
+  exit-file state, and a command excerpt.
+- `--skip-live-processes` preserves the previous claim-only behavior for
+  deterministic tests or historical comparisons.
+
+Verification:
+
+- RED targeted unit:
+  `python3 -m unittest support.scripts.tests.test_factor_claim_terminalization_audit.FactorClaimTerminalizationAuditTest.test_build_report_marks_unclaimed_live_factor_processes_attention -v`
+  failed before implementation because `build_report` did not accept
+  `live_processes`.
+- GREEN targeted unit: same command passed.
+- Full unit suite:
+  `python3 -m unittest support.scripts.tests.test_factor_claim_terminalization_audit -v`
+  passed `9` tests.
+- Compile:
+  `python3 -m py_compile support/scripts/factor_claim_terminalization_audit.py support/scripts/tests/test_factor_claim_terminalization_audit.py`
+  passed.
+- Script manifest:
+  `python3 support/scripts/check_script_manifest.py` passed.
+
+Fresh live audit:
+
+- `/tmp/ict-engine-factor-claims-live-process-audit-20260523.json`.
+- `summary.status=needs_attention`.
+- `active_claims=2`.
+- `live_factor_processes=1`.
+- `terminalized_claims=58`.
+- `total_claims=60`.
+- `promotion_allowed_true=0`.
+- `trade_usable_true=0`.
+- `blocking_reasons=["active_claims","live_factor_processes"]`.
+
+Claim-only control:
+
+- `/tmp/ict-engine-factor-claims-skip-live-process-audit-20260523.json`.
+- `active_claims=2`.
+- `live_factor_processes=0`.
+
+Current attention items:
+
+- Active claim:
+  `20260523T-current-codex-ibkr-axon-public-safety-ttm-squeeze-1m-mtf-gate1.claim`.
+  No run root or terminal evidence was found in the readback.
+- Active claim:
+  `20260523T045720+0800-codex-ibkr-rpd1h-cybersecurity-pda-mtf-template-transfer-exact-downstream.claim`.
+  No RPD 1h downstream run root or process was found in the readback.
+- Live unclaimed process:
+  TOMAC PSAR/Aroon-CCI repair PID `93988` under
+  `/tmp/ict-engine-tomac-psar-arooncci-gate1-repair-20260523T0500+0800`;
+  no `checks/01_full_repair.exit` exists yet.
+
+Actionability:
+
+- Do not treat a claim-only pass as closure evidence. Use the default
+  live-process-aware audit before any closure, staging, or commit decision.
+- Do not terminalize AXON, RPD 1h, or TOMAC repair by inference. Close only from
+  their own terminal artifacts or explicit owner externalization.
+- No promotion/trade-usable factor exists in the current compact audit.
+
+## 2026-05-23 05:09 CST False-Positive Guard And Current Queue
+
+Follow-up finding:
+
+- A readback shell command of the form `sleep; ps -axo ... | rg ...` can contain
+  factor runner markers in the regex itself.
+- Without an explicit guard, the live-process detector can count that telemetry
+  command as a live factor process even though it is only observing processes.
+
+Repair:
+
+- Added a regression test for `ps|rg` readback commands.
+- Updated the live-process classifier so shell `ps -axo` pipelines are excluded
+  from live factor runner counts while real Python/AQ runner commands remain
+  eligible.
+
+Fresh verification:
+
+- RED:
+  `python3 -m unittest support.scripts.tests.test_factor_claim_terminalization_audit.FactorClaimTerminalizationAuditTest.test_live_process_classifier_ignores_ps_rg_readback_commands -v`
+  failed before the classifier repair because `_is_live_factor_command(...)`
+  returned `True`.
+- GREEN targeted:
+  the same test passed after the classifier repair.
+- Live-process attention regression:
+  `python3 -m unittest support.scripts.tests.test_factor_claim_terminalization_audit.FactorClaimTerminalizationAuditTest.test_build_report_marks_unclaimed_live_factor_processes_attention -v`
+  passed.
+- Full unit suite:
+  `python3 -m unittest support.scripts.tests.test_factor_claim_terminalization_audit -v`
+  passed `10` tests.
+- Compile:
+  `python3 -m py_compile support/scripts/factor_claim_terminalization_audit.py support/scripts/tests/test_factor_claim_terminalization_audit.py`
+  passed.
+- Script manifest:
+  `python3 support/scripts/check_script_manifest.py` passed with `entries=21`.
+
+Fresh current readback:
+
+- `/tmp/ict-engine-factor-claims-live-process-audit-final3-20260523.json` exited
+  `1`, as expected for a fail-closed blocker state.
+- `summary.status=needs_attention`.
+- `active_claims=0`.
+- `terminalized_claims=61`.
+- `total_claims=61`.
+- `missing_run_roots=0`.
+- `live_factor_processes=1`.
+- `promotion_allowed_true=0`.
+- `trade_usable_true=0`.
+- `blocking_reasons=["live_factor_processes"]`.
+- Current live blocker is the TOMAC PSAR/Aroon-CCI repair PID `93988` under
+  `/tmp/ict-engine-tomac-psar-arooncci-gate1-repair-20260523T0500+0800`; its
+  `checks/01_full_repair.exit` is still missing.
+
+Actionability:
+
+- Claim-file terminalization is currently clear, but the full audit loop is not
+  clear because one real live factor process remains.
+- No current audit evidence supports promotion or trade usability.
+- Next valid action is to wait for or read back the TOMAC repair exit/artifacts,
+  then terminalize from its own evidence only.
+
+## 2026-05-23 05:10 CST Superseding Live-Process-Aware Readback
+
+Latest compact audit:
+
+- `/tmp/ict-engine-factor-claims-refresh-20260523T050944+0800.json`.
+- `summary.status=needs_attention`.
+- `active_claims=0`.
+- `live_factor_processes=1`.
+- `terminalized_claims=61`.
+- `total_claims=61`.
+- `missing_run_roots=0`.
+- `promotion_allowed_true=0`.
+- `trade_usable_true=0`.
+- `next_action=wait for live factor processes to exit or claim them before closure`.
+
+Evidence-backed terminalizations after the 05:01 readback:
+
+- AXON public-safety TTM-squeeze Gate 1 is terminalized from
+  `support/docs/experiments/actionable-regime-confidence/runs/20260523T050413+0800-codex-ibkr-axon-public-safety-ttm-squeeze-1m-mtf-gate1-v1/checks/terminal_metrics.json`.
+  Decision: `drop_gate1_cost_or_density_failed`; `provider_data_acquired_count=7`,
+  `material_count=7`, `rank_total_trade_count=71`,
+  `origin_1m_survivors_5bps_density=[]`,
+  `survivors_5bps_per_side=[]`, `promotion_allowed=false`, and
+  `trade_usable=false`.
+- RPD exact 1h downstream is terminalized from
+  `support/docs/experiments/actionable-regime-confidence/runs/20260523T044255+0800-codex-ibkr-rpd5m-cybersecurity-pda-mtf-template-transfer-gate1-v1/downstream-exact-ibkr-rpd-1h-pda-mtf-template-transfer-20260523T050125+0800/checks/downstream_metrics.json`.
+  Decision: `exact_rpd_1h_downstream_fail_closed`; `execution_candidate_status=no_trade`,
+  `execution_readiness=0.37429404324066085`,
+  `transition_hazard=0.9643304104686289`,
+  `pda_hybrid_alignment=false`,
+  `path_ranker_score_used_by_execution_tree=false`,
+  `ranker_validation_ready=false`, `promotion_allowed=false`, and
+  `trade_usable=false`.
+- TENB cybersecurity PDA/MTF exact 5m Gate 1 is terminalized from
+  `support/docs/experiments/actionable-regime-confidence/runs/20260523T050645+0800-codex-ibkr-tenb-cybersecurity-pda-mtf-template-transfer-5m-gate1-v1`.
+  Claim decision: `drop_gate1_no_exact_5m_5bps_density_survivor`.
+
+Remaining blocker:
+
+- The only live factor process in the latest clean audit is the unclaimed TOMAC
+  PSAR/Aroon-CCI repair PID `93988` under parent PID `93976`, run root
+  `/tmp/ict-engine-tomac-psar-arooncci-gate1-repair-20260523T0500+0800`.
+- At the 05:10 CST process readback, `checks/01_full_repair.exit` was still
+  absent. Output had progressed through NQ scoring and into YM loading, with
+  the latest NQ scoring line `score-progress NQ 11500/11664`.
+
+Actionability:
+
+- The claim board is terminalized, but live factor work still blocks closure.
+- Do not promote AXON, RPD 1h, TENB, or TOMAC by implication. Each current
+  terminalized claim remains `promotion_allowed=false` and
+  `trade_usable=false`; TOMAC repair remains in-flight without terminal
+  evidence.
+- The active three-part goal remains incomplete, and no mirror release action
+  is authorized by this readback.
+
+## 2026-05-23 05:12 CST Pre-Commit Drift Check
+
+Fresh audit:
+
+- `/tmp/ict-engine-factor-claims-live-process-audit-final4-20260523.json`
+  exited `1`.
+- `summary.status=needs_attention`.
+- `active_claims=0`.
+- `terminalized_claims=61`.
+- `total_claims=61`.
+- `missing_run_roots=0`.
+- `live_factor_processes=1`.
+- `promotion_allowed_true=0`.
+- `trade_usable_true=0`.
+- `blocking_reasons=["live_factor_processes"]`.
+
+Current blocker:
+
+- The only live blocker remains TOMAC PSAR/Aroon-CCI repair PID `93988` under
+  `/tmp/ict-engine-tomac-psar-arooncci-gate1-repair-20260523T0500+0800`.
+- `checks/01_full_repair.exit` is still missing at this readback.
+
+Actionability:
+
+- This commit may cover only the audit-tooling fix and handoff evidence.
+- The broader full-audit objective remains active until the TOMAC repair exits
+  and is classified from terminal artifacts.

@@ -11,7 +11,13 @@ SCRIPTS_ROOT = Path(__file__).resolve().parents[1]
 if str(SCRIPTS_ROOT) not in sys.path:
     sys.path.insert(0, str(SCRIPTS_ROOT))
 
-from factor_claim_terminalization_audit import build_report, format_report, parse_claim_text, summarize  # noqa: E402
+from factor_claim_terminalization_audit import (  # noqa: E402
+    _is_live_factor_command,
+    build_report,
+    format_report,
+    parse_claim_text,
+    summarize,
+)
 
 
 class FactorClaimTerminalizationAuditTest(unittest.TestCase):
@@ -172,6 +178,57 @@ trade_usable=false
         self.assertIn("terminalize or externalize active claims", summary["next_action"])
         self.assertIn("restore or terminalize missing run roots", summary["next_action"])
         self.assertIn("review positive trade/promotion flags", summary["next_action"])
+
+    def test_build_report_marks_unclaimed_live_factor_processes_attention(self) -> None:
+        with tempfile.TemporaryDirectory() as repo_tmp, tempfile.TemporaryDirectory() as claims_tmp:
+            repo_root = Path(repo_tmp)
+            claims_dir = Path(claims_tmp)
+            live_run_root = Path("/tmp/ict-engine-tomac-psar-arooncci-gate1-repair-test")
+            (claims_dir / "terminal.claim").write_text(
+                """
+owner=codex
+status=terminalized
+decision=fail_closed
+promotion_allowed=false
+trade_usable=false
+""",
+                encoding="utf-8",
+            )
+
+            report = build_report(
+                claims_dir=claims_dir,
+                repo_root=repo_root,
+                live_processes=[
+                    {
+                        "pid": 12345,
+                        "ppid": 123,
+                        "elapsed": "00:12",
+                        "command_excerpt": "python3 /tmp/run_tomac_psar_arooncci_gate1.py --out "
+                        f"{live_run_root}/full",
+                        "run_root": str(live_run_root),
+                        "exit_file": str(live_run_root / "checks" / "01_full_repair.exit"),
+                        "exit_file_exists": False,
+                    }
+                ],
+            )
+            compact = format_report(report, compact=True)
+
+            self.assertEqual(report["summary"]["status"], "needs_attention")
+            self.assertEqual(report["summary"]["active_claims"], 0)
+            self.assertEqual(report["summary"]["live_factor_processes"], 1)
+            self.assertIn("live_factor_processes", report["summary"]["blocking_reasons"])
+            self.assertEqual(compact["attention_live_process_count"], 1)
+            self.assertEqual(compact["attention_live_processes"][0]["pid"], 12345)
+
+    def test_live_process_classifier_ignores_ps_rg_readback_commands(self) -> None:
+        command = (
+            "/bin/zsh -lc sleep 75; ps -axo pid,ppid,etime,%cpu,%mem,command | "
+            "rg -i 'run_tomac_psar_arooncci|tomac-psar|run_ibkr_axon|"
+            "auto-quant-agent-material|fetch_external\\.py|factor-research|cargo run' | "
+            "rg -v 'rg -i'"
+        )
+
+        self.assertFalse(_is_live_factor_command(command))
 
     def test_format_report_compact_keeps_only_attention_claim_summaries(self) -> None:
         full_report = {

@@ -7039,3 +7039,136 @@ Current actionable queue:
    fresh count still has zero promotion-allowed and zero trade-usable factors.
 4. Do not prepare or publish a release until practical-factor proof and a clean
    sanitized export exist.
+
+## 2026-05-23 continuation - 05:01 CST live-process audit repair
+
+Current answer remains no. The prior claim-only compact audit could report
+`pass` while unclaimed factor runner processes were still live, which left a
+blind spot in the full-audit loop.
+
+Root cause:
+
+- `support/scripts/factor_claim_terminalization_audit.py` only inspected claim
+  files under `/tmp/ict-engine-agent-claims/board-b-factor-refinement`.
+- Live factor runner processes without a corresponding active claim, such as
+  the TOMAC repair under
+  `/tmp/ict-engine-tomac-psar-arooncci-gate1-repair-20260523T0500+0800`, were
+  invisible to the audit summary.
+
+Remediation:
+
+- Added a ps-based live factor process readback to the factor-claim audit.
+- The compact report now includes `live_factor_processes`,
+  `attention_live_process_count`, and `attention_live_processes`.
+- Added `--skip-live-processes` for deterministic or claim-only readbacks.
+
+Fresh verification:
+
+- RED:
+  `python3 -m unittest support.scripts.tests.test_factor_claim_terminalization_audit.FactorClaimTerminalizationAuditTest.test_build_report_marks_unclaimed_live_factor_processes_attention -v`
+  failed before implementation with `TypeError: build_report() got an unexpected
+  keyword argument 'live_processes'`.
+- GREEN targeted:
+  the same test passed after implementation.
+- Full factor-claim audit tests:
+  `python3 -m unittest support.scripts.tests.test_factor_claim_terminalization_audit -v`
+  passed `9` tests.
+- Compile:
+  `python3 -m py_compile support/scripts/factor_claim_terminalization_audit.py support/scripts/tests/test_factor_claim_terminalization_audit.py`
+  passed.
+- Script manifest:
+  `python3 support/scripts/check_script_manifest.py` passed with `entries=21`.
+- Whitespace:
+  `git diff --check -- support/scripts/factor_claim_terminalization_audit.py support/scripts/tests/test_factor_claim_terminalization_audit.py`
+  passed.
+
+Fresh current readbacks:
+
+- Live-process aware compact audit:
+  `/tmp/ict-engine-factor-claims-live-process-audit-20260523.json` exited `1`
+  with `summary.status=needs_attention`, `active_claims=2`,
+  `live_factor_processes=1`, `terminalized_claims=58`, `total_claims=60`,
+  `promotion_allowed_true=0`, and `trade_usable_true=0`.
+- Claim-only control:
+  `/tmp/ict-engine-factor-claims-skip-live-process-audit-20260523.json` exited
+  `1` with `active_claims=2` and `live_factor_processes=0`.
+- Fresh release readiness:
+  `/tmp/ict-engine-release-readiness-continuation-20260523.json` exited `1`
+  with unresolved gates `worktree_clean_for_release`,
+  `release_docs_fresh_for_selected_tag`, `source_origin_matches_selected_source`,
+  and `release_version_tag_available`.
+- TOMAC repair:
+  PID `93988` still running at `2026-05-23 05:01:34 CST`; stdout reached NQ day
+  `1000` with `11664` candidates; `checks/01_full_repair.exit` remains absent.
+
+Current active blockers:
+
+- Claim board has two active claims:
+  `20260523T-current-codex-ibkr-axon-public-safety-ttm-squeeze-1m-mtf-gate1.claim`
+  and
+  `20260523T045720+0800-codex-ibkr-rpd1h-cybersecurity-pda-mtf-template-transfer-exact-downstream.claim`.
+- The TOMAC repair is live but unclaimed by the claim audit board.
+- Release readiness remains failed.
+- No current evidence supports `promotion_allowed=true` or `trade_usable=true`.
+
+Next action:
+
+- Do not close the full-audit goal. The audit tooling now fails closed on hidden
+  live factor work, but the current tree still has live factor blockers and
+  release blockers.
+
+## 2026-05-23 continuation - 05:09 CST readback false-positive guard
+
+Follow-up repair:
+
+- The live-process detector briefly over-counted a shell readback command whose
+  `ps -axo ... | rg ...` regex contained factor runner markers.
+- Added a regression test proving that telemetry/readback pipelines are not live
+  factor runners.
+- Updated the classifier to exclude shell `ps -axo` pipelines while preserving
+  real Python/AQ runner detection.
+
+Fresh verification:
+
+- RED:
+  `python3 -m unittest support.scripts.tests.test_factor_claim_terminalization_audit.FactorClaimTerminalizationAuditTest.test_live_process_classifier_ignores_ps_rg_readback_commands -v`
+  failed before the classifier repair.
+- GREEN targeted:
+  the same test passed after repair.
+- Live-process attention regression:
+  `python3 -m unittest support.scripts.tests.test_factor_claim_terminalization_audit.FactorClaimTerminalizationAuditTest.test_build_report_marks_unclaimed_live_factor_processes_attention -v`
+  passed.
+- Full factor-claim audit tests:
+  `python3 -m unittest support.scripts.tests.test_factor_claim_terminalization_audit -v`
+  passed `10` tests.
+- Compile:
+  `python3 -m py_compile support/scripts/factor_claim_terminalization_audit.py support/scripts/tests/test_factor_claim_terminalization_audit.py`
+  passed.
+- Script manifest:
+  `python3 support/scripts/check_script_manifest.py` passed with `entries=21`.
+
+Fresh current readback:
+
+- `/tmp/ict-engine-factor-claims-live-process-audit-final3-20260523.json`
+  exited `1` with `summary.status=needs_attention`.
+- `active_claims=0`.
+- `terminalized_claims=61`.
+- `total_claims=61`.
+- `missing_run_roots=0`.
+- `live_factor_processes=1`.
+- `promotion_allowed_true=0`.
+- `trade_usable_true=0`.
+- `blocking_reasons=["live_factor_processes"]`.
+
+Current blocker:
+
+- TOMAC PSAR/Aroon-CCI repair PID `93988` remains live under
+  `/tmp/ict-engine-tomac-psar-arooncci-gate1-repair-20260523T0500+0800`.
+- `checks/01_full_repair.exit` is still missing.
+- No current factor claim is promotion-allowed or trade-usable.
+
+Next action:
+
+- Commit this audit-tooling fix as a narrow slice after staged diff checks.
+- Continue the broader goal by reading the TOMAC repair terminal artifacts when
+  they exist; do not infer a factor decision from the live process alone.
