@@ -18,14 +18,38 @@ Claim: continuing the full-audit/remediation loop from current worktree
 evidence. Answer to "so there is nothing left to do": no. Current evidence still
 disproves full completion and release readiness.
 
-Fresh current-state commands:
+Latest checkpoint for this live loop:
+
+- Factor-claim terminalization is live-drifting again after prior clear states:
+  `python3 support/scripts/factor_claim_terminalization_audit.py --compact --output /tmp/ict-engine-factor-claims-final-prestage-current-20260523.json`
+  exited `1` with `summary.status=needs_attention`, `active_claims=6`,
+  `terminalized_claims=43`, `total_claims=49`, `trade_usable_true=0`, and
+  `promotion_allowed_true=0`. DOV/PWR/FIX/TOMAC drift claims were terminalized
+  fail-closed from terminal metrics, but fresh cybersecurity/WMT/CPB/ENPH/GLW/
+  TOMAC active claims remain before commit. This is still claim-board hygiene
+  only, not factor promotion or trade usability.
+- Done-definition full-heavy evidence is current:
+  `/tmp/ict-engine-done-current-heavy-timeout3600-20260523.json` reports
+  `summary.status=pass`, `completion_ready=true`,
+  `evidence_level=full_enabled_gate_coverage`, `pass_count=8`, and
+  `fail_count=0`.
+- Release readiness is still blocked:
+  `/tmp/ict-engine-release-readiness-doc-sync-precommit-20260523.json` reports
+  `summary.status=needs_fix` with unresolved
+  `worktree_clean_for_release`, `release_docs_fresh_for_selected_tag`,
+  `source_origin_matches_selected_source`, and
+  `release_version_tag_available`.
+- This checkpoint is not a factor-promotion, trade-usability, release, tag, push,
+  or mirror-publish claim.
+
+Initial current-state commands for this live loop:
 
 - `git status --short --untracked-files=all`
 - `python3 support/scripts/release_readiness_audit.py --compact --check-remotes --output /tmp/ict-engine-release-readiness-current.json`
 - `python3 support/scripts/done_definition_audit.py --compact --output /tmp/ict-engine-done-current.json`
 - `python3 support/scripts/factor_claim_terminalization_audit.py --compact --output /tmp/ict-engine-factor-claims-current.json`
 
-Current findings:
+Initial findings before the latest checkpoint above:
 
 - Release readiness remains `needs_fix` with unresolved gates:
   `worktree_clean_for_release`, `release_docs_fresh_for_selected_tag`,
@@ -39,13 +63,13 @@ Current findings:
 - Current worktree is not release-clean:
   `status_entries=854`, `tracked_entries=77`, `untracked_entries=777`.
   Do not publish from this checkout or stage broadly.
-- Done-definition compact audit is only light evidence:
+- Done-definition compact audit initially had only light evidence:
   `summary.status=pass`, `completion_ready=false`,
   `evidence_level=partial_skipped_gates`, `pass_count=4`, `skip_count=4`.
   Skipped heavy gates are `cargo_check_all_targets`,
   `cargo_clippy_all_targets_deny_warnings`, `cargo_test`, and
   `smoke_acceptance_tmp_state`.
-- Factor-claim compact audit still needs attention:
+- Factor-claim compact audit initially still needed attention:
   `active_claims=7`, `terminalized_claims=2`, `trade_usable_true=0`,
   `promotion_allowed_true=0`. All attention claims have
   `run_root_state=none`, so this turn must not collide with those active
@@ -6903,10 +6927,12 @@ the audit only recognized `terminalized_at`, `decision`, or a status containing
 
 ### Current Factor Claim Readback
 
+- Latest verified compact audit:
+  `/tmp/ict-engine-factor-claims-final-prestage-current-20260523.json`
 - `status=needs_attention`
-- `total_claims=26`
-- `terminalized_claims=23`
-- `active_claims=3`
+- `total_claims=49`
+- `terminalized_claims=43`
+- `active_claims=6`
 - `missing_run_roots=0`
 - `trade_usable_true=0`
 - `promotion_allowed_true=0`
@@ -6915,11 +6941,9 @@ the audit only recognized `terminalized_at`, `decision`, or a status containing
 
 ### Remaining Broad Blockers
 
-- Three active factor claims remain and must not be edited without checking
-  owner/process state:
-  `20260523T000747+0800-codex-tomac-tod-balanced-execution-predicate-readback.claim`,
-  `20260523T021624+0800-codex-historical-interrupt-profit-factor-extension-triage.claim`,
-  and `20260523T024228+0800-codex-vst-same-root-execution-predicate-diagnosis.claim`.
+- Factor-claim audit currently needs attention because live `/tmp` claims keep
+  drifting. Do not claim zero active claims unless a fresh compact audit proves
+  it in the current turn.
 - Release readiness remains blocked.
-- Done-definition completion remains light-only until full-heavy gates are rerun
-  after source changes.
+- Done-definition full-heavy evidence has passed, but it is not a sanitized
+  release-export proof.
