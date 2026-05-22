@@ -11,6 +11,73 @@
 
 ---
 
+### Live Audit Loop - 2026-05-22 22:58 +0800
+
+Owner: Codex current turn.
+Claim: continuing the full-audit/remediation loop; completion remains
+unproven. This slice improves release-readiness worktree blocker
+actionability without cleaning, staging, publishing, tagging, or changing
+release metadata.
+
+Problem found:
+
+- `support/scripts/release_readiness_audit.py --compact --check-remotes`
+  correctly failed `worktree_clean_for_release`, but the blocker details only
+  exposed a total dirty count and the first `20` status rows.
+- In a broad dirty tree, that forced the next user/agent to infer whether the
+  blocker was mostly tracked edits, staged changes, or untracked experiment
+  residue before choosing a safe release-export path.
+
+Fix applied:
+
+- Added worktree status classification to the release audit details:
+  `tracked_entries`, `untracked_entries`, `staged_entries`,
+  `unstaged_entries`, `modified_entries`, `deleted_entries`,
+  `renamed_entries`, and `status_counts`.
+- Added a `next_action` field that keeps the policy explicit:
+  commit/exclude a narrow source slice, then build release evidence from a
+  clean sanitized export.
+- Fail-closed semantics are unchanged.
+
+Fresh evidence:
+
+- `python3 -m unittest support.scripts.tests.test_release_readiness_audit -v`
+  passed `11` tests.
+- `python3 -m py_compile support/scripts/release_readiness_audit.py support/scripts/tests/test_release_readiness_audit.py`
+  passed.
+- `python3 support/scripts/release_readiness_audit.py --compact --check-remotes --output /tmp/ict-engine-release-readiness-audit-worktree-actionability-after.json`
+  exited `1` as expected because release blockers remain.
+- The compact report now shows:
+  `status_entries=855`, `tracked_entries=78`, `untracked_entries=777`,
+  `staged_entries=0`, `unstaged_entries=78`, `modified_entries=78`,
+  `deleted_entries=0`, `renamed_entries=0`, and
+  `status_counts={" M":78,"??":777}`.
+- `rg -n "/Users|repo_root" /tmp/ict-engine-release-readiness-audit-worktree-actionability-after.json`
+  returned no matches.
+- `python3 support/scripts/check_script_manifest.py` passed with
+  `entries=21`.
+- `git diff --check -- support/scripts/release_readiness_audit.py support/scripts/tests/test_release_readiness_audit.py support/docs/plans/2026-05-09-ict-engine-audit-remediation-todo.md`
+  passed.
+
+Current release blocker readback:
+
+- `summary.status=needs_fix`
+- unresolved:
+  `worktree_clean_for_release`,
+  `release_docs_fresh_for_selected_tag`,
+  `source_origin_matches_selected_source`,
+  `release_version_tag_available`.
+- The version/tag blocker still suggests `0.1.5` / `v0.1.5`, but this is not
+  release permission.
+
+Next safe action:
+
+- Treat the current worktree as unsuitable for direct publish. A release lane
+  must first isolate a narrow source slice or clean export, refresh release
+  docs, verify the selected version/tag, and rerun full gates.
+
+---
+
 ### Live Audit Loop - 2026-05-22 22:48 +0800
 
 Owner: Codex current turn.

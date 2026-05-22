@@ -13,6 +13,7 @@ if str(SCRIPTS_ROOT) not in sys.path:
 from release_readiness_audit import (  # noqa: E402
     evaluate_docs_freshness,
     evaluate_source_origin_alignment,
+    evaluate_worktree_clean,
     evaluate_version_tag,
     evaluate_version_tag_unknown,
     format_report,
@@ -50,6 +51,31 @@ ghi789\trefs/tags/v0.1.4^{}
         self.assertEqual(parsed["heads"]["main"], "abc123")
         self.assertEqual(parsed["tags"]["v0.1.4"], "def456")
         self.assertNotIn("v0.1.4^{}", parsed["tags"])
+
+    def test_worktree_clean_gate_summarizes_dirty_status_classes(self) -> None:
+        gate = evaluate_worktree_clean(
+            """
+ M src/main.rs
+M  Cargo.toml
+MM src/lib.rs
+ D old.txt
+R  old.rs -> new.rs
+?? scratch.py
+"""
+        )
+
+        details = gate["details"]
+        self.assertEqual(gate["status"], "fail")
+        self.assertEqual(details["status_entries"], 6)
+        self.assertEqual(details["tracked_entries"], 5)
+        self.assertEqual(details["untracked_entries"], 1)
+        self.assertEqual(details["staged_entries"], 3)
+        self.assertEqual(details["unstaged_entries"], 3)
+        self.assertEqual(details["modified_entries"], 3)
+        self.assertEqual(details["deleted_entries"], 1)
+        self.assertEqual(details["renamed_entries"], 1)
+        self.assertEqual(details["status_counts"]["??"], 1)
+        self.assertIn("clean sanitized export", details["next_action"])
 
     def test_version_tag_fails_when_release_mirror_already_has_version(self) -> None:
         gate = evaluate_version_tag("0.1.4", {"v0.1.3", "v0.1.4"})

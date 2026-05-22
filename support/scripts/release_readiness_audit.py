@@ -91,14 +91,59 @@ def parse_ls_remote(text: str) -> dict[str, dict[str, str]]:
 
 def evaluate_worktree_clean(status_text: str) -> dict[str, Any]:
     entries = [line for line in status_text.splitlines() if line.strip()]
+    details = summarize_worktree_status(entries)
+    details.update(
+        {
+            "sample": entries[:20],
+            "rule": "release export must start from an explicitly selected committed tree, not a broad dirty worktree",
+            "next_action": "commit or exclude a narrow source slice, then build release evidence from a clean sanitized export",
+        }
+    )
     return {
         "id": "worktree_clean_for_release",
         "status": "pass" if not entries else "fail",
-        "details": {
-            "status_entries": len(entries),
-            "sample": entries[:20],
-            "rule": "release export must start from an explicitly selected committed tree, not a broad dirty worktree",
-        },
+        "details": details,
+    }
+
+
+def summarize_worktree_status(entries: list[str]) -> dict[str, Any]:
+    status_counts: dict[str, int] = {}
+    tracked_entries = 0
+    untracked_entries = 0
+    staged_entries = 0
+    unstaged_entries = 0
+    modified_entries = 0
+    deleted_entries = 0
+    renamed_entries = 0
+    for entry in entries:
+        code = entry[:2]
+        status_counts[code] = status_counts.get(code, 0) + 1
+        if code == "??":
+            untracked_entries += 1
+            continue
+        tracked_entries += 1
+        index_status = code[0]
+        worktree_status = code[1]
+        if index_status != " ":
+            staged_entries += 1
+        if worktree_status != " ":
+            unstaged_entries += 1
+        if "M" in code:
+            modified_entries += 1
+        if "D" in code:
+            deleted_entries += 1
+        if "R" in code:
+            renamed_entries += 1
+    return {
+        "status_entries": len(entries),
+        "tracked_entries": tracked_entries,
+        "untracked_entries": untracked_entries,
+        "staged_entries": staged_entries,
+        "unstaged_entries": unstaged_entries,
+        "modified_entries": modified_entries,
+        "deleted_entries": deleted_entries,
+        "renamed_entries": renamed_entries,
+        "status_counts": status_counts,
     }
 
 
