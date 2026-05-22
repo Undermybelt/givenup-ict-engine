@@ -121,10 +121,20 @@ R  old.rs -> new.rs
         gate = evaluate_docs_freshness(
             "This signoff is historical v0.1.3 evidence, not current release permission.",
             "These notes are historical v0.1.3 draft notes. They are not valid release notes.",
+            signoff_path="support/docs/audits/release-signoff.md",
+            notes_path="support/docs/release-notes-draft.md",
         )
         self.assertEqual(gate["status"], "fail")
         self.assertIn("release_signoff_historical", gate["details"]["markers"])
         self.assertIn("release_notes_historical", gate["details"]["markers"])
+        self.assertEqual(
+            gate["details"]["doc_paths"],
+            [
+                "support/docs/audits/release-signoff.md",
+                "support/docs/release-notes-draft.md",
+            ],
+        )
+        self.assertIn("selected tag/export", gate["details"]["next_action"])
 
     def test_summarize_needs_fix_when_any_required_gate_fails(self) -> None:
         summary = summarize(

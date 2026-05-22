@@ -213,7 +213,12 @@ def evaluate_cargo_release_policy(metadata: dict[str, Any]) -> dict[str, Any]:
     }
 
 
-def evaluate_docs_freshness(signoff_text: str, notes_text: str) -> dict[str, Any]:
+def evaluate_docs_freshness(
+    signoff_text: str,
+    notes_text: str,
+    signoff_path: str = "support/docs/audits/release-signoff.md",
+    notes_path: str = "support/docs/release-notes-draft.md",
+) -> dict[str, Any]:
     markers: list[str] = []
     signoff_lower = signoff_text.lower()
     notes_lower = notes_text.lower()
@@ -223,13 +228,17 @@ def evaluate_docs_freshness(signoff_text: str, notes_text: str) -> dict[str, Any
         markers.append("release_notes_historical")
     if "no release permission" in signoff_lower or "do not publish" in signoff_lower:
         markers.append("release_signoff_blocks_publish")
+    details: dict[str, Any] = {
+        "markers": markers,
+        "doc_paths": [signoff_path, notes_path],
+        "rule": "signoff and release notes must describe the selected fresh tag/export, not historical evidence",
+    }
+    if markers:
+        details["next_action"] = "refresh release signoff and release notes for the selected tag/export, then rerun release readiness audit"
     return {
         "id": "release_docs_fresh_for_selected_tag",
         "status": "pass" if not markers else "fail",
-        "details": {
-            "markers": markers,
-            "rule": "signoff and release notes must describe the selected fresh tag/export, not historical evidence",
-        },
+        "details": details,
     }
 
 

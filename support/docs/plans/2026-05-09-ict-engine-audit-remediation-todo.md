@@ -11,6 +11,86 @@
 
 ---
 
+### Live Audit Loop - 2026-05-22 23:18 +0800
+
+Owner: Codex current turn.
+Claim: continuing the full-audit/remediation loop after the previous
+source/origin drift slice. Completion remains disproven by current release,
+heavy-gate, and factor-claim evidence. This slice improves
+`release_docs_fresh_for_selected_tag` actionability without editing release
+signoff content, release notes, version metadata, mirror tags, or remotes.
+
+Problem found:
+
+- `support/scripts/release_readiness_audit.py --compact --check-remotes`
+  correctly failed `release_docs_fresh_for_selected_tag`, but the gate only
+  emitted stale markers and a generic rule.
+- The next user/agent still had to inspect implementation details to know
+  which release docs must be refreshed and what action would unblock the gate.
+
+Fix applied:
+
+- Add `doc_paths` to the release-doc freshness gate details:
+  `support/docs/audits/release-signoff.md` and
+  `support/docs/release-notes-draft.md`.
+- Add a fail-only `next_action` that says to refresh release signoff and release
+  notes for the selected tag/export, then rerun release readiness audit.
+- Keep fail-closed semantics unchanged; this does not make stale release docs
+  pass and does not grant release permission.
+
+Fresh evidence so far:
+
+- `python3 -m unittest support.scripts.tests.test_release_readiness_audit.ReleaseReadinessAuditTest.test_docs_freshness_fails_on_historical_release_notes -v`
+  first failed because `evaluate_docs_freshness` had no `signoff_path` /
+  `notes_path` contract, then passed after adding the gate details.
+- `python3 -m unittest support.scripts.tests.test_release_readiness_audit -v`
+  passed `12` tests.
+- `python3 -m py_compile support/scripts/release_readiness_audit.py support/scripts/tests/test_release_readiness_audit.py`
+  passed.
+- `python3 support/scripts/check_script_manifest.py` passed with `entries=21`.
+- `git diff --check -- support/scripts/release_readiness_audit.py support/scripts/tests/test_release_readiness_audit.py support/docs/plans/2026-05-09-ict-engine-audit-remediation-todo.md`
+  passed.
+- `python3 support/scripts/release_readiness_audit.py --compact --check-remotes --output /tmp/ict-engine-release-readiness-audit-doc-paths-after.json`
+  exited `1` as expected because release blockers remain.
+- `rg -n "/Users|repo_root" /tmp/ict-engine-release-readiness-audit-doc-paths-after.json /tmp/ict-engine-done-definition-audit-doc-paths-after.json /tmp/ict-engine-factor-claim-terminalization-audit-doc-paths-after.json`
+  returned no matches.
+
+Current release blocker readback:
+
+- `summary.status=needs_fix`
+- unresolved:
+  `worktree_clean_for_release`,
+  `release_docs_fresh_for_selected_tag`,
+  `source_origin_matches_selected_source`,
+  `release_version_tag_available`.
+- `release_docs_fresh_for_selected_tag` now reports:
+  `doc_paths=["support/docs/audits/release-signoff.md",
+  "support/docs/release-notes-draft.md"]`, markers
+  `release_signoff_historical`, `release_notes_historical`, and
+  `release_signoff_blocks_publish`, plus `next_action=refresh release signoff
+  and release notes for the selected tag/export, then rerun release readiness
+  audit`.
+- Other blockers remain:
+  source is `75` commits ahead of `origin/main` and `0` behind; worktree has
+  `857` status entries, including `80` tracked modified entries and `777`
+  untracked entries; `Cargo.toml` version `0.1.3` maps to already-used
+  `v0.1.3`, with suggested next patch `0.1.5`.
+
+Current done/factor readback:
+
+- Done-definition compact remains light-only: `pass_count=4`, `skip_count=4`.
+- Factor-claim compact remains unresolved:
+  `status=needs_attention`, `active_claims=28`, `missing_run_roots=2`,
+  `terminalized_claims=63`, `trade_usable_true=0`.
+
+Next safe action:
+
+- Do not edit release signoff/notes yet without a selected clean export and tag
+  candidate. Continue with another narrow audit/readiness slice, likely
+  improving factor-claim lane grouping or release-version source actionability.
+
+---
+
 ### Live Audit Loop - 2026-05-22 23:09 +0800
 
 Owner: Codex current turn.
