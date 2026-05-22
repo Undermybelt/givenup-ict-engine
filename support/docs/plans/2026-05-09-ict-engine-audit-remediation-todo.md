@@ -11,6 +11,85 @@
 
 ---
 
+### Live Audit Loop - 2026-05-22 23:31 +0800
+
+Owner: Codex current turn.
+Claim: continuing the full-audit/remediation loop after the factor-claim
+grouping slice. Completion remains disproven by current release, heavy-gate,
+and factor-claim evidence. This slice improves release-version blocker
+actionability without editing `Cargo.toml`, changing the package version,
+creating tags, pushing remotes, or publishing a mirror.
+
+Problem found:
+
+- `support/scripts/release_readiness_audit.py --compact --check-remotes`
+  correctly failed `release_version_tag_available` because current version
+  `0.1.3` maps to already-used `v0.1.3`, but the gate did not name the version
+  source file.
+- The gate suggested `0.1.5`, but did not provide a concrete next action tying
+  that suggestion back to release metadata.
+
+Fix applied:
+
+- Add `version_source_path` to `release_version_tag_available` details, defaulting
+  to `Cargo.toml`.
+- Add a fail-only `next_action` that points to updating `Cargo.toml` to an
+  unused version such as the suggested next patch, then rerunning release
+  readiness audit.
+- Keep fail-closed semantics unchanged; this does not update release metadata
+  and does not grant release permission.
+
+Fresh evidence so far:
+
+- `python3 -m unittest support.scripts.tests.test_release_readiness_audit.ReleaseReadinessAuditTest.test_version_tag_fails_when_release_mirror_already_has_version -v`
+  first failed because `evaluate_version_tag` had no `version_source_path`
+  contract, then passed after adding the details and `next_action`.
+- `python3 -m unittest support.scripts.tests.test_release_readiness_audit -v`
+  passed `12` tests.
+- `python3 -m py_compile support/scripts/release_readiness_audit.py support/scripts/tests/test_release_readiness_audit.py`
+  passed.
+- `python3 support/scripts/check_script_manifest.py` passed with `entries=21`.
+- `git diff --check -- support/scripts/release_readiness_audit.py support/scripts/tests/test_release_readiness_audit.py support/docs/plans/2026-05-09-ict-engine-audit-remediation-todo.md`
+  passed.
+- `python3 support/scripts/release_readiness_audit.py --compact --check-remotes --output /tmp/ict-engine-release-readiness-audit-version-source-after.json`
+  exited `1` as expected because release blockers remain.
+- `rg -n "/Users|repo_root|claim_path|\"run_root\"" /tmp/ict-engine-release-readiness-audit-version-source-after.json /tmp/ict-engine-done-definition-audit-version-source-after.json /tmp/ict-engine-factor-claim-terminalization-audit-version-source-after.json`
+  returned no matches.
+
+Current release blocker readback:
+
+- `summary.status=needs_fix`
+- unresolved:
+  `worktree_clean_for_release`,
+  `release_docs_fresh_for_selected_tag`,
+  `source_origin_matches_selected_source`,
+  `release_version_tag_available`.
+- `release_version_tag_available` now reports:
+  `version_source_path=Cargo.toml`, `version=0.1.3`,
+  `candidate_tag=v0.1.3`, `blocking_tags=["v0.1.3"]`,
+  `suggested_next_patch_version=0.1.5`,
+  `suggested_next_patch_tag=v0.1.5`, and
+  `next_action=update Cargo.toml to an unused version such as 0.1.5, then
+  rerun release readiness audit`.
+- Other blockers remain: broad dirty worktree, stale release docs, and source
+  HEAD `77` commits ahead of `origin/main`.
+
+Current done/factor readback:
+
+- Done-definition compact remains light-only: `pass_count=4`, `skip_count=4`.
+- Factor-claim compact remains unresolved:
+  `status=needs_attention`, `active_claims=36`,
+  `missing_run_roots=2`, `terminalized_claims=68`,
+  `trade_usable_true=0`.
+
+Next safe action:
+
+- Do not update version metadata until a release lane has selected a clean
+  export/tag candidate. Continue with audit actionability or non-colliding
+  factor-claim cleanup.
+
+---
+
 ### Live Audit Loop - 2026-05-22 23:23 +0800
 
 Owner: Codex current turn.

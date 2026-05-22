@@ -83,11 +83,14 @@ R  old.rs -> new.rs
         self.assertIn("clean sanitized export", details["next_action"])
 
     def test_version_tag_fails_when_release_mirror_already_has_version(self) -> None:
-        gate = evaluate_version_tag("0.1.4", {"v0.1.3", "v0.1.4"})
+        gate = evaluate_version_tag("0.1.4", {"v0.1.3", "v0.1.4"}, version_source_path="Cargo.toml")
         self.assertEqual(gate["status"], "fail")
         self.assertIn("v0.1.4", gate["details"]["blocking_tags"])
+        self.assertEqual(gate["details"]["version_source_path"], "Cargo.toml")
         self.assertEqual(gate["details"]["suggested_next_patch_version"], "0.1.5")
         self.assertEqual(gate["details"]["suggested_next_patch_tag"], "v0.1.5")
+        self.assertIn("Cargo.toml", gate["details"]["next_action"])
+        self.assertIn("0.1.5", gate["details"]["next_action"])
 
     def test_version_tag_suggestion_skips_multiple_existing_patch_tags(self) -> None:
         gate = evaluate_version_tag("0.1.3", {"v0.1.3", "v0.1.4", "v0.1.5"})

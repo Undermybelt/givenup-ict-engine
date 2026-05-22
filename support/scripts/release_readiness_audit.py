@@ -147,22 +147,33 @@ def summarize_worktree_status(entries: list[str]) -> dict[str, Any]:
     }
 
 
-def evaluate_version_tag(version: str | None, release_tags: set[str]) -> dict[str, Any]:
+def evaluate_version_tag(
+    version: str | None,
+    release_tags: set[str],
+    version_source_path: str = "Cargo.toml",
+) -> dict[str, Any]:
     tag = f"v{version}" if version else None
     blocking = sorted([tag] if tag and tag in release_tags else [])
     suggested = suggest_next_patch_version(version, release_tags)
+    details: dict[str, Any] = {
+        "version": version,
+        "version_source_path": version_source_path,
+        "candidate_tag": tag,
+        "blocking_tags": blocking,
+        "suggested_next_patch_version": suggested,
+        "suggested_next_patch_tag": f"v{suggested}" if suggested else None,
+        "known_release_tags": sorted(release_tags),
+        "rule": "never reuse an existing release mirror tag",
+    }
+    if blocking:
+        next_action = f"update {version_source_path} to an unused version"
+        if suggested:
+            next_action += f" such as {suggested}"
+        details["next_action"] = next_action + ", then rerun release readiness audit"
     return {
         "id": "release_version_tag_available",
         "status": "pass" if tag and not blocking else "fail",
-        "details": {
-            "version": version,
-            "candidate_tag": tag,
-            "blocking_tags": blocking,
-            "suggested_next_patch_version": suggested,
-            "suggested_next_patch_tag": f"v{suggested}" if suggested else None,
-            "known_release_tags": sorted(release_tags),
-            "rule": "never reuse an existing release mirror tag",
-        },
+        "details": details,
     }
 
 
