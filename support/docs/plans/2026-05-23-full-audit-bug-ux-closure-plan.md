@@ -376,3 +376,79 @@ Decision:
   claim/process hygiene more accurate for hot-plug pending runner claims.
 - It does not clear factor readiness. There are still active claims/live
   processes, zero promotion/trade-usable positives, and release blockers.
+
+### 2026-05-23 07:33 CST Readback Process Classifier Slice
+
+Trigger:
+
+- Post-commit factor audit at
+  `/tmp/ict-engine-full-audit-20260523-codex-refresh/factor_claim_terminalization_after_commit_7fb46d2a.json`
+  exited `1`.
+- Summary: `active_claims=5`, `live_factor_processes=5`,
+  `missing_run_roots=0`, `terminalized_claims=98`, `total_claims=103`,
+  `promotion_allowed_true=0`, `trade_usable_true=0`.
+- One `attention_live_processes` entry was a read-only status probe:
+  `/bin/zsh -lc ps auxww | rg -i "...run_ibkr...run_bybit"`.
+- A later fresh audit also exposed a read-only source readback:
+  `sed -n .../scripts/run_ibkr_ntnx_bayesian_markov_trend_detector_1m_mtf_gate1.py`.
+
+Patch:
+
+- `support/scripts/factor_claim_terminalization_audit.py`
+  - treats `ps auxww | rg/grep ...` commands as readback commands, same as
+    existing `ps -axo | rg/grep ...` handling.
+  - treats direct `sed -n ...` source readbacks as readback commands.
+  - keeps TOMAC helper scans such as
+    `tomac_tod_portfolio_density_repair_scan.py` classified as live factor
+    work.
+- `support/scripts/tests/test_factor_claim_terminalization_audit.py`
+  - adds regression coverage for the `ps auxww | rg` and `sed -n` probe
+    shapes.
+  - adds coverage that TOMAC helper scans remain detected.
+
+TDD / verification:
+
+- RED:
+  `python3 -m unittest support.scripts.tests.test_factor_claim_terminalization_audit.FactorClaimTerminalizationAuditTest.test_live_process_classifier_ignores_ps_auxww_rg_readback_commands -v`
+  - exit `1` before the classifier patch.
+  - expected failure: `_is_live_factor_command(...)` returned `True`.
+- GREEN:
+  same focused test after the classifier patch
+  - exit `0`.
+- RED:
+  `python3 -m unittest support.scripts.tests.test_factor_claim_terminalization_audit.FactorClaimTerminalizationAuditTest.test_live_process_classifier_ignores_sed_readback_of_factor_wrappers -v`
+  - exit `1` before the refined classifier patch.
+  - expected failure: `_is_live_factor_command(...)` returned `True`.
+- GREEN:
+  same focused `sed -n` test after the refined classifier patch
+  - exit `0`.
+- Regression:
+  `python3 -m unittest support.scripts.tests.test_factor_claim_terminalization_audit -v > /tmp/ict-engine-full-audit-20260523-codex-refresh/factor_claim_audit_unittest_ps_auxww_readback.stdout 2> /tmp/ict-engine-full-audit-20260523-codex-refresh/factor_claim_audit_unittest_ps_auxww_readback.stderr`
+  - exit `0`, `16` tests passed.
+- Regression after refinement:
+  `python3 -m unittest support.scripts.tests.test_factor_claim_terminalization_audit -v > /tmp/ict-engine-full-audit-20260523-codex-refresh/factor_claim_audit_unittest_readback_commands_refined.stdout 2> /tmp/ict-engine-full-audit-20260523-codex-refresh/factor_claim_audit_unittest_readback_commands_refined.stderr`
+  - exit `0`, `18` tests passed.
+- `python3 -m py_compile support/scripts/factor_claim_terminalization_audit.py support/scripts/tests/test_factor_claim_terminalization_audit.py`
+  - exit `0`.
+- `git diff --check -- support/scripts/factor_claim_terminalization_audit.py support/scripts/tests/test_factor_claim_terminalization_audit.py`
+  - exit `0`.
+- `python3 support/scripts/factor_claim_terminalization_audit.py --compact --output /tmp/ict-engine-full-audit-20260523-codex-refresh/factor_claim_terminalization_after_readback_refined.json`
+  - exit `1`.
+  - current summary after refined classifier patch: `active_claims=4`,
+    `live_factor_processes=2`, `missing_run_roots=0`,
+    `terminalized_claims=99`, `total_claims=103`,
+    `promotion_allowed_true=0`, `trade_usable_true=0`.
+  - remaining live processes were the NTNX wrapper and child IBKR historical
+    fetch; read-only `ps auxww | rg` and `sed -n` commands no longer appeared
+    as live factor processes.
+- `python3 support/scripts/check_script_manifest.py`
+  - exit `0`, `script_manifest status=pass entries=21`.
+- `python3 support/scripts/ci/check_docs_runtime_isolation.py`
+  - exit `0`, `docs runtime isolation ok`.
+
+Decision:
+
+- This removes another deterministic audit-noise class from live factor process
+  detection.
+- It does not clear the objective. Real active claims/live wrappers can still
+  exist and must terminalize or be externalized by evidence.

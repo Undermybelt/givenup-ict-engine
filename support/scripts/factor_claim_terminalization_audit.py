@@ -27,6 +27,9 @@ LIVE_FACTOR_PROCESS_MARKERS = (
     "run_binance_",
     "run_kraken_",
     "run_external_",
+    "tomac_session_seasonality_scan.py",
+    "tomac_tod_portfolio_density_repair_scan.py",
+    "tomac_tod_portfolio_aq.py",
     "auto-quant-agent-material",
     "fetch_external.py",
     "prepare_external.py",
@@ -308,9 +311,13 @@ def _is_live_factor_command(command: str) -> bool:
 def _looks_like_readback_command(command: str) -> bool:
     if re.match(r"^(?:\S*/)?(?:rg|grep|egrep|fgrep)\s", command.strip()):
         return True
-    if "ps -axo" in command and ("| rg" in command or " rg " in command or "| grep" in command):
+    if ("ps -axo" in command or "ps auxww" in command) and (
+        "| rg" in command or " rg " in command or "| grep" in command
+    ):
         return True
-    readback_markers = ("ps -axo", " rg ", " tail -n", " find ")
+    if re.search(r"(?:^|\s|['\"])(?:\S*/)?sed\s+-n\s+", command):
+        return True
+    readback_markers = ("ps -axo", "ps auxww", " rg ", " tail -n", " find ")
     if not any(marker in command for marker in readback_markers):
         return False
     return "python" not in command and "auto-quant-agent-material" not in command

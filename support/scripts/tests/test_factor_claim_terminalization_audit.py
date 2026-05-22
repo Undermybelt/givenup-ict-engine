@@ -266,6 +266,24 @@ trade_usable=false
 
         self.assertFalse(_is_live_factor_command(command))
 
+    def test_live_process_classifier_ignores_ps_auxww_rg_readback_commands(self) -> None:
+        command = (
+            "/bin/zsh -lc ps auxww | rg -i "
+            '"run_ibkr|fetch_external\\.py.*ibkr|auto-quant-agent-material-|'
+            'run_tomac|run_bybit"'
+        )
+
+        self.assertFalse(_is_live_factor_command(command))
+
+    def test_live_process_classifier_ignores_sed_readback_of_factor_wrappers(self) -> None:
+        command = (
+            "/bin/zsh -lc sed -n '1,260p' "
+            "support/docs/experiments/actionable-regime-confidence/runs/example/"
+            "scripts/run_ibkr_ntnx_bayesian_markov_trend_detector_1m_mtf_gate1.py"
+        )
+
+        self.assertFalse(_is_live_factor_command(command))
+
     def test_live_process_classifier_ignores_bare_search_readback_commands(self) -> None:
         command = (
             "rg -i run_tomac_psar_arooncci|tomac-psar|run_ibkr_|"
@@ -301,6 +319,17 @@ trade_usable=false
         for command in commands:
             with self.subTest(command=command):
                 self.assertTrue(_is_live_factor_command(command))
+
+    def test_live_process_classifier_detects_tomac_helper_scans(self) -> None:
+        command = (
+            "/opt/homebrew/bin/python3 "
+            "/Users/example/Downloads/Tomac/futures_factor_research_20260521/"
+            "tomac_tod_portfolio_density_repair_scan.py --leaderboard "
+            "/tmp/ict-engine-tomac-session-seasonality-rebuild/leaderboard.csv "
+            "--out /tmp/ict-engine-tomac-tod-balanced-portfolio-rebuild-wide"
+        )
+
+        self.assertTrue(_is_live_factor_command(command))
 
     def test_format_report_compact_keeps_only_attention_claim_summaries(self) -> None:
         full_report = {
