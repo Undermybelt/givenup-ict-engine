@@ -1543,7 +1543,8 @@ Actionability:
 Fresh factor-claim audit after the live EURUSD, USDJPY, TOMAC Choppiness, and
 Bybit public crypto lanes exited and were terminalized:
 
-- `/tmp/ict-engine-factor-claims-after-bybit-terminalization.json` exited `0`.
+- `/tmp/ict-engine-factor-claims-after-bybit-vol-terminalization-20260523T062053+0800.json`
+  exited `0`.
 - `summary.status=pass`.
 - `active_claims=0`.
 - `terminalized_claims=78`.
@@ -1580,8 +1581,8 @@ Bybit nuance:
 
 Fresh release-readiness audit:
 
-- `/tmp/ict-engine-release-readiness-after-bybit-terminalization.json` exited
-  `1`.
+- `/tmp/ict-engine-release-readiness-after-bybit-vol-terminalization-20260523T062053+0800.json`
+  exited `1`.
 - `summary.status=needs_fix`.
 - `fail_count=4`, `pass_count=1`, `skip_count=0`.
 - `HEAD=88ccea762ceefc764fdb31845adfa6d60f26b384`.
