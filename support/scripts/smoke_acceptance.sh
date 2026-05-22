@@ -132,5 +132,29 @@ if ! require_output_match policy_training_agent '"update_runs"[[:space:]]*:[[:sp
   printf 'smoke_acceptance: policy-training-status did not report update_runs=1; inspect %s/policy_training_agent.out\n' "$OUT_DIR" >&2
   exit 1
 fi
+if ! require_output_match policy_training_agent '"export_ready"[[:space:]]*:[[:space:]]*true'; then
+  printf 'smoke_acceptance: structural path-ranker target export was not inspectable; inspect %s/policy_training_agent.out\n' "$OUT_DIR" >&2
+  exit 1
+fi
+if ! require_output_match policy_training_agent '"trainer_manifest_ready"[[:space:]]*:[[:space:]]*true'; then
+  printf 'smoke_acceptance: structural path-ranker trainer manifest was not inspectable; inspect %s/policy_training_agent.out\n' "$OUT_DIR" >&2
+  exit 1
+fi
+if ! require_output_match policy_training_agent '"runtime_selection_enabled"[[:space:]]*:[[:space:]]*false'; then
+  printf 'smoke_acceptance: zero-config DEMO unexpectedly enabled path-ranker runtime; inspect %s/policy_training_agent.out\n' "$OUT_DIR" >&2
+  exit 1
+fi
+if ! require_output_literal policy_training_agent "trainer_artifact=missing"; then
+  printf 'smoke_acceptance: zero-config DEMO did not expose missing trainer artifact status; inspect %s/policy_training_agent.out\n' "$OUT_DIR" >&2
+  exit 1
+fi
+if ! require_output_literal policy_training_agent "runtime_selection=disabled"; then
+  printf 'smoke_acceptance: zero-config DEMO did not fail closed with runtime_selection=disabled; inspect %s/policy_training_agent.out\n' "$OUT_DIR" >&2
+  exit 1
+fi
+if ! require_output_literal policy_training_agent "production_validation=0/30"; then
+  printf 'smoke_acceptance: zero-config DEMO did not expose path-ranker validation shortfall; inspect %s/policy_training_agent.out\n' "$OUT_DIR" >&2
+  exit 1
+fi
 
 printf 'smoke_acceptance: passed state_dir=%s output_dir=%s\n' "$STATE_DIR" "$OUT_DIR"

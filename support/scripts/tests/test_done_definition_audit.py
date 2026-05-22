@@ -4,6 +4,7 @@ from __future__ import annotations
 import sys
 import unittest
 from pathlib import Path
+import json
 
 SCRIPTS_ROOT = Path(__file__).resolve().parents[1]
 if str(SCRIPTS_ROOT) not in sys.path:
@@ -12,6 +13,7 @@ if str(SCRIPTS_ROOT) not in sys.path:
 from done_definition_audit import (  # noqa: E402
     evaluate_main_rs_guardrail,
     parse_main_rs_baseline,
+    run_command,
     summarize,
 )
 
@@ -65,6 +67,23 @@ Measured on 2026-05-22:
         summary = summarize(gates)
         self.assertEqual(summary["status"], "pass")
         self.assertEqual(summary["unresolved"], [])
+
+    def test_run_command_timeout_details_are_json_serializable(self) -> None:
+        status, details = run_command(
+            [
+                sys.executable,
+                "-c",
+                "import sys, time; sys.stdout.buffer.write(b'out'); sys.stdout.flush(); "
+                "sys.stderr.buffer.write(b'err'); sys.stderr.flush(); time.sleep(2)",
+            ],
+            cwd=SCRIPTS_ROOT,
+            timeout=1,
+        )
+        self.assertEqual(status, "fail")
+        self.assertEqual(details["error"], "timeout")
+        self.assertIsInstance(details["stdout"], str)
+        self.assertIsInstance(details["stderr"], str)
+        json.dumps(details)
 
 
 if __name__ == "__main__":

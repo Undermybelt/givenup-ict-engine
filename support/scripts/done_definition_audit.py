@@ -113,6 +113,14 @@ def evaluate_script_governance() -> dict:
     )
 
 
+def _completed_stream_text(value: str | bytes | None) -> str:
+    if value is None:
+        return ""
+    if isinstance(value, bytes):
+        return value.decode("utf-8", errors="replace")
+    return value
+
+
 def run_command(
     cmd: list[str],
     *,
@@ -135,8 +143,8 @@ def run_command(
             "command": cmd,
             "timeout_seconds": timeout,
             "error": "timeout",
-            "stdout": (exc.stdout or "").strip(),
-            "stderr": (exc.stderr or "").strip(),
+            "stdout": _completed_stream_text(exc.stdout).strip(),
+            "stderr": _completed_stream_text(exc.stderr).strip(),
         }
 
     return (

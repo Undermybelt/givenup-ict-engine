@@ -19,7 +19,13 @@ def make_fake_cargo(bin_dir: Path, exit_code: int) -> None:
         'case "$*" in\n'
         '  *" update "*) printf \'{"realized_outcome": "breakeven", "feedback_records_applied": 1}\\n\' ;;\n'
         '  *" workflow-status "*" --agent"*) printf \'{"current_regime_posterior": {"source_phase": "update"}}\\n\' ;;\n'
-        '  *" policy-training-status "*) printf \'{"update_runs": 1}\\n\' ;;\n'
+        '  *" policy-training-status "*)\n'
+        '    if [[ "${FAKE_CARGO_WEAK_POLICY_OUTPUT:-0}" == "1" ]]; then\n'
+        '      printf \'{"update_runs": 1}\\n\'\n'
+        "    else\n"
+        "      printf '%s\\n' '{\"update_runs\": 1, \"structural_path_ranking_target\": {\"export_ready\": true, \"trainer_manifest_ready\": true, \"runtime_selection_enabled\": false}, \"structural_path_ranking_runtime\": {\"summary_line\": \"Ranker runtime: trainer_artifact=missing runtime_selection=disabled\"}, \"structural_path_ranking_validation\": {\"summary_line\": \"Ranker validation: production_validation=0/30\"}}'\n"
+        "    fi\n"
+        "    ;;\n"
         "  *) printf '{}\\n' ;;\n"
         "esac\n"
         f"exit {exit_code}\n",
@@ -34,6 +40,7 @@ def run_smoke_with_fake_cargo(
     state_dir: str,
     cargo_exit_code: int = 0,
     allow_repo_state: bool = False,
+    weak_policy_output: bool = False,
 ) -> subprocess.CompletedProcess[str]:
     fake_bin = tmp_path / "bin"
     fake_bin.mkdir()
@@ -44,6 +51,10 @@ def run_smoke_with_fake_cargo(
     env["STATE_DIR"] = state_dir
     env["OUT_DIR"] = str(tmp_path / "out")
     env["FAKE_CARGO_LOG"] = str(tmp_path / "cargo.log")
+    if weak_policy_output:
+        env["FAKE_CARGO_WEAK_POLICY_OUTPUT"] = "1"
+    else:
+        env.pop("FAKE_CARGO_WEAK_POLICY_OUTPUT", None)
     if allow_repo_state:
         env["ICT_ENGINE_ALLOW_REPO_STATE"] = "1"
     else:
@@ -96,6 +107,18 @@ class SmokeAcceptancePreflightTests(unittest.TestCase):
 
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertIn("state_dir=state", result.stdout)
+
+    def test_requires_fail_closed_path_ranker_boundary(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            tmp_path = Path(tmp)
+            result = run_smoke_with_fake_cargo(
+                tmp_path,
+                state_dir=str(tmp_path / "state"),
+                weak_policy_output=True,
+            )
+
+        self.assertEqual(result.returncode, 1, result.stderr)
+        self.assertIn("structural path-ranker target export", result.stderr)
 
 
 if __name__ == "__main__":
