@@ -5104,3 +5104,75 @@ were allowed to remain `none`.
   - unresolved `main.rs` extraction debt reduction,
   - continued P0 closed-loop verification on current tree,
   - remaining user-facing pain-point sweeps documented in this plan.
+
+---
+
+## 2026-05-22 continuation - done_definition_audit helper for repeatable closure evidence
+
+Current answer to "is this 100% complete?": still no. This slice does not claim
+completion; it introduces a repeatable audit helper to make that answer
+evidence-backed and less manual.
+
+### Problem
+
+The plan's Done Definition remained mostly manual to verify each loop:
+
+- lightweight doc/surface checks (`main.rs` growth, quickstart links, script governance),
+- output-mode policy sanity (`help_audit` expected none-set),
+- optional heavy gates (`cargo check/clippy/test` + smoke).
+
+Without a single helper, evidence quality drifted by operator memory and each
+pass cost extra tokens and repeated ad-hoc command glue.
+
+### Root Cause
+
+No `support/scripts/**` helper consolidated Done Definition gates with:
+
+- zero-config safe defaults,
+- opt-in heavy verification,
+- JSON output suitable for handoff/automation,
+- explicit unresolved gate list for fail-closed loops.
+
+### Fix
+
+- Added `support/scripts/done_definition_audit.py`.
+- Default mode runs low-cost read-only checks:
+  - `main_rs_line_guardrail`: parse baseline from
+    `support/docs/main-rs-guardrails.md` and compare to live `src/main.rs` line
+    count,
+  - `quickstart_surface`: verify README links to consumer/contributor
+    quickstarts and both quickstart docs exist,
+  - `script_governance_surface`: verify `SCRIPTS.md` and
+    `script_manifest.json` exist,
+  - `help_audit_none_output_policy`: execute `help_audit.py` and require
+    `none_output_mode_policy_matches_expected=true`.
+- Added opt-in heavy checks behind flags/env (skip by default):
+  - `--run-cargo-check` / `ICT_ENGINE_DONE_DEFINITION_RUN_CARGO_CHECK`,
+  - `--run-cargo-clippy` / `ICT_ENGINE_DONE_DEFINITION_RUN_CARGO_CLIPPY`,
+  - `--run-cargo-test` / `ICT_ENGINE_DONE_DEFINITION_RUN_CARGO_TEST`,
+  - `--run-smoke` / `ICT_ENGINE_DONE_DEFINITION_RUN_SMOKE`,
+  - `--run-all-heavy` / `ICT_ENGINE_DONE_DEFINITION_RUN_HEAVY`.
+- Added unit tests: `support/scripts/tests/test_done_definition_audit.py`.
+- Registered governance surface:
+  - `support/scripts/SCRIPTS.md`,
+  - `support/scripts/script_manifest.json`.
+- Maintained no-pollution behavior: no repo-local default state writes; smoke
+  defaults to `/tmp/ict-engine-done-definition-audit-smoke` when explicitly
+  enabled.
+
+### Verification
+
+- `python3 -m py_compile support/scripts/done_definition_audit.py support/scripts/tests/test_done_definition_audit.py`
+- `python3 -m unittest support.scripts.tests.test_done_definition_audit -v`
+- `python3 -m unittest support.scripts.tests.test_help_audit -v`
+- `python3 support/scripts/check_script_manifest.py`
+- `python3 support/scripts/done_definition_audit.py --output /tmp/ict-engine-done-definition-audit-light.json`
+- `python3 support/scripts/done_definition_audit.py --run-smoke --output /tmp/ict-engine-done-definition-audit-smoke.json`
+  (heavy optional gate probe; still fail-closed if unresolved checks remain)
+
+### Remaining Gaps
+
+- This helper improves repeatability only; it does not by itself make all Done
+  Definition gates green.
+- Full closure still needs periodic heavy gate refresh on the current tree,
+  plus continued `main.rs` extraction and P0 closed-loop verification slices.

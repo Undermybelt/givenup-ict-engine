@@ -1,0 +1,130 @@
+[
+  {
+    "name": "smoke_acceptance",
+    "stability": "stable_helper",
+    "entrypoint": "support/scripts/smoke_acceptance.sh",
+    "safe_default": true,
+    "requires_data": false,
+    "test_command": "bash -n support/scripts/smoke_acceptance.sh"
+  },
+  {
+    "name": "docs_runtime_isolation",
+    "stability": "ci_guard",
+    "entrypoint": "support/scripts/ci/check_docs_runtime_isolation.py",
+    "safe_default": true,
+    "requires_data": false,
+    "test_command": "python3 support/scripts/ci/check_docs_runtime_isolation.py"
+  },
+  {
+    "name": "help_audit",
+    "stability": "audit_helper",
+    "entrypoint": "support/scripts/help_audit.py",
+    "safe_default": true,
+    "requires_data": false,
+    "test_command": "python3 support/scripts/help_audit.py"
+  },
+  {
+    "name": "done_definition_audit",
+    "stability": "audit_helper",
+    "entrypoint": "support/scripts/done_definition_audit.py",
+    "safe_default": true,
+    "requires_data": false,
+    "test_command": "python3 support/scripts/done_definition_audit.py"
+  },
+  {
+    "name": "check_factor_truth_map",
+    "stability": "docs_guard",
+    "entrypoint": "support/scripts/check_factor_truth_map.py",
+    "safe_default": true,
+    "requires_data": false,
+    "test_command": "python3 support/scripts/check_factor_truth_map.py"
+  },
+  {
+    "name": "check_script_manifest",
+    "stability": "docs_guard",
+    "entrypoint": "support/scripts/check_script_manifest.py",
+    "safe_default": true,
+    "requires_data": false,
+    "test_command": "python3 support/scripts/check_script_manifest.py"
+  },
+  {
+    "name": "search_local",
+    "stability": "public_wrapper",
+    "entrypoint": "support/scripts/search_local.py",
+    "safe_default": true,
+    "requires_data": true,
+    "test_command": "python3 support/scripts/search_local.py --target"
+  },
+  {
+    "name": "search_cluster",
+    "stability": "public_wrapper",
+    "entrypoint": "support/scripts/search_cluster.py",
+    "safe_default": true,
+    "requires_data": true,
+    "test_command": "python3 support/scripts/search_cluster.py --target"
+  },
+  {
+    "name": "evaluate_bottleneck",
+    "stability": "public_wrapper",
+    "entrypoint": "support/scripts/evaluate_bottleneck.py",
+    "safe_default": true,
+    "requires_data": true,
+    "test_command": "python3 support/scripts/evaluate_bottleneck.py --target"
+  },
+  {
+    "name": "research_verdict",
+    "stability": "read_only_utility",
+    "entrypoint": "support/scripts/research_verdict.py",
+    "safe_default": true,
+    "requires_data": true,
+    "test_command": "python3 support/scripts/research_verdict.py --help"
+  },
+  {
+    "name": "pandas_path_ranker_trainer",
+    "stability": "active_bridge",
+    "entrypoint": "support/scripts/auto_quant_external/pandas_path_ranker_trainer.py",
+    "safe_default": false,
+    "requires_data": true,
+    "test_command": "python3 -m unittest discover support/scripts/auto_quant_external/tests -p 'test_path_ranker_hotplug.py'"
+  },
+  {
+    "name": "path_ranker_integration",
+    "stability": "active_bridge",
+    "entrypoint": "support/scripts/auto_quant_external/path_ranker_integration.py",
+    "safe_default": false,
+    "requires_data": true,
+    "test_command": "python3 -m py_compile support/scripts/auto_quant_external/path_ranker_integration.py"
+  },
+  {
+    "name": "structural_feedback_replay_harness",
+    "stability": "active_bridge",
+    "entrypoint": "support/scripts/auto_quant_external/structural_feedback_replay_harness.py",
+    "safe_default": false,
+    "requires_data": true,
+    "test_command": "python3 -m py_compile support/scripts/auto_quant_external/structural_feedback_replay_harness.py"
+  },
+  {
+    "name": "fetch_external",
+    "stability": "provider_bridge",
+    "entrypoint": "support/scripts/auto_quant_external/fetch_external.py",
+    "safe_default": false,
+    "requires_data": true,
+    "test_command": "python3 -m py_compile support/scripts/auto_quant_external/fetch_external.py"
+  },
+  {
+    "name": "pandas_datareader_hotplug",
+    "stability": "optional_bridge",
+    "entrypoint": "support/scripts/research/pandas_datareader_hotplug.py",
+    "safe_default": false,
+    "requires_data": true,
+    "test_command": "python3 -m py_compile support/scripts/research/pandas_datareader_hotplug.py"
+  },
+  {
+    "name": "ibkr_bridge",
+    "stability": "operator_bridge",
+    "entrypoint": "support/scripts/ibkr_bridge/bridge.py",
+    "safe_default": false,
+    "requires_data": true,
+    "test_command": "python3 -m unittest support/scripts/ibkr_bridge/test_setup.py support/scripts/ibkr_bridge/test_consumer.py"
+  }
+]
