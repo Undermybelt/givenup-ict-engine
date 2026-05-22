@@ -398,3 +398,140 @@ Actionability:
   evidence.
 - The broader goal remains incomplete: zero current promotion-allowed and zero
   current trade-usable factors in the latest compact audit.
+
+## 2026-05-23 04:32 CST Superseding Active-Claim Readback
+
+Latest compact audit:
+
+- `/tmp/ict-engine-factor-claims-after-cybersecurity-terminalized-20260523T0433.json`.
+- `summary.status=needs_attention`.
+- `active_claims=1`.
+- `terminalized_claims=48`.
+- `total_claims=49`.
+- `missing_run_roots=0`.
+- `promotion_allowed_true=0`.
+- `trade_usable_true=0`.
+
+Evidence-backed terminalizations completed after the 04:24 drift note:
+
+- `20260523T041029+0800-codex-ibkr-cpb-packaged-food-connors-rsi2-rebound-1m-mtf-gate1.claim`
+  from
+  `support/docs/experiments/actionable-regime-confidence/runs/20260523T041446+0800-codex-ibkr-cpb-packaged-food-connors-rsi2-rebound-1m-mtf-gate1-v1/checks/terminal_metrics.json`.
+  Decision: `drop_gate1_no_exact_1m_5bps_density_survivor`.
+- `20260523T041026+0800-codex-ibkr-wmt-defensive-retail-opening-drive-rvol-full-ladder-provider-retry.claim`
+  from
+  `support/docs/experiments/actionable-regime-confidence/runs/20260523T041250+0800-codex-ibkr-wmt-defensive-retail-opening-drive-rvol-gate1-v1/summaries/ibkr_wmt_defensive_retail_opening_drive_rvol_gate1_v1.json`.
+  Decision: `keep_small_only_observation_fail_closed`; `all_commands_ok=false`
+  because upper-window `1m 30D` and `5m 3M` fetches failed before smaller
+  real-window retries succeeded.
+- `20260523T041504+0800-codex-ibkr-enph-solar-gap-failure-reversal-1m-mtf-gate1.claim`
+  from
+  `support/docs/experiments/actionable-regime-confidence/runs/20260523T042314+0800-codex-ibkr-enph-solar-gap-failure-reversal-1m-mtf-gate1-v1/checks/terminal_metrics.json`.
+  Decision: `drop_gate1_cost_or_density_failed`.
+- `20260523T041850+0800-codex-ibkr-glw-optical-communications-keltner-reclaim-1m-mtf-gate1.claim`
+  from
+  `support/docs/experiments/actionable-regime-confidence/runs/20260523T042324+0800-codex-ibkr-glw-optical-communications-keltner-reclaim-1m-mtf-gate1-v1/checks/terminal_metrics.json`.
+  Decision: `drop_gate1_cost_or_density_failed`.
+- `20260523T041012+0800-codex-ibkr-cybersecurity-sibling-provider-preflight.claim`
+  from
+  `/tmp/ict-engine-ibkr-cybersecurity-sibling-provider-preflight-20260523T041012+0800/checks/provider_preflight_metrics.json`.
+  Decision: `provider_preflight_full_ladder_available`; provider rows only,
+  no Auto-Quant, no downstream, no promotion, and no trade.
+
+Remaining active claim:
+
+- `20260523T0420+0800-codex-tomac-psar-arooncci-gate1.claim`.
+- Run root:
+  `/tmp/ict-engine-tomac-psar-arooncci-gate1-20260523T0420+0800`.
+- Live readback at 04:31 CST found the full scan process still running and
+  `checks/02_full_scan.exit` still absent.
+
+Actionability:
+
+- The latest claim-board blocker is narrow but real: wait for TOMAC full-scan
+  terminal evidence, then terminalize or externalize only from its own
+  artifacts.
+- Current positive practical-factor count is still zero. Do not convert
+  provider-preflight availability, higher-timeframe sibling evidence, or
+  `keep_small_only` rows into promotion/trade-usability language.
+- Release remains blocked; no mirror/tag/GitHub Release action is authorized by
+  this readback.
+
+## 2026-05-23 04:45 CST Superseding Claim Pass After TOMAC/S/RPD Terminalization
+
+Latest compact audit:
+
+- `/tmp/ict-engine-factor-claims-after-cybersecurity-reread-20260523T044517+0800.json`.
+- `summary.status=pass`.
+- `active_claims=0`.
+- `terminalized_claims=55`.
+- `total_claims=55`.
+- `missing_run_roots=0`.
+- `promotion_allowed_true=0`.
+- `trade_usable_true=0`.
+- `next_action=no claim terminalization blockers found`.
+
+Evidence-backed terminalizations after the 04:32 readback:
+
+- `20260523T0420+0800-codex-tomac-psar-arooncci-gate1.claim` is
+  `status: terminalized_runtime_abort`. The full scan exited `143`; no full
+  terminal metrics were produced; the NQ smoke packet under
+  `/tmp/ict-engine-tomac-psar-arooncci-gate1-20260523T0420+0800/smoke-nq`
+  reports `drop_gate1_no_5bps_density_quality_survivor_no_downstream`,
+  `gate1_survivors=0`, `promotion_allowed=false`, and `trade_usable=false`.
+- `20260523T-current-codex-ibkr-s-cybersecurity-pda-mtf-template-transfer-5m-gate1.claim`
+  is terminalized from
+  `support/docs/experiments/actionable-regime-confidence/runs/20260523T044321+0800-codex-ibkr-s-cybersecurity-pda-mtf-template-transfer-5m-gate1-v1/checks/terminal_metrics.json`.
+  Decision:
+  `ibkr_s_cybersecurity_pda_mtf_5m_gate1_5bps_density_survivor_downstream_allowed`;
+  `downstream_allowed=true`, but `promotion_allowed=false`,
+  `trade_usable=false`, `extension_complete=false`, and `update_goal=false`.
+- `20260523T043947+0800-codex-ibkr-rpd5m-cybersecurity-pda-mtf-template-transfer-gate1.claim`
+  is terminalized from
+  `support/docs/experiments/actionable-regime-confidence/runs/20260523T044255+0800-codex-ibkr-rpd5m-cybersecurity-pda-mtf-template-transfer-gate1-v1/checks/terminal_metrics.json`.
+  Decision: `drop_gate1_no_exact_rpd5m_5bps_density_survivor`;
+  promotion/trade false.
+
+Actionability:
+
+- Claim terminalization is clear at this readback.
+- Do not promote the IBKR S Gate-1 survivor by implication. It is a same-root
+  downstream candidate only; practical/live admission still requires the actual
+  downstream chain and `extension_complete=true` / promotion / trade usability
+  evidence.
+- The broader active goal remains incomplete, and mirror release remains
+  blocked.
+
+## 2026-05-23 04:49 CST Live Recheck After User Status Question
+
+Latest compact audit:
+
+- `/tmp/ict-engine-factor-claims-next-20260523.json`.
+- `summary.status=pass`.
+- `active_claims=0`.
+- `terminalized_claims=55`.
+- `total_claims=55`.
+- `missing_run_roots=0`.
+- `promotion_allowed_true=0`.
+- `trade_usable_true=0`.
+- `next_action=no claim terminalization blockers found`.
+
+Live process readback:
+
+- New TOMAC PSAR/Aroon-CCI repair is still running:
+  `/tmp/run_tomac_psar_arooncci_gate1.py`.
+- Parent PID `93976`, child PID `93988`.
+- Run root:
+  `/tmp/ict-engine-tomac-psar-arooncci-gate1-repair-20260523T0500+0800`.
+- No `checks/01_full_repair.exit` exists yet, and no terminal metrics were
+  available at the readback.
+
+Actionability:
+
+- The claim-terminalization queue is currently clear, but this is not a
+  practical-factor win. Promotion/trade counts are still zero.
+- The in-flight repair is a separate live process; do not modify, kill,
+  terminalize, or promote it without terminal evidence.
+- Next valid step is to re-read the repair exit/artifacts when it finishes, or
+  continue release-readiness work from a separate clean source slice. No mirror
+  release, tag, or GitHub Release is authorized by this checkpoint.

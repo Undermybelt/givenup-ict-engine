@@ -6947,3 +6947,95 @@ the audit only recognized `terminalized_at`, `decision`, or a status containing
 - Release readiness remains blocked.
 - Done-definition full-heavy evidence has passed, but it is not a sanitized
   release-export proof.
+
+## 2026-05-23 continuation - full-audit goal current blocker refresh
+
+Current answer to "am I 100% sure the full audit / bug cleanup / UX pain plan is
+complete?": no. Fresh evidence proves meaningful progress, but also proves
+completion is still blocked outside the done-definition gate.
+
+Fresh evidence:
+
+- Release readiness:
+  `python3 support/scripts/release_readiness_audit.py --compact --check-remotes --output /tmp/ict-engine-release-readiness-goal-current-20260523.json`
+  exited `1` with `summary.status=needs_fix`, `fail_count=4`, and unresolved
+  gates `worktree_clean_for_release`, `release_docs_fresh_for_selected_tag`,
+  `source_origin_matches_selected_source`, and
+  `release_version_tag_available`.
+- Release audit details: `HEAD=a73d7bfc165b7ef9c08681090167622dd88a4fb3`,
+  `origin/main=79d9579ea38685bd8c798dc80c1f5177e3c220b6`, local source is
+  `87` commits ahead of origin, `Cargo.toml` still reports `version=0.1.3`, and
+  release mirror tags already include `v0.1.3`; audit suggests `0.1.5` /
+  `v0.1.5` before any future release attempt.
+- Worktree release cleanliness: the release audit reports `status_entries=859`,
+  `tracked_entries=77`, `untracked_entries=782`, and no staged entries. This
+  remains a broad dirty worktree; do not stage broadly or publish from it.
+- Done-definition heavy audit:
+  `python3 support/scripts/done_definition_audit.py --run-all-heavy --compact --output /tmp/ict-engine-done-goal-heavy-20260523.json`
+  exited `0` with `summary.status=pass`, `completion_ready=true`,
+  `evidence_level=full_enabled_gate_coverage`, `pass_count=8`, `skip_count=0`,
+  and `fail_count=0`.
+- Factor claim audit rerun:
+  `python3 support/scripts/factor_claim_terminalization_audit.py --compact --output /tmp/ict-engine-factor-claims-goal-rerun-20260523.json`
+  exited `1` with `summary.status=needs_attention`, `active_claims=3`,
+  `terminalized_claims=48`, `total_claims=51`, `promotion_allowed_true=0`, and
+  `trade_usable_true=0`.
+- Active factor claims at this checkpoint:
+  `20260523T0420+0800-codex-tomac-psar-arooncci-gate1.claim`,
+  `20260523T043301+0800-codex-ibkr-wtrg-water-utility-percentband-mfi-reclaim-1m-mtf-gate1.claim`,
+  and
+  `20260523T043420+0800-codex-ibkr-s5m-cybersecurity-pda-mtf-template-transfer-gate1.claim`.
+- TOMAC PSAR/Aroon-CCI is genuinely still in flight, not just a stale claim:
+  PID `58220` is running `/tmp/run_tomac_psar_arooncci_gate1.py` against
+  `/tmp/ict-engine-tomac-psar-arooncci-gate1-20260523T0420+0800/full`, and
+  `checks/02_full_scan.exit` does not exist yet. The current stdout tail reached
+  NQ scoring after `11664` candidates; no terminal decision exists for the full
+  scan.
+
+Current blocker classification:
+
+- Done-definition gates are currently strong evidence for the repo's internal
+  audit harness only.
+- Release readiness is explicitly failed and cannot be inferred from the
+  done-definition pass.
+- Factor/practical usability is explicitly incomplete: the current claim board
+  has active claims and zero current promotion/trade-usable claims.
+- The all-audit objective remains active. Next safe actions are to continue
+  terminalizing or externalizing live factor claims from their own evidence,
+  avoid touching active TOMAC while it runs, then address the release-readiness
+  gates only from a coherent clean source slice.
+
+## 2026-05-23 continuation - 04:49 CST live no-completion readback
+
+Answer to "so there is nothing to do?": no. The broad objective remains active.
+
+Fresh live evidence:
+
+- Claim audit:
+  `python3 support/scripts/factor_claim_terminalization_audit.py --compact --output /tmp/ict-engine-factor-claims-next-20260523.json`
+  exited `0` and wrote JSON only. The summary reports `status=pass`,
+  `active_claims=0`, `terminalized_claims=55`, `total_claims=55`,
+  `missing_run_roots=0`, `promotion_allowed_true=0`,
+  `trade_usable_true=0`, and
+  `next_action=no claim terminalization blockers found`.
+- TOMAC repair process:
+  PID `93988` is still running
+  `/tmp/run_tomac_psar_arooncci_gate1.py` under
+  `/tmp/ict-engine-tomac-psar-arooncci-gate1-repair-20260523T0500+0800`;
+  `checks/01_full_repair.exit` does not exist yet. The stdout tail has only
+  reached NQ day `250` with `11664` candidates, so this repair cannot be
+  terminalized or promoted.
+- Release state is unchanged from the current blocker refresh: release readiness
+  remains blocked by dirty-tree/source-mirror/tag freshness gates and no explicit
+  operator publish approval exists.
+
+Current actionable queue:
+
+1. Keep the claim board read-only unless new active claims appear in a fresh
+   compact audit.
+2. Let the TOMAC repair finish or fail, then classify it only from its exit file
+   and terminal artifacts.
+3. Do not treat the claim-board pass as practical-factor completion, because the
+   fresh count still has zero promotion-allowed and zero trade-usable factors.
+4. Do not prepare or publish a release until practical-factor proof and a clean
+   sanitized export exist.
