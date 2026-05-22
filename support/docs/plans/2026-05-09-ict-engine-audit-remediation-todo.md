@@ -11,6 +11,68 @@
 
 ---
 
+### Live Audit Loop - 2026-05-22 22:27 +0800
+
+Owner: Codex current turn.
+Claim: continuing the full-audit/remediation loop; completion remains
+unproven. The current useful slice is making the done-definition audit
+readback token-friendly and consumer-safe by default/opt-in flag, without
+changing gate semantics.
+
+Problem found:
+
+- `support/scripts/done_definition_audit.py` had a full JSON output path only.
+  It was usable as evidence, but not token-friendly for repeated handoff loops
+  and included repo-local absolute paths such as `repo_root` by default in the
+  report body.
+- Adjacent audit helpers now support `--compact`; this helper was the remaining
+  mismatch in the live full-audit evidence loop.
+
+Fix applied:
+
+- Added `format_report(report, compact=True)` and `--compact`.
+- Default/full output stays unchanged for backward compatibility.
+- Compact output now keeps timestamp, summary, gate count, gate ids/statuses,
+  heavy flags, and details only for non-pass gates.
+- Compact details recursively relativize repo-local absolute paths, and compact
+  output omits `repo_root`.
+- Updated `support/scripts/SCRIPTS.md` so consumers and agents can discover the
+  safe compact mode without reading implementation.
+
+Fresh evidence:
+
+- `python3 -m unittest support.scripts.tests.test_done_definition_audit -v`
+  passed `9` tests.
+- `python3 -m py_compile support/scripts/done_definition_audit.py support/scripts/tests/test_done_definition_audit.py`
+  passed.
+- `python3 support/scripts/done_definition_audit.py --compact --output /tmp/ict-engine-done-definition-audit-compact-after-fix.json`
+  exited `0`.
+- `rg -n "/Users|repo_root" /tmp/ict-engine-done-definition-audit-compact-after-fix.json`
+  returned no matches.
+- `python3 support/scripts/check_script_manifest.py` passed with
+  `entries=21`.
+- `git diff --check -- support/scripts/done_definition_audit.py support/scripts/tests/test_done_definition_audit.py support/scripts/SCRIPTS.md support/docs/plans/2026-05-09-ict-engine-audit-remediation-todo.md`
+  passed.
+
+Current done-definition readback from the compact report:
+
+- `summary.status=pass`
+- `pass_count=4`
+- `fail_count=0`
+- `skip_count=4`
+- Heavy gates remain skipped in this quick readback:
+  `cargo_check_all_targets`, `cargo_clippy_all_targets_deny_warnings`,
+  `cargo_test`, and `smoke_acceptance_tmp_state`.
+
+Next safe action:
+
+- Use the compact done-definition report for cheap live readback, but do not
+  treat it as release or full-audit completion until heavy gates, release
+  readiness, factor claim terminalization, and clean-export checks have fresh
+  passing evidence.
+
+---
+
 ### Live Audit Loop - 2026-05-22 22:05 +0800
 
 Owner: Codex current turn.

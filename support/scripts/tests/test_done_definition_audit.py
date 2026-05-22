@@ -12,6 +12,7 @@ if str(SCRIPTS_ROOT) not in sys.path:
 
 from done_definition_audit import (  # noqa: E402
     evaluate_main_rs_guardrail,
+    format_report,
     parse_main_rs_baseline,
     run_command,
     summarize,
@@ -84,6 +85,63 @@ Measured on 2026-05-22:
         self.assertIsInstance(details["stdout"], str)
         self.assertIsInstance(details["stderr"], str)
         json.dumps(details)
+
+    def test_format_report_compact_omits_repo_root_and_pass_details(self) -> None:
+        report = {
+            "timestamp_utc": "2026-05-22T00:00:00Z",
+            "repo_root": "/Users/example/ict-engine",
+            "summary": {"status": "pass", "pass_count": 1, "fail_count": 0, "skip_count": 1},
+            "gates": [
+                {
+                    "id": "main_rs_line_guardrail",
+                    "status": "pass",
+                    "heavy": False,
+                    "details": {"current_lines": 100},
+                },
+                {
+                    "id": "cargo_test",
+                    "status": "skip",
+                    "heavy": True,
+                    "details": {"reason": "heavy_check_not_enabled", "enable_with": "--run-cargo-test"},
+                },
+            ],
+        }
+
+        text = format_report(report, compact=True)
+        parsed = json.loads(text)
+
+        self.assertNotIn("repo_root", parsed)
+        self.assertEqual(parsed["summary"], report["summary"])
+        self.assertEqual(parsed["gate_count"], 2)
+        self.assertEqual(parsed["gates"][0], {"id": "main_rs_line_guardrail", "status": "pass", "heavy": False})
+        self.assertEqual(parsed["gates"][1]["details"]["enable_with"], "--run-cargo-test")
+        self.assertNotIn("/Users/example", text)
+        self.assertNotIn("\n  ", text)
+
+    def test_format_report_compact_relativizes_repo_paths_in_details(self) -> None:
+        report = {
+            "timestamp_utc": "2026-05-22T00:00:00Z",
+            "repo_root": "/Users/example/ict-engine",
+            "summary": {"status": "needs_fix"},
+            "gates": [
+                {
+                    "id": "smoke_acceptance_tmp_state",
+                    "status": "fail",
+                    "heavy": True,
+                    "details": {
+                        "command": ["bash", "/Users/example/ict-engine/support/scripts/smoke_acceptance.sh"],
+                        "stderr": "failed at /Users/example/ict-engine/state",
+                    },
+                }
+            ],
+        }
+
+        text = format_report(report, compact=True)
+        parsed = json.loads(text)
+
+        self.assertEqual(parsed["gates"][0]["details"]["command"][1], "support/scripts/smoke_acceptance.sh")
+        self.assertEqual(parsed["gates"][0]["details"]["stderr"], "failed at state")
+        self.assertNotIn("/Users/example", text)
 
 
 if __name__ == "__main__":

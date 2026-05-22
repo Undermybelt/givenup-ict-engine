@@ -319,6 +319,52 @@ def summarize(gates: list[dict]) -> dict:
     }
 
 
+def _repo_relative_text(value: str, root: str) -> str:
+    if not root:
+        return value
+    replacements = (root + "/", root)
+    result = value
+    result = result.replace(replacements[0], "")
+    result = result.replace(replacements[1], ".")
+    return result
+
+
+def _compact_value(value, root: str):
+    if isinstance(value, str):
+        return _repo_relative_text(value, root)
+    if isinstance(value, list):
+        return [_compact_value(item, root) for item in value]
+    if isinstance(value, dict):
+        return {key: _compact_value(nested, root) for key, nested in value.items()}
+    return value
+
+
+def _compact_gate(gate: dict, root: str) -> dict:
+    compact = {
+        "id": gate.get("id"),
+        "status": gate.get("status"),
+        "heavy": gate.get("heavy", False),
+    }
+    if gate.get("status") != "pass":
+        compact["details"] = _compact_value(gate.get("details", {}), root)
+    return compact
+
+
+def format_report(report: dict, *, compact: bool = False) -> str:
+    if not compact:
+        return json.dumps(report, indent=2) + "\n"
+
+    root = str(report.get("repo_root") or "")
+    gates = report.get("gates", [])
+    compact_report = {
+        "timestamp_utc": report.get("timestamp_utc"),
+        "summary": report.get("summary"),
+        "gate_count": len(gates),
+        "gates": [_compact_gate(gate, root) for gate in gates],
+    }
+    return json.dumps(compact_report, sort_keys=True, separators=(",", ":")) + "\n"
+
+
 def parse_args(argv: list[str]) -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description=(
@@ -373,6 +419,11 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
         default="",
         help="Optional output JSON file path. Always prints JSON to stdout.",
     )
+    parser.add_argument(
+        "--compact",
+        action="store_true",
+        help="Print token-friendly JSON without repo-local absolute paths.",
+    )
     return parser.parse_args(argv)
 
 
@@ -417,12 +468,13 @@ def main(argv: list[str] | None = None) -> int:
         "gates": gates,
     }
 
+    output_text = format_report(report, compact=args.compact)
     if args.output:
         output_path = Path(args.output).expanduser()
         output_path.parent.mkdir(parents=True, exist_ok=True)
-        output_path.write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
+        output_path.write_text(output_text, encoding="utf-8")
 
-    print(json.dumps(report, indent=2))
+    sys.stdout.write(output_text)
     return 0 if summary["status"] == "pass" else 1
 
 
