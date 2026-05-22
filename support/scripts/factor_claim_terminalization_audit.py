@@ -207,7 +207,8 @@ def format_report(report: dict[str, Any], compact: bool = False) -> dict[str, An
         return report
 
     claims = report.get("claims", [])
-    attention_claims = [_compact_claim(claim) for claim in claims if _claim_needs_attention(claim)]
+    root = str(report.get("repo_root") or "")
+    attention_claims = [_compact_claim(claim, root) for claim in claims if _claim_needs_attention(claim)]
     return {
         "schema_version": report.get("schema_version"),
         "generated_at": report.get("generated_at"),
@@ -227,16 +228,26 @@ def _claim_needs_attention(claim: dict[str, Any]) -> bool:
     )
 
 
-def _compact_claim(claim: dict[str, Any]) -> dict[str, Any]:
+def _compact_text(value: object, root: str) -> object:
+    if not isinstance(value, str):
+        return value
+    result = value
+    if root:
+        result = result.replace(root + "/", "")
+        result = result.replace(root, ".")
+    return re.sub(r"/Users/[^\s,;:)]+", "[local-path]", result)
+
+
+def _compact_claim(claim: dict[str, Any], root: str) -> dict[str, Any]:
     run_root_state = "none"
     if claim.get("run_root"):
         run_root_state = "present" if claim.get("run_root_exists") else "missing"
     return {
-        "claim_file": claim.get("claim_file"),
-        "status": claim.get("status"),
-        "owner": claim.get("owner"),
-        "scope": claim.get("scope"),
-        "decision": claim.get("decision"),
+        "claim_file": _compact_text(claim.get("claim_file"), root),
+        "status": _compact_text(claim.get("status"), root),
+        "owner": _compact_text(claim.get("owner"), root),
+        "scope": _compact_text(claim.get("scope"), root),
+        "decision": _compact_text(claim.get("decision"), root),
         "run_root_state": run_root_state,
         "promotion_allowed": claim.get("promotion_allowed"),
         "trade_usable": claim.get("trade_usable"),

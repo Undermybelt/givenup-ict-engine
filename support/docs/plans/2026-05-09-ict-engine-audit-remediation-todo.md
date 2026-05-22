@@ -11,6 +11,59 @@
 
 ---
 
+### Live Audit Loop - 2026-05-22 22:48 +0800
+
+Owner: Codex current turn.
+Claim: continuing the full-audit/remediation loop; completion remains
+unproven. This slice fixes another compact-output privacy edge in the factor
+claim terminalization audit.
+
+Problem found:
+
+- `support/scripts/factor_claim_terminalization_audit.py --compact` already
+  omitted `claim_path`, raw `run_root`, and `repo_root`, but compact
+  `scope`/`decision` fields were still copied from free-text claim files.
+- A claim author could accidentally put a `/Users/...` path into those free-text
+  fields, which would then leak into the supposedly consumer-safe handoff.
+
+Fix applied:
+
+- Compact claim formatting now repo-relativizes paths under the current repo
+  root and redacts any remaining `/Users/...` path-like substrings as
+  `[local-path]`.
+- Full/non-compact output remains unchanged for local forensic use.
+- Added regression coverage for mixed repo-local and non-repo `/Users/...`
+  paths inside compact free-text fields.
+
+Fresh evidence:
+
+- `python3 -m unittest support.scripts.tests.test_factor_claim_terminalization_audit -v`
+  passed `7` tests.
+- `python3 -m py_compile support/scripts/factor_claim_terminalization_audit.py support/scripts/tests/test_factor_claim_terminalization_audit.py`
+  passed.
+- `python3 support/scripts/factor_claim_terminalization_audit.py --compact --output /tmp/ict-engine-factor-claim-terminalization-audit-sanitized-text.json`
+  exited `1` as expected because live claims still need attention.
+- `rg -n "/Users|repo_root|claim_path|\"run_root\"" /tmp/ict-engine-factor-claim-terminalization-audit-sanitized-text.json`
+  returned no matches.
+- `python3 support/scripts/check_script_manifest.py` passed with
+  `entries=21`.
+- `git diff --check -- support/scripts/factor_claim_terminalization_audit.py support/scripts/tests/test_factor_claim_terminalization_audit.py support/docs/plans/2026-05-09-ict-engine-audit-remediation-todo.md`
+  passed.
+
+Current factor blocker readback:
+
+- The compact report still exits `1` with `summary.status=needs_attention`.
+- The fix makes the readback safer for handoff; it does not terminalize any
+  active claim, promote any branch, or prove `trade_usable=true`.
+
+Next safe action:
+
+- Continue using compact claim readback to choose non-colliding factor repair
+  lanes, but require real terminal decisions and promotion/trade gates before
+  counting factor diffusion as complete.
+
+---
+
 ### Live Audit Loop - 2026-05-22 22:39 +0800
 
 Owner: Codex current turn.

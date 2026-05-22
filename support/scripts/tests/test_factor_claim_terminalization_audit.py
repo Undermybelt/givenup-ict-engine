@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 from __future__ import annotations
 
+import json
 import sys
 import tempfile
 import unittest
@@ -182,6 +183,38 @@ run_root=/tmp/missing-run-root-for-test
         self.assertEqual(compact["attention_claims"][0]["run_root_state"], "missing")
         self.assertNotIn("claim_path", compact["attention_claims"][0])
         self.assertNotIn("run_root", compact["attention_claims"][0])
+
+    def test_format_report_compact_sanitizes_free_text_paths(self) -> None:
+        full_report = {
+            "schema_version": "factor-claim-terminalization-audit/v1",
+            "generated_at": "2026-05-22T00:00:00+00:00",
+            "claims_dir": "/tmp/claims",
+            "repo_root": "/Users/example/ict-engine",
+            "summary": {"status": "needs_attention"},
+            "claims": [
+                {
+                    "claim_file": "active.claim",
+                    "claim_path": "/tmp/claims/active.claim",
+                    "status": "active",
+                    "owner": "codex",
+                    "scope": "inspect /Users/example/ict-engine/support/docs/private.md and /Users/example/Downloads/private.csv",
+                    "decision": "blocked by /Users/example/ict-engine/state/local",
+                    "run_root": "/Users/example/ict-engine/support/docs/experiments/run-a",
+                    "run_root_exists": True,
+                    "promotion_allowed": None,
+                    "trade_usable": None,
+                    "summary_files": [],
+                },
+            ],
+        }
+
+        compact = format_report(full_report, compact=True)
+        serialized = json.dumps(compact, sort_keys=True)
+
+        self.assertIn("support/docs/private.md", compact["attention_claims"][0]["scope"])
+        self.assertIn("[local-path]", compact["attention_claims"][0]["scope"])
+        self.assertEqual(compact["attention_claims"][0]["decision"], "blocked by state/local")
+        self.assertNotIn("/Users/example", serialized)
 
     def test_format_report_full_keeps_original_report(self) -> None:
         full_report = {"summary": {"status": "pass"}, "claims": []}
