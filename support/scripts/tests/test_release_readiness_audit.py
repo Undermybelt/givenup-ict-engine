@@ -19,6 +19,7 @@ from release_readiness_audit import (  # noqa: E402
     format_report,
     parse_cargo_metadata,
     parse_ls_remote,
+    parse_origin_divergence,
     summarize,
 )
 
@@ -51,6 +52,10 @@ ghi789\trefs/tags/v0.1.4^{}
         self.assertEqual(parsed["heads"]["main"], "abc123")
         self.assertEqual(parsed["tags"]["v0.1.4"], "def456")
         self.assertNotIn("v0.1.4^{}", parsed["tags"])
+
+    def test_parse_origin_divergence_maps_left_right_counts(self) -> None:
+        parsed = parse_origin_divergence("1\t2\n", ref="origin/main")
+        self.assertEqual(parsed, {"ahead": 2, "behind": 1, "ref": "origin/main"})
 
     def test_worktree_clean_gate_summarizes_dirty_status_classes(self) -> None:
         gate = evaluate_worktree_clean(
@@ -102,9 +107,14 @@ R  old.rs -> new.rs
             head="source-head",
             origin_main="other-source-head",
             mirror_main="mirror-export-commit",
+            origin_divergence={"ahead": 2, "behind": 0, "ref": "origin/main"},
         )
         self.assertEqual(gate["status"], "fail")
         self.assertEqual(gate["details"]["release_mirror_main"], "mirror-export-commit")
+        self.assertEqual(gate["details"]["source_ahead_of_origin"], 2)
+        self.assertEqual(gate["details"]["source_behind_origin"], 0)
+        self.assertEqual(gate["details"]["origin_ref"], "origin/main")
+        self.assertEqual(gate["details"]["next_action"], "push selected source commit or publish from a clean export at the selected commit")
         self.assertEqual(gate["details"]["rule"], "source origin/main must match the selected source commit before a clean export is published")
 
     def test_docs_freshness_fails_on_historical_release_notes(self) -> None:

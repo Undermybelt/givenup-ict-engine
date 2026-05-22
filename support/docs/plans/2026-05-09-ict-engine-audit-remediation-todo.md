@@ -11,6 +11,86 @@
 
 ---
 
+### Live Audit Loop - 2026-05-22 23:09 +0800
+
+Owner: Codex current turn.
+Claim: continuing the full-audit/remediation loop after the operator asked
+whether there is nothing left to do. Completion remains disproven by live
+release, heavy-gate, and factor-claim evidence. This slice improves
+release-readiness source/origin drift actionability without publishing,
+tagging, pushing, changing release metadata, or touching unrelated dirty work.
+
+Problem found:
+
+- `support/scripts/release_readiness_audit.py --compact --check-remotes`
+  correctly failed `source_origin_matches_selected_source`, but only exposed
+  `head`, `origin_main`, and `release_mirror_main`.
+- In a dirty/live branch, that forced the next user/agent to manually calculate
+  whether the selected source was ahead of `origin/main`, behind it, or both
+  before choosing a safe export path.
+
+Fix applied:
+
+- Add parser coverage for
+  `git rev-list --left-right --count origin/main...HEAD`, preserving the correct
+  left/right semantics: left is `behind`, right is `ahead`.
+- Add `source_ahead_of_origin`, `source_behind_origin`, `origin_ref`, and a
+  concrete `next_action` to the source/origin gate details.
+- Keep the release blocker fail-closed; the extra fields are actionability
+  telemetry only.
+
+Fresh evidence so far:
+
+- `python3 -m unittest support.scripts.tests.test_release_readiness_audit.ReleaseReadinessAuditTest.test_parse_origin_divergence_maps_left_right_counts -v`
+  first failed with inverted ahead/behind semantics, then passed after the
+  helper fix.
+- `python3 -m unittest support.scripts.tests.test_release_readiness_audit.ReleaseReadinessAuditTest.test_source_origin_alignment_does_not_compare_mirror_commit_to_source_head -v`
+  first failed because the gate had no `origin_divergence` contract, then
+  passed after wiring the details.
+- `python3 -m unittest support.scripts.tests.test_release_readiness_audit -v`
+  passed `12` tests.
+- `python3 -m py_compile support/scripts/release_readiness_audit.py support/scripts/tests/test_release_readiness_audit.py`
+  passed.
+- `python3 support/scripts/check_script_manifest.py` passed with `entries=21`.
+- `git diff --check -- support/scripts/release_readiness_audit.py support/scripts/tests/test_release_readiness_audit.py support/docs/plans/2026-05-09-ict-engine-audit-remediation-todo.md`
+  passed.
+- `python3 support/scripts/release_readiness_audit.py --compact --check-remotes --output /tmp/ict-engine-release-readiness-audit-origin-divergence-after.json`
+  exited `1` as expected because release blockers remain.
+- `rg -n "/Users|repo_root" /tmp/ict-engine-release-readiness-audit-origin-divergence-after.json /tmp/ict-engine-done-definition-audit-origin-divergence-after.json /tmp/ict-engine-factor-claim-terminalization-audit-origin-divergence-after.json`
+  returned no matches.
+
+Current release blocker readback:
+
+- `summary.status=needs_fix`
+- unresolved:
+  `worktree_clean_for_release`,
+  `release_docs_fresh_for_selected_tag`,
+  `source_origin_matches_selected_source`,
+  `release_version_tag_available`.
+- `source_origin_matches_selected_source` now reports:
+  `source_ahead_of_origin=74`, `source_behind_origin=0`,
+  `origin_ref=origin/main`, and `next_action=push selected source commit or
+  publish from a clean export at the selected commit`.
+- `worktree_clean_for_release` still reports:
+  `status_entries=857`, `tracked_entries=80`, `untracked_entries=777`,
+  `modified_entries=80`.
+
+Current done/factor readback:
+
+- Done-definition compact remains light-only: `pass_count=4`, `skip_count=4`.
+- Factor-claim compact remains unresolved:
+  `status=needs_attention`, `active_claims=25`,
+  `terminalized_claims=60`, `trade_usable_true=0`.
+
+Next safe action:
+
+- Do not treat this as release readiness. Continue with a separate narrow
+  slice, likely either release-doc freshness actionability, clean-export
+  preparation, or active-claim terminalization that does not collide with
+  existing Board B/TOMAC lanes.
+
+---
+
 ### Live Audit Loop - 2026-05-22 22:58 +0800
 
 Owner: Codex current turn.

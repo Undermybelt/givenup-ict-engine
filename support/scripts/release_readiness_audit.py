@@ -233,21 +233,53 @@ def evaluate_docs_freshness(signoff_text: str, notes_text: str) -> dict[str, Any
     }
 
 
+def parse_origin_divergence(text: str, ref: str = "origin/main") -> dict[str, Any]:
+    parts = text.split()
+    if len(parts) < 2:
+        raise ValueError("origin divergence output must contain ahead and behind counts")
+    behind, ahead = (int(parts[0]), int(parts[1]))
+    return {
+        "ahead": ahead,
+        "behind": behind,
+        "ref": ref,
+    }
+
+
 def evaluate_source_origin_alignment(
     head: str,
     origin_main: str | None,
     mirror_main: str | None,
+    origin_divergence: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     aligned = bool(head and origin_main == head)
+    details: dict[str, Any] = {
+        "head": head,
+        "origin_main": origin_main,
+        "release_mirror_main": mirror_main,
+        "rule": "source origin/main must match the selected source commit before a clean export is published",
+    }
+    if origin_divergence:
+        details.update(
+            {
+                "source_ahead_of_origin": origin_divergence.get("ahead"),
+                "source_behind_origin": origin_divergence.get("behind"),
+                "origin_ref": origin_divergence.get("ref"),
+            }
+        )
+    if not aligned:
+        ahead = origin_divergence.get("ahead") if origin_divergence else None
+        behind = origin_divergence.get("behind") if origin_divergence else None
+        if ahead and not behind:
+            next_action = "push selected source commit or publish from a clean export at the selected commit"
+        elif behind:
+            next_action = "sync local source with origin/main before selecting a release export commit"
+        else:
+            next_action = "inspect source/origin drift before release export"
+        details["next_action"] = next_action
     return {
         "id": "source_origin_matches_selected_source",
         "status": "pass" if aligned else "fail",
-        "details": {
-            "head": head,
-            "origin_main": origin_main,
-            "release_mirror_main": mirror_main,
-            "rule": "source origin/main must match the selected source commit before a clean export is published",
-        },
+        "details": details,
     }
 
 
@@ -294,12 +326,21 @@ def build_report(root: Path, check_remotes: bool) -> dict[str, Any]:
         if origin_state == "pass" and mirror_state == "pass":
             origin = parse_ls_remote(origin_details["stdout"])
             mirror = parse_ls_remote(mirror_details["stdout"])
+            divergence: dict[str, Any] | None = None
+            divergence_state, divergence_details = run_command(
+                ["git", "rev-list", "--left-right", "--count", "origin/main...HEAD"],
+                root,
+                timeout=20,
+            )
+            if divergence_state == "pass":
+                divergence = parse_origin_divergence(divergence_details["stdout"], ref="origin/main")
             release_tags = set(mirror["tags"])
             remote_details.update(
                 {
                     "origin_main": origin["heads"].get("main"),
                     "release_mirror_main": mirror["heads"].get("main"),
                     "release_mirror_tags": sorted(mirror["tags"]),
+                    "origin_divergence": divergence if divergence else divergence_details,
                 }
             )
             gates.append(
@@ -307,6 +348,7 @@ def build_report(root: Path, check_remotes: bool) -> dict[str, Any]:
                     head_details["stdout"].strip(),
                     origin["heads"].get("main"),
                     mirror["heads"].get("main"),
+                    origin_divergence=divergence,
                 )
             )
         else:
