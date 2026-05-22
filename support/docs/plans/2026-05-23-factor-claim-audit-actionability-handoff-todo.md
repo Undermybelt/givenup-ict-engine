@@ -958,3 +958,303 @@ Actionability:
 - The full objective is not complete: wait for or read the TOMAC terminal
   artifacts, then terminalize from its own evidence only.
 - No current evidence supports `promotion_allowed=true` or `trade_usable=true`.
+
+## 2026-05-23 05:29 CST Superseding Single-Blocker Readback
+
+Fresh factor-claim audit:
+
+- `/tmp/ict-engine-factor-claims-refresh-20260523T0529-rerun.json` exited `1`.
+- `summary.status=needs_attention`.
+- `active_claims=1`.
+- `terminalized_claims=65`.
+- `total_claims=66`.
+- `missing_run_roots=0`.
+- `live_factor_processes=1`.
+- `promotion_allowed_true=0`.
+- `trade_usable_true=0`.
+- `blocking_reasons=["active_claims","live_factor_processes"]`.
+
+Superseding terminal claim readbacks:
+
+- ASTS Gate 1 is no longer live. Its terminal metrics at
+  `support/docs/experiments/actionable-regime-confidence/runs/20260523T051704+0800-codex-ibkr-asts-space-satellite-gap-continuation-1m-mtf-gate1-v1/checks/terminal_metrics.json`
+  report `decision=provider_or_aq_blocked_no_gate1_verdict`,
+  `promotion_allowed=false`, `trade_usable=false`,
+  `extension_complete=false`, and `update_goal=false`.
+- DASH Gate 1 is no longer live. Its terminal metrics at
+  `support/docs/experiments/actionable-regime-confidence/runs/20260523T051716+0800-codex-ibkr-dash-delivery-platform-initial-balance-range-expansion-1m-mtf-gate1-v1/checks/terminal_metrics.json`
+  report `decision=provider_or_aq_blocked_no_gate1_verdict`,
+  `promotion_allowed=false`, `trade_usable=false`,
+  `extension_complete=false`, and `update_goal=false`.
+- FTNT 15m Gate 1 is terminalized under
+  `support/docs/experiments/actionable-regime-confidence/runs/20260523T052155+0800-codex-ibkr-ftnt15m-cybersecurity-pda-mtf-template-transfer-gate1-v1/checks/terminal_metrics.json`.
+  It has `downstream_allowed=true`, but still
+  `promotion_allowed=false`, `trade_usable=false`,
+  `extension_complete=false`, and `update_goal=false`.
+- XOM readback is terminalized fail-closed in
+  `/tmp/ict-engine-agent-claims/board-b-factor-refinement/20260523T052255+0800-codex-ibkr-xom-opening-drive-rvol-cost-stress-readback.claim`
+  with `terminal_decision=drop_gate1_no_1m_2bps_or_5bps_survivor`,
+  `downstream_allowed=false`, `promotion_allowed=false`, and
+  `trade_usable=false`. The prior 05:24 audit caught this claim before the
+  terminal append landed; the 05:29 rerun supersedes that transient row.
+- The S 5m exact downstream rerun is terminalized fail-closed in
+  `/tmp/ict-engine-agent-claims/board-b-factor-refinement/20260523T052500+0800-codex-ibkr-s5m-pda-mtf-template-transfer-exact-downstream.claim`;
+  `execution_candidate_status=no_trade`, `transition_hazard=0.9508954331342251`,
+  `pda_hybrid_alignment=false`, `promotion_allowed=false`, and
+  `trade_usable=false`.
+
+Remaining blocker:
+
+- The only active claim is still
+  `20260523T051745+0800-codex-tomac-psar-arooncci-repair-readback.claim`.
+- The only live factor process is TOMAC PSAR/Aroon-CCI worker PID `93988`
+  under parent PID `93976`, run root
+  `/tmp/ict-engine-tomac-psar-arooncci-gate1-repair-20260523T0500+0800`.
+- At 05:29 CST, `checks/01_full_repair.exit` was still missing. The durable
+  stdout had advanced to `simulate-day YM day=500 date=2022-08-10
+  candidates=11664`; no terminal metrics, scan results, or leaderboard files
+  existed under the repair tree.
+
+Actionability:
+
+- Do not call the factor/audit objective complete while the TOMAC repair claim
+  and process are still live.
+- Do not promote FTNT from `downstream_allowed=true`; promotion and trade
+  usability remain explicitly false.
+- No current claim provides `promotion_allowed=true` or `trade_usable=true`.
+
+## 2026-05-23 05:30 CST Final Live Readback
+
+Fresh final audit after this doc sync:
+
+- `/tmp/ict-engine-factor-claims-refresh-20260523T0530-final.json` exited `1`.
+- `summary.status=needs_attention`.
+- `active_claims=1`.
+- `terminalized_claims=66`.
+- `total_claims=67`.
+- `missing_run_roots=0`.
+- `live_factor_processes=1`.
+- `promotion_allowed_true=0`.
+- `trade_usable_true=0`.
+
+The blocker shape is unchanged from the 05:29 readback: the only attention
+claim is TOMAC PSAR/Aroon-CCI repair readback, and the only live process is
+worker PID `93988` under
+`/tmp/ict-engine-tomac-psar-arooncci-gate1-repair-20260523T0500+0800`.
+`checks/01_full_repair.exit` is still missing.
+
+## 2026-05-23 05:35 CST TOMAC Repair Terminalized, Claim Hygiene Pass
+
+Fresh audit after TOMAC repair terminalization:
+
+- `/tmp/ict-engine-factor-claims-refresh-20260523T0535-post-tomac-terminal.json`
+  exited `0`.
+- `summary.status=pass`.
+- `active_claims=0`.
+- `terminalized_claims=68`.
+- `total_claims=68`.
+- `missing_run_roots=0`.
+- `live_factor_processes=0`.
+- `promotion_allowed_true=0`.
+- `trade_usable_true=0`.
+
+TOMAC repair terminal evidence:
+
+- Claim:
+  `/tmp/ict-engine-agent-claims/board-b-factor-refinement/20260523T051745+0800-codex-tomac-psar-arooncci-repair-readback.claim`.
+- Run root:
+  `/tmp/ict-engine-tomac-psar-arooncci-gate1-repair-20260523T0500+0800`.
+- `checks/01_full_repair.exit=143`.
+- No `terminal_metrics.json`, `scan_results.json`, or `leaderboard.csv`
+  materialized.
+- Last durable stdout reached `simulate-day YM day=750 date=2023-05-31
+  candidates=11664`; XAU was not reached.
+- Decision:
+  `tomac_psar_arooncci_repair_runtime_abort_no_terminal_metrics`,
+  `downstream_allowed=false`, `promotion_allowed=false`,
+  `trade_usable=false`, `extension_complete=false`, and `update_goal=false`.
+
+Actionability:
+
+- Current claim/process hygiene is clean.
+- This is not practical-factor completion: current promotion/trade positives
+  remain zero.
+- Next valid work is a new or repaired same-root practical branch with
+  provider-backed terminal metrics, hard-cost/density proof, downstream
+  Pre-Bayes/BBN/CatBoost/execution-tree admission, and explicit
+  `promotion_allowed=true` / `trade_usable=true` before any release claim.
+
+## 2026-05-23 05:35 CST Release Readiness Remote Check Still Fails
+
+Fresh release-readiness audit:
+
+- `/tmp/ict-engine-release-readiness-goal-refresh2-20260523.json` exited `1`.
+- `summary.status=needs_fix`.
+- `fail_count=4`, `pass_count=1`, `skip_count=0`.
+- `HEAD=e06ca1704af8ea6e9e6ee0ab85cfde6ec6fd9de4`.
+- `origin/main=79d9579ea38685bd8c798dc80c1f5177e3c220b6`.
+- Source is ahead of origin by `92` commits.
+- Release mirror `main=ab6b1b55d516bcd0f6b88db1931cc40802e683bb`.
+- `Cargo.toml` version is still `0.1.3`.
+- Known release tags include `v0.1.3` and `v0.1.4`; suggested next patch is
+  `0.1.5` / `v0.1.5`.
+
+Unresolved gates:
+
+- `worktree_clean_for_release`: current worktree readback saw `78` tracked
+  dirty entries and `782` untracked entries.
+- `release_docs_fresh_for_selected_tag`: release signoff and release notes are
+  still marked historical/stale.
+- `source_origin_matches_selected_source`: selected source commit is not on
+  `origin/main`.
+- `release_version_tag_available`: current `v0.1.3` tag is already used.
+
+Actionability:
+
+- No release, tag, push, or GitHub Release is authorized from this checkout.
+- The next release-safe path is still a selected committed source slice, clean
+  sanitized export, refreshed release docs for an unused tag, and a rerun of
+  the full release gate set.
+- The current audit question remains open despite claim hygiene passing,
+  because release readiness and practical-factor proof both remain unproven.
+
+## 2026-05-23 05:39 CST Resume Readback
+
+Fresh resume factor-claim audit:
+
+- `/tmp/ict-engine-factor-claims-resume.json` exited `0`.
+- `summary.status=pass`.
+- `active_claims=0`.
+- `terminalized_claims=69`.
+- `total_claims=69`.
+- `missing_run_roots=0`.
+- `live_factor_processes=0`.
+- `promotion_allowed_true=0`.
+- `trade_usable_true=0`.
+- `next_action="no claim terminalization blockers found"`.
+
+Fresh resume release-readiness audit:
+
+- `/tmp/ict-engine-release-readiness-resume.json` exited `1`.
+- `summary.status=needs_fix`.
+- `fail_count=4`, `pass_count=1`, `skip_count=0`.
+- `HEAD=e06ca1704af8ea6e9e6ee0ab85cfde6ec6fd9de4`.
+- `origin/main=79d9579ea38685bd8c798dc80c1f5177e3c220b6`.
+- Source is ahead of origin by `92` commits.
+- Release mirror `main=ab6b1b55d516bcd0f6b88db1931cc40802e683bb`.
+- `Cargo.toml` version remains `0.1.3`.
+- Known release tags include `v0.1.3` and `v0.1.4`; suggested next patch is
+  `0.1.5` / `v0.1.5`.
+
+Unresolved release gates:
+
+- `worktree_clean_for_release`: current worktree readback saw `78` tracked
+  dirty entries and `782` untracked entries.
+- `release_docs_fresh_for_selected_tag`: release signoff and release notes are
+  still historical/stale for the selected tag/export.
+- `source_origin_matches_selected_source`: selected source commit is not on
+  `origin/main`.
+- `release_version_tag_available`: current `v0.1.3` tag is already used.
+
+Actionability:
+
+- Claim/process hygiene is currently clean.
+- This still does not close the full audit objective: no current evidence has
+  `promotion_allowed=true` or `trade_usable=true`.
+- No release, tag, push, or GitHub Release is authorized from this checkout.
+- Next safe actions are either a release-readiness cleanup slice from a selected
+  committed source export, or a fresh practical-factor proof lane with
+  provider-backed terminal metrics and downstream gate admission.
+
+## 2026-05-23 05:45 CST Live-Queue Drift After Clean Resume
+
+Fresh factor-claim audit after the clean resume snapshot:
+
+- `/tmp/ict-engine-factor-claims-handoff-drift-latest.json` exited `1`.
+- `summary.status=needs_attention`.
+- `active_claims=3`.
+- `terminalized_claims=69`.
+- `total_claims=72`.
+- `missing_run_roots=0`.
+- `live_factor_processes=5`.
+- `promotion_allowed_true=0`.
+- `trade_usable_true=0`.
+- `blocking_reasons=["active_claims","live_factor_processes"]`.
+- `next_action="terminalize or externalize active claims; wait for live factor
+  processes to exit or claim them before closure"`.
+
+Current active compact claims:
+
+- `20260523T053853+0800-codex-ibkr-gbpjpy-fx-volatility-breakout-reclaim-1m-mtf-gate1.claim`
+  is active with no terminal decision yet. It is an IBKR FX/CASH
+  `GBPJPY` MIDPOINT Gate 1 lane after equity STK/TRADES preflight timeouts.
+- `20260523T0540+0800-codex-ibkr-jpm-money-center-bank-dmi-adx-pullback-1m-mtf-gate1.claim`
+  is active with no terminal decision yet. It targets JPM DMI/ADX
+  pullback-continuation 1m-origin MTF Gate 1.
+- `20260523T0545+0800-codex-tomac-kama-vortex-gate1.claim` is active with
+  `promotion_allowed=false` and `trade_usable=false` in the claim body. Its
+  run root is now present at
+  `/tmp/ict-engine-tomac-kama-vortex-gate1-20260523T0545+0800`.
+
+Current live process readback:
+
+- JPM wrapper PID `60693` with active IBKR child fetches under the
+  `20260523T054054+0800-codex-ibkr-jpm-money-center-bank-dmi-adx-pullback-1m-mtf-gate1-v1`
+  run root.
+- JPM wrapper PID `65615` with active IBKR child fetches under the
+  `20260523T054412+0800-codex-ibkr-jpm-money-center-bank-dmi-adx-pullback-1m-mtf-gate1-v1`
+  run root.
+- TOMAC KAMA/Vortex worker PID `66220` writing to
+  `/tmp/ict-engine-tomac-kama-vortex-gate1-20260523T0545+0800`.
+
+Actionability:
+
+- The earlier 05:39 clean factor-claim snapshot is superseded for closure
+  claims by this live-queue drift readback.
+- Do not call the factor/audit objective complete while these active claims or
+  live factor processes remain unresolved.
+- Do not infer promotion from any active claim. Promotion/trade positives remain
+  zero in the latest audit.
+- The useful next step is terminal readback for the GBPJPY, JPM, and TOMAC
+  lanes after their wrappers exit, followed by claim terminalization or explicit
+  externalization from their own evidence.
+
+## 2026-05-23 05:46 CST Precommit Handoff Readback
+
+Fresh precommit factor-claim audit:
+
+- `/tmp/ict-engine-factor-claims-precommit-handoff-final.json` exited `1`.
+- `summary.status=needs_attention`.
+- `active_claims=2`.
+- `terminalized_claims=70`.
+- `total_claims=72`.
+- `missing_run_roots=0`.
+- `live_factor_processes=5`.
+- `promotion_allowed_true=0`.
+- `trade_usable_true=0`.
+- `blocking_reasons=["active_claims","live_factor_processes"]`.
+- `next_action="terminalize or externalize active claims; wait for live factor
+  processes to exit or claim them before closure"`.
+
+Current active compact claims:
+
+- `20260523T053853+0800-codex-ibkr-gbpjpy-fx-volatility-breakout-reclaim-1m-mtf-gate1.claim`.
+- `20260523T0540+0800-codex-ibkr-jpm-money-center-bank-dmi-adx-pullback-1m-mtf-gate1.claim`.
+
+Live process readback still includes:
+
+- JPM wrapper PID `60693`.
+- JPM wrapper PID `65615`.
+- TOMAC KAMA/Vortex worker PID `66220` under
+  `/tmp/ict-engine-tomac-kama-vortex-gate1-20260523T0545+0800`.
+- Two active IBKR child fetches under the JPM wrapper processes.
+
+Actionability:
+
+- The 05:45 TOMAC active-claim row is superseded by this readback: TOMAC no
+  longer appears in `attention_claims`, but its worker is still live.
+- Claim hygiene is not clean while GBPJPY/JPM active claims and live processes
+  remain.
+- No factor is promotion-allowed or trade-usable in this readback.
+- This checkpoint is handoff evidence only. It is not release readiness, not a
+  practical-factor proof, and not a publish/tag/push authorization.
