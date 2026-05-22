@@ -5512,3 +5512,52 @@ in `git status --short`. Current readback showed:
   explicit publish/tag confirmation are still required.
 - The worktree remains broadly dirty from other lanes; commit only this narrow
   boundary slice if verification passes.
+
+## 2026-05-22 continuation - release blocker readback after root boundary
+
+Current answer to "is this 100% complete?": no. Factor repair lanes are
+currently claimed by other active Board B work, so this continuation did a
+read-only release/export blocker refresh instead of taking over M2K/SI work.
+
+### Fresh Readback
+
+- Source `HEAD`: `d1641d3ee51d5dced305e36c24f1806fb9b5b0de`.
+- Source `origin/main`: `79d9579ea38685bd8c798dc80c1f5177e3c220b6`.
+- Current `HEAD` is `62` commits ahead of that source remote readback.
+- Release mirror `main`: `ab6b1b55d516bcd0f6b88db1931cc40802e683bb`.
+- Release mirror tags currently include `v0.1.0`, `v0.1.1`, `v0.1.2`,
+  `v0.1.3`, and `v0.1.4`.
+- `Cargo.toml` still reports `version = "0.1.3"` while the mirror already has
+  a `v0.1.4` tag, so version/tag selection is stale for any new release.
+- `git status --short | wc -l` reported `846`; the checkout is still broad and
+  dirty.
+
+### Factor Lane Collision Check
+
+The latest blocker map still recommends M2K 1m RVOL-PDA or SI tight-range /
+Turtle-Soup repair, but active claims already exist for:
+
+- M2K reverse-gate diagnostic / provider-history probe / ranker-runtime repair;
+- SI15 Turtle Soup PDA-sequence repair;
+- additional historical OKTA/NET PDA extension readback/takeover lanes.
+
+This continuation did not take over those factor lanes.
+
+### Release Remediation Required
+
+Before any release/mirror completion claim:
+
+1. Select an explicit new tag/version.
+2. Commit or otherwise identify the exact intended source tree.
+3. Build a sanitized `git archive HEAD` export from that source.
+4. Run fmt, Clippy, full tests, zero-config smoke, and privacy scans from the
+   export.
+5. Refresh `support/docs/audits/release-signoff.md` and
+   `support/docs/release-notes-draft.md` for that tag.
+6. Only after explicit operator confirmation, push mirror `main`, push the tag,
+   and create the GitHub Release.
+
+### Evidence Update
+
+- Updated `support/docs/audits/release-signoff.md` with this readback.
+- This is a blocker record only, not a release-prep or publish action.

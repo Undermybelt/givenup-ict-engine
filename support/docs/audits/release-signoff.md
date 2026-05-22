@@ -21,6 +21,30 @@ from the intended commit, rerun fmt, Clippy, full tests, zero-config smoke, and
 privacy scans from that export, then replace this file and
 `support/docs/release-notes-draft.md` with evidence for the selected tag.
 
+## 2026-05-22 root-boundary continuation readback
+
+Current source `HEAD` after the local-agent-material boundary slice:
+`d1641d3ee51d5dced305e36c24f1806fb9b5b0de`.
+
+Fresh read-only release state:
+
+- source `origin/main`: `79d9579ea38685bd8c798dc80c1f5177e3c220b6`;
+- current `HEAD` is `62` commits ahead of that remote main readback;
+- release mirror `main`:
+  `ab6b1b55d516bcd0f6b88db1931cc40802e683bb`;
+- release mirror has tags through `v0.1.4`;
+- `Cargo.toml` still reports `version = "0.1.3"`, `publish = false`,
+  `license = "PolyForm-Noncommercial-1.0.0"`, and repository
+  `https://github.com/Undermybelt/ict-engine-release`;
+- current worktree still has hundreds of modified/untracked entries from other
+  lanes, while root `docs/` and `skills/` are now ignored local agent material.
+
+Verdict: still no release permission. The next release slice must select a new
+tag/version, export from the intended committed source, run the release gates
+from that sanitized export, refresh this signoff and release notes, then wait
+for explicit operator confirmation before any mirror push, tag push, or GitHub
+release creation.
+
 ## Final verdict
 
 Do not publish the whole dirty working tree.
