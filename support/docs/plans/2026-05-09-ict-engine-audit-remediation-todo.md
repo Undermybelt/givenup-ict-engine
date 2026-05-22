@@ -105,6 +105,34 @@ Next safe action:
   budget. Do not claim completion until full-heavy coverage, release readiness,
   and factor-claim terminalization all have fresh matching evidence.
 
+Post-commit readback:
+
+- Commit created:
+  `a87f52d1 fix done audit smoke isolation`.
+- Post-commit release audit:
+  `python3 support/scripts/release_readiness_audit.py --compact --check-remotes --output /tmp/ict-engine-release-readiness-post-smoke-isolation.json`
+  exited `1` with `summary.status=needs_fix`, `fail_count=3`, `skip_count=1`,
+  and unresolved `worktree_clean_for_release`,
+  `release_docs_fresh_for_selected_tag`, and `remote_readback`.
+- Release remote nuance:
+  `origin` readback succeeded, but release mirror readback failed with
+  `Connection closed by 198.18.1.114 port 22`; therefore
+  `release_version_tag_available` is `skip`, not a pass. A future release lane
+  must restore release mirror readback before selecting or publishing a tag.
+- Post-commit done-definition audit:
+  `python3 support/scripts/done_definition_audit.py --compact --output /tmp/ict-engine-done-post-smoke-isolation.json`
+  exited `0` but remains light-only:
+  `completion_ready=false`, `evidence_level=partial_skipped_gates`,
+  `pass_count=4`, `skip_count=4`.
+- Post-commit factor-claim audit:
+  `python3 support/scripts/factor_claim_terminalization_audit.py --compact --output /tmp/ict-engine-factor-claims-post-smoke-isolation.json`
+  exited `1` with `summary.status=needs_attention`, `active_claims=10`,
+  `terminalized_claims=11`, `promotion_allowed_true=0`,
+  and `trade_usable_true=0`.
+- Worktree state still blocks release:
+  broad dirty work remains outside this committed slice; do not stage or publish
+  from the dirty checkout.
+
 ### Live Audit Loop - 2026-05-22 23:44 +0800
 
 Owner: Codex current turn.
