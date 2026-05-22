@@ -101,6 +101,52 @@ run_root=/tmp/missing-run-root-for-test
             self.assertEqual(report["summary"]["active_claims"], 0)
             self.assertEqual(report["claims"][0]["decision"], "continue_goal_active; no promotion_allowed/trade_usable evidence found")
 
+    def test_build_report_treats_terminal_status_and_markdown_bullets_as_terminal(self) -> None:
+        with tempfile.TemporaryDirectory() as repo_tmp, tempfile.TemporaryDirectory() as claims_tmp:
+            project_root = Path(repo_tmp)
+            claims_dir = Path(claims_tmp)
+            run_root = project_root / "support" / "docs" / "experiments" / "run-a"
+            (run_root / "checks").mkdir(parents=True)
+            (run_root / "summaries").mkdir(parents=True)
+            (run_root / "checks" / "terminal_metrics.json").write_text(
+                '{"promotion_allowed": false, "trade_usable": false}',
+                encoding="utf-8",
+            )
+
+            (claims_dir / "bullet-terminal.claim").write_text(
+                f"""
+# Claim
+
+- owner: codex
+- status: terminal_observation_only
+- run_root: {run_root.relative_to(project_root)}
+- terminal_decision: fail_closed_observation_only
+- promotion_allowed: false
+- trade_usable: false
+""",
+                encoding="utf-8",
+            )
+            (claims_dir / "plain-terminal.claim").write_text(
+                f"""
+owner=codex
+status=terminal
+run_root={run_root.relative_to(project_root)}
+terminal_decision=drop_gate1
+promotion_allowed=false
+trade_usable=false
+""",
+                encoding="utf-8",
+            )
+
+            report = build_report(claims_dir, project_root)
+
+            self.assertEqual(report["summary"]["total_claims"], 2)
+            self.assertEqual(report["summary"]["terminalized_claims"], 2)
+            self.assertEqual(report["summary"]["active_claims"], 0)
+            self.assertEqual(report["summary"]["status"], "pass")
+            self.assertEqual(report["claims"][0]["status"], "terminalized")
+            self.assertEqual(report["claims"][0]["decision"], "fail_closed_observation_only")
+
     def test_summarize_marks_needs_attention_for_active_or_positive_claims(self) -> None:
         summary = summarize(
             [

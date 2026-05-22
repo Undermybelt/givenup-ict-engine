@@ -6862,3 +6862,64 @@ editing any claim files, run roots, Board rows, or factor evidence.
   source-origin drift, and version/tag reuse.
 - Done-definition completion remains light-only until a fresh `--run-all-heavy`
   pass is rerun after the current source changes.
+
+## 2026-05-23 continuation - factor claim terminal parser repair
+
+The factor audit still reports `needs_attention`, but the previous active-claim
+count included parser false positives. Several claim files had terminal evidence
+written as Markdown bullets, `status=terminal...`, or `terminal_decision=...`;
+the audit only recognized `terminalized_at`, `decision`, or a status containing
+`terminalized`.
+
+### Remediation
+
+- `parse_claim_text` now strips Markdown bullet prefixes before parsing key
+  names.
+- `_status` now treats `status=terminal*` as terminalized.
+- `_status` and `read_claim` now treat `terminal_decision` as a terminal
+  decision fallback.
+- No claim files, run roots, Board rows, or factor evidence were edited.
+
+### Verification
+
+- RED:
+  `python3 -m unittest support.scripts.tests.test_factor_claim_terminalization_audit.FactorClaimTerminalizationAuditTest.test_build_report_treats_terminal_status_and_markdown_bullets_as_terminal -v`
+  failed before implementation because `terminalized_claims` was `0` instead of
+  `2`.
+- GREEN targeted:
+  the same test passed after the parser repair.
+- Full factor-claim audit tests:
+  `python3 -m unittest support.scripts.tests.test_factor_claim_terminalization_audit -v`
+  passed `8` tests.
+- Compile:
+  `python3 -m py_compile support/scripts/factor_claim_terminalization_audit.py support/scripts/tests/test_factor_claim_terminalization_audit.py`
+  passed.
+- Script manifest:
+  `python3 support/scripts/check_script_manifest.py`
+  passed with `entries=21`.
+- Real compact audit:
+  `python3 support/scripts/factor_claim_terminalization_audit.py --compact --output /tmp/ict-engine-factor-claims-terminal-parser-20260523.json`
+  exited `1` as expected.
+
+### Current Factor Claim Readback
+
+- `status=needs_attention`
+- `total_claims=26`
+- `terminalized_claims=23`
+- `active_claims=3`
+- `missing_run_roots=0`
+- `trade_usable_true=0`
+- `promotion_allowed_true=0`
+- `blocking_reasons=["active_claims"]`
+- `next_action=terminalize or externalize active claims`
+
+### Remaining Broad Blockers
+
+- Three active factor claims remain and must not be edited without checking
+  owner/process state:
+  `20260523T000747+0800-codex-tomac-tod-balanced-execution-predicate-readback.claim`,
+  `20260523T021624+0800-codex-historical-interrupt-profit-factor-extension-triage.claim`,
+  and `20260523T024228+0800-codex-vst-same-root-execution-predicate-diagnosis.claim`.
+- Release readiness remains blocked.
+- Done-definition completion remains light-only until full-heavy gates are rerun
+  after source changes.

@@ -24,6 +24,8 @@ token-friendly and privacy-safe while making the next local action explicit.
 - [x] Run targeted and full factor-claim audit tests.
 - [x] Run py_compile and script manifest checks.
 - [x] Run a real compact factor-claim audit readback.
+- [x] Fix claim parsing for terminal Markdown bullets, `status=terminal*`, and
+  `terminal_decision`.
 
 ### Next
 
@@ -60,6 +62,26 @@ token-friendly and privacy-safe while making the next local action explicit.
 - Real compact factor audit:
   `python3 support/scripts/factor_claim_terminalization_audit.py --compact --output /tmp/ict-engine-factor-claims-actionability-20260523.json`
   exited `1` as expected.
+- Parser RED:
+  `python3 -m unittest support.scripts.tests.test_factor_claim_terminalization_audit.FactorClaimTerminalizationAuditTest.test_build_report_treats_terminal_status_and_markdown_bullets_as_terminal -v`
+  failed before implementation because `terminalized_claims` was `0` instead of
+  `2`.
+- Parser GREEN:
+  the same targeted test passed after parsing Markdown bullet keys, treating
+  `status=terminal*` as terminalized, and using `terminal_decision` as a
+  decision fallback.
+- Full factor-claim audit tests after parser fix:
+  `python3 -m unittest support.scripts.tests.test_factor_claim_terminalization_audit -v`
+  passed `8` tests.
+- Compile after parser fix:
+  `python3 -m py_compile support/scripts/factor_claim_terminalization_audit.py support/scripts/tests/test_factor_claim_terminalization_audit.py`
+  passed.
+- Script manifest after parser fix:
+  `python3 support/scripts/check_script_manifest.py`
+  passed with `entries=21`.
+- Real compact factor audit after parser fix:
+  `python3 support/scripts/factor_claim_terminalization_audit.py --compact --output /tmp/ict-engine-factor-claims-terminal-parser-20260523.json`
+  exited `1` as expected, but active claims dropped from `8` to `3`.
 
 ## Current Readback
 
@@ -81,6 +103,26 @@ Attention groups:
 - by owner: `Codex=1`, `Codex CLI=1`, `codex=3`, `unknown=3`
 - by run-root state: `none=6`, `present=2`
 - by status: `active=8`
+
+After the parser fix, `/tmp/ict-engine-factor-claims-terminal-parser-20260523.json`
+reports:
+
+- `summary.status=needs_attention`
+- `total_claims=26`
+- `terminalized_claims=23`
+- `active_claims=3`
+- `missing_run_roots=0`
+- `trade_usable_true=0`
+- `promotion_allowed_true=0`
+- `blocking_reasons=["active_claims"]`
+- `next_action="terminalize or externalize active claims"`
+- `attention_claim_count=3`
+
+Remaining active compact claims:
+
+- `20260523T000747+0800-codex-tomac-tod-balanced-execution-predicate-readback.claim`
+- `20260523T021624+0800-codex-historical-interrupt-profit-factor-extension-triage.claim`
+- `20260523T024228+0800-codex-vst-same-root-execution-predicate-diagnosis.claim`
 
 ## Compatibility Boundary
 

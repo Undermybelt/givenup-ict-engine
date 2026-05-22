@@ -29,6 +29,8 @@ def parse_claim_text(text: str) -> dict[str, Any]:
     summary_parts: list[str] = []
     for raw_line in text.splitlines():
         line = raw_line.strip()
+        if line.startswith(("- ", "* ")):
+            line = line[2:].strip()
         if not line or line.startswith("#"):
             continue
         separator = _first_separator(line)
@@ -76,9 +78,10 @@ def _resolved_run_root(value: str | None, root: Path) -> Path | None:
 
 
 def _status(fields: dict[str, Any]) -> str:
-    if fields.get("terminalized_at") or "terminalized" in str(fields.get("status", "")).lower():
+    status = str(fields.get("status", "")).lower()
+    if fields.get("terminalized_at") or status.startswith("terminal") or "terminalized" in status:
         return "terminalized"
-    if fields.get("decision"):
+    if fields.get("decision") or fields.get("terminal_decision"):
         return "terminalized"
     return "active"
 
@@ -147,7 +150,7 @@ def read_claim(path: Path, root: Path) -> dict[str, Any]:
         "status": _status(fields),
         "owner": fields.get("owner") or fields.get("owner_id"),
         "scope": fields.get("scope") or fields.get("task") or fields.get("lane"),
-        "decision": fields.get("decision"),
+        "decision": fields.get("decision") or fields.get("terminal_decision"),
         "terminalized_at": fields.get("terminalized_at"),
         "run_root": str(run_root) if run_root else None,
         "run_root_exists": bool(run_root and run_root.exists()),
