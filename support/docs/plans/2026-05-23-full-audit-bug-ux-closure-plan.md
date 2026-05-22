@@ -268,3 +268,50 @@ Decision:
 - It clears the current claim/process hygiene blocker only. It does not clear
   factor readiness because there are still zero promotion/trade-usable
   positives.
+
+### 2026-05-23 07:14 CST Post-Commit Drift Readback
+
+Commits landed in this continuation:
+
+- `9df168b3 docs: add full audit closure handoff`
+  - created this handoff and recorded fresh audit/smoke/check/clippy/test
+    evidence.
+- `2853332f fix: tighten factor claim audit classifiers`
+  - tightened live factor process detection and run-root sentinel handling.
+
+Fresh post-commit factor audit:
+
+- `python3 support/scripts/factor_claim_terminalization_audit.py --compact --output /tmp/ict-engine-full-audit-20260523-codex/factor_claim_terminalization_after_commit_2853332f.json`
+  - exit `1`.
+  - status `needs_attention`.
+  - current summary: `active_claims=1`, `live_factor_processes=2`,
+    `missing_run_roots=0`, `terminalized_claims=93`, `total_claims=94`,
+    `promotion_allowed_true=0`, `trade_usable_true=0`.
+  - active blocker: IHI medical-device ETF Keltner reclaim Gate 1 claim with
+    a present run root and live wrapper/fetch processes.
+
+Fresh post-commit release-readiness audit:
+
+- `python3 support/scripts/release_readiness_audit.py --compact --check-remotes --output /tmp/ict-engine-full-audit-20260523-codex/release_readiness_after_commit_2853332f.json`
+  - exit `1`.
+  - status `needs_fix`, `fail_count=4`, `pass_count=1`.
+  - `HEAD=2853332f4b17b0aa6c7a4a494c08439057aa0ea3`.
+  - unresolved gates:
+    `worktree_clean_for_release`,
+    `release_docs_fresh_for_selected_tag`,
+    `source_origin_matches_selected_source`,
+    `release_version_tag_available`.
+  - current version remains `0.1.3`; known mirror tags include `v0.1.3` and
+    `v0.1.4`; audit still suggests `0.1.5` / `v0.1.5` for a future selected
+    release.
+
+Decision:
+
+- The second commit improved audit accuracy but did not make the full objective
+  complete.
+- Claim/process hygiene is live-drift sensitive and is currently blocked again
+  by the IHI lane.
+- Release remains blocked by dirty source state, stale release signoff/notes,
+  source remote mismatch, reused current version/tag, zero practical
+  promotion/trade-usable factors, and missing explicit operator release
+  approval.
