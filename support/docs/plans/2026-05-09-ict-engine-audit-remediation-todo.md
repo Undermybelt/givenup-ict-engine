@@ -11,6 +11,66 @@
 
 ---
 
+### Live Audit Loop - 2026-05-22 22:31 +0800
+
+Owner: Codex current turn.
+Claim: continuing the full-audit/remediation loop; completion remains
+unproven. A post-commit release-readiness readback found another compact-output
+privacy mismatch.
+
+Problem found:
+
+- `support/scripts/release_readiness_audit.py --compact --check-remotes` still
+  emitted the full report shape with `repo_root=/Users/...`.
+- That made the release audit less safe as a consumer/agent handoff surface even
+  though it was already token-friendly by whitespace.
+
+Fix applied:
+
+- Changed compact release output to a sanitized projection instead of only
+  single-line JSON.
+- Compact output omits `repo_root` and recursively relativizes repo-local
+  absolute paths inside nested details.
+- Default/full output remains unchanged.
+- Updated `support/scripts/SCRIPTS.md` to state that release compact mode omits
+  repo-local absolute paths.
+
+Fresh evidence:
+
+- `python3 -m unittest support.scripts.tests.test_release_readiness_audit -v`
+  passed `9` tests, including the compact privacy regression.
+- `python3 -m py_compile support/scripts/release_readiness_audit.py support/scripts/tests/test_release_readiness_audit.py`
+  passed.
+- `python3 support/scripts/release_readiness_audit.py --compact --check-remotes --output /tmp/ict-engine-release-readiness-audit-compact-private-path-fix.json`
+  exited `1` as expected because release blockers remain.
+- `rg -n "/Users|repo_root" /tmp/ict-engine-release-readiness-audit-compact-private-path-fix.json`
+  returned no matches.
+- `python3 support/scripts/check_script_manifest.py` passed with
+  `entries=21`.
+- `git diff --check -- support/scripts/release_readiness_audit.py support/scripts/tests/test_release_readiness_audit.py support/scripts/SCRIPTS.md support/docs/plans/2026-05-09-ict-engine-audit-remediation-todo.md`
+  passed.
+
+Current release blocker readback from the fixed compact report:
+
+- `summary.status=needs_fix`
+- `pass_count=1`
+- `fail_count=4`
+- unresolved:
+  `worktree_clean_for_release`,
+  `release_docs_fresh_for_selected_tag`,
+  `source_origin_matches_selected_source`,
+  `release_version_tag_available`.
+- Current version `0.1.3` maps to blocked candidate tag `v0.1.3`; release
+  mirror tags include `v0.1.3` and `v0.1.4`.
+
+Next safe action:
+
+- Keep release/publish/tag/push blocked. The compact surface is safer for
+  handoff, but the release lane still needs a clean selected export, fresh
+  release docs, source-origin alignment, and a non-reused version/tag.
+
+---
+
 ### Live Audit Loop - 2026-05-22 22:27 +0800
 
 Owner: Codex current turn.

@@ -284,10 +284,40 @@ def build_report(root: Path, check_remotes: bool) -> dict[str, Any]:
     }
 
 
+def _repo_relative_text(value: str, root: str) -> str:
+    if not root:
+        return value
+    result = value.replace(root + "/", "")
+    return result.replace(root, ".")
+
+
+def _compact_value(value: Any, root: str) -> Any:
+    if isinstance(value, str):
+        return _repo_relative_text(value, root)
+    if isinstance(value, list):
+        return [_compact_value(item, root) for item in value]
+    if isinstance(value, dict):
+        return {key: _compact_value(nested, root) for key, nested in value.items()}
+    return value
+
+
+def _compact_report(report: dict[str, Any]) -> dict[str, Any]:
+    root = str(report.get("repo_root") or "")
+    return {
+        "timestamp_utc": report.get("timestamp_utc"),
+        "head": report.get("head"),
+        "cargo": report.get("cargo"),
+        "remote_details": _compact_value(report.get("remote_details", {}), root),
+        "summary": report.get("summary"),
+        "gates": _compact_value(report.get("gates", []), root),
+    }
+
+
 def format_report(report: dict[str, Any], compact: bool) -> str:
+    payload = _compact_report(report) if compact else report
     indent = None if compact else 2
     separators = (",", ":") if compact else None
-    return json.dumps(report, indent=indent, separators=separators, sort_keys=True) + "\n"
+    return json.dumps(payload, indent=indent, separators=separators, sort_keys=True) + "\n"
 
 
 def main() -> int:

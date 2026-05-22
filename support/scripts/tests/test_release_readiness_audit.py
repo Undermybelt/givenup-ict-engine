@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 from __future__ import annotations
 
+import json
 import sys
 import unittest
 from pathlib import Path
@@ -98,6 +99,35 @@ ghi789\trefs/tags/v0.1.4^{}
         self.assertTrue(text.endswith("\n"))
         self.assertNotIn("\n  ", text)
         self.assertIn('"summary":{"status":"pass"}', text)
+
+    def test_format_report_compact_omits_repo_root_and_relativizes_details(self) -> None:
+        report = {
+            "timestamp_utc": "2026-05-22T00:00:00Z",
+            "repo_root": "/Users/example/ict-engine",
+            "head": "abc123",
+            "cargo": {"version": "0.1.3"},
+            "remote_details": {"enabled": False},
+            "summary": {"status": "needs_fix"},
+            "gates": [
+                {
+                    "id": "worktree_clean_for_release",
+                    "status": "fail",
+                    "details": {
+                        "sample": [" M /Users/example/ict-engine/src/main.rs"],
+                        "stderr": "failed at /Users/example/ict-engine/support/docs/release-notes-draft.md",
+                    },
+                }
+            ],
+        }
+
+        text = format_report(report, compact=True)
+        parsed = json.loads(text)
+
+        self.assertNotIn("repo_root", parsed)
+        self.assertEqual(parsed["head"], "abc123")
+        self.assertEqual(parsed["gates"][0]["details"]["sample"], [" M src/main.rs"])
+        self.assertEqual(parsed["gates"][0]["details"]["stderr"], "failed at support/docs/release-notes-draft.md")
+        self.assertNotIn("/Users/example", text)
 
 
 if __name__ == "__main__":
