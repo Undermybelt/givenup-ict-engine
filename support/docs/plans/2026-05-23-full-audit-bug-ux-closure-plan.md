@@ -543,3 +543,44 @@ Decision:
   snapshot.
 - Do not mark full objective complete, do not publish a release, and do not
   claim practical factor usability.
+
+### 2026-05-23 07:47 CST Post-Drift Commit Readback
+
+Trigger:
+
+- After commit `b4e0bc32 docs: record reopened factor drift`, fresh audits were
+  rerun to avoid relying on a stale live-process snapshot.
+
+Fresh factor claim/process audit:
+
+- `python3 support/scripts/factor_claim_terminalization_audit.py --compact --output /tmp/ict-engine-full-audit-20260523-codex-refresh/factor_claim_terminalization_after_commit_b4e0bc32.json`
+  - exit `1`.
+  - status `needs_attention`.
+  - summary: `active_claims=3`, `live_factor_processes=5`,
+    `missing_run_roots=0`, `terminalized_claims=105`, `total_claims=108`,
+    `promotion_allowed_true=0`, `trade_usable_true=0`.
+  - active claims:
+    TOMAC TOD BalancedAdaptiveSlotPortfolio exact AQ broad replay,
+    TOMAC TOD cap65 exact AQ rebuild, and Bybit WOO/CFX PGO reclaim Gate 1.
+  - live processes:
+    XBI IBKR wrapper/fetch plus TOMAC exact-AQ / run_tomac child processes.
+
+Fresh release-readiness audit:
+
+- `python3 support/scripts/release_readiness_audit.py --compact --check-remotes --output /tmp/ict-engine-full-audit-20260523-codex-refresh/release_readiness_after_commit_b4e0bc32.json`
+  - exit `1`.
+  - status `needs_fix`, `fail_count=4`, `pass_count=1`.
+  - `HEAD=b4e0bc329094eccdf7bbfb8ae6f753e9810af20c`.
+  - unresolved gates:
+    `worktree_clean_for_release`,
+    `release_docs_fresh_for_selected_tag`,
+    `source_origin_matches_selected_source`,
+    `release_version_tag_available`.
+
+Decision:
+
+- No release action is allowed from this state.
+- No practical-factor completion claim is allowed from this state.
+- Next safe actions are limited to waiting for live factor lanes to terminalize,
+  externalizing abandoned claims from evidence, or cutting a narrow verified
+  docs/audit slice that does not touch unrelated dirty source.
