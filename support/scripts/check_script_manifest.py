@@ -41,6 +41,7 @@ REQUIRED_PUBLIC_HELPERS = {
     "support/scripts/check_factor_truth_map.py",
     "support/scripts/check_script_manifest.py",
     "support/scripts/ci/check_docs_runtime_isolation.py",
+    "support/scripts/factor_claim_terminalization_audit.py",
     "support/scripts/release_readiness_audit.py",
 }
 

@@ -5623,3 +5623,70 @@ miss if checked manually:
   release.
 - Practical factor diffusion still has no `trade_usable=true` /
   `promotion_allowed=true` evidence.
+
+## 2026-05-22 continuation - factor claim terminalization audit helper
+
+Current answer to "so there is nothing to do?": no. The factor refinement
+surface still has many `/tmp` claim files, and the current done/release/factor
+boards do not prove 100% completion. Manual claim readback is now itself a
+workflow risk because it is easy to miss an active or unterminated lane in the
+large dirty tree.
+
+### Selected Narrow Slice
+
+- Add a read-only `support/scripts/factor_claim_terminalization_audit.py`
+  helper.
+- Default claim directory:
+  `/tmp/ict-engine-agent-claims/board-b-factor-refinement`.
+- Emit compact JSON to stdout or an explicit `--output` path.
+- Detect active/unterminalized claims, terminal decisions, missing run roots,
+  and best-effort `trade_usable` / `promotion_allowed` flags from claim text and
+  nearby summary JSON/Markdown.
+- Register the helper in `support/scripts/SCRIPTS.md` and
+  `support/scripts/script_manifest.json`.
+- Keep this helper audit-only: it must not modify claims, run roots, factor
+  artifacts, provider state, or repo docs.
+
+### Verification Plan
+
+- RED unit tests for active-vs-terminal claim classification, run-root
+  existence checks, and summary counts.
+- GREEN unit tests for the helper.
+- `python3 -m py_compile` for the helper and tests.
+- `python3 support/scripts/check_script_manifest.py`.
+- Real read-only run against current `/tmp` claims, writing output under `/tmp`.
+- `python3 support/scripts/done_definition_audit.py --output /tmp/...`.
+- `git diff --check` over the explicit slice.
+
+### Verification Results
+
+- RED:
+  - `python3 -m unittest support.scripts.tests.test_factor_claim_terminalization_audit -v`
+  - failed before implementation with
+    `ModuleNotFoundError: No module named 'factor_claim_terminalization_audit'`.
+- GREEN:
+  - `python3 -m unittest support.scripts.tests.test_factor_claim_terminalization_audit -v`
+  - passed `4` tests.
+  - `python3 -m py_compile support/scripts/factor_claim_terminalization_audit.py support/scripts/tests/test_factor_claim_terminalization_audit.py support/scripts/check_script_manifest.py`
+  - passed.
+  - `python3 support/scripts/check_script_manifest.py`
+  - passed with `script_manifest status=pass entries=21`.
+  - `python3 support/scripts/factor_claim_terminalization_audit.py --output /tmp/ict-engine-factor-claim-terminalization-audit-current-v2.json --compact`
+  - exited `1` by design because the current claim board still needs
+    attention; output summary:
+    `total_claims=37`, `terminalized_claims=19`, `active_claims=18`,
+    `missing_run_roots=0`, `trade_usable_true=0`,
+    `promotion_allowed_true=0`, `status=needs_attention`.
+  - `python3 support/scripts/done_definition_audit.py --output /tmp/ict-engine-done-definition-audit-after-factor-claim-helper.json`
+  - passed light gates with `pass_count=4`, `fail_count=0`, `skip_count=4`.
+  - `git diff --check -- support/scripts/factor_claim_terminalization_audit.py support/scripts/tests/test_factor_claim_terminalization_audit.py support/scripts/check_script_manifest.py support/scripts/SCRIPTS.md support/scripts/script_manifest.json support/docs/plans/2026-05-09-ict-engine-audit-remediation-todo.md`
+  - passed.
+
+### Remaining Broad Blockers After This Slice
+
+- Goal is still not complete: current factor claims include `18` active /
+  unterminalized records, although no current parsed claim reports
+  `trade_usable=true` or `promotion_allowed=true`.
+- Release readiness remains blocked by the prior release-readiness audit helper.
+- This helper only reduces audit ambiguity; it does not repair factor gates or
+  authorize release/publish.

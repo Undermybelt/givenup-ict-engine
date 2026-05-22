@@ -13,6 +13,7 @@ governance only; no script was moved or promoted by this document.
 | `support/scripts/help_audit.py` | audit helper | yes, read-only cargo help probes | `python3 support/scripts/help_audit.py` |
 | `support/scripts/done_definition_audit.py` | audit helper | yes, lightweight read-only checks by default | `python3 support/scripts/done_definition_audit.py` |
 | `support/scripts/release_readiness_audit.py` | audit helper | yes, read-only local checks; remote readback opt-in | `python3 -m unittest support.scripts.tests.test_release_readiness_audit -v` |
+| `support/scripts/factor_claim_terminalization_audit.py` | audit helper | yes, read-only `/tmp` claim scanner | `python3 -m unittest support.scripts.tests.test_factor_claim_terminalization_audit -v` |
 | `support/scripts/check_factor_truth_map.py` | docs guard | yes, read-only | `python3 support/scripts/check_factor_truth_map.py` |
 | `support/scripts/check_script_manifest.py` | docs guard | yes, read-only | `python3 support/scripts/check_script_manifest.py` |
 | `support/scripts/script_manifest.json` | machine-readable manifest | yes, read-only data | checked by `check_script_manifest.py` |

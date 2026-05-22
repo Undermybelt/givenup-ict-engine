@@ -40,6 +40,14 @@
     "test_command": "python3 -m unittest support.scripts.tests.test_release_readiness_audit -v"
   },
   {
+    "name": "factor_claim_terminalization_audit",
+    "stability": "audit_helper",
+    "entrypoint": "support/scripts/factor_claim_terminalization_audit.py",
+    "safe_default": true,
+    "requires_data": false,
+    "test_command": "python3 -m unittest support.scripts.tests.test_factor_claim_terminalization_audit -v"
+  },
+  {
     "name": "check_factor_truth_map",
     "stability": "docs_guard",
     "entrypoint": "support/scripts/check_factor_truth_map.py",
