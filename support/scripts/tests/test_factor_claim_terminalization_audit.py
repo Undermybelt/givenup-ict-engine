@@ -10,7 +10,7 @@ SCRIPTS_ROOT = Path(__file__).resolve().parents[1]
 if str(SCRIPTS_ROOT) not in sys.path:
     sys.path.insert(0, str(SCRIPTS_ROOT))
 
-from factor_claim_terminalization_audit import build_report, parse_claim_text, summarize  # noqa: E402
+from factor_claim_terminalization_audit import build_report, format_report, parse_claim_text, summarize  # noqa: E402
 
 
 class FactorClaimTerminalizationAuditTest(unittest.TestCase):
@@ -113,6 +113,79 @@ run_root=/tmp/missing-run-root-for-test
         self.assertEqual(summary["missing_run_roots"], 1)
         self.assertEqual(summary["trade_usable_true"], 1)
         self.assertEqual(summary["promotion_allowed_true"], 1)
+
+    def test_format_report_compact_keeps_only_attention_claim_summaries(self) -> None:
+        full_report = {
+            "schema_version": "factor-claim-terminalization-audit/v1",
+            "generated_at": "2026-05-22T00:00:00+00:00",
+            "claims_dir": "/tmp/claims",
+            "repo_root": "/Users/example/ict-engine",
+            "summary": {
+                "status": "needs_attention",
+                "total_claims": 3,
+                "terminalized_claims": 1,
+                "active_claims": 1,
+                "missing_run_roots": 1,
+                "trade_usable_true": 1,
+                "promotion_allowed_true": 1,
+            },
+            "claims": [
+                {
+                    "claim_file": "terminal.claim",
+                    "claim_path": "/tmp/claims/terminal.claim",
+                    "status": "terminalized",
+                    "owner": "codex",
+                    "scope": "done",
+                    "decision": "drop",
+                    "run_root": "/Users/example/ict-engine/support/docs/experiments/run-a",
+                    "run_root_exists": True,
+                    "promotion_allowed": False,
+                    "trade_usable": False,
+                    "summary_files": ["summaries/terminal_decision_summary.md"],
+                },
+                {
+                    "claim_file": "active.claim",
+                    "claim_path": "/tmp/claims/active.claim",
+                    "status": "active",
+                    "owner": "codex",
+                    "scope": "still running",
+                    "decision": None,
+                    "run_root": "/tmp/missing-run-root",
+                    "run_root_exists": False,
+                    "promotion_allowed": None,
+                    "trade_usable": None,
+                    "summary_files": [],
+                },
+                {
+                    "claim_file": "positive.claim",
+                    "claim_path": "/tmp/claims/positive.claim",
+                    "status": "terminalized",
+                    "owner": "codex",
+                    "scope": "positive flag",
+                    "decision": "review",
+                    "run_root": "/tmp/run",
+                    "run_root_exists": True,
+                    "promotion_allowed": True,
+                    "trade_usable": True,
+                    "summary_files": ["checks/terminal_metrics.json"],
+                },
+            ],
+        }
+
+        compact = format_report(full_report, compact=True)
+
+        self.assertNotIn("claims", compact)
+        self.assertNotIn("repo_root", compact)
+        self.assertEqual(compact["summary"], full_report["summary"])
+        self.assertEqual(compact["attention_claim_count"], 2)
+        self.assertEqual([claim["claim_file"] for claim in compact["attention_claims"]], ["active.claim", "positive.claim"])
+        self.assertEqual(compact["attention_claims"][0]["run_root_state"], "missing")
+        self.assertNotIn("claim_path", compact["attention_claims"][0])
+        self.assertNotIn("run_root", compact["attention_claims"][0])
+
+    def test_format_report_full_keeps_original_report(self) -> None:
+        full_report = {"summary": {"status": "pass"}, "claims": []}
+        self.assertIs(format_report(full_report, compact=False), full_report)
 
 
 if __name__ == "__main__":

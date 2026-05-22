@@ -202,12 +202,54 @@ def build_report(claims_dir: Path, repo_root: Path) -> dict[str, Any]:
     }
 
 
+def format_report(report: dict[str, Any], compact: bool = False) -> dict[str, Any]:
+    if not compact:
+        return report
+
+    claims = report.get("claims", [])
+    attention_claims = [_compact_claim(claim) for claim in claims if _claim_needs_attention(claim)]
+    return {
+        "schema_version": report.get("schema_version"),
+        "generated_at": report.get("generated_at"),
+        "claims_dir": report.get("claims_dir"),
+        "summary": report.get("summary"),
+        "attention_claim_count": len(attention_claims),
+        "attention_claims": attention_claims,
+    }
+
+
+def _claim_needs_attention(claim: dict[str, Any]) -> bool:
+    return bool(
+        claim.get("status") != "terminalized"
+        or (claim.get("run_root") and not claim.get("run_root_exists"))
+        or claim.get("promotion_allowed") is True
+        or claim.get("trade_usable") is True
+    )
+
+
+def _compact_claim(claim: dict[str, Any]) -> dict[str, Any]:
+    run_root_state = "none"
+    if claim.get("run_root"):
+        run_root_state = "present" if claim.get("run_root_exists") else "missing"
+    return {
+        "claim_file": claim.get("claim_file"),
+        "status": claim.get("status"),
+        "owner": claim.get("owner"),
+        "scope": claim.get("scope"),
+        "decision": claim.get("decision"),
+        "run_root_state": run_root_state,
+        "promotion_allowed": claim.get("promotion_allowed"),
+        "trade_usable": claim.get("trade_usable"),
+        "summary_files": claim.get("summary_files", []),
+    }
+
+
 def parse_args(argv: list[str]) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Audit Board B factor claim terminalization state.")
     parser.add_argument("--claims-dir", type=Path, default=DEFAULT_CLAIMS_DIR)
     parser.add_argument("--repo-root", type=Path, default=None)
     parser.add_argument("--output", type=Path, default=None)
-    parser.add_argument("--compact", action="store_true", help="write compact JSON")
+    parser.add_argument("--compact", action="store_true", help="write token-friendly attention summary JSON")
     return parser.parse_args(argv)
 
 
@@ -236,8 +278,9 @@ def main(argv: list[str] | None = None) -> int:
     else:
         report = build_report(claims_dir=claims_dir, repo_root=root)
 
+    output_report = format_report(report, compact=args.compact)
     indent = None if args.compact else 2
-    output_text = json.dumps(report, indent=indent, sort_keys=True) + "\n"
+    output_text = json.dumps(output_report, indent=indent, sort_keys=True) + "\n"
     if args.output:
         args.output.parent.mkdir(parents=True, exist_ok=True)
         args.output.write_text(output_text, encoding="utf-8")

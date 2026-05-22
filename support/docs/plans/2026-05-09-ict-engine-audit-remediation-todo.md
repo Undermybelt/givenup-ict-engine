@@ -11,6 +11,81 @@
 
 ---
 
+### Live Audit Loop - 2026-05-22 22:05 +0800
+
+Owner: Codex current turn.
+Claim: continuing the full-audit/remediation loop; completion remains unproven.
+
+Problem found:
+
+- `support/scripts/factor_claim_terminalization_audit.py --compact` only
+  removed JSON whitespace. It still wrote the full claim list with
+  `claim_path`, `run_root`, and `repo_root` style absolute paths into the
+  supposedly compact report. That made the live audit readback token-heavy and
+  weaker for consumer-safe / low-pollution handoffs.
+
+Fix applied:
+
+- Added `format_report(report, compact=True)` for a token-friendly attention
+  summary.
+- Default/full output stays unchanged.
+- Compact output now keeps:
+  - schema and timestamp;
+  - `claims_dir`;
+  - `summary`;
+  - `attention_claim_count`;
+  - `attention_claims` with `claim_file`, status, owner, scope, decision,
+    `run_root_state`, promotion/trade flags, and summary file names.
+- Compact output intentionally omits full `claims`, `repo_root`, `claim_path`,
+  and raw `run_root` values.
+
+Fresh evidence:
+
+- RED before implementation:
+  - `python3 -m unittest support.scripts.tests.test_factor_claim_terminalization_audit -v`
+  - failed because `format_report` did not exist.
+- GREEN after implementation:
+  - `python3 -m unittest support.scripts.tests.test_factor_claim_terminalization_audit -v`
+    passed `6` tests.
+  - `python3 -m py_compile support/scripts/factor_claim_terminalization_audit.py support/scripts/tests/test_factor_claim_terminalization_audit.py`
+    passed.
+  - `python3 support/scripts/factor_claim_terminalization_audit.py --output /tmp/ict-engine-factor-claim-terminalization-audit-compact-after-fix.json --compact`
+    exited `1` as expected because live claims still need attention.
+  - Full report comparison:
+    - compact: `/tmp/ict-engine-factor-claim-terminalization-audit-compact-final.json`
+      was `6519` bytes.
+    - full: `/tmp/ict-engine-factor-claim-terminalization-audit-full-after-fix.json`
+      was `39858` bytes.
+  - `rg -n "/Users|claim_path|\"claims\"|\"repo_root\"|\"run_root\"" /tmp/ict-engine-factor-claim-terminalization-audit-compact-final.json`
+    returned no matches.
+  - `python3 support/scripts/check_script_manifest.py` passed with
+    `entries=21`.
+  - `git diff --check -- support/scripts/factor_claim_terminalization_audit.py support/scripts/tests/test_factor_claim_terminalization_audit.py`
+    passed.
+
+Current live factor state from the fixed compact report:
+
+- `summary.status=needs_attention`
+- `total_claims=47`
+- `terminalized_claims=30`
+- `active_claims=18`
+- `missing_run_roots=0`
+- `trade_usable_true=0`
+- `promotion_allowed_true=0`
+- Post-commit drift readback:
+  `/tmp/ict-engine-factor-claim-terminalization-audit-post-commit.json`
+  still exited `1` as expected and showed `attention_claim_count=17`.
+  The `/tmp` claim directory is live external state; use the latest compact
+  report for lane selection rather than treating one count as fixed.
+
+Next safe action:
+
+- Continue reducing the `active_claims` list or use the compact readback to
+  choose a non-colliding same-root repair. This fix improves the audit loop; it
+  does not prove factor diffusion or release completion.
+
+---
+
 ### Live Audit Loop - 2026-05-22 21:58 +0800
 
 Owner: Codex current turn.
