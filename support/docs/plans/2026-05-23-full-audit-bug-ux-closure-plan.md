@@ -109,6 +109,13 @@ Repeat until all requirements are proven:
   updating this handoff.
 - [x] Stage and commit the verified handoff/evidence slice with isolated
   staged paths.
+- [x] Patch the factor-claim audit parser so `pending_*` run-root placeholders
+  do not become false `missing_run_roots` blockers.
+- [ ] Terminalize or externalize current active factor claims without
+  interrupting live provider/AQ processes.
+- [ ] Keep release readiness blocked until a clean selected export, fresh
+  release docs/signoff, unused version/tag, remote parity, and explicit
+  operator approval exist.
 
 ## Evidence Log
 
@@ -315,3 +322,57 @@ Decision:
   source remote mismatch, reused current version/tag, zero practical
   promotion/trade-usable factors, and missing explicit operator release
   approval.
+
+### 2026-05-23 07:26 CST Pending Run-Root Sentinel Slice
+
+Trigger:
+
+- Fresh factor audit at
+  `/tmp/ict-engine-full-audit-20260523-codex-refresh/factor_claim_terminalization_latest.json`
+  still exited `1`.
+- Summary before the patch: `active_claims=6`, `live_factor_processes=4`,
+  `missing_run_roots=1`, `terminalized_claims=94`, `total_claims=100`,
+  `promotion_allowed_true=0`, `trade_usable_true=0`.
+- The missing-root blocker came from a not-yet-launched claim using
+  `run_root=pending_runner_timestamp`, which is a placeholder, not a filesystem
+  path.
+
+Patch:
+
+- `support/scripts/factor_claim_terminalization_audit.py`
+  - treats `pending_*` `run_root` values as absent/pending sentinels.
+- `support/scripts/tests/test_factor_claim_terminalization_audit.py`
+  - adds regression coverage for `pending_runner_timestamp` and
+    `pending_runner_launch_after_ibkr_fetch_clear`.
+
+TDD / verification:
+
+- RED:
+  `python3 -m unittest support.scripts.tests.test_factor_claim_terminalization_audit.FactorClaimTerminalizationAuditTest.test_build_report_ignores_none_and_pending_run_root_sentinels -v`
+  - exit `1` before the parser patch.
+  - expected failure: `missing_run_roots` was `2` instead of `0`.
+- GREEN:
+  same focused test after the parser patch
+  - exit `0`.
+- Regression:
+  `python3 -m unittest support.scripts.tests.test_factor_claim_terminalization_audit -v > /tmp/ict-engine-full-audit-20260523-codex-refresh/factor_claim_audit_unittest_pending_sentinels.stdout 2> /tmp/ict-engine-full-audit-20260523-codex-refresh/factor_claim_audit_unittest_pending_sentinels.stderr`
+  - exit `0`, `15` tests passed.
+- `python3 -m py_compile support/scripts/factor_claim_terminalization_audit.py support/scripts/tests/test_factor_claim_terminalization_audit.py`
+  - exit `0`.
+- `git diff --check -- support/scripts/factor_claim_terminalization_audit.py support/scripts/tests/test_factor_claim_terminalization_audit.py`
+  - exit `0`.
+- `python3 support/scripts/factor_claim_terminalization_audit.py --compact --output /tmp/ict-engine-full-audit-20260523-codex-refresh/factor_claim_terminalization_after_pending_sentinels.json`
+  - exit `1`.
+  - current summary after patch: `active_claims=7`, `live_factor_processes=2`,
+    `missing_run_roots=1`, `terminalized_claims=95`, `total_claims=102`,
+    `promotion_allowed_true=0`, `trade_usable_true=0`.
+  - remaining attention includes active DUOL, XBI, TOMAC TOD, NTNX, USDCHF,
+    DYDX/APE, and NEO/QTUM lanes; live processes were NTNX wrapper and child
+    IBKR historical fetch at the audit moment.
+
+Decision:
+
+- The parser fix removes one deterministic false-positive class and keeps
+  claim/process hygiene more accurate for hot-plug pending runner claims.
+- It does not clear factor readiness. There are still active claims/live
+  processes, zero promotion/trade-usable positives, and release blockers.

@@ -111,7 +111,18 @@ run_root=/tmp/missing-run-root-for-test
         with tempfile.TemporaryDirectory() as repo_tmp, tempfile.TemporaryDirectory() as claims_tmp:
             repo_root = Path(repo_tmp)
             claims_dir = Path(claims_tmp)
-            for index, sentinel in enumerate(["none", "pending", "n/a", "na", "null", "-"]):
+            for index, sentinel in enumerate(
+                [
+                    "none",
+                    "pending",
+                    "pending_runner_timestamp",
+                    "pending_runner_launch_after_ibkr_fetch_clear",
+                    "n/a",
+                    "na",
+                    "null",
+                    "-",
+                ]
+            ):
                 (claims_dir / f"sentinel-{index}.claim").write_text(
                     f"""
 owner=codex
@@ -126,8 +137,8 @@ trade_usable=false
 
             report = build_report(claims_dir=claims_dir, repo_root=repo_root)
 
-            self.assertEqual(report["summary"]["total_claims"], 6)
-            self.assertEqual(report["summary"]["terminalized_claims"], 6)
+            self.assertEqual(report["summary"]["total_claims"], 8)
+            self.assertEqual(report["summary"]["terminalized_claims"], 8)
             self.assertEqual(report["summary"]["active_claims"], 0)
             self.assertEqual(report["summary"]["missing_run_roots"], 0)
             self.assertTrue(all(claim["run_root"] is None for claim in report["claims"]))

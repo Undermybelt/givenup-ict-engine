@@ -88,7 +88,8 @@ def _extract_bool(name: str, text: str) -> bool | None:
 def _resolved_run_root(value: str | None, root: Path) -> Path | None:
     if not value:
         return None
-    if str(value).strip().lower() in RUN_ROOT_SENTINELS:
+    normalized = str(value).strip().lower()
+    if normalized in RUN_ROOT_SENTINELS or normalized.startswith("pending_"):
         return None
     path = Path(value).expanduser()
     if not path.is_absolute():
