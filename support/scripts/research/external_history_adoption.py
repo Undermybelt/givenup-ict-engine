@@ -68,10 +68,26 @@ def build_analyze_command(symbol: str, state_dir: str, mapping: dict[str, str]) 
     )
 
 
+def build_workflow_status_command(
+    symbol: str,
+    state_dir: str,
+    profile_selector: str | None,
+) -> str:
+    parts = [
+        "cargo run --quiet -- workflow-status",
+        f"--symbol {symbol}",
+        f"--state-dir {shell_quote(state_dir)}",
+    ]
+    if profile_selector:
+        parts.append(f"--profile {profile_selector}")
+    parts.append("--agent")
+    return " ".join(parts)
+
+
 def build_factor_research_command(
     symbol: str,
     state_dir: str,
-    profile_selector: str,
+    profile_selector: str | None,
     mapping: dict[str, str],
     objective: str,
 ) -> str:
@@ -83,14 +99,65 @@ def build_factor_research_command(
         f"--objective {objective}",
         "--backend auto-quant",
         "--auto-quant-profile synthetic_ohlcv",
-        f"--profile {profile_selector}",
         f"--state-dir {shell_quote(state_dir)}",
         "--human",
     ]
+    if profile_selector:
+        parts.insert(6, f"--profile {profile_selector}")
     for timeframe, path in rank_timeframes(mapping):
         parts.append(f"--data-{timeframe} {shell_quote(path)}")
     parts.append(f"# primary_timeframe={primary_tf}")
     return " ".join(parts)
+
+
+def build_command_set(
+    workflow_symbol: str,
+    objective: str,
+    state_dir: str,
+    timeframe_inputs: dict[str, str],
+    profile_selector: str | None,
+) -> dict[str, str]:
+    return {
+        "workflow_status": build_workflow_status_command(
+            workflow_symbol, state_dir, profile_selector
+        ),
+        "analyze": build_analyze_command(workflow_symbol, state_dir, timeframe_inputs),
+        "factor_research": build_factor_research_command(
+            workflow_symbol,
+            state_dir,
+            profile_selector,
+            timeframe_inputs,
+            objective,
+        ),
+        "auto_quant_prepare": (
+            f"cargo run --quiet -- auto-quant-prepare --state-dir {shell_quote(state_dir)}"
+        ),
+        "auto_quant_adoption_review": (
+            f"cargo run --quiet -- auto-quant-adoption-review --symbol {workflow_symbol} "
+            f"--state-dir {shell_quote(state_dir)}"
+        ),
+    }
+
+
+def render_choice_shell_lines(command_choices: list[dict[str, Any]]) -> list[str]:
+    lines = ["#!/usr/bin/env bash", ""]
+    command_order = [
+        "workflow_status",
+        "analyze",
+        "factor_research",
+        "auto_quant_prepare",
+        "auto_quant_adoption_review",
+    ]
+    for choice in command_choices:
+        header = f"# {choice['choice_id']}"
+        if choice.get("recommended"):
+            header += " (recommended)"
+        lines.append(header)
+        lines.append(f"# {choice['summary']}")
+        for key in command_order:
+            lines.append(choice["suggested_commands"][key])
+        lines.append("")
+    return lines
 
 
 def build_adoption_bundle(
@@ -110,30 +177,44 @@ def build_adoption_bundle(
         timeframes=list(timeframe_inputs),
     )
     selected_profile = resolution["symbol_resolution"]["selected_profile"] or {}
+    command_profile_selector = selected_profile.get("selector") or profile_selector
     primary_tf, primary_path = choose_primary_timeframe(timeframe_inputs)
-    commands = {
-        "workflow_status": (
-            f"cargo run --quiet -- workflow-status --symbol {workflow_symbol} "
-            f"--state-dir {shell_quote(state_dir)} --profile {profile_selector} --agent"
-        ),
-        "analyze": build_analyze_command(workflow_symbol, state_dir, timeframe_inputs),
-        "factor_research": build_factor_research_command(
-            workflow_symbol,
-            state_dir,
-            profile_selector,
-            timeframe_inputs,
-            objective,
-        ),
-        "auto_quant_prepare": (
-            f"cargo run --quiet -- auto-quant-prepare --state-dir {shell_quote(state_dir)}"
-        ),
-        "auto_quant_adoption_review": (
-            f"cargo run --quiet -- auto-quant-adoption-review --symbol {workflow_symbol} "
-            f"--state-dir {shell_quote(state_dir)}"
-        ),
-    }
+    keep_zero_config_commands = build_command_set(
+        workflow_symbol,
+        objective,
+        state_dir,
+        timeframe_inputs,
+        None,
+    )
+    opt_in_commands = build_command_set(
+        workflow_symbol,
+        objective,
+        state_dir,
+        timeframe_inputs,
+        command_profile_selector,
+    )
+    selected_profile_name = selected_profile.get("display_name") or profile_selector
+    command_choices = [
+        {
+            "choice_id": "keep_zero_config",
+            "label": "Keep zero-config defaults",
+            "recommended": True,
+            "profile_selector": None,
+            "summary": "Stay on the generic public-default lane and use the normalized files only for this run.",
+            "suggested_commands": keep_zero_config_commands,
+        },
+        {
+            "choice_id": "reuse_saved_profile",
+            "label": "Reuse opt-in profile",
+            "recommended": False,
+            "profile_selector": command_profile_selector,
+            "summary": f"Reuse the optional profile {selected_profile_name} on commands that support --profile.",
+            "suggested_commands": opt_in_commands,
+        },
+    ]
     return {
-        "schema_version": "external-history-adoption/v1",
+        "schema_version": "external-history-adoption/v2",
+        "default_choice_id": "keep_zero_config",
         "market_key": resolution["symbol_resolution"]["market_key"],
         "workflow_symbol": workflow_symbol,
         "objective": objective,
@@ -150,7 +231,9 @@ def build_adoption_bundle(
         ],
         "data_catalog_summary": resolution["data_catalog"]["summary"],
         "dataset_contracts": resolution["data_catalog"]["datasets"],
-        "suggested_commands": commands,
+        "command_choices": command_choices,
+        "suggested_commands": keep_zero_config_commands,
+        "opt_in_suggested_commands": opt_in_commands,
     }
 
 
@@ -221,17 +304,7 @@ def main(argv: list[str] | None = None) -> int:
     _write_json(bundle_path, bundle)
     commands_path = output_dir / "suggested_commands.sh"
     commands_path.write_text(
-        "\n".join(
-            [
-                "#!/usr/bin/env bash",
-                bundle["suggested_commands"]["workflow_status"],
-                bundle["suggested_commands"]["analyze"],
-                bundle["suggested_commands"]["factor_research"],
-                bundle["suggested_commands"]["auto_quant_prepare"],
-                bundle["suggested_commands"]["auto_quant_adoption_review"],
-                "",
-            ]
-        ),
+        "\n".join(render_choice_shell_lines(bundle["command_choices"])),
         encoding="utf-8",
     )
     print(

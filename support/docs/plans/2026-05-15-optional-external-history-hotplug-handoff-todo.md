@@ -207,3 +207,32 @@ Outcome:
 - `win_rate_pct=80.0`
 - `profit_factor=1.5635`
 - `review_status=ready_for_external_execution`
+
+## 2026-05-22 Continuation - Dual-Lane Consumer Adoption Bundle
+
+Purpose:
+- keep the external-history lane opt-in and consumer-safe even when a personal
+  profile exists.
+
+What changed:
+- `support/scripts/research/external_history_adoption.py` now emits two explicit
+  command lanes:
+  - `keep_zero_config` (recommended)
+  - `reuse_saved_profile`
+- top-level `suggested_commands` now stay on the zero-config lane by default.
+- `opt_in_suggested_commands` and `command_choices` preserve the explicit
+  profile-reuse lane.
+- `support/scripts/research/market_data_resolver.py` now exposes
+  `selected_profile.selector`, so emitted `--profile` commands use the real repo
+  selector `thrill3r-nq-external-history-v1` instead of the invalid underscore
+  profile id.
+
+Verification:
+- `python3 -m unittest support/scripts/research/tests/test_market_data_resolver.py support/scripts/research/tests/test_external_history_adoption.py -v`
+  - passed `6` tests
+- real smoke under `/tmp/ict-engine-external-history-adoption-rRPMTB`
+  confirmed:
+  - `default_choice_id=keep_zero_config`
+  - shell sections `# keep_zero_config (recommended)` and
+    `# reuse_saved_profile`
+  - opt-in commands use `--profile thrill3r-nq-external-history-v1`

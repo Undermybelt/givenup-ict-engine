@@ -79,6 +79,10 @@ class MarketDataResolverTests(unittest.TestCase):
             bundle["symbol_resolution"]["selected_profile"]["profile_id"],
             "thrill3r_nq_external_history_v1",
         )
+        self.assertEqual(
+            bundle["symbol_resolution"]["selected_profile"]["selector"],
+            "thrill3r-nq-external-history-v1",
+        )
         historical_entry = next(
             entry
             for entry in bundle["data_catalog"]["datasets"]
