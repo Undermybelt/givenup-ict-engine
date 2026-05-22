@@ -7172,3 +7172,94 @@ Next action:
 - Commit this audit-tooling fix as a narrow slice after staged diff checks.
 - Continue the broader goal by reading the TOMAC repair terminal artifacts when
   they exist; do not infer a factor decision from the live process alone.
+
+## 2026-05-23 continuation - 05:17 CST bare search readback guard
+
+Follow-up repair:
+
+- A bare `rg`/`grep` process can contain factor runner markers inside its search
+  pattern while it is only a readback command.
+- Added a regression test for this case.
+- Updated the live-process classifier to exclude commands starting with `rg`,
+  `grep`, `egrep`, or `fgrep` from live factor runner counts.
+
+Fresh verification:
+
+- Target regression:
+  `python3 -m unittest support.scripts.tests.test_factor_claim_terminalization_audit.FactorClaimTerminalizationAuditTest.test_live_process_classifier_ignores_bare_search_readback_commands -v`
+  passed.
+- Full factor-claim audit tests:
+  `python3 -m unittest support.scripts.tests.test_factor_claim_terminalization_audit -v`
+  passed `11` tests.
+- Compile:
+  `python3 -m py_compile support/scripts/factor_claim_terminalization_audit.py support/scripts/tests/test_factor_claim_terminalization_audit.py`
+  passed.
+- Script manifest:
+  `python3 support/scripts/check_script_manifest.py` passed with `entries=21`.
+- Whitespace:
+  `git diff --check -- support/scripts/factor_claim_terminalization_audit.py support/scripts/tests/test_factor_claim_terminalization_audit.py`
+  passed.
+
+Fresh post-commit audit:
+
+- `/tmp/ict-engine-factor-claims-postcommit-20260523.json` exited `1`.
+- `summary.status=needs_attention`.
+- `active_claims=2`.
+- `terminalized_claims=61`.
+- `total_claims=63`.
+- `missing_run_roots=0`.
+- `live_factor_processes=1`.
+- `promotion_allowed_true=0`.
+- `trade_usable_true=0`.
+- `blocking_reasons=["active_claims","live_factor_processes"]`.
+
+Current blockers:
+
+- ASTS 1m MTF Gate 1 active claim remains open.
+- DASH 1m MTF Gate 1 active claim remains open.
+- TOMAC PSAR/Aroon-CCI repair PID `93988` remains live without
+  `checks/01_full_repair.exit`.
+- No current evidence supports `promotion_allowed=true` or `trade_usable=true`.
+
+Next action:
+
+- Commit this classifier follow-up as a second narrow slice.
+- Continue by terminalizing/externalizing ASTS and DASH from their own evidence,
+  and reading TOMAC terminal artifacts when the live repair exits.
+
+## 2026-05-23 continuation - 05:19 CST post-guard drift readback
+
+Fresh audit after the bare-search guard:
+
+- `/tmp/ict-engine-factor-claims-post-bare-search-guard-20260523.json` exited
+  `1`.
+- `summary.status=needs_attention`.
+- `active_claims=4`.
+- `terminalized_claims=61`.
+- `total_claims=65`.
+- `missing_run_roots=1`.
+- `live_factor_processes=5`.
+- `promotion_allowed_true=0`.
+- `trade_usable_true=0`.
+- `blocking_reasons=["active_claims","live_factor_processes","missing_run_roots"]`.
+
+Current active claims:
+
+- ASTS 1m MTF Gate 1.
+- FTNT 15m cybersecurity PDA/MTF Gate 1, with missing run root.
+- DASH 1m MTF Gate 1.
+- TOMAC PSAR/Aroon-CCI repair readback.
+
+Current live processes:
+
+- ASTS Gate 1 runner.
+- DASH Gate 1 runner.
+- Two `fetch_external.py` provider child processes.
+- TOMAC PSAR/Aroon-CCI repair PID `93988`, still missing
+  `checks/01_full_repair.exit`.
+
+Next action:
+
+- Commit the bare-search readback guard as tooling only.
+- Keep the broader audit goal open; do not promote or terminalize these live
+  claims without their own terminal artifacts.

@@ -230,6 +230,15 @@ trade_usable=false
 
         self.assertFalse(_is_live_factor_command(command))
 
+    def test_live_process_classifier_ignores_bare_search_readback_commands(self) -> None:
+        command = (
+            "rg -i run_tomac_psar_arooncci|tomac-psar|run_ibkr_|"
+            "auto-quant-agent-material|fetch_external\\.py|prepare_external\\.py|"
+            "factor-research|01_full_repair"
+        )
+
+        self.assertFalse(_is_live_factor_command(command))
+
     def test_format_report_compact_keeps_only_attention_claim_summaries(self) -> None:
         full_report = {
             "schema_version": "factor-claim-terminalization-audit/v1",

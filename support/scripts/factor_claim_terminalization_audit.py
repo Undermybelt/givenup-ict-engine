@@ -297,6 +297,8 @@ def _is_live_factor_command(command: str) -> bool:
 
 
 def _looks_like_readback_command(command: str) -> bool:
+    if re.match(r"^(?:\S*/)?(?:rg|grep|egrep|fgrep)\s", command.strip()):
+        return True
     if "ps -axo" in command and ("| rg" in command or " rg " in command or "| grep" in command):
         return True
     readback_markers = ("ps -axo", " rg ", " tail -n", " find ")
