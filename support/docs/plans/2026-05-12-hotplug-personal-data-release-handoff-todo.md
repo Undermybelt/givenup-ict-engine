@@ -4246,3 +4246,52 @@ Decision:
   factor exists.
 - No Board A/B dirty work, mirror push, tag, GitHub Release, practical-trading
   promotion, or `update_goal complete` is authorized from this state.
+
+### 2026-05-23 13:38-13:39 CST TOMAC downstream terminal readback clears live-process blocker
+
+TOMAC wrapper completion:
+
+- Wrapper root:
+  `/tmp/ict-engine-tomac-tod-component-pair-guard-overlay-20260523T-resume`.
+- Wrapper exit file:
+  `/tmp/ict-engine-tomac-tod-component-pair-guard-overlay-20260523T-resume/checks/05_downstream_wrapper.exit`
+  contains `0`.
+- Wrapper stdout reports downstream decision file:
+  `/tmp/ict-engine-tomac-tod-component-pair-guard-downstream-20260523T131439+0800/checks/downstream_metrics.json`.
+- No child process remained under wrapper PID `11691` after completion.
+
+Downstream decision:
+
+- Summary:
+  `/tmp/ict-engine-tomac-tod-component-pair-guard-downstream-20260523T131439+0800/summaries/terminal_decision_summary.md`.
+- Decision: `component_pair_guard_downstream_fail_closed_or_incomplete`.
+- All downstream command exits are zero through final export:
+  `all_command_exits_zero=True`.
+- Exact branch survived and path-ranker validation is visible, but execution
+  remains closed: `execution_candidate_actionable=False`,
+  `execution_candidate_status=no_trade`, `path_ranker_visible=True`,
+  `path_ranker_used=False`, `validation_ready=True`.
+- Validation counts remain below production/observation admission:
+  `mature=3`, `history=3117`, `raw_scored=0`, `production=0`,
+  `observation=0`.
+- Promotion/trading readback is still negative: `promotion_allowed=False`,
+  `trade_usable=False`, `extension_complete=False`.
+
+Fresh factor-claim audit after TOMAC exit:
+
+- Audit:
+  `/tmp/ict-engine-factor-claims-after-tomac-exit-20260523T133909+0800.json`
+  exited `0`.
+- `summary.status=pass`, `active_claims=0`, `missing_run_roots=0`,
+  `live_factor_processes=0`, `terminalized_claims=136`, `total_claims=136`.
+- `promotion_allowed_true=0` and `trade_usable_true=0`.
+
+Decision:
+
+- The live TOMAC downstream process blocker is cleared, and factor-claim
+  terminalization now passes.
+- Factor promotion and practical trading are still not authorized because no
+  claim reports `promotion_allowed_true` or `trade_usable_true`.
+- Release remains separate and still requires a clean selected-source audit plus
+  explicit operator authorization before source push, mirror push, tag, or
+  GitHub Release.
