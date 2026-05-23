@@ -4075,3 +4075,56 @@ Release decision:
   zero-config smoke, and privacy scan pass from the selected source.
 - No mirror `main` push, tag creation, GitHub Release, practical-trading
   promotion, or `update_goal complete` is authorized from this state.
+
+### 2026-05-23 10:24-10:26 CST selected-source export passes tests and smoke, release still gated
+
+Selected-source commits now include:
+
+- `4e388b86 docs: record candidate pack branch path repair`.
+- `f0281630 fix: resolve claim run roots from claim repo`.
+
+Clean export evidence:
+
+- Export root: `/tmp/ict-engine-v015-release-export-20260523T101600+0800`.
+- Export included the candidate-pack branch-path metadata and the `f0281630`
+  claim-root fix doc.
+- `cargo fmt --check` passed.
+- `cargo clippy --all-targets -- -D warnings` passed.
+- `cargo test` passed: `src/lib.rs` `1166` passed, `src/main.rs` `327`
+  passed, integration tests passed, doc tests `0` passed / `0` failed.
+
+Zero-config smoke evidence:
+
+- Smoke root: `/tmp/ict-engine-v015-release-smoke-20260523T102127+0800`.
+- Commands run from the clean export: `provider-status --compact`,
+  `workflow-status --human`, `analyze --demo --human`, refreshed
+  `workflow-status --agent`, `pre-bayes-status --output-format json`, and
+  `policy-training-status --output-format agent` against a `/tmp` state dir.
+- Smoke exited `0`; stdout had `1178` lines and stderr had `0` lines.
+- Privacy scan found no `/Users/`, `/private/tmp`, `Downloads`, Homebrew path,
+  secret-like token, key, password, or private-key marker.
+- The only path hits were `12` expected explicit `/tmp` smoke state paths in
+  recommended commands and generated summary paths.
+
+Postexport audits:
+
+- `/tmp/ict-engine-factor-claims-continuation-postexport-debug-20260523T102550+0800.json`
+  exited `0`; `summary.status=pass`, `active_claims=0`,
+  `missing_run_roots=0`, `live_factor_processes=0`,
+  `terminalized_claims=129`, `total_claims=129`,
+  `promotion_allowed_true=0`, `trade_usable_true=0`.
+- `/tmp/ict-engine-release-readiness-continuation-postexport-*.json` still exits
+  `1`; `summary.status=needs_fix` with unresolved gates
+  `worktree_clean_for_release` and `source_origin_matches_selected_source`.
+- Postexport release audit `HEAD=f0281630ef61722786984a687808a0380fc28ec1`;
+  source is `116` commits ahead of `origin/main` and still not reconciled.
+
+Release decision:
+
+- The clean-export test blocker is repaired for the selected source, and the
+  zero-config smoke/privacy gate has fresh passing evidence.
+- Release is still not ready because the worktree is not release-clean and the
+  selected source has not been reconciled with `origin/main` / release mirror
+  publication flow.
+- No mirror `main` push, tag creation, GitHub Release, practical-trading
+  promotion, or `update_goal complete` is authorized from this state.

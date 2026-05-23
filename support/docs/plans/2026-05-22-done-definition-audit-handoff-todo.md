@@ -1850,6 +1850,54 @@ Decision:
 - Keep the goal active; no mirror release, tag, push, factor promotion, or
   `update_goal complete` is authorized from this state.
 
+### 2026-05-23 10:24-10:26 CST Clean Export Repaired, Done Definition Still Not Completion
+
+Selected-source clean export:
+
+- Export root: `/tmp/ict-engine-v015-release-export-20260523T101600+0800`.
+- Selected source includes `4e388b86` candidate-pack branch-path repair and
+  `f0281630` claim-root resolution repair.
+- `cargo fmt --check` passed.
+- `cargo clippy --all-targets -- -D warnings` passed.
+- `cargo test` passed: `src/lib.rs` `1166` passed, `src/main.rs` `327`
+  passed, integration tests passed, doc tests `0` passed / `0` failed.
+
+Zero-config smoke and privacy:
+
+- Smoke root: `/tmp/ict-engine-v015-release-smoke-20260523T102127+0800`.
+- Zero-config consumer command chain exited `0`; stdout had `1178` lines and
+  stderr had `0` lines.
+- Privacy scan found no `/Users/`, `/private/tmp`, `Downloads`, Homebrew path,
+  secret-like token, key, password, or private-key marker.
+- The only path hits were `12` expected `/tmp` smoke state paths in recommended
+  commands and generated summary paths.
+
+Fresh postexport factor-claim audit:
+
+- `/tmp/ict-engine-factor-claims-continuation-postexport-debug-20260523T102550+0800.json`
+  exited `0`.
+- `summary.status=pass`.
+- `active_claims=0`, `missing_run_roots=0`, `live_factor_processes=0`.
+- `terminalized_claims=129`, `total_claims=129`.
+- `promotion_allowed_true=0`, `trade_usable_true=0`.
+
+Fresh postexport release-readiness audit:
+
+- `/tmp/ict-engine-release-readiness-continuation-postexport-*.json` exited `1`.
+- `summary.status=needs_fix`.
+- Unresolved gates remain `worktree_clean_for_release` and
+  `source_origin_matches_selected_source`.
+- `HEAD=f0281630ef61722786984a687808a0380fc28ec1`; source is `116` commits
+  ahead of `origin/main`.
+
+Decision:
+
+- The clean-export full-test blocker is repaired, but Done Definition remains
+  incomplete because release publication source/origin reconciliation is still
+  gated and zero factors are promotable/trade-usable.
+- Keep the goal active; no mirror release, tag, push, factor promotion, or
+  `update_goal complete` is authorized from this state.
+
 ### 2026-05-23 09:26 CST Claim Hygiene Clean Again, Done Definition Still Not Completion
 
 Fresh factor-claim audit:

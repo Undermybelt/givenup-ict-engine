@@ -1791,6 +1791,39 @@ Actionability:
 - Do not release, tag, push, promote, describe any factor as trade-usable, or
   call `update_goal complete` from this state.
 
+## 2026-05-23 10:26 CST Postexport Claim Hygiene Clean, Still Zero Practical Factors
+
+Fresh postexport factor-claim audit:
+
+- `/tmp/ict-engine-factor-claims-continuation-postexport-debug-20260523T102550+0800.json`
+  exited `0`.
+- `summary.status=pass`.
+- `active_claims=0`.
+- `terminalized_claims=129`.
+- `total_claims=129`.
+- `missing_run_roots=0`.
+- `live_factor_processes=0`.
+- `promotion_allowed_true=0`.
+- `trade_usable_true=0`.
+- `next_action="no claim terminalization blockers found"`.
+
+Release-only evidence from the selected source:
+
+- Clean export root: `/tmp/ict-engine-v015-release-export-20260523T101600+0800`.
+- Zero-config smoke root: `/tmp/ict-engine-v015-release-smoke-20260523T102127+0800`.
+- Clean export `fmt`, Clippy, and full `cargo test` passed.
+- Zero-config smoke exited `0` and the privacy scan found no private home paths
+  or secret-like values; only expected `/tmp` smoke state paths were present.
+
+Actionability:
+
+- Claim/process hygiene is clean again in this snapshot.
+- The practical-factor objective remains open because
+  `promotion_allowed_true=0` and `trade_usable_true=0` across all audited
+  claims, including the candidate-pack metadata repair lane.
+- Do not release, tag, push, promote, describe any factor as trade-usable, or
+  call `update_goal complete` from this state.
+
 ## 2026-05-23 09:58 CST Claim Hygiene Clean, Release Export Found Data-Slice Blocker
 
 Fresh factor-claim audit:
