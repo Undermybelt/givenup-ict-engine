@@ -4217,3 +4217,32 @@ Release decision:
 - Release is still not ready from this shared checkout. It still requires a
   clean selected-source audit after this retarget commit and explicit operator
   authorization before any source push, mirror push, tag, or GitHub Release.
+
+### 2026-05-23 13:18 CST stale factor-claim terminalization readback
+
+Fresh factor claim readback after terminalizing stale current-agent claim files:
+
+- Updated only `/tmp` claim files, not repo Board A/B docs:
+  - `/tmp/ict-engine-agent-claims/board-b-factor-refinement/20260523T-current-codex-ibkr-amd30m-existing-downstream-terminalization.claim`
+    now points to the already recorded AMD 30m downstream fail-closed row.
+  - `/tmp/ict-engine-agent-claims/board-b-factor-refinement/20260523T121900+0800-codex-ibkr-xlp-consumer-staples-mass-index-reversal-1m-mtf-gate1.claim`
+    now points to the later terminalized XLP Mass Index exact Gate 1 claim and
+    terminal metrics.
+- Audit:
+  `/tmp/ict-engine-factor-claims-after-stale-claim-terminalization-20260523T131817+0800.json`
+  exited `1` with `summary.status=needs_attention`.
+- Improvement: `active_claims=0`, `terminalized_claims=136`, `total_claims=136`,
+  and `missing_run_roots=0`.
+- Remaining blocker: `live_factor_processes=1`, the TOMAC TOD component-pair
+  downstream wrapper under
+  `/tmp/ict-engine-tomac-tod-component-pair-guard-overlay-20260523T-resume`.
+- Factor promotion readback is still negative:
+  `promotion_allowed_true=0`, `trade_usable_true=0`.
+
+Decision:
+
+- The stale claim-file blocker is cleared, but factor closure is still not
+  proven while the TOMAC downstream process is live and no promotable/trade-usable
+  factor exists.
+- No Board A/B dirty work, mirror push, tag, GitHub Release, practical-trading
+  promotion, or `update_goal complete` is authorized from this state.
