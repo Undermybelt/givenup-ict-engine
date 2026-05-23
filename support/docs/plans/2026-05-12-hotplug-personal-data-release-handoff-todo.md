@@ -4334,3 +4334,65 @@ Decision:
 - Publishing still requires explicit operator authorization for the exact source
   push or clean-export publication path, plus mirror push, tag, and GitHub
   Release actions. None is authorized from this handoff state.
+
+### 2026-05-23 13:45-13:53 CST current HEAD v0.1.7 clean release verification
+
+Fresh factor-claim audit:
+
+- Audit:
+  `/tmp/ict-engine-factor-claims-current-20260523T134520+0800.json`
+  exited `0`.
+- `summary.status=pass`, `active_claims=0`, `missing_run_roots=0`,
+  `live_factor_processes=0`, `terminalized_claims=136`, `total_claims=136`.
+- `promotion_allowed_true=0` and `trade_usable_true=0`.
+
+Current-HEAD clean release-readiness audit:
+
+- Detached worktree:
+  `/tmp/ict-engine-release-clean-head-20260523T134535+0800` at
+  `HEAD=877bd9167479a79560e596bd52648a14ac2d3ad8`.
+- Audit:
+  `/tmp/ict-engine-release-readiness-clean-head-20260523T134535+0800.json`
+  exited `1`.
+- Passed gates: `worktree_clean_for_release`, `cargo_release_policy`,
+  `release_docs_fresh_for_selected_tag`, and `release_version_tag_available`.
+- `v0.1.7` remains available in the release mirror; known tags are `v0.0.1`
+  through `v0.1.6`.
+- Only unresolved gate: `source_origin_matches_selected_source`.
+- Source/origin readback: selected `HEAD=877bd9167479a79560e596bd52648a14ac2d3ad8`,
+  `origin/main=4406454de95d40551acfcb573e3a4f68bf189e0b`,
+  `release_mirror_main=e6a8e62826692c645303ba3fdc1d43790a048761`,
+  `source_ahead_of_origin=6`, `source_behind_origin=0`.
+
+Clean-worktree release verification:
+
+- `cargo fmt --check` passed.
+- `cargo check --locked` passed for `ict-engine v0.1.7`.
+- Zero-config smoke root:
+  `/tmp/ict-engine-v017-smoke-20260523T134618+0800`.
+- Zero-config smoke commands all exited `0`:
+  `provider-status --compact`, `analyze --symbol DEMO --demo --human`, and
+  `workflow-status --symbol DEMO --refresh --agent`.
+- Smoke privacy scan found no `/Users/`, `Downloads`, or common token/key
+  patterns in smoke output files.
+- Initial parallel `cargo clippy --locked --all-targets -- -D warnings` and
+  `cargo test --locked` attempts hit host `No space left on device` while
+  writing build/test artifacts.
+- Safe temp cleanup performed: removed older current-lane release worktree
+  `/tmp/ict-engine-release-clean-head-20260523T134219+0800`, ran `cargo clean`
+  inside `/tmp/ict-engine-release-clean-head-20260523T134535+0800`, and freed
+  `5.5GiB` from that target directory; free space recovered to about `21GiB`,
+  then `44GiB` before final test rerun.
+- Sequential rerun passed:
+  `cargo clippy --locked --all-targets -- -D warnings`.
+- Sequential rerun passed:
+  `cargo test --locked` with all unit/integration/doc tests green.
+
+Decision:
+
+- Current selected source has clean release-quality evidence for `v0.1.7`.
+- Release is still not authorized or complete because source/origin alignment is
+  unresolved and no operator permission has been given for source push, clean
+  export publication, mirror push, tag, or GitHub Release.
+- Factor promotion/trading remains explicitly negative: no promotable or
+  trade-usable factor is proven by the claim audit.
