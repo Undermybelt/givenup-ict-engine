@@ -3476,7 +3476,7 @@ fn build_analyze_report(input: BuildAnalyzeReportInput<'_>) -> Result<AnalyzeRep
         .to_string();
     let (current_hybrid_age_bars, historical_hybrid_regime_ages) =
         hybrid_regime_duration_context(&previous_runs, &current_hybrid_label);
-    let hybrid_regime_packet = build_hybrid_regime_packet(
+    let mut hybrid_regime_packet = build_hybrid_regime_packet(
         Some(&htf_features),
         &ltf_features,
         None,
@@ -3583,6 +3583,11 @@ fn build_analyze_report(input: BuildAnalyzeReportInput<'_>) -> Result<AnalyzeRep
         }
     }
     stage_trace.event("build_analyze_report:pre_bayes_filter_ready");
+    append_rooted_branch_pda_execution_context(
+        &mut hybrid_regime_packet,
+        &pre_bayes_evidence_filter,
+        pda_sequence_summary.as_ref(),
+    );
 
     let evidence = trade_evidence_from_pre_bayes_filter(network, &pre_bayes_evidence_filter)?;
     let base_entry_quality = infer_entry_quality(network, &evidence)?;
@@ -4896,6 +4901,78 @@ fn order_block_distance_to_price(ob: &ict_engine::types::OrderBlock, price: f64)
     ((ob.high + ob.low) / 2.0 - price).abs()
 }
 
+fn append_rooted_branch_pda_execution_context(
+    hybrid_regime: &mut RegimeSegmentationPacket,
+    pre_bayes_filter: &PreBayesEvidenceFilter,
+    pda_sequence_summary: Option<&ict_engine::pda_sequence::PdaSequenceArtifactSummary>,
+) {
+    if !hybrid_regime
+        .evidence
+        .iter()
+        .any(|line| line == "pda_hybrid_alignment=false")
+    {
+        return;
+    }
+    let branch_path = pre_bayes_filter
+        .evidence_assignments
+        .get("regime_profit_branch_path")
+        .map(String::as_str)
+        .unwrap_or_default();
+    let main_regime = pre_bayes_filter
+        .evidence_assignments
+        .get("main_regime")
+        .map(String::as_str)
+        .or_else(|| branch_path.split(" -> ").next())
+        .unwrap_or_default();
+    if branch_path.is_empty() || main_regime.is_empty() {
+        return;
+    }
+    let pda_family = pda_sequence_summary
+        .and_then(|summary| summary.primary_cluster_family.as_deref())
+        .unwrap_or_default();
+    let pda_direction_confirmed = pda_sequence_summary
+        .map(|summary| {
+            matches!(
+                summary.primary_cluster_direction.as_deref(),
+                Some("bull") | Some("bear")
+            ) && summary
+                .primary_cluster_directional_confirmation_ratio
+                .unwrap_or_default()
+                > 0.0
+        })
+        .unwrap_or(false);
+    let branch_lower = branch_path.to_ascii_lowercase();
+    let main_lower = main_regime.to_ascii_lowercase();
+    let is_session_orthogonal = matches!(main_regime, "SessionRhythm" | "TimeOfDaySeasonality")
+        || branch_path.contains("SessionRhythm -> TimeOfDaySeasonality");
+    let is_trend_pullback_supplement = (main_lower.contains("trend")
+        || branch_path.starts_with("Trend"))
+        && pda_family == "trend"
+        && pda_direction_confirmed
+        && ["pullback", "reclaim", "mss", "cisd"]
+            .iter()
+            .any(|token| branch_lower.contains(token));
+
+    if is_session_orthogonal {
+        hybrid_regime
+            .evidence
+            .push("pda_hybrid_alignment_context=orthogonal_root_session_rhythm".to_string());
+        hybrid_regime
+            .evidence
+            .push(format!("rooted_branch_main_regime={main_regime}"));
+    } else if is_trend_pullback_supplement {
+        hybrid_regime
+            .evidence
+            .push("pda_hybrid_alignment_context=trend_pullback_structure_supplement".to_string());
+        hybrid_regime
+            .evidence
+            .push("trend_pullback_structure_evidence=mss_cisd_or_reclaim".to_string());
+        hybrid_regime
+            .evidence
+            .push(format!("rooted_branch_main_regime={main_regime}"));
+    }
+}
+
 #[allow(clippy::too_many_arguments)]
 fn build_regime_bayesian_section(
     hmm_state: &str,
@@ -5494,6 +5571,106 @@ mod tests {
             output_format,
             refresh_workflow_snapshot,
         )
+    }
+
+    fn pda_summary(
+        family: &str,
+        direction: Option<&str>,
+        ratio: f64,
+    ) -> ict_engine::pda_sequence::PdaSequenceArtifactSummary {
+        ict_engine::pda_sequence::PdaSequenceArtifactSummary {
+            method: "pda_sequence_analysis_v2".to_string(),
+            primary_cluster: Some(0),
+            primary_cluster_label: Some("cluster_0".to_string()),
+            primary_cluster_family: Some(family.to_string()),
+            primary_cluster_direction: direction.map(str::to_string),
+            primary_cluster_directional_confirmation_ratio: Some(ratio),
+            primary_cluster_confidence: Some(0.92),
+            consistency_ratio: 0.82,
+            ensemble_mean_confidence: 0.85,
+            valid_sessions: 8,
+            total_sessions: 10,
+            kmer_k: 2,
+        }
+    }
+
+    #[test]
+    fn rooted_branch_pda_context_marks_session_rhythm_as_orthogonal() {
+        let mut hybrid = RegimeSegmentationPacket {
+            evidence: vec!["pda_hybrid_alignment=false".to_string()],
+            ..RegimeSegmentationPacket::default()
+        };
+        let filter = PreBayesEvidenceFilter {
+            evidence_assignments: BTreeMap::from([
+                (
+                    "regime_profit_branch_path".to_string(),
+                    "SessionRhythm -> TimeOfDaySeasonality -> BalancedAdaptiveSlotPortfolio -> tomac_tod_balanced_adaptive_slot_portfolio_exact_v1".to_string(),
+                ),
+                ("main_regime".to_string(), "SessionRhythm".to_string()),
+            ]),
+            ..PreBayesEvidenceFilter::default()
+        };
+        let pda = pda_summary("trend", Some("bull"), 0.25);
+
+        append_rooted_branch_pda_execution_context(&mut hybrid, &filter, Some(&pda));
+
+        assert!(hybrid
+            .evidence
+            .contains(&"pda_hybrid_alignment_context=orthogonal_root_session_rhythm".to_string()));
+    }
+
+    #[test]
+    fn rooted_branch_pda_context_does_not_accept_generic_regime_mismatch() {
+        let mut hybrid = RegimeSegmentationPacket {
+            evidence: vec!["pda_hybrid_alignment=false".to_string()],
+            ..RegimeSegmentationPacket::default()
+        };
+        let filter = PreBayesEvidenceFilter {
+            evidence_assignments: BTreeMap::from([
+                (
+                    "regime_profit_branch_path".to_string(),
+                    "RangeConsolidation -> WideRange -> fade_failure_v1".to_string(),
+                ),
+                ("main_regime".to_string(), "RangeConsolidation".to_string()),
+            ]),
+            ..PreBayesEvidenceFilter::default()
+        };
+        let pda = pda_summary("trend", Some("bull"), 0.25);
+
+        append_rooted_branch_pda_execution_context(&mut hybrid, &filter, Some(&pda));
+
+        assert!(!hybrid
+            .evidence
+            .iter()
+            .any(|line| line.starts_with("pda_hybrid_alignment_context=")));
+    }
+
+    #[test]
+    fn rooted_branch_pda_context_marks_trend_pullback_structure_as_supplemental() {
+        let mut hybrid = RegimeSegmentationPacket {
+            evidence: vec!["pda_hybrid_alignment=false".to_string()],
+            ..RegimeSegmentationPacket::default()
+        };
+        let filter = PreBayesEvidenceFilter {
+            evidence_assignments: BTreeMap::from([
+                (
+                    "regime_profit_branch_path".to_string(),
+                    "TrendExpansion -> PullbackContinuation -> mss_cisd_pullback_reclaim -> trend_pullback_reclaim_v1".to_string(),
+                ),
+                ("main_regime".to_string(), "TrendExpansion".to_string()),
+            ]),
+            ..PreBayesEvidenceFilter::default()
+        };
+        let pda = pda_summary("trend", Some("bull"), 0.25);
+
+        append_rooted_branch_pda_execution_context(&mut hybrid, &filter, Some(&pda));
+
+        assert!(hybrid.evidence.contains(
+            &"pda_hybrid_alignment_context=trend_pullback_structure_supplement".to_string()
+        ));
+        assert!(hybrid
+            .evidence
+            .contains(&"trend_pullback_structure_evidence=mss_cisd_or_reclaim".to_string()));
     }
 
     fn texture_test_candle(ts: i64, open: f64, high: f64, low: f64, close: f64) -> Candle {

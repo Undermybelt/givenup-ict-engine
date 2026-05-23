@@ -1122,6 +1122,38 @@ pub fn structural_feedback_counts_as_executed_trade(record: &FeedbackRecord) -> 
         .unwrap_or(true)
 }
 
+pub fn structural_feedback_is_infrastructure_negative(record: &FeedbackRecord) -> bool {
+    let outcome_or_pnl_is_negative = matches!(
+        structural_feedback_learning_outcome(record),
+        Some(StructuralFeedbackLearningOutcome::Negative)
+    );
+    if !outcome_or_pnl_is_negative {
+        return false;
+    }
+    let Some(refs) = record.structural_feedback.as_ref() else {
+        return false;
+    };
+    let evidence = format!(
+        "{} {}",
+        refs.exit_reason.as_deref().unwrap_or_default(),
+        refs.notes.as_deref().unwrap_or_default()
+    )
+    .to_ascii_lowercase();
+    [
+        "infrastructure_negative_sample",
+        "provider_authority",
+        "runtime_missing_dep",
+        "missing_dependency",
+        "zero_provider_rows",
+        "provider_failure",
+        "provider_reachability",
+        "bootstrap_failure",
+        "aq_bootstrap_failure",
+    ]
+    .iter()
+    .any(|needle| evidence.contains(needle))
+}
+
 pub fn structural_feedback_trade_outcome_proxy(record: &FeedbackRecord) -> Option<String> {
     use StructuralFeedbackLearningOutcome::{Negative, Neutral, Positive};
 
@@ -1185,6 +1217,13 @@ pub fn structural_feedback_learning_semantics(
     if !structural_feedback_counts_as_executed_trade(record) {
         return StructuralFeedbackLearningSemantics {
             credit_class: "no_credit_not_followed".to_string(),
+            success_credit: 0.0,
+            observation_weight: 0.0,
+        };
+    }
+    if structural_feedback_is_infrastructure_negative(record) {
+        return StructuralFeedbackLearningSemantics {
+            credit_class: "no_credit_infrastructure_negative".to_string(),
             success_credit: 0.0,
             observation_weight: 0.0,
         };
@@ -4147,6 +4186,9 @@ impl LearningState {
             if structural_feedback_outcome_is_unresolved(&record.realized_outcome) {
                 continue;
             }
+            if structural_feedback_is_infrastructure_negative(record) {
+                continue;
+            }
             let Some(refs) = record.structural_feedback.as_ref() else {
                 continue;
             };
@@ -6797,6 +6839,65 @@ mod tests {
             .expect("path prior state");
         assert!(path.weighted_failure_mass > 0.0);
         assert!(path.smoothed_prior < 0.5);
+    }
+
+    #[test]
+    fn test_negative_boundary_sample_trains_same_rooted_branch_as_failure_evidence() {
+        let mut feedback = sample_feedback();
+        feedback.source = "structural_feedback_submission".to_string();
+        feedback.realized_outcome = "loss".to_string();
+        feedback.pnl = -0.015;
+        feedback.structural_feedback = Some(StructuralFeedbackRefs {
+            protocol_version: "structural-feedback-v1".to_string(),
+            recommendation_id: "rec-negative-boundary".to_string(),
+            recommended_at: "2026-04-30T00:00:00Z".to_string(),
+            node_id: "TrendExpansion".to_string(),
+            branch_id: "TrendExpansion -> PullbackContinuation".to_string(),
+            scenario_id: "mss_cisd_pullback_reclaim".to_string(),
+            path_id: "TrendExpansion -> PullbackContinuation -> mss_cisd_pullback_reclaim -> trend_pullback_reclaim_v1".to_string(),
+            followed_path: true,
+            exit_reason: Some("negative_boundary_sample:trend_pullback_do_not_trade".to_string()),
+            notes: Some("negative_sample_type=trend_pullback_do_not_trade".to_string()),
+        });
+
+        let mut state = LearningState::default();
+        state.apply_structural_feedback(&[feedback]);
+
+        let path = state
+            .structural_prior_state
+            .paths
+            .get("TrendExpansion -> PullbackContinuation -> mss_cisd_pullback_reclaim -> trend_pullback_reclaim_v1")
+            .expect("negative boundary path prior state");
+        assert_eq!(path.observations, 1);
+        assert_eq!(path.followed_count, 1);
+        assert!(path.weighted_failure_mass > 0.0);
+        assert!(path.smoothed_prior < 0.5);
+    }
+
+    #[test]
+    fn test_infrastructure_negative_sample_does_not_train_factor_boundary() {
+        let mut feedback = sample_feedback();
+        feedback.source = "structural_feedback_submission".to_string();
+        feedback.realized_outcome = "loss".to_string();
+        feedback.pnl = 0.0;
+        feedback.structural_feedback = Some(StructuralFeedbackRefs {
+            protocol_version: "structural-feedback-v1".to_string(),
+            recommendation_id: "rec-infra-negative".to_string(),
+            recommended_at: "2026-04-30T00:00:00Z".to_string(),
+            node_id: "TrendExpansion".to_string(),
+            branch_id: "TrendExpansion -> PullbackContinuation".to_string(),
+            scenario_id: "mss_cisd_pullback_reclaim".to_string(),
+            path_id: "TrendExpansion -> PullbackContinuation -> mss_cisd_pullback_reclaim -> trend_pullback_reclaim_v1".to_string(),
+            followed_path: true,
+            exit_reason: Some("infrastructure_negative_sample:provider_authority".to_string()),
+            notes: Some("negative_sample_type=provider_authority".to_string()),
+        });
+
+        let mut state = LearningState::default();
+        state.apply_structural_feedback(&[feedback]);
+
+        assert!(state.structural_prior_state.paths.is_empty());
+        assert!(state.structural_prior_state.event_ledger.is_empty());
     }
 
     #[test]

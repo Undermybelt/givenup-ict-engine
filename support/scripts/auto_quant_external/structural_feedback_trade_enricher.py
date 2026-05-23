@@ -257,7 +257,7 @@ def build_structural_feedback_from_target_row(
         sub_sub_regime = sub_sub_regime or (branch_parts[2] if len(branch_parts) > 2 else None)
         profit_factor = profit_factor or (" -> ".join(branch_parts[3:]) if len(branch_parts) > 3 else None)
 
-    path_id = branch_path or str(_first_present(row, ["path_id"], "path:unknown"))
+    path_id = str(_first_present(row, ["path_id"], branch_path or "path:unknown"))
     branch_id = (
         f"{main_regime} -> {sub_regime}"
         if main_regime and sub_regime

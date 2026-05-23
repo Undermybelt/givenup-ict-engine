@@ -1481,16 +1481,25 @@ pub fn apply_structural_path_ranking_execution_gates(
         };
         let lower_bound = lower_bound.clamp(0.0, 1.0);
         let min_path_prob = STRUCTURAL_PATH_RANKING_EXECUTION_GATE_MIN_PATH_PROB;
-        let status = if lower_bound >= min_path_prob {
+        let negative_feedback = structural_path_ranking_reward_label(&row.pending_reward_state)
+            .is_some_and(|label| label <= 0.0);
+        let status = if negative_feedback {
+            "observe"
+        } else if lower_bound >= min_path_prob {
             "pass"
         } else {
             "observe"
         };
         row.execution_gate_status = Some(status.to_string());
         row.execution_gate_min_path_prob = Some(min_path_prob);
-        row.execution_gate_reason = Some(format!(
-            "path_prob_lower_bound={lower_bound:.3} min_path_prob={min_path_prob:.3}"
-        ));
+        row.execution_gate_reason = Some(if negative_feedback {
+            format!(
+                "negative_feedback_sample={} path_prob_lower_bound={lower_bound:.3} min_path_prob={min_path_prob:.3}",
+                row.pending_reward_state
+            )
+        } else {
+            format!("path_prob_lower_bound={lower_bound:.3} min_path_prob={min_path_prob:.3}")
+        });
     }
 }
 
@@ -2445,6 +2454,37 @@ mod tests {
         let probability = structural_path_ranker_direct_model_probability(&model, &row);
 
         assert!((probability - 0.371035).abs() < 1e-9);
+    }
+
+    #[test]
+    fn execution_gate_keeps_negative_feedback_samples_observe_only() {
+        let mut artifact = StructuralPathRankingTargetArtifact {
+            protocol_version: "structural-path-ranking-target-v1".to_string(),
+            symbol: "NQ".to_string(),
+            candidate_set_id: "structural-feedback-aggregate:NQ:negative".to_string(),
+            candidate_set_size: 1,
+            generated_at: "2026-05-23T00:00:00Z".to_string(),
+            rows: vec![test_target_row(
+                "structural-feedback-aggregate:NQ:negative",
+                "TrendExpansion -> PullbackContinuation -> trend_pullback_reclaim_v1",
+                "matured_failure",
+                0.45,
+                Some(0.95),
+            )],
+        };
+        artifact.rows[0].path_prob_lower_bound = Some(0.90);
+
+        apply_structural_path_ranking_execution_gates(&mut artifact);
+
+        assert_eq!(
+            artifact.rows[0].execution_gate_status.as_deref(),
+            Some("observe")
+        );
+        assert!(artifact.rows[0]
+            .execution_gate_reason
+            .as_deref()
+            .unwrap()
+            .contains("negative_feedback_sample=matured_failure"));
     }
 
     #[test]

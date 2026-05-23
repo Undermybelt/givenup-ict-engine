@@ -491,6 +491,26 @@ fn structural_execution_candidate_value_from_recommended_path_bundle(
             StructuralPathRankerRuntimeContext { state_dir },
         )?;
     let latest_phase = latest_workflow_phase(snapshot);
+    let latest_structural_feedback = snapshot
+        .latest_update
+        .as_ref()
+        .and_then(|phase| phase.structural_feedback.as_ref());
+    let rooted_feedback_path_override = latest_structural_feedback.is_some_and(|feedback| {
+        !feedback.path_id.trim().is_empty()
+            && !regime_rooted_path_ids_match(&feedback.path_id, &bundle.path_id)
+    });
+    let candidate_path_id = latest_structural_feedback
+        .filter(|feedback| rooted_feedback_path_override && !feedback.path_id.trim().is_empty())
+        .map(|feedback| feedback.path_id.clone())
+        .unwrap_or_else(|| bundle.path_id.clone());
+    let candidate_path_label = latest_structural_feedback
+        .filter(|feedback| rooted_feedback_path_override && !feedback.path_id.trim().is_empty())
+        .map(|feedback| feedback.path_id.clone())
+        .unwrap_or_else(|| bundle.path_label.clone());
+    let candidate_scenario_id = latest_structural_feedback
+        .filter(|feedback| rooted_feedback_path_override && !feedback.scenario_id.trim().is_empty())
+        .map(|feedback| feedback.scenario_id.clone())
+        .unwrap_or_else(|| bundle.scenario_id.clone());
     let pre_bayes_phase = latest_pre_bayes_phase(snapshot);
     let execution_gate_status = latest_phase
         .and_then(|phase| phase.execution_gate_status.clone())
@@ -520,10 +540,10 @@ fn structural_execution_candidate_value_from_recommended_path_bundle(
         "source_phase": "structural-recommended-path-bundle",
         "source_run_id": latest_phase.map(|phase| phase.run_id.clone()),
         "persisted": false,
-        "path": format!("structural-recommended-path-bundle:{}", bundle.path_id),
-        "path_id": bundle.path_id.clone(),
-        "path_label": bundle.path_label.clone(),
-        "scenario_id": bundle.scenario_id.clone(),
+        "path": format!("structural-recommended-path-bundle:{}", candidate_path_id),
+        "path_id": candidate_path_id,
+        "path_label": candidate_path_label,
+        "scenario_id": candidate_scenario_id,
         "candidate_set_id": bundle.candidate_set_id.clone(),
         "candidate_set_size": bundle.candidate_set_size,
         "trade_direction": bundle.direction.clone(),
@@ -548,6 +568,7 @@ fn structural_execution_candidate_value_from_recommended_path_bundle(
         "path_ranker_calibrated_path_prob": bundle.path_ranker_calibrated_path_prob,
         "path_ranker_path_prob_lower_bound": bundle.path_ranker_path_prob_lower_bound,
         "path_ranker_runtime_source": bundle.path_ranker_runtime_source.clone(),
+        "rooted_feedback_path_override": rooted_feedback_path_override,
         "structural_recommended_path_bundle": bundle,
     });
     apply_persisted_analyze_execution_candidate_veto(&mut candidate, snapshot);
@@ -659,7 +680,10 @@ fn apply_same_root_execution_tree_admission_to_structural_candidate(
     let Some(admission) = trace.get("closed_loop_branch_admission") else {
         return;
     };
-    if admission.get("path_id").and_then(Value::as_str) != Some(path_id) {
+    let Some(admission_path_id) = admission.get("path_id").and_then(Value::as_str) else {
+        return;
+    };
+    if !regime_rooted_path_ids_match(path_id, admission_path_id) {
         return;
     }
     let admitted = admission.get("status").and_then(Value::as_str) == Some("admitted")
@@ -707,10 +731,26 @@ fn apply_same_root_execution_tree_admission_to_structural_candidate(
         .and_then(|veto| veto.get("review_reason"))
         .and_then(Value::as_str)
         == Some("candidate_not_actionable");
+    let stale_phase_gate_veto_can_be_overridden = map
+        .get("persisted_execution_candidate_veto")
+        .and_then(|veto| veto.get("source_phase"))
+        .and_then(Value::as_str)
+        == Some("analyze")
+        && matches!(
+            candidate_source_phase,
+            "execution-tree-trace" | "structural-recommended-path-bundle"
+        )
+        && map
+            .get("persisted_execution_candidate_veto")
+            .and_then(|veto| veto.get("candidate_status"))
+            .and_then(Value::as_str)
+            .is_some_and(|status| matches!(status, "execution_blocked" | "observe" | "no_trade"));
     let persisted_veto_active = map.contains_key("persisted_execution_candidate_veto");
     let duplicate_veto_can_be_overridden = duplicate_analyze_veto_active
-        && (candidate_source_phase == "execution-tree-trace"
-            || ready_duplicate_analyze_veto_active);
+        && (matches!(
+            candidate_source_phase,
+            "execution-tree-trace" | "structural-recommended-path-bundle"
+        ) || ready_duplicate_analyze_veto_active);
     let status = admission
         .get("candidate_status")
         .and_then(Value::as_str)
@@ -752,6 +792,7 @@ fn apply_same_root_execution_tree_admission_to_structural_candidate(
     if persisted_veto_active
         && !duplicate_veto_can_be_overridden
         && !candidate_not_actionable_analyze_veto_active
+        && !stale_phase_gate_veto_can_be_overridden
     {
         return;
     }
@@ -784,10 +825,74 @@ fn apply_same_root_execution_tree_admission_to_structural_candidate(
         );
         return;
     }
+    if stale_phase_gate_veto_can_be_overridden {
+        map.insert(
+            "persisted_execution_candidate_veto_overridden".to_string(),
+            json!(true),
+        );
+        map.insert(
+            "review_reason".to_string(),
+            json!("same_root_execution_tree_trace_admitted_after_stale_phase_gate_veto"),
+        );
+        return;
+    }
     map.insert(
         "review_reason".to_string(),
         json!("same_root_execution_tree_trace_admitted"),
     );
+}
+
+fn regime_rooted_path_ids_match(left: &str, right: &str) -> bool {
+    let left = left.trim();
+    let right = right.trim();
+    if left == right {
+        return true;
+    }
+    fn provenance_suffix_match<'a>(suffix: &'a str, candidate: &'a str) -> bool {
+        if suffix.is_empty() || suffix == candidate || !candidate.ends_with(suffix) {
+            return false;
+        }
+        candidate
+            .get(..candidate.len().saturating_sub(suffix.len()))
+            .is_some_and(|prefix| prefix.trim_end().ends_with("->"))
+    }
+    if provenance_suffix_match(left, right) || provenance_suffix_match(right, left) {
+        return true;
+    }
+    let canonical_roots = [
+        "Crisis",
+        "ExtremeStress",
+        "MomentumContinuation",
+        "Range",
+        "RangeConsolidation",
+        "RangeReversion",
+        "ReversalBrewing",
+        "SessionLiquidityCoreViable",
+        "ThinLiquidity",
+        "Transition",
+        "TrendExpansion",
+        "WideRange",
+    ];
+    fn rooted_suffix<'a>(path: &'a str, roots: &[&str]) -> Option<&'a str> {
+        let mut byte_offset = 0usize;
+        for segment in path.split(" -> ") {
+            let trimmed = segment.trim();
+            let leading_ws = segment.len() - segment.trim_start().len();
+            let segment_start = byte_offset + leading_ws;
+            if roots.iter().any(|root| *root == trimmed) {
+                return path.get(segment_start..).map(str::trim);
+            }
+            byte_offset += segment.len() + " -> ".len();
+        }
+        None
+    }
+    match (
+        rooted_suffix(left, &canonical_roots),
+        rooted_suffix(right, &canonical_roots),
+    ) {
+        (Some(left_rooted), Some(right_rooted)) => left_rooted == right_rooted,
+        _ => false,
+    }
 }
 
 fn execution_candidate_value_from_same_root_execution_tree_trace(
@@ -944,17 +1049,28 @@ fn structural_branch_admission_controls_workflow(
     if no_workflow_state || hard_block_active {
         return false;
     }
-    let Some(candidate_path_id) = candidate
-        .and_then(|value| value.get("path_id"))
-        .and_then(Value::as_str)
-    else {
+    let Some(candidate) = candidate else {
         return false;
     };
-    snapshot
+    let Some(candidate_path_id) = candidate.get("path_id").and_then(Value::as_str) else {
+        return false;
+    };
+    let candidate_admission_path_id = candidate
+        .get("execution_tree_closed_loop_branch_admission")
+        .and_then(|admission| admission.get("path_id"))
+        .and_then(Value::as_str);
+    let Some(feedback_path_id) = snapshot
         .latest_update
         .as_ref()
         .and_then(|phase| phase.structural_feedback.as_ref())
-        .is_some_and(|feedback| feedback.path_id == candidate_path_id)
+        .map(|feedback| feedback.path_id.as_str())
+    else {
+        return false;
+    };
+    regime_rooted_path_ids_match(feedback_path_id, candidate_path_id)
+        || candidate_admission_path_id.is_some_and(|admission_path_id| {
+            regime_rooted_path_ids_match(feedback_path_id, admission_path_id)
+        })
 }
 
 fn build_full_workflow_status_json_value(
@@ -1088,6 +1204,26 @@ fn structural_feedback_template_value_from_recommended_path_bundle(
     let Value::Object(map) = &mut value else {
         return Ok(value);
     };
+    let latest_structural_feedback = snapshot
+        .latest_update
+        .as_ref()
+        .and_then(|phase| phase.structural_feedback.as_ref());
+    let rooted_feedback_path_override = latest_structural_feedback.is_some_and(|feedback| {
+        !feedback.path_id.trim().is_empty()
+            && !regime_rooted_path_ids_match(&feedback.path_id, &recommended.path_id)
+    });
+    let path_id = latest_structural_feedback
+        .filter(|feedback| rooted_feedback_path_override && !feedback.path_id.trim().is_empty())
+        .map(|feedback| feedback.path_id.clone())
+        .unwrap_or_else(|| recommended.path_id.clone());
+    let path_label = latest_structural_feedback
+        .filter(|feedback| rooted_feedback_path_override && !feedback.path_id.trim().is_empty())
+        .map(|feedback| feedback.path_id.clone())
+        .unwrap_or_else(|| recommended.path_label.clone());
+    let scenario_id = latest_structural_feedback
+        .filter(|feedback| rooted_feedback_path_override && !feedback.scenario_id.trim().is_empty())
+        .map(|feedback| feedback.scenario_id.clone())
+        .unwrap_or_else(|| recommended.scenario_id.clone());
 
     map.insert(
         "source_phase".to_string(),
@@ -1105,9 +1241,17 @@ fn structural_feedback_template_value_from_recommended_path_bundle(
         json!(bundle.feedback_template.path_id),
     );
     map.insert("symbol".to_string(), json!(recommended.symbol));
-    map.insert("path_id".to_string(), json!(recommended.path_id));
-    map.insert("path_label".to_string(), json!(recommended.path_label));
-    map.insert("scenario_id".to_string(), json!(recommended.scenario_id));
+    map.insert("path_id".to_string(), json!(path_id));
+    map.insert("path_label".to_string(), json!(path_label));
+    map.insert("scenario_id".to_string(), json!(scenario_id));
+    map.insert(
+        "rooted_feedback_path_override".to_string(),
+        json!(rooted_feedback_path_override),
+    );
+    map.insert(
+        "structural_recommended_path_bundle".to_string(),
+        serde_json::to_value(recommended)?,
+    );
     map.insert(
         "candidate_set_id".to_string(),
         json!(recommended.candidate_set_id),
@@ -3130,22 +3274,30 @@ fn build_agent_workflow_status_view_with_provider_agent_and_structural_prior_sta
     let raw_closed_loop_branch_admission = structural_execution_candidate
         .as_ref()
         .and_then(structural_closed_loop_branch_admission_value);
+    let raw_branch_admission_status = raw_closed_loop_branch_admission
+        .as_ref()
+        .and_then(|admission| admission.get("status").and_then(Value::as_str));
+    let soft_block_overridden_by_admitted_branch = hard_block_active
+        && raw_branch_admission_status == Some("admitted")
+        && matches!(
+            snapshot.blocking_truth.status.as_str(),
+            "pass_neutralized" | "bridge_needs_confirmation"
+        );
+    let effective_branch_hard_block_active =
+        hard_block_active && !soft_block_overridden_by_admitted_branch;
     let branch_admission_controls_workflow = structural_branch_admission_controls_workflow(
         snapshot,
         structural_execution_candidate.as_ref(),
         no_workflow_state,
-        hard_block_active,
+        effective_branch_hard_block_active,
     );
     let closed_loop_branch_admission = if branch_admission_controls_workflow {
         raw_closed_loop_branch_admission.clone()
     } else {
         None
     };
-    let branch_admission_fail_closed = branch_admission_controls_workflow
-        && raw_closed_loop_branch_admission
-            .as_ref()
-            .and_then(|admission| admission.get("status").and_then(Value::as_str))
-            == Some("fail_closed");
+    let branch_admission_fail_closed =
+        branch_admission_controls_workflow && raw_branch_admission_status == Some("fail_closed");
     let branch_admission_reason = raw_closed_loop_branch_admission
         .as_ref()
         .and_then(|admission| admission.get("reason").and_then(Value::as_str))
@@ -3154,15 +3306,16 @@ fn build_agent_workflow_status_view_with_provider_agent_and_structural_prior_sta
         "{} --phase execution-candidate",
         workflow_status_base_command(&snapshot.symbol, state_dir, provider_status_agent)
     );
-    let effective_hard_block_active = hard_block_active || branch_admission_fail_closed;
-    let command_source = if hard_block_active {
+    let effective_hard_block_active =
+        effective_branch_hard_block_active || branch_admission_fail_closed;
+    let command_source = if effective_branch_hard_block_active {
         "blocking_truth"
     } else if branch_admission_fail_closed {
         "closed_loop_branch_admission"
     } else {
         "recommended_next_command"
     };
-    let raw_next_command = if hard_block_active {
+    let raw_next_command = if effective_branch_hard_block_active {
         snapshot.blocking_truth.next_command.clone()
     } else if branch_admission_fail_closed {
         branch_admission_command
@@ -3218,7 +3371,7 @@ fn build_agent_workflow_status_view_with_provider_agent_and_structural_prior_sta
     } else {
         serde_json::Value::String(next_command.clone())
     };
-    let blocking_status = if hard_block_active {
+    let blocking_status = if effective_branch_hard_block_active {
         snapshot.blocking_truth.status.clone()
     } else if branch_admission_fail_closed {
         "fail_closed".to_string()
@@ -3227,7 +3380,7 @@ fn build_agent_workflow_status_view_with_provider_agent_and_structural_prior_sta
     } else {
         "unblocked".to_string()
     };
-    let blocking_reason = if hard_block_active {
+    let blocking_reason = if effective_branch_hard_block_active {
         snapshot.blocking_truth.reason.clone()
     } else if branch_admission_fail_closed {
         branch_admission_reason.to_string()
@@ -6584,8 +6737,8 @@ mod tests {
                     "execution_gate_status": "execution_ready",
                     "execution_tree_gate_status": "ready",
                     "execution_tree_branch": "fill_viable",
-                    "path_id": structural_refs.path_id,
-                    "path_label": structural_refs.path_id,
+                    "path_id": format!("US_EQ -> single_stock -> CRWD -> 5m -> {}", structural_refs.path_id),
+                    "path_label": format!("US_EQ -> single_stock -> CRWD -> 5m -> {}", structural_refs.path_id),
                     "pre_bayes_gate_status": "pass_neutralized",
                     "review_status": "promote_latest",
                     "source_phase": "execution-tree-trace"
@@ -6715,7 +6868,8 @@ mod tests {
     }
 
     #[test]
-    fn execution_candidate_phase_keeps_duplicate_analyze_veto_over_same_root_trace_admission() {
+    fn execution_candidate_phase_lets_structural_bundle_trace_admission_supersede_duplicate_analyze_veto(
+    ) {
         let temp = tempfile::tempdir().unwrap();
         let feedback = sample_structural_feedback_history();
         let structural_refs = feedback[0].structural_feedback.clone().unwrap();
@@ -6793,19 +6947,20 @@ mod tests {
 
         assert_eq!(value["source_phase"], "structural-recommended-path-bundle");
         assert_eq!(value["path_id"], structural_refs.path_id);
-        assert_eq!(value["candidate_status"], "no_trade");
-        assert_eq!(value["execution_gate_status"], "no_trade");
-        assert_eq!(value["actionable"], false);
-        assert_eq!(value["ready"], false);
-        assert_eq!(value["review_status"], "discard");
+        assert_eq!(value["candidate_status"], "execution_ready");
+        assert_eq!(value["execution_gate_status"], "execution_ready");
+        assert_eq!(value["actionable"], true);
+        assert_eq!(value["ready"], true);
+        assert_eq!(value["review_status"], "promote_latest");
         assert_eq!(
             value["review_reason"],
-            "duplicate_execution_candidate_context"
+            "same_root_execution_tree_trace_admitted_after_duplicate_analyze_veto"
         );
         assert_eq!(
             value["persisted_execution_candidate_veto"]["review_reason"],
             "duplicate_execution_candidate_context"
         );
+        assert_eq!(value["persisted_execution_candidate_veto_overridden"], true);
     }
 
     #[test]
@@ -7349,6 +7504,68 @@ mod tests {
         assert_eq!(
             value["next_command_source"], "blocking_truth",
             "agent workflow-status must not route a neutralized branch as unblocked"
+        );
+    }
+
+    #[test]
+    fn agent_status_surfaces_admitted_structural_branch_over_neutralized_blocking_truth() {
+        let mut feedback = sample_structural_feedback_history();
+        let rooted_path_id = "RangeReversion -> AiSecuritySoftwareOversoldReclaim -> rsi_vwap_reclaim_dense -> yf_ai_security_software_rsi_vwap_reclaim_crwd_5m_v1 -> session_liquidity_transition_stability_v1 -> pda_mtf_soft_confirmation_v1".to_string();
+        let mut structural_refs = feedback[0].structural_feedback.clone().unwrap();
+        structural_refs.path_id = rooted_path_id.clone();
+        feedback[0].structural_feedback = Some(structural_refs.clone());
+        structural_refs.path_id =
+            format!("US_EQ -> single_stock -> CRWD -> 5m -> {rooted_path_id}");
+        let snapshot = WorkflowSnapshot {
+            symbol: "NQ".to_string(),
+            latest_update: Some(WorkflowPhaseSnapshot {
+                phase: "update".to_string(),
+                run_id: "update:NQ:branch".to_string(),
+                structural_feedback: Some(structural_refs.clone()),
+                pre_bayes_gate_status: "pass_neutralized".to_string(),
+                pre_bayes_policy_version: "structural-feedback-branch-path-v1".to_string(),
+                execution_readiness: Some(0.67),
+                execution_gate_status: Some("execution_ready".to_string()),
+                ..WorkflowPhaseSnapshot::default()
+            }),
+            blocking_truth: crate::state::WorkflowBlockingTruth {
+                stage: "analyze".to_string(),
+                status: "pass_neutralized".to_string(),
+                reason: "pre-bayes neutralized until structural branch admission".to_string(),
+                evidence: vec!["pre_bayes_gate_status=pass_neutralized".to_string()],
+                next_command: "ict-engine pre-bayes-status --symbol NQ".to_string(),
+            },
+            ..WorkflowSnapshot::default()
+        };
+
+        let value =
+            build_agent_workflow_status_view_with_provider_agent_and_structural_prior_state_and_state_dir(
+                &snapshot,
+                &[],
+                &sample_provider_agent_surface(),
+                &feedback,
+                &StructuralPriorLearningState::default(),
+                Some("/tmp/ict-engine-board-b-admitted-neutralized"),
+            );
+
+        assert_eq!(value["blocking_status"], "unblocked");
+        assert_eq!(value["blocking_reason"], "none");
+        assert_eq!(
+            value["latest_structural_execution_candidate"]["path_id"],
+            rooted_path_id
+        );
+        assert_eq!(
+            value["latest_structural_execution_candidate"]["execution_gate_status"],
+            "execution_ready"
+        );
+        assert_eq!(value["closed_loop_branch_admission"]["status"], "admitted");
+        assert_eq!(
+            value["closed_loop_branch_admission"]["execution_gate_status"],
+            "execution_ready"
+        );
+        assert_eq!(
+            value["closed_loop_branch_admission"]["path_id"],
+            rooted_path_id
         );
     }
 
@@ -9799,6 +10016,67 @@ mod tests {
             .as_str()
             .unwrap()
             .starts_with("path:scenario:"));
+    }
+
+    #[test]
+    fn workflow_status_structural_candidate_preserves_latest_feedback_root_over_unrelated_bundle() {
+        let bundle_branch =
+            "Transition -> LiquidityMap -> liquidity_pool_texture -> liquidity_pool_texture_v1";
+        let feedback_branch = "TrendExpansion -> MicroTrendPullbackReclaim -> ibkr_futures_micro_trend_pullback_reclaim_gate1_v1";
+        let mut history = sample_structural_feedback_history();
+        for record in &mut history {
+            if let Some(refs) = record.structural_feedback.as_mut() {
+                refs.recommendation_id = "structural-feedback:NQ:transition-liquidity".to_string();
+                refs.branch_id = "regime-bundle-branch:transition-liquidity".to_string();
+                refs.scenario_id = "scenario:transition-liquidity".to_string();
+                refs.path_id = bundle_branch.to_string();
+            }
+        }
+        let latest_structural_feedback = crate::state::StructuralFeedbackRefs {
+            protocol_version: "structural-feedback-v1".to_string(),
+            recommendation_id: "structural-feedback:NQ:microtrend-pullback".to_string(),
+            recommended_at: "2026-05-23T06:00:00Z".to_string(),
+            node_id: "NQ:belief_regime_node:trend".to_string(),
+            branch_id: "regime-bundle-branch:microtrend-pullback".to_string(),
+            scenario_id: "scenario:microtrend-pullback".to_string(),
+            path_id: feedback_branch.to_string(),
+            followed_path: true,
+            exit_reason: Some("target_hit".to_string()),
+            notes: None,
+        };
+        let snapshot = WorkflowSnapshot {
+            symbol: "NQ".to_string(),
+            latest_update: Some(WorkflowPhaseSnapshot {
+                phase: "update".to_string(),
+                run_id: "update:NQ:microtrend-pullback".to_string(),
+                structural_feedback: Some(latest_structural_feedback.clone()),
+                pre_bayes_gate_status: "pass_neutralized".to_string(),
+                pre_bayes_policy_version: "structural-feedback-branch-path-v1".to_string(),
+                execution_readiness: Some(0.37),
+                execution_gate_status: Some("no_trade".to_string()),
+                ..WorkflowPhaseSnapshot::default()
+            }),
+            ..WorkflowSnapshot::default()
+        };
+
+        let value = build_workflow_status_phase_value_with_structural_prior_state(
+            &snapshot,
+            &[],
+            &sample_provider_agent_surface(),
+            &history,
+            &StructuralPriorLearningState::default(),
+            "structural-feedback",
+        )
+        .unwrap();
+
+        assert_eq!(value["source_phase"], "structural-recommended-path-bundle");
+        assert_eq!(value["path_id"], feedback_branch);
+        assert_eq!(value["scenario_id"], latest_structural_feedback.scenario_id);
+        assert_eq!(value["rooted_feedback_path_override"], true);
+        assert_eq!(
+            value["structural_recommended_path_bundle"]["path_id"],
+            bundle_branch
+        );
     }
 
     #[test]

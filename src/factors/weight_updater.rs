@@ -93,7 +93,10 @@ impl WeightUpdater {
             .collect::<Vec<_>>();
         let executed_feedback = structurally_resolved_feedback
             .iter()
-            .filter(|record| crate::state::structural_feedback_counts_as_executed_trade(record))
+            .filter(|record| {
+                crate::state::structural_feedback_counts_as_executed_trade(record)
+                    && !crate::state::structural_feedback_is_infrastructure_negative(record)
+            })
             .cloned()
             .collect::<Vec<_>>();
         learning_state.apply_structural_feedback(&structurally_resolved_feedback);
@@ -628,5 +631,71 @@ mod tests {
             .get("path:scenario:NQ:belief_regime_node:trend:trend_follow_through:primary")
             .expect("path prior state");
         assert_eq!(path.abandoned, 1);
+    }
+
+    #[test]
+    fn test_apply_feedback_excludes_infrastructure_negative_from_factor_learning() {
+        let updater = WeightUpdater::default();
+        let mut learning_state = LearningState {
+            factor_rankings: vec![PersistedFactorRanking {
+                factor_name: "trend_momentum".to_string(),
+                weight: 0.2,
+                ..PersistedFactorRanking::default()
+            }],
+            ..LearningState::default()
+        };
+        let feedback = FeedbackRecord {
+            timestamp: Utc::now(),
+            symbol: "NQ".to_string(),
+            source: "structural_feedback".to_string(),
+            run_id: None,
+            trade_id: None,
+            prompt_version: None,
+            factor_version: None,
+            data_fingerprint: None,
+            factors_used: vec![FeedbackFactorUsage {
+                factor_name: "trend_momentum".to_string(),
+                category: "trend_momentum".to_string(),
+                direction: Direction::Bull,
+                value: 0.8,
+                confidence: 0.7,
+                weight: 0.3,
+                long_support: 0.4,
+                short_support: 0.0,
+                uncertainty_contribution: 0.1,
+            }],
+            model_probabilities_before_trade: ModelProbabilitySnapshot {
+                selected_direction: Direction::Bull,
+                selected_probability: 0.6,
+                long_score: 0.6,
+                short_score: 0.3,
+                win_prob_long: 0.58,
+                win_prob_short: 0.41,
+                uncertainty: 0.2,
+            },
+            realized_outcome: "loss".to_string(),
+            pnl: 0.0,
+            regime_at_entry: Regime::ManipulationExpansion,
+            structural_feedback: Some(crate::state::StructuralFeedbackRefs {
+                protocol_version: "structural-feedback-v1".to_string(),
+                recommendation_id: "rec-infra-negative".to_string(),
+                recommended_at: "2026-04-29T00:00:00Z".to_string(),
+                node_id: "TrendExpansion".to_string(),
+                branch_id: "TrendExpansion -> PullbackContinuation".to_string(),
+                scenario_id: "mss_cisd_pullback_reclaim".to_string(),
+                path_id: "TrendExpansion -> PullbackContinuation -> mss_cisd_pullback_reclaim -> trend_pullback_reclaim_v1".to_string(),
+                followed_path: true,
+                exit_reason: Some("infrastructure_negative_sample:provider_authority".to_string()),
+                notes: Some("negative_sample_type=provider_authority".to_string()),
+            }),
+            reflection_mismatch_tags: Vec::new(),
+        };
+        let before_weight = learning_state.factor_rankings[0].weight;
+
+        updater.apply_feedback(&mut learning_state, &[feedback]);
+
+        assert_eq!(learning_state.factor_rankings[0].weight, before_weight);
+        assert!(learning_state.factor_profiles.is_empty());
+        assert!(learning_state.structural_prior_state.paths.is_empty());
     }
 }
