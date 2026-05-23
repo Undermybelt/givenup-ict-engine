@@ -65,6 +65,17 @@ summary=promotion_allowed=true; trade_usable=true
         self.assertEqual(parsed["run_root"], "/tmp/example-run")
         self.assertEqual(parsed["decision"], "drop_gate1")
 
+    def test_parse_claim_text_keeps_absolute_run_root_over_later_relative_duplicate(self) -> None:
+        parsed = parse_claim_text(
+            """
+run_root: /tmp/real-run-root
+decision: drop_gate1
+run_root=support/docs/experiments/run-a
+"""
+        )
+
+        self.assertEqual(parsed["run_root"], "/tmp/real-run-root")
+
     def test_build_report_classifies_active_and_terminal_claims(self) -> None:
         with tempfile.TemporaryDirectory() as repo_tmp, tempfile.TemporaryDirectory() as claims_tmp:
             repo_root = Path(repo_tmp)
@@ -100,6 +111,33 @@ run_root=/tmp/missing-run-root-for-test
             self.assertEqual(report["summary"]["promotion_allowed_true"], 0)
             active = [claim for claim in report["claims"] if claim["status"] == "active"][0]
             self.assertEqual(active["claim_file"], "active.claim")
+
+    def test_build_report_resolves_relative_run_root_against_claim_repo_field(self) -> None:
+        with tempfile.TemporaryDirectory() as claim_repo_tmp, tempfile.TemporaryDirectory() as audit_repo_tmp, tempfile.TemporaryDirectory() as claims_tmp:
+            claim_repo = Path(claim_repo_tmp)
+            audit_repo = Path(audit_repo_tmp)
+            claims_dir = Path(claims_tmp)
+            run_root = claim_repo / "support" / "docs" / "experiments" / "run-a"
+            run_root.mkdir(parents=True)
+
+            (claims_dir / "repo-relative.claim").write_text(
+                f"""
+owner=codex
+repo={claim_repo}
+status=terminalized
+run_root={run_root.relative_to(claim_repo)}
+decision=drop_gate1
+promotion_allowed=false
+trade_usable=false
+""",
+                encoding="utf-8",
+            )
+
+            report = build_report(claims_dir=claims_dir, repo_root=audit_repo)
+
+            self.assertEqual(report["summary"]["status"], "pass")
+            self.assertEqual(report["summary"]["missing_run_roots"], 0)
+            self.assertTrue(report["claims"][0]["run_root_exists"])
 
     def test_build_report_reads_json_claim_with_decision_as_terminal(self) -> None:
         with tempfile.TemporaryDirectory() as repo_tmp, tempfile.TemporaryDirectory() as claims_tmp:

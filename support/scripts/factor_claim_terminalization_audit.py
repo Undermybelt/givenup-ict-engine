@@ -62,6 +62,8 @@ def parse_claim_text(text: str) -> dict[str, Any]:
         value = _normalize_scalar(value)
         if not key:
             continue
+        if key == "run_root" and key in fields and _is_absolute_path_text(fields[key]) and not _is_absolute_path_text(value):
+            continue
         fields[key] = value
         if key in {"summary", "terminal_summary"}:
             summary_parts.append(value)
@@ -88,6 +90,10 @@ def _normalize_scalar(value: object) -> object:
     if len(text) >= 2 and text[0] == text[-1] and text[0] in {'`', '"', "'"}:
         return text[1:-1].strip()
     return text
+
+
+def _is_absolute_path_text(value: object) -> bool:
+    return isinstance(value, str) and Path(value).expanduser().is_absolute()
 
 
 def _extract_bool(name: str, text: str) -> bool | None:
@@ -173,7 +179,8 @@ def _find_key(value: object, target: str) -> object:
 def read_claim(path: Path, root: Path) -> dict[str, Any]:
     text = path.read_text(encoding="utf-8", errors="replace")
     fields = _parse_claim_file(path, text)
-    run_root = _resolved_run_root(fields.get("run_root"), root)
+    claim_root = _claim_repo_root(fields, root)
+    run_root = _resolved_run_root(fields.get("run_root"), claim_root)
     summary_flags = _load_summary_flags(run_root)
     promotion_allowed = fields.get("promotion_allowed")
     trade_usable = fields.get("trade_usable")
@@ -195,7 +202,18 @@ def read_claim(path: Path, root: Path) -> dict[str, Any]:
         "promotion_allowed": promotion_allowed,
         "trade_usable": trade_usable,
         "summary_files": summary_flags.get("summary_files", []),
-    }
+}
+
+
+def _claim_repo_root(fields: dict[str, Any], fallback: Path) -> Path:
+    for key in ("repo", "repo_root"):
+        raw_value = fields.get(key)
+        if not isinstance(raw_value, str) or not raw_value.strip():
+            continue
+        candidate = Path(raw_value).expanduser()
+        if candidate.is_absolute() and candidate.exists():
+            return candidate
+    return fallback
 
 
 def _parse_claim_file(path: Path, text: str) -> dict[str, Any]:

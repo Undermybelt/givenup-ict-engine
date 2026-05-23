@@ -42,7 +42,7 @@ complete.
 | R3 | Default provider behavior is zero-config and fallback-oriented | `provider-status --compact` and `workflow-status` evidence, no required private profile | smoke provider output passed; `provider_status.out` reports yfinance live zero-config and public crypto runtimes ready |
 | R4 | Closed-loop surfaces are inspectable end-to-end | provider -> regime posterior -> Pre-Bayes -> BBN -> path-ranker/CatBoost visibility -> execution tree -> feedback/training readbacks | smoke passed through analyze/update/workflow/pre-Bayes/policy-training readbacks; practical factor promotion remains unproven |
 | R5 | Release readiness is clear | `support/scripts/release_readiness_audit.py --compact --check-remotes` exits `0` | selected clean worktree now clears dirty-tree gate; source origin/export parity still fails |
-| R6 | Factor claim/process hygiene is clear | `support/scripts/factor_claim_terminalization_audit.py --compact` exits `0` | fresh pass at 2026-05-23 10:12 CST after Markdown scalar parser fix and XLU terminal readback: `active_claims=0`, `live_factor_processes=0`, `missing_run_roots=0`; practical positives remain zero |
+| R6 | Factor claim/process hygiene is clear | `support/scripts/factor_claim_terminalization_audit.py --compact` exits `0` | fresh pass at 2026-05-23 10:19 CST after claim parser and `/tmp` claim provenance repairs: `active_claims=0`, `live_factor_processes=0`, `missing_run_roots=0`; practical positives remain zero |
 | R7 | At least one practical factor is truly promotion/trade usable if the objective claims practical factor closure | downstream evidence has `promotion_allowed=true` and `trade_usable=true` with cost/sample/provider gates | known zero positives in latest handoff |
 | R8 | Docs do not become runtime inputs | `support/scripts/ci/check_docs_runtime_isolation.py` exits `0` | fresh pass |
 | R9 | Script governance surfaces are consistent | `support/scripts/check_script_manifest.py` exits `0`; relevant script tests pass | fresh pass for manifest; focused script tests still per-slice |
@@ -125,6 +125,8 @@ Repeat until all requirements are proven:
   worktree without touching the broad dirty development checkout.
 - [x] Fix factor claim audit scalar parsing so Markdown backtick-wrapped
   `run_root` values resolve to real paths instead of false missing roots.
+- [x] Fix factor claim audit repo-relative run-root handling so global `/tmp`
+  claims resolve relative evidence against their claim-local `repo` field.
 - [ ] Keep release readiness blocked until a clean selected export, fresh
   release docs/signoff, unused version/tag, remote parity, and explicit
   operator approval exist.
@@ -1089,3 +1091,55 @@ Decision:
 - Claim/process hygiene is clear again for the current development checkout.
 - This does not prove practical factor readiness; promotion/trade-usable
   positives remain zero.
+
+Follow-up parser repair:
+
+- Clean detached worktree audits still saw false missing run roots for terminal
+  claims whose repo-relative `run_root` values belonged to the main development
+  checkout, not the detached export root.
+- `support/scripts/factor_claim_terminalization_audit.py` now resolves relative
+  claim run roots against `repo` or `repo_root` from the claim when present.
+- The parser also preserves an earlier absolute `run_root` when a later
+  duplicate relative `run_root` appears in the same claim file.
+- `support/scripts/tests/test_factor_claim_terminalization_audit.py` now covers
+  both claim-local repo-root resolution and duplicate run-root precedence.
+
+External claim metadata repair:
+
+- Seven terminalized `/tmp/ict-engine-agent-claims/board-b-factor-refinement/*`
+  claim files were missing a `repo` field even though their evidence roots were
+  repo-relative ignored run trees under the main development checkout.
+- Added `repo=/Users/<redacted>/projects-ict-engine/ict-engine` provenance to
+  those external `/tmp` claims only; no repo evidence trees were staged.
+
+Live process readback:
+
+- A new TOMAC 6E local futures run appeared while this repair was in progress.
+- It completed naturally and terminalized its `/tmp` claim as
+  `drop_gate1_density_below_target_no_aq`:
+  `source_rows=3825696`, `screen_rows=84`, `screen_survivors_5bps=3`,
+  `selected_for_auto_quant=0`, `promotion_allowed=false`, `trade_usable=false`.
+
+Final verification for this slice:
+
+- `python3 -m unittest support.scripts.tests.test_factor_claim_terminalization_audit -v`
+  - exit `0`; 22 tests passed.
+- `python3 -m py_compile support/scripts/factor_claim_terminalization_audit.py support/scripts/tests/test_factor_claim_terminalization_audit.py`
+  - exit `0`.
+- `python3 support/scripts/factor_claim_terminalization_audit.py --compact --output /tmp/factor_claim_terminalization_after_tmp_repo_claim_patch_dev_20260523.json`
+  - exit `0`.
+  - summary: `active_claims=0`, `live_factor_processes=0`,
+    `missing_run_roots=0`, `terminalized_claims=127`, `total_claims=127`,
+    `promotion_allowed_true=0`, `trade_usable_true=0`.
+- `python3 support/scripts/factor_claim_terminalization_audit.py --repo-root /tmp/ict-engine-v015-release-worktree-20260523-b13a57aa --compact --output /tmp/factor_claim_terminalization_after_tmp_repo_claim_patch_clean_20260523.json`
+  - exit `0`.
+  - summary: `active_claims=0`, `live_factor_processes=0`,
+    `missing_run_roots=0`, `terminalized_claims=127`, `total_claims=127`,
+    `promotion_allowed_true=0`, `trade_usable_true=0`.
+
+Decision:
+
+- Factor claim/process hygiene is clear in both the development checkout and a
+  clean selected-tree audit context.
+- Practical factor closure remains false because there are still zero
+  promotion/trade-usable positives.
