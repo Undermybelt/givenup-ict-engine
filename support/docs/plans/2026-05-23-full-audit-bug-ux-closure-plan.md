@@ -42,12 +42,12 @@ complete.
 | R3 | Default provider behavior is zero-config and fallback-oriented | `provider-status --compact` and `workflow-status` evidence, no required private profile | smoke provider output passed; `provider_status.out` reports yfinance live zero-config and public crypto runtimes ready |
 | R4 | Closed-loop surfaces are inspectable end-to-end | provider -> regime posterior -> Pre-Bayes -> BBN -> path-ranker/CatBoost visibility -> execution tree -> feedback/training readbacks | smoke passed through analyze/update/workflow/pre-Bayes/policy-training readbacks; practical factor promotion remains unproven |
 | R5 | Release readiness is clear | `support/scripts/release_readiness_audit.py --compact --check-remotes` exits `0` | fresh fail: worktree dirty, stale release docs, source origin mismatch, reused `v0.1.3` |
-| R6 | Factor claim/process hygiene is clear | `support/scripts/factor_claim_terminalization_audit.py --compact` exits `0` | live-drift sensitive: passed at 07:39, reopened after `4f54a6bf` with active claims, live processes, and one missing run root |
+| R6 | Factor claim/process hygiene is clear | `support/scripts/factor_claim_terminalization_audit.py --compact` exits `0` | fresh fail after `3a8e77c9`: `active_claims=2`, `live_factor_processes=1`, `missing_run_roots=0`; live drift remains open |
 | R7 | At least one practical factor is truly promotion/trade usable if the objective claims practical factor closure | downstream evidence has `promotion_allowed=true` and `trade_usable=true` with cost/sample/provider gates | known zero positives in latest handoff |
 | R8 | Docs do not become runtime inputs | `support/scripts/ci/check_docs_runtime_isolation.py` exits `0` | fresh pass |
 | R9 | Script governance surfaces are consistent | `support/scripts/check_script_manifest.py` exits `0`; relevant script tests pass | fresh pass for manifest; focused script tests still per-slice |
 | R10 | Help/CLI UX has no obvious broken output path | `support/scripts/help_audit.py` or Done Definition audit help gate | fresh pass |
-| R11 | Cargo build/lint/test floor is known | `done_definition_audit.py --run-all-heavy` or focused cargo commands | fresh pass for smoke, `cargo check --all-targets`, `cargo clippy --all-targets -- -D warnings`, and `cargo test` |
+| R11 | Cargo build/lint/test floor is known | `done_definition_audit.py --run-all-heavy` or focused cargo commands | fresh pass for source slice before `3a8e77c9`: `cargo fmt -- --check`, `cargo check --all-targets`, `cargo clippy --all-targets -- -D warnings`, and `cargo test` |
 | R12 | Dirty worktree is either intentionally preserved or sliced into coherent commits | `git status --short`, staged-path readback before each commit | currently broad dirty tree; not release-ready |
 | R13 | Release notes/signoff match selected tag/export | fresh release docs for unused selected tag | known failing in latest release readiness evidence |
 | R14 | Source/mirror/tag state is publishable | source selected commit pushed or clean export selected; unused version/tag; mirror parity readback | known failing in latest release readiness evidence |
@@ -64,6 +64,8 @@ baseline scan.
 - Practical factor closure is not proven:
   the latest factor audit has `promotion_allowed_true=0` and
   `trade_usable_true=0`.
+- Current factor claim/process hygiene is open again after the source commit:
+  the latest audit has `active_claims=2` and `live_factor_processes=1`.
 - The worktree is broad and dirty; release must not publish directly from it.
 - Fresh consumer smoke, privacy scan, docs/runtime isolation, script manifest,
   and help audit now pass for this checkout state.
@@ -111,6 +113,8 @@ Repeat until all requirements are proven:
   staged paths.
 - [x] Patch the factor-claim audit parser so `pending_*` run-root placeholders
   do not become false `missing_run_roots` blockers.
+- [x] Commit the verified source/test owner-move slice as `3a8e77c9`.
+- [x] Refresh factor and release readiness audits after `3a8e77c9`.
 - [ ] Terminalize or externalize current active factor claims without
   interrupting live provider/AQ processes.
 - [ ] Keep release readiness blocked until a clean selected export, fresh
@@ -693,3 +697,82 @@ Decision:
   `promotion_allowed=true` and zero `trade_usable=true` results.
 - The release objective is still blocked by dirty worktree/export/docs/tag and
   remote-parity requirements.
+
+### 2026-05-23 08:48 CST Source/Test Slice Commit Readback
+
+Trigger:
+
+- Resume from a staged source/test slice after the operator asked whether there
+  was nothing left to do.
+
+Scope:
+
+- Commit only the verified `Cargo.lock`, `src/**`, and `tests/**` slice.
+- Preserve unrelated dirty docs, Board evidence, experiment scripts, and run
+  artifacts.
+- Do not release, tag, push, or stage broad worktree state.
+
+Pre-commit verification:
+
+- `git diff --cached --check`
+  - exit `0`.
+- `git diff --cached -- Cargo.lock src tests | rg -n "/Users/thrill3r|/Users/[^\"']+|Downloads/Tomac|secret-token-value|secret-token|PRIVATE_KEY|PASSWORD"`
+  - exit `1`, no matches.
+- `git diff --cached --name-only | rg -v '^(Cargo\.lock|src/|tests/)'`
+  - exit `1`, no non-allowlisted staged paths.
+- `cargo fmt -- --check > /tmp/ict-engine-source-slice-precommit-cargo-fmt-20260523.stdout 2> /tmp/ict-engine-source-slice-precommit-cargo-fmt-20260523.stderr`
+  - exit `0`.
+- `cargo check --all-targets > /tmp/ict-engine-source-slice-precommit-cargo-check-all-20260523.stdout 2> /tmp/ict-engine-source-slice-precommit-cargo-check-all-20260523.stderr`
+  - exit `0`; stderr readback reports `Finished dev profile`.
+- `cargo clippy --all-targets -- -D warnings > /tmp/ict-engine-source-slice-precommit-cargo-clippy-20260523.stdout 2> /tmp/ict-engine-source-slice-precommit-cargo-clippy-20260523.stderr`
+  - exit `0`.
+- `cargo test > /tmp/ict-engine-source-slice-precommit-cargo-test-20260523.stdout 2> /tmp/ict-engine-source-slice-precommit-cargo-test-20260523.stderr`
+  - exit `0`; test readback includes the new structural path-ranker contract
+    integration tests with `7 passed; 0 failed`.
+
+Commit:
+
+- `3a8e77c9 refactor: move CLI and ranking surfaces to owners`
+  - `85` files changed.
+  - New owner modules include CLI arg surfaces, output/state-dir helpers,
+    Deribit options runtime, factor-candidate orchestration, and structural
+    path-ranker contract fixtures/tests.
+
+Fresh post-commit factor claim/process audit:
+
+- `python3 support/scripts/factor_claim_terminalization_audit.py --compact --output /tmp/factor_claim_terminalization_post_3a8e77c9_20260523.json`
+  - exit `1`.
+  - status `needs_attention`.
+  - summary: `active_claims=2`, `live_factor_processes=1`,
+    `missing_run_roots=0`, `terminalized_claims=120`, `total_claims=122`,
+    `promotion_allowed_true=0`, `trade_usable_true=0`.
+  - active claims:
+    Bybit BOME/TURBO Darvas box breakout terminal readback and IBKR SMR
+    small-modular-nuclear initial-balance range-expansion Gate 1.
+  - live process:
+    `/tmp/run_tomac_tod_cap65_downstream_v1.py`.
+
+Fresh post-commit release-readiness audit:
+
+- `python3 support/scripts/release_readiness_audit.py --compact --check-remotes --output /tmp/release_readiness_post_3a8e77c9_20260523.json`
+  - exit `1`.
+  - status `needs_fix`, `fail_count=4`, `pass_count=1`.
+  - `HEAD=3a8e77c93625fe3a647460dcd23d4f5197ff9f2e`.
+  - unresolved gates:
+    `worktree_clean_for_release`,
+    `release_docs_fresh_for_selected_tag`,
+    `source_origin_matches_selected_source`,
+    `release_version_tag_available`.
+  - current version remains `0.1.3`; existing mirror tags include `v0.1.3`
+    and `v0.1.4`; audit still suggests `0.1.5` / `v0.1.5` for a future
+    selected release.
+
+Decision:
+
+- There is still work to do.
+- Source/test owner-move work is committed and verified for this slice.
+- Factor claim/process hygiene is open again in the latest audit snapshot, and
+  practical factor readiness still has zero promotion/trade-usable positives.
+- Release readiness remains blocked by dirty worktree/export, stale release
+  docs/signoff, source remote mismatch, reused current version/tag, and missing
+  explicit operator release approval.
