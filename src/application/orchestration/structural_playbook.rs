@@ -3287,7 +3287,11 @@ fn structural_recommended_path_bundle_from_candidates(
             candidate_paths
                 .iter()
                 .filter(|path| structural_path_matches_current_pre_bayes_branch(path, branch_path))
-                .max_by(|left, right| structural_path_selection_order(left, right, false))
+                .max_by(|left, right| {
+                    structural_current_pre_bayes_branch_priority(left)
+                        .cmp(&structural_current_pre_bayes_branch_priority(right))
+                        .then_with(|| structural_path_selection_order(left, right, false))
+                })
         })
         .or_else(|| {
             if prefer_history_paths {
@@ -3420,6 +3424,7 @@ fn structural_is_regime_root_label(label: &str) -> bool {
             | "Sideways"
             | "Crisis"
             | "Transition"
+            | "SessionRhythm"
             | "TrendExpansion"
             | "RangeExpansion"
             | "RangeConsolidation"
@@ -3433,6 +3438,24 @@ fn structural_path_matches_current_pre_bayes_branch(
 ) -> bool {
     structural_normalize_rooted_branch_path(&path.path_id).as_deref()
         == Some(current_pre_bayes_branch_path)
+}
+
+fn structural_current_pre_bayes_branch_priority(path: &StructuralPathArtifact) -> u8 {
+    let exact_branch_shape = !path.path_id.starts_with("path:") && path.path_id.contains(" -> ");
+    if !exact_branch_shape {
+        return 0;
+    }
+    if path.historical_total_records >= 30 {
+        3
+    } else if path.catboost_score.is_some()
+        || path.path_ranker_calibrated_path_prob.is_some()
+        || path.path_ranker_path_prob_lower_bound.is_some()
+        || path.path_ranker_runtime_source.is_some()
+    {
+        2
+    } else {
+        1
+    }
 }
 
 fn structural_path_runtime_source_is_history(source: Option<&str>) -> bool {
@@ -7540,6 +7563,48 @@ mod tests {
         assert_eq!(bundle.path_id, canonical_branch);
         assert_eq!(bundle.path_label, canonical_branch);
         assert!(!bundle.path_id.starts_with("US_EQ ->"));
+    }
+
+    #[test]
+    fn recommended_bundle_preserves_session_rhythm_current_pre_bayes_branch() {
+        let tomac_branch = "SessionRhythm -> TimeOfDaySeasonality -> BalancedAdaptiveSlotPortfolio -> tomac_tod_balanced_adaptive_slot_portfolio_exact_v1";
+        let bundle = structural_recommended_path_bundle_from_candidates(
+            "TOMAC_TOD_BALANCED_PORTFOLIO_CAP65_DOWNSTREAM_V1".to_string(),
+            "candidate-set:tomac-cap65".to_string(),
+            Some(StructuralPathRankerRuntimeSurface {
+                reuse_mode: Some(STRUCTURAL_PATH_RANKING_RUNTIME_MODE_PREFER_HISTORY.to_string()),
+                ..StructuralPathRankerRuntimeSurface::default()
+            }),
+            Some(tomac_branch),
+            vec![
+                StructuralPathArtifact {
+                    path_id: tomac_branch.to_string(),
+                    path_label: tomac_branch.to_string(),
+                    catboost_score: Some(0.8241877907929633),
+                    path_ranker_execution_gate_status: Some("observe".to_string()),
+                    path_ranker_runtime_source: Some("registered_artifact".to_string()),
+                    composite_preference_score: 0.3812965015029336,
+                    path_posterior: 0.470696,
+                    path_prior: 0.47077903941171856,
+                    historical_total_records: 1641,
+                    ..StructuralPathArtifact::default()
+                },
+                StructuralPathArtifact {
+                    path_id: "Transition -> LiquidityMap -> liquidity_pool_texture -> liquidity_pool_texture:observation_v1".to_string(),
+                    path_label: "Transition -> LiquidityMap -> liquidity_pool_texture -> liquidity_pool_texture:observation_v1".to_string(),
+                    catboost_score: Some(0.7674295989242353),
+                    path_ranker_runtime_source: Some("registered_artifact_history".to_string()),
+                    composite_preference_score: 0.5448793997310588,
+                    path_posterior: 0.470696,
+                    path_prior: 0.470696,
+                    ..StructuralPathArtifact::default()
+                },
+            ],
+        )
+        .expect("recommended bundle");
+
+        assert_eq!(bundle.path_id, tomac_branch);
+        assert_eq!(bundle.path_ranker_raw_score, Some(0.8241877907929633));
     }
 
     #[test]
