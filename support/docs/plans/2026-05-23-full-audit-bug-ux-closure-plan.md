@@ -1143,3 +1143,82 @@ Decision:
   clean selected-tree audit context.
 - Practical factor closure remains false because there are still zero
   promotion/trade-usable positives.
+
+### 2026-05-23 10:27-10:31 CST continuation readback: help audit timeout cleared, release/factor blockers remain
+
+Routing/readback:
+
+- Route used: `sd/ict-engine-maintenance-loop` via Hermes router and repo
+  `CLAUDE.md` -> `AGENT.md`; installed runtime skill path
+  `/Users/<redacted>/.hermes/skills/software-development/ict-engine-maintenance-loop/SKILL.md`.
+- Current broad development worktree remains dirty with unrelated Board A/B and
+  generated factor-script work. Preserve it; do not stage broad files.
+
+Factor claim terminalization readback:
+
+- `/tmp/factor_claim_terminalization_final2_dev_f0281630_20260523.json`
+  exited `0` with `summary.status=pass`, `active_claims=0`,
+  `live_factor_processes=0`, `missing_run_roots=0`,
+  `terminalized_claims=128`, `total_claims=128`,
+  `promotion_allowed_true=0`, `trade_usable_true=0`.
+- `/tmp/factor_claim_terminalization_final2_clean_f0281630_20260523.json`
+  matched the same pass summary from the selected clean-tree context.
+
+Done-definition timeout readback:
+
+- Previous clean selected-tree audit
+  `/tmp/done_definition_final_clean_f0281630_20260523.json` failed only
+  `help_audit_none_output_policy` because `support/scripts/help_audit.py`
+  timed out while running its internal `cargo build --quiet` after 120 seconds.
+- From `/tmp/ict-engine-v015-release-worktree-20260523-f0281630`, a direct
+  `cargo build --quiet` completed successfully in this continuation.
+- After that build, `python3 support/scripts/help_audit.py` exited `0`:
+  `command_count=53`, `commands_with_missing_help=0`,
+  `commands_with_help_errors=0`, `commands_with_market_bias=0`,
+  `none_output_mode_policy_matches_expected=true`, `status=pass`.
+- `python3 support/scripts/done_definition_audit.py --compact --output /tmp/done_definition_clean_after_help_retry_f0281630_20260523.json`
+  exited `0` with light gates passing: `pass_count=4`, `fail_count=0`,
+  `skip_count=4`, `status=pass`. Heavy gates remain skipped in that audit.
+
+Release readback:
+
+- `/tmp/release_readiness_final_clean_f0281630_20260523.json` still exits `1`:
+  `worktree_clean_for_release`, `cargo_release_policy`,
+  `release_docs_fresh_for_selected_tag`, and `release_version_tag_available`
+  pass; `source_origin_matches_selected_source` fails.
+- `HEAD=f0281630ef61722786984a687808a0380fc28ec1`,
+  `origin/main=79d9579ea38685bd8c798dc80c1f5177e3c220b6`,
+  `source_ahead_of_origin=116`.
+
+Decision:
+
+- The clean selected-tree help-audit timeout is cleared as a cold-build timeout,
+  not a current help-surface failure.
+- Full completion is still false: heavy done-definition gates need fresh
+  selected-tree evidence if release readiness is claimed, source-origin parity
+  remains unresolved, and practical factor closure remains false because all
+  terminalized factor claims still have zero promotion/trade-usable positives.
+- No mirror push, release tag, GitHub Release, practical-trading promotion, or
+  `update_goal complete` is authorized from this state.
+
+Heavy done-definition follow-up:
+
+- From `/tmp/ict-engine-v015-release-worktree-20260523-f0281630`, reran:
+  `python3 support/scripts/done_definition_audit.py --run-all-heavy --heavy-timeout-seconds 900 --compact --output /tmp/done_definition_clean_heavy_f0281630_20260523.json`.
+- Exit `0`; summary `status=pass`, `completion_ready=true`,
+  `evidence_level=full_enabled_gate_coverage`, `pass_count=8`,
+  `fail_count=0`, `skip_count=0`.
+- Passing gates: `main_rs_line_guardrail`, `quickstart_surface`,
+  `script_governance_surface`, `help_audit_none_output_policy`,
+  `cargo_check_all_targets`, `cargo_clippy_all_targets_deny_warnings`,
+  `cargo_test`, and `smoke_acceptance_tmp_state`.
+
+Updated decision:
+
+- Clean selected-tree done-definition coverage is now fully proven for
+  `f0281630`.
+- Release completion remains false because
+  `source_origin_matches_selected_source` is still unresolved and broad
+  development checkout dirt is intentionally preserved.
+- Practical factor closure remains false because the clean and dev factor audits
+  still show `promotion_allowed_true=0` and `trade_usable_true=0`.
