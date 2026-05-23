@@ -41,7 +41,7 @@ complete.
 | R2 | Public surfaces are token-friendly and do not expose private paths/secrets by default | smoke outputs plus privacy/path scan over captured outputs | smoke privacy scan passed over `/private/tmp/ict-engine-done-definition-audit-smoke-20260522T223543265157Z-43488-out`; release blockers remain |
 | R3 | Default provider behavior is zero-config and fallback-oriented | `provider-status --compact` and `workflow-status` evidence, no required private profile | smoke provider output passed; `provider_status.out` reports yfinance live zero-config and public crypto runtimes ready |
 | R4 | Closed-loop surfaces are inspectable end-to-end | provider -> regime posterior -> Pre-Bayes -> BBN -> path-ranker/CatBoost visibility -> execution tree -> feedback/training readbacks | smoke passed through analyze/update/workflow/pre-Bayes/policy-training readbacks; practical factor promotion remains unproven |
-| R5 | Release readiness is clear | `support/scripts/release_readiness_audit.py --compact --check-remotes` exits `0` | fresh fail: worktree dirty, stale release docs, source origin mismatch, reused `v0.1.3` |
+| R5 | Release readiness is clear | `support/scripts/release_readiness_audit.py --compact --check-remotes` exits `0` | fresh fail after version slice: worktree dirty, stale release docs, and source origin mismatch remain |
 | R6 | Factor claim/process hygiene is clear | `support/scripts/factor_claim_terminalization_audit.py --compact` exits `0` | fresh pass at 2026-05-23 09:27 CST after parser fix and claim externalization readback: `active_claims=0`, `live_factor_processes=0`, `missing_run_roots=0`; practical positives remain zero |
 | R7 | At least one practical factor is truly promotion/trade usable if the objective claims practical factor closure | downstream evidence has `promotion_allowed=true` and `trade_usable=true` with cost/sample/provider gates | known zero positives in latest handoff |
 | R8 | Docs do not become runtime inputs | `support/scripts/ci/check_docs_runtime_isolation.py` exits `0` | fresh pass |
@@ -50,7 +50,7 @@ complete.
 | R11 | Cargo build/lint/test floor is known | `done_definition_audit.py --run-all-heavy` or focused cargo commands | fresh pass for source slice before `3a8e77c9`: `cargo fmt -- --check`, `cargo check --all-targets`, `cargo clippy --all-targets -- -D warnings`, and `cargo test` |
 | R12 | Dirty worktree is either intentionally preserved or sliced into coherent commits | `git status --short`, staged-path readback before each commit | currently broad dirty tree; not release-ready |
 | R13 | Release notes/signoff match selected tag/export | fresh release docs for unused selected tag | known failing in latest release readiness evidence |
-| R14 | Source/mirror/tag state is publishable | source selected commit pushed or clean export selected; unused version/tag; mirror parity readback | known failing in latest release readiness evidence |
+| R14 | Source/mirror/tag state is publishable | source selected commit pushed or clean export selected; unused version/tag; mirror parity readback | tag/version availability is now locally fixed to `0.1.5`/`v0.1.5`; source/mirror parity still fails |
 
 ## Known Current Blockers
 
@@ -59,8 +59,8 @@ baseline scan.
 
 - Release readiness is not clear:
   `worktree_clean_for_release`, `release_docs_fresh_for_selected_tag`,
-  `source_origin_matches_selected_source`, and `release_version_tag_available`
-  were unresolved in the latest release-readiness audit.
+  and `source_origin_matches_selected_source` remain unresolved in the latest
+  release-readiness audit.
 - Practical factor closure is not proven:
   the latest factor audit has `promotion_allowed_true=0` and
   `trade_usable_true=0`.
@@ -118,6 +118,8 @@ Repeat until all requirements are proven:
 - [x] Refresh factor and release readiness audits after `3a8e77c9`.
 - [x] Terminalize or externalize current active factor claims without
   interrupting live provider/AQ processes.
+- [x] Move the local release candidate version from reused `0.1.3` to unused
+  `0.1.5` so `release_version_tag_available` can pass without publishing.
 - [ ] Keep release readiness blocked until a clean selected export, fresh
   release docs/signoff, unused version/tag, remote parity, and explicit
   operator approval exist.
@@ -874,3 +876,57 @@ Post-commit readback:
   - `HEAD=35d12c83a950095a513b439b8c842aabb4a3f9d7`,
     `source_ahead_of_origin=108`, version `0.1.3`, suggested future
     version/tag `0.1.5` / `v0.1.5`.
+
+### 2026-05-23 09:34 CST Release Version Gate Slice
+
+Trigger:
+
+- Continue the full audit loop from current `HEAD=28b1927b` after confirming
+  factor claim/process hygiene still passes and release readiness still fails.
+
+Fresh pre-slice evidence:
+
+- `python3 support/scripts/factor_claim_terminalization_audit.py --compact --output /tmp/factor_claim_terminalization_resume2_20260523.json`
+  - exit `0`.
+  - factor claim/process hygiene remains clear for this snapshot.
+- `python3 support/scripts/done_definition_audit.py --compact --output /tmp/done_definition_resume2_20260523.json`
+  - exit `0`.
+  - light status `pass`; `completion_ready=false` because cargo/smoke heavy
+    gates were intentionally skipped in this refresh.
+- `python3 support/scripts/release_readiness_audit.py --compact --check-remotes --output /tmp/release_readiness_resume2_20260523.json`
+  - exit `1`.
+  - unresolved before the slice:
+    `worktree_clean_for_release`,
+    `release_docs_fresh_for_selected_tag`,
+    `source_origin_matches_selected_source`,
+    `release_version_tag_available`.
+  - version `0.1.3`; candidate tag `v0.1.3`; known release tags include
+    `v0.1.3` and `v0.1.4`; audit suggested `0.1.5` / `v0.1.5`.
+
+Patch:
+
+- `Cargo.toml`: package version `0.1.3` -> `0.1.5`.
+- `Cargo.lock`: `ict-engine` package version `0.1.3` -> `0.1.5`.
+- Historical `v0.1.3` release signoff/notes were not rewritten; the release
+  audit correctly still requires fresh docs for the selected export/tag.
+
+Verification so far:
+
+- `cargo metadata --no-deps --format-version 1 > /tmp/ict_engine_metadata_version_015_20260523.json`
+  - exit `0`.
+- `python3 support/scripts/release_readiness_audit.py --compact --check-remotes --output /tmp/release_readiness_after_version_015_20260523.json`
+  - exit `1`.
+  - `release_version_tag_available=pass` with `candidate_tag=v0.1.5` and no
+    blocking tags.
+  - remaining unresolved gates:
+    `worktree_clean_for_release`,
+    `release_docs_fresh_for_selected_tag`,
+    `source_origin_matches_selected_source`.
+
+Decision:
+
+- This removes one deterministic release blocker without publishing, tagging,
+  pushing, or claiming release readiness.
+- Full objective remains incomplete until clean export/source parity, fresh
+  release docs/signoff, practical factor proof, and explicit operator approval
+  are all satisfied.
