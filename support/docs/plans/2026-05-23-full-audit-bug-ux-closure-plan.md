@@ -1222,3 +1222,62 @@ Updated decision:
   development checkout dirt is intentionally preserved.
 - Practical factor closure remains false because the clean and dev factor audits
   still show `promotion_allowed_true=0` and `trade_usable_true=0`.
+
+### 2026-05-23 10:37-10:44 CST mirror-stage diff-check repair readback
+
+Fresh current-state audits:
+
+- `python3 support/scripts/factor_claim_terminalization_audit.py --compact --output /tmp/factor_claim_terminalization_resume4_current_20260523.json`
+  exited `0`; `summary.status=pass`, `active_claims=0`,
+  `live_factor_processes=0`, `missing_run_roots=0`,
+  `terminalized_claims=130`, `total_claims=130`,
+  `promotion_allowed_true=0`, `trade_usable_true=0`.
+- `python3 support/scripts/release_readiness_audit.py --compact --check-remotes --output /tmp/release_readiness_resume4_shared_f5d70370_20260523.json`
+  exited `1` from the shared checkout. Unresolved gates are
+  `worktree_clean_for_release` and `source_origin_matches_selected_source`.
+  The shared checkout has `769` status entries (`6` tracked dirty, `763`
+  untracked), while `HEAD=f5d703700f18eb71a1bdf637e9d69e8cec9a84bd` is
+  `119` commits ahead of `origin/main`.
+
+Mirror-stage failure found and rechecked:
+
+- A concurrent staged mirror export wrote report root
+  `/tmp/ict-engine-v015-release-mirror-stage-report-20260523T103658+0800`.
+- It stopped at `git diff --check`; the blocker was
+  `README.zh-CN.md:11: trailing whitespace`.
+- Re-read of current `HEAD` shows `README.zh-CN.md` line 11 already has no
+  trailing spaces, so no README source diff remained to commit in this
+  continuation.
+
+Current-source verification:
+
+- `git diff --check HEAD -- README.zh-CN.md` exited `0`.
+- `git diff -- README.zh-CN.md` is empty.
+
+Verification:
+
+- `git diff --check -- README.zh-CN.md` exited `0`.
+- Secret/path grep over `README.zh-CN.md` for group-number injection patterns,
+  key/token patterns, private-key markers, and `/Users/<redacted>` exited `1`
+  with no hits.
+- Rebuilt a temporary export from `HEAD` plus this README patch and staged it
+  into a shallow release mirror clone using null-delimited checksum parity:
+  `/tmp/ict-engine-v015-readme-whitespace-report-nullsafe-20260523T104133+0800/summary.json`.
+- The staged mirror `git diff --check` now has `diff_check_stdout_lines=0` and
+  `diff_check_stderr_lines=0`.
+- Export/mirror checksum parity is `pass`.
+- Broad private scan still reports existing repository hits (`644`) in old docs,
+  tests, and policy strings; no hit comes from the one-line README patch. Treat
+  that as a separate release-hygiene audit axis, not part of this whitespace
+  repair.
+
+Decision:
+
+- The immediate mirror-stage diff-check blocker is not present in current
+  `HEAD`; the earlier failed stage was stale relative to the current source
+  readback.
+- Release completion remains false: source/origin alignment is still unresolved,
+  the shared checkout remains intentionally dirty, and broad historical private
+  path/doc hits still need their own scoped audit before any publish claim.
+- Practical factor closure remains false because factor audits still have zero
+  promotion/trade-usable positives.
