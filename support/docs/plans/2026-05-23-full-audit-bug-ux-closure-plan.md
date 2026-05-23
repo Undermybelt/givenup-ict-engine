@@ -649,3 +649,47 @@ Next safe actions:
 - Keep release readiness blocked until the dirty source is cut into a clean
   selected export, release docs/signoff are refreshed for an unused version/tag,
   remote parity is proven, and the operator explicitly approves release action.
+
+### 2026-05-23 07:59 CST Factor Hygiene Recheck
+
+Trigger:
+
+- The 07:53 factor audit was live-drift sensitive. The TOMAC cap65 exact-AQ
+  process exited and its claim received terminal evidence from its run root.
+
+Evidence:
+
+- TOMAC claim:
+  `/tmp/ict-engine-agent-claims/board-b-factor-refinement/20260523T074346+0800-codex-tomac-tod-cap65-exact-aq-rebuild.claim`
+  - terminalized at `2026-05-23T07:57:18+0800`.
+  - decision:
+    `exact_autoquant_replay_no_parity_or_5bps_density_survivor`.
+  - run root:
+    `/tmp/ict-engine-tomac-tod-balanced-portfolio-cap65-aq-20260523T074346+0800`.
+  - compile exit `0`; run_tomac exit `0`.
+  - vector trades `1644`; executable vector trades `1644`;
+    suppressed entries `0`; signal sidecar rows `3288`.
+  - `five_bps_survivors=[]`, `promotion_allowed=false`,
+    `trade_usable=false`.
+- `python3 support/scripts/factor_claim_terminalization_audit.py --compact --output /tmp/factor_claim_terminalization_after_tomac_claim_cleanup_20260523.json`
+  - exit `0`.
+  - status `pass`.
+  - summary: `active_claims=0`, `live_factor_processes=0`,
+    `missing_run_roots=0`, `terminalized_claims=109`, `total_claims=109`,
+    `promotion_allowed_true=0`, `trade_usable_true=0`.
+- `python3 support/scripts/release_readiness_audit.py --compact --check-remotes --output /tmp/release_readiness_post_8b28eabc_20260523.json`
+  - exit `1`.
+  - status `needs_fix`.
+  - unresolved:
+    `worktree_clean_for_release`,
+    `release_docs_fresh_for_selected_tag`,
+    `source_origin_matches_selected_source`,
+    `release_version_tag_available`.
+
+Decision:
+
+- Current factor claim/process hygiene is clear for this snapshot.
+- The practical factor objective is still not complete: there are still zero
+  `promotion_allowed=true` and zero `trade_usable=true` results.
+- The release objective is still blocked by dirty worktree/export/docs/tag and
+  remote-parity requirements.
