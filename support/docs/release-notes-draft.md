@@ -1,15 +1,15 @@
 # Release Notes
 
-Version: `v0.1.6`
+Version: `v0.1.7`
 Draft date: 2026-05-23
 Status: correction candidate for the private `ict-engine-release` mirror.
 
 ## Scope
 
-`v0.1.6` corrects the CI failure exposed by the published `v0.1.5` mirror
-release. The fix is intentionally narrow: the release privacy audit test fixture
-no longer embeds a `support/docs/plans/*.md` literal that violates the mirror CI
-docs-runtime-isolation rule.
+`v0.1.7` carries the correction after the prepared `v0.1.6` tag was found
+already present in the release mirror. The fix remains intentionally narrow: the
+release privacy audit test fixture no longer embeds a `support/docs/plans/*.md`
+literal that violates the mirror CI docs-runtime-isolation rule.
 
 The release remains a private source mirror release. It is not a crates.io,
 npm/npx, Homebrew, Docker, binary, or public package-manager release.
@@ -21,8 +21,8 @@ npm/npx, Homebrew, Docker, binary, or public package-manager release.
   `support/docs/plans/old.md` to `support/docs/audits/old.md`.
 - Preserved the release privacy audit behavior: secret-like tokens still block
   release even when found in archived docs.
-- Advanced Cargo metadata to `version = "0.1.6"` so the correction release uses
-  a new mirror tag instead of rewriting `v0.1.5`.
+- Advanced Cargo metadata to `version = "0.1.7"` so the correction release uses
+  an unused mirror tag instead of rewriting `v0.1.6`.
 
 ## Verification already run for the fix slice
 
@@ -40,14 +40,14 @@ npm/npx, Homebrew, Docker, binary, or public package-manager release.
 
 ## Release requirements
 
-Publish `v0.1.6` only after a fresh clean export from the selected committed
+Publish `v0.1.7` only after a fresh clean export from the selected committed
 `HEAD` passes the final gate set and readback confirms:
 
 - mirror `main` advances on `Undermybelt/ict-engine-release`;
-- tag `v0.1.6` exists and resolves to the published mirror commit;
-- GitHub release `v0.1.6` exists;
+- tag `v0.1.7` exists and resolves to the published mirror commit;
+- GitHub release `v0.1.7` exists;
 - no package-manager publication is enabled.
 
 ## Release label
 
-`ict-engine v0.1.6`
+`ict-engine v0.1.7`

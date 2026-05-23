@@ -1,10 +1,10 @@
 # Release signoff
 
 Date: 2026-05-23
-Selected candidate: `v0.1.6`
+Selected candidate: `v0.1.7`
 Selected source commit: pending commit after the CI fixture fix and version bump.
-Status: correction candidate for the `v0.1.5` mirror CI failure. Publish only
-from a clean export after the gates below pass.
+Status: correction candidate after `v0.1.6` was found already present in the
+release mirror. Publish only from a clean export after the gates below pass.
 
 ## Correction scope
 
@@ -39,21 +39,21 @@ The fix keeps the privacy-audit test semantics while moving the fixture path to
   - `cargo test --manifest-path /tmp/ict-engine-v015-ci-fix-export-20260523T120926+0800/Cargo.toml`
     - exit `0`.
 
-## Required final gates for `v0.1.6`
+## Required final gates for `v0.1.7`
 
 After this document and `Cargo.toml` are committed, create a fresh export of the
 selected committed `HEAD` and run:
 
 ```bash
 python3 support/scripts/ci/check_docs_runtime_isolation.py
-python3 support/scripts/release_privacy_audit.py . --compact --output /tmp/release_privacy_audit_v016_export_20260523.json
+python3 support/scripts/release_privacy_audit.py . --compact --output /tmp/release_privacy_audit_v017_export_20260523.json
 python3 -m unittest support.scripts.tests.test_release_privacy_audit -v
 cargo fmt --manifest-path "$RELEASE_EXPORT_DIR/Cargo.toml" --check
 cargo clippy --manifest-path "$RELEASE_EXPORT_DIR/Cargo.toml" --all-targets -- -D warnings
 cargo test --manifest-path "$RELEASE_EXPORT_DIR/Cargo.toml"
 cargo run --manifest-path "$RELEASE_EXPORT_DIR/Cargo.toml" --quiet -- provider-status --compact
-cargo run --manifest-path "$RELEASE_EXPORT_DIR/Cargo.toml" --quiet -- analyze --symbol DEMO --demo --state-dir /tmp/ict-engine-v016-first-run --human
-cargo run --manifest-path "$RELEASE_EXPORT_DIR/Cargo.toml" --quiet -- workflow-status --symbol DEMO --state-dir /tmp/ict-engine-v016-first-run --refresh --agent
+cargo run --manifest-path "$RELEASE_EXPORT_DIR/Cargo.toml" --quiet -- analyze --symbol DEMO --demo --state-dir /tmp/ict-engine-v017-first-run --human
+cargo run --manifest-path "$RELEASE_EXPORT_DIR/Cargo.toml" --quiet -- workflow-status --symbol DEMO --state-dir /tmp/ict-engine-v017-first-run --refresh --agent
 ```
 
 ## Release boundary

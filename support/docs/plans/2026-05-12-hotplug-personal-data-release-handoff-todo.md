@@ -4169,3 +4169,51 @@ Release decision:
   the already verified clean export at the selected commit.
 - No mirror `main` push, tag creation, GitHub Release, practical-trading
   promotion, or `update_goal complete` is authorized from this state.
+
+### 2026-05-23 13:10-13:13 CST v0.1.7 release-candidate retarget
+
+Fresh factor claim readback:
+
+- `/tmp/ict-engine-factor-claims-post-handoff-20260523T131016+0800.json`
+  exited `1`; `summary.status=needs_attention`, `active_claims=1`,
+  `live_factor_processes=0`, `promotion_allowed_true=0`, and
+  `trade_usable_true=0`.
+- Factor closure is still not proven; the active claim must be terminalized or
+  externalized before any factor-completion claim.
+
+Release readiness readback:
+
+- Clean detached audit at `HEAD=22fae7f2f0c0bfea39d7c6c2c5dceac6076c2ccb`
+  wrote `/tmp/ict-engine-release-readiness-clean-head-20260523T131049+0800.json`
+  and exited `1`.
+- In that clean worktree, `worktree_clean_for_release`,
+  `cargo_release_policy`, and `release_docs_fresh_for_selected_tag` passed.
+- `source_origin_matches_selected_source` failed because selected `HEAD` is
+  `2` commits ahead of `origin/main=4406454de95d40551acfcb573e3a4f68bf189e0b`.
+- `release_version_tag_available` failed because `v0.1.6` already exists in the
+  release mirror; the audit suggested `0.1.7` / `v0.1.7`.
+
+Retarget applied in this slice:
+
+- `Cargo.toml` and `Cargo.lock` now use `version = "0.1.7"`.
+- `support/docs/audits/release-signoff.md` and
+  `support/docs/release-notes-draft.md` now identify `v0.1.7` as the selected
+  correction candidate and keep the clean-export gate requirement.
+
+Verification:
+
+- `git diff --check -- Cargo.toml Cargo.lock support/docs/audits/release-signoff.md support/docs/release-notes-draft.md`
+  passed.
+- `cargo check --locked` passed for `ict-engine v0.1.7`.
+- Shared-checkout release audit
+  `/tmp/ict-engine-release-readiness-v017-workingtree-20260523T131237+0800.json`
+  exited `1`; `release_version_tag_available` now passes for `v0.1.7`, while
+  `worktree_clean_for_release` and `source_origin_matches_selected_source`
+  remain unresolved.
+
+Release decision:
+
+- The tag-collision blocker is repaired locally by retargeting to `v0.1.7`.
+- Release is still not ready from this shared checkout. It still requires a
+  clean selected-source audit after this retarget commit and explicit operator
+  authorization before any source push, mirror push, tag, or GitHub Release.
