@@ -853,3 +853,24 @@ Decision:
 - The full objective is still not complete: practical factor readiness still
   has zero promotion/trade-usable positives, and release readiness still fails
   four gates.
+
+Post-commit readback:
+
+- Commit: `35d12c83 fix: recognize terminal factor claim readbacks`.
+- `python3 support/scripts/factor_claim_terminalization_audit.py --compact --output /tmp/factor_claim_terminalization_post_35d12c83_20260523.json`
+  - exit `0`.
+  - status `pass`.
+  - summary: `active_claims=0`, `live_factor_processes=0`,
+    `missing_run_roots=0`, `terminalized_claims=123`, `total_claims=123`,
+    `promotion_allowed_true=0`, `trade_usable_true=0`.
+- `python3 support/scripts/release_readiness_audit.py --compact --check-remotes --output /tmp/release_readiness_post_35d12c83_20260523.json`
+  - exit `1`.
+  - status `needs_fix`.
+  - unresolved:
+    `worktree_clean_for_release`,
+    `release_docs_fresh_for_selected_tag`,
+    `source_origin_matches_selected_source`,
+    `release_version_tag_available`.
+  - `HEAD=35d12c83a950095a513b439b8c842aabb4a3f9d7`,
+    `source_ahead_of_origin=108`, version `0.1.3`, suggested future
+    version/tag `0.1.5` / `v0.1.5`.
