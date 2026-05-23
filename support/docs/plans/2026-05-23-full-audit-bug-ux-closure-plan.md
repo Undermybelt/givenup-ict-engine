@@ -914,6 +914,9 @@ Verification so far:
 
 - `cargo metadata --no-deps --format-version 1 > /tmp/ict_engine_metadata_version_015_20260523.json`
   - exit `0`.
+- `cargo check --all-targets > /tmp/ict_engine_version_015_cargo_check_all_20260523.stdout 2> /tmp/ict_engine_version_015_cargo_check_all_20260523.stderr`
+  - exit `0`.
+  - stderr ended with `Checking ict-engine v0.1.5` and `Finished dev profile`.
 - `python3 support/scripts/release_readiness_audit.py --compact --check-remotes --output /tmp/release_readiness_after_version_015_20260523.json`
   - exit `1`.
   - `release_version_tag_available=pass` with `candidate_tag=v0.1.5` and no
@@ -930,3 +933,27 @@ Decision:
 - Full objective remains incomplete until clean export/source parity, fresh
   release docs/signoff, practical factor proof, and explicit operator approval
   are all satisfied.
+
+Post-commit readback:
+
+- Commit: `2617f214 build: advance release candidate version to 0.1.5`.
+- `cargo metadata --no-deps --format-version 1 > /tmp/ict_engine_metadata_version_015_precommit_20260523.json`
+  - exit `0`.
+- `python3 support/scripts/factor_claim_terminalization_audit.py --compact --output /tmp/factor_claim_terminalization_post_version_commit_20260523.json`
+  - exit `0`.
+  - status `pass`.
+  - summary: `active_claims=0`, `live_factor_processes=0`,
+    `missing_run_roots=0`, `terminalized_claims=123`, `total_claims=123`,
+    `promotion_allowed_true=0`, `trade_usable_true=0`.
+- `python3 support/scripts/done_definition_audit.py --compact --output /tmp/done_definition_post_version_commit_20260523.json`
+  - exit `0`.
+  - light status `pass`; `completion_ready=false`; heavy gates skipped.
+- `python3 support/scripts/release_readiness_audit.py --compact --check-remotes --output /tmp/release_readiness_post_version_commit_20260523.json`
+  - exit `1`.
+  - `release_version_tag_available=pass`, `candidate_tag=v0.1.5`.
+  - remaining unresolved gates:
+    `worktree_clean_for_release`,
+    `release_docs_fresh_for_selected_tag`,
+    `source_origin_matches_selected_source`.
+  - `HEAD=2617f214f55029c203639785885c9292899e4d22`,
+    `source_ahead_of_origin=110`.
