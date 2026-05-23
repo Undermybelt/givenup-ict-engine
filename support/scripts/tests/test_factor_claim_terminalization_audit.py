@@ -24,10 +24,10 @@ class FactorClaimTerminalizationAuditTest(unittest.TestCase):
     def test_parse_claim_text_accepts_colon_and_equals_claims(self) -> None:
         parsed = parse_claim_text(
             """
-owner: codex
-run_root: /tmp/example-run
+Owner: codex
+run-root: /tmp/example-run
 terminalized_at: 2026-05-22T21:52:00+08:00
-decision: fail_closed
+Decision: fail_closed
 summary: promotion_allowed=false; trade_usable=false
 """
         )
@@ -188,6 +188,47 @@ trade_usable=false
             self.assertEqual(report["summary"]["status"], "pass")
             self.assertEqual(report["claims"][0]["status"], "terminalized")
             self.assertEqual(report["claims"][0]["decision"], "fail_closed_observation_only")
+
+    def test_build_report_treats_terminal_readback_heading_case_as_terminal(self) -> None:
+        with tempfile.TemporaryDirectory() as repo_tmp, tempfile.TemporaryDirectory() as claims_tmp:
+            repo_root = Path(repo_tmp)
+            claims_dir = Path(claims_tmp)
+            run_root = repo_root / "support" / "docs" / "experiments" / "run-a"
+            run_root.mkdir(parents=True)
+
+            (claims_dir / "terminal-readback.md").write_text(
+                f"""
+# Terminal Readback
+
+Decision: drop_gate1_no_hard_5bps_density_survivor
+
+Run root:
+{run_root.relative_to(repo_root)}
+
+promotion_allowed=false
+trade_usable=false
+""",
+                encoding="utf-8",
+            )
+            (claims_dir / "terminal-status.claim").write_text(
+                f"""
+owner=codex
+terminal_status=drop_gate1
+terminal_at=2026-05-23T08:41:35+0800
+run_root={run_root.relative_to(repo_root)}
+promotion_allowed=false
+trade_usable=false
+""",
+                encoding="utf-8",
+            )
+
+            report = build_report(claims_dir=claims_dir, repo_root=repo_root)
+
+            self.assertEqual(report["summary"]["terminalized_claims"], 2)
+            self.assertEqual(report["summary"]["active_claims"], 0)
+            self.assertEqual(report["summary"]["status"], "pass")
+            self.assertEqual(report["claims"][0]["decision"], "drop_gate1_no_hard_5bps_density_survivor")
+            self.assertEqual(report["claims"][1]["decision"], "drop_gate1")
 
     def test_summarize_marks_needs_attention_for_active_or_positive_claims(self) -> None:
         summary = summarize(

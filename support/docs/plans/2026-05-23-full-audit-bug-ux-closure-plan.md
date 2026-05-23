@@ -42,7 +42,7 @@ complete.
 | R3 | Default provider behavior is zero-config and fallback-oriented | `provider-status --compact` and `workflow-status` evidence, no required private profile | smoke provider output passed; `provider_status.out` reports yfinance live zero-config and public crypto runtimes ready |
 | R4 | Closed-loop surfaces are inspectable end-to-end | provider -> regime posterior -> Pre-Bayes -> BBN -> path-ranker/CatBoost visibility -> execution tree -> feedback/training readbacks | smoke passed through analyze/update/workflow/pre-Bayes/policy-training readbacks; practical factor promotion remains unproven |
 | R5 | Release readiness is clear | `support/scripts/release_readiness_audit.py --compact --check-remotes` exits `0` | fresh fail: worktree dirty, stale release docs, source origin mismatch, reused `v0.1.3` |
-| R6 | Factor claim/process hygiene is clear | `support/scripts/factor_claim_terminalization_audit.py --compact` exits `0` | fresh fail after `3a8e77c9`: `active_claims=2`, `live_factor_processes=1`, `missing_run_roots=0`; live drift remains open |
+| R6 | Factor claim/process hygiene is clear | `support/scripts/factor_claim_terminalization_audit.py --compact` exits `0` | fresh pass at 2026-05-23 09:27 CST after parser fix and claim externalization readback: `active_claims=0`, `live_factor_processes=0`, `missing_run_roots=0`; practical positives remain zero |
 | R7 | At least one practical factor is truly promotion/trade usable if the objective claims practical factor closure | downstream evidence has `promotion_allowed=true` and `trade_usable=true` with cost/sample/provider gates | known zero positives in latest handoff |
 | R8 | Docs do not become runtime inputs | `support/scripts/ci/check_docs_runtime_isolation.py` exits `0` | fresh pass |
 | R9 | Script governance surfaces are consistent | `support/scripts/check_script_manifest.py` exits `0`; relevant script tests pass | fresh pass for manifest; focused script tests still per-slice |
@@ -64,8 +64,9 @@ baseline scan.
 - Practical factor closure is not proven:
   the latest factor audit has `promotion_allowed_true=0` and
   `trade_usable_true=0`.
-- Current factor claim/process hygiene is open again after the source commit:
-  the latest audit has `active_claims=2` and `live_factor_processes=1`.
+- Current factor claim/process hygiene is clear for the latest snapshot, but this
+  is only claim hygiene: the latest factor audit still has
+  `promotion_allowed_true=0` and `trade_usable_true=0`.
 - The worktree is broad and dirty; release must not publish directly from it.
 - Fresh consumer smoke, privacy scan, docs/runtime isolation, script manifest,
   and help audit now pass for this checkout state.
@@ -115,7 +116,7 @@ Repeat until all requirements are proven:
   do not become false `missing_run_roots` blockers.
 - [x] Commit the verified source/test owner-move slice as `3a8e77c9`.
 - [x] Refresh factor and release readiness audits after `3a8e77c9`.
-- [ ] Terminalize or externalize current active factor claims without
+- [x] Terminalize or externalize current active factor claims without
   interrupting live provider/AQ processes.
 - [ ] Keep release readiness blocked until a clean selected export, fresh
   release docs/signoff, unused version/tag, remote parity, and explicit
@@ -776,3 +777,79 @@ Decision:
 - Release readiness remains blocked by dirty worktree/export, stale release
   docs/signoff, source remote mismatch, reused current version/tag, and missing
   explicit operator release approval.
+
+### 2026-05-23 09:27 CST Resume Audit and Claim Parser Fix
+
+Trigger:
+
+- Resume after the operator asked whether there was nothing left to do.
+- Re-read routing, repo authority, this plan, release handoff, worktree status,
+  and current audit state before acting.
+
+Fresh audit evidence:
+
+- `python3 support/scripts/factor_claim_terminalization_audit.py --compact --output /tmp/factor_claim_terminalization_resume_20260523_codex.json`
+  - exit `1` before the parser fix and claim hygiene pass.
+  - status `needs_attention`.
+  - summary: `active_claims=3`, `live_factor_processes=0`,
+    `missing_run_roots=0`, `terminalized_claims=120`, `total_claims=123`,
+    `promotion_allowed_true=0`, `trade_usable_true=0`.
+  - attention claims:
+    Bybit BOME/TURBO Darvas terminal readback, IBKR SMR prelaunch claim, and
+    IBKR EURGBP claim.
+- `python3 support/scripts/release_readiness_audit.py --compact --check-remotes --output /tmp/release_readiness_resume_20260523_codex.json`
+  - exit `1`.
+  - status `needs_fix`.
+  - unresolved:
+    `worktree_clean_for_release`,
+    `release_docs_fresh_for_selected_tag`,
+    `source_origin_matches_selected_source`,
+    `release_version_tag_available`.
+  - `HEAD=c5d1db7bbc4d7d232cfaad0e05b18039c0876584`,
+    `source_ahead_of_origin=107`, version `0.1.3`, suggested future
+    version/tag `0.1.5` / `v0.1.5`.
+
+Finding:
+
+- `support/scripts/factor_claim_terminalization_audit.py` had a parser UX bug:
+  Markdown terminal readbacks using title-case `Decision:` were reported as
+  active because claim keys were case-sensitive. Existing claim variants also
+  used `terminal_status` / `terminal_at`, which should be terminal aliases.
+- This made the audit noisier and less token-friendly for consumers/agents who
+  write natural terminal readbacks.
+
+Patch:
+
+- `support/scripts/factor_claim_terminalization_audit.py`
+  - normalizes claim keys to lowercase snake_case;
+  - treats `terminal_status` and `terminal_at` as terminal evidence;
+  - uses `terminal_status` as a decision fallback.
+- `support/scripts/tests/test_factor_claim_terminalization_audit.py`
+  - adds regression coverage for title-case `Decision:`, hyphenated `run-root`,
+    and `terminal_status` / `terminal_at` aliases.
+- `/tmp` claim hygiene:
+  - BOME/TURBO original claim already had terminal status and no promotion; the
+    parser fix now classifies the terminal readback correctly.
+  - SMR and EURGBP prelaunch residues were externalized/terminalized with
+    `promotion_allowed=false` and `trade_usable=false`; no live factor process
+    was interrupted.
+
+Verification:
+
+- `python3 -m unittest support.scripts.tests.test_factor_claim_terminalization_audit -v`
+  - exit `0`, `19` tests passed.
+- `python3 -m py_compile support/scripts/factor_claim_terminalization_audit.py support/scripts/tests/test_factor_claim_terminalization_audit.py`
+  - exit `0`.
+- `python3 support/scripts/factor_claim_terminalization_audit.py --compact --output /tmp/factor_claim_terminalization_after_parser_fix_20260523_codex.json`
+  - exit `0`.
+  - status `pass`.
+  - summary: `active_claims=0`, `live_factor_processes=0`,
+    `missing_run_roots=0`, `terminalized_claims=123`, `total_claims=123`,
+    `promotion_allowed_true=0`, `trade_usable_true=0`.
+
+Decision:
+
+- Claim/process hygiene is clear for the latest snapshot.
+- The full objective is still not complete: practical factor readiness still
+  has zero promotion/trade-usable positives, and release readiness still fails
+  four gates.

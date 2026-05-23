@@ -58,7 +58,7 @@ def parse_claim_text(text: str) -> dict[str, Any]:
             summary_parts.append(line)
             continue
         key, value = line.split(separator, 1)
-        key = key.strip()
+        key = key.strip().lower().replace("-", "_")
         value = value.strip()
         if not key:
             continue
@@ -102,7 +102,13 @@ def _resolved_run_root(value: str | None, root: Path) -> Path | None:
 
 def _status(fields: dict[str, Any]) -> str:
     status = str(fields.get("status", "")).lower()
-    if fields.get("terminalized_at") or status.startswith("terminal") or "terminalized" in status:
+    if (
+        fields.get("terminalized_at")
+        or fields.get("terminal_at")
+        or fields.get("terminal_status")
+        or status.startswith("terminal")
+        or "terminalized" in status
+    ):
         return "terminalized"
     if fields.get("decision") or fields.get("terminal_decision"):
         return "terminalized"
@@ -173,8 +179,8 @@ def read_claim(path: Path, root: Path) -> dict[str, Any]:
         "status": _status(fields),
         "owner": fields.get("owner") or fields.get("owner_id"),
         "scope": fields.get("scope") or fields.get("task") or fields.get("lane"),
-        "decision": fields.get("decision") or fields.get("terminal_decision"),
-        "terminalized_at": fields.get("terminalized_at"),
+        "decision": fields.get("decision") or fields.get("terminal_decision") or fields.get("terminal_status"),
+        "terminalized_at": fields.get("terminalized_at") or fields.get("terminal_at"),
         "run_root": str(run_root) if run_root else None,
         "run_root_exists": bool(run_root and run_root.exists()),
         "promotion_allowed": promotion_allowed,
