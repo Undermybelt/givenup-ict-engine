@@ -5,7 +5,7 @@ use serde_json::Value;
 use std::collections::{BTreeMap, BTreeSet};
 use std::fs;
 use std::io::{BufRead, BufReader};
-use std::path::Path;
+use std::path::{Path, PathBuf};
 
 use crate::application::auto_quant::results::{
     load_strategy_library_manifest, ARTIFACT_KIND_LIBRARY,
@@ -71,6 +71,53 @@ pub const STRUCTURAL_PATH_RANKING_TRAINER_ARTIFACT_FILE: &str =
 const STRUCTURAL_PATH_RANKING_TRAINER_ARTIFACT_PROTOCOL_VERSION: &str =
     "structural-path-ranking-trainer-artifact-v1";
 const STRUCTURAL_PATH_RANKING_PRODUCTION_VALIDATION_MIN_ROWS: usize = 30;
+const ICT_ENGINE_FEEDBACK_STATE_CHILD: &str = "ict-engine-feedback";
+
+fn structural_path_ranking_summary_path(state_dir: &str, symbol: &str) -> PathBuf {
+    Path::new(state_dir)
+        .join(symbol)
+        .join(POLICY_TRAINING_DIR)
+        .join(STRUCTURAL_PATH_RANKING_TARGET_SUMMARY_FILE)
+}
+
+fn structural_path_ranking_summary_strength(path: &Path) -> Option<usize> {
+    let raw = fs::read_to_string(path).ok()?;
+    let summary = serde_json::from_str::<StructuralPathRankingTargetExportSummary>(&raw).ok()?;
+    let raw_scored_rows = summary
+        .history_rows_with_raw_path_score
+        .max(summary.rows_with_raw_path_score);
+    let validation_rows = summary
+        .history_rows_with_propensity_estimate
+        .max(summary.rows_with_propensity_estimate);
+    Some(
+        raw_scored_rows
+            .saturating_mul(10_000)
+            .saturating_add(validation_rows.saturating_mul(1_000))
+            .saturating_add(summary.history_mature_rows.saturating_mul(10))
+            .saturating_add(summary.mature_rows)
+            .saturating_add(summary.rows),
+    )
+}
+
+fn structural_path_ranking_read_state_dir(state_dir: &str, symbol: &str) -> String {
+    let primary_summary = structural_path_ranking_summary_path(state_dir, symbol);
+    let alternate_state_dir = Path::new(state_dir).join(ICT_ENGINE_FEEDBACK_STATE_CHILD);
+    let alternate_summary = alternate_state_dir
+        .join(symbol)
+        .join(POLICY_TRAINING_DIR)
+        .join(STRUCTURAL_PATH_RANKING_TARGET_SUMMARY_FILE);
+    if !alternate_summary.exists() {
+        return state_dir.to_string();
+    }
+    let primary_strength = structural_path_ranking_summary_strength(&primary_summary).unwrap_or(0);
+    let alternate_strength =
+        structural_path_ranking_summary_strength(&alternate_summary).unwrap_or(0);
+    if alternate_strength > primary_strength {
+        alternate_state_dir.to_string_lossy().to_string()
+    } else {
+        state_dir.to_string()
+    }
+}
 
 #[derive(Debug, Clone, Deserialize, PartialEq)]
 struct StructuralPathRankingStatusRow {
@@ -1103,8 +1150,10 @@ pub fn policy_training_status(
         }
     }
     let cisd_rb = cisd_rb_training_status(state_dir, symbol)?;
+    let structural_path_ranking_state_dir =
+        structural_path_ranking_read_state_dir(state_dir, symbol);
     let structural_path_ranking_target =
-        structural_path_ranking_target_training_status(state_dir, symbol)?;
+        structural_path_ranking_target_training_status(&structural_path_ranking_state_dir, symbol)?;
     let factor_candidate_packs = factor_candidate_pack_training_status(state_dir, symbol)?;
     let regime_confidence_assets = regime_confidence_asset_training_status(state_dir, symbol)?;
     let providers = entry_model_providers()
@@ -1416,10 +1465,7 @@ pub fn structural_path_ranking_target_training_status(
     state_dir: &str,
     symbol: &str,
 ) -> Result<StructuralPathRankingTargetTrainingStatusSurface> {
-    let summary_path = Path::new(state_dir)
-        .join(symbol)
-        .join(POLICY_TRAINING_DIR)
-        .join(STRUCTURAL_PATH_RANKING_TARGET_SUMMARY_FILE);
+    let summary_path = structural_path_ranking_summary_path(state_dir, symbol);
     if !summary_path.exists() {
         let validation_min_rows = STRUCTURAL_PATH_RANKING_PRODUCTION_VALIDATION_MIN_ROWS;
         let target_row_validation = StructuralPathRankingTargetRowValidationSurface {
@@ -3249,12 +3295,13 @@ fn export_structural_path_ranking_target_from_state_dir(
     state_dir: &str,
     symbol: &str,
 ) -> Result<StructuralPathRankingTargetExportSummary> {
-    let snapshot = load_workflow_snapshot(state_dir, symbol)?;
-    let learning_state = load_learning_state(state_dir, symbol)?;
+    let read_state_dir = structural_path_ranking_read_state_dir(state_dir, symbol);
+    let snapshot = load_workflow_snapshot(&read_state_dir, symbol)?;
+    let learning_state = load_learning_state(&read_state_dir, symbol)?;
     let provider_status_agent = provider_status_agent_surface(None, None, None).unwrap_or_default();
-    let agent_material_rank = load_latest_agent_material_rank_artifact(state_dir, symbol)?;
+    let agent_material_rank = load_latest_agent_material_rank_artifact(&read_state_dir, symbol)?;
     export_structural_path_ranking_target_with_agent_material_rank(
-        state_dir,
+        &read_state_dir,
         symbol,
         &snapshot,
         &provider_status_agent,
@@ -5160,6 +5207,189 @@ detector_context:
             .any(|warning| warning.contains(
                 "structural_path_ranking_target_feedback_rows_missing_structural_refs:dominant_source=legacy_feedback count=1"
             )));
+    }
+
+    fn structural_path_ranking_status_rows_jsonl(
+        candidate_set_id: &str,
+        rows: usize,
+        mature_rows: usize,
+        scored: bool,
+    ) -> String {
+        (0..rows)
+            .map(|idx| {
+                serde_json::to_string(&StructuralPathRankingTargetRow {
+                    rank: idx + 1,
+                    candidate_set_id: candidate_set_id.to_string(),
+                    candidate_set_size: rows,
+                    path_id: format!("path-{idx}"),
+                    scenario_id: format!("scenario-{idx}"),
+                    path_label: "test".to_string(),
+                    direction: "observe".to_string(),
+                    raw_path_score: scored.then_some(0.75),
+                    calibrated_path_prob: scored.then_some(0.75),
+                    path_prob_lower_bound: scored.then_some(0.70),
+                    pending_reward_state: if idx < mature_rows {
+                        "success".to_string()
+                    } else {
+                        "pending".to_string()
+                    },
+                    maturity_mask: idx < mature_rows,
+                    maturity_weight: if idx < mature_rows { 1.0 } else { 0.0 },
+                    propensity_estimate: scored.then_some(0.50),
+                    ips_weight: scored.then_some(2.0),
+                    training_weight: scored.then_some(1.0),
+                    regime_calibration_bucket: "test".to_string(),
+                    behavior_policy_probability: 0.5,
+                    experience_prior: 0.5,
+                    current_posterior: 0.5,
+                    structural_baseline_score: 0.5,
+                    score_model_family: scored.then_some("catboost".to_string()),
+                    score_source_kind: scored.then_some("external_model".to_string()),
+                    score_model_artifact_uri: scored.then_some("artifact://test".to_string()),
+                    ..StructuralPathRankingTargetRow::default()
+                })
+                .unwrap()
+            })
+            .collect::<Vec<_>>()
+            .join("\n")
+    }
+
+    #[test]
+    fn policy_training_status_uses_mature_feedback_child_root_for_ranker_when_primary_root_only_has_assets(
+    ) {
+        let temp = tempfile::tempdir().unwrap();
+        let symbol = "BOARD_A_AGGREGATED_ROOTED_FEEDBACK_20260523";
+        let primary_summary_dir = temp.path().join(symbol).join(POLICY_TRAINING_DIR);
+        let feedback_state_dir = temp.path().join(ICT_ENGINE_FEEDBACK_STATE_CHILD);
+        let feedback_summary_dir = feedback_state_dir.join(symbol).join(POLICY_TRAINING_DIR);
+        std::fs::create_dir_all(&primary_summary_dir).unwrap();
+        std::fs::create_dir_all(&feedback_summary_dir).unwrap();
+
+        let primary_summary = StructuralPathRankingTargetExportSummary {
+            symbol: symbol.to_string(),
+            rows: 1,
+            mature_rows: 0,
+            history_rows: 1,
+            history_mature_rows: 0,
+            candidate_set_id: format!("structural-candidates:{symbol}:primary"),
+            summary_path: primary_summary_dir
+                .join(STRUCTURAL_PATH_RANKING_TARGET_SUMMARY_FILE)
+                .to_string_lossy()
+                .to_string(),
+            ..StructuralPathRankingTargetExportSummary::default()
+        };
+        std::fs::write(
+            primary_summary_dir.join(STRUCTURAL_PATH_RANKING_TARGET_SUMMARY_FILE),
+            serde_json::to_string_pretty(&primary_summary).unwrap(),
+        )
+        .unwrap();
+
+        let feedback_summary = StructuralPathRankingTargetExportSummary {
+            symbol: symbol.to_string(),
+            rows: 50,
+            mature_rows: 50,
+            history_rows: 188,
+            history_mature_rows: 185,
+            rows_with_raw_path_score: 47,
+            rows_with_calibrated_path_prob: 47,
+            rows_with_path_prob_lower_bound: 47,
+            rows_with_propensity_estimate: 120,
+            history_rows_with_raw_path_score: 47,
+            history_rows_with_calibrated_path_prob: 47,
+            history_rows_with_path_prob_lower_bound: 47,
+            history_rows_with_propensity_estimate: 120,
+            candidate_set_id: format!("structural-candidates:{symbol}:feedback"),
+            summary_path: feedback_summary_dir
+                .join(STRUCTURAL_PATH_RANKING_TARGET_SUMMARY_FILE)
+                .to_string_lossy()
+                .to_string(),
+            jsonl_path: feedback_summary_dir
+                .join("structural_path_ranking_target.jsonl")
+                .to_string_lossy()
+                .to_string(),
+            history_jsonl_path: feedback_summary_dir
+                .join("structural_path_ranking_target_history.jsonl")
+                .to_string_lossy()
+                .to_string(),
+            ..StructuralPathRankingTargetExportSummary::default()
+        };
+        std::fs::write(
+            feedback_summary_dir.join(STRUCTURAL_PATH_RANKING_TARGET_SUMMARY_FILE),
+            serde_json::to_string_pretty(&feedback_summary).unwrap(),
+        )
+        .unwrap();
+        std::fs::write(
+            feedback_summary_dir.join("structural_path_ranking_target.jsonl"),
+            structural_path_ranking_status_rows_jsonl(
+                &feedback_summary.candidate_set_id,
+                50,
+                50,
+                true,
+            ),
+        )
+        .unwrap();
+        std::fs::write(
+            feedback_summary_dir.join("structural_path_ranking_target_history.jsonl"),
+            structural_path_ranking_status_rows_jsonl(
+                &feedback_summary.candidate_set_id,
+                188,
+                185,
+                true,
+            ),
+        )
+        .unwrap();
+
+        let payload = serde_json::json!({
+            "summary": {
+                "asset_count": 18,
+                "board_a_regime_gate_count": 11,
+                "direct_event_overlay_count": 2,
+                "diagnostic_after_source_control_unlock_count": 4,
+                "contrast_evidence_count": 10,
+                "recovered_not_candidate_pack_count": 9,
+                "promotion_allowed": false,
+                "runtime_selection_enabled": false
+            },
+            "assets": []
+        });
+        let asset_path = temp
+            .path()
+            .join(symbol)
+            .join("regime_confidence_asset_inventory.json");
+        std::fs::create_dir_all(asset_path.parent().unwrap()).unwrap();
+        std::fs::write(&asset_path, serde_json::to_string_pretty(&payload).unwrap()).unwrap();
+        append_artifact_ledger_entry(
+            temp.path(),
+            symbol,
+            ArtifactLedgerEntry {
+                artifact_kind: "regime_confidence_asset_inventory".to_string(),
+                artifact_id: format!("regime-confidence-asset-inventory:{symbol}:test"),
+                symbol: symbol.to_string(),
+                path: asset_path.to_string_lossy().to_string(),
+                status: "ready_preserved".to_string(),
+                actionable: false,
+                ..ArtifactLedgerEntry::default()
+            },
+        )
+        .unwrap();
+
+        let status = policy_training_status(temp.path().to_str().unwrap(), symbol, None).unwrap();
+
+        assert!(status.regime_confidence_assets.inventory_ready);
+        assert_eq!(status.regime_confidence_assets.asset_count, 18);
+        assert_eq!(status.structural_path_ranking_target.rows, 50);
+        assert_eq!(status.structural_path_ranking_target.mature_rows, 50);
+        assert_eq!(status.structural_path_ranking_target.history_rows, 188);
+        assert_eq!(
+            status.structural_path_ranking_target.history_mature_rows,
+            185
+        );
+        assert_eq!(
+            status
+                .structural_path_ranking_target
+                .history_rows_with_raw_path_score,
+            188
+        );
     }
 
     fn structural_feedback_record_for_status(
