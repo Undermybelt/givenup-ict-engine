@@ -58,13 +58,15 @@ pub fn persist_workspace_profile_selection(
             Ok(None)
         }
         Some(value) if value.eq_ignore_ascii_case(AUTO_QUANT_PROFILE_SYNTHETIC_OHLCV) => {
+            let inferred = infer_pair_and_timeframe_from_source_path(source_data_path, symbol)
+                .unwrap_or_else(|| (synthetic_ohlcv_pair_alias(symbol), "1h".to_string()));
             let profile = AutoQuantWorkspaceProfileConfig {
                 profile: AUTO_QUANT_PROFILE_SYNTHETIC_OHLCV.to_string(),
                 symbol: symbol.to_string(),
                 source_data_path: source_data_path.to_string(),
-                pair: synthetic_ohlcv_pair_alias(symbol),
-                base_timeframe: "1h".to_string(),
-                additional_timeframes: vec!["4h".to_string(), "1d".to_string()],
+                pair: inferred.0,
+                base_timeframe: inferred.1.clone(),
+                additional_timeframes: handoff_additional_timeframes(&inferred.1),
                 notes: vec![
                     "profile_materializes_additive_external_runner".to_string(),
                     "profile_reuses_primary_cleaned_candle_json_as_prepare_external_source"
@@ -206,7 +208,8 @@ fn handoff_workspace_profile(
     if data_path.is_empty() || !Path::new(data_path).exists() {
         return None;
     }
-    let (pair, base_timeframe) = infer_pair_and_timeframe_from_handoff(data_path, &payload.symbol)?;
+    let (pair, base_timeframe) =
+        infer_pair_and_timeframe_from_source_path(data_path, &payload.symbol)?;
     Some(AutoQuantWorkspaceProfileConfig {
         profile: AUTO_QUANT_PROFILE_SYNTHETIC_OHLCV.to_string(),
         symbol: payload.symbol.clone(),
@@ -221,7 +224,7 @@ fn handoff_workspace_profile(
     })
 }
 
-fn infer_pair_and_timeframe_from_handoff(
+fn infer_pair_and_timeframe_from_source_path(
     data_path: &str,
     symbol: &str,
 ) -> Option<(String, String)> {
@@ -230,12 +233,14 @@ fn infer_pair_and_timeframe_from_handoff(
         .split(|ch: char| !ch.is_ascii_alphanumeric())
         .filter(|token| !token.is_empty())
         .collect::<Vec<_>>();
-    let timeframe = tokens
+    let (timeframe_index, timeframe) = tokens
+        .iter()
+        .enumerate()
+        .rev()
+        .find_map(|(index, token)| normalize_timeframe_token(token).map(|tf| (index, tf)))?;
+    let base = tokens[..timeframe_index]
         .iter()
         .rev()
-        .find_map(|token| normalize_timeframe_token(token))?;
-    let base = tokens
-        .iter()
         .find_map(|token| normalize_symbol_token(token))
         .unwrap_or_else(|| synthetic_ohlcv_alias_base_from_symbol(symbol));
     Some((format!("{base}/USD"), timeframe))
@@ -759,5 +764,39 @@ class TomacNQ_KillzoneBreakout(IStrategy):
             active_files.is_empty(),
             "M2K synthetic handoff must remain seed-required instead of copying generic NQ"
         );
+    }
+
+    #[test]
+    fn synthetic_profile_selection_infers_exact_tomac_ladder_from_source_path() {
+        let temp = tempfile::tempdir().unwrap();
+        let state_dir = temp.path().join("state");
+        fs::create_dir_all(&state_dir).unwrap();
+        let source_data_path = temp
+            .path()
+            .join("data-root-diagnostic/tomac_tod_cap65_nq_1m_tail20k.csv");
+
+        let profile = persist_workspace_profile_selection(
+            state_dir.to_str().unwrap(),
+            Some(AUTO_QUANT_PROFILE_SYNTHETIC_OHLCV),
+            "TOMAC_TOD_BALANCED_PORTFOLIO_CAP65_DOWNSTREAM_V1",
+            source_data_path.to_str().unwrap(),
+        )
+        .unwrap()
+        .expect("synthetic profile");
+
+        assert_eq!(profile.pair, "NQ/USD");
+        assert_eq!(profile.base_timeframe, "1m");
+        assert_eq!(
+            profile.additional_timeframes,
+            vec![
+                "5m".to_string(),
+                "15m".to_string(),
+                "30m".to_string(),
+                "1h".to_string(),
+                "4h".to_string(),
+                "1d".to_string(),
+            ]
+        );
+        assert_eq!(profile.source_data_path, source_data_path.to_string_lossy());
     }
 }

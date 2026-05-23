@@ -1,5 +1,6 @@
 use anyhow::Result;
 
+use crate::application::entry_models::training_export::structural_path_ranking_read_state_dir;
 use crate::application::multi_timeframe_inputs::{
     detected_multi_timeframe_clean_root, detected_tomac_root, detected_tomac_root_or_placeholder,
 };
@@ -129,15 +130,16 @@ where
         stable,
     } = input;
     let _ = migrate_ensemble_executor_scorecards(state_dir, symbol)?;
+    let read_state_dir = structural_path_ranking_read_state_dir(state_dir, symbol);
     let mut snapshot = if refresh {
-        refresh_snapshot(state_dir, symbol)?
+        refresh_snapshot(&read_state_dir, symbol)?
     } else {
-        load_workflow_snapshot(state_dir, symbol)?
+        load_workflow_snapshot(&read_state_dir, symbol)?
     };
     hydrate_workflow_snapshot_recommended_next_command_meta(&mut snapshot);
     let persisted_scorecards =
         load_ensemble_executor_scorecards(state_dir, symbol).unwrap_or_default();
-    let learning_state = load_learning_state(state_dir, symbol).unwrap_or_default();
+    let learning_state = load_learning_state(&read_state_dir, symbol).unwrap_or_default();
     let relevant_provider_ids = workflow_relevant_provider_ids(
         &snapshot.recommended_next_command,
         (!snapshot.blocking_truth.reason.is_empty())
@@ -212,10 +214,11 @@ pub fn pre_bayes_status_command<F>(
 where
     F: Fn(&str, &str) -> Result<WorkflowSnapshot>,
 {
+    let read_state_dir = structural_path_ranking_read_state_dir(state_dir, symbol);
     let snapshot = if refresh {
-        refresh_snapshot(state_dir, symbol)?
+        refresh_snapshot(&read_state_dir, symbol)?
     } else {
-        load_workflow_snapshot(state_dir, symbol)?
+        load_workflow_snapshot(&read_state_dir, symbol)?
     };
     emit_pre_bayes_status_output(&snapshot, section, output_format)
 }
@@ -230,18 +233,87 @@ pub fn pre_bayes_diff_command<F>(
 where
     F: Fn(&str, &str) -> Result<WorkflowSnapshot>,
 {
+    let read_state_dir = structural_path_ranking_read_state_dir(state_dir, symbol);
     let snapshot = if refresh {
-        refresh_snapshot(state_dir, symbol)?
+        refresh_snapshot(&read_state_dir, symbol)?
     } else {
-        load_workflow_snapshot(state_dir, symbol)?
+        load_workflow_snapshot(&read_state_dir, symbol)?
     };
     emit_pre_bayes_diff_output(&snapshot, output_format)
 }
 
 #[cfg(test)]
 mod tests {
+    use super::structural_path_ranking_read_state_dir;
+    use super::workflow_status_command;
     use super::workflow_status_needs_provider_surface;
+    use crate::application::entry_models::training_export::POLICY_TRAINING_DIR;
+    use crate::belief_core::ranking_label::StructuralPathRankingTargetExportSummary;
     use crate::state::WorkflowSnapshot;
+    use std::cell::RefCell;
+    use std::path::Path;
+
+    fn write_structural_path_ranking_summary(
+        summary_dir: &Path,
+        symbol: &str,
+        candidate_set_id: &str,
+        rows: usize,
+        mature_rows: usize,
+        history_rows: usize,
+        history_mature_rows: usize,
+        rows_with_raw_path_score: usize,
+        rows_with_propensity_estimate: usize,
+    ) {
+        let summary = StructuralPathRankingTargetExportSummary {
+            symbol: symbol.to_string(),
+            rows,
+            candidate_set_id: candidate_set_id.to_string(),
+            candidate_set_size: rows,
+            pending_reward_states: std::collections::BTreeMap::new(),
+            mature_rows,
+            rows_with_raw_path_score,
+            rows_with_calibrated_path_prob: rows_with_raw_path_score,
+            rows_with_path_prob_lower_bound: rows_with_raw_path_score,
+            rows_with_propensity_estimate,
+            csv_path: summary_dir
+                .join("structural_path_ranking_target.csv")
+                .to_string_lossy()
+                .to_string(),
+            jsonl_path: summary_dir
+                .join("structural_path_ranking_target.jsonl")
+                .to_string_lossy()
+                .to_string(),
+            history_csv_path: summary_dir
+                .join("structural_path_ranking_target_history.csv")
+                .to_string_lossy()
+                .to_string(),
+            history_jsonl_path: summary_dir
+                .join("structural_path_ranking_target_history.jsonl")
+                .to_string_lossy()
+                .to_string(),
+            history_rows,
+            history_mature_rows,
+            history_rows_with_raw_path_score: rows_with_raw_path_score,
+            history_rows_with_calibrated_path_prob: rows_with_raw_path_score,
+            history_rows_with_path_prob_lower_bound: rows_with_raw_path_score,
+            history_rows_with_propensity_estimate: rows_with_propensity_estimate,
+            summary_path: summary_dir
+                .join("structural_path_ranking_target_summary.json")
+                .to_string_lossy()
+                .to_string(),
+            trainer_manifest: Default::default(),
+            summary_line: format!("structural_path_ranking_target rows={rows}"),
+            rows_with_execution_gate_status: 0,
+            rows_with_training_weight: rows_with_propensity_estimate,
+            history_rows_with_training_weight: rows_with_propensity_estimate,
+        };
+        std::fs::create_dir_all(summary_dir).unwrap();
+        std::fs::write(
+            summary_dir.join("structural_path_ranking_target_summary.json"),
+            serde_json::to_string_pretty(&summary).unwrap(),
+        )
+        .unwrap();
+    }
 
     #[test]
     fn workflow_status_phase_read_skips_provider_surface_without_explicit_profile() {
@@ -280,5 +352,76 @@ mod tests {
             Some("execution-candidate"),
             &snapshot,
         ));
+    }
+
+    #[test]
+    fn workflow_status_command_refreshes_from_mature_feedback_child_root() {
+        let temp = tempfile::tempdir().unwrap();
+        let symbol = "BOARD_A_AGGREGATED_ROOTED_FEEDBACK_20260523";
+        let primary_summary_dir = temp.path().join(symbol).join(POLICY_TRAINING_DIR);
+        let feedback_state_dir = temp.path().join("ict-engine-feedback");
+        let feedback_summary_dir = feedback_state_dir.join(symbol).join(POLICY_TRAINING_DIR);
+
+        write_structural_path_ranking_summary(
+            &primary_summary_dir,
+            symbol,
+            &format!("structural-candidates:{symbol}:primary"),
+            1,
+            0,
+            1,
+            0,
+            0,
+            0,
+        );
+        write_structural_path_ranking_summary(
+            &feedback_summary_dir,
+            symbol,
+            &format!("structural-candidates:{symbol}:feedback"),
+            50,
+            50,
+            188,
+            185,
+            47,
+            120,
+        );
+
+        let observed_state_dir = RefCell::new(None::<String>);
+        let refresh_snapshot =
+            |state_dir: &str, symbol: &str| -> anyhow::Result<WorkflowSnapshot> {
+                observed_state_dir.replace(Some(state_dir.to_string()));
+                Ok(WorkflowSnapshot {
+                    symbol: symbol.to_string(),
+                    ..WorkflowSnapshot::default()
+                })
+            };
+
+        workflow_status_command(
+            crate::application::orchestration::WorkflowStatusCommandInput {
+                symbol,
+                state_dir: temp.path().to_str().unwrap(),
+                refresh: true,
+                provider_profile: None,
+                phase: None,
+                actionable_only: false,
+                conflicts_only: false,
+                latest_promotable: false,
+                hard_block_only: false,
+                hard_block_reason: None,
+                limit: None,
+                output_format: "json",
+                stable: false,
+            },
+            refresh_snapshot,
+        )
+        .unwrap();
+
+        assert_eq!(
+            observed_state_dir.into_inner().as_deref(),
+            Some(feedback_state_dir.to_str().unwrap())
+        );
+        assert_eq!(
+            structural_path_ranking_read_state_dir(temp.path().to_str().unwrap(), symbol),
+            feedback_state_dir.to_string_lossy()
+        );
     }
 }

@@ -99,7 +99,7 @@ fn structural_path_ranking_summary_strength(path: &Path) -> Option<usize> {
     )
 }
 
-fn structural_path_ranking_read_state_dir(state_dir: &str, symbol: &str) -> String {
+pub(crate) fn structural_path_ranking_read_state_dir(state_dir: &str, symbol: &str) -> String {
     let primary_summary = structural_path_ranking_summary_path(state_dir, symbol);
     let alternate_state_dir = Path::new(state_dir).join(ICT_ENGINE_FEEDBACK_STATE_CHILD);
     let alternate_summary = alternate_state_dir
