@@ -4295,3 +4295,42 @@ Decision:
 - Release remains separate and still requires a clean selected-source audit plus
   explicit operator authorization before source push, mirror push, tag, or
   GitHub Release.
+
+### 2026-05-23 13:41-13:42 CST current factor audit and clean v0.1.7 selected-source release audit
+
+Fresh factor-claim audit:
+
+- Audit:
+  `/tmp/ict-engine-factor-claims-current-20260523T134155+0800.json`
+  exited `0`.
+- `summary.status=pass`, `active_claims=0`, `missing_run_roots=0`,
+  `live_factor_processes=0`, `terminalized_claims=136`, `total_claims=136`.
+- `promotion_allowed_true=0` and `trade_usable_true=0`.
+
+Fresh clean selected-source release audit:
+
+- Detached worktree:
+  `/tmp/ict-engine-release-clean-head-20260523T134219+0800` at
+  `HEAD=849772d185f44d7722edb66b7d39bd65a24146e9`.
+- Audit:
+  `/tmp/ict-engine-release-readiness-clean-head-rerun-20260523T134248+0800.json`
+  exited `1`.
+- Passed gates: `worktree_clean_for_release`, `cargo_release_policy`,
+  `release_docs_fresh_for_selected_tag`, and `release_version_tag_available`.
+- `v0.1.7` remains available in the release mirror; known tags are `v0.0.1`
+  through `v0.1.6`.
+- Only unresolved gate: `source_origin_matches_selected_source`.
+- Source/origin readback: selected `HEAD=849772d185f44d7722edb66b7d39bd65a24146e9`,
+  `origin/main=4406454de95d40551acfcb573e3a4f68bf189e0b`,
+  `release_mirror_main=e6a8e62826692c645303ba3fdc1d43790a048761`,
+  `source_ahead_of_origin=5`, `source_behind_origin=0`.
+
+Decision:
+
+- Factor terminalization is currently clean, but still no promotion/trade-usable
+  factor exists.
+- The selected source is clean and internally ready for a `v0.1.7` release export
+  except for source/origin alignment.
+- Publishing still requires explicit operator authorization for the exact source
+  push or clean-export publication path, plus mirror push, tag, and GitHub
+  Release actions. None is authorized from this handoff state.
