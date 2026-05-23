@@ -4396,3 +4396,71 @@ Decision:
   export publication, mirror push, tag, or GitHub Release.
 - Factor promotion/trading remains explicitly negative: no promotable or
   trade-usable factor is proven by the claim audit.
+
+### 2026-05-23 14:00-14:01 CST non-published v0.1.7 selected-source export artifact
+
+Fresh factor-claim audit:
+
+- Audit:
+  `/tmp/ict-engine-factor-claims-current-20260523T140008+0800.json`
+  exited `0`.
+- `summary.status=pass`, `active_claims=0`, `missing_run_roots=0`,
+  `live_factor_processes=0`, `terminalized_claims=136`, `total_claims=136`.
+- `promotion_allowed_true=0` and `trade_usable_true=0`.
+
+Current selected-source audit before export:
+
+- Detached worktree:
+  `/tmp/ict-engine-release-export-head-20260523T140040+0800` at
+  `HEAD=eed300a271a79468d6425f14d1af37c595f7e71c`.
+- Audit:
+  `/tmp/ict-engine-release-readiness-export-head-20260523T140040+0800.json`
+  exited `1`.
+- Passed gates: `worktree_clean_for_release`, `cargo_release_policy`,
+  `release_docs_fresh_for_selected_tag`, and `release_version_tag_available`.
+- Only unresolved gate: `source_origin_matches_selected_source`.
+- Source/origin readback: selected `HEAD=eed300a271a79468d6425f14d1af37c595f7e71c`,
+  `origin/main=4406454de95d40551acfcb573e3a4f68bf189e0b`,
+  `release_mirror_main=e6a8e62826692c645303ba3fdc1d43790a048761`,
+  `source_ahead_of_origin=7`, `source_behind_origin=0`.
+- `v0.1.7` remains available in the release mirror; known tags are `v0.0.1`
+  through `v0.1.6`.
+
+Non-published export artifact:
+
+- Tarball:
+  `/tmp/ict-engine-v0.1.7-selected-source-20260523T140040+0800.tar.gz`
+  (`176M`).
+- Manifest:
+  `/tmp/ict-engine-v0.1.7-selected-source-20260523T140040+0800.manifest.txt`
+  (`7.0M`).
+- Archive prefix: `ict-engine-v0.1.7/`.
+- Archive entries: `47938`.
+- SHA-256:
+  `71361b85ecc97ab6866c7aeb917bcb2ce59645c34ab98fa86cef2224b308acd2`
+  for the tarball.
+- SHA-256:
+  `4e93d4c1ffd6584ce3c26525d4bfd7bd86b6d35c09795708ab18c59df17b7041`
+  for the manifest.
+
+Privacy/readback notes:
+
+- Manifest scan for `/Users/`, `Downloads`, and common token patterns produced
+  only filename false positives from `risk-...` path substrings matching the
+  broad `sk-...` token regex; no private absolute path was present in those
+  manifest lines.
+- Sampled text scan of release-critical docs found only the literal policy text
+  `Do not expose /Users/...` in `AGENT.md`; this is an instruction, not a leaked
+  local path.
+- This export is deliberately not pushed, tagged, mirrored, or published.
+
+Decision:
+
+- A non-published clean selected-source export artifact now exists for the
+  pre-record commit `eed300a271a79468d6425f14d1af37c595f7e71c`.
+- Recording this evidence in the repo necessarily advances `main`; before any
+  actual release publication, rerun the clean selected-source audit and export
+  at the exact commit the operator authorizes.
+- Release remains unauthorized and incomplete until the operator explicitly
+  chooses the source push or clean-export publication path and authorizes mirror
+  push, tag, and GitHub Release actions.
