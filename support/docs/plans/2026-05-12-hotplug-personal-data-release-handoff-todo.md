@@ -4464,3 +4464,51 @@ Decision:
 - Release remains unauthorized and incomplete until the operator explicitly
   chooses the source push or clean-export publication path and authorizes mirror
   push, tag, and GitHub Release actions.
+
+### 2026-05-23 14:06 CST current-HEAD operator decision checkpoint
+
+Fresh factor-claim audit:
+
+- Audit:
+  `/tmp/ict-engine-factor-claims-current-20260523T140607+0800.json`
+  exited `0`.
+- `summary.status=pass`, `active_claims=0`, `missing_run_roots=0`,
+  `live_factor_processes=0`, `terminalized_claims=136`, `total_claims=136`.
+- `promotion_allowed_true=0` and `trade_usable_true=0`.
+
+Current-HEAD clean release-readiness audit:
+
+- Detached worktree:
+  `/tmp/ict-engine-release-clean-head-20260523T140646+0800` at
+  `HEAD=db2e3d2fb1786ab62cb236cdf73b01d16e62053b`.
+- Audit:
+  `/tmp/ict-engine-release-readiness-clean-head-20260523T140646+0800.json`
+  exited `1`.
+- Passed gates: `worktree_clean_for_release`, `cargo_release_policy`,
+  `release_docs_fresh_for_selected_tag`, and `release_version_tag_available`.
+- Only unresolved gate: `source_origin_matches_selected_source`.
+- Source/origin readback: selected
+  `HEAD=db2e3d2fb1786ab62cb236cdf73b01d16e62053b`,
+  `origin/main=4406454de95d40551acfcb573e3a4f68bf189e0b`,
+  `release_mirror_main=e6a8e62826692c645303ba3fdc1d43790a048761`,
+  `source_ahead_of_origin=8`, `source_behind_origin=0`.
+- `v0.1.7` remains available in the release mirror; known tags are `v0.0.1`
+  through `v0.1.6`.
+
+Operator decision required before publication:
+
+- Option A: authorize pushing the selected source commit to `origin/main`, then
+  rerun the clean selected-source audit/export at the pushed commit before any
+  mirror push, tag, or GitHub Release.
+- Option B: authorize publishing from a clean export at the exact selected
+  commit without first aligning source `origin/main`; this must be explicit
+  because the readiness audit intentionally keeps
+  `source_origin_matches_selected_source` failed until that policy choice is
+  made.
+
+Decision:
+
+- The current source tree is clean-auditable for a `v0.1.7` release candidate,
+  but release is still not complete or authorized.
+- Do not push source, push mirror, create `v0.1.7`, create a GitHub Release,
+  mark the goal complete, or promote any factor for trading from this state.
