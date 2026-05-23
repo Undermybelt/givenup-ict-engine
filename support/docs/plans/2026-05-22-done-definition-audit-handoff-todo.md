@@ -1898,6 +1898,48 @@ Decision:
 - Keep the goal active; no mirror release, tag, push, factor promotion, or
   `update_goal complete` is authorized from this state.
 
+### 2026-05-23 10:31 CST Isolated Release Audit Leaves Only Source/Origin Gate
+
+Fresh factor-claim audit:
+
+- `/tmp/ict-engine-factor-claims-continuation-20260523T102946+0800.json`
+  exited `0`.
+- `summary.status=pass`.
+- `active_claims=0`, `missing_run_roots=0`, `live_factor_processes=0`.
+- `terminalized_claims=129`, `total_claims=129`.
+- `promotion_allowed_true=0`, `trade_usable_true=0`.
+
+Release-readiness audit from shared checkout:
+
+- `/tmp/ict-engine-release-readiness-continuation-20260523T102946+0800.json`
+  exited `1`.
+- `summary.status=needs_fix`.
+- Unresolved gates were `worktree_clean_for_release` and
+  `source_origin_matches_selected_source` because the shared checkout still has
+  `770` dirty/untracked status entries.
+
+Release-readiness audit from isolated clean worktree:
+
+- Clean worktree: `/tmp/ict-engine-release-clean-wt-20260523T103100+0800`.
+- Audit: `/tmp/ict-engine-release-readiness-clean-wt-20260523T103119+0800.json`
+  exited `1`.
+- `worktree_clean_for_release` passed in the isolated selected source.
+- `cargo_release_policy`, `release_docs_fresh_for_selected_tag`, and
+  `release_version_tag_available` passed.
+- The only unresolved gate was `source_origin_matches_selected_source`.
+- `HEAD=7fbe89f3c9a90130100e0ba9cf321c1d1da3a577`; source is `117` commits
+  ahead of `origin/main`.
+
+Decision:
+
+- Done Definition remains incomplete, but the release blocker is now narrowed:
+  the selected source is clean-auditable, and only source/origin publication
+  alignment remains for the release path.
+- Practical-factor diffusion remains incomplete because zero audited factors are
+  promotable or trade-usable.
+- Keep the goal active; no mirror release, tag, push, factor promotion, or
+  `update_goal complete` is authorized from this state.
+
 ### 2026-05-23 09:26 CST Claim Hygiene Clean Again, Done Definition Still Not Completion
 
 Fresh factor-claim audit:

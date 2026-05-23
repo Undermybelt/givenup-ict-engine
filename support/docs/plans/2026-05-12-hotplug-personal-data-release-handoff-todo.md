@@ -4128,3 +4128,44 @@ Release decision:
   publication flow.
 - No mirror `main` push, tag creation, GitHub Release, practical-trading
   promotion, or `update_goal complete` is authorized from this state.
+
+### 2026-05-23 10:29-10:31 CST isolated clean-worktree release audit narrows blocker to source/origin
+
+Fresh shared-checkout audits:
+
+- `/tmp/ict-engine-factor-claims-continuation-20260523T102946+0800.json`
+  exited `0`; `summary.status=pass`, `active_claims=0`,
+  `missing_run_roots=0`, `live_factor_processes=0`,
+  `terminalized_claims=129`, `total_claims=129`,
+  `promotion_allowed_true=0`, `trade_usable_true=0`.
+- `/tmp/ict-engine-release-readiness-continuation-20260523T102946+0800.json`
+  exited `1`; `summary.status=needs_fix` with unresolved gates
+  `worktree_clean_for_release` and `source_origin_matches_selected_source`.
+- Shared checkout dirty state is still broad: `770` status entries, including
+  `7` tracked dirty entries and `763` untracked entries.
+
+Isolated selected-source audit:
+
+- Clean worktree: `/tmp/ict-engine-release-clean-wt-20260523T103100+0800`,
+  created detached at `HEAD=7fbe89f3c9a90130100e0ba9cf321c1d1da3a577`.
+- Audit: `/tmp/ict-engine-release-readiness-clean-wt-20260523T103119+0800.json`
+  exited `1`.
+- In the clean worktree, `worktree_clean_for_release` passed with `0` status
+  entries.
+- `cargo_release_policy`, `release_docs_fresh_for_selected_tag`, and
+  `release_version_tag_available` also passed.
+- The only remaining release-readiness failure in the isolated selected source
+  is `source_origin_matches_selected_source`.
+- Source/origin readback: `origin/main=79d9579ea38685bd8c798dc80c1f5177e3c220b6`,
+  `release_mirror_main=ab6b1b55d516bcd0f6b88db1931cc40802e683bb`, and local
+  selected source is `117` commits ahead of `origin/main`.
+
+Release decision:
+
+- The dirty-worktree release gate is now proven to be shared-checkout noise for
+  the selected committed source, not a blocker in the detached clean worktree.
+- The remaining release blocker is source/origin alignment: publish requires an
+  explicit operator decision to push the selected source commit or publish from
+  the already verified clean export at the selected commit.
+- No mirror `main` push, tag creation, GitHub Release, practical-trading
+  promotion, or `update_goal complete` is authorized from this state.
