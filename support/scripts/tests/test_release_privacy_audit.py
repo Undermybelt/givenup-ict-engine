@@ -74,7 +74,7 @@ class ReleasePrivacyAuditTest(unittest.TestCase):
     def test_secret_like_tokens_in_historical_docs_still_block_release(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
-            docs = root / "support" / "docs" / "plans"
+            docs = root / "support" / "docs" / "audits"
             docs.mkdir(parents=True)
             (docs / "old.md").write_text(
                 "legacy token " + "sk-" + "abcdefghijklmnopqrstuvwxyz123456" + "\n",
@@ -87,7 +87,7 @@ class ReleasePrivacyAuditTest(unittest.TestCase):
         self.assertEqual(report["summary"]["release_blocking_hits"], 1)
         self.assertEqual(
             report["summary"]["release_blocking_paths"],
-            ["support/docs/plans/old.md"],
+            ["support/docs/audits/old.md"],
         )
 
     def test_compact_report_omits_root_and_limits_samples(self) -> None:
