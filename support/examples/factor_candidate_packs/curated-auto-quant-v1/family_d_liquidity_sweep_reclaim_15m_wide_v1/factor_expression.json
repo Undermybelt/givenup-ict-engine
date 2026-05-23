@@ -23,7 +23,7 @@
   ],
   "complexity": 10,
   "paradigm": "mean reversion sweep reclaim",
-  "expected_regime": null,
+  "expected_regime": "Transition -> LiquiditySweep -> sweep_reclaim_small_cycle -> liquidity_sweep_reclaim_15m_wide_v1",
   "target_market_hypothesis": [
     "NQ/USD"
   ],
@@ -56,5 +56,15 @@
       "backwardation_conflict"
     ],
     "structural_feedback_required": true
+  },
+  "branch_path_contract": {
+    "main_regime": "Transition",
+    "sub_regime": "LiquiditySweep",
+    "sub_sub_regime_or_profit_factor": "sweep_reclaim_small_cycle",
+    "profit_factor": "liquidity_sweep_reclaim_15m_wide_v1",
+    "regime_profit_branch_path": "Transition -> LiquiditySweep -> sweep_reclaim_small_cycle -> liquidity_sweep_reclaim_15m_wide_v1",
+    "training_timeframe": "15m_and_5m",
+    "neutralization_timeframe": "1h",
+    "confirmation_timeframe": "4h"
   }
 }

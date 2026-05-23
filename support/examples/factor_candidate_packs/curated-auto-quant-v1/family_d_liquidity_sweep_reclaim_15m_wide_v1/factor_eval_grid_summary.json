@@ -92,6 +92,100 @@
       "4h": "trend_vote"
     }
   },
+  "timeframe_ladder_evidence": {
+    "schema_version": "board-b-factor-refinement-timeframe-ladder/v1",
+    "branch_path": "Transition -> LiquiditySweep -> sweep_reclaim_small_cycle -> liquidity_sweep_reclaim_15m_wide_v1",
+    "training_timeframe": "15m_and_5m",
+    "neutralization_timeframe": "1h",
+    "confirmation_timeframe": "4h",
+    "small_cycle": {
+      "decision": "incubate",
+      "evidence": [
+        {
+          "timeframe": "15m",
+          "trade_count": 62,
+          "wins": 30,
+          "losses": 32,
+          "profit_factor": 1.7157,
+          "total_profit_pct": 8.67,
+          "evidence_path": "support/docs/experiments/actionable-regime-confidence/runs/20260517T211800+0800-codex-board-b-smallcycle-sweep-nq15m-gate1-v1/summaries/terminal_decision_summary.md"
+        },
+        {
+          "timeframe": "5m",
+          "trade_count": 100,
+          "wins": 34,
+          "losses": 66,
+          "profit_factor": 1.0418,
+          "total_profit_pct": 0.66,
+          "evidence_path": "support/docs/experiments/actionable-regime-confidence/runs/20260517T214500+0800-codex-board-b-smallcycle-sweep-nq5m-sibling-gate1-v1/summaries/terminal_decision_summary.md"
+        }
+      ]
+    },
+    "medium_neutralization": {
+      "decision": "lift_to_confirmation",
+      "result": "positive_but_thin",
+      "evidence": [
+        {
+          "timeframe": "1h",
+          "trade_count": 6,
+          "wins": 4,
+          "losses": 2,
+          "profit_factor": 2.8103,
+          "total_profit_pct": 2.68,
+          "evidence_path": "support/docs/experiments/actionable-regime-confidence/runs/20260517T220000+0800-codex-board-b-sweep-nq1h-neutralization-v1/summaries/terminal_decision_summary.md"
+        },
+        {
+          "timeframe": "1h",
+          "trade_count": 18,
+          "wins": 13,
+          "losses": 5,
+          "profit_factor": 3.3386,
+          "total_profit_pct": 7.78,
+          "evidence_path": "support/docs/experiments/actionable-regime-confidence/runs/20260517T220500+0800-codex-board-b-smallcycle-sweep-nq1h-neutralization-v1/summaries/terminal_decision_summary.md"
+        }
+      ]
+    },
+    "high_timeframe_confirmation": {
+      "decision": "handoff_confirmed",
+      "result": "15m_execution_with_4h_informative_confirmation_positive_but_not_promoted",
+      "trade_count": 62,
+      "wins": 30,
+      "losses": 32,
+      "profit_factor": 1.7157,
+      "total_profit_pct": 8.67,
+      "evidence_path": "support/docs/experiments/actionable-regime-confidence/runs/20260517T221500+0800-codex-board-b-smallcycle-sweep-nq4h-confirmation-v1/summaries/terminal_decision_summary.md",
+      "supplemental_pure_4h_base_confirmation": {
+        "result": "positive_but_thin_not_promoted",
+        "trade_count": 4,
+        "wins": 3,
+        "losses": 1,
+        "profit_factor": 2.093,
+        "total_profit_pct": 1.63,
+        "evidence_path": "support/docs/experiments/actionable-regime-confidence/runs/20260517T223000+0800-codex-board-b-sweep-nq4h-confirmation-v1/summaries/terminal_decision_summary.md"
+      }
+    },
+    "structural_feedback_handoff": {
+      "decision": "handoff_confirmed_not_promotion",
+      "result": "structural_feedback_and_execution_tree_trace_present_but_execution_guarded",
+      "feedback_records_inserted": 62,
+      "observation_validation_rows": 62,
+      "observation_validation_min_rows": 30,
+      "production_validation_rows": 62,
+      "raw_scored_mature_rows": 63,
+      "score_model_family": "catboost",
+      "path_ranker_score_visible_to_execution_tree": true,
+      "path_ranker_score_used_by_execution_tree": true,
+      "execution_gate_status": "observe",
+      "execution_guardrail": "transition_guardrail",
+      "latest_candidate_status": "no_trade",
+      "promotion_allowed": false,
+      "trade_usable": false,
+      "evidence_path": "support/docs/experiments/actionable-regime-confidence/runs/20260517T221500+0800-codex-board-b-smallcycle-sweep-nq4h-confirmation-v1/summaries/terminal_decision_summary.md",
+      "execution_tree_trace_path": "support/docs/experiments/actionable-regime-confidence/runs/20260517T221500+0800-codex-board-b-smallcycle-sweep-nq4h-confirmation-v1/state/SMALLCYCLE_SWEEP_NQ4H_CONFIRMATION/execution_tree_trace.json"
+    },
+    "promotion_state": "candidate_only",
+    "promotion_blocker": "structural feedback and CatBoost/execution-tree handoff exist, but latest execution gate remains observe/transition_guardrail with candidate_status=no_trade; needs factor/gate improvement before promotion"
+  },
   "autoresearch": {
     "effective_status": null,
     "decision_counts": {},

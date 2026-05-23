@@ -1607,3 +1607,478 @@ Actionability:
   from this state.
 - Next coherent slices are either release cleanup/export readiness or a new
   isolated practical-factor proof lane.
+
+## 2026-05-23 07:13 CST SOUN/Bybit/TOMAC Alligator Terminalized, Claim Hygiene Pass
+
+Fresh factor-claim audit after SOUN, AERO/ZRO, GMX/ZETA, DASH/ZEC, and TOMAC
+Alligator/Fractal terminalization:
+
+- `/tmp/ict-engine-factor-claims-final-current-20260523T071328+0800.json`
+  exited `0`.
+- `summary.status=pass`.
+- `active_claims=0`.
+- `terminalized_claims=93`.
+- `total_claims=93`.
+- `missing_run_roots=0`.
+- `live_factor_processes=0`.
+- `promotion_allowed_true=0`.
+- `trade_usable_true=0`.
+- `next_action="no claim terminalization blockers found"`.
+
+Terminalized evidence since the 06:25 checkpoint:
+
+- SOUN voice-AI momentum expansion:
+  `support/docs/experiments/actionable-regime-confidence/runs/20260523T064857+0800-codex-ibkr-soun-voice-ai-momentum-expansion-1m-mtf-gate1-v1`,
+  decision `provider_or_aq_blocked_no_gate1_verdict`. IBKR provider status
+  passed, but all requested/retry OHLCV fetches returned zero rows with exit
+  `3`; no material rows, no rank rows, no downstream.
+- Bybit AERO/ZRO PPO histogram reclaim:
+  `support/docs/experiments/actionable-regime-confidence/runs/20260523T070020+0800-codex-bybit-aero-zro-ppo-histogram-reclaim-1m-full-ladder-gate1-v1`,
+  decision `higher_timeframe_subclass_only_exact_1m_blocked`.
+- Bybit GMX/ZETA Schaff Trend Cycle:
+  `support/docs/experiments/actionable-regime-confidence/runs/20260523T070409+0800-codex-bybit-gmx-zeta-schaff-trend-cycle-1m-full-ladder-gate1-v1`,
+  decision `higher_timeframe_subclass_only_origin_blocked`.
+- Bybit DASH/ZEC Awesome/Accelerator:
+  `support/docs/experiments/actionable-regime-confidence/runs/20260523T070459+0800-codex-bybit-dash-zec-awesome-accelerator-1m-full-ladder-v1`,
+  decision `drop_gate1_cost_or_density_failed`.
+- TOMAC NQ/YM/XAU Alligator/Fractal:
+  `/tmp/ict-engine-tomac-alligator-fractal-gate1-20260523T065631+0800`,
+  decision `drop_gate1_no_hard_5bps_density_quality_survivor`,
+  `candidate_count=1350`, `gate1_survivor_count=0`.
+
+Actionability:
+
+- Claim/process hygiene is clean in this snapshot.
+- The practical-factor objective remains open because
+  `promotion_allowed_true=0` and `trade_usable_true=0`.
+- Release readiness is separate and still fails in the matching release audit.
+- Do not release, tag, push, promote, or describe any factor as trade-usable
+  from this state.
+
+## 2026-05-23 07:28 CST Superseding Drift: Active Claims And Live Work Returned
+
+Fresh factor-claim audit after terminalizing stale DUOL and DYDX/APE claim
+metadata:
+
+- `/tmp/ict-engine-factor-claims-resume-20260523T072855+0800.json`
+  exited `1`.
+- `summary.status=needs_attention`.
+- `active_claims=5`.
+- `terminalized_claims=98`.
+- `total_claims=103`.
+- `missing_run_roots=0`.
+- `live_factor_processes=5`.
+- `promotion_allowed_true=0`.
+- `trade_usable_true=0`.
+
+Current active blockers:
+
+- XBI Williams/MFI reclaim remains claimed and waiting for IBKR contention to
+  clear; no run root exists yet.
+- TOMAC TOD BalancedAdaptiveSlotPortfolio rebuild remains active; the density
+  repair scan is live under PID `14171`, with `portfolio_root` still in
+  progress.
+- NTNX Bayesian-Markov trend detector remains active; wrapper PID `10905` and
+  child IBKR fetch PID `15620` were live against the `15m 3M` request.
+- USDCHF Bollinger squeeze mean-reclaim remains validated but pending launch
+  until the active IBKR fetch clears.
+- Bybit NEO/QTUM Mass Index remains active; wrapper PID `15006` and
+  Auto-Quant dispatch/run_tomac descendants were live.
+
+Terminalized since the 07:13 clean snapshot:
+
+- DUOL Keltner/RSI reclaim:
+  `support/docs/experiments/actionable-regime-confidence/runs/20260523T071951+0800-codex-ibkr-duol-language-learning-keltner-rsi-reclaim-1m-mtf-gate1-v1`,
+  decision `provider_blocked_no_1m_origin_data_no_gate1_verdict`.
+- Bybit DYDX/APE Elder Ray:
+  `support/docs/experiments/actionable-regime-confidence/runs/20260523T072042+0800-codex-bybit-dydx-ape-elder-ray-power-1m-full-ladder-v1`,
+  decision `higher_timeframe_subclass_only_origin_blocked`.
+
+Actionability:
+
+- The 07:13 clean claim/process checkpoint is superseded by this 07:28 drift.
+- The factor objective remains open: zero `promotion_allowed=true`, zero
+  `trade_usable=true`, five active claims, and five live factor processes.
+- Do not release, tag, push, promote, describe any factor as trade-usable, or
+  call `update_goal complete` from this state.
+
+## 2026-05-23 07:39 CST Corrected Claim Hygiene Pass, No Practical Factor Yet
+
+Fresh factor-claim audit after terminalizing/externalizing the post-07:13
+active lanes:
+
+- `/tmp/ict-engine-factor-claims-resume-20260523T073957+0800.json`
+  exited `0`.
+- `summary.status=pass`.
+- `active_claims=0`.
+- `terminalized_claims=103`.
+- `total_claims=103`.
+- `missing_run_roots=0`.
+- `live_factor_processes=0`.
+- `promotion_allowed_true=0`.
+- `trade_usable_true=0`.
+- `next_action="no claim terminalization blockers found"`.
+
+Terminalized or externalized since the 07:28 drift checkpoint:
+
+- Bybit NEO/QTUM Mass Index:
+  `/tmp/ict-engine-bybit-neo-qtum-mass-index-reversal-1m-full-ladder-20260523T072137+0800`,
+  decision `drop_gate1_no_hard_5bps_density_survivor`.
+- TOMAC TOD BalancedAdaptiveSlotPortfolio prerequisite summary:
+  `/tmp/ict-engine-tomac-tod-balanced-portfolio-rebuild-broad-20260523T071334+0800/portfolio_summary.json`
+  had `2299` trades, `1.4775064267352185` trades/all-session, and
+  `5bps` net return `0.5744555991316406`, but exact AQ/downstream was not run;
+  decision `prerequisite_portfolio_summary_ready_exact_aq_pending_no_promotion`.
+- NTNX Bayesian-Markov trend detector:
+  `support/docs/experiments/actionable-regime-confidence/runs/20260523T072352+0800-codex-ibkr-ntnx-bayesian-markov-trend-detector-1m-mtf-gate1-v1`,
+  decision `provider_or_aq_blocked_no_gate1_verdict`, with all provider retry
+  legs exiting `3` and no rank rows.
+- XBI Williams/MFI and USDCHF Bollinger squeeze were externalized as
+  `externalized_pending_ibkr_contention_no_factor_verdict`; they were not
+  launched and have no factor verdict.
+
+Audit fix landed in this slice:
+
+- `support/scripts/factor_claim_terminalization_audit.py` now detects TOMAC
+  helper scans such as `tomac_tod_portfolio_density_repair_scan.py`.
+- `python3 -m unittest support.scripts.tests.test_factor_claim_terminalization_audit`
+  passed `18` tests.
+
+Actionability:
+
+- Claim/process hygiene is clean again in this snapshot.
+- The practical-factor objective remains open because
+  `promotion_allowed_true=0` and `trade_usable_true=0`.
+- Do not release, tag, push, promote, describe any factor as trade-usable, or
+  call `update_goal complete` from this state.
+
+## 2026-05-23 10:12 CST Claim Hygiene Clean, Candidate-Pack Metadata Repair Is Release-Only
+
+Fresh factor-claim audit:
+
+- `/tmp/ict-engine-factor-claims-continuation-20260523T101244+0800.json`
+  exited `0`.
+- `summary.status=pass`.
+- `active_claims=0`.
+- `terminalized_claims=126`.
+- `total_claims=126`.
+- `missing_run_roots=0`.
+- `live_factor_processes=0`.
+- `promotion_allowed_true=0`.
+- `trade_usable_true=0`.
+- `next_action="no claim terminalization blockers found"`.
+
+Candidate-pack metadata repair precheck:
+
+- The dirty three-file JSON slice under
+  `support/examples/factor_candidate_packs/curated-auto-quant-v1/family_d_liquidity_sweep_reclaim_15m_wide_v1/`
+  adds `expected_regime`, `branch_path_contract`, `timeframe_ladder_evidence`,
+  and `timeframe_ladder_transfer` metadata.
+- The slice explicitly preserves `promotion_allowed=false` and
+  `trade_usable=false`; this is release/source coherency repair evidence, not a
+  practical-trading promotion.
+- `cargo test cli_surface_tests::test_factor_candidate_admission_target_builder_lives_in_orchestration_owner -- --nocapture`
+  passed in the dirty worktree.
+- `cargo test tests::test_build_factor_candidate_pack_inventory_reads_curated_packs -- --nocapture`
+  passed in the dirty worktree.
+
+Actionability:
+
+- Claim/process hygiene is clean again in this snapshot.
+- The practical-factor objective remains open because
+  `promotion_allowed_true=0`, `trade_usable_true=0`, and the metadata repair only
+  fixes selected-source coherency for a candidate that remains observation-only.
+- Do not release, tag, push, promote, describe any factor as trade-usable, or
+  call `update_goal complete` from this state.
+
+## 2026-05-23 09:58 CST Claim Hygiene Clean, Release Export Found Data-Slice Blocker
+
+Fresh factor-claim audit:
+
+- `/tmp/ict-engine-factor-claims-continuation-20260523T095813+0800.json`
+  exited `0`.
+- `summary.status=pass`.
+- `active_claims=0`, `missing_run_roots=0`, `live_factor_processes=0`.
+- `terminalized_claims=123`, `total_claims=123`.
+- `promotion_allowed_true=0`, `trade_usable_true=0`.
+
+Actionability:
+
+- Claim/process hygiene remains clean, but the practical-factor objective is not
+  complete because zero factors are promotable or trade-usable.
+- The release side also found a concrete clean-export blocker: committed `HEAD`
+  has tests expecting the Family D liquidity-sweep branch-path contract, while
+  that candidate-pack metadata exists only in dirty working-tree JSON. This is a
+  release-source-slice issue, not a practical-factor promotion.
+- Do not release, tag, push, promote, describe any factor as trade-usable, or
+  call `update_goal complete` from this state.
+
+## 2026-05-23 09:30 CST Superseding Claim Hygiene Clean, Still No Trade-Usable Factor
+
+Fresh factor-claim audit after the 09:26 checkpoint:
+
+- `/tmp/ict-engine-factor-claims-continuation-20260523T093047+0800.json`
+  exited `0`.
+- `summary.status=pass`.
+- `active_claims=0`, `missing_run_roots=0`, `live_factor_processes=0`.
+- `terminalized_claims=123`, `total_claims=123`.
+- `promotion_allowed_true=0`, `trade_usable_true=0`.
+
+Fresh process probe:
+
+- A transient TOMAC cap65 `policy-training-status` process was visible at the
+  first 09:30 readback, but a focused `ps -p` readback immediately afterward
+  found no such PID. No live factor process blocker remained in the compact
+  factor audit.
+
+Actionability:
+
+- The 09:26 checkpoint is superseded by the 09:30 checkpoint, not by a
+  completion signal.
+- Claim/process hygiene remains clean in this snapshot.
+- The practical-factor objective remains open because zero factors are
+  promotable or trade-usable.
+- Do not release, tag, push, promote, describe any factor as trade-usable, or
+  call `update_goal complete` from this state.
+
+## 2026-05-23 09:54 CST Resume Readback: Claim Hygiene Clean, No Practical Factor
+
+Fresh factor-claim audit after interruption/resume:
+
+- `/tmp/ict-engine-factor-claims-continuation-20260523T095449+0800.json`
+  exited `0`.
+- `summary.status=pass`.
+- `active_claims=0`, `missing_run_roots=0`, `live_factor_processes=0`.
+- `terminalized_claims=123`, `total_claims=123`.
+- `promotion_allowed_true=0`, `trade_usable_true=0`.
+
+Fresh process probe:
+
+- The only matches were the `ps | rg` probe itself. No live factor training,
+  Auto-Quant, provider fetch, or downstream `ict-engine` process was visible.
+
+Actionability:
+
+- The 09:33 checkpoint is superseded by the 09:54 checkpoint, not by a
+  completion signal.
+- Claim/process hygiene remains clean in this snapshot.
+- The practical-factor objective remains open because zero factors are
+  promotable or trade-usable.
+- Do not release, tag, push, promote, describe any factor as trade-usable, or
+  call `update_goal complete` from this state.
+
+## 2026-05-23 09:33 CST Superseding Claim Hygiene Clean, Factor Objective Still Open
+
+Fresh factor-claim audit after the 09:30 checkpoint:
+
+- `/tmp/ict-engine-factor-claims-continuation-20260523T093348+0800.json`
+  exited `0`.
+- `summary.status=pass`.
+- `active_claims=0`, `missing_run_roots=0`, `live_factor_processes=0`.
+- `terminalized_claims=123`, `total_claims=123`.
+- `promotion_allowed_true=0`, `trade_usable_true=0`.
+
+Fresh process probe:
+
+- The only matches were the `ps | rg` probe itself. No live factor training,
+  Auto-Quant, provider fetch, or downstream `ict-engine` process was visible.
+
+Actionability:
+
+- The 09:30 checkpoint is superseded by the 09:33 checkpoint, not by a
+  completion signal.
+- Claim/process hygiene remains clean in this snapshot.
+- The practical-factor objective remains open because zero factors are
+  promotable or trade-usable.
+- Do not release, tag, push, promote, describe any factor as trade-usable, or
+  call `update_goal complete` from this state.
+
+## 2026-05-23 09:26 CST Superseding Clean Claim Hygiene, TOMAC Downstream Fail-Closed
+
+Fresh factor-claim audit after the BOME/TURBO, SMR, EURGBP, and TOMAC cap65
+downstream readbacks were normalized into terminal/externalized claim metadata:
+
+- `/tmp/ict-engine-factor-claims-continuation-20260523T092617+0800.json`
+  exited `0`.
+- `summary.status=pass`.
+- `active_claims=0`.
+- `terminalized_claims=123`.
+- `total_claims=123`.
+- `missing_run_roots=0`.
+- `live_factor_processes=0`.
+- `promotion_allowed_true=0`.
+- `trade_usable_true=0`.
+- `next_action="no claim terminalization blockers found"`.
+
+Terminalized or externalized since the 08:23 checkpoint:
+
+- TOMAC TOD BalancedAdaptiveSlotPortfolio cap65 downstream:
+  `/tmp/ict-engine-tomac-tod-cap65-downstream-20260523T083547+0800`,
+  decision `cap65_downstream_fail_closed_or_incomplete`; real trade rows `1638`,
+  command `09_ingest_real_trades.exit=124`, `mature_rows=3`,
+  `history_mature_rows=1641`, `execution_candidate_actionable=false`,
+  `execution_candidate_status=no_trade`, `execution_readiness=0.37842405925447914`,
+  `pda_hybrid_alignment=false`, path-ranker visible/used/validation-ready all
+  `false`, and `promotion_allowed=false` / `trade_usable=false`.
+- Bybit BOME/TURBO Darvas box breakout:
+  `support/docs/experiments/actionable-regime-confidence/runs/20260523T084135+0800-codex-bybit-bome-turbo-darvas-box-breakout-1m-full-ladder-v1`,
+  decision `drop_gate1_no_hard_5bps_density_survivor`; BOME provider rows were
+  fetched, TURBO was invalid on the Bybit linear path, AQ rank rows had zero
+  trades, and all downstream/promotion/trade gates remain `false`.
+- IBKR SMR small-modular-nuclear initial-balance range-expansion:
+  claim externalized as `externalized_prelaunch_no_run_root_no_factor_evidence`;
+  no run root or live process was found, so this is claim hygiene only and not a
+  factor result.
+- IBKR EURGBP FX volatility breakout/reclaim:
+  `support/docs/experiments/actionable-regime-confidence/runs/20260523T085036+0800-codex-ibkr-eurgbp-fx-volatility-breakout-reclaim-1m-mtf-gate1-v1`,
+  decision `drop_gate1_no_exact_1m_5bps_density_survivor`; `14` AQ rank rows,
+  exact `1m` rows had `5-6` trades but negative after hard `5bps/side`, and
+  downstream remains forbidden.
+
+Actionability:
+
+- Claim/process hygiene is clean again in this snapshot.
+- TOMAC cap65 remains useful negative downstream evidence: the prior Gate 1
+  survivor did not become promotable or trade-usable.
+- The practical-factor objective remains open because
+  `promotion_allowed_true=0` and `trade_usable_true=0`.
+- Do not release, tag, push, promote, describe any factor as trade-usable, or
+  call `update_goal complete` from this state.
+
+## 2026-05-23 08:23 CST Superseding Clean Claim Hygiene, Gate 1 Evidence Still Not Promotion
+
+Fresh factor-claim audit after the post-07:58 USDCAD/CADJPY/BONK-FLOKI/GALA-GMT
+drift and the TOMAC cap65 suppressed AQ run:
+
+- `/tmp/ict-engine-factor-claims-continuation-20260523T082357+0800.json`
+  exited `0`.
+- `summary.status=pass`.
+- `active_claims=0`.
+- `terminalized_claims=114`.
+- `total_claims=114`.
+- `missing_run_roots=0`.
+- `live_factor_processes=0`.
+- `promotion_allowed_true=0`.
+- `trade_usable_true=0`.
+- `next_action="no claim terminalization blockers found"`.
+
+Terminalized or reclassified since the 07:58 checkpoint:
+
+- IBKR CADJPY FX Donchian/Turtle breakout-retest:
+  `support/docs/experiments/actionable-regime-confidence/runs/20260523T080227+0800-codex-ibkr-cadjpy-fx-donchian-turtle-breakout-retest-1m-mtf-gate1-v1`,
+  decision `drop_gate1_no_exact_1m_5bps_density_survivor`; `6` provider legs,
+  `12` rank rows, `1312` ranked trades, no `1/2/5bps` survivors, and no
+  downstream.
+- IBKR USDCAD FX Donchian/Turtle retest:
+  `support/docs/experiments/actionable-regime-confidence/runs/20260523T080304+0800-codex-ibkr-usdcad-fx-donchian-turtle-retest-1m-mtf-gate1-v1`,
+  decision `drop_gate1_no_exact_1m_5bps_density_survivor`; `7` provider legs,
+  `14` rank rows, `655` ranked trades, some `1/2bps` non-practical survivors,
+  no `5bps` or exact-origin survivor, and no downstream.
+- Bybit BONK/FLOKI VWAPDEV/OBVRSI:
+  `support/docs/experiments/actionable-regime-confidence/runs/20260523T080742+0800-codex-bybit-bonk-floki-vwapdev-obvrsi-reclaim-1m-full-ladder-v1`,
+  decision `drop_gate1_no_hard_5bps_density_survivor`; `14` provider rows,
+  `14` rank rows, `19` ranked trades, no origin or any hard `5bps` density
+  survivor.
+- Bybit GALA/GMT RWI trend breakout:
+  `support/docs/experiments/actionable-regime-confidence/runs/20260523T081826+0800-codex-bybit-gala-gmt-rwi-trend-breakout-1m-full-ladder-v1`,
+  decision `higher_timeframe_subclass_only_origin_blocked`; `GMTUSDT 5m`
+  survived hard `5bps` as subclass evidence, but exact `1m` origin survivors
+  were empty and downstream remained forbidden.
+- TOMAC TOD BalancedAdaptiveSlotPortfolio cap65 suppressed AQ:
+  `/tmp/ict-engine-tomac-tod-balanced-portfolio-cap65-aq-suppressed-20260523T0816+0800`,
+  decision `gate1_autoquant_cost_density_survivor_downstream_required`;
+  vector trades `1644`, executable vector trades `1638`, suppressed entries
+  `6`, signal rows `3282`, `5bps` survivor
+  `tomac_tod_balanced_adaptive_slot_portfolio_exact_v1`, but
+  `promotion_allowed=false`, `trade_usable=false`, `catboost_allowed=false`,
+  and `execution_tree_allowed=false`.
+
+Verification in this slice:
+
+- `python3 -m unittest support.scripts.tests.test_factor_claim_terminalization_audit`
+  passed `18` tests.
+- `git diff --check -- support/scripts/factor_claim_terminalization_audit.py support/scripts/tests/test_factor_claim_terminalization_audit.py support/docs/plans/2026-05-23-factor-claim-audit-actionability-handoff-todo.md support/docs/plans/2026-05-22-done-definition-audit-handoff-todo.md support/docs/plans/2026-05-12-hotplug-personal-data-release-handoff-todo.md`
+  exited `0` before this append; rerun after append is required for the final
+  verification bundle.
+
+Actionability:
+
+- Claim/process hygiene is clean again in this snapshot.
+- The practical-factor objective remains open because
+  `promotion_allowed_true=0`, `trade_usable_true=0`, and the only fresh
+  positive Gate 1 result explicitly requires downstream proof.
+- Do not release, tag, push, promote, describe any factor as trade-usable, or
+  call `update_goal complete` from this state.
+
+## 2026-05-23 07:58 CST Superseding Clean Claim Hygiene, Still No Practical Factor
+
+Fresh factor-claim audit after post-07:39 APE/USDCHF/XBI/TOMAC/Bybit drift was
+terminalized from artifacts:
+
+- `/tmp/ict-engine-factor-claims-resume-20260523T075832+0800.json`
+  exited `0`.
+- `summary.status=pass`.
+- `active_claims=0`.
+- `terminalized_claims=109`.
+- `total_claims=109`.
+- `missing_run_roots=0`.
+- `live_factor_processes=0`.
+- `promotion_allowed_true=0`.
+- `trade_usable_true=0`.
+- `next_action="no claim terminalization blockers found"`.
+
+Terminalized or reclassified since the 07:39 checkpoint:
+
+- APEUSDT exact 5m Elder Ray:
+  `support/docs/experiments/actionable-regime-confidence/runs/20260523T074059+0800-codex-bybit-apeusdt-5m-elder-ray-power-exact-gate1-v1`,
+  decision `keep_exact_5m_gate1_cost_survivor_downstream_fail_closed`.
+  Gate 1 kept a tiny exact 5m survivor (`6` trades, `5bps/side=+0.12%`,
+  density `1.73/day`), but downstream stayed fail-closed:
+  `execution_candidate_actionable=false`, `execution_candidate_status=no_trade`,
+  `execution_readiness=0.487050812943753`,
+  `transition_hazard=0.9875370421259952`,
+  `pda_hybrid_alignment=false`, path-ranker visible but not used, and
+  `promotion_allowed=false` / `trade_usable=false`.
+- USDCHF FX Bollinger squeeze:
+  `support/docs/experiments/actionable-regime-confidence/runs/20260523T074020+0800-codex-ibkr-usdchf-fx-bollinger-squeeze-mean-reclaim-1m-mtf-gate1-v1`,
+  decision `drop_gate1_no_exact_1m_5bps_density_survivor`; `7` provider legs,
+  `14` material/rank rows, `58` ranked trades, but zero 1/2/5bps survivors and
+  no downstream.
+- XBI Williams/MFI:
+  `support/docs/experiments/actionable-regime-confidence/runs/20260523T074037+0800-codex-ibkr-xbi-biotech-etf-williams-mfi-reclaim-1m-mtf-gate1-v1`,
+  decision `provider_or_aq_blocked_no_gate1_verdict`; provider/material/AQ did
+  not produce rank rows, so this is infrastructure-blocked evidence only.
+- TOMAC TOD broad exact AQ:
+  `/tmp/ict-engine-tomac-tod-balanced-portfolio-exact-aq-broad-20260523T074209+0800`,
+  decision `exact_autoquant_replay_no_parity_or_5bps_density_survivor`;
+  compile/run exited `0`, vector trades `2299`, executable trades `2299`,
+  signal sidecar rows `4598`, and `5bps survivors=[]`.
+- TOMAC TOD cap65 exact AQ:
+  `/tmp/ict-engine-tomac-tod-balanced-portfolio-cap65-aq-20260523T074346+0800`,
+  decision `exact_autoquant_replay_no_parity_or_5bps_density_survivor`;
+  compile/run exited `0`, vector trades `1644`, executable trades `1644`,
+  signal sidecar rows `3288`, and `5bps survivors=[]`.
+- Bybit ALGO/XTZ Choppiness:
+  `support/docs/experiments/actionable-regime-confidence/runs/20260523T074908+0800-codex-bybit-algo-xtz-choppiness-breakout-reclaim-1m-full-ladder-v1`,
+  decision `higher_timeframe_subclass_only_origin_blocked`; non-origin
+  subclass rows exist, but exact 1m origin survivors are empty and downstream is
+  forbidden.
+- Bybit WOO/CFX PGO:
+  `support/docs/experiments/actionable-regime-confidence/runs/20260523T075214+0800-codex-bybit-woo-cfx-pgo-reclaim-1m-full-ladder-v1`,
+  decision `drop_gate1_no_hard_5bps_density_survivor`; `14` provider rows,
+  `14` rank rows, `9` ranked trades, and no hard 5bps density survivor.
+
+Verification in this slice:
+
+- `python3 -m unittest support.scripts.tests.test_factor_claim_terminalization_audit`
+  passed `18` tests.
+- `git diff --check -- support/scripts/factor_claim_terminalization_audit.py support/scripts/tests/test_factor_claim_terminalization_audit.py support/docs/plans/2026-05-23-factor-claim-audit-actionability-handoff-todo.md support/docs/plans/2026-05-22-done-definition-audit-handoff-todo.md support/docs/plans/2026-05-12-hotplug-personal-data-release-handoff-todo.md`
+  exited `0`.
+
+Actionability:
+
+- Claim/process hygiene is clean again in this snapshot.
+- The practical-factor objective remains open because
+  `promotion_allowed_true=0` and `trade_usable_true=0`.
+- Do not release, tag, push, promote, describe any factor as trade-usable, or
+  call `update_goal complete` from this state.

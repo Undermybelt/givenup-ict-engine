@@ -53,5 +53,49 @@
       "evidence_source": "slice_92_cross_market"
     }
   },
-  "evidence_source": "manifest+candidate_spec"
+  "evidence_source": "manifest+candidate_spec",
+  "branch_path_contract": {
+    "main_regime": "Transition",
+    "sub_regime": "LiquiditySweep",
+    "sub_sub_regime_or_profit_factor": "sweep_reclaim_small_cycle",
+    "profit_factor": "liquidity_sweep_reclaim_15m_wide_v1",
+    "regime_profit_branch_path": "Transition -> LiquiditySweep -> sweep_reclaim_small_cycle -> liquidity_sweep_reclaim_15m_wide_v1"
+  },
+  "timeframe_ladder_transfer": {
+    "small_cycle_decision": "incubate",
+    "medium_neutralization_result": "lift_to_confirmation_positive_but_thin",
+    "high_timeframe_confirmation_result": "handoff_confirmed_not_promotion",
+    "small_cycle_trade_count": 162,
+    "medium_neutralization_trade_count_range": [
+      6,
+      18
+    ],
+    "confirmation_trade_count": 62,
+    "confirmation_trade_count_additional_pure_4h": 4,
+    "structural_feedback_handoff": {
+      "feedback_records_inserted": 62,
+      "observation_validation_rows": 62,
+      "observation_validation_min_rows": 30,
+      "production_validation_rows": 62,
+      "raw_scored_mature_rows": 63,
+      "score_model_family": "catboost",
+      "path_ranker_score_visible_to_execution_tree": true,
+      "path_ranker_score_used_by_execution_tree": true,
+      "execution_gate_status": "observe",
+      "execution_guardrail": "transition_guardrail",
+      "latest_candidate_status": "no_trade",
+      "evidence_path": "support/docs/experiments/actionable-regime-confidence/runs/20260517T221500+0800-codex-board-b-smallcycle-sweep-nq4h-confirmation-v1/summaries/terminal_decision_summary.md"
+    },
+    "promotion_allowed": false,
+    "trade_usable": false,
+    "promotion_blocker": "structural feedback and CatBoost/execution-tree handoff exist, but latest execution gate remains observe/transition_guardrail with candidate_status=no_trade; needs factor/gate improvement before promotion",
+    "evidence_paths": [
+      "support/docs/experiments/actionable-regime-confidence/runs/20260517T211800+0800-codex-board-b-smallcycle-sweep-nq15m-gate1-v1/summaries/terminal_decision_summary.md",
+      "support/docs/experiments/actionable-regime-confidence/runs/20260517T214500+0800-codex-board-b-smallcycle-sweep-nq5m-sibling-gate1-v1/summaries/terminal_decision_summary.md",
+      "support/docs/experiments/actionable-regime-confidence/runs/20260517T220000+0800-codex-board-b-sweep-nq1h-neutralization-v1/summaries/terminal_decision_summary.md",
+      "support/docs/experiments/actionable-regime-confidence/runs/20260517T220500+0800-codex-board-b-smallcycle-sweep-nq1h-neutralization-v1/summaries/terminal_decision_summary.md",
+      "support/docs/experiments/actionable-regime-confidence/runs/20260517T221500+0800-codex-board-b-smallcycle-sweep-nq4h-confirmation-v1/summaries/terminal_decision_summary.md",
+      "support/docs/experiments/actionable-regime-confidence/runs/20260517T223000+0800-codex-board-b-sweep-nq4h-confirmation-v1/summaries/terminal_decision_summary.md"
+    ]
+  }
 }

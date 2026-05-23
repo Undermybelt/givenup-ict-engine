@@ -86,6 +86,9 @@ Status legend: `done`, `active`, `next`, `blocked`, `not_yet`.
 | done | Auto-Quant path-ranker helper hardening | Owner: Codex current turn, closed 2026-05-22 after focused Python/Rust verification. Fixed consumer pain points in the external path-ranker loop: Yahoo/futures symbols such as `GC=F` now materialize TOMAC pair aliases without punctuation, IBKR `ts` CSV headers can derive timeranges, state-local trainer artifacts register with policy-relative URIs, CatBoost training can fall back to direct weighted-feature artifacts when labels are not trainable, and replay feedback can target an exact `regime_profit_branch_path` instead of rank 1. Verification: `python3 -m unittest support.scripts.auto_quant_external.tests.test_next_slice_helpers support.scripts.auto_quant_external.tests.test_path_ranker_hotplug` passed 26 tests; `cargo test application::auto_quant::agent_material::tests:: -- --nocapture` passed 15 tests. |
 | done | Consumer/contributor entrypoint docs | Owner: Codex current turn, closed 2026-05-22 after link-target and light-audit verification. Added root README links to zero-config consumer/contributor quickstarts, `CONTRIBUTING.md`, and command-output contract; refreshed AGENT/factor-catalog factor traceability from stale line numbers/stubs to stable function paths and active partial status; recorded main.rs debt baseline and release-mirror version/readiness warning. Verification: link targets exist, `git diff --check` passed for the docs slice, and `python3 support/scripts/done_definition_audit.py --output /tmp/ict-engine-done-definition-audit-20260522-doc-entrypoint-light.json` passed default gates with `pass_count=4`, `fail_count=0`, `skip_count=4`. |
 | blocked | 2026-05-22 three-part completion audit | Current-tree Done Definition heavy gate now passes at `/tmp/ict-engine-done-definition-audit-20260522-current-heavy.json`, and smoke path-ranker audit gate was committed as `6bcc66bb`. Release completion is still not proven: source branch remains ahead of `origin/main` (`79d9579e`), release mirror `main` is `ab6b1b55`, `Cargo.toml` still reports `0.1.3`, `support/docs/audits/release-signoff.md` and `support/docs/release-notes-draft.md` now explicitly mark their `v0.1.3` content as historical/stale for the current branch, and this worktree has broad dirty state. Do not publish from this checkout; rebuild a clean export for an explicit new tag and rerun release gates first. |
+| blocked | 2026-05-22 realtime continuation readback | Owner: Codex current turn, refreshed after routing and live probes. Current source `HEAD=6dd08ec5132a728336d3545be20ac290d35e7ab2`, `origin/main=79d9579ea38685bd8c798dc80c1f5177e3c220b6`, and local main is `61` commits ahead of origin. Release mirror `Undermybelt/ict-engine-release` still has `main=ab6b1b55d516bcd0f6b88db1931cc40802e683bb` and latest GitHub Release `v0.1.4` from `2026-05-18T13:02:21Z`; local `Cargo.toml` remains `0.1.3`. Factor readback remains non-promoting: blocker map says no hard-gate branch; M2K current blocker report has `promotion_allowed=false`, `trade_usable=false`, `execution_candidate_status=no_trade`, `ranker_validation_ready=false`. Next work is same-root repair or clean export/tag preparation, not completion claim. |
+| active | SI `15m` Turtle Soup same-root PDA repair selection | Owner: Codex current turn, claim `/tmp/ict-engine-agent-claims/board-b-factor-refinement/20260522T210000+0800-codex-si15m-turtle-soup-pda-sequence-repair.claim`. M2K is skipped for now because active M2K claims exist and the fresh14d readback lost the older 5bps survivor. SI `15m` Turtle Soup has exact 5bps survivors, `ranker_validation_ready=true`, and path-ranker visible; blockers are PDA family/sequence disagreement, high transition hazard, `execution_candidate_status=no_trade`, and visible-not-used path-ranker. |
+| active | CRWD `5m` promotion/trade-usable bridge readback | Owner: Codex current turn, current-binary isolated readback `/tmp/ict-engine-crwd5m-current-readback-20260522T212430+0800` ran all commands with exit `0`. CRWD now has execution candidate `execution_ready/actionable=true`, structural execution candidate `ready=true`, closed-loop branch admission `admitted`, ranker runtime using candidate-set scores, and ranker validation `46/30` raw/production plus `43/30` observation. It still cannot be counted as completed diffusion or release proof: `promotion_allowed=false`, `read_only_regime_bbn_trade_usable=false`, Pre-Bayes is `pass_neutralized`, latest analyze stays `promotion_status=observe` / `execution_gate_status=execution_blocked`, and trade plan `actionable=false`. Next work is exact-root BBN/promotion bridge audit; do not publish or promote by copying the structural candidate upward. |
 | blocked | Current-tree release completion | Full `cargo test` now passes after the provider Python probe repair. Still blocked until the current dirty tree is split/committed or clean-exported from the intended HEAD; do not publish from this dirty worktree. |
 | blocked | Publish release mirror | Blocked on the new closed-loop/entrypoint/privacy gate and then explicit operator confirmation for `v0.1.2` tag/push/`gh release create`. GitHub auth was previously available and remote had no `v0.1.2` tag, but re-check before any publish. |
 
@@ -2626,3 +2629,1449 @@ Release mirror verification:
 - Smoke summary reported yfinance as the zero-config ready provider,
   `candidate_pack_count=7`, admission target `rows=35`, and
   `regime_confidence_asset_count=18`.
+
+### 2026-05-22 latest-goal continuation: release remains blocked
+
+Current answer to the three-part goal is still no:
+
+- Latest current-tree audit evidence exists, but it is not a clean release-export
+  proof for the current dirty tree.
+- Mirror release evidence is stale relative to current source state: local
+  source and release metadata were not proven as a new sanitized export, and no
+  explicit operator permission exists for a new tag/push/GitHub Release.
+- Practical-factor diffusion is still not trade-usable. The isolated SI `15m`
+  Turtle Soup readback at
+  `/tmp/ict-engine-si15m-current-readback-20260522T211036+0800` ran current
+  binary commands successfully, but the key summary at
+  `/tmp/ict-engine-si15m-current-readback-20260522T211036+0800/out/06_key_summary.json`
+  reports `promotion_status=observe`, execution candidate `no_trade`,
+  closed-loop branch admission `fail_closed`, execution tree `blocked`, ranker
+  validation `ready=false`, and
+  `path_ranker_score_visible_to_execution_tree=true` while
+  `path_ranker_score_used_by_execution_tree=false`.
+- Sibling SI `15m` admission roots are duplicate-depth, not release proof: each
+  available simulated-trade file has `23` rows, and the current exact-branch
+  target history still has only `23/30` production and observation validation
+  rows. This cannot be counted as practical all-market/all-product diffusion.
+
+Release unblock requirements remain:
+
+1. Prove at least one exact rooted branch through downstream gates with
+   `promotion_allowed=true`, `trade_usable=true`, ranker validation ready,
+   execution-tree use of the ranker score, and a non-blocked execution gate.
+2. Freeze a coherent source slice from the dirty tree.
+3. Build a clean sanitized export, rerun fmt, Clippy, full tests,
+   zero-config smoke, and privacy scans from that export.
+4. Refresh release signoff and release notes for the selected new tag.
+5. Publish mirror main/tag/GitHub Release only after explicit operator
+   confirmation for that exact slice.
+
+### 2026-05-22 latest-goal continuation: CRWD is execution-ready, not promoted
+
+Current answer to the three-part goal remains no.
+
+- CRWD `5m` readback root:
+  `/tmp/ict-engine-crwd5m-current-readback-20260522T212430+0800`.
+- The current binary preserved the rooted branch path:
+  `RangeReversion -> AiSecuritySoftwareOversoldReclaim -> rsi_vwap_reclaim_dense -> yf_ai_security_software_rsi_vwap_reclaim_crwd_5m_v1 -> session_liquidity_transition_stability_v1 -> pda_mtf_soft_confirmation_v1`.
+- Positive current evidence: execution candidate is `execution_ready`, the
+  structural execution candidate is `ready=true`, closed-loop branch admission
+  is `admitted`, and policy/ranker validation is ready with
+  `raw_scored_mature=46/30`, `production_validation=46/30`, and
+  `observation_validation=43/30`.
+- Blocking current evidence: top-level promotion remains false
+  (`current_regime_posterior.promotion_allowed=false` and
+  `regime_confidence_assets.promotion_allowed=false`), BBN filtered assignment
+  still says `read_only_regime_bbn_trade_usable=false`, latest analyze remains
+  `promotion_status=observe` / `execution_gate_status=execution_blocked`, and
+  `report.trade_plan.actionable=false`.
+
+Decision:
+
+- CRWD is the next best same-root repair lead because the ranker/execution-tree
+  layer is no longer the blocker.
+- The remaining gap is the BBN/promotion/trade-plan bridge for this exact
+  branch; release mirror status remains blocked until a promoted/trade-usable
+  branch exists and a clean export/tag/release is explicitly approved.
+- Opt-in BBN probe `/tmp/ict-engine-crwd5m-bbn-optin-probe-20260522T2129`
+  confirms this is not just a missing CLI flag. With
+  `--apply-regime-bundle-bbn-soft-evidence`, the current binary still reports
+  `promotion_status=observe`, `trade_plan.actionable=false`,
+  `regime_bundle_bbn_application_status=skipped`, and
+  `read_only_regime_bbn_trade_usable=false`. The imported strategy library
+  metadata itself is non-promoting (`promotion_allowed=false`,
+  `trade_usable=false`), so the adapter emits read-only branch context rather
+  than a trade-usable BBN label.
+
+### 2026-05-22 latest-goal continuation: current-state refresh
+
+Current answer to the three-part goal remains no.
+
+Fresh source / mirror readback:
+
+- Local `HEAD=df5c679e6c83a2bd65cdef89e1035bef8843eddb`.
+- `origin/main=79d9579ea38685bd8c798dc80c1f5177e3c220b6`.
+- Local `main` is ahead of origin by `64` commits.
+- Release mirror `main=ab6b1b55d516bcd0f6b88db1931cc40802e683bb`.
+- Latest GitHub Release is still `v0.1.4`, published
+  `2026-05-18T13:02:21Z`.
+- `Cargo.toml` still says `version=0.1.3`.
+
+Current CRWD full-chain readback:
+
+- Artifact:
+  `support/docs/experiments/actionable-regime-confidence/runs/20260522T211756+0800-codex-crwd5m-current-code-isolated-execution-candidate-replay-v2/checks/current_code_full_chain_readback.json`.
+- Branch-local execution/ranker state is strong:
+  `execution_ready`, `admitted`, path-ranker used by execution tree, and
+  ranker validation `46/30`, `46/30`, `43/30`.
+- It still cannot be promoted or released:
+  `promotion_allowed=false`, `trade_usable=false`,
+  `extension_complete=false`, and `regime_root_parity=false`.
+- The parity blocker is concrete: runtime `path_id` is prefixed with
+  `US_EQ -> single_stock -> CRWD -> 5m ->` before the canonical
+  `RangeReversion -> ...` branch. Those four fields are provenance labels, not
+  branch parents.
+
+Provider parity note:
+
+- `/tmp/ict-engine-crwd5m-fresh-ibkr-provider-parity-20260522T213105+0800`
+  had a partial failure on `5m 3M` (`exit=3`, `rows=0`).
+- `/tmp/ict-engine-crwd-ibkr-1m-full-ladder-provider-preflight-20260522T213325+0800`
+  later proved a complete IBKR ladder with rows for
+  `1m/5m/15m/30m/1h/4h/1d`.
+- This improves the extension preflight, but it is not a practical-factor or
+  release completion proof until strict rooted-branch parity, promotion,
+  trade-usable, sibling/timeframe coverage, clean export, and release approval
+  all pass.
+
+### 2026-05-22 latest-goal continuation: rooted path code repair landed, runtime parity still unproven
+
+Current answer to the three-part goal remains no.
+
+Rooted identity code repair:
+
+- File: `src/application/orchestration/structural_playbook.rs`.
+- The recommended structural path bundle now strips recognized
+  market/product/symbol/timeframe provenance prefixes before emitting branch
+  identity when a candidate path contains a canonical regime root.
+- Focused CRWD shape:
+  `US_EQ -> single_stock -> CRWD -> 5m -> RangeReversion -> ...` emits
+  `RangeReversion -> ...` as the recommended bundle `path_id`.
+- The change is intentionally scoped to recommended-bundle comparison/emission;
+  target export rows were not globally rewritten in this slice.
+
+Fresh verification:
+
+- RED command:
+  `CARGO_TARGET_DIR=/tmp/ict-engine-target-crwd-root-parity cargo test application::orchestration::structural_playbook::tests::recommended_bundle_strips_market_provenance_from_rooted_path_identity -- --nocapture`
+  exited `101` before the fix with raw provenance prefix on the emitted
+  `bundle.path_id`.
+- GREEN command:
+  same command exited `0` after the fix: `1 passed; 0 failed`.
+- Related structural tests:
+  `CARGO_TARGET_DIR=/tmp/ict-engine-target-crwd-root-parity cargo test application::orchestration::structural_playbook::tests:: -- --nocapture`
+  exited `0`: `49 passed; 0 failed`.
+- Same-root workflow regression:
+  `CARGO_TARGET_DIR=/tmp/ict-engine-target-crwd-root-parity cargo test application::orchestration::workflow_status::tests::execution_candidate_phase_lets_same_root_trace_admission_supersede_duplicate_analyze_veto -- --nocapture`
+  exited `0`: `1 passed; 0 failed`.
+- Whitespace / formatting:
+  `git diff --check -- src/application/orchestration/structural_playbook.rs support/docs/plans/2026-05-22-done-definition-audit-handoff-todo.md support/docs/plans/2026-05-12-hotplug-personal-data-release-handoff-todo.md`
+  exited `0`; `rustfmt --check src/application/orchestration/structural_playbook.rs`
+  exited `0`.
+- Light done-definition audit:
+  `python3 support/scripts/done_definition_audit.py --output /tmp/ict-engine-done-definition-audit-20260522-after-root-parity-light.json`
+  exited `0` with `status=pass`, `pass_count=4`, `fail_count=0`,
+  `skip_count=4`.
+- Note: `cargo fmt --check -- src/application/orchestration/structural_playbook.rs`
+  exited `1` due to unrelated dirty-file formatting diffs outside this slice;
+  direct `rustfmt --check` on the touched Rust file passed.
+
+Why release is still blocked:
+
+- This is code-level/rooted-bundle evidence only. It is not yet a fresh CRWD
+  full-chain readback proving `regime_root_parity=true`.
+- Stored CRWD full-chain evidence still has `promotion_allowed=false`,
+  `trade_usable=false`, `extension_complete=false`, and release mirror evidence
+  is still stale relative to source `HEAD`.
+- Next release-relevant proof must rerun the CRWD copied-state chain with the
+  patched binary, then continue through promotion/trade-usability,
+  all-market/all-product diffusion, clean sanitized export, and explicit mirror
+  release approval.
+
+### 2026-05-22 latest-goal continuation: CRWD execution-candidate parity repaired, release still blocked
+
+Current answer to the three-part goal remains no.
+
+Fresh runtime readback after rebuilding the local binary:
+
+- Rebuilt binary:
+  `CARGO_TARGET_DIR=.local-artifacts/cargo-target cargo build --bin ict-engine`
+  exited `0`.
+- Fresh copied-state replay root:
+  `support/docs/experiments/actionable-regime-confidence/runs/20260522T222741+0800-codex-crwd5m-root-parity-workflow-veto-reread-v1`.
+- Commands `01_analyze_current_code` through
+  `07_workflow_execution_candidate_json` all exited `0`.
+- Compact readback:
+  `support/docs/experiments/actionable-regime-confidence/runs/20260522T222741+0800-codex-crwd5m-root-parity-workflow-veto-reread-v1/checks/current_code_full_chain_readback_after_veto_fix.json`.
+
+Positive branch-local evidence:
+
+- `workflow-status --phase execution-candidate` now reports
+  `candidate_status=execution_ready`, `actionable=true`, and `ready=true`.
+- The execution tree same-root branch is admitted:
+  `execution_tree_closed_loop_branch_admission.status=admitted`,
+  `execution_tree_gate_status=ready`, `execution_tree_branch=fill_viable`.
+- The stale persisted analyze veto is explicitly overridden:
+  `persisted_execution_candidate_veto_overridden=true` with reason
+  `same_root_execution_tree_trace_admitted_after_candidate_not_actionable_veto`.
+- The execution-candidate and recommended-bundle paths are canonical rooted
+  branch paths without the `US_EQ -> single_stock -> CRWD -> 5m ->`
+  provenance prefix.
+
+Why release is still blocked:
+
+- Pre-Bayes/BBN still carries the provenance-prefixed
+  `regime_profit_branch_path` and read-only BBN label set.
+- `trade_plan.actionable=false`, latest promotion status remains `observe`,
+  execution artifact hard gate remains `execution_blocked`, and
+  `read_only_regime_bbn_trade_usable=false`.
+- This is one branch-local CRWD repair, not practical all-market/all-product
+  factor diffusion.
+- No clean sanitized release export, refreshed release signoff, mirror update,
+  tag, or GitHub Release has been produced; mirror publishing still requires
+  explicit operator confirmation.
+
+### 2026-05-22 latest-goal continuation: CRWD root parity repaired through Pre-Bayes/BBN, release still blocked
+
+Current answer to the three-part goal remains no.
+
+Fresh runtime readback after adapter and workflow-status repairs:
+
+- Rebuilt binary:
+  `CARGO_TARGET_DIR=.local-artifacts/cargo-target cargo build --bin ict-engine`
+  exited `0`.
+- Fresh copied-state replay root:
+  `support/docs/experiments/actionable-regime-confidence/runs/20260522T230202+0800-codex-crwd5m-prebayes-bbn-root-parity-ready-veto-reread-v1`.
+- Commands `01_analyze_current_code` through
+  `07_workflow_execution_candidate_json` all exited `0`.
+- Compact readback:
+  `support/docs/experiments/actionable-regime-confidence/runs/20260522T230202+0800-codex-crwd5m-prebayes-bbn-root-parity-ready-veto-reread-v1/checks/current_code_full_chain_readback_after_adapter_and_ready_veto_fix.json`.
+
+Positive branch-local evidence:
+
+- `workflow-status --phase execution-candidate` reports
+  `candidate_status=execution_ready`, `actionable=true`, and `ready=true`.
+- The execution tree same-root branch is admitted.
+- The stale duplicate analyze veto is overridden only because the persisted
+  duplicate candidate is already actionable / `execution_ready`.
+- The execution-candidate path, recommended bundle path, Pre-Bayes
+  `regime_profit_branch_path`, and read-only BBN label set all carry canonical
+  rooted branch identity without `US_EQ -> single_stock -> CRWD -> 5m ->`.
+
+Why release is still blocked:
+
+- `trade_plan.actionable=false`.
+- Latest promotion status remains `observe`.
+- Execution artifact hard gate remains `execution_blocked`.
+- `read_only_regime_bbn_trade_usable=false`.
+- `regime_bundle_bbn_application_status=skipped` because the imported
+  strategy-library context is still non-promoting.
+- This is still one CRWD `US_EQ/single_stock/5m` branch, not practical
+  all-market/all-product factor diffusion.
+- No clean sanitized release export, refreshed release signoff, mirror update,
+  tag, or GitHub Release has been produced; mirror publishing still requires
+  explicit operator confirmation.
+
+### 2026-05-22 latest-goal continuation: CRWD owner trace says not trade-usable
+
+Current answer to the three-part goal remains no.
+
+The CRWD `5m` copied-state replay at
+`support/docs/experiments/actionable-regime-confidence/runs/20260522T230202+0800-codex-crwd5m-prebayes-bbn-root-parity-ready-veto-reread-v1`
+is a partial repair only. It proves `workflow-status --phase
+execution-candidate` can read the branch as `execution_ready`, `actionable=true`,
+`ready=true`, and same-root admitted after the Pre-Bayes/BBN rooted-identity
+fixes. It does not prove practical trade usability.
+
+Terminal owner-trace evidence:
+
+- Claim:
+  `/tmp/ict-engine-agent-claims/board-b-factor-refinement/20260522T231709+0800-codex-crwd5m-promotion-trade-usability-owner-trace.claim`.
+- Compact readback:
+  `support/docs/experiments/actionable-regime-confidence/runs/20260522T230202+0800-codex-crwd5m-prebayes-bbn-root-parity-ready-veto-reread-v1/checks/current_code_full_chain_readback_after_adapter_and_ready_veto_fix.json`.
+- `report.trade_plan.actionable=false` because the plan has
+  `win_probability=0.5036168298260623`,
+  `risk_reward=0.6666666666666757`, and `kelly_fraction=0.0`.
+- Latest analyze still says `promotion_status=observe`.
+- The raw analyze execution artifact still says
+  `hard_gate_status=execution_blocked`.
+- `read_only_regime_bbn_trade_usable=false`.
+- `regime_bundle_bbn_application_status=skipped`.
+- Imported strategy-library metadata remains `promotion_allowed=false` and
+  `trade_usable=false`.
+
+Interpretation:
+
+- Raw analyze hard-gate status and structural execution-candidate readiness are
+  separate owner surfaces. Do not copy structural `execution_ready` upward into
+  promotion or trade usability.
+- The next valid CRWD repair must produce same-root evidence that makes the
+  promotion/trade-plan owner positive without hand-flipping imported
+  `promotion_allowed` or `trade_usable`.
+- Release completion remains blocked: this is one CRWD `US_EQ/single_stock/5m`
+  branch, not market/product diffusion, and no clean export, mirror update, tag,
+  or GitHub Release was produced.
+
+### 2026-05-22 realtime continuation: release still blocked after fresh probes
+
+Current answer to the three-part goal remains no.
+
+Fresh current-state readback:
+
+- Source `HEAD=9ca9538b511631d9d19e42d64c4946325ec5ffa8`; `origin/main` is
+  still `79d9579ea38685bd8c798dc80c1f5177e3c220b6`.
+- Dirty worktree count observed: `854` status rows.
+- Release mirror `main=ab6b1b55d516bcd0f6b88db1931cc40802e683bb`.
+- Latest release remains `v0.1.4` from `2026-05-18T13:02:21Z`.
+- Light Done Definition audit passed at
+  `/tmp/ict-engine-done-definition-audit-20260522-realtime-continuation-light.json`
+  with heavy gates skipped.
+- Factor readback remains non-promoting: latest 2026-05-22 terminal metrics
+  sweep found `promotion_allowed_true=0` and `trade_usable_true=0`.
+- Factor claim audit still needs attention; before this cleanup it showed
+  `34` active claims and no positive promotion/trade-usable claims.
+
+MNST Gate 1 cleanup:
+
+- Terminalized the IBKR MNST beverage-growth opening-drive RVOL claim:
+  `/tmp/ict-engine-agent-claims/board-b-factor-refinement/20260522T232205+0800-codex-ibkr-mnst-beverage-growth-opening-drive-rvol-gate1.claim`.
+- Added compact terminal metrics under:
+  `support/docs/experiments/actionable-regime-confidence/runs/20260522T232427+0800-codex-ibkr-mnst-beverage-growth-opening-drive-rvol-gate1-v1/checks/terminal_metrics.json`.
+- Decision is observation-only: `keep_small_only`, `promotion_allowed=false`,
+  `trade_usable=false`.
+
+Release implication:
+
+- This cleanup improves tracking fidelity only. It does not satisfy the
+  practical-factor lane, because MNST did not reach downstream gates or trade
+  usability.
+- Mirror release remains blocked until the factor lane has real promoted
+  evidence and the intended source is clean-exported, fully gated, privacy
+  scanned, signed off, and explicitly approved for publish.
+
+### 2026-05-23 current-continuation release/factor blocker refresh
+
+Current answer to the requested three-part goal remains no.
+
+Fresh audit evidence:
+
+- Full-heavy Done Definition audit:
+  `/tmp/ict-engine-done-definition-audit-20260522-current-continuation-heavy.json`.
+- Result: `summary.status=pass`, `completion_ready=true`,
+  `evidence_level=full_enabled_gate_coverage`, `pass_count=8`,
+  `fail_count=0`, `skip_count=0`, `unresolved=[]`.
+- Included gates passed:
+  `cargo check --all-targets`, `cargo clippy --all-targets -- -D warnings`,
+  `cargo test`, and `support/scripts/smoke_acceptance.sh`.
+
+Fresh source/release readback:
+
+- Source `HEAD=956a1c3e1907483953024c2d4ba9ecb23036442d`, branch `main`.
+- `origin/main=79d9579ea38685bd8c798dc80c1f5177e3c220b6`.
+- Dirty worktree count observed: `854` status rows.
+- Release mirror readback:
+  `Undermybelt/ict-engine-release main=ab6b1b55d516bcd0f6b88db1931cc40802e683bb`.
+- Latest GitHub Release remains `v0.1.4`, published
+  `2026-05-18T13:02:21Z`.
+
+Fresh factor/claim readback:
+
+- Current `20260522*` terminal-metrics sweep:
+  `terminal_metrics_files=167`, `promotion_allowed_true=0`,
+  `trade_usable_true=0`, `downstream_allowed_true=17`,
+  `survivor_5bps_nonempty=3`.
+- Claim audit after terminalizing the M2K readback claim:
+  `/tmp/ict-engine-factor-claim-terminalization-audit-20260523-after-m2k-terminalized.json`
+  reports `status=needs_attention`, `active_claims=7`,
+  `terminalized_claims=1`, `total_claims=8`, `missing_run_roots=0`,
+  `promotion_allowed_true=0`, and `trade_usable_true=0`.
+- The only cleanup performed in this slice was `/tmp`-only and
+  evidence-backed:
+  `/tmp/ict-engine-agent-claims/board-b-factor-refinement/20260523T000526+0800-codex-m2k-rvol-pda-full-ladder-readback.claim`
+  now has `status=terminalized`,
+  `decision=m2k_rvol_pda_full_ladder_readback_fail_closed`,
+  `promotion_allowed=false`, and `trade_usable=false`.
+
+Release decision:
+
+- Do not publish from this checkout. Heavy audit pass does not override broad
+  dirty state, missing practical factor proof, stale mirror head, stale release
+  tag, or the requirement for explicit operator confirmation.
+- Next release-relevant work is still sequential:
+  first prove a practical same-root factor through downstream ownership and
+  trade-plan gates, then freeze a coherent source slice, then build a clean
+  sanitized export, rerun full release gates and privacy scan, refresh signoff
+  and notes, and only then publish mirror main/tag/GitHub Release after explicit
+  approval.
+
+Final same-slice claim-audit correction:
+
+- Final readback:
+  `/tmp/ict-engine-factor-claim-terminalization-audit-20260523-final-readback.json`.
+- Result: `status=needs_attention`, `active_claims=7`,
+  `terminalized_claims=2`, `total_claims=9`, `missing_run_roots=0`,
+  `promotion_allowed_true=0`, and `trade_usable_true=0`.
+- The factor/release decision is unchanged: no practical promoted factor, no
+  clean export, and no mirror publish approval.
+
+### 2026-05-23 03:27 CST timeout-budget rerun and release blocker readback
+
+Current answer to the requested three-part goal remains no.
+
+Fresh audit evidence:
+
+- Inherited heavy audit with `--heavy-timeout-seconds 1800`:
+  `/tmp/ict-engine-done-current-heavy-after-smoke-fix-20260523.json`.
+- Result: `summary.status=needs_fix`, unresolved `cargo_test`, but the details
+  show a timeout after compilation finished at `29m52s`; no Rust assertion
+  failure was recorded.
+- Direct control command `cargo test` exited `0`; lib tests passed
+  `1166/1166`, bin tests passed `327/327`, integration tests passed, and
+  doc-tests passed `0/0`.
+- Current full-heavy rerun:
+  `python3 support/scripts/done_definition_audit.py --run-all-heavy --compact --heavy-timeout-seconds 3600 --output /tmp/ict-engine-done-current-heavy-timeout3600-20260523.json`.
+- Result: `summary.status=pass`, `completion_ready=true`,
+  `evidence_level=full_enabled_gate_coverage`, `pass_count=8`,
+  `fail_count=0`, `skip_count=0`, and `unresolved=[]`.
+- Included gates passed:
+  `cargo check --all-targets`, `cargo clippy --all-targets -- -D warnings`,
+  `cargo test`, and `support/scripts/smoke_acceptance.sh`.
+- Post-run process readback found no orphan audit, smoke, cargo, rustc, or
+  rustdoc process from the timeout or rerun.
+
+Fresh source/release readback:
+
+- Source `HEAD=9034ef20f12198b138edc217921756d6907d62b0`, branch `main`.
+- `origin/main=79d9579ea38685bd8c798dc80c1f5177e3c220b6`.
+- Dirty worktree count observed: `859` status rows.
+- Release mirror `main=ab6b1b55d516bcd0f6b88db1931cc40802e683bb`.
+- Release mirror tag `v0.1.4=699cad1e90844c466009bb3c6231403373ca4aaf`;
+  peeled commit `725852eaa10498f4275e3fc4eed351f3aea55eb5`.
+- Latest GitHub Release via `gh api` remains `v0.1.4`, published
+  `2026-05-18T13:02:21Z`, target `main`, URL
+  `https://github.com/Undermybelt/ict-engine-release/releases/tag/v0.1.4`.
+
+Fresh factor/claim readback:
+
+- Current claim audit:
+  `/tmp/ict-engine-factor-claim-terminalization-audit-20260523-after-timeout3600-heavy-pass.json`.
+- Result: `status=pass`, `active_claims=0`, `terminalized_claims=31`,
+  `total_claims=31`, `missing_run_roots=0`, `promotion_allowed_true=0`, and
+  `trade_usable_true=0`.
+- Recent current-slice terminal metrics sweep:
+  `/tmp/ict-engine-terminal-metrics-sweep-20260523-after-smoke-fix.json`
+  reported `terminal_metrics_files=720`, `promotion_allowed_true=0`,
+  `trade_usable_true=0`, `downstream_allowed_true=85`, and
+  `survivor_5bps_nonempty=594`.
+- Broad historical sweep:
+  `/tmp/ict-engine-terminal-metrics-sweep-20260523-after-timeout3600-heavy-pass.json`
+  reported `terminal_metrics_files=1437`, `promotion_allowed_true=5`,
+  `trade_usable_true=6`, `downstream_allowed_true=142`, and
+  `survivor_5bps_nonempty=335`.
+- The broad positives are stale Gate-1-era or incubation flags, not current
+  proof of full downstream Pre-Bayes, BBN, CatBoost/path-ranker, execution-tree,
+  promotion, trade-plan ownership, and all-market/all-product diffusion.
+
+Release decision:
+
+- Do not publish from this checkout.
+- Heavy Done Definition gates now pass on the current tree, but release remains
+  blocked by stale mirror state, broad dirty source state, no clean sanitized
+  export, no refreshed release signoff/notes for this source head, no explicit
+  operator publish approval, and no current practical-factor proof.
+- Next release-relevant work is to review/retire stale positive terminal metric
+  flags, then prove a same-root practical branch through downstream owners and
+  trade usability before preparing a clean export and mirror release.
+
+### 2026-05-23 stale positive terminal-metrics release audit
+
+The requested stale-positive review is complete for the broad historical
+`promotion_allowed=true` / `trade_usable=true` examples from the all-history
+sweep:
+
+| Run root | Raw positive | Superseding evidence | Release classification |
+|---|---:|---|---|
+| `20260518T125934+0800-codex-binance-vwapdev-obvrsi-1m-strict-iteration-v2` | `trade_usable=true` | `downstream-strict-1m-small-2000-20260518T2240+0800/checks/downstream_metrics.json`: no-trade, ranker not used, ranker not ready, promotion/trade false | stale Gate-1 flag; observation only |
+| `20260518T111136+0800-codex-tvr-kweb-orb-rvol-vwap-density-1m-mtf-v1` | promotion/trade true | `summaries/corrected_terminal_decision_summary.md` and `checks/cost_stress_gate.json`: cost-fragile, downstream false, promotion/trade false | corrected to stop before downstream |
+| `20260518T122226+0800-codex-yf-cybersecurity-etf-opening-drive-rvol-vwap-1m-mtf-v1` | `trade_usable=true` | `checks/cost_stress_gate.json` and `checks/cost_stress.json`: cost-fragile, downstream false, promotion false | incubation/neutralization only |
+| `20260518T103501+0800-codex-tvr-arkk-orb-rvol-vwap-density-1m-mtf-v3` | promotion/trade true | downstream readbacks such as `downstream-20260518T104018+0800/checks/downstream_metrics.json`: fail-closed, no-trade, observe, promotion false | raw Gate-1 only |
+| `20260518T110424+0800-codex-tvr-xlb-orb-rvol-vwap-density-1m-mtf-v1` | promotion/trade true | `downstream-20260518T110606+0800/checks/downstream_metrics.json`: fail-closed, no-trade, observe, promotion false | raw Gate-1 only |
+| `20260518T085150+0800-codex-binance-crypto-donchian-rvol-breakout-mtf-gate1-v1` | `promotion_allowed=true` | downstream readbacks under `downstream-20260518T085715+0800` and `downstream-20260518T085720+0800`: no-trade, ranker not used, ranker not ready, promotion false | small-cycle observation only |
+| `20260518T105024+0800-codex-tvr-ibb-orb-rvol-vwap-density-1m-mtf-v1` | promotion/trade true | corrected cost gate plus `downstream-20260518T105726+0800/checks/downstream_metrics.json`: fail-closed, no-trade, ranker not ready, promotion false | corrected to fail-closed |
+
+Release implication:
+
+- These rows close the residual audit ambiguity; none is a current practical
+  factor or release-ready proof.
+- The next release-relevant factor task is not more broad counting. It is a
+  same-root branch proof that ends with `promotion_allowed=true`,
+  `trade_usable=true`, ranker validation ready, ranker score used by the
+  execution tree, and an actionable/non-blocked trade plan.
+- Mirror publication remains blocked until that practical-factor proof exists,
+  a coherent source slice is clean-exported and fully gated, release notes and
+  signoff are refreshed, and the operator explicitly approves the exact
+  mirror/tag/GitHub Release action.
+
+### 2026-05-23 04:05 CST factor-claim closure and release status
+
+Fresh claim readback:
+
+- `/tmp/ict-engine-factor-claims-after-fix-terminalized-20260523.json`
+  reports `summary.status=pass`, `active_claims=0`,
+  `terminalized_claims=40`, `total_claims=40`, `missing_run_roots=0`,
+  `promotion_allowed_true=0`, and `trade_usable_true=0`.
+- TOMAC NQ two-leg source-discovery is terminalized fail-closed from
+  `/tmp/ict-engine-tomac-nq-twoleg-reconstruction-probe-20260523T035059+0800/checks/terminal_metrics.json`.
+  Decision: `reconstruction_parity_failed_do_not_ingest`.
+- FIX infrastructure range-expansion is terminalized fail-closed from
+  `support/docs/experiments/actionable-regime-confidence/runs/20260523T035708+0800-codex-ibkr-fix-infrastructure-range-expansion-continuation-1m-mtf-gate1-v1/checks/terminal_metrics.json`.
+  Decision: `drop_gate1_cost_or_density_failed`.
+
+Release status:
+
+- This clears the current claim-terminalization blocker only.
+- It does not prove all-market/all-product practical factor diffusion:
+  promotion-allowed and trade-usable counts remain zero in the fresh claim
+  audit.
+- It does not authorize mirror release. The next release-capable state still
+  requires practical factor proof, clean sanitized export, full release gate
+  rerun from that export, privacy scan, refreshed release notes/signoff, and
+  explicit operator approval for the exact mirror publish/tag/release action.
+
+### 2026-05-23 04:24 CST live claim drift after transient clear
+
+Fresh superseding claim readback:
+
+- `/tmp/ict-engine-factor-claims-after-dov-terminalized-live-20260523.json`
+  reports `summary.status=needs_attention`, `active_claims=6`,
+  `terminalized_claims=41`, `total_claims=47`, `missing_run_roots=0`,
+  `promotion_allowed_true=0`, and `trade_usable_true=0`.
+- DOV industrial-automation Gate 1 was closed from its own terminal evidence as
+  `decision=keep_small_only`, with promotion/trade/update-goal false.
+- New active claims appeared after the earlier zero-active readback: CBRE, WMT,
+  CPB, cybersecurity sibling provider preflight, and TOMAC PSAR/Aroon-CCI.
+
+Release status:
+
+- Release remains blocked. A transient claim-board pass is not a release gate.
+- The latest claim-board state needs attention again, and no current claim is
+  promotion-allowed or trade-usable.
+- Do not publish mirror main, create a tag, or create a GitHub Release from this
+  checkout without a clean export, full export-side verification, refreshed
+  signoff/notes, and explicit operator approval.
+
+### 2026-05-23 04:32 CST live claim terminalization continuation
+
+Current answer to the three-part goal remains no.
+
+Fresh claim evidence:
+
+- Compact audit:
+  `/tmp/ict-engine-factor-claims-after-cybersecurity-terminalized-20260523T0433.json`.
+- Result: `summary.status=needs_attention`, `active_claims=1`,
+  `terminalized_claims=48`, `total_claims=49`, `missing_run_roots=0`,
+  `promotion_allowed_true=0`, and `trade_usable_true=0`.
+- The single remaining active claim is
+  `/tmp/ict-engine-agent-claims/board-b-factor-refinement/20260523T0420+0800-codex-tomac-psar-arooncci-gate1.claim`.
+  Its run root is
+  `/tmp/ict-engine-tomac-psar-arooncci-gate1-20260523T0420+0800`,
+  and the full scan was still running at the 04:31 CST readback with no
+  `checks/02_full_scan.exit` yet.
+
+Claims terminalized from their own evidence in this continuation:
+
+- CPB packaged-food Connors RSI2:
+  `support/docs/experiments/actionable-regime-confidence/runs/20260523T041446+0800-codex-ibkr-cpb-packaged-food-connors-rsi2-rebound-1m-mtf-gate1-v1/checks/terminal_metrics.json`,
+  `decision=drop_gate1_no_exact_1m_5bps_density_survivor`,
+  `promotion_allowed=false`, `trade_usable=false`.
+- WMT defensive retail opening-drive RVOL:
+  `support/docs/experiments/actionable-regime-confidence/runs/20260523T041250+0800-codex-ibkr-wmt-defensive-retail-opening-drive-rvol-gate1-v1/summaries/ibkr_wmt_defensive_retail_opening_drive_rvol_gate1_v1.json`,
+  `decision=keep_small_only`, `promotion_allowed=false`,
+  `trade_usable=false`; note the upper-window failures
+  `01_ibkr_wmt_1m_30d_fetch.exit=3` and
+  `02_ibkr_wmt_5m_3m_fetch.exit=3`, followed by smaller real-window retries
+  exiting `0`.
+- ENPH solar gap-failure reversal:
+  `support/docs/experiments/actionable-regime-confidence/runs/20260523T042314+0800-codex-ibkr-enph-solar-gap-failure-reversal-1m-mtf-gate1-v1/checks/terminal_metrics.json`,
+  `decision=drop_gate1_cost_or_density_failed`,
+  `promotion_allowed=false`, `trade_usable=false`.
+- GLW optical communications Keltner reclaim:
+  `support/docs/experiments/actionable-regime-confidence/runs/20260523T042324+0800-codex-ibkr-glw-optical-communications-keltner-reclaim-1m-mtf-gate1-v1/checks/terminal_metrics.json`,
+  `decision=drop_gate1_cost_or_density_failed`,
+  `promotion_allowed=false`, `trade_usable=false`.
+- Cybersecurity sibling provider preflight:
+  `/tmp/ict-engine-ibkr-cybersecurity-sibling-provider-preflight-20260523T041012+0800/checks/provider_preflight_metrics.json`,
+  `decision=provider_preflight_full_ladder_available`,
+  `provider_parity_candidate=true`, `auto_quant_run=false`,
+  `downstream_allowed=false`, `promotion_allowed=false`, and
+  `trade_usable=false`. This is provider-row evidence only; it is not a
+  practical factor.
+
+Release status:
+
+- The latest Done Definition heavy audit remains green at
+  `/tmp/ict-engine-done-current-heavy-timeout3600-20260523.json`.
+- Practical factor diffusion is still unproven: the latest claim audit has zero
+  promotion-allowed and zero trade-usable claims, and TOMAC PSAR/Aroon-CCI is
+  still in flight.
+- Mirror release remains blocked until a current practical branch proves
+  promotion/trade usability, a clean sanitized export is built and verified,
+  signoff and notes are refreshed, and the operator explicitly approves the
+  exact mirror/tag/GitHub Release action.
+
+### 2026-05-23 04:45 CST factor-claim pass after TOMAC/S/RPD readback
+
+Fresh superseding claim evidence:
+
+- `/tmp/ict-engine-factor-claims-after-cybersecurity-reread-20260523T044517+0800.json`
+  reports `summary.status=pass`, `active_claims=0`,
+  `terminalized_claims=55`, `total_claims=55`, `missing_run_roots=0`,
+  `promotion_allowed_true=0`, and `trade_usable_true=0`.
+- The previous transient attention artifact
+  `/tmp/ict-engine-factor-claims-after-tomac-psar-terminal-readback-20260523Tdebug.json`
+  was superseded after the S/RPD cybersecurity claims were terminalized.
+- TOMAC PSAR/Aroon-CCI is no longer active. Its claim is
+  `status: terminalized_runtime_abort`; full scan `02_full_scan.exit=143`,
+  no full-scan terminal metrics materialized, and the NQ smoke packet reports
+  `drop_gate1_no_5bps_density_quality_survivor_no_downstream`.
+- IBKR S cybersecurity PDA/MTF exact 5m Gate 1 produced a hard 5bps density
+  survivor and `downstream_allowed=true`, but its own terminal metrics still
+  keep `promotion_allowed=false`, `trade_usable=false`,
+  `extension_complete=false`, and `update_goal=false`.
+- IBKR RPD 5m cybersecurity provider-parity extension is terminalized
+  fail-closed with `drop_gate1_no_exact_rpd5m_5bps_density_survivor`.
+
+Release decision:
+
+- The current claim-board hygiene blocker is clear.
+- This is still not practical-factor completion: no current claim is
+  promotion-allowed or trade-usable, and the S Gate-1 survivor has not been
+  carried through same-root Pre-Bayes/filter, BBN, CatBoost/path-ranker,
+  execution-tree consumption, promotion, and trade-plan ownership.
+- Process drift note: a separate unclaimed TOMAC repair scan was live at the
+  04:50 CST process readback:
+  `/tmp/ict-engine-tomac-psar-arooncci-gate1-repair-20260523T0500+0800`,
+  PID `93988`, command `run_tomac_psar_arooncci_gate1.py --symbols NQ,YM,XAU`.
+  It had no `checks/01_full_repair.exit` or terminal metrics yet. This does not
+  change the claim audit result, but it blocks any stronger "no live factor work"
+  or practical-completion language.
+- Mirror release remains blocked until practical factor proof exists, a clean
+  sanitized export passes full release gates and privacy scan, release notes and
+  signoff are refreshed, and the operator explicitly approves the exact
+  mirror/tag/GitHub Release action.
+
+### 2026-05-23 05:10 CST live-process-aware factor readback
+
+Fresh superseding claim/process evidence:
+
+- `/tmp/ict-engine-factor-claims-refresh-20260523T050944+0800.json`
+  reports `summary.status=needs_attention`, `active_claims=0`,
+  `live_factor_processes=1`, `terminalized_claims=61`, `total_claims=61`,
+  `missing_run_roots=0`, `promotion_allowed_true=0`, and
+  `trade_usable_true=0`.
+- AXON public-safety TTM-squeeze Gate 1 is terminalized
+  `drop_gate1_cost_or_density_failed` from
+  `support/docs/experiments/actionable-regime-confidence/runs/20260523T050413+0800-codex-ibkr-axon-public-safety-ttm-squeeze-1m-mtf-gate1-v1/checks/terminal_metrics.json`.
+  It has seven IBKR provider packets and seven AQ material/rank rows, but no
+  exact 1m hard-5bps density survivor and no 5bps-per-side survivor set.
+- RPD exact 1h downstream is terminalized
+  `exact_rpd_1h_downstream_fail_closed` from
+  `support/docs/experiments/actionable-regime-confidence/runs/20260523T044255+0800-codex-ibkr-rpd5m-cybersecurity-pda-mtf-template-transfer-gate1-v1/downstream-exact-ibkr-rpd-1h-pda-mtf-template-transfer-20260523T050125+0800/checks/downstream_metrics.json`.
+  It remains no-trade with high transition hazard, PDA misalignment, ranker
+  score not used by the execution tree, and promotion/trade false.
+- TENB cybersecurity exact 5m Gate 1 is terminalized
+  `drop_gate1_no_exact_5m_5bps_density_survivor` under
+  `support/docs/experiments/actionable-regime-confidence/runs/20260523T050645+0800-codex-ibkr-tenb-cybersecurity-pda-mtf-template-transfer-5m-gate1-v1`.
+- The only remaining live factor process is TOMAC PSAR/Aroon-CCI repair PID
+  `93988`, run root
+  `/tmp/ict-engine-tomac-psar-arooncci-gate1-repair-20260523T0500+0800`; at
+  05:10 CST it had no `checks/01_full_repair.exit` and no terminal metrics.
+
+Release decision:
+
+- This readback supersedes the earlier transient clean claim-board pass. The
+  board claims are terminalized, but live factor work still exists.
+- No current factor is promotion-allowed or trade-usable.
+- Do not publish mirror `main`, create a tag, or create a GitHub Release from
+  this state. Release remains blocked by missing practical-factor proof,
+  missing clean sanitized export, missing export-side release gates/privacy
+  scan, missing refreshed notes/signoff, and missing explicit operator approval.
+
+### 2026-05-23 05:21 CST release blocker refresh
+
+Fresh superseding factor audit:
+
+- `/tmp/ict-engine-factor-claims-refresh-20260523T052140+0800.json`
+  reports `summary.status=needs_attention`, `active_claims=4`,
+  `live_factor_processes=5`, `terminalized_claims=61`, `total_claims=65`,
+  `missing_run_roots=1`, `promotion_allowed_true=0`, and
+  `trade_usable_true=0`.
+- Current active claim blockers are ASTS Gate 1, DASH Gate 1, FTNT 15m Gate 1,
+  and TOMAC PSAR/Aroon-CCI repair readback.
+- ASTS and DASH have live wrappers and child IBKR fetch processes; their run
+  roots exist but no terminal metrics are available. Observed fetch exits so far
+  are nonzero (`3`) and are not promotion evidence.
+- FTNT remains active with `run_root=pending`.
+- TOMAC repair PID `93988` remains live with no `checks/01_full_repair.exit` and
+  no terminal metrics under
+  `/tmp/ict-engine-tomac-psar-arooncci-gate1-repair-20260523T0500+0800`.
+
+Source and mirror readback:
+
+- Local source `HEAD=fa2f4400ac2a2de74a8cc5d5b9f66954a6cfd4e4`.
+- `origin/main=79d9579ea38685bd8c798dc80c1f5177e3c220b6`.
+- Current worktree readback still showed a broad dirty tree (`863` short-status
+  rows).
+- `Cargo.toml` still reports `version = "0.1.3"`.
+- Release mirror `main` remains `ab6b1b55d516bcd0f6b88db1931cc40802e683bb`.
+- Latest GitHub Release remains `v0.1.4`, published `2026-05-18T13:02:21Z`.
+
+Release decision:
+
+- Do not publish mirror `main`, create a tag, or create a GitHub Release from
+  this state.
+- Release remains blocked by zero current promotion/trade-usable factors,
+  active/live factor work, no clean sanitized export, no export-side release
+  gate/privacy scan, no refreshed notes/signoff, and no explicit operator
+  approval.
+
+### 2026-05-23 05:29 CST release blocker narrowed, not cleared
+
+Fresh superseding factor audit:
+
+- `/tmp/ict-engine-factor-claims-refresh-20260523T0529-rerun.json` reports
+  `summary.status=needs_attention`, `active_claims=1`,
+  `live_factor_processes=1`, `terminalized_claims=65`, `total_claims=66`,
+  `missing_run_roots=0`, `promotion_allowed_true=0`, and
+  `trade_usable_true=0`.
+- ASTS and DASH Gate 1 runs now have terminal metrics. Both are
+  `provider_or_aq_blocked_no_gate1_verdict` and both keep
+  `promotion_allowed=false`, `trade_usable=false`,
+  `extension_complete=false`, and `update_goal=false`.
+- FTNT 15m Gate 1 has `downstream_allowed=true`, but its own terminal metrics
+  still keep `promotion_allowed=false`, `trade_usable=false`,
+  `extension_complete=false`, and `update_goal=false`.
+- XOM cost-stress readback and S 5m exact downstream are both terminalized
+  fail-closed; neither provides promotion or trade-usability evidence.
+- The only remaining live factor blocker is TOMAC PSAR/Aroon-CCI repair PID
+  `93988` under
+  `/tmp/ict-engine-tomac-psar-arooncci-gate1-repair-20260523T0500+0800`, with
+  no `checks/01_full_repair.exit` or terminal metrics at 05:29 CST.
+
+Release decision:
+
+- Do not publish mirror `main`, create a tag, or create a GitHub Release from
+  this state.
+- The release remains blocked by zero current promotion/trade-usable factors,
+  one live TOMAC repair process without terminal evidence, no clean sanitized
+  export, no export-side release gates/privacy scan, no refreshed notes/signoff,
+  and no explicit operator approval.
+
+### 2026-05-23 05:30 CST final release blocker readback
+
+- `/tmp/ict-engine-factor-claims-refresh-20260523T0530-final.json` exited `1`
+  with `summary.status=needs_attention`, `active_claims=1`,
+  `live_factor_processes=1`, `terminalized_claims=66`, `total_claims=67`,
+  `missing_run_roots=0`, `promotion_allowed_true=0`, and
+  `trade_usable_true=0`.
+- The only live blocker remains TOMAC PSAR/Aroon-CCI repair PID `93988`; no
+  `checks/01_full_repair.exit` or terminal metrics exist yet.
+- Mirror release remains blocked; no tag, push, or GitHub Release is authorized.
+
+### 2026-05-23 05:35 CST claim hygiene pass, release still blocked
+
+- `/tmp/ict-engine-factor-claims-refresh-20260523T0535-post-tomac-terminal.json`
+  exited `0` with `summary.status=pass`, `active_claims=0`,
+  `live_factor_processes=0`, `terminalized_claims=68`, `total_claims=68`,
+  `missing_run_roots=0`, `promotion_allowed_true=0`, and
+  `trade_usable_true=0`.
+- TOMAC PSAR/Aroon-CCI repair has terminal evidence now:
+  `checks/01_full_repair.exit=143` under
+  `/tmp/ict-engine-tomac-psar-arooncci-gate1-repair-20260523T0500+0800`.
+  No terminal metrics, scan results, or leaderboard materialized, so the repair
+  is fail-closed and non-promoting.
+
+Release decision:
+
+- Claim/process hygiene is no longer the release blocker.
+- Mirror release remains blocked by zero current promotion/trade-usable factors,
+  no clean sanitized export, no export-side release gates/privacy scan, no
+  refreshed notes/signoff, and no explicit operator approval.
+- No tag, push, or GitHub Release is authorized.
+
+### 2026-05-23 05:47 CST release readiness remains blocked after live drift
+
+Fresh release-readiness audit:
+
+- `/tmp/ict-engine-release-readiness-20260523T054440+0800.json` exited `1`.
+- `summary.status=needs_fix`.
+- `fail_count=4`, `pass_count=1`, `skip_count=0`.
+- `HEAD=e06ca1704af8ea6e9e6ee0ab85cfde6ec6fd9de4`.
+- `origin/main=79d9579ea38685bd8c798dc80c1f5177e3c220b6`.
+- Source is ahead of origin by `92` commits.
+- Release mirror `main=ab6b1b55d516bcd0f6b88db1931cc40802e683bb`.
+- `Cargo.toml` version remains `0.1.3`.
+- Known release tags include `v0.1.3` and `v0.1.4`; suggested next patch is
+  `0.1.5` / `v0.1.5`.
+
+Unresolved release gates:
+
+- `worktree_clean_for_release`: dirty worktree, with `78` tracked dirty entries
+  and `782` untracked entries in the audit sample.
+- `release_docs_fresh_for_selected_tag`: release signoff and notes are still
+  historical/stale for a fresh selected export.
+- `source_origin_matches_selected_source`: selected source commit is not on
+  `origin/main`.
+- `release_version_tag_available`: `v0.1.3` is already used.
+
+Fresh factor-readiness drift:
+
+- `/tmp/ict-engine-factor-claims-refresh-20260523T054654+0800.json` exited `1`
+  with `active_claims=2`, `live_factor_processes=5`,
+  `promotion_allowed_true=0`, and `trade_usable_true=0`.
+- FTNT 15m exact downstream is execution-ready but not promotable:
+  current mature rows are `3/30`, `extension_complete=false`,
+  `promotion_allowed=false`, and `trade_usable=false`.
+- TOMAC KAMA/Vortex smoke terminalized fail-closed with no hard 5bps/density
+  survivor, while its full process remains live.
+
+Release decision:
+
+- The earlier 05:35 claim-hygiene pass is superseded by live factor drift.
+- No mirror `main` push, tag creation, or GitHub Release is authorized.
+- The next release-safe path is still: terminalize/externalize live factor
+  work, prove at least one exact rooted branch with promotion/trade usability,
+  select and commit a coherent source slice, build a clean sanitized export,
+  rerun release gates/privacy scan, refresh signoff/notes for an unused tag,
+  and obtain explicit operator approval.
+
+### 2026-05-23 06:02 CST release still blocked after JPM terminalization
+
+Fresh factor audit:
+
+- `/tmp/ict-engine-factor-claims-after-jpm-terminalization-20260523T060019+0800.json`
+  exited `1`.
+- `summary.status=needs_attention`.
+- `active_claims=1`, `missing_run_roots=1`, `live_factor_processes=0`.
+- `terminalized_claims=73`, `total_claims=74`.
+- `promotion_allowed_true=0`, `trade_usable_true=0`.
+- JPM is now terminalized fail-closed as
+  `blocked_provider_runtime_no_candles` under
+  `support/docs/experiments/actionable-regime-confidence/runs/20260523T054054+0800-codex-ibkr-jpm-money-center-bank-dmi-adx-pullback-1m-mtf-gate1-v1`.
+- The current attention claim is
+  `20260523T055929+0800-codex-tomac-choppiness-gate1.claim`, with claimed root
+  `/tmp/ict-engine-tomac-choppiness-gate1-20260523T055929+0800` missing in the
+  compact audit.
+
+Fresh release-readiness audit:
+
+- `/tmp/ict-engine-release-readiness-after-jpm-terminalization-20260523T060019+0800.json`
+  exited `1`.
+- `summary.status=needs_fix`.
+- `fail_count=2`, `pass_count=1`, `skip_count=2`.
+- `HEAD=88ccea762ceefc764fdb31845adfa6d60f26b384`.
+- `Cargo.toml` still reports `version=0.1.3`, `publish=false`, and
+  repository `https://github.com/Undermybelt/ict-engine-release`.
+
+Unresolved release gates:
+
+- `worktree_clean_for_release`: fail; the audit sample reports `78` tracked
+  dirty entries and `782` untracked entries.
+- `release_docs_fresh_for_selected_tag`: fail; release signoff and notes are
+  still historical for a fresh selected export.
+- `remote_readback`: skipped because network remote checking was not enabled.
+- `release_version_tag_available`: skipped because release mirror tags were not
+  checked in this no-remote audit.
+
+Release decision:
+
+- No mirror `main` push, tag creation, or GitHub Release is authorized.
+- Release remains blocked by the dirty source tree, stale selected-tag docs,
+  skipped remote/tag readback, zero current promotion/trade-usable factors, and
+  the active TOMAC choppiness claim.
+
+### 2026-05-23 06:04 CST release still blocked after final drift check
+
+Fresh final factor audit:
+
+- `/tmp/ict-engine-factor-claims-final-refresh-20260523T060423+0800.json`
+  exited `1`.
+- `summary.status=needs_attention`.
+- `active_claims=2`, `missing_run_roots=1`, `live_factor_processes=2`.
+- `terminalized_claims=74`, `total_claims=76`.
+- `promotion_allowed_true=0`, `trade_usable_true=0`.
+
+Current factor blockers:
+
+- TOMAC choppiness is terminalized fail-closed as
+  `blocked_missing_run_root_self_test_failure_no_terminal_metrics`, but its
+  declared root is still missing and no terminal metrics exist.
+- EURUSD FX London ORB/retest is active/claimed and not promotion/trade usable.
+- USDJPY FX DMI/ADX pullback is active with live wrapper PID `95345` and child
+  IBKR fetch PID `96849`.
+
+Release decision:
+
+- The 06:02 release checkpoint is superseded by this 06:04 drift.
+- No mirror `main` push, tag creation, or GitHub Release is authorized.
+- Release remains blocked by dirty source state, stale selected-tag docs,
+  skipped remote/tag readback, zero promotion/trade-usable factor evidence, and
+  current active/live factor work.
+
+### 2026-05-23 06:21 CST release still blocked after Bybit terminalization
+
+Fresh factor audit:
+
+- `/tmp/ict-engine-factor-claims-after-bybit-vol-terminalization-20260523T062053+0800.json`
+  exited `0`.
+- `summary.status=pass`.
+- `active_claims=0`, `missing_run_roots=0`, `live_factor_processes=0`.
+- `terminalized_claims=78`, `total_claims=78`.
+- `promotion_allowed_true=0`, `trade_usable_true=0`.
+
+Fresh release-readiness audit:
+
+- `/tmp/ict-engine-release-readiness-after-bybit-vol-terminalization-20260523T062053+0800.json`
+  exited `1`.
+- `summary.status=needs_fix`.
+- `fail_count=4`, `pass_count=1`, `skip_count=0`.
+- `HEAD=88ccea762ceefc764fdb31845adfa6d60f26b384`.
+- Source remains `93` commits ahead of `origin/main`.
+- Current version remains `0.1.3`; known mirror tags include `v0.1.3` and
+  `v0.1.4`; suggested next tag remains `v0.1.5`.
+
+Unresolved release gates:
+
+- `worktree_clean_for_release`.
+- `release_docs_fresh_for_selected_tag`.
+- `source_origin_matches_selected_source`.
+- `release_version_tag_available`.
+
+Release decision:
+
+- The factor/process hygiene blocker is cleared in this snapshot, but release is
+  still blocked by the four readiness gates above and by zero
+  promotion/trade-usable factor evidence.
+- No mirror `main` push, tag creation, GitHub Release, or practical-trading
+  promotion is authorized from this state.
+
+### 2026-05-23 07:13 CST release still blocked after SOUN/Bybit/TOMAC terminalization
+
+Fresh factor audit:
+
+- `/tmp/ict-engine-factor-claims-final-current-20260523T071328+0800.json`
+  exited `0`.
+- `summary.status=pass`.
+- `active_claims=0`, `missing_run_roots=0`, `live_factor_processes=0`.
+- `terminalized_claims=93`, `total_claims=93`.
+- `promotion_allowed_true=0`, `trade_usable_true=0`.
+
+Terminalized factor evidence:
+
+- SOUN: `provider_or_aq_blocked_no_gate1_verdict`; IBKR status passed, but all
+  requested/retry fetches returned zero rows, so this is provider/AQ-blocked and
+  not a factor economics verdict.
+- Bybit AERO/ZRO: `higher_timeframe_subclass_only_exact_1m_blocked`.
+- Bybit GMX/ZETA: `higher_timeframe_subclass_only_origin_blocked`.
+- Bybit DASH/ZEC: `drop_gate1_cost_or_density_failed`.
+- TOMAC Alligator/Fractal: `drop_gate1_no_hard_5bps_density_quality_survivor`
+  with `candidate_count=1350` and `gate1_survivor_count=0`.
+
+Fresh release-readiness audit:
+
+- `/tmp/ict-engine-release-readiness-final-current-20260523T071328+0800.json`
+  exited `1`.
+- `summary.status=needs_fix`.
+- `HEAD=9df168b37799851381ba767448a253c075b2fde3`.
+- `Cargo.toml` still reports `version=0.1.3`, `publish=false`, and repository
+  `https://github.com/Undermybelt/ict-engine-release`.
+- The audit sample reports `80` tracked dirty entries and `782` untracked
+  entries.
+
+Unresolved release gates:
+
+- `worktree_clean_for_release`: fail; release export must start from an
+  explicitly selected committed tree, not this broad dirty worktree.
+- `release_docs_fresh_for_selected_tag`: fail; release signoff and notes still
+  describe historical/stale evidence for a fresh selected export.
+- `remote_readback`: skipped because network remote checking was not enabled.
+- `release_version_tag_available`: skipped because release mirror tags were not
+  checked in this no-remote audit.
+
+Release decision:
+
+- Claim/process hygiene is clean in this snapshot, but release is still blocked.
+- The practical-factor objective is still open because there are zero
+  `promotion_allowed=true` and zero `trade_usable=true` factors.
+- No mirror `main` push, tag creation, GitHub Release, practical-trading
+  promotion, or `update_goal complete` is authorized from this state.
+
+### 2026-05-23 07:28 CST release still blocked after post-07:13 drift
+
+Fresh factor audit:
+
+- `/tmp/ict-engine-factor-claims-resume-20260523T072855+0800.json`
+  exited `1`.
+- `summary.status=needs_attention`.
+- `active_claims=5`, `missing_run_roots=0`, `live_factor_processes=5`.
+- `terminalized_claims=98`, `total_claims=103`.
+- `promotion_allowed_true=0`, `trade_usable_true=0`.
+
+Active/live factor blockers:
+
+- XBI Williams/MFI remains claimed and waiting for IBKR contention to clear.
+- TOMAC TOD BalancedAdaptiveSlotPortfolio rebuild remains live under the local
+  TOMAC portfolio repair scan.
+- NTNX Bayesian-Markov trend detector remains live with an IBKR historical
+  child fetch.
+- USDCHF Bollinger squeeze remains validated but pending launch behind IBKR
+  contention.
+- Bybit NEO/QTUM Mass Index remains live in Auto-Quant dispatch.
+
+Fresh release-readiness audit:
+
+- `/tmp/ict-engine-release-readiness-resume-20260523T072855+0800.json`
+  exited `1`.
+- `summary.status=needs_fix`.
+- `HEAD=7fb46d2a1c57a7570d1df26aca74fce4fd88d56c`.
+- `Cargo.toml` still reports `version=0.1.3`, `publish=false`, and repository
+  `https://github.com/Undermybelt/ict-engine-release`.
+- The audit sample reports `78` tracked dirty entries and `782` untracked
+  entries.
+
+Unresolved release gates:
+
+- `worktree_clean_for_release`: fail; release export must start from an
+  explicitly selected committed tree, not this broad dirty worktree.
+- `release_docs_fresh_for_selected_tag`: fail; release signoff and notes still
+  describe historical/stale evidence for a fresh selected export.
+- `remote_readback`: skipped because network remote checking was not enabled.
+- `release_version_tag_available`: skipped because release mirror tags were not
+  checked in this no-remote audit.
+
+Release decision:
+
+- The 07:13 clean claim/process snapshot is superseded by active/live factor
+  drift.
+- Release remains blocked by dirty source state, stale selected-tag docs,
+  skipped remote/tag readback, active factor work, and zero
+  promotion/trade-usable factor evidence.
+- No mirror `main` push, tag creation, GitHub Release, practical-trading
+  promotion, or `update_goal complete` is authorized from this state.
+
+### 2026-05-23 07:39 CST release still blocked after claim hygiene cleanup
+
+Fresh factor audit:
+
+- `/tmp/ict-engine-factor-claims-resume-20260523T073957+0800.json`
+  exited `0`.
+- `summary.status=pass`.
+- `active_claims=0`, `missing_run_roots=0`, `live_factor_processes=0`.
+- `terminalized_claims=103`, `total_claims=103`.
+- `promotion_allowed_true=0`, `trade_usable_true=0`.
+
+Fresh release-readiness audit:
+
+- `/tmp/ict-engine-release-readiness-resume-20260523T073957+0800.json`
+  exited `1`.
+- `summary.status=needs_fix`.
+- `HEAD=49c2bc31a4a5aa8acf9817994c9112620ea90754`.
+- `Cargo.toml` still reports `version=0.1.3`, `publish=false`, and repository
+  `https://github.com/Undermybelt/ict-engine-release`.
+- The audit sample reports `78` tracked dirty entries and `782` untracked
+  entries.
+
+Unresolved release gates:
+
+- `worktree_clean_for_release`: fail; release export must start from an
+  explicitly selected committed tree, not this broad dirty worktree.
+- `release_docs_fresh_for_selected_tag`: fail; release signoff and notes still
+  describe historical/stale evidence for a fresh selected export.
+- `remote_readback`: skipped because network remote checking was not enabled.
+- `release_version_tag_available`: skipped because release mirror tags were not
+  checked in this no-remote audit.
+
+Release decision:
+
+- Factor claim/process hygiene is clean, but release is still blocked.
+- The practical-factor objective is still open because there are zero
+  `promotion_allowed=true` and zero `trade_usable=true` factors.
+- No mirror `main` push, tag creation, GitHub Release, practical-trading
+  promotion, or `update_goal complete` is authorized from this state.
+
+### 2026-05-23 07:58 CST release still blocked after second claim hygiene cleanup
+
+Fresh factor audit:
+
+- `/tmp/ict-engine-factor-claims-resume-20260523T075832+0800.json`
+  exited `0`.
+- `summary.status=pass`.
+- `active_claims=0`, `missing_run_roots=0`, `live_factor_processes=0`.
+- `terminalized_claims=109`, `total_claims=109`.
+- `promotion_allowed_true=0`, `trade_usable_true=0`.
+
+Fresh release-readiness audit:
+
+- `/tmp/ict-engine-release-readiness-resume-20260523T075832+0800.json`
+  exited `1`.
+- `summary.status=needs_fix`.
+- `HEAD=8b28eabc2535b4580af1634fd69cbb80f9aaaeb1`.
+- `Cargo.toml` still reports `version=0.1.3`, `publish=false`, and repository
+  `https://github.com/Undermybelt/ict-engine-release`.
+- The audit sample reports `78` tracked dirty entries and `782` untracked
+  entries.
+
+Unresolved release gates:
+
+- `worktree_clean_for_release`: fail; release export must start from an
+  explicitly selected committed tree, not this broad dirty worktree.
+- `release_docs_fresh_for_selected_tag`: fail; release signoff and notes still
+  describe historical/stale evidence for a fresh selected export.
+- `remote_readback`: skipped because network remote checking was not enabled.
+- `release_version_tag_available`: skipped because release mirror tags were not
+  checked in this no-remote audit.
+
+Release decision:
+
+- Factor claim/process hygiene is clean again, but release is still blocked.
+- The practical-factor objective is still open because there are zero
+  `promotion_allowed=true` and zero `trade_usable=true` factors.
+- No mirror `main` push, tag creation, GitHub Release, practical-trading
+  promotion, or `update_goal complete` is authorized from this state.
+
+### 2026-05-23 08:23 CST release still blocked after remote readback and clean claim hygiene
+
+Fresh factor audit:
+
+- `/tmp/ict-engine-factor-claims-continuation-20260523T082357+0800.json`
+  exited `0`.
+- `summary.status=pass`.
+- `active_claims=0`, `missing_run_roots=0`, `live_factor_processes=0`.
+- `terminalized_claims=114`, `total_claims=114`.
+- `promotion_allowed_true=0`, `trade_usable_true=0`.
+
+Fresh release-readiness audit with remote/tag readback:
+
+- `/tmp/ict-engine-release-readiness-continuation-20260523T081859+0800.json`
+  exited `1`.
+- `summary.status=needs_fix`.
+- `HEAD=b94770e9e82c53a42fa78eb05582cd33ccf213b8`.
+- `origin/main=79d9579ea38685bd8c798dc80c1f5177e3c220b6`.
+- `release_mirror_main=ab6b1b55d516bcd0f6b88db1931cc40802e683bb`.
+- `Cargo.toml` still reports `version=0.1.3`, `publish=false`, and repository
+  `https://github.com/Undermybelt/ict-engine-release`.
+- The audit sample reports `78` tracked dirty entries and `782` untracked
+  entries.
+
+Unresolved release gates:
+
+- `worktree_clean_for_release`: fail; release export must start from an
+  explicitly selected committed tree, not this broad dirty worktree.
+- `release_docs_fresh_for_selected_tag`: fail; release signoff and notes still
+  describe historical/stale evidence for a fresh selected export.
+- `source_origin_matches_selected_source`: fail; the source branch is `105`
+  commits ahead of `origin/main`, so a selected committed source/export has not
+  been reconciled.
+- `release_version_tag_available`: fail; `v0.1.3` already exists, mirror tags
+  include `v0.1.4`, and the audit suggests `v0.1.5`.
+
+Release decision:
+
+- Claim/process hygiene is clean again, but release is still blocked.
+- TOMAC cap65 suppressed AQ produced a hard `5bps` Gate 1 survivor, but its own
+  decision requires downstream proof and keeps `promotion_allowed=false` /
+  `trade_usable=false`.
+- No mirror `main` push, tag creation, GitHub Release, practical-trading
+  promotion, or `update_goal complete` is authorized from this state.
+
+### 2026-05-23 09:26 CST release still blocked after TOMAC downstream readback
+
+Fresh factor audit:
+
+- `/tmp/ict-engine-factor-claims-continuation-20260523T092617+0800.json`
+  exited `0`.
+- `summary.status=pass`.
+- `active_claims=0`, `missing_run_roots=0`, `live_factor_processes=0`.
+- `terminalized_claims=123`, `total_claims=123`.
+- `promotion_allowed_true=0`, `trade_usable_true=0`.
+
+Fresh release-readiness audit with remote/tag readback:
+
+- `/tmp/ict-engine-release-readiness-continuation-20260523T092420+0800.json`
+  exited `1`.
+- `summary.status=needs_fix`.
+- `HEAD=c5d1db7bbc4d7d232cfaad0e05b18039c0876584`.
+- `origin/main=79d9579ea38685bd8c798dc80c1f5177e3c220b6`.
+- `release_mirror_main=ab6b1b55d516bcd0f6b88db1931cc40802e683bb`.
+- `Cargo.toml` still reports `version=0.1.3`, `publish=false`, and repository
+  `https://github.com/Undermybelt/ict-engine-release`.
+- The release audit sample reports `12` tracked dirty entries and `763`
+  untracked entries.
+
+Unresolved release gates:
+
+- `worktree_clean_for_release`: fail; release export must start from an
+  explicitly selected committed tree, not this broad dirty worktree.
+- `release_docs_fresh_for_selected_tag`: fail; release signoff and notes still
+  describe historical/stale evidence for a fresh selected export.
+- `source_origin_matches_selected_source`: fail; the source branch is `107`
+  commits ahead of `origin/main`, so a selected committed source/export has not
+  been reconciled.
+- `release_version_tag_available`: fail; `v0.1.3` already exists, mirror tags
+  include `v0.1.4`, and the audit suggests `v0.1.5`.
+
+Release decision:
+
+- Claim/process hygiene is clean again, but release is still blocked.
+- TOMAC cap65 downstream failed closed/incomplete: `09_ingest_real_trades`
+  timed out, execution candidate stayed `no_trade`, path-ranker was not visible
+  or used, and `promotion_allowed=false` / `trade_usable=false`.
+- No mirror `main` push, tag creation, GitHub Release, practical-trading
+  promotion, or `update_goal complete` is authorized from this state.
+
+### 2026-05-23 09:30 CST release still blocked; source HEAD moved again
+
+Fresh factor audit:
+
+- `/tmp/ict-engine-factor-claims-continuation-20260523T093047+0800.json`
+  exited `0`.
+- `summary.status=pass`.
+- `active_claims=0`, `missing_run_roots=0`, `live_factor_processes=0`.
+- `terminalized_claims=123`, `total_claims=123`.
+- `promotion_allowed_true=0`, `trade_usable_true=0`.
+
+Fresh release-readiness audit with remote/tag readback:
+
+- `/tmp/ict-engine-release-readiness-continuation-20260523T093047+0800.json`
+  exited `1`.
+- `summary.status=needs_fix`.
+- `HEAD=35d12c83a950095a513b439b8c842aabb4a3f9d7`.
+- `origin/main=79d9579ea38685bd8c798dc80c1f5177e3c220b6`.
+- `release_mirror_main=ab6b1b55d516bcd0f6b88db1931cc40802e683bb`.
+- `Cargo.toml` still reports `version=0.1.3`, `publish=false`, and repository
+  `https://github.com/Undermybelt/ict-engine-release`.
+- The release audit sample reports `13` tracked dirty entries, `1` staged entry,
+  and `763` untracked entries.
+
+Unresolved release gates:
+
+- `worktree_clean_for_release`: fail; release export must start from an
+  explicitly selected committed tree, not this broad dirty worktree.
+- `release_docs_fresh_for_selected_tag`: fail; release signoff and notes still
+  describe historical/stale evidence for a fresh selected export.
+- `source_origin_matches_selected_source`: fail; the source branch is `109`
+  commits ahead of `origin/main`, so a selected committed source/export has not
+  been reconciled.
+- `release_version_tag_available`: fail; `v0.1.3` already exists, mirror tags
+  include `v0.1.4`, and the audit suggests `v0.1.5`.
+
+Release decision:
+
+- Claim/process hygiene is clean again, but release is still blocked.
+- No mirror `main` push, tag creation, GitHub Release, practical-trading
+  promotion, or `update_goal complete` is authorized from this state.
+
+### 2026-05-23 09:33 CST release still blocked; version/tag gate now passes
+
+Fresh factor audit:
+
+- `/tmp/ict-engine-factor-claims-continuation-20260523T093348+0800.json`
+  exited `0`.
+- `summary.status=pass`.
+- `active_claims=0`, `missing_run_roots=0`, `live_factor_processes=0`.
+- `terminalized_claims=123`, `total_claims=123`.
+- `promotion_allowed_true=0`, `trade_usable_true=0`.
+
+Fresh release-readiness audit with remote/tag readback:
+
+- `/tmp/ict-engine-release-readiness-continuation-20260523T093348+0800.json`
+  exited `1`.
+- `summary.status=needs_fix`.
+- `HEAD=28b1927bdeb3ea316c35c22dcf65cf367df93b20`.
+- `origin/main=79d9579ea38685bd8c798dc80c1f5177e3c220b6`.
+- `release_mirror_main=ab6b1b55d516bcd0f6b88db1931cc40802e683bb`.
+- `Cargo.toml` and `Cargo.lock` now report `version=0.1.5`; mirror tags list
+  `v0.0.1` through `v0.1.4`, so `release_version_tag_available` passes for
+  candidate tag `v0.1.5`.
+- The release audit sample reports `14` tracked dirty entries and `763`
+  untracked entries.
+
+Unresolved release gates:
+
+- `worktree_clean_for_release`: fail; release export must start from an
+  explicitly selected committed tree, not this broad dirty worktree.
+- `release_docs_fresh_for_selected_tag`: fail; release signoff and notes still
+  describe historical/stale evidence for a fresh selected export.
+- `source_origin_matches_selected_source`: fail; the source branch is `109`
+  commits ahead of `origin/main`, so a selected committed source/export has not
+  been reconciled.
+
+Release decision:
+
+- Version/tag reuse is no longer the current release blocker, but release is
+  still blocked by dirty source selection, stale release docs, and source/origin
+  mismatch.
+- No mirror `main` push, tag creation, GitHub Release, practical-trading
+  promotion, or `update_goal complete` is authorized from this state.
+
+### 2026-05-23 09:54 CST release still blocked after resume readback
+
+Fresh factor audit:
+
+- `/tmp/ict-engine-factor-claims-continuation-20260523T095449+0800.json`
+  exited `0`.
+- `summary.status=pass`.
+- `active_claims=0`, `missing_run_roots=0`, `live_factor_processes=0`.
+- `terminalized_claims=123`, `total_claims=123`.
+- `promotion_allowed_true=0`, `trade_usable_true=0`.
+
+Fresh release-readiness audit with remote/tag readback:
+
+- `/tmp/ict-engine-release-readiness-continuation-20260523T095449+0800.json`
+  exited `1`.
+- `summary.status=needs_fix`.
+- `HEAD=28b1927bdeb3ea316c35c22dcf65cf367df93b20`.
+- `origin/main=79d9579ea38685bd8c798dc80c1f5177e3c220b6`.
+- `release_mirror_main=ab6b1b55d516bcd0f6b88db1931cc40802e683bb`.
+- `Cargo.toml` and `Cargo.lock` still report `version=0.1.5`; mirror tags list
+  `v0.0.1` through `v0.1.4`, so `release_version_tag_available` passes for
+  candidate tag `v0.1.5`.
+- The release audit sample reports `15` tracked dirty entries and `763`
+  untracked entries.
+
+Unresolved release gates:
+
+- `worktree_clean_for_release`: fail; release export must start from an
+  explicitly selected committed tree, not this broad dirty worktree.
+- `release_docs_fresh_for_selected_tag`: fail; release signoff and notes still
+  describe historical/stale evidence for a fresh selected export.
+- `source_origin_matches_selected_source`: fail; the source branch is `109`
+  commits ahead of `origin/main`, so a selected committed source/export has not
+  been reconciled.
+
+Release decision:
+
+- Version/tag reuse remains fixed, but release is still blocked by dirty source
+  selection, stale release docs, and source/origin mismatch.
+- No mirror `main` push, tag creation, GitHub Release, practical-trading
+  promotion, or `update_goal complete` is authorized from this state.
+
+### 2026-05-23 09:58-10:03 CST clean export evidence: fmt/clippy pass, full test fails
+
+Fresh factor audit:
+
+- `/tmp/ict-engine-factor-claims-continuation-20260523T095813+0800.json`
+  exited `0`.
+- `summary.status=pass`.
+- `active_claims=0`, `missing_run_roots=0`, `live_factor_processes=0`.
+- `terminalized_claims=123`, `total_claims=123`.
+- `promotion_allowed_true=0`, `trade_usable_true=0`.
+
+Fresh release-readiness audit with remote/tag readback:
+
+- `/tmp/ict-engine-release-readiness-continuation-20260523T095813+0800.json`
+  exited `1`.
+- `summary.status=needs_fix`.
+- `HEAD=b52b66dc947291669991d2ffdc6aa8cfd5480e00`.
+- `origin/main=79d9579ea38685bd8c798dc80c1f5177e3c220b6`.
+- `release_mirror_main=ab6b1b55d516bcd0f6b88db1931cc40802e683bb`.
+- `Cargo.toml` and `Cargo.lock` report `version=0.1.5`; mirror tags still list
+  only through `v0.1.4`, so the version/tag gate passes.
+- The release audit sample reports `12` tracked dirty entries and `763`
+  untracked entries.
+
+Clean export gate attempt:
+
+- Export root: `/tmp/ict-engine-v015-release-export-20260523T095925+0800` from
+  `git archive HEAD`.
+- `cargo fmt --check` exited `0`.
+- `cargo clippy --all-targets -- -D warnings` exited `0`.
+- `cargo test` exited `101`; `src/lib.rs` unit tests passed `1166/1166`, but
+  `src/main.rs` bin tests failed `2` of `327`.
+- Failing tests:
+  `cli_surface_tests::test_factor_candidate_admission_target_builder_lives_in_orchestration_owner`
+  and `tests::test_build_factor_candidate_pack_inventory_reads_curated_packs`.
+
+Root cause readback:
+
+- The clean export uses committed `HEAD`, where
+  `support/examples/factor_candidate_packs/curated-auto-quant-v1/family_d_liquidity_sweep_reclaim_15m_wide_v1/factor_expression.json`
+  still has `expected_regime=null` and no `branch_path_contract`.
+- The dirty working tree has the missing `expected_regime`,
+  `branch_path_contract`, and related timeframe-ladder metadata across
+  `factor_expression.json`, `factor_eval_grid_summary.json`, and
+  `transfer_score.json`.
+- The two failing tests pass in the dirty worktree when run individually, so the
+  release source slice is incoherent: tests in committed `HEAD` expect candidate
+  pack metadata that is only present in unstaged/dirty files.
+
+Release decision:
+
+- Release docs must not be refreshed as current signoff yet. A clean export from
+  the selected commit still fails full tests.
+- The next safe release repair is a narrow, verified source slice that includes
+  the three candidate-pack JSON files or adjusts the tests/data contract from the
+  canonical owner, then reruns clean-export fmt, clippy, full tests,
+  zero-config smoke, and privacy scan before any signoff/notes refresh.
+- No mirror `main` push, tag creation, GitHub Release, practical-trading
+  promotion, or `update_goal complete` is authorized from this state.
+
+### 2026-05-23 10:12 CST candidate-pack source-slice repair precheck
+
+Fresh factor audit:
+
+- `/tmp/ict-engine-factor-claims-continuation-20260523T101244+0800.json`
+  exited `0`.
+- `summary.status=pass`.
+- `active_claims=0`, `missing_run_roots=0`, `live_factor_processes=0`.
+- `terminalized_claims=126`, `total_claims=126`.
+- `promotion_allowed_true=0`, `trade_usable_true=0`.
+
+Fresh release-readiness audit with remote/tag readback:
+
+- `/tmp/ict-engine-release-readiness-continuation-20260523T101244+0800.json`
+  exited `1`.
+- `summary.status=needs_fix`.
+- `HEAD=b13a57aaa2ac2a3babe0a837f9fbd039d4dca93c`.
+- `origin/main=79d9579ea38685bd8c798dc80c1f5177e3c220b6`.
+- `release_mirror_main=ab6b1b55d516bcd0f6b88db1931cc40802e683bb`.
+- `Cargo.toml` and `Cargo.lock` report `version=0.1.5`; mirror tags still list
+  only through `v0.1.4`, so the version/tag gate passes.
+- `release_docs_fresh_for_selected_tag` now passes.
+- The unresolved gates are `worktree_clean_for_release` and
+  `source_origin_matches_selected_source`.
+- The release audit sample reports `12` tracked dirty entries and `763`
+  untracked entries; source is `114` commits ahead of `origin/main`.
+
+Candidate-pack source-slice verification:
+
+- `cargo test cli_surface_tests::test_factor_candidate_admission_target_builder_lives_in_orchestration_owner -- --nocapture`
+  passed in the dirty worktree.
+- `cargo test tests::test_build_factor_candidate_pack_inventory_reads_curated_packs -- --nocapture`
+  passed in the dirty worktree.
+- The narrow data slice is the three JSON files under
+  `support/examples/factor_candidate_packs/curated-auto-quant-v1/family_d_liquidity_sweep_reclaim_15m_wide_v1/`:
+  `factor_expression.json`, `factor_eval_grid_summary.json`, and
+  `transfer_score.json`.
+- The slice adds rooted branch-path metadata, timeframe-ladder evidence, and
+  explicit `promotion_allowed=false` / `trade_usable=false`; it does not make the
+  candidate practical-trading usable.
+
+Release decision:
+
+- The previous clean-export failure has a verified narrow data repair candidate,
+  but release is still not ready until that selected source is committed or
+  otherwise exported coherently, then clean-export fmt, clippy, full tests,
+  zero-config smoke, and privacy scan pass from the selected source.
+- No mirror `main` push, tag creation, GitHub Release, practical-trading
+  promotion, or `update_goal complete` is authorized from this state.
