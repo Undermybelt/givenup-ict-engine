@@ -5,6 +5,7 @@ use crate::types::Candle;
 
 use super::{
     crypto_public_runtime::CryptoPublicRuntimeProvider,
+    deribit_options_runtime::DeribitOptionsRuntimeProvider,
     external_http_runtime::ExternalHttpRuntimeProvider,
     market_support::{AuxiliaryMarketEvidence, OptionsChainSummary, SpotInstrumentKind},
     provider::RealtimeDataProvider,
@@ -20,6 +21,7 @@ pub enum LiveDataBackend {
     BinancePublic,
     BybitPublic,
     TradingViewMcp,
+    DeribitPublic,
 }
 
 impl LiveDataBackend {
@@ -31,6 +33,7 @@ impl LiveDataBackend {
             "binance_public" | "binance_public_runtime" => Ok(Self::BinancePublic),
             "bybit_public" | "bybit_public_runtime" => Ok(Self::BybitPublic),
             "tradingview" | "tradingview_mcp" | "tv_mcp" => Ok(Self::TradingViewMcp),
+            "deribit" | "deribit_public" | "deribit_options" => Ok(Self::DeribitPublic),
             other => bail!("unsupported live data backend '{}'", other),
         }
     }
@@ -43,6 +46,7 @@ impl LiveDataBackend {
             Self::BinancePublic => "binance_public_runtime",
             Self::BybitPublic => "bybit_public_runtime",
             Self::TradingViewMcp => "tradingview_mcp",
+            Self::DeribitPublic => "deribit_public",
         }
     }
 }
@@ -411,6 +415,83 @@ impl IntegratedLiveDataSource for CryptoPublicRuntimeProvider {
     }
 }
 
+impl IntegratedLiveDataSource for DeribitOptionsRuntimeProvider {
+    fn fetch_futures_candles(
+        &self,
+        _symbol: &str,
+        _interval: &str,
+        _start: DateTime<Utc>,
+        _end: DateTime<Utc>,
+    ) -> Result<Vec<Candle>> {
+        bail!("Deribit options runtime does not provide OHLCV candles")
+    }
+
+    fn fetch_futures_last_price(&self, symbol: &str) -> Result<f64> {
+        Ok(futures::executor::block_on(self.get_quote(symbol))?.last)
+    }
+
+    fn fetch_spot_candles(
+        &self,
+        _kind: SpotInstrumentKind,
+        _symbol: &str,
+        _interval: Option<&str>,
+        _start: DateTime<Utc>,
+        _end: DateTime<Utc>,
+    ) -> Result<Vec<Candle>> {
+        bail!("Deribit options runtime does not provide spot candles")
+    }
+
+    fn fetch_spot_last_price(&self, _kind: SpotInstrumentKind, _symbol: &str) -> Result<f64> {
+        bail!("Deribit options runtime does not provide spot quote directly")
+    }
+
+    fn fetch_options_chain_summary(&self, symbol: &str) -> Result<OptionsChainSummary> {
+        DeribitOptionsRuntimeProvider::fetch_options_chain_summary(self, symbol)
+    }
+
+    fn fetch_options_volatility_proxy_summary(
+        &self,
+        _proxy_symbol: &str,
+        _underlying_symbol: &str,
+    ) -> Result<OptionsChainSummary> {
+        bail!("Deribit options runtime does not support volatility proxy fallback")
+    }
+
+    fn build_auxiliary_evidence(
+        &self,
+        spot_kind: SpotInstrumentKind,
+        spot_symbol: &str,
+        options_symbol: &str,
+        futures_candles: &[Candle],
+        spot_candles: &[Candle],
+        options_summary: &OptionsChainSummary,
+    ) -> AuxiliaryMarketEvidence {
+        DeribitOptionsRuntimeProvider::build_auxiliary_evidence(
+            self,
+            spot_kind,
+            spot_symbol,
+            options_symbol,
+            futures_candles,
+            spot_candles,
+            options_summary,
+        )
+    }
+
+    fn apply_auxiliary_evidence_to_outcome(
+        &self,
+        base_distribution: &[f64],
+        directional_bias: f64,
+        uncertainty_penalty: f64,
+    ) -> Vec<f64> {
+        DeribitOptionsRuntimeProvider::apply_auxiliary_evidence_to_outcome(
+            self,
+            base_distribution,
+            directional_bias,
+            uncertainty_penalty,
+        )
+    }
+}
+
 pub fn build_live_data_source(
     backend: LiveDataBackend,
     base_url: &str,
@@ -426,5 +507,6 @@ pub fn build_live_data_source(
             Box::new(CryptoPublicRuntimeProvider::new_for_exchange("bybit"))
         }
         LiveDataBackend::TradingViewMcp => Box::new(TradingViewMcpRuntimeProvider::new(base_url)),
+        LiveDataBackend::DeribitPublic => Box::new(DeribitOptionsRuntimeProvider::new(base_url)),
     }
 }

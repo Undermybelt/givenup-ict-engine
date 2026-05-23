@@ -13,6 +13,7 @@ use crate::application::multi_timeframe_inputs::{
     build_multi_timeframe_research_signal, build_multi_timeframe_summary,
     resolve_multi_timeframe_inputs, MultiTimeframeInputPaths,
 };
+use crate::application::output_foundation::print_redacted_json;
 use crate::config::env_f64;
 use crate::data::load_candles;
 use crate::factors::FactorRegistry;
@@ -29,6 +30,7 @@ pub struct FactorPipelineDebugCommandInput<'a> {
     pub data_1h: Option<&'a str>,
     pub data_4h: Option<&'a str>,
     pub data_1d: Option<&'a str>,
+    pub output_format: &'a str,
 }
 
 pub fn factor_pipeline_debug_command(input: FactorPipelineDebugCommandInput<'_>) -> Result<()> {
@@ -44,6 +46,7 @@ pub fn factor_pipeline_debug_command(input: FactorPipelineDebugCommandInput<'_>)
         data_1h,
         data_4h,
         data_1d,
+        output_format,
     } = input;
     let objective_mode = parse_research_objective(objective)?;
     let resolved_multi_timeframe_inputs = resolve_multi_timeframe_inputs(
@@ -111,6 +114,24 @@ pub fn factor_pipeline_debug_command(input: FactorPipelineDebugCommandInput<'_>)
         bridge_gap_clear_threshold: env_f64("ICT_ENGINE_BRIDGE_GAP_CLEAR_THRESHOLD", 0.12),
         paired_market_quality_report: None,
     })?;
-    println!("{}", serde_json::to_string_pretty(&report)?);
-    Ok(())
+    match output_format.trim().to_ascii_lowercase().as_str() {
+        "json" | "compact" | "agent" => print_redacted_json(&report),
+        "human" => {
+            println!(
+                "Factor pipeline debug | symbol={} | factor={} | objective={} | direction={} | confidence={:.3} | gate={} | soft_divergences={}",
+                symbol,
+                factor,
+                research_objective_label(objective_mode),
+                report.latest_signal.direction,
+                report.latest_signal.confidence,
+                report.gating_status,
+                report.soft_evidence_divergence.len()
+            );
+            Ok(())
+        }
+        other => anyhow::bail!(
+            "unsupported factor-pipeline-debug output format '{}'",
+            other
+        ),
+    }
 }

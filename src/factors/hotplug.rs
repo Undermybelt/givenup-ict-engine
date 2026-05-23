@@ -84,6 +84,7 @@ impl Default for FactorHotplugConfig {
         let mut families = BTreeMap::new();
         for name in &[
             "trend_momentum",
+            "bayesian_markov_trend_detector",
             "volatility_mean_reversion",
             "structure_ict",
             "cross_market_smt",
@@ -428,14 +429,16 @@ detector_context:
 
     #[test]
     fn test_summary_reports_opt_in_detector_context_without_private_values() {
-        let mut config = FactorHotplugConfig::default();
-        config.detector_context = Some(DetectorHotplugContext {
-            session_label: Some("ny_open".to_string()),
-            source_profile: Some("paper_session_labels_v1".to_string()),
-            volume_quality: Some("broker_reported".to_string()),
-            symbol_context: Some("nq_futures".to_string()),
-            calendar_context: Some("cme_regular_session".to_string()),
-        });
+        let config = FactorHotplugConfig {
+            detector_context: Some(DetectorHotplugContext {
+                session_label: Some("ny_open".to_string()),
+                source_profile: Some("paper_session_labels_v1".to_string()),
+                volume_quality: Some("broker_reported".to_string()),
+                symbol_context: Some("nq_futures".to_string()),
+                calendar_context: Some("cme_regular_session".to_string()),
+            }),
+            ..Default::default()
+        };
 
         let summary = config.summary_line();
 
@@ -509,21 +512,23 @@ detector_ga_bundle:
 
     #[test]
     fn test_summary_reports_detector_ga_bundle_without_private_values() {
-        let mut config = FactorHotplugConfig::default();
-        config.detector_ga_bundle = Some(DetectorGaFeatureBundle {
-            bundle_id: Some("local/private/ga-bundle".to_string()),
-            target_consumer: Some("auto_quant_search".to_string()),
-            selected_fields: vec![
-                "vi_mitigation_pct".to_string(),
-                "fvg_mitigation_pct".to_string(),
-                "ob_mitigation_pct".to_string(),
-            ],
-            optimizer_objectives: vec![
-                "regime_conditioned_win_rate".to_string(),
-                "cost_adjusted_expectancy".to_string(),
-            ],
-            validation_windows: vec!["local/private/window.json".to_string()],
-        });
+        let config = FactorHotplugConfig {
+            detector_ga_bundle: Some(DetectorGaFeatureBundle {
+                bundle_id: Some("local/private/ga-bundle".to_string()),
+                target_consumer: Some("auto_quant_search".to_string()),
+                selected_fields: vec![
+                    "vi_mitigation_pct".to_string(),
+                    "fvg_mitigation_pct".to_string(),
+                    "ob_mitigation_pct".to_string(),
+                ],
+                optimizer_objectives: vec![
+                    "regime_conditioned_win_rate".to_string(),
+                    "cost_adjusted_expectancy".to_string(),
+                ],
+                validation_windows: vec!["local/private/window.json".to_string()],
+            }),
+            ..Default::default()
+        };
 
         let summary = config.summary_line();
 

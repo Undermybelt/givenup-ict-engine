@@ -1,5 +1,6 @@
 use super::*;
 use ict_engine::application::regime::HMM_STATE_FILE;
+use std::path::Path;
 
 pub(crate) fn train_command(
     symbol: &str,
@@ -7,6 +8,12 @@ pub(crate) fn train_command(
     epochs: usize,
     state_dir: &str,
 ) -> Result<()> {
+    if !Path::new(data).exists() {
+        bail!(
+            "train_data_missing flag=--data path={} expected=cleaned candle JSON recovery=run `ict-engine clean-futures` for TOMAC history or pass an existing cleaned candle JSON artifact",
+            data
+        );
+    }
     let (observations, multi_timeframe_summary, candles_total) =
         build_multi_timeframe_training_observations(data)?;
     let initial_params = load_or_init_hmm_params(symbol, state_dir);
@@ -177,4 +184,38 @@ pub(crate) fn train_command(
         HMM_STATE_FILE,
     );
     Ok(())
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn train_missing_data_error_names_flag_schema_and_recovery() {
+        let temp = tempfile::tempdir().unwrap();
+        let missing = temp.path().join("missing-train-candles.json");
+
+        let result = train_command(
+            "DEMO",
+            missing.to_str().unwrap(),
+            1,
+            temp.path().to_str().unwrap(),
+        );
+
+        let err = result.expect_err("missing train data must fail clearly");
+        let message = format!("{err:#}");
+        assert!(
+            message.contains("train_data_missing"),
+            "unexpected error: {message}"
+        );
+        assert!(
+            message.contains("flag=--data"),
+            "unexpected error: {message}"
+        );
+        assert!(
+            message.contains("cleaned candle JSON"),
+            "unexpected error: {message}"
+        );
+        assert!(message.contains("recovery="), "unexpected error: {message}");
+    }
 }

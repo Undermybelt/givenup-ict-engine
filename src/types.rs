@@ -538,7 +538,7 @@ pub struct StructureBreak {
     pub level: f64,
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub enum StructureType {
     BOS,
     CHoCH,

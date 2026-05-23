@@ -1,5 +1,19 @@
 use super::*;
 
+pub(crate) struct RunProbabilisticBacktestInput<'a> {
+    pub(crate) symbol: &'a str,
+    pub(crate) state_dir: &'a str,
+    pub(crate) candles: &'a [Candle],
+    pub(crate) paired_candles: Option<&'a [Candle]>,
+    pub(crate) warmup_bars: usize,
+    pub(crate) hold_bars: usize,
+    pub(crate) realism: &'a ExecutionRealismConfig,
+    pub(crate) online_learn: bool,
+    pub(crate) params: &'a HMMParams,
+    pub(crate) network: &'a ict_engine::bbn::BayesianNetwork,
+    pub(crate) learning_state: &'a mut LearningState,
+}
+
 pub(crate) fn run_probabilistic_backtest(
     input: RunProbabilisticBacktestInput<'_>,
 ) -> Result<(

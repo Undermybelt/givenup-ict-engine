@@ -213,7 +213,7 @@ pub fn classify_liquidity_sweep_quality(
     let confidence = match quality {
         LiquiditySweepQualityKind::Clean => (0.45
             + (1.0 - (return_bars as f64 / 8.0)).max(0.0) * 0.20
-            + (1.25 - displacement_atr).max(0.0).min(1.0) * 0.15)
+            + (1.25 - displacement_atr).clamp(0.0, 1.0) * 0.15)
             .clamp(0.0, 0.82),
         LiquiditySweepQualityKind::Dirty => {
             (0.42 + (return_bars as f64 / 10.0).min(0.25) + (displacement_atr / 4.0).min(0.20))

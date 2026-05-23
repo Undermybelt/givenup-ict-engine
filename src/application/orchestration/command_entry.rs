@@ -75,10 +75,11 @@ fn attach_workflow_opt_in_profile_refs(
     Ok(())
 }
 
+#[cfg(test)]
 fn workflow_status_needs_provider_surface(
     provider_profile: Option<&str>,
     phase: Option<&str>,
-    snapshot: &WorkflowSnapshot,
+    _snapshot: &WorkflowSnapshot,
 ) -> bool {
     if provider_profile.is_some() {
         return true;
@@ -223,6 +224,7 @@ pub fn pre_bayes_diff_command<F>(
     symbol: &str,
     state_dir: &str,
     refresh: bool,
+    output_format: &str,
     refresh_snapshot: F,
 ) -> Result<()>
 where
@@ -233,7 +235,7 @@ where
     } else {
         load_workflow_snapshot(state_dir, symbol)?
     };
-    emit_pre_bayes_diff_output(&snapshot)
+    emit_pre_bayes_diff_output(&snapshot, output_format)
 }
 
 #[cfg(test)]

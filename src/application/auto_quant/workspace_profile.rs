@@ -6,7 +6,7 @@ use std::path::{Path, PathBuf};
 
 use crate::data::load_candles;
 
-use super::handoff::AutoQuantWorkspaceConfig;
+use super::handoff::{AutoQuantResearchHandoffPayload, AutoQuantWorkspaceConfig};
 
 pub const AUTO_QUANT_WORKSPACE_PROFILE_FILE: &str = "auto_quant_workspace_profile.json";
 pub const AUTO_QUANT_PROFILE_SYNTHETIC_OHLCV: &str = "synthetic_ohlcv";
@@ -87,29 +87,28 @@ pub fn apply_workspace_profile(
         return Ok(None);
     };
     if profile.profile == AUTO_QUANT_PROFILE_SYNTHETIC_OHLCV {
-        let repo_root = PathBuf::from(&workspace.repo_root);
-        workspace.profile_name = Some(profile.profile.clone());
-        workspace.prepare_script = repo_root
-            .join("prepare_external.py")
-            .to_string_lossy()
-            .to_string();
-        workspace.run_script = repo_root.join("run_tomac.py").to_string_lossy().to_string();
-        workspace.config_json = repo_root
-            .join("config.tomac.json")
-            .to_string_lossy()
-            .to_string();
-        workspace.strategies_dir = repo_root
-            .join("user_data/strategies_external")
-            .to_string_lossy()
-            .to_string();
-        workspace.expected_data_files = expected_data_files(&profile);
-        workspace.strategy_seed_source_dir = Some(
-            repo_root
-                .join("user_data/strategies")
-                .to_string_lossy()
-                .to_string(),
-        );
+        apply_synthetic_profile_to_workspace(&profile, workspace);
     }
+    Ok(Some(profile))
+}
+
+pub fn apply_handoff_workspace_profile(
+    payload: &AutoQuantResearchHandoffPayload,
+    workspace: &mut AutoQuantWorkspaceConfig,
+) -> Option<AutoQuantWorkspaceProfileConfig> {
+    let profile = handoff_workspace_profile(payload)?;
+    apply_synthetic_profile_to_workspace(&profile, workspace);
+    Some(profile)
+}
+
+pub fn materialize_handoff_workspace_profile(
+    payload: &AutoQuantResearchHandoffPayload,
+    workspace: &AutoQuantWorkspaceConfig,
+) -> Result<Option<AutoQuantWorkspaceProfileConfig>> {
+    let Some(profile) = handoff_workspace_profile(payload) else {
+        return Ok(None);
+    };
+    materialize_synthetic_workspace_profile(&profile, workspace)?;
     Ok(Some(profile))
 }
 
@@ -123,6 +122,43 @@ pub fn materialize_workspace_profile(
     if profile.profile != AUTO_QUANT_PROFILE_SYNTHETIC_OHLCV {
         return Ok(Some(profile));
     }
+    materialize_synthetic_workspace_profile(&profile, workspace)?;
+    Ok(Some(profile))
+}
+
+fn apply_synthetic_profile_to_workspace(
+    profile: &AutoQuantWorkspaceProfileConfig,
+    workspace: &mut AutoQuantWorkspaceConfig,
+) {
+    let repo_root = PathBuf::from(&workspace.repo_root);
+    workspace.profile_name = Some(profile.profile.clone());
+    workspace.prepare_script = repo_root
+        .join("prepare_external.py")
+        .to_string_lossy()
+        .to_string();
+    workspace.run_script = repo_root.join("run_tomac.py").to_string_lossy().to_string();
+    workspace.config_json = repo_root
+        .join("config.tomac.json")
+        .to_string_lossy()
+        .to_string();
+    workspace.strategies_dir = repo_root
+        .join("user_data/strategies_external")
+        .to_string_lossy()
+        .to_string();
+    workspace.expected_data_files = expected_data_files(profile);
+    workspace.strategy_seed_source_dir = (!synthetic_profile_requires_exact_seed(&profile.symbol))
+        .then(|| {
+            repo_root
+                .join("user_data/strategies")
+                .to_string_lossy()
+                .to_string()
+        });
+}
+
+fn materialize_synthetic_workspace_profile(
+    profile: &AutoQuantWorkspaceProfileConfig,
+    workspace: &AutoQuantWorkspaceConfig,
+) -> Result<()> {
     let workspace_root = PathBuf::from(&workspace.repo_root);
     fs::create_dir_all(workspace_root.join("user_data/strategies_external"))?;
     fs::create_dir_all(workspace_root.join("user_data/data"))?;
@@ -146,7 +182,7 @@ pub fn materialize_workspace_profile(
     )?;
     write_profile_config(
         &workspace_root.join("config.tomac.json"),
-        &profile,
+        profile,
         &source_summary.timerange,
     )?;
     seed_profile_strategies(
@@ -160,7 +196,83 @@ pub fn materialize_workspace_profile(
             .join("support/scripts/auto_quant_external/strategies/TomacNQ_KillzoneBreakout.py"),
         &profile.symbol,
     )?;
-    Ok(Some(profile))
+    Ok(())
+}
+
+fn handoff_workspace_profile(
+    payload: &AutoQuantResearchHandoffPayload,
+) -> Option<AutoQuantWorkspaceProfileConfig> {
+    let data_path = payload.data_path.trim();
+    if data_path.is_empty() || !Path::new(data_path).exists() {
+        return None;
+    }
+    let (pair, base_timeframe) = infer_pair_and_timeframe_from_handoff(data_path, &payload.symbol)?;
+    Some(AutoQuantWorkspaceProfileConfig {
+        profile: AUTO_QUANT_PROFILE_SYNTHETIC_OHLCV.to_string(),
+        symbol: payload.symbol.clone(),
+        source_data_path: data_path.to_string(),
+        pair,
+        additional_timeframes: handoff_additional_timeframes(&base_timeframe),
+        base_timeframe,
+        notes: vec![
+            "profile_materializes_exact_auto_quant_handoff_data".to_string(),
+            format!("handoff_artifact_id={}", payload.artifact_id),
+        ],
+    })
+}
+
+fn infer_pair_and_timeframe_from_handoff(
+    data_path: &str,
+    symbol: &str,
+) -> Option<(String, String)> {
+    let stem = Path::new(data_path).file_stem()?.to_str()?;
+    let tokens = stem
+        .split(|ch: char| !ch.is_ascii_alphanumeric())
+        .filter(|token| !token.is_empty())
+        .collect::<Vec<_>>();
+    let timeframe = tokens
+        .iter()
+        .rev()
+        .find_map(|token| normalize_timeframe_token(token))?;
+    let base = tokens
+        .iter()
+        .find_map(|token| normalize_symbol_token(token))
+        .unwrap_or_else(|| synthetic_ohlcv_alias_base_from_symbol(symbol));
+    Some((format!("{base}/USD"), timeframe))
+}
+
+fn handoff_additional_timeframes(base_timeframe: &str) -> Vec<String> {
+    let timeframes: &[&str] = match base_timeframe {
+        "1m" => &["5m", "15m", "30m", "1h", "4h", "1d"],
+        "5m" => &["15m", "30m", "1h", "4h", "1d"],
+        "15m" => &["30m", "1h", "4h", "1d"],
+        "30m" => &["1h", "4h", "1d"],
+        "1h" => &["4h", "1d"],
+        "4h" => &["1d"],
+        _ => &[],
+    };
+    timeframes
+        .iter()
+        .map(|timeframe| (*timeframe).to_string())
+        .collect()
+}
+
+fn normalize_timeframe_token(token: &str) -> Option<String> {
+    let lower = token.to_ascii_lowercase();
+    matches!(
+        lower.as_str(),
+        "1m" | "3m" | "5m" | "15m" | "30m" | "1h" | "4h" | "1d"
+    )
+    .then_some(lower)
+}
+
+fn normalize_symbol_token(token: &str) -> Option<String> {
+    let upper = token.to_ascii_uppercase();
+    const SKIP: &[&str] = &["IBKR", "YF", "TVR", "KRAKEN", "BINANCE", "BYBIT"];
+    if SKIP.contains(&upper.as_str()) || upper.chars().all(|ch| ch.is_ascii_digit()) {
+        return None;
+    }
+    Some(upper)
 }
 
 fn workspace_profile_path(state_dir: &str) -> PathBuf {
@@ -209,6 +321,7 @@ fn synthetic_ohlcv_alias_base_from_symbol(symbol: &str) -> String {
     }
     const STOPWORDS: &[&str] = &[
         "IBKR",
+        "FUTURES",
         "YF",
         "TVR",
         "KRAKEN",
@@ -249,7 +362,20 @@ fn synthetic_ohlcv_alias_base_from_symbol(symbol: &str) -> String {
                 && !upper.chars().all(|ch| ch.is_ascii_digit())
         });
 
-    candidate.unwrap_or(symbol).to_string()
+    candidate
+        .map(strip_runtime_timeframe_suffix)
+        .unwrap_or_else(|| symbol.to_string())
+}
+
+fn strip_runtime_timeframe_suffix(token: &str) -> String {
+    const SUFFIXES: &[&str] = &["15M", "30M", "1M", "5M", "1H", "4H", "1D"];
+    let upper = token.to_ascii_uppercase();
+    for suffix in SUFFIXES {
+        if upper.ends_with(suffix) && token.len() > suffix.len() {
+            return token[..token.len() - suffix.len()].to_string();
+        }
+    }
+    token.to_string()
 }
 
 fn write_profile_config(
@@ -343,21 +469,38 @@ fn seed_profile_strategies(
                 .map(|name| !name.starts_with('_'))
                 .unwrap_or(false);
             if is_python && is_active {
-                write_strategy_with_meta(
-                    &path,
-                    &target_dir.join(entry.file_name()),
-                    profile_symbol,
-                )?;
-                copied += 1;
+                let source = fs::read_to_string(&path)
+                    .with_context(|| format!("reading strategy source {}", path.display()))?;
+                if strategy_source_compatible_with_profile(&path, &source, profile_symbol) {
+                    write_strategy_with_meta_source(
+                        &source,
+                        &target_dir.join(entry.file_name()),
+                        profile_symbol,
+                    )?;
+                    copied += 1;
+                }
             }
         }
     }
     if copied == 0 {
+        let fallback_source = fs::read_to_string(fallback_strategy_path).with_context(|| {
+            format!(
+                "reading fallback strategy source {}",
+                fallback_strategy_path.display()
+            )
+        })?;
+        if !strategy_source_compatible_with_profile(
+            fallback_strategy_path,
+            &fallback_source,
+            profile_symbol,
+        ) {
+            return Ok(());
+        }
         let filename = fallback_strategy_path
             .file_name()
             .context("missing fallback strategy filename")?;
-        write_strategy_with_meta(
-            fallback_strategy_path,
+        write_strategy_with_meta_source(
+            &fallback_source,
             &target_dir.join(filename),
             profile_symbol,
         )?;
@@ -365,15 +508,13 @@ fn seed_profile_strategies(
     Ok(())
 }
 
-fn write_strategy_with_meta(
-    source_path: &Path,
+fn write_strategy_with_meta_source(
+    source: &str,
     target_path: &Path,
     profile_symbol: &str,
 ) -> Result<()> {
-    let source = fs::read_to_string(source_path)
-        .with_context(|| format!("reading strategy source {}", source_path.display()))?;
     let rendered = if source.contains("# AUTO_QUANT_META") {
-        source
+        source.to_string()
     } else {
         let strategy = target_path
             .file_stem()
@@ -381,20 +522,20 @@ fn write_strategy_with_meta(
             .unwrap_or("SyntheticProfileStrategy");
         let base_factor = camel_to_snake(strategy);
         let hypothesis = sanitize_auto_quant_meta_value(
-            &extract_doc_field(&source, "Hypothesis")
+            &extract_doc_field(source, "Hypothesis")
                 .unwrap_or_else(|| format!("{strategy} hypothesis under synthetic_ohlcv profile.")),
         );
         let paradigm = sanitize_auto_quant_meta_value(
-            &extract_doc_field(&source, "Paradigm").unwrap_or_else(|| "other".to_string()),
+            &extract_doc_field(source, "Paradigm").unwrap_or_else(|| "other".to_string()),
         );
         let parent = sanitize_auto_quant_meta_value(
-            &extract_doc_field(&source, "Parent").unwrap_or_else(|| "root".to_string()),
+            &extract_doc_field(source, "Parent").unwrap_or_else(|| "root".to_string()),
         );
         let status = sanitize_auto_quant_meta_value(
-            &extract_doc_field(&source, "Status").unwrap_or_else(|| "active".to_string()),
+            &extract_doc_field(source, "Status").unwrap_or_else(|| "active".to_string()),
         );
         let created = sanitize_auto_quant_meta_value(
-            &extract_doc_field(&source, "Created").unwrap_or_default(),
+            &extract_doc_field(source, "Created").unwrap_or_default(),
         );
         let expected_regime =
             if source.contains("@informative(\"1d\")") || source.contains("@informative(\"4h\")") {
@@ -410,10 +551,36 @@ fn write_strategy_with_meta(
         let meta_block = format!(
             "# AUTO_QUANT_META v1\nStrategy:        {strategy}\nMutation_id:     synthetic-ohlcv-{strategy}\nBase_factor:     {base_factor}\nHypothesis:      {hypothesis}\nParadigm:        {paradigm}\nExpected_regime: {expected_regime}\nFactors_used:    {base_factor}\nParent:          {parent}\nAsset_class:     {asset_class}\nStatus:          {status}\nCreated:         {created}\n# END_AUTO_QUANT_META"
         );
-        inject_auto_quant_meta_into_docstring(&source, &meta_block)
+        inject_auto_quant_meta_into_docstring(source, &meta_block)
     };
     fs::write(target_path, rendered)
         .with_context(|| format!("writing exportable strategy {}", target_path.display()))
+}
+
+fn strategy_source_compatible_with_profile(
+    source_path: &Path,
+    source: &str,
+    profile_symbol: &str,
+) -> bool {
+    if !synthetic_profile_requires_exact_seed(profile_symbol) {
+        return true;
+    }
+    let exact = profile_symbol.to_ascii_uppercase();
+    let base = synthetic_ohlcv_alias_base_from_symbol(profile_symbol).to_ascii_uppercase();
+    let haystack = format!(
+        "{}\n{}",
+        source_path
+            .file_stem()
+            .and_then(|value| value.to_str())
+            .unwrap_or_default(),
+        source
+    )
+    .to_ascii_uppercase();
+    haystack.contains(&exact) || (!base.is_empty() && haystack.contains(&base))
+}
+
+fn synthetic_profile_requires_exact_seed(symbol: &str) -> bool {
+    symbol.contains('_')
 }
 
 fn extract_doc_field(source: &str, label: &str) -> Option<String> {
@@ -499,6 +666,18 @@ mod tests {
     }
 
     #[test]
+    fn synthetic_ohlcv_pair_alias_skips_asset_class_tokens_for_futures_symbols() {
+        assert_eq!(
+            synthetic_ohlcv_pair_alias("IBKR_FUTURES_MNQ1M_LIQUIDITY_SWEEP_SIM_TRADE_ADMISSION_V1"),
+            "MNQ/USD"
+        );
+        assert_eq!(
+            synthetic_ohlcv_pair_alias("IBKR_FUTURES_MGC1M_ADX_ATR_BREAKOUT_7D_GATE1_V1"),
+            "MGC/USD"
+        );
+    }
+
+    #[test]
     fn synthetic_ohlcv_pair_alias_collapses_local_nonbtc_runtime_symbol_to_ticker() {
         assert_eq!(
             synthetic_ohlcv_pair_alias("B2R_LOCAL_NONBTC_SPY_USD_MTF_124245"),
@@ -533,6 +712,52 @@ mod tests {
         assert_eq!(
             source_candle_timerange(&candles).unwrap(),
             "20260502-20260515"
+        );
+    }
+
+    #[test]
+    fn synthetic_profile_does_not_seed_nq_fallback_for_other_symbols() {
+        let temp = tempfile::tempdir().unwrap();
+        let source_dir = temp.path().join("source");
+        let target_dir = temp.path().join("target");
+        fs::create_dir_all(&source_dir).unwrap();
+        fs::create_dir_all(&target_dir).unwrap();
+        let nq_strategy = source_dir.join("TomacNQ_KillzoneBreakout.py");
+        fs::write(
+            &nq_strategy,
+            r#""""NQ-only upstream template."""
+
+from freqtrade.strategy import IStrategy
+
+class TomacNQ_KillzoneBreakout(IStrategy):
+    pass
+"#,
+        )
+        .unwrap();
+
+        seed_profile_strategies(
+            &source_dir,
+            &target_dir,
+            &nq_strategy,
+            "IBKR_M2K1M_RVOL_PDA_CONSISTENCY_FLOOR_AUTORESEARCH_REPAIR_V1",
+        )
+        .unwrap();
+
+        let active_files = fs::read_dir(&target_dir)
+            .unwrap()
+            .filter_map(Result::ok)
+            .filter(|entry| {
+                entry
+                    .path()
+                    .extension()
+                    .and_then(|ext| ext.to_str())
+                    .map(|ext| ext.eq_ignore_ascii_case("py"))
+                    .unwrap_or(false)
+            })
+            .collect::<Vec<_>>();
+        assert!(
+            active_files.is_empty(),
+            "M2K synthetic handoff must remain seed-required instead of copying generic NQ"
         );
     }
 }

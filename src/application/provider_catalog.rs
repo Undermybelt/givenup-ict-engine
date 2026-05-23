@@ -4,7 +4,9 @@ use std::collections::BTreeMap;
 use std::env;
 use std::fs;
 use std::path::{Path, PathBuf};
-use std::process::{Command, ExitStatus, Output, Stdio};
+use std::process::{Command, Output};
+#[cfg(test)]
+use std::process::{ExitStatus, Stdio};
 use std::thread::sleep;
 use std::time::{Duration, Instant, SystemTime, UNIX_EPOCH};
 
@@ -1096,6 +1098,7 @@ fn command_output_with_timeout(command: &mut Command, timeout: Duration) -> Opti
     })
 }
 
+#[cfg(test)]
 fn command_status_with_timeout(command: &mut Command, timeout: Duration) -> Option<ExitStatus> {
     command.stdout(Stdio::null()).stderr(Stdio::null());
     let mut child = command.spawn().ok()?;

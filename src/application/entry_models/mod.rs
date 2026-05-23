@@ -91,6 +91,7 @@ pub fn entry_model_providers() -> Vec<Box<dyn EntryModelProvider>> {
     vec![
         Box::new(self::training_export::CisdRbEntryModelProvider),
         Box::new(self::training_export::BreakerRbEntryModelProvider),
+        Box::new(self::training_export::AutoQuantRealTradeFeedbackEntryModelProvider),
     ]
 }
 
@@ -130,11 +131,14 @@ pub use cisd_rb::{
 };
 pub use training_export::{
     apply_structural_path_ranking_external_scores_command,
+    apply_structural_path_ranking_external_scores_command_with_format,
     clear_structural_path_ranking_trainer_artifact_command,
     disable_structural_path_ranking_runtime_command,
     enable_structural_path_ranking_runtime_command, export_policy_training_tables,
-    export_structural_path_ranking_target_command, policy_training_status,
+    export_structural_path_ranking_target_command,
+    export_structural_path_ranking_target_command_with_format, policy_training_status,
     policy_training_status_command, register_structural_path_ranking_trainer_artifact_command,
+    AutoQuantRealTradeFeedbackEntryModelProvider, AutoQuantRealTradeTrainingRow,
     BreakerRbEntryModelProvider, CisdRbBbnTrainingRow, CisdRbCatBoostTrainingRow,
     CisdRbEntryModelProvider, CisdRbTrainingExportSummary, CisdRbTrainingStatusSurface,
     FactorCandidatePackTrainingStatusSurface, PolicyTrainingProviderStatusSurface,

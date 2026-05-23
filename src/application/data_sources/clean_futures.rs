@@ -96,7 +96,11 @@ pub fn run_clean_futures(
     std::fs::create_dir_all(output_dir)?;
     let datasets = discover_tomac_futures_datasets(root)?;
     if datasets.is_empty() {
-        bail!("no TOMAC futures datasets found under '{}'", root);
+        bail!(
+            "futures_sop_tomac_root_missing: flag=--root path={} expected=TOMAC futures dataset tree containing *.ohlcv-1m.csv files with sibling symbology.csv recovery=pass the TOMAC futures export root or run `ict-engine clean-futures --root <tomac-root> --output-dir <clean-output>` before `ict-engine futures-sop --root <tomac-root> --output-dir <sop-output> --interval {}`",
+            root,
+            interval
+        );
     }
 
     let mut reports = Vec::new();
@@ -189,4 +193,37 @@ pub fn infer_market_code_from_path(path: &str) -> String {
         .next()
         .unwrap_or(parent)
         .to_ascii_uppercase()
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn futures_sop_missing_root_error_names_flag_schema_and_recovery() {
+        let temp = tempfile::tempdir().unwrap();
+        let missing_root = temp.path().join("missing-tomac-root");
+        let output_dir = temp.path().join("sop-out");
+
+        let err = run_clean_futures(
+            missing_root.to_str().unwrap(),
+            output_dir.to_str().unwrap(),
+            "1m",
+        )
+        .unwrap_err();
+        let message = format!("{err:#}");
+
+        assert!(
+            message.contains("futures_sop_tomac_root_missing"),
+            "{message}"
+        );
+        assert!(message.contains("flag=--root"), "{message}");
+        assert!(
+            message.contains(missing_root.to_str().unwrap()),
+            "{message}"
+        );
+        assert!(message.contains("*.ohlcv-1m.csv"), "{message}");
+        assert!(message.contains("symbology.csv"), "{message}");
+        assert!(message.contains("recovery="), "{message}");
+    }
 }

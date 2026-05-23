@@ -86,6 +86,10 @@ pub struct StrategyLibraryMetadata {
     #[serde(default)]
     pub profit_factor: String,
     #[serde(default)]
+    pub direction: String,
+    #[serde(default)]
+    pub trade_direction: String,
+    #[serde(default)]
     pub regime_profit_branch_path: String,
     #[serde(default)]
     pub factors_used: Vec<String>,
@@ -329,6 +333,8 @@ mod tests {
                   "sub_regime":"MarketStructureEvent",
                   "sub_sub_regime_or_profit_factor":"atr_cisd_direct_limit",
                   "profit_factor":"market_structure_event_classifier_atr_cisd_direct_limit_v1",
+                  "direction":"short",
+                  "trade_direction":"Bear",
                   "regime_profit_branch_path":"Transition -> MarketStructureEvent -> atr_cisd_direct_limit -> market_structure_event_classifier_atr_cisd_direct_limit_v1",
                   "promotion_allowed":false,
                   "trade_usable":false
@@ -353,6 +359,8 @@ mod tests {
             metadata.regime_profit_branch_path,
             "Transition -> MarketStructureEvent -> atr_cisd_direct_limit -> market_structure_event_classifier_atr_cisd_direct_limit_v1"
         );
+        assert_eq!(metadata.direction, "short");
+        assert_eq!(metadata.trade_direction, "Bear");
         assert!(!metadata.promotion_allowed);
         assert!(!metadata.trade_usable);
     }

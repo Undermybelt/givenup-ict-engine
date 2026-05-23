@@ -1,4 +1,5 @@
 use super::*;
+use ict_engine::application::orchestration::resolved_vote_scorecards;
 
 fn structural_learning_evidence_line(
     credit_class: Option<&str>,

@@ -68,6 +68,16 @@ pub struct ArtifactLineageView {
     pub edges: Vec<ArtifactLineageEdge>,
 }
 
+enum ArtifactStatusOutputView {
+    Entries(ArtifactStatusView),
+    Buckets(ArtifactStatusBucketView),
+}
+
+enum ArtifactLineageOutputView {
+    Summaries(Vec<ArtifactLineageSummary>),
+    View(ArtifactLineageView),
+}
+
 #[derive(Debug, Clone, Default)]
 pub struct ConsumedAnalyzeContext {
     pub analyze_run_id: Option<String>,
@@ -305,7 +315,31 @@ pub fn artifact_status_entry_view(entry: ArtifactLedgerEntry) -> ArtifactStatusE
     }
 }
 
-pub fn artifact_status_command(input: ArtifactStatusCommandInput<'_>) -> Result<()> {
+fn normalize_artifact_output_format(value: &str) -> Result<&'static str> {
+    match value.trim() {
+        "" | "json" => Ok("json"),
+        "compact" => Ok("compact"),
+        "agent" => Ok("agent"),
+        "human" => Ok("human"),
+        other => bail!(
+            "unsupported artifact output format '{}'; expected json, compact, agent, or human",
+            other
+        ),
+    }
+}
+
+fn print_artifact_json<T: Serialize>(value: &T, compact: bool) -> Result<()> {
+    if compact {
+        println!("{}", serde_json::to_string(value)?);
+    } else {
+        println!("{}", serde_json::to_string_pretty(value)?);
+    }
+    Ok(())
+}
+
+fn artifact_status_output(
+    input: ArtifactStatusCommandInput<'_>,
+) -> Result<ArtifactStatusOutputView> {
     let ArtifactStatusCommandInput {
         symbol,
         state_dir,
@@ -377,27 +411,76 @@ pub fn artifact_status_command(input: ArtifactStatusCommandInput<'_>) -> Result<
                 )
             })
             .collect::<BTreeMap<_, _>>();
-        println!(
-            "{}",
-            serde_json::to_string_pretty(&ArtifactStatusBucketView {
+        return Ok(ArtifactStatusOutputView::Buckets(
+            ArtifactStatusBucketView {
                 symbol: symbol.to_string(),
                 total_entries: buckets.values().map(Vec::len).sum(),
                 buckets,
-            })?
-        );
-        return Ok(());
+            },
+        ));
     }
-    println!(
-        "{}",
-        serde_json::to_string_pretty(&ArtifactStatusView {
-            symbol: symbol.to_string(),
-            total_entries: entries.len(),
-            entries: entries
-                .into_iter()
-                .map(artifact_status_entry_view)
-                .collect::<Vec<_>>(),
-        })?
-    );
+    Ok(ArtifactStatusOutputView::Entries(ArtifactStatusView {
+        symbol: symbol.to_string(),
+        total_entries: entries.len(),
+        entries: entries
+            .into_iter()
+            .map(artifact_status_entry_view)
+            .collect::<Vec<_>>(),
+    }))
+}
+
+fn print_artifact_status_output(
+    view: &ArtifactStatusOutputView,
+    output_format: &str,
+) -> Result<()> {
+    match normalize_artifact_output_format(output_format)? {
+        "json" | "agent" => match view {
+            ArtifactStatusOutputView::Entries(view) => print_artifact_json(view, false),
+            ArtifactStatusOutputView::Buckets(view) => print_artifact_json(view, false),
+        },
+        "compact" => match view {
+            ArtifactStatusOutputView::Entries(view) => print_artifact_json(view, true),
+            ArtifactStatusOutputView::Buckets(view) => print_artifact_json(view, true),
+        },
+        "human" => {
+            match view {
+                ArtifactStatusOutputView::Entries(view) => {
+                    let first = view.entries.first();
+                    println!(
+                        "artifact-status symbol={} total_entries={} entries={} first_artifact={}",
+                        view.symbol,
+                        view.total_entries,
+                        view.entries.len(),
+                        first
+                            .map(|entry| entry.entry.artifact_id.as_str())
+                            .unwrap_or("none")
+                    );
+                }
+                ArtifactStatusOutputView::Buckets(view) => {
+                    println!(
+                        "artifact-status symbol={} total_entries={} buckets={}",
+                        view.symbol,
+                        view.total_entries,
+                        view.buckets.len()
+                    );
+                }
+            }
+            Ok(())
+        }
+        _ => unreachable!(),
+    }
+}
+
+pub fn artifact_status_command(input: ArtifactStatusCommandInput<'_>) -> Result<()> {
+    artifact_status_command_with_output(input, "json")
+}
+
+pub fn artifact_status_command_with_output(
+    input: ArtifactStatusCommandInput<'_>,
+    output_format: &str,
+) -> Result<()> {
+    let view = artifact_status_output(input)?;
+    print_artifact_status_output(&view, output_format)?;
     Ok(())
 }
 
@@ -559,7 +642,7 @@ pub fn artifact_lineage_view(
     }
 }
 
-pub fn artifact_diff_command(input: ArtifactDiffCommandInput<'_>) -> Result<()> {
+fn artifact_diff_output(input: ArtifactDiffCommandInput<'_>) -> Result<ArtifactDiffView> {
     let ArtifactDiffCommandInput {
         symbol,
         state_dir,
@@ -600,11 +683,39 @@ pub fn artifact_diff_command(input: ArtifactDiffCommandInput<'_>) -> Result<()> 
         )?,
         other => bail!("artifact-diff not supported for artifact kind '{}'", other),
     };
-    println!("{}", serde_json::to_string_pretty(&view)?);
+    Ok(view)
+}
+
+pub fn artifact_diff_command(input: ArtifactDiffCommandInput<'_>) -> Result<()> {
+    artifact_diff_command_with_output(input, "json")
+}
+
+pub fn artifact_diff_command_with_output(
+    input: ArtifactDiffCommandInput<'_>,
+    output_format: &str,
+) -> Result<()> {
+    let view = artifact_diff_output(input)?;
+    match normalize_artifact_output_format(output_format)? {
+        "json" | "agent" => print_artifact_json(&view, false)?,
+        "compact" => print_artifact_json(&view, true)?,
+        "human" => {
+            println!(
+                "artifact-diff kind={} left={} right={} changed_fields={} summary={}",
+                view.kind,
+                view.left_artifact_id,
+                view.right_artifact_id,
+                view.changed_fields.len(),
+                view.summary
+            );
+        }
+        _ => unreachable!(),
+    }
     Ok(())
 }
 
-pub fn artifact_lineage_command(input: ArtifactLineageCommandInput<'_>) -> Result<()> {
+fn artifact_lineage_output(
+    input: ArtifactLineageCommandInput<'_>,
+) -> Result<ArtifactLineageOutputView> {
     let ArtifactLineageCommandInput {
         symbol,
         ledger,
@@ -624,14 +735,54 @@ pub fn artifact_lineage_command(input: ArtifactLineageCommandInput<'_>) -> Resul
             regressing_only,
             rule_break_only,
         )?;
-        println!("{}", serde_json::to_string_pretty(&summaries)?);
-        return Ok(());
+        return Ok(ArtifactLineageOutputView::Summaries(summaries));
     }
 
-    println!(
-        "{}",
-        serde_json::to_string_pretty(&artifact_lineage_view(symbol, ledger, focus_artifact_id))?
-    );
+    Ok(ArtifactLineageOutputView::View(artifact_lineage_view(
+        symbol,
+        ledger,
+        focus_artifact_id,
+    )))
+}
+
+pub fn artifact_lineage_command(input: ArtifactLineageCommandInput<'_>) -> Result<()> {
+    artifact_lineage_command_with_output(input, "json")
+}
+
+pub fn artifact_lineage_command_with_output(
+    input: ArtifactLineageCommandInput<'_>,
+    output_format: &str,
+) -> Result<()> {
+    let view = artifact_lineage_output(input)?;
+    match normalize_artifact_output_format(output_format)? {
+        "json" | "agent" => match &view {
+            ArtifactLineageOutputView::Summaries(summaries) => {
+                print_artifact_json(summaries, false)?
+            }
+            ArtifactLineageOutputView::View(view) => print_artifact_json(view, false)?,
+        },
+        "compact" => match &view {
+            ArtifactLineageOutputView::Summaries(summaries) => {
+                print_artifact_json(summaries, true)?
+            }
+            ArtifactLineageOutputView::View(view) => print_artifact_json(view, true)?,
+        },
+        "human" => match &view {
+            ArtifactLineageOutputView::Summaries(summaries) => {
+                println!("artifact-lineage summaries={}", summaries.len());
+            }
+            ArtifactLineageOutputView::View(view) => {
+                println!(
+                    "artifact-lineage symbol={} focus={} nodes={} edges={}",
+                    view.symbol,
+                    view.focus_artifact_id.as_deref().unwrap_or("none"),
+                    view.nodes.len(),
+                    view.edges.len()
+                );
+            }
+        },
+        _ => unreachable!(),
+    }
     Ok(())
 }
 

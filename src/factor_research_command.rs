@@ -73,12 +73,12 @@ pub(crate) fn factor_research_shell(input: FactorResearchShellInput<'_>) -> Resu
     let cli_auxiliary_override = load_auxiliary_evidence_override(auxiliary_evidence)?;
     let cli_runtime_notes =
         build_auxiliary_runtime_notes(auxiliary_evidence, cli_auxiliary_override.as_ref());
-    let output_format = match resolve_output_format(output_format, compact, agent, human)? {
-        OutputFormat::Json => "json",
-        OutputFormat::Compact => "compact",
-        OutputFormat::Agent => "agent",
-        OutputFormat::Human => "human",
-    };
+    let output_format = crate::output_format::output_format_label(resolve_output_format(
+        output_format,
+        compact,
+        agent,
+        human,
+    )?);
     let _ = (
         data_1m,
         data_5m,
@@ -200,6 +200,12 @@ fn load_auxiliary_evidence_override(path: Option<&str>) -> Result<Option<Auxilia
 }
 
 fn load_auxiliary_evidence_from_path(path: &str) -> Result<AuxiliaryMarketEvidence> {
+    if !std::path::Path::new(path).exists() {
+        anyhow::bail!(
+            "factor_research_auxiliary_evidence_missing: flag=--auxiliary-evidence path={} expected=AuxiliaryMarketEvidence JSON or analyze-report JSON containing supporting.auxiliary recovery=export auxiliary market/options evidence or rerun without --auxiliary-evidence until that artifact exists",
+            path
+        );
+    }
     let raw = std::fs::read_to_string(path)
         .with_context(|| format!("reading auxiliary/options evidence from {}", path))?;
     if let Ok(auxiliary) = serde_json::from_str::<AuxiliaryMarketEvidence>(&raw) {
@@ -292,6 +298,24 @@ mod tests {
         assert_eq!(auxiliary.spot_symbol, "QQQ");
         assert_eq!(auxiliary.options_symbol, "QQQ");
         assert_eq!(auxiliary.hedge_pressure_direction.as_deref(), Some("long"));
+    }
+
+    #[test]
+    fn missing_auxiliary_evidence_error_names_flag_schema_and_recovery() {
+        let temp = tempfile::tempdir().unwrap();
+        let missing_path = temp.path().join("missing-auxiliary-evidence.json");
+
+        let err = load_auxiliary_evidence_from_path(missing_path.to_str().unwrap()).unwrap_err();
+        let message = format!("{err:#}");
+
+        assert!(
+            message.contains("factor_research_auxiliary_evidence_missing"),
+            "{message}"
+        );
+        assert!(message.contains("flag=--auxiliary-evidence"), "{message}");
+        assert!(message.contains("AuxiliaryMarketEvidence"), "{message}");
+        assert!(message.contains("supporting.auxiliary"), "{message}");
+        assert!(message.contains("recovery="), "{message}");
     }
 
     #[test]

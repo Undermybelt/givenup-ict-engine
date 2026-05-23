@@ -203,6 +203,35 @@ struct StructuralPathRankerRuntimeRowMatch {
     row: StructuralPathRankerRuntimeRow,
 }
 
+fn structural_path_ranker_runtime_row_with_history_gate_metadata(
+    mut row: StructuralPathRankerRuntimeRow,
+    history_row: Option<&StructuralPathRankerRuntimeRow>,
+) -> StructuralPathRankerRuntimeRow {
+    let Some(history_row) = history_row else {
+        return row;
+    };
+    if row.calibrated_path_prob.is_none() {
+        row.calibrated_path_prob = history_row.calibrated_path_prob;
+    }
+    if row.path_prob_lower_bound.is_none() {
+        row.path_prob_lower_bound = history_row.path_prob_lower_bound;
+    }
+    if row.execution_gate_status.is_none() {
+        row.execution_gate_status = history_row.execution_gate_status.clone();
+    }
+    row
+}
+
+fn structural_path_ranker_candidate_row_key(row: &StructuralPathRankingTargetRow) -> String {
+    format!("{}|{}", row.candidate_set_id, row.path_id)
+}
+
+fn structural_path_ranker_runtime_candidate_row_key(
+    row: &StructuralPathRankerRuntimeRow,
+) -> String {
+    format!("{}|{}", row.candidate_set_id, row.path_id)
+}
+
 pub fn resolved_latest_ensemble_vote(
     snapshot: &WorkflowSnapshot,
 ) -> Option<crate::state::EnsembleVoteRecord> {
@@ -1212,6 +1241,19 @@ fn structural_apply_order_block_variant_context(
     });
     row.ob_confidence = Some(evidence.confidence);
     row.ob_fail_closed_reason = evidence.fail_closed_reason.clone();
+    let branch_path =
+        "Transition -> OrderBlockVariant -> ob_mitigation_breaker_rejection -> order_block_variant_classifier_v1";
+    if evidence.factor_name == "order_block_variant_classifier"
+        && (row.path_id == branch_path
+            || row.regime_profit_branch_path.as_deref() == Some(branch_path))
+    {
+        row.regime_profit_branch_path = Some(branch_path.to_string());
+        row.parent_regime_root = Some("Transition".to_string());
+        row.main_regime = Some("Transition".to_string());
+        row.sub_regime = Some("OrderBlockVariant".to_string());
+        row.sub_sub_regime_or_profit_factor = Some("ob_mitigation_breaker_rejection".to_string());
+        row.profit_factor = Some("order_block_variant_classifier_v1".to_string());
+    }
 }
 
 fn structural_apply_reference_liquidity_levels_context(
@@ -1336,15 +1378,13 @@ fn structural_path_ranking_feedback_target_rows(
                 structural_prior_target_policy_reward_prior(prior_stats)
                     .or_else(|| prior_stats.map(|stats| stats.smoothed_prior.clamp(0.0, 1.0)))
                     .unwrap_or(0.5);
-            let raw_path_score = Some(if selected_probability > f64::EPSILON {
+            let raw_path_score = if selected_probability > f64::EPSILON {
                 selected_probability
             } else {
                 neutral_behavior_probability
-            });
+            };
             let calibrated_label = structural_path_ranking_reward_label(&pending_reward_state)?;
-            let behavior_policy_probability = raw_path_score
-                .unwrap_or(neutral_behavior_probability)
-                .clamp(0.01, 1.0);
+            let behavior_policy_probability = raw_path_score.clamp(0.01, 1.0);
             let execution_propensity = Some(1.0);
             let propensity_estimate = structural_path_ranking_propensity_estimate(
                 execution_propensity,
@@ -1379,7 +1419,7 @@ fn structural_path_ranking_feedback_target_rows(
                     record.model_probabilities_before_trade.selected_direction,
                 )
                 .to_string(),
-                raw_path_score,
+                raw_path_score: Some(raw_path_score),
                 calibrated_path_prob: None,
                 path_prob_lower_bound: None,
                 execution_gate_status: None,
@@ -1484,6 +1524,22 @@ fn structural_path_ranking_current_feedback_target_rows(
         .collect()
 }
 
+fn structural_path_ranking_carry_forward_score_metadata(
+    row: &mut StructuralPathRankingTargetRow,
+    existing_history_score_map: &BTreeMap<String, StructuralPathRankingTargetRow>,
+) {
+    if let Some(scored_row) =
+        existing_history_score_map.get(&structural_path_ranking_target_row_score_key(row))
+    {
+        row.raw_path_score = scored_row.raw_path_score;
+        row.score_model_family = scored_row.score_model_family.clone();
+        row.score_source_kind = scored_row.score_source_kind.clone();
+        row.score_model_artifact_uri = scored_row.score_model_artifact_uri.clone();
+        row.score_generator = scored_row.score_generator.clone();
+        clear_structural_path_ranking_target_row_outputs(row);
+    }
+}
+
 fn structural_runtime_context_prefers_history(
     runtime_context: &StructuralPathRankerRuntimeContext<'_>,
     symbol: &str,
@@ -1565,6 +1621,7 @@ fn structural_regime_bundle_branch_paths(snapshot: &WorkflowSnapshot) -> Vec<Str
     for key in [
         "regime_profit_branch_path",
         "regime_bundle_branch_path",
+        "regime_refinement_branch_path",
         "selected_regime_profit_branch_path",
         "read_only_regime_bbn_label_set",
         "regime_bbn_label_set",
@@ -1572,6 +1629,12 @@ fn structural_regime_bundle_branch_paths(snapshot: &WorkflowSnapshot) -> Vec<Str
         if let Some(raw) = assignments.get(key) {
             paths.extend(raw.split(',').map(str::to_string));
         }
+    }
+    if let Some(path) = structural_order_block_variant_runtime_branch_path(snapshot) {
+        paths.push(path);
+    }
+    if let Some(path) = structural_liquidity_pool_texture_runtime_branch_path(snapshot) {
+        paths.push(path);
     }
     let mut seen = BTreeSet::new();
     paths
@@ -1586,6 +1649,54 @@ fn structural_regime_bundle_branch_paths(snapshot: &WorkflowSnapshot) -> Vec<Str
         })
         .filter(|path| path.contains(" -> ") && seen.insert(path.clone()))
         .collect()
+}
+
+fn structural_order_block_variant_runtime_branch_path(
+    snapshot: &WorkflowSnapshot,
+) -> Option<String> {
+    let evidence = snapshot
+        .latest_analyze
+        .as_ref()
+        .and_then(|phase| phase.order_block_variant.as_ref())?;
+    if evidence.confidence <= 0.0
+        || evidence.validation_state.trim().is_empty()
+        || evidence.validation_state == "fail_closed"
+        || evidence.fail_closed_reason.is_some()
+    {
+        return None;
+    }
+    let factor_name = evidence.factor_name.trim();
+    if factor_name != "order_block_variant_classifier" {
+        return None;
+    }
+    Some(
+        "Transition -> OrderBlockVariant -> ob_mitigation_breaker_rejection -> order_block_variant_classifier_v1"
+            .to_string(),
+    )
+}
+
+fn structural_liquidity_pool_texture_runtime_branch_path(
+    snapshot: &WorkflowSnapshot,
+) -> Option<String> {
+    let evidence = snapshot
+        .latest_analyze
+        .as_ref()
+        .and_then(|phase| phase.liquidity_pool_texture.as_ref())?;
+    if evidence.confidence <= 0.0
+        || evidence.texture.trim().is_empty()
+        || evidence.texture == "none"
+        || evidence.fail_closed_reason.is_some()
+    {
+        return None;
+    }
+    let factor_name = evidence.factor_name.trim();
+    if factor_name != "liquidity_pool_texture" {
+        return None;
+    }
+    Some(
+        "Transition -> LiquidityMap -> liquidity_pool_texture -> liquidity_pool_texture:observation_v1"
+            .to_string(),
+    )
 }
 
 fn structural_regime_bundle_branch_score(snapshot: &WorkflowSnapshot) -> f64 {
@@ -1799,11 +1910,11 @@ fn structural_path_ranking_agent_material_rank_target_rows(
     structural_prior_state: &StructuralPriorLearningState,
     rank_artifact: &AgentMaterialRankArtifact,
 ) -> Vec<StructuralPathRankingTargetRow> {
-    let mut seen = BTreeSet::new();
-    let branch_paths = rank_artifact
+    let ranked_branch_rows = rank_artifact
         .ranking
         .iter()
-        .filter_map(|row| {
+        .enumerate()
+        .filter_map(|(source_index, row)| {
             row.regime_profit_branch_path
                 .as_ref()
                 .or(row.branch_path.as_ref())
@@ -1815,41 +1926,123 @@ fn structural_path_ranking_agent_material_rank_target_rows(
                         .collect::<Vec<_>>()
                         .join(" ")
                 })
-                .filter(|path| path.contains(" -> ") && seen.insert(path.clone()))
-                .map(|path| (path, row))
+                .filter(|path| path.contains(" -> "))
+                .map(|path| (path, source_index, row))
+        })
+        .collect::<Vec<_>>();
+    let mut branch_counts = BTreeMap::<String, usize>::new();
+    let mut branch_has_dense_observation = BTreeMap::<String, bool>::new();
+    for (path, _, row) in &ranked_branch_rows {
+        *branch_counts.entry(path.clone()).or_default() += 1;
+        if structural_agent_material_rank_row_has_dense_observation(row) {
+            branch_has_dense_observation.insert(path.clone(), true);
+        }
+    }
+    let mut seen_unobserved = BTreeSet::new();
+    let branch_paths = ranked_branch_rows
+        .into_iter()
+        .filter(|(path, _, row)| {
+            let dense_observation = structural_agent_material_rank_row_has_dense_observation(row);
+            if dense_observation {
+                return true;
+            }
+            if branch_has_dense_observation
+                .get(path)
+                .copied()
+                .unwrap_or_default()
+            {
+                return false;
+            }
+            seen_unobserved.insert(path.clone())
         })
         .collect::<Vec<_>>();
     if branch_paths.is_empty() {
         return Vec::new();
+    }
+    let mut kept_branch_counts = BTreeMap::<String, usize>::new();
+    for (path, _, _) in &branch_paths {
+        *kept_branch_counts.entry(path.clone()).or_default() += 1;
     }
 
     let candidate_set_id = rank_artifact.artifact_id.clone();
     let candidate_set_size = branch_paths.len();
     let denominator = branch_paths
         .iter()
-        .map(|(_, row)| structural_agent_material_rank_row_score(row).max(0.0))
+        .map(|(_, _, row)| structural_agent_material_rank_row_score(row).max(0.0))
         .sum::<f64>();
     let regime_aux_context = StructuralRegimeAuxContext::from_snapshot(snapshot);
     branch_paths
         .into_iter()
         .enumerate()
-        .map(|(index, (branch_path, rank_row))| {
+        .map(|(index, (branch_path, source_index, rank_row))| {
             let regime_calibration_bucket =
                 structural_path_ranking_regime_bucket_for_path(snapshot, &branch_path);
             let row_score = structural_agent_material_rank_row_score(rank_row);
             let behavior_policy_probability =
                 structural_candidate_policy_probability(row_score, denominator, candidate_set_size);
+            let completed_rank_row = rank_row.status == "completed";
+            let dense_rank_observation =
+                completed_rank_row && rank_row.trade_count.unwrap_or(0) >= 30;
+            let profit_observation = dense_rank_observation && rank_row.total_profit_pct.is_some();
+            let score_observation =
+                dense_rank_observation && !profit_observation && rank_row.sharpe.is_some();
+            let pending_reward_state = if profit_observation
+                && rank_row.total_profit_pct.is_some_and(|value| value > 0.0)
+            {
+                "matured_success"
+            } else if profit_observation {
+                "matured_failure"
+            } else if score_observation && rank_row.sharpe.is_some_and(|value| value > 0.0) {
+                "matured_success"
+            } else if score_observation {
+                "matured_failure"
+            } else {
+                "unobserved"
+            };
+            let calibrated_label = structural_path_ranking_reward_label(pending_reward_state);
+            let maturity_mask = calibrated_label.is_some();
+            let maturity_weight = if profit_observation {
+                1.0
+            } else if score_observation {
+                0.5
+            } else {
+                0.0
+            };
+            let propensity_estimate = maturity_mask.then_some(behavior_policy_probability);
+            let ips_weight = structural_path_ranking_ips_weight(propensity_estimate);
+            let training_weight = structural_path_ranking_training_weight(
+                calibrated_label,
+                maturity_weight,
+                ips_weight,
+            );
             let prior_stats = structural_prior_state.paths.get(&branch_path);
             let experience_prior =
                 structural_resolved_smoothed_prior(prior_stats, structural_prior_state, row_score);
+            let row_candidate_set_id = if kept_branch_counts
+                .get(&branch_path)
+                .copied()
+                .unwrap_or_default()
+                > 1
+            {
+                format!(
+                    "{}:rank-row:{:016x}",
+                    candidate_set_id,
+                    structural_stable_hash64(&format!(
+                        "{}|{}|{}|{}",
+                        candidate_set_id, branch_path, source_index, rank_row.unit_label
+                    ))
+                )
+            } else {
+                candidate_set_id.clone()
+            };
             let mut row = StructuralPathRankingTargetRow {
                 rank: index + 1,
-                candidate_set_id: candidate_set_id.clone(),
+                candidate_set_id: row_candidate_set_id.clone(),
                 candidate_set_size,
                 path_id: branch_path.clone(),
                 scenario_id: format!(
                     "auto-quant-agent-material-rank:{:016x}",
-                    structural_stable_hash64(&format!("{}|{}", candidate_set_id, branch_path))
+                    structural_stable_hash64(&format!("{}|{}", row_candidate_set_id, branch_path))
                 ),
                 path_label: rank_row.unit_label.clone(),
                 regime_profit_branch_path: Some(branch_path.clone()),
@@ -1860,18 +2053,18 @@ fn structural_path_ranking_agent_material_rank_target_rows(
                 profit_factor: rank_row.profit_factor.clone(),
                 direction: structural_feedback_path_direction_label(&branch_path, None, snapshot),
                 raw_path_score: None,
-                calibrated_path_prob: None,
+                calibrated_path_prob: maturity_mask.then_some(row_score),
                 path_prob_lower_bound: None,
                 execution_gate_status: None,
                 execution_gate_min_path_prob: None,
                 execution_gate_reason: None,
-                pending_reward_state: "unobserved".to_string(),
-                maturity_mask: false,
-                maturity_weight: 0.0,
-                calibrated_label: None,
-                propensity_estimate: Some(behavior_policy_probability),
-                ips_weight: structural_path_ranking_ips_weight(Some(behavior_policy_probability)),
-                training_weight: None,
+                pending_reward_state: pending_reward_state.to_string(),
+                maturity_mask,
+                maturity_weight,
+                calibrated_label,
+                propensity_estimate: propensity_estimate.or(Some(behavior_policy_probability)),
+                ips_weight,
+                training_weight,
                 regime_calibration_bucket,
                 behavior_policy_probability,
                 execution_propensity: Some(behavior_policy_probability),
@@ -1931,6 +2124,148 @@ fn structural_path_ranking_agent_material_rank_target_rows(
         .collect()
 }
 
+fn structural_path_ranking_row_is_auto_quant_material_rank(
+    row: &StructuralPathRankingTargetRow,
+) -> bool {
+    row.score_source_kind.as_deref() == Some("agent_material_rank")
+        || row.score_model_family.as_deref() == Some("auto_quant_agent_material_rank")
+        || row
+            .candidate_set_id
+            .starts_with("auto-quant-agent-material-rank:")
+        || row
+            .scenario_id
+            .starts_with("auto-quant-agent-material-rank:")
+}
+
+fn structural_current_auto_quant_material_rank_target_rows(
+    state_dir: Option<&str>,
+    symbol: &str,
+) -> Vec<StructuralPathRankingTargetRow> {
+    let Some(state_dir) = state_dir else {
+        return Vec::new();
+    };
+    let summary_path = Path::new(state_dir)
+        .join(symbol)
+        .join(STRUCTURAL_PATH_RANKING_TARGET_EXPORT_DIR)
+        .join(STRUCTURAL_PATH_RANKING_TARGET_SUMMARY_FILE);
+    let Ok(raw_summary) = fs::read_to_string(&summary_path) else {
+        return Vec::new();
+    };
+    let Ok(summary) = serde_json::from_str::<StructuralPathRankingTargetExportSummary>(
+        &raw_summary,
+    )
+    .map(|summary| {
+        rebase_structural_path_ranking_target_export_summary_paths(state_dir, symbol, summary)
+    }) else {
+        return Vec::new();
+    };
+    load_structural_path_ranking_target_rows(Path::new(&summary.jsonl_path))
+        .unwrap_or_default()
+        .into_iter()
+        .filter(structural_path_ranking_row_is_auto_quant_material_rank)
+        .collect()
+}
+
+fn structural_auto_quant_material_rank_candidate_from_row(
+    snapshot: &WorkflowSnapshot,
+    row: &StructuralPathRankingTargetRow,
+) -> Option<StructuralPathArtifact> {
+    let path_id = row
+        .regime_profit_branch_path
+        .as_deref()
+        .and_then(structural_normalize_branch_path)
+        .or_else(|| structural_normalize_branch_path(&row.path_id))?;
+    let score = row
+        .raw_path_score
+        .or(row.calibrated_path_prob)
+        .unwrap_or(row.structural_baseline_score)
+        .clamp(0.0, 1.0);
+    let command = top_level_command(snapshot);
+    let next_meta = recommended_next_command_meta(&command);
+    StructuralPathArtifact {
+        path_id: path_id.clone(),
+        scenario_id: row.scenario_id.clone(),
+        path_label: if row.path_label.trim().is_empty() {
+            path_id.clone()
+        } else {
+            row.path_label.clone()
+        },
+        direction: row.direction.clone(),
+        entry_style: "auto_quant_agent_material_rank".to_string(),
+        selected_entry_quality: structural_selected_entry_quality(snapshot),
+        selected_entry_quality_probability: structural_selected_entry_quality_probability(snapshot),
+        pre_bayes_gate_status: structural_pre_bayes_gate_status(snapshot),
+        multi_timeframe_direction_bias: structural_multi_timeframe_direction_bias(snapshot),
+        execution_candidate_status: snapshot
+            .latest_execution_candidate
+            .as_ref()
+            .map(|candidate| candidate.candidate_status.clone())
+            .filter(|value| !value.trim().is_empty()),
+        execution_candidate_artifact_id: snapshot
+            .latest_execution_candidate
+            .as_ref()
+            .map(|candidate| candidate.artifact_id.clone()),
+        execution_readiness: snapshot
+            .latest_analyze
+            .as_ref()
+            .and_then(|phase| phase.execution_readiness),
+        prediction_edge_share: snapshot
+            .latest_analyze
+            .as_ref()
+            .and_then(|phase| phase.prediction_edge_share),
+        execution_edge_share: snapshot
+            .latest_analyze
+            .as_ref()
+            .and_then(|phase| phase.execution_edge_share),
+        historical_total_records: 0,
+        historical_followed_count: 0,
+        execution_propensity: row.execution_propensity,
+        historical_win_rate: None,
+        historical_invalidation_rate: None,
+        historical_avg_pnl: None,
+        trigger_conditions: vec![format!(
+            "preserve current Auto-Quant material-rank branch {path_id}"
+        )],
+        confirmation_conditions: vec![
+            "ranked Auto-Quant material row must remain selectable by runtime".to_string(),
+        ],
+        stop_definition: "use the Auto-Quant material branch stop contract".to_string(),
+        target_definition: format!("auto_quant_material_rank_score={score:.6}"),
+        invalidation_conditions: vec![
+            "do not collapse this branch into a generic structural runtime path".to_string(),
+        ],
+        expected_failure_mode:
+            "Auto-Quant material-rank branch exported but not admitted as runtime candidate"
+                .to_string(),
+        max_time_in_trade: "use Auto-Quant material horizon".to_string(),
+        path_prior: row.experience_prior.clamp(0.0, 1.0),
+        path_posterior: row.current_posterior.clamp(0.0, 1.0),
+        bbn_support_score: row.current_posterior.clamp(0.0, 1.0),
+        catboost_score: row.raw_path_score,
+        path_ranker_calibrated_path_prob: row.calibrated_path_prob,
+        path_ranker_path_prob_lower_bound: row.path_prob_lower_bound,
+        path_ranker_execution_gate_status: row.execution_gate_status.clone(),
+        path_ranker_runtime_source: None,
+        composite_preference_score: score,
+        recommended_command: next_meta.executable_command.clone().or_else(|| {
+            if command.trim().is_empty() {
+                None
+            } else {
+                Some(command)
+            }
+        }),
+    }
+    .into()
+}
+
+fn structural_agent_material_rank_row_has_dense_observation(
+    row: &crate::application::auto_quant::AgentMaterialRankRow,
+) -> bool {
+    row.status == "completed"
+        && row.trade_count.unwrap_or(0) >= 30
+        && (row.total_profit_pct.is_some() || row.sharpe.is_some())
+}
+
 fn structural_agent_material_rank_row_score(
     row: &crate::application::auto_quant::AgentMaterialRankRow,
 ) -> f64 {
@@ -1950,9 +2285,6 @@ fn structural_required_candidate_paths(
     let required_branch_paths = structural_regime_bundle_branch_paths(snapshot)
         .into_iter()
         .collect::<BTreeSet<_>>();
-    if required_branch_paths.is_empty() {
-        return ranked_paths.into_iter().take(min_top_count).collect();
-    }
 
     let mut selected = Vec::new();
     let mut seen_path_ids = BTreeSet::new();
@@ -1961,8 +2293,15 @@ fn structural_required_candidate_paths(
             selected.push(path.clone());
         }
     }
-    for path in ranked_paths {
+    for path in &ranked_paths {
         if required_branch_paths.contains(&path.path_id)
+            && seen_path_ids.insert(path.path_id.clone())
+        {
+            selected.push(path.clone());
+        }
+    }
+    for path in ranked_paths {
+        if path.entry_style == "auto_quant_agent_material_rank"
             && seen_path_ids.insert(path.path_id.clone())
         {
             selected.push(path);
@@ -2060,7 +2399,7 @@ pub fn export_structural_path_ranking_target_with_agent_material_rank(
         &artifact.candidate_set_id,
         artifact.candidate_set_size,
     );
-    let agent_material_rank_target_rows = agent_material_rank
+    let mut agent_material_rank_target_rows = agent_material_rank
         .map(|rank| {
             structural_path_ranking_agent_material_rank_target_rows(
                 snapshot,
@@ -2081,16 +2420,10 @@ pub fn export_structural_path_ranking_target_with_agent_material_rank(
         })
         .collect::<BTreeMap<_, _>>();
     for row in &mut artifact.rows {
-        if let Some(scored_row) =
-            existing_history_score_map.get(&structural_path_ranking_target_row_score_key(row))
-        {
-            row.raw_path_score = scored_row.raw_path_score;
-            row.score_model_family = scored_row.score_model_family.clone();
-            row.score_source_kind = scored_row.score_source_kind.clone();
-            row.score_model_artifact_uri = scored_row.score_model_artifact_uri.clone();
-            row.score_generator = scored_row.score_generator.clone();
-            clear_structural_path_ranking_target_row_outputs(row);
-        }
+        structural_path_ranking_carry_forward_score_metadata(row, &existing_history_score_map);
+    }
+    for row in &mut agent_material_rank_target_rows {
+        structural_path_ranking_carry_forward_score_metadata(row, &existing_history_score_map);
     }
     let mut rows_for_history = artifact.rows.clone();
     rows_for_history.extend(feedback_target_rows.clone());
@@ -2497,19 +2830,42 @@ fn resolve_structural_path_ranker_runtime(
         && !using_service
         && !service_declared
         && artifact_metadata.is_some();
-
-    let artifact_exact_matches = artifact_rows
+    let current_candidate_row_keys = current_candidate_rows
         .iter()
-        .filter(|row| {
-            row.candidate_set_id == candidate_set_id
-                && row.raw_path_score.is_some()
-                && candidate_paths
-                    .iter()
-                    .any(|path| path.path_id == row.path_id)
-        })
-        .cloned()
-        .map(|row| (row.path_id.clone(), row))
-        .collect::<BTreeMap<_, _>>();
+        .map(structural_path_ranker_candidate_row_key)
+        .collect::<BTreeSet<_>>();
+    let runtime_row_priority = |row: &StructuralPathRankerRuntimeRow| -> u8 {
+        if row.candidate_set_id == candidate_set_id {
+            2
+        } else if current_candidate_row_keys
+            .contains(&structural_path_ranker_runtime_candidate_row_key(row))
+        {
+            1
+        } else {
+            0
+        }
+    };
+    let mut artifact_exact_matches = BTreeMap::<String, StructuralPathRankerRuntimeRow>::new();
+    let mut artifact_exact_priorities = BTreeMap::<String, u8>::new();
+    for row in artifact_rows.iter().filter(|row| {
+        row.raw_path_score.is_some()
+            && candidate_paths
+                .iter()
+                .any(|path| path.path_id == row.path_id)
+    }) {
+        let priority = runtime_row_priority(row);
+        if priority == 0 {
+            continue;
+        }
+        let existing_priority = artifact_exact_priorities
+            .get(&row.path_id)
+            .copied()
+            .unwrap_or(0);
+        if priority > existing_priority {
+            artifact_exact_priorities.insert(row.path_id.clone(), priority);
+            artifact_exact_matches.insert(row.path_id.clone(), row.clone());
+        }
+    }
     let artifact_path_matches = if using_static_registered_artifact {
         artifact_rows
             .iter()
@@ -2542,7 +2898,9 @@ fn resolve_structural_path_ranker_runtime(
         .iter()
         .chain(current_rows.iter())
         .filter(|row| {
-            row.candidate_set_id == candidate_set_id
+            let row_key = structural_path_ranker_candidate_row_key(row);
+            (row.candidate_set_id == candidate_set_id
+                || current_candidate_row_keys.contains(&row_key))
                 && row.raw_path_score.is_some()
                 && candidate_paths
                     .iter()
@@ -2568,6 +2926,36 @@ fn resolve_structural_path_ranker_runtime(
         .collect::<BTreeMap<_, _>>();
 
     let mut latest_history_matches = BTreeMap::<String, StructuralPathRankerRuntimeRow>::new();
+    let mut history_gate_metadata_matches =
+        BTreeMap::<String, StructuralPathRankerRuntimeRow>::new();
+    for row in &history_rows {
+        if row.calibrated_path_prob.is_none()
+            && row.path_prob_lower_bound.is_none()
+            && row.execution_gate_status.is_none()
+        {
+            continue;
+        }
+        if candidate_paths
+            .iter()
+            .any(|path| path.path_id == row.path_id)
+        {
+            history_gate_metadata_matches.insert(
+                row.path_id.clone(),
+                StructuralPathRankerRuntimeRow {
+                    candidate_set_id: row.candidate_set_id.clone(),
+                    path_id: row.path_id.clone(),
+                    raw_path_score: row.raw_path_score,
+                    calibrated_path_prob: row.calibrated_path_prob,
+                    path_prob_lower_bound: row.path_prob_lower_bound,
+                    execution_gate_status: row.execution_gate_status.clone(),
+                    score_model_family: row.score_model_family.clone(),
+                    score_source_kind: row.score_source_kind.clone(),
+                    score_model_artifact_uri: row.score_model_artifact_uri.clone(),
+                    score_generator: row.score_generator.clone(),
+                },
+            );
+        }
+    }
     for row in history_rows.iter().chain(current_rows.iter()) {
         if row.raw_path_score.is_none() {
             continue;
@@ -2623,7 +3011,10 @@ fn resolve_structural_path_ranker_runtime(
                 } else {
                     "registered_artifact"
                 },
-                row: row.clone(),
+                row: structural_path_ranker_runtime_row_with_history_gate_metadata(
+                    row.clone(),
+                    history_gate_metadata_matches.get(&path.path_id),
+                ),
             })
         } else if let Some(row) = artifact_history_match {
             artifact_match_count += 1;
@@ -2635,13 +3026,19 @@ fn resolve_structural_path_ranker_runtime(
             artifact_match_count += 1;
             Some(StructuralPathRankerRuntimeRowMatch {
                 source: "registered_artifact_path",
-                row: row.clone(),
+                row: structural_path_ranker_runtime_row_with_history_gate_metadata(
+                    row.clone(),
+                    history_gate_metadata_matches.get(&path.path_id),
+                ),
             })
         } else if let Some(row) = exact_matches.get(&path.path_id) {
             candidate_set_match_count += 1;
             Some(StructuralPathRankerRuntimeRowMatch {
                 source: "candidate_set",
-                row: row.clone(),
+                row: structural_path_ranker_runtime_row_with_history_gate_metadata(
+                    row.clone(),
+                    history_gate_metadata_matches.get(&path.path_id),
+                ),
             })
         } else if reuse_mode == STRUCTURAL_PATH_RANKING_RUNTIME_MODE_PREFER_HISTORY {
             latest_history_matches
@@ -2651,7 +3048,10 @@ fn resolve_structural_path_ranker_runtime(
                     history_match_count += 1;
                     StructuralPathRankerRuntimeRowMatch {
                         source: "history_path",
-                        row,
+                        row: structural_path_ranker_runtime_row_with_history_gate_metadata(
+                            row,
+                            history_gate_metadata_matches.get(&path.path_id),
+                        ),
                     }
                 })
         } else {
@@ -2863,6 +3263,7 @@ pub fn build_structural_recommended_path_bundle_artifact(
         symbol,
         selection.candidate_set_id,
         None,
+        structural_current_pre_bayes_regime_profit_branch_path(snapshot).as_deref(),
         selection.candidate_paths,
     )
 }
@@ -2871,33 +3272,53 @@ fn structural_recommended_path_bundle_from_candidates(
     symbol: String,
     candidate_set_id: String,
     path_ranker_runtime: Option<StructuralPathRankerRuntimeSurface>,
+    current_pre_bayes_branch_path: Option<&str>,
     candidate_paths: Vec<StructuralPathArtifact>,
 ) -> Option<StructuralRecommendedPathBundleArtifact> {
     let denominator = structural_candidate_policy_denominator(&candidate_paths);
     let candidate_set_size = candidate_paths.len();
     let prefer_history_paths =
         structural_runtime_surface_prefers_history(path_ranker_runtime.as_ref());
-    let path = if prefer_history_paths {
-        candidate_paths
-            .iter()
-            .filter(|path| structural_prefer_history_path_priority(path, true) > 0)
-            .max_by(|left, right| structural_path_selection_order(left, right, true))
-    } else {
-        None
-    }
-    .or_else(|| {
-        candidate_paths
-            .iter()
-            .filter(|path| path.path_ranker_execution_gate_status.as_deref() == Some("pass"))
-            .max_by(|left, right| structural_path_selection_order(left, right, false))
-    })
-    .or_else(|| candidate_paths.first())?;
+    let current_pre_bayes_branch_path =
+        current_pre_bayes_branch_path.and_then(structural_normalize_rooted_branch_path);
+    let path = current_pre_bayes_branch_path
+        .as_deref()
+        .and_then(|branch_path| {
+            candidate_paths
+                .iter()
+                .filter(|path| structural_path_matches_current_pre_bayes_branch(path, branch_path))
+                .max_by(|left, right| structural_path_selection_order(left, right, false))
+        })
+        .or_else(|| {
+            if prefer_history_paths {
+                candidate_paths
+                    .iter()
+                    .filter(|path| structural_prefer_history_path_priority(path, true) > 0)
+                    .max_by(|left, right| structural_path_selection_order(left, right, true))
+            } else {
+                None
+            }
+        })
+        .or_else(|| {
+            candidate_paths
+                .iter()
+                .filter(|path| path.path_ranker_execution_gate_status.as_deref() == Some("pass"))
+                .max_by(|left, right| structural_path_selection_order(left, right, false))
+        })
+        .or_else(|| candidate_paths.first())?;
     let selected_path_probability = structural_candidate_policy_probability(
         path.composite_preference_score,
         denominator,
         candidate_set_size,
     );
     let why_this_path = structural_why_this_path_summary(path);
+    let selected_path_id = structural_normalize_rooted_branch_path(&path.path_id)
+        .unwrap_or_else(|| path.path_id.clone());
+    let selected_path_label = if selected_path_id != path.path_id {
+        selected_path_id.clone()
+    } else {
+        path.path_label.clone()
+    };
     Some(StructuralRecommendedPathBundleArtifact {
         symbol,
         rank: 1,
@@ -2905,9 +3326,9 @@ fn structural_recommended_path_bundle_from_candidates(
         candidate_set_size,
         path_ranker_runtime,
         selected_path_probability,
-        path_id: path.path_id.clone(),
+        path_id: selected_path_id,
         scenario_id: path.scenario_id.clone(),
-        path_label: path.path_label.clone(),
+        path_label: selected_path_label,
         direction: path.direction.clone(),
         experience_prior: path.path_prior,
         current_posterior: path.path_posterior,
@@ -2945,8 +3366,92 @@ fn structural_runtime_surface_prefers_history(
         .is_some_and(|mode| mode == STRUCTURAL_PATH_RANKING_RUNTIME_MODE_PREFER_HISTORY)
 }
 
+fn structural_current_pre_bayes_regime_profit_branch_path(
+    snapshot: &WorkflowSnapshot,
+) -> Option<String> {
+    snapshot
+        .latest_analyze
+        .as_ref()
+        .and_then(|phase| {
+            phase
+                .pre_bayes_filtered_assignments
+                .get("regime_profit_branch_path")
+        })
+        .and_then(|path| structural_normalize_branch_path(path))
+}
+
+fn structural_normalize_branch_path(raw: &str) -> Option<String> {
+    let path = raw
+        .trim()
+        .replace("_->_", " -> ")
+        .replace("->", " -> ")
+        .split_whitespace()
+        .collect::<Vec<_>>()
+        .join(" ");
+    if path.contains(" -> ") {
+        Some(path)
+    } else {
+        None
+    }
+}
+
+fn structural_normalize_rooted_branch_path(raw: &str) -> Option<String> {
+    let path = structural_normalize_branch_path(raw)?;
+    let parts = path
+        .split(" -> ")
+        .map(str::trim)
+        .filter(|part| !part.is_empty())
+        .collect::<Vec<_>>();
+    let root_start = parts
+        .iter()
+        .position(|part| structural_is_regime_root_label(part))?;
+    if root_start == 0 {
+        Some(path)
+    } else {
+        Some(parts[root_start..].join(" -> "))
+    }
+}
+
+fn structural_is_regime_root_label(label: &str) -> bool {
+    matches!(
+        label,
+        "Bull"
+            | "Bear"
+            | "Sideways"
+            | "Crisis"
+            | "Transition"
+            | "TrendExpansion"
+            | "RangeExpansion"
+            | "RangeConsolidation"
+            | "RangeReversion"
+    )
+}
+
+fn structural_path_matches_current_pre_bayes_branch(
+    path: &StructuralPathArtifact,
+    current_pre_bayes_branch_path: &str,
+) -> bool {
+    structural_normalize_rooted_branch_path(&path.path_id).as_deref()
+        == Some(current_pre_bayes_branch_path)
+}
+
 fn structural_path_runtime_source_is_history(source: Option<&str>) -> bool {
     matches!(source, Some("history_path" | "registered_artifact_history"))
+}
+
+fn structural_current_auto_quant_material_rank_path_priority(path: &StructuralPathArtifact) -> u8 {
+    let runtime_source = path.path_ranker_runtime_source.as_deref();
+    let exact_branch_shape = !path.path_id.starts_with("path:") && path.path_id.contains(" -> ");
+    if path.entry_style == "auto_quant_agent_material_rank"
+        && exact_branch_shape
+        && path.catboost_score.is_some()
+        && runtime_source.is_some()
+        && !structural_path_runtime_source_is_history(runtime_source)
+    {
+        3
+    } else {
+        0
+    }
 }
 
 fn structural_prefer_history_path_priority(
@@ -2956,14 +3461,21 @@ fn structural_prefer_history_path_priority(
     if !prefer_history_paths {
         return 0;
     }
+    let current_auto_quant_material_rank_priority =
+        structural_current_auto_quant_material_rank_path_priority(path);
+    if current_auto_quant_material_rank_priority > 0 {
+        return current_auto_quant_material_rank_priority;
+    }
+    let runtime_source = path.path_ranker_runtime_source.as_deref();
     let has_runtime_score = path.catboost_score.is_some()
         || path.path_ranker_calibrated_path_prob.is_some()
         || path.path_ranker_path_prob_lower_bound.is_some()
-        || structural_path_runtime_source_is_history(path.path_ranker_runtime_source.as_deref());
-    if structural_exact_feedback_path_priority(path) == 0 && has_runtime_score {
+        || runtime_source.is_some();
+    if structural_path_runtime_source_is_history(runtime_source) {
+        3
+    } else if structural_exact_feedback_path_priority(path) == 0 && runtime_source.is_some() {
         2
-    } else if structural_path_runtime_source_is_history(path.path_ranker_runtime_source.as_deref())
-    {
+    } else if structural_exact_feedback_path_priority(path) == 0 && has_runtime_score {
         1
     } else {
         0
@@ -3032,6 +3544,10 @@ fn structural_path_selection_order(
             right,
             prefer_history_paths,
         ))
+        .then_with(|| {
+            structural_observed_feedback_branch_priority(left)
+                .cmp(&structural_observed_feedback_branch_priority(right))
+        })
         .then_with(|| structural_observed_exact_path_order(left, right))
         .then_with(|| {
             if near_tied && same_branch_family {
@@ -3066,6 +3582,23 @@ fn structural_observed_exact_path_order(
         return std::cmp::Ordering::Less;
     }
     std::cmp::Ordering::Equal
+}
+
+fn structural_observed_feedback_branch_priority(path: &StructuralPathArtifact) -> u8 {
+    let exact_branch_shape = !path.path_id.starts_with("path:") && path.path_id.contains(" -> ");
+    if exact_branch_shape
+        && path.entry_style == "structural_feedback_path"
+        && path.historical_total_records >= 30
+    {
+        2
+    } else if exact_branch_shape
+        && path.entry_style == "structural_feedback_path"
+        && path.historical_total_records > 0
+    {
+        1
+    } else {
+        0
+    }
 }
 
 pub fn build_structural_recommended_path_bundle_artifact_with_prior_state(
@@ -3118,6 +3651,7 @@ pub(crate) fn build_structural_recommended_path_bundle_artifact_with_runtime_con
         symbol,
         selection.candidate_set_id,
         selection.runtime,
+        structural_current_pre_bayes_regime_profit_branch_path(snapshot).as_deref(),
         selection.candidate_paths,
     )
 }
@@ -3848,10 +4382,20 @@ pub(crate) fn build_structural_path_plan_artifact_with_runtime_context_and_prior
             }
         }
     }
+    let auto_quant_material_rank_rows =
+        structural_current_auto_quant_material_rank_target_rows(runtime_context.state_dir, &symbol);
+    for material_rank_path in auto_quant_material_rank_rows
+        .iter()
+        .filter_map(|row| structural_auto_quant_material_rank_candidate_from_row(snapshot, row))
+    {
+        if seen_path_ids.insert(material_rank_path.path_id.clone()) {
+            paths.push(material_rank_path);
+        }
+    }
     paths.sort_by(|left, right| structural_path_plan_order(left, right, include_feedback_paths));
     let top_candidate_paths = structural_required_candidate_paths(snapshot, paths.clone(), 3);
     let candidate_set_id = structural_candidate_set_id(&symbol, &top_candidate_paths);
-    let current_candidate_rows = structural_path_ranking_target_artifact_from_candidates(
+    let mut current_candidate_rows = structural_path_ranking_target_artifact_from_candidates(
         snapshot,
         feedback_history,
         structural_prior_state,
@@ -3859,6 +4403,16 @@ pub(crate) fn build_structural_path_plan_artifact_with_runtime_context_and_prior
         Some(candidate_set_id.clone()),
     )
     .rows;
+    current_candidate_rows.extend(
+        auto_quant_material_rank_rows
+            .iter()
+            .filter(|row| {
+                top_candidate_paths
+                    .iter()
+                    .any(|path| path.path_id == row.path_id)
+            })
+            .cloned(),
+    );
     let runtime = resolve_structural_path_ranker_runtime(
         runtime_context.state_dir,
         &symbol,
@@ -3904,11 +4458,31 @@ fn structural_feedback_path_direction_label(
         )
         .to_string();
     }
+    if let Some(direction) = structural_current_pre_bayes_trade_direction(snapshot) {
+        if structural_current_pre_bayes_regime_profit_branch_path(snapshot).as_deref()
+            == Some(path_id)
+        {
+            return direction;
+        }
+    }
     let root = path_id.split(" -> ").next().unwrap_or(path_id).trim();
     match root {
         "Bull" | "Sideways" | "Crisis" => "bull".to_string(),
         "Bear" => "bear".to_string(),
         _ => structural_direction(snapshot),
+    }
+}
+
+fn structural_current_pre_bayes_trade_direction(snapshot: &WorkflowSnapshot) -> Option<String> {
+    let raw = snapshot
+        .latest_analyze
+        .as_ref()
+        .and_then(|phase| phase.pre_bayes_filtered_assignments.get("trade_direction"))?;
+    match raw.trim().to_ascii_lowercase().as_str() {
+        "bear" | "short" | "sell" => Some("bear".to_string()),
+        "bull" | "long" | "buy" => Some("bull".to_string()),
+        "neutral" | "observe" => Some("neutral".to_string()),
+        _ => None,
     }
 }
 
@@ -5391,7 +5965,7 @@ mod tests {
     use super::*;
     use crate::state::{
         structural_source_reliability_em_fit_from_state, FeedbackRecord, ModelProbabilitySnapshot,
-        StructuralFeedbackRefs, WorkflowPhaseSnapshot,
+        OrderBlockVariantRuntimeEvidence, StructuralFeedbackRefs, WorkflowPhaseSnapshot,
         STRUCTURAL_SOURCE_RELIABILITY_EM_MIN_MULTI_SOURCE_ITEMS,
     };
     use crate::types::{Direction, Regime};
@@ -5490,6 +6064,98 @@ mod tests {
             score_model_artifact_uri: None,
             score_generator: None,
         }
+    }
+
+    #[test]
+    fn order_block_context_does_not_relabel_generic_candidate_rows() {
+        let mut row = calibration_row(
+            "path:scenario:ORDER_BLOCK_NQ_YF_NONLIVE_DIAG:belief_regime_node:trend:fill_viable",
+            0.68,
+            "unobserved",
+        );
+        let snapshot = WorkflowSnapshot {
+            latest_analyze: Some(WorkflowPhaseSnapshot {
+                order_block_variant: Some(OrderBlockVariantRuntimeEvidence {
+                    factor_name: "order_block_variant_classifier".to_string(),
+                    variant: "breaker_block".to_string(),
+                    direction: Direction::Bear,
+                    high: Some(715.76),
+                    low: Some(715.39),
+                    midpoint: Some(715.575),
+                    validation_state: "breaker_confirmed".to_string(),
+                    mitigation_count: 805,
+                    mitigation_pct: None,
+                    failed_mitigation: false,
+                    partial_fill_state: "none".to_string(),
+                    breaker_confirmed: true,
+                    rejection_confirmed: false,
+                    confidence: 0.78,
+                    fail_closed_reason: None,
+                }),
+                ..WorkflowPhaseSnapshot::default()
+            }),
+            ..WorkflowSnapshot::default()
+        };
+
+        structural_apply_order_block_variant_context(&snapshot, &mut row);
+
+        assert_eq!(row.regime_profit_branch_path, None);
+        assert_eq!(row.parent_regime_root, None);
+        assert_eq!(row.main_regime, None);
+        assert_eq!(row.sub_regime, None);
+        assert_eq!(row.sub_sub_regime_or_profit_factor, None);
+        assert_eq!(row.profit_factor, None);
+        assert_eq!(row.ob_variant.as_deref(), Some("breaker_block"));
+        assert_eq!(
+            row.ob_validation_state.as_deref(),
+            Some("breaker_confirmed")
+        );
+    }
+
+    #[test]
+    fn order_block_owner_rows_bind_rooted_branch_fields_from_runtime_evidence() {
+        let branch_path =
+            "Transition -> OrderBlockVariant -> ob_mitigation_breaker_rejection -> order_block_variant_classifier_v1";
+        let mut row = calibration_row(branch_path, 0.68, "unobserved");
+        let snapshot = WorkflowSnapshot {
+            latest_analyze: Some(WorkflowPhaseSnapshot {
+                order_block_variant: Some(OrderBlockVariantRuntimeEvidence {
+                    factor_name: "order_block_variant_classifier".to_string(),
+                    variant: "breaker_block".to_string(),
+                    direction: Direction::Bear,
+                    high: Some(715.76),
+                    low: Some(715.39),
+                    midpoint: Some(715.575),
+                    validation_state: "breaker_confirmed".to_string(),
+                    mitigation_count: 805,
+                    mitigation_pct: None,
+                    failed_mitigation: false,
+                    partial_fill_state: "none".to_string(),
+                    breaker_confirmed: true,
+                    rejection_confirmed: false,
+                    confidence: 0.78,
+                    fail_closed_reason: None,
+                }),
+                ..WorkflowPhaseSnapshot::default()
+            }),
+            ..WorkflowSnapshot::default()
+        };
+
+        structural_apply_order_block_variant_context(&snapshot, &mut row);
+
+        assert_eq!(row.regime_profit_branch_path.as_deref(), Some(branch_path));
+        assert_eq!(row.parent_regime_root.as_deref(), Some("Transition"));
+        assert_eq!(row.main_regime.as_deref(), Some("Transition"));
+        assert_eq!(row.sub_regime.as_deref(), Some("OrderBlockVariant"));
+        assert_eq!(
+            row.sub_sub_regime_or_profit_factor.as_deref(),
+            Some("ob_mitigation_breaker_rejection")
+        );
+        assert_eq!(
+            row.profit_factor.as_deref(),
+            Some("order_block_variant_classifier_v1")
+        );
+        assert_eq!(row.ob_variant.as_deref(), Some("breaker_block"));
     }
 
     fn source_em_event(
@@ -6317,7 +6983,10 @@ mod tests {
             .rows
             .iter()
             .filter(|row| row.raw_path_score.is_some())
-            .all(|row| row.execution_gate_min_path_prob == Some(0.5)));
+            .all(|row| row.execution_gate_min_path_prob
+                == Some(
+                    crate::belief_core::ranking_label::STRUCTURAL_PATH_RANKING_EXECUTION_GATE_MIN_PATH_PROB,
+                )));
         assert_eq!(
             artifact
                 .rows
@@ -6849,6 +7518,31 @@ mod tests {
     }
 
     #[test]
+    fn recommended_bundle_strips_market_provenance_from_rooted_path_identity() {
+        let canonical_branch = "RangeReversion -> AiSecuritySoftwareOversoldReclaim -> rsi_vwap_reclaim_dense -> yf_ai_security_software_rsi_vwap_reclaim_crwd_5m_v1 -> session_liquidity_transition_stability_v1 -> pda_mtf_soft_confirmation_v1";
+        let prefixed_branch = format!("US_EQ -> single_stock -> CRWD -> 5m -> {canonical_branch}");
+        let bundle = structural_recommended_path_bundle_from_candidates(
+            "CRWD".to_string(),
+            "candidate-set:crwd".to_string(),
+            None,
+            Some(&prefixed_branch),
+            vec![StructuralPathArtifact {
+                path_id: prefixed_branch.clone(),
+                path_label: "CRWD 5m branch-local execution candidate".to_string(),
+                path_posterior: 0.62,
+                path_prior: 0.50,
+                composite_preference_score: 0.67,
+                ..StructuralPathArtifact::default()
+            }],
+        )
+        .expect("recommended bundle");
+
+        assert_eq!(bundle.path_id, canonical_branch);
+        assert_eq!(bundle.path_label, canonical_branch);
+        assert!(!bundle.path_id.starts_with("US_EQ ->"));
+    }
+
+    #[test]
     fn target_export_surfaces_branch_segments_as_catboost_features() {
         let temp = tempfile::tempdir().unwrap();
         let branch_path = "Crisis -> CrisisReliefCarry -> StopManagedPanicRecovery -> SourceRootStopCarryLongHorizonV1:crisis_carry_h8_sl048_tp12";
@@ -6925,6 +7619,133 @@ mod tests {
     }
 
     #[test]
+    fn target_export_binds_order_block_runtime_context_to_rooted_branch() {
+        let temp = tempfile::tempdir().unwrap();
+        let branch_path = "Transition -> OrderBlockVariant -> ob_mitigation_breaker_rejection -> order_block_variant_classifier_v1";
+        let snapshot = WorkflowSnapshot {
+            symbol: "ORDER_BLOCK_NQ_YF_NONLIVE_DIAG".to_string(),
+            latest_analyze: Some(WorkflowPhaseSnapshot {
+                phase: "analyze".to_string(),
+                order_block_variant: Some(OrderBlockVariantRuntimeEvidence {
+                    factor_name: "order_block_variant_classifier".to_string(),
+                    variant: "breaker_block".to_string(),
+                    direction: Direction::Bull,
+                    high: Some(29243.25),
+                    low: Some(29172.25),
+                    midpoint: Some(29207.75),
+                    validation_state: "breaker_confirmed".to_string(),
+                    mitigation_count: 368,
+                    mitigation_pct: None,
+                    failed_mitigation: false,
+                    partial_fill_state: "none".to_string(),
+                    breaker_confirmed: true,
+                    rejection_confirmed: false,
+                    confidence: 0.78,
+                    fail_closed_reason: None,
+                }),
+                ..WorkflowPhaseSnapshot::default()
+            }),
+            ..WorkflowSnapshot::default()
+        };
+
+        let summary = export_structural_path_ranking_target(
+            temp.path().to_str().unwrap(),
+            "ORDER_BLOCK_NQ_YF_NONLIVE_DIAG",
+            &snapshot,
+            &ProviderCatalogAgentSurface::default(),
+            &[],
+            &StructuralPriorLearningState::default(),
+        )
+        .unwrap();
+        let current_rows =
+            load_structural_path_ranking_target_rows(Path::new(&summary.jsonl_path)).unwrap();
+        let branch_row = current_rows
+            .iter()
+            .find(|row| row.path_id == branch_path)
+            .expect("order-block rooted branch row");
+
+        assert_eq!(
+            branch_row.regime_profit_branch_path.as_deref(),
+            Some(branch_path)
+        );
+        assert_eq!(branch_row.main_regime.as_deref(), Some("Transition"));
+        assert_eq!(branch_row.sub_regime.as_deref(), Some("OrderBlockVariant"));
+        assert_eq!(
+            branch_row.sub_sub_regime_or_profit_factor.as_deref(),
+            Some("ob_mitigation_breaker_rejection")
+        );
+        assert_eq!(
+            branch_row.profit_factor.as_deref(),
+            Some("order_block_variant_classifier_v1")
+        );
+        assert_eq!(branch_row.ob_variant.as_deref(), Some("breaker_block"));
+        assert_eq!(
+            branch_row.ob_validation_state.as_deref(),
+            Some("breaker_confirmed")
+        );
+        assert_eq!(branch_row.ob_confidence, Some(0.78));
+    }
+
+    #[test]
+    fn target_export_binds_liquidity_texture_runtime_context_to_rooted_branch() {
+        let temp = tempfile::tempdir().unwrap();
+        let branch_path =
+            "Transition -> LiquidityMap -> liquidity_pool_texture -> liquidity_pool_texture:observation_v1";
+        let snapshot = WorkflowSnapshot {
+            symbol: "LPT_IBKR_TLT_FEEDBACK".to_string(),
+            latest_analyze: Some(WorkflowPhaseSnapshot {
+                phase: "analyze".to_string(),
+                liquidity_pool_texture: Some(crate::state::LiquidityPoolTextureRuntimeEvidence {
+                    factor_name: "liquidity_pool_texture".to_string(),
+                    texture: "smooth".to_string(),
+                    subtype: "equal_high_pool".to_string(),
+                    level: Some(94.25),
+                    high: Some(94.40),
+                    low: Some(94.05),
+                    touch_count: 6,
+                    spacing_consistency: Some(0.77),
+                    clean_sweep_likelihood: Some(0.63),
+                    confidence: 0.71,
+                    fail_closed_reason: None,
+                }),
+                ..WorkflowPhaseSnapshot::default()
+            }),
+            ..WorkflowSnapshot::default()
+        };
+
+        let summary = export_structural_path_ranking_target(
+            temp.path().to_str().unwrap(),
+            "LPT_IBKR_TLT_FEEDBACK",
+            &snapshot,
+            &ProviderCatalogAgentSurface::default(),
+            &[],
+            &StructuralPriorLearningState::default(),
+        )
+        .unwrap();
+        let current_rows =
+            load_structural_path_ranking_target_rows(Path::new(&summary.jsonl_path)).unwrap();
+        let branch_row = current_rows
+            .iter()
+            .find(|row| row.path_id == branch_path)
+            .expect("liquidity texture rooted branch row");
+
+        assert_eq!(
+            branch_row.regime_profit_branch_path.as_deref(),
+            Some(branch_path)
+        );
+        assert_eq!(branch_row.main_regime.as_deref(), Some("Transition"));
+        assert_eq!(branch_row.sub_regime.as_deref(), Some("LiquidityMap"));
+        assert_eq!(
+            branch_row.sub_sub_regime_or_profit_factor.as_deref(),
+            Some("liquidity_pool_texture")
+        );
+        assert_eq!(
+            branch_row.profit_factor.as_deref(),
+            Some("liquidity_pool_texture:observation_v1")
+        );
+    }
+
+    #[test]
     fn agent_material_rank_rows_export_as_structural_score_targets() {
         let branch_path =
             "Transition -> RuntimeEvidenceDensity -> upbar_reclaim -> runtime_density_upbar_reclaim_long_v1";
@@ -6993,6 +7814,185 @@ mod tests {
     }
 
     #[test]
+    fn completed_agent_material_rank_rows_with_density_become_trainable_structural_targets() {
+        let winning_branch =
+            "TrendExpansion -> MomentumPersistence -> elder_impulse_macd -> elder_impulse_v1";
+        let losing_branch =
+            "TrendExpansion -> MomentumPersistence -> elder_impulse_macd -> elder_impulse_loser_v1";
+        let rank_artifact = crate::application::auto_quant::AgentMaterialRankArtifact {
+            artifact_id: "auto-quant-agent-material-rank:ELDER:20260517T133032.892Z".to_string(),
+            generated_at: Utc::now(),
+            symbol: "ELDER".to_string(),
+            source_dispatch_artifact_id: "dispatch-elder".to_string(),
+            ranking: vec![
+                crate::application::auto_quant::AgentMaterialRankRow {
+                    unit_label: "elder impulse positive".to_string(),
+                    status: "completed".to_string(),
+                    regime_profit_branch_path: Some(winning_branch.to_string()),
+                    main_regime: Some("TrendExpansion".to_string()),
+                    sub_regime: Some("MomentumPersistence".to_string()),
+                    sub_sub_regime_or_profit_factor: Some("elder_impulse_macd".to_string()),
+                    profit_factor: Some("elder_impulse_v1".to_string()),
+                    win_rate_pct: Some(48.6111),
+                    sharpe: Some(1.947),
+                    total_profit_pct: Some(3.31),
+                    trade_count: Some(72),
+                    ..crate::application::auto_quant::AgentMaterialRankRow::default()
+                },
+                crate::application::auto_quant::AgentMaterialRankRow {
+                    unit_label: "elder impulse negative".to_string(),
+                    status: "completed".to_string(),
+                    regime_profit_branch_path: Some(losing_branch.to_string()),
+                    main_regime: Some("TrendExpansion".to_string()),
+                    sub_regime: Some("MomentumPersistence".to_string()),
+                    sub_sub_regime_or_profit_factor: Some("elder_impulse_macd".to_string()),
+                    profit_factor: Some("elder_impulse_loser_v1".to_string()),
+                    win_rate_pct: Some(39.2857),
+                    sharpe: Some(-1.1328),
+                    total_profit_pct: Some(-0.40),
+                    trade_count: Some(56),
+                    ..crate::application::auto_quant::AgentMaterialRankRow::default()
+                },
+            ],
+        };
+
+        let rows = structural_path_ranking_agent_material_rank_target_rows(
+            &WorkflowSnapshot {
+                symbol: "ELDER".to_string(),
+                ..WorkflowSnapshot::default()
+            },
+            &StructuralPriorLearningState::default(),
+            &rank_artifact,
+        );
+
+        let winning = rows
+            .iter()
+            .find(|row| row.path_id == winning_branch)
+            .expect("winning branch row");
+        assert_eq!(winning.pending_reward_state, "matured_success");
+        assert!(winning.maturity_mask);
+        assert_eq!(winning.calibrated_label, Some(1.0));
+        assert!(winning.training_weight.is_some());
+        assert!(winning.calibrated_path_prob.is_some());
+
+        let losing = rows
+            .iter()
+            .find(|row| row.path_id == losing_branch)
+            .expect("losing branch row");
+        assert_eq!(losing.pending_reward_state, "matured_failure");
+        assert!(losing.maturity_mask);
+        assert_eq!(losing.calibrated_label, Some(0.0));
+        assert!(losing.training_weight.is_some());
+    }
+
+    #[test]
+    fn same_branch_agent_material_rank_timeframes_remain_distinct_trainable_observations() {
+        let branch =
+            "TrendExpansion -> MomentumPersistence -> public_elder_impulse_macd_histogram -> ibkr_public_elder_impulse_macd_histogram_v1";
+        let rank_artifact = crate::application::auto_quant::AgentMaterialRankArtifact {
+            artifact_id:
+                "auto-quant-agent-material-rank:IBKR_PUBLIC_ELDER_IMPULSE_MACD_QQQ:20260517T133032.892Z"
+                    .to_string(),
+            generated_at: Utc::now(),
+            symbol: "IBKR_PUBLIC_ELDER_IMPULSE_MACD_QQQ".to_string(),
+            source_dispatch_artifact_id: "dispatch-elder".to_string(),
+            ranking: vec![
+                crate::application::auto_quant::AgentMaterialRankRow {
+                    unit_label: "IBKR public Elder Impulse MACD histogram - QQQ 1m 7 D"
+                        .to_string(),
+                    status: "completed".to_string(),
+                    regime_profit_branch_path: Some(branch.to_string()),
+                    main_regime: Some("TrendExpansion".to_string()),
+                    sub_regime: Some("MomentumPersistence".to_string()),
+                    sub_sub_regime_or_profit_factor: Some(
+                        "public_elder_impulse_macd_histogram".to_string(),
+                    ),
+                    profit_factor: Some("ibkr_public_elder_impulse_macd_histogram_v1".to_string()),
+                    win_rate_pct: Some(41.841),
+                    sharpe: Some(65.9252),
+                    total_profit_pct: Some(1.20),
+                    trade_count: Some(239),
+                    ..crate::application::auto_quant::AgentMaterialRankRow::default()
+                },
+                crate::application::auto_quant::AgentMaterialRankRow {
+                    unit_label: "IBKR public Elder Impulse MACD histogram - QQQ 5m 1 M"
+                        .to_string(),
+                    status: "completed".to_string(),
+                    regime_profit_branch_path: Some(branch.to_string()),
+                    main_regime: Some("TrendExpansion".to_string()),
+                    sub_regime: Some("MomentumPersistence".to_string()),
+                    sub_sub_regime_or_profit_factor: Some(
+                        "public_elder_impulse_macd_histogram".to_string(),
+                    ),
+                    profit_factor: Some("ibkr_public_elder_impulse_macd_histogram_v1".to_string()),
+                    win_rate_pct: Some(40.1198),
+                    sharpe: Some(14.6117),
+                    total_profit_pct: Some(2.56),
+                    trade_count: Some(167),
+                    ..crate::application::auto_quant::AgentMaterialRankRow::default()
+                },
+                crate::application::auto_quant::AgentMaterialRankRow {
+                    unit_label: "IBKR public Elder Impulse MACD histogram - QQQ 15m 1 M"
+                        .to_string(),
+                    status: "completed".to_string(),
+                    regime_profit_branch_path: Some(branch.to_string()),
+                    main_regime: Some("TrendExpansion".to_string()),
+                    sub_regime: Some("MomentumPersistence".to_string()),
+                    sub_sub_regime_or_profit_factor: Some(
+                        "public_elder_impulse_macd_histogram".to_string(),
+                    ),
+                    profit_factor: Some("ibkr_public_elder_impulse_macd_histogram_v1".to_string()),
+                    win_rate_pct: Some(39.2857),
+                    sharpe: Some(-1.1328),
+                    total_profit_pct: Some(-0.40),
+                    trade_count: Some(56),
+                    ..crate::application::auto_quant::AgentMaterialRankRow::default()
+                },
+            ],
+        };
+
+        let rows = structural_path_ranking_agent_material_rank_target_rows(
+            &WorkflowSnapshot {
+                symbol: "IBKR_PUBLIC_ELDER_IMPULSE_MACD_QQQ".to_string(),
+                ..WorkflowSnapshot::default()
+            },
+            &StructuralPriorLearningState::default(),
+            &rank_artifact,
+        );
+
+        assert_eq!(
+            rows.len(),
+            3,
+            "same branch rows from different timeframes must stay distinct observations"
+        );
+        assert!(rows
+            .iter()
+            .all(|row| row.path_id == branch
+                && row.regime_profit_branch_path.as_deref() == Some(branch)));
+        assert_eq!(
+            rows.iter()
+                .filter(|row| row.pending_reward_state == "matured_success")
+                .count(),
+            2
+        );
+        assert_eq!(
+            rows.iter()
+                .filter(|row| row.pending_reward_state == "matured_failure")
+                .count(),
+            1
+        );
+        let score_keys = rows
+            .iter()
+            .map(structural_path_ranking_target_row_score_key)
+            .collect::<BTreeSet<_>>();
+        assert_eq!(
+            score_keys.len(),
+            3,
+            "each timeframe row needs a unique score key"
+        );
+    }
+
+    #[test]
     fn target_export_surfaces_read_only_bbn_label_set_branch_paths_in_current_rows() {
         let temp = tempfile::tempdir().unwrap();
         let branch_paths = [
@@ -7049,6 +8049,131 @@ mod tests {
     }
 
     #[test]
+    fn target_export_surfaces_regime_refinement_branch_path_in_current_rows() {
+        let temp = tempfile::tempdir().unwrap();
+        let branch_path =
+            "TrendExpansion -> BullTrendExhaustion -> lowtf_range_flip -> trend_to_range_flip_kraken_tao_1m_v1";
+        let snapshot = WorkflowSnapshot {
+            symbol: "KRAKEN_TAO".to_string(),
+            latest_analyze: Some(crate::state::WorkflowPhaseSnapshot {
+                phase: "analyze".to_string(),
+                pre_bayes_filtered_assignments: std::collections::BTreeMap::from([
+                    (
+                        "regime_refinement_branch_path".to_string(),
+                        branch_path.to_string(),
+                    ),
+                    ("main_regime".to_string(), "TrendExpansion".to_string()),
+                    ("sub_regime".to_string(), "BullTrendExhaustion".to_string()),
+                    (
+                        "sub_sub_regime_or_refinement_factor".to_string(),
+                        "lowtf_range_flip".to_string(),
+                    ),
+                    (
+                        "refinement_factor".to_string(),
+                        "trend_to_range_flip_kraken_tao_1m_v1".to_string(),
+                    ),
+                ]),
+                order_block_variant: Some(OrderBlockVariantRuntimeEvidence {
+                    factor_name: "order_block_variant_classifier".to_string(),
+                    variant: "breaker_block".to_string(),
+                    direction: Direction::Bull,
+                    high: Some(276.17),
+                    low: Some(275.97),
+                    midpoint: Some(276.07),
+                    validation_state: "breaker_confirmed".to_string(),
+                    mitigation_count: 15,
+                    mitigation_pct: None,
+                    failed_mitigation: false,
+                    partial_fill_state: "none".to_string(),
+                    breaker_confirmed: true,
+                    rejection_confirmed: false,
+                    confidence: 0.78,
+                    fail_closed_reason: None,
+                }),
+                ..crate::state::WorkflowPhaseSnapshot::default()
+            }),
+            ..WorkflowSnapshot::default()
+        };
+
+        let summary = export_structural_path_ranking_target(
+            temp.path().to_str().unwrap(),
+            "KRAKEN_TAO",
+            &snapshot,
+            &ProviderCatalogAgentSurface::default(),
+            &[],
+            &StructuralPriorLearningState::default(),
+        )
+        .unwrap();
+        let current_rows =
+            load_structural_path_ranking_target_rows(Path::new(&summary.jsonl_path)).unwrap();
+        let refinement_row = current_rows
+            .iter()
+            .find(|row| row.path_id == branch_path)
+            .expect("refinement branch row should be first-class target row");
+
+        assert_eq!(
+            refinement_row.regime_profit_branch_path.as_deref(),
+            Some(branch_path)
+        );
+        assert_eq!(
+            refinement_row.main_regime.as_deref(),
+            Some("TrendExpansion")
+        );
+        assert_eq!(
+            refinement_row.sub_regime.as_deref(),
+            Some("BullTrendExhaustion")
+        );
+        assert_eq!(
+            refinement_row.sub_sub_regime_or_profit_factor.as_deref(),
+            Some("lowtf_range_flip")
+        );
+        assert_eq!(
+            refinement_row.profit_factor.as_deref(),
+            Some("trend_to_range_flip_kraken_tao_1m_v1")
+        );
+    }
+
+    #[test]
+    fn target_export_uses_exact_branch_trade_direction_over_snapshot_fallback() {
+        let temp = tempfile::tempdir().unwrap();
+        let branch_path = "FUTURES -> equity_index -> M2K -> 1m -> RangeReversion -> LiquiditySweepRejectShort -> ibkr_m2k1m_liquidity_sweep_reject_short_7d_gate1_v1 -> ibkr_m2k1m_liquidity_sweep_reject_short_rvol_pda_guard_7d_gate1_v1";
+        let snapshot = WorkflowSnapshot {
+            symbol: "M2K".to_string(),
+            latest_analyze: Some(crate::state::WorkflowPhaseSnapshot {
+                phase: "analyze".to_string(),
+                selected_direction: Some("Bull".to_string()),
+                pre_bayes_filtered_assignments: std::collections::BTreeMap::from([
+                    (
+                        "regime_profit_branch_path".to_string(),
+                        branch_path.to_string(),
+                    ),
+                    ("trade_direction".to_string(), "Bear".to_string()),
+                ]),
+                ..crate::state::WorkflowPhaseSnapshot::default()
+            }),
+            ..WorkflowSnapshot::default()
+        };
+
+        let summary = export_structural_path_ranking_target(
+            temp.path().to_str().unwrap(),
+            "M2K",
+            &snapshot,
+            &ProviderCatalogAgentSurface::default(),
+            &[],
+            &StructuralPriorLearningState::default(),
+        )
+        .unwrap();
+        let current_rows =
+            load_structural_path_ranking_target_rows(Path::new(&summary.jsonl_path)).unwrap();
+        let branch_row = current_rows
+            .iter()
+            .find(|row| row.path_id == branch_path)
+            .expect("exact M2K branch should be exported as a current target row");
+
+        assert_eq!(branch_row.direction, "bear");
+    }
+
+    #[test]
     fn path_ranker_runtime_falls_back_to_history_when_registered_artifact_misses_path() {
         let temp = tempfile::tempdir().unwrap();
         let snapshot =
@@ -7068,9 +8193,23 @@ mod tests {
         let path_id = history_score_row.path_id.clone();
         history_score_row.candidate_set_id = "structural-candidates:NQ:history".to_string();
         history_score_row.raw_path_score = Some(0.91);
+        history_score_row.calibrated_path_prob = None;
+        history_score_row.path_prob_lower_bound = None;
+        history_score_row.execution_gate_status = None;
+        let mut history_gate_row = history_score_row.clone();
+        history_gate_row.candidate_set_id =
+            "structural-feedback-history:NQ:history-gate".to_string();
+        history_gate_row.raw_path_score = None;
+        history_gate_row.calibrated_path_prob = Some(0.61);
+        history_gate_row.path_prob_lower_bound = Some(0.44);
+        history_gate_row.execution_gate_status = Some("pass".to_string());
         fs::write(
             &summary.history_jsonl_path,
-            render_structural_path_ranking_target_rows_jsonl(&[history_score_row]).unwrap(),
+            render_structural_path_ranking_target_rows_jsonl(&[
+                history_score_row,
+                history_gate_row,
+            ])
+            .unwrap(),
         )
         .unwrap();
         let artifact_dir = Path::new(&summary.summary_path)
@@ -7144,6 +8283,17 @@ mod tests {
                 .find(|path| path.path_id == path_id)
                 .and_then(|path| path.path_ranker_runtime_source.as_deref()),
             Some("history_path")
+        );
+        let selected = selection
+            .candidate_paths
+            .iter()
+            .find(|path| path.path_id == path_id)
+            .expect("history path should be selected");
+        assert_eq!(selected.path_ranker_calibrated_path_prob, Some(0.61));
+        assert_eq!(selected.path_ranker_path_prob_lower_bound, Some(0.44));
+        assert_eq!(
+            selected.path_ranker_execution_gate_status.as_deref(),
+            Some("pass")
         );
     }
 
@@ -7357,6 +8507,369 @@ mod tests {
             Some("candidate_set")
         );
         assert_eq!(selected.catboost_score, Some(0.81));
+    }
+
+    #[test]
+    fn path_ranker_runtime_backfills_current_score_with_same_path_history_gate_metadata() {
+        let temp = tempfile::tempdir().unwrap();
+        let snapshot =
+            crate::application::orchestration::workflow_status::sample_human_workflow_snapshot();
+        let summary = export_structural_path_ranking_target(
+            temp.path().to_str().unwrap(),
+            "NQ",
+            &snapshot,
+            &ProviderCatalogAgentSurface::default(),
+            &[],
+            &StructuralPriorLearningState::default(),
+        )
+        .unwrap();
+        let mut current_rows =
+            load_structural_path_ranking_target_rows(Path::new(&summary.jsonl_path)).unwrap();
+        let mut history_rows =
+            load_structural_path_ranking_target_rows(Path::new(&summary.history_jsonl_path))
+                .unwrap();
+        assert!(!current_rows.is_empty(), "expected structural target rows");
+        let target = current_rows.first_mut().expect("current target row");
+        let candidate_set_id = target.candidate_set_id.clone();
+        let path_id = target.path_id.clone();
+        target.raw_path_score = Some(0.835725);
+        target.calibrated_path_prob = None;
+        target.path_prob_lower_bound = None;
+        target.execution_gate_status = None;
+        target.score_model_family = Some("catboost".to_string());
+        target.score_source_kind = Some("external_model".to_string());
+        target.score_model_artifact_uri = Some("catboost_model/catboost_model.cbm".to_string());
+        target.score_generator = Some("test-current-scorer".to_string());
+
+        let history_target = history_rows
+            .iter_mut()
+            .find(|row| row.path_id == path_id)
+            .expect("same path should exist in history rows");
+        history_target.candidate_set_id = format!("{candidate_set_id}:prior");
+        history_target.raw_path_score = Some(0.890452);
+        history_target.calibrated_path_prob = Some(0.619048);
+        history_target.path_prob_lower_bound = Some(0.449251);
+        history_target.execution_gate_status = Some("pass".to_string());
+        history_target.score_model_family = Some("catboost".to_string());
+        history_target.score_source_kind = Some("external_model".to_string());
+        history_target.score_model_artifact_uri = Some("catboost_model/prior.cbm".to_string());
+        history_target.score_generator = Some("test-history-scorer".to_string());
+
+        fs::write(
+            &summary.jsonl_path,
+            render_structural_path_ranking_target_rows_jsonl(&current_rows).unwrap(),
+        )
+        .unwrap();
+        fs::write(
+            &summary.history_jsonl_path,
+            render_structural_path_ranking_target_rows_jsonl(&history_rows).unwrap(),
+        )
+        .unwrap();
+        let artifact_dir = Path::new(&summary.summary_path)
+            .parent()
+            .expect("summary parent")
+            .to_path_buf();
+        fs::create_dir_all(artifact_dir.join("catboost_model")).unwrap();
+        let artifact =
+            crate::application::entry_models::training_export::StructuralPathRankingTrainerArtifact {
+                protocol_version: "structural-path-ranking-trainer-artifact-v1".to_string(),
+                dataset_role: "external_path_ranker_training_dataset".to_string(),
+                model_family: "catboost".to_string(),
+                artifact_uri: "catboost_model".to_string(),
+                model_artifact_uri: Some("catboost_model/catboost_model.cbm".to_string()),
+                score_column: "raw_path_score".to_string(),
+                trained_rows: 42,
+                history_rows: 42,
+                calibration_rows: 12,
+                selected_features: vec!["rank".to_string(), "raw_path_score".to_string()],
+                validation_metrics:
+                    crate::belief_core::ranking_label::StructuralPathRankerValidationMetrics::default(),
+                calibration_metrics:
+                    crate::belief_core::ranking_label::StructuralPathRankerCalibrationMetrics::default(),
+                rule_list: Vec::new(),
+                tree_json: None,
+                created_at: None,
+                notes: vec![],
+            };
+        fs::write(
+            artifact_dir.join("structural_path_ranking_trainer_artifact.json"),
+            serde_json::to_string_pretty(&artifact).unwrap(),
+        )
+        .unwrap();
+        crate::application::entry_models::enable_structural_path_ranking_runtime_command(
+            temp.path().to_str().unwrap(),
+            "NQ",
+            STRUCTURAL_PATH_RANKING_RUNTIME_MODE_CANDIDATE_SET_ONLY,
+        )
+        .unwrap();
+
+        let selection = structural_ranked_paths_with_runtime_context_and_prior_state(
+            &snapshot,
+            &ProviderCatalogAgentSurface::default(),
+            &[],
+            &StructuralPriorLearningState::default(),
+            StructuralPathRankerRuntimeContext {
+                state_dir: Some(temp.path().to_str().unwrap()),
+            },
+        );
+
+        let selected = selection
+            .candidate_paths
+            .iter()
+            .find(|path| path.path_id == path_id)
+            .expect("ranked path with current score");
+        assert_eq!(
+            selected.path_ranker_runtime_source.as_deref(),
+            Some("candidate_set")
+        );
+        assert_eq!(selected.catboost_score, Some(0.835725));
+        assert_eq!(selected.path_ranker_calibrated_path_prob, Some(0.619048));
+        assert_eq!(selected.path_ranker_path_prob_lower_bound, Some(0.449251));
+        assert_eq!(
+            selected.path_ranker_execution_gate_status.as_deref(),
+            Some("pass")
+        );
+    }
+
+    #[test]
+    fn path_ranker_runtime_backfills_duplicate_current_score_with_history_gate_metadata() {
+        let temp = tempfile::tempdir().unwrap();
+        let snapshot =
+            crate::application::orchestration::workflow_status::sample_human_workflow_snapshot();
+        let summary = export_structural_path_ranking_target(
+            temp.path().to_str().unwrap(),
+            "NQ",
+            &snapshot,
+            &ProviderCatalogAgentSurface::default(),
+            &[],
+            &StructuralPriorLearningState::default(),
+        )
+        .unwrap();
+        let mut current_rows =
+            load_structural_path_ranking_target_rows(Path::new(&summary.jsonl_path)).unwrap();
+        let mut history_rows =
+            load_structural_path_ranking_target_rows(Path::new(&summary.history_jsonl_path))
+                .unwrap();
+        assert!(!current_rows.is_empty(), "expected structural target rows");
+        let target = current_rows.first_mut().expect("current target row");
+        let candidate_set_id = target.candidate_set_id.clone();
+        let path_id = target.path_id.clone();
+        target.raw_path_score = Some(0.835725);
+        target.calibrated_path_prob = Some(0.619048);
+        target.path_prob_lower_bound = Some(0.449251);
+        target.execution_gate_status = Some("pass".to_string());
+        target.score_model_family = Some("catboost".to_string());
+        target.score_source_kind = Some("external_model".to_string());
+        target.score_model_artifact_uri = Some("catboost_model/gated.cbm".to_string());
+        target.score_generator = Some("test-current-gated-scorer".to_string());
+
+        let mut later_score_without_gate = target.clone();
+        later_score_without_gate.raw_path_score = Some(0.850571);
+        later_score_without_gate.calibrated_path_prob = None;
+        later_score_without_gate.path_prob_lower_bound = None;
+        later_score_without_gate.execution_gate_status = None;
+        later_score_without_gate.score_model_artifact_uri =
+            Some("catboost_model/latest-score.cbm".to_string());
+        later_score_without_gate.score_generator = Some("test-current-latest-score".to_string());
+        current_rows.push(later_score_without_gate);
+
+        let history_target = history_rows
+            .iter_mut()
+            .find(|row| row.path_id == path_id)
+            .expect("same path should exist in history rows");
+        history_target.candidate_set_id = format!("{candidate_set_id}:prior");
+        history_target.raw_path_score = Some(0.769455);
+        history_target.calibrated_path_prob = Some(0.727273);
+        history_target.path_prob_lower_bound = Some(0.516426);
+        history_target.execution_gate_status = Some("pass".to_string());
+        history_target.score_model_family = Some("catboost".to_string());
+        history_target.score_source_kind = Some("external_model".to_string());
+        history_target.score_model_artifact_uri = Some("catboost_model/prior.cbm".to_string());
+        history_target.score_generator = Some("test-history-gated-scorer".to_string());
+
+        fs::write(
+            &summary.jsonl_path,
+            render_structural_path_ranking_target_rows_jsonl(&current_rows).unwrap(),
+        )
+        .unwrap();
+        fs::write(
+            &summary.history_jsonl_path,
+            render_structural_path_ranking_target_rows_jsonl(&history_rows).unwrap(),
+        )
+        .unwrap();
+        crate::application::entry_models::enable_structural_path_ranking_runtime_command(
+            temp.path().to_str().unwrap(),
+            "NQ",
+            STRUCTURAL_PATH_RANKING_RUNTIME_MODE_CANDIDATE_SET_ONLY,
+        )
+        .unwrap();
+
+        let selection = structural_ranked_paths_with_runtime_context_and_prior_state(
+            &snapshot,
+            &ProviderCatalogAgentSurface::default(),
+            &[],
+            &StructuralPriorLearningState::default(),
+            StructuralPathRankerRuntimeContext {
+                state_dir: Some(temp.path().to_str().unwrap()),
+            },
+        );
+
+        let selected = selection
+            .candidate_paths
+            .iter()
+            .find(|path| path.path_id == path_id)
+            .expect("ranked path with duplicate current score");
+        assert_eq!(
+            selected.path_ranker_runtime_source.as_deref(),
+            Some("candidate_set")
+        );
+        assert_eq!(selected.catboost_score, Some(0.850571));
+        assert_eq!(selected.path_ranker_calibrated_path_prob, Some(0.727273));
+        assert_eq!(selected.path_ranker_path_prob_lower_bound, Some(0.516426));
+        assert_eq!(
+            selected.path_ranker_execution_gate_status.as_deref(),
+            Some("pass")
+        );
+    }
+
+    #[test]
+    fn path_ranker_runtime_prefers_current_candidate_row_over_stale_duplicate_artifact_row() {
+        let temp = tempfile::tempdir().unwrap();
+        let snapshot =
+            crate::application::orchestration::workflow_status::sample_human_workflow_snapshot();
+        let summary = export_structural_path_ranking_target(
+            temp.path().to_str().unwrap(),
+            "NQ",
+            &snapshot,
+            &ProviderCatalogAgentSurface::default(),
+            &[],
+            &StructuralPriorLearningState::default(),
+        )
+        .unwrap();
+        let current_rows =
+            load_structural_path_ranking_target_rows(Path::new(&summary.jsonl_path)).unwrap();
+        assert!(!current_rows.is_empty(), "expected structural target rows");
+        let target = current_rows.first().expect("current target row");
+        let candidate_set_id = target.candidate_set_id.clone();
+        let path_id = target.path_id.clone();
+        let stale_material_candidate_set_id =
+            format!("auto-quant-agent-material-rank:{candidate_set_id}:stale");
+        let mut current_candidate_rows = current_rows.clone();
+        let mut stale_material_row = target.clone();
+        stale_material_row.candidate_set_id = stale_material_candidate_set_id.clone();
+        current_candidate_rows.push(stale_material_row);
+
+        let mut history_rows =
+            load_structural_path_ranking_target_rows(Path::new(&summary.history_jsonl_path))
+                .unwrap();
+        let mut history_gate_row = target.clone();
+        history_gate_row.raw_path_score = None;
+        history_gate_row.calibrated_path_prob = Some(0.857143);
+        history_gate_row.path_prob_lower_bound = Some(0.654245);
+        history_gate_row.execution_gate_status = Some("pass".to_string());
+        history_rows.push(history_gate_row);
+        fs::write(
+            &summary.history_jsonl_path,
+            render_structural_path_ranking_target_rows_jsonl(&history_rows).unwrap(),
+        )
+        .unwrap();
+
+        let artifact_dir = Path::new(&summary.summary_path)
+            .parent()
+            .expect("summary parent")
+            .to_path_buf();
+        fs::write(
+            artifact_dir.join("artifact_scores.jsonl"),
+            format!(
+                "{}\n{}\n",
+                serde_json::json!({
+                    "candidate_set_id": candidate_set_id,
+                    "path_id": path_id,
+                    "raw_path_score": 0.8030589351441021,
+                    "score_model_family": "catboost",
+                    "score_source_kind": "external_artifact",
+                    "score_model_artifact_uri": "artifact_scores.jsonl",
+                    "score_generator": "test-current-candidate-score"
+                }),
+                serde_json::json!({
+                    "candidate_set_id": stale_material_candidate_set_id,
+                    "path_id": path_id,
+                    "raw_path_score": 0.36742166703440915,
+                    "score_model_family": "catboost",
+                    "score_source_kind": "external_artifact",
+                    "score_model_artifact_uri": "artifact_scores.jsonl",
+                    "score_generator": "test-stale-material-score"
+                })
+            ),
+        )
+        .unwrap();
+        let artifact =
+            crate::application::entry_models::training_export::StructuralPathRankingTrainerArtifact {
+                protocol_version: "structural-path-ranking-trainer-artifact-v1".to_string(),
+                dataset_role: "external_path_ranker_training_dataset".to_string(),
+                model_family: "catboost".to_string(),
+                artifact_uri: "artifact_scores.jsonl".to_string(),
+                model_artifact_uri: None,
+                score_column: "raw_path_score".to_string(),
+                trained_rows: 42,
+                history_rows: 42,
+                calibration_rows: 12,
+                selected_features: vec!["rank".to_string(), "raw_path_score".to_string()],
+                validation_metrics:
+                    crate::belief_core::ranking_label::StructuralPathRankerValidationMetrics::default(),
+                calibration_metrics:
+                    crate::belief_core::ranking_label::StructuralPathRankerCalibrationMetrics::default(),
+                rule_list: Vec::new(),
+                tree_json: None,
+                created_at: None,
+                notes: vec![],
+            };
+        fs::write(
+            artifact_dir.join("structural_path_ranking_trainer_artifact.json"),
+            serde_json::to_string_pretty(&artifact).unwrap(),
+        )
+        .unwrap();
+        crate::application::entry_models::enable_structural_path_ranking_runtime_command(
+            temp.path().to_str().unwrap(),
+            "NQ",
+            STRUCTURAL_PATH_RANKING_RUNTIME_MODE_CANDIDATE_SET_ONLY,
+        )
+        .unwrap();
+
+        let mut candidate_paths = structural_ranked_paths_with_runtime_context_and_prior_state(
+            &snapshot,
+            &ProviderCatalogAgentSurface::default(),
+            &[],
+            &StructuralPriorLearningState::default(),
+            StructuralPathRankerRuntimeContext { state_dir: None },
+        )
+        .candidate_paths;
+
+        let runtime = resolve_structural_path_ranker_runtime(
+            Some(temp.path().to_str().unwrap()),
+            "NQ",
+            &candidate_set_id,
+            &current_candidate_rows,
+            &mut candidate_paths,
+        )
+        .expect("runtime surface");
+
+        assert_eq!(runtime.status, "using_registered_artifact_scores");
+        let selected = candidate_paths
+            .iter()
+            .find(|path| path.path_id == path_id)
+            .expect("ranked path with registered score");
+        assert_eq!(
+            selected.path_ranker_runtime_source.as_deref(),
+            Some("registered_artifact")
+        );
+        assert_eq!(selected.catboost_score, Some(0.8030589351441021));
+        assert_eq!(selected.path_ranker_calibrated_path_prob, Some(0.857143));
+        assert_eq!(selected.path_ranker_path_prob_lower_bound, Some(0.654245));
+        assert_eq!(
+            selected.path_ranker_execution_gate_status.as_deref(),
+            Some("pass")
+        );
     }
 
     #[test]
@@ -7658,11 +9171,499 @@ mod tests {
             "DENSE_KLINE_BRANCH".to_string(),
             "structural-candidates:DENSE_KLINE_BRANCH:test".to_string(),
             Some(runtime),
+            None,
             vec![generic_scenario, exact_path.clone()],
         )
         .expect("recommended path bundle");
 
         assert_eq!(bundle.path_id, exact_path.path_id);
+    }
+
+    #[test]
+    fn recommended_path_bundle_prefers_observed_feedback_branch_over_generic_branch_when_history_is_strong(
+    ) {
+        let runtime = StructuralPathRankerRuntimeSurface {
+            enabled: true,
+            reuse_mode: Some(STRUCTURAL_PATH_RANKING_RUNTIME_MODE_PREFER_HISTORY.to_string()),
+            status: "using_history_scores".to_string(),
+            artifact_match_count: 0,
+            candidate_set_match_count: 2,
+            history_match_count: 2,
+            applied_path_count: 2,
+            score_model_family: Some("catboost".to_string()),
+            score_source_kind: Some("external_model".to_string()),
+            score_model_artifact_uri: None,
+            score_generator: None,
+        };
+        let exact_sweep_branch = StructuralPathArtifact {
+            path_id:
+                "Transition -> LiquiditySweep -> sweep_reclaim_small_cycle -> liquidity_sweep_reclaim_15m_wide_v1"
+                    .to_string(),
+            scenario_id: "scenario:exact-sweep".to_string(),
+            path_label:
+                "Transition -> LiquiditySweep -> sweep_reclaim_small_cycle -> liquidity_sweep_reclaim_15m_wide_v1"
+                    .to_string(),
+            direction: "Observe".to_string(),
+            entry_style: "structural_feedback_path".to_string(),
+            historical_total_records: 62,
+            historical_followed_count: 62,
+            catboost_score: Some(0.384),
+            path_ranker_runtime_source: Some("history_path".to_string()),
+            path_prior: 0.48,
+            path_posterior: 0.384,
+            bbn_support_score: 0.384,
+            composite_preference_score: 0.414,
+            stop_definition: "sweep-stop".to_string(),
+            target_definition: "sweep-target".to_string(),
+            expected_failure_mode: "sweep-fail".to_string(),
+            max_time_in_trade: "15m".to_string(),
+            ..StructuralPathArtifact::default()
+        };
+        let generic_order_block_branch = StructuralPathArtifact {
+            path_id:
+                "Transition -> OrderBlockVariant -> ob_mitigation_breaker_rejection -> order_block_variant_classifier_v1"
+                    .to_string(),
+            scenario_id: "scenario:order-block".to_string(),
+            path_label:
+                "Transition -> OrderBlockVariant -> ob_mitigation_breaker_rejection -> order_block_variant_classifier_v1"
+                    .to_string(),
+            direction: "Observe".to_string(),
+            entry_style: "regime_bundle_branch_path".to_string(),
+            historical_total_records: 1,
+            historical_followed_count: 0,
+            catboost_score: Some(0.5),
+            path_ranker_runtime_source: Some("history_path".to_string()),
+            path_prior: 0.49,
+            path_posterior: 0.384,
+            bbn_support_score: 0.384,
+            composite_preference_score: 0.415,
+            stop_definition: "generic-stop".to_string(),
+            target_definition: "generic-target".to_string(),
+            expected_failure_mode: "generic-fail".to_string(),
+            max_time_in_trade: "15m".to_string(),
+            ..StructuralPathArtifact::default()
+        };
+
+        let bundle = structural_recommended_path_bundle_from_candidates(
+            "SMALLCYCLE_SWEEP_NQ4H_CONFIRMATION".to_string(),
+            "structural-candidates:SMALLCYCLE_SWEEP_NQ4H_CONFIRMATION:test".to_string(),
+            Some(runtime),
+            None,
+            vec![generic_order_block_branch, exact_sweep_branch.clone()],
+        )
+        .expect("recommended path bundle");
+
+        assert_eq!(bundle.path_id, exact_sweep_branch.path_id);
+    }
+
+    #[test]
+    fn recommended_path_bundle_prefers_history_scored_feedback_branch_over_synthetic_regime_branch()
+    {
+        let runtime = StructuralPathRankerRuntimeSurface {
+            enabled: true,
+            reuse_mode: Some(STRUCTURAL_PATH_RANKING_RUNTIME_MODE_PREFER_HISTORY.to_string()),
+            status: "using_history_scores".to_string(),
+            history_match_count: 1,
+            applied_path_count: 1,
+            score_model_family: Some("catboost".to_string()),
+            score_source_kind: Some("external_model".to_string()),
+            ..StructuralPathRankerRuntimeSurface::default()
+        };
+        let exact_sweep_branch = StructuralPathArtifact {
+            path_id:
+                "Transition -> LiquiditySweep -> sweep_reclaim_small_cycle -> liquidity_sweep_reclaim_15m_wide_v1"
+                    .to_string(),
+            scenario_id: "scenario:exact-sweep".to_string(),
+            path_label:
+                "Transition -> LiquiditySweep -> sweep_reclaim_small_cycle -> liquidity_sweep_reclaim_15m_wide_v1"
+                    .to_string(),
+            direction: "bull".to_string(),
+            entry_style: "structural_feedback_path".to_string(),
+            historical_total_records: 62,
+            historical_followed_count: 62,
+            catboost_score: Some(0.965975),
+            path_ranker_calibrated_path_prob: Some(0.484375),
+            path_ranker_path_prob_lower_bound: Some(0.382716),
+            path_ranker_execution_gate_status: Some("observe".to_string()),
+            path_ranker_runtime_source: Some("history_path".to_string()),
+            path_prior: 0.485765,
+            path_posterior: 0.483886,
+            bbn_support_score: 0.483886,
+            composite_preference_score: 0.464103,
+            stop_definition: "sweep-stop".to_string(),
+            target_definition: "sweep-target".to_string(),
+            expected_failure_mode: "sweep-fail".to_string(),
+            max_time_in_trade: "15m".to_string(),
+            ..StructuralPathArtifact::default()
+        };
+        let synthetic_order_block_branch = StructuralPathArtifact {
+            path_id:
+                "Transition -> OrderBlockVariant -> ob_mitigation_breaker_rejection -> order_block_variant_classifier_v1"
+                    .to_string(),
+            scenario_id: "scenario:order-block".to_string(),
+            path_label:
+                "Transition -> OrderBlockVariant -> ob_mitigation_breaker_rejection -> order_block_variant_classifier_v1"
+                    .to_string(),
+            direction: "bear".to_string(),
+            entry_style: "regime_bundle_branch_path".to_string(),
+            historical_total_records: 1,
+            historical_followed_count: 0,
+            catboost_score: Some(0.384068),
+            path_ranker_runtime_source: None,
+            path_prior: 0.486983,
+            path_posterior: 0.384068,
+            bbn_support_score: 0.384068,
+            composite_preference_score: 0.414943,
+            stop_definition: "order-block-stop".to_string(),
+            target_definition: "order-block-target".to_string(),
+            expected_failure_mode: "order-block-fail".to_string(),
+            max_time_in_trade: "15m".to_string(),
+            ..StructuralPathArtifact::default()
+        };
+
+        let bundle = structural_recommended_path_bundle_from_candidates(
+            "SMALLCYCLE_SWEEP_NQ4H_CONFIRMATION".to_string(),
+            "structural-candidates:SMALLCYCLE_SWEEP_NQ4H_CONFIRMATION:test".to_string(),
+            Some(runtime),
+            None,
+            vec![synthetic_order_block_branch, exact_sweep_branch.clone()],
+        )
+        .expect("recommended path bundle");
+
+        assert_eq!(bundle.path_id, exact_sweep_branch.path_id);
+        assert_eq!(
+            bundle.path_ranker_runtime_source.as_deref(),
+            Some("history_path")
+        );
+    }
+
+    #[test]
+    fn recommended_path_bundle_prefers_current_pre_bayes_branch_over_unrelated_higher_score() {
+        let runtime = StructuralPathRankerRuntimeSurface {
+            enabled: true,
+            reuse_mode: Some(STRUCTURAL_PATH_RANKING_RUNTIME_MODE_PREFER_HISTORY.to_string()),
+            status: "using_candidate_set_scores".to_string(),
+            candidate_set_match_count: 3,
+            applied_path_count: 3,
+            score_model_family: Some("catboost".to_string()),
+            score_source_kind: Some("external_model".to_string()),
+            ..StructuralPathRankerRuntimeSurface::default()
+        };
+        let liquidity_branch =
+            "Transition -> LiquidityMap -> liquidity_pool_texture -> liquidity_pool_texture:observation_v1";
+        let liquidity_path = StructuralPathArtifact {
+            path_id: liquidity_branch.to_string(),
+            scenario_id: "scenario:liquidity-texture".to_string(),
+            path_label: liquidity_branch.to_string(),
+            direction: "Observe".to_string(),
+            entry_style: "regime_bundle_branch_path".to_string(),
+            historical_total_records: 30,
+            historical_followed_count: 30,
+            catboost_score: Some(0.538345),
+            path_ranker_runtime_source: Some("candidate_set".to_string()),
+            path_prior: 0.665,
+            path_posterior: 0.537,
+            bbn_support_score: 0.537,
+            composite_preference_score: 0.576,
+            stop_definition: "liquidity-stop".to_string(),
+            target_definition: "liquidity-target".to_string(),
+            expected_failure_mode: "liquidity-fail".to_string(),
+            max_time_in_trade: "15m".to_string(),
+            ..StructuralPathArtifact::default()
+        };
+        let order_block_path = StructuralPathArtifact {
+            path_id:
+                "Transition -> OrderBlockVariant -> ob_mitigation_breaker_rejection -> order_block_variant_classifier_v1"
+                    .to_string(),
+            scenario_id: "scenario:order-block".to_string(),
+            path_label:
+                "Transition -> OrderBlockVariant -> ob_mitigation_breaker_rejection -> order_block_variant_classifier_v1"
+                    .to_string(),
+            direction: "Observe".to_string(),
+            entry_style: "regime_bundle_branch_path".to_string(),
+            historical_total_records: 49,
+            historical_followed_count: 49,
+            catboost_score: Some(0.700935),
+            path_ranker_runtime_source: Some("candidate_set".to_string()),
+            path_prior: 0.665,
+            path_posterior: 0.537,
+            bbn_support_score: 0.537,
+            composite_preference_score: 0.594,
+            stop_definition: "order-block-stop".to_string(),
+            target_definition: "order-block-target".to_string(),
+            expected_failure_mode: "order-block-fail".to_string(),
+            max_time_in_trade: "15m".to_string(),
+            ..StructuralPathArtifact::default()
+        };
+
+        let bundle = structural_recommended_path_bundle_from_candidates(
+            "LPT_IBKR_TLT_FEEDBACK_193517".to_string(),
+            "structural-candidates:LPT_IBKR_TLT_FEEDBACK_193517:test".to_string(),
+            Some(runtime),
+            Some(liquidity_branch),
+            vec![order_block_path, liquidity_path.clone()],
+        )
+        .expect("recommended path bundle");
+
+        assert_eq!(bundle.path_id, liquidity_path.path_id);
+    }
+
+    #[test]
+    fn recommended_path_bundle_can_select_current_auto_quant_material_rank_branch() {
+        let temp = tempfile::tempdir().unwrap();
+        let symbol = "NQ";
+        let branch_path = "RangeConsolidation -> TightRangeBandExpansionFade -> ibkr_si5m_tight_range_band_expansion_fade_1m_gate1_v1";
+        let snapshot =
+            crate::application::orchestration::workflow_status::sample_human_workflow_snapshot();
+        let rank_artifact = crate::application::auto_quant::AgentMaterialRankArtifact {
+            artifact_id: "auto-quant-agent-material-rank:strategy-library:NQ:test".to_string(),
+            generated_at: Utc::now(),
+            symbol: symbol.to_string(),
+            source_dispatch_artifact_id: "dispatch-si5m".to_string(),
+            ranking: vec![crate::application::auto_quant::AgentMaterialRankRow {
+                unit_label: "SI dense fade".to_string(),
+                status: "completed".to_string(),
+                regime_profit_branch_path: Some(branch_path.to_string()),
+                main_regime: Some("RangeConsolidation".to_string()),
+                sub_regime: Some("TightRangeBandExpansionFade".to_string()),
+                sub_sub_regime_or_profit_factor: Some(
+                    "ibkr_si5m_tight_range_band_expansion_fade_1m_gate1_v1".to_string(),
+                ),
+                profit_factor: Some(
+                    "ibkr_si5m_tight_range_band_expansion_fade_1m_gate1_v1".to_string(),
+                ),
+                win_rate_pct: Some(77.7),
+                sharpe: Some(1.42),
+                total_profit_pct: Some(1.33),
+                trade_count: Some(42),
+                ..crate::application::auto_quant::AgentMaterialRankRow::default()
+            }],
+        };
+        let summary = export_structural_path_ranking_target_with_agent_material_rank(
+            temp.path().to_str().unwrap(),
+            symbol,
+            &snapshot,
+            &ProviderCatalogAgentSurface::default(),
+            &[],
+            &StructuralPriorLearningState::default(),
+            Some(&rank_artifact),
+        )
+        .unwrap();
+        apply_structural_path_ranking_external_scores(
+            temp.path().to_str().unwrap(),
+            symbol,
+            &[StructuralPathRankingExternalScoreInput {
+                candidate_set_id: rank_artifact.artifact_id.clone(),
+                path_id: branch_path.to_string(),
+                raw_path_score: 0.91,
+                score_model_family: Some("catboost".to_string()),
+                score_source_kind: Some("external_model".to_string()),
+                score_model_artifact_uri: Some("path_ranker_model/catboost_model.cbm".to_string()),
+                score_generator: Some("test-auto-quant-material-scorer".to_string()),
+            }],
+        )
+        .unwrap();
+        crate::application::entry_models::enable_structural_path_ranking_runtime_command(
+            temp.path().to_str().unwrap(),
+            symbol,
+            STRUCTURAL_PATH_RANKING_RUNTIME_MODE_CANDIDATE_SET_ONLY,
+        )
+        .unwrap();
+
+        let rows = load_structural_path_ranking_target_rows(Path::new(&summary.jsonl_path))
+            .expect("target rows");
+        assert!(
+            rows.iter().any(|row| {
+                row.candidate_set_id == rank_artifact.artifact_id
+                    && row.path_id == branch_path
+                    && row.raw_path_score == Some(0.91)
+            }),
+            "test setup must persist the exact Auto-Quant material branch score"
+        );
+
+        let bundle =
+            build_structural_recommended_path_bundle_artifact_with_state_dir_and_prior_state(
+                &snapshot,
+                &ProviderCatalogAgentSurface::default(),
+                &[],
+                &StructuralPriorLearningState::default(),
+                Some(temp.path().to_str().unwrap()),
+            )
+            .expect("recommended path bundle");
+
+        assert_eq!(bundle.path_id, branch_path);
+        assert_eq!(bundle.path_ranker_raw_score, Some(0.91));
+        assert_eq!(
+            bundle.path_ranker_runtime_source.as_deref(),
+            Some("candidate_set")
+        );
+    }
+
+    #[test]
+    fn target_export_preserves_applied_auto_quant_material_rank_score_after_refresh() {
+        let temp = tempfile::tempdir().unwrap();
+        let symbol = "TRX";
+        let branch_path = "TrendExpansion -> CryptoIchimokuCloudContinuation -> bybit_trxusdt_ichimoku_cloud_continuation_4h_exact_v1";
+        let snapshot =
+            crate::application::orchestration::workflow_status::sample_human_workflow_snapshot();
+        let rank_artifact = crate::application::auto_quant::AgentMaterialRankArtifact {
+            artifact_id: "auto-quant-agent-material-rank:strategy-library:TRX:test".to_string(),
+            generated_at: Utc::now(),
+            symbol: symbol.to_string(),
+            source_dispatch_artifact_id: "dispatch-trx4h".to_string(),
+            ranking: vec![crate::application::auto_quant::AgentMaterialRankRow {
+                unit_label: "TRXUSDT Ichimoku 4h exact".to_string(),
+                status: "completed".to_string(),
+                regime_profit_branch_path: Some(branch_path.to_string()),
+                main_regime: Some("TrendExpansion".to_string()),
+                sub_regime: Some("CryptoIchimokuCloudContinuation".to_string()),
+                sub_sub_regime_or_profit_factor: Some(
+                    "bybit_trxusdt_ichimoku_cloud_continuation_4h_exact_v1".to_string(),
+                ),
+                profit_factor: Some(
+                    "bybit_trxusdt_ichimoku_cloud_continuation_4h_exact_v1".to_string(),
+                ),
+                win_rate_pct: Some(66.7),
+                sharpe: Some(1.84),
+                total_profit_pct: Some(2.45),
+                trade_count: Some(12),
+                ..crate::application::auto_quant::AgentMaterialRankRow::default()
+            }],
+        };
+        export_structural_path_ranking_target_with_agent_material_rank(
+            temp.path().to_str().unwrap(),
+            symbol,
+            &snapshot,
+            &ProviderCatalogAgentSurface::default(),
+            &[],
+            &StructuralPriorLearningState::default(),
+            Some(&rank_artifact),
+        )
+        .unwrap();
+        apply_structural_path_ranking_external_scores(
+            temp.path().to_str().unwrap(),
+            symbol,
+            &[StructuralPathRankingExternalScoreInput {
+                candidate_set_id: rank_artifact.artifact_id.clone(),
+                path_id: branch_path.to_string(),
+                raw_path_score: 0.8298382441725878,
+                score_model_family: Some("catboost".to_string()),
+                score_source_kind: Some("external_model".to_string()),
+                score_model_artifact_uri: Some("path_ranker_model/catboost_model.cbm".to_string()),
+                score_generator: Some("pandas_path_ranker_trainer.py".to_string()),
+            }],
+        )
+        .unwrap();
+
+        let refreshed = export_structural_path_ranking_target_with_agent_material_rank(
+            temp.path().to_str().unwrap(),
+            symbol,
+            &snapshot,
+            &ProviderCatalogAgentSurface::default(),
+            &[],
+            &StructuralPriorLearningState::default(),
+            Some(&rank_artifact),
+        )
+        .unwrap();
+
+        for path in [&refreshed.jsonl_path, &refreshed.history_jsonl_path] {
+            let rows = load_structural_path_ranking_target_rows(Path::new(path)).unwrap();
+            let exact = rows
+                .iter()
+                .find(|row| {
+                    row.candidate_set_id == rank_artifact.artifact_id && row.path_id == branch_path
+                })
+                .expect("refreshed exact Auto-Quant material row");
+            assert_eq!(exact.raw_path_score, Some(0.8298382441725878));
+            assert_eq!(exact.score_model_family.as_deref(), Some("catboost"));
+            assert_eq!(exact.score_source_kind.as_deref(), Some("external_model"));
+            assert_eq!(
+                exact.score_model_artifact_uri.as_deref(),
+                Some("path_ranker_model/catboost_model.cbm")
+            );
+            assert_eq!(
+                exact.score_generator.as_deref(),
+                Some("pandas_path_ranker_trainer.py")
+            );
+        }
+    }
+
+    #[test]
+    fn recommended_path_bundle_prefers_higher_scored_current_auto_quant_material_rank_branch_under_registered_artifact_runtime(
+    ) {
+        let runtime = StructuralPathRankerRuntimeSurface {
+            enabled: true,
+            reuse_mode: Some(STRUCTURAL_PATH_RANKING_RUNTIME_MODE_PREFER_HISTORY.to_string()),
+            status: "using_registered_artifact_scores".to_string(),
+            artifact_match_count: 3,
+            candidate_set_match_count: 1,
+            history_match_count: 0,
+            applied_path_count: 3,
+            score_model_family: Some("catboost".to_string()),
+            score_source_kind: Some("external_model".to_string()),
+            score_model_artifact_uri: Some("path_ranker_model/catboost_model.cbm".to_string()),
+            score_generator: Some("pandas_path_ranker_trainer.py".to_string()),
+        };
+        let liquidity_branch =
+            "Transition -> LiquidityMap -> liquidity_pool_texture -> liquidity_pool_texture:observation_v1";
+        let exact_aq_branch = "RangeConsolidation -> TightRangeBandExpansionFade -> ibkr_si5m_tight_range_band_expansion_fade_1m_gate1_v1";
+        let liquidity_path = StructuralPathArtifact {
+            path_id: liquidity_branch.to_string(),
+            scenario_id: "regime-bundle-branch:3f508910efe0520f".to_string(),
+            path_label: liquidity_branch.to_string(),
+            direction: "favor_mean_reversion_only".to_string(),
+            entry_style: "regime_bundle_branch_path".to_string(),
+            historical_total_records: 2,
+            historical_followed_count: 2,
+            catboost_score: Some(0.8264553496921968),
+            path_ranker_runtime_source: Some("registered_artifact_history".to_string()),
+            path_prior: 0.5220524826481612,
+            path_posterior: 0.6102018853814164,
+            bbn_support_score: 0.6102018853814164,
+            composite_preference_score: 0.6102018853814164,
+            stop_definition: "liquidity-stop".to_string(),
+            target_definition: "liquidity-target".to_string(),
+            expected_failure_mode: "liquidity-fail".to_string(),
+            max_time_in_trade: "5m".to_string(),
+            ..StructuralPathArtifact::default()
+        };
+        let exact_aq_path = StructuralPathArtifact {
+            path_id: exact_aq_branch.to_string(),
+            scenario_id: "auto-quant-agent-material-rank:971588fa6a418f00".to_string(),
+            path_label: "ibkr_si5m_tight_range_band_expansion_fade_dense_fade_v1".to_string(),
+            direction: "favor_mean_reversion_only".to_string(),
+            entry_style: "auto_quant_agent_material_rank".to_string(),
+            historical_total_records: 0,
+            historical_followed_count: 0,
+            catboost_score: Some(0.8298382441725878),
+            path_ranker_runtime_source: Some("registered_artifact".to_string()),
+            path_prior: 0.75,
+            path_posterior: 0.75,
+            bbn_support_score: 0.75,
+            composite_preference_score: 0.75,
+            stop_definition: "auto-quant-stop".to_string(),
+            target_definition: "auto-quant-target".to_string(),
+            expected_failure_mode: "auto-quant-fail".to_string(),
+            max_time_in_trade: "5m".to_string(),
+            ..StructuralPathArtifact::default()
+        };
+
+        let bundle = structural_recommended_path_bundle_from_candidates(
+            "IBKR_SI5M_TIGHT_RANGE_CANONICAL_EXACT_DOWNSTREAM_V1".to_string(),
+            "structural-candidates:IBKR_SI5M_TIGHT_RANGE_CANONICAL_EXACT_DOWNSTREAM_V1:c4be2410dbb5696c"
+                .to_string(),
+            Some(runtime),
+            None,
+            vec![liquidity_path, exact_aq_path.clone()],
+        )
+        .expect("recommended path bundle");
+
+        assert_eq!(bundle.path_id, exact_aq_path.path_id);
+        assert_eq!(bundle.path_ranker_raw_score, Some(0.8298382441725878));
+        assert_eq!(
+            bundle.path_ranker_runtime_source.as_deref(),
+            Some("registered_artifact")
+        );
     }
 
     #[test]

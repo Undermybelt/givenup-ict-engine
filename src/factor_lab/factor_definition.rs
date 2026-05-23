@@ -415,6 +415,23 @@ impl FactorDefinition {
         }
     }
 
+    pub fn bayesian_markov_trend_detector() -> Self {
+        Self {
+            name: "bayesian_markov_trend_detector".to_string(),
+            description:
+                "Bayesian trend posterior fused with synthetic two-state Markov transitions"
+                    .to_string(),
+            category: FactorCategory::TrendMomentum,
+            enabled: true,
+            parameters: BTreeMap::from([
+                ("fast_period".to_string(), 30.0),
+                ("slow_period".to_string(), 60.0),
+                ("rsi_period".to_string(), 30.0),
+                ("adx_period".to_string(), 16.0),
+            ]),
+        }
+    }
+
     pub fn volatility_mean_reversion() -> Self {
         Self {
             name: "volatility_mean_reversion".to_string(),
@@ -1068,17 +1085,21 @@ impl FactorDefinition {
         candles: &[Candle],
         context: &FactorContext<'a>,
     ) -> Result<FactorSeries> {
-        let signals = match self.category {
-            FactorCategory::TrendMomentum => self.evaluate_trend_momentum(candles),
-            FactorCategory::VolatilityMeanReversion => {
-                self.evaluate_volatility_mean_reversion(candles)
+        let signals = if self.name == "bayesian_markov_trend_detector" {
+            self.evaluate_bayesian_markov_trend_detector(candles)
+        } else {
+            match self.category {
+                FactorCategory::TrendMomentum => self.evaluate_trend_momentum(candles),
+                FactorCategory::VolatilityMeanReversion => {
+                    self.evaluate_volatility_mean_reversion(candles)
+                }
+                FactorCategory::StructureIct => self.evaluate_structure_ict(candles, context),
+                FactorCategory::CrossMarketSmt => self.evaluate_cross_market_smt(candles, context),
+                FactorCategory::OptionsHedging => self.evaluate_options_hedging(candles, context),
+                FactorCategory::CrowdingHerding => self.evaluate_crowding_herding(candles),
+                FactorCategory::SpectralRhythm => self.evaluate_spectral_rhythm(candles),
+                FactorCategory::SessionLiquidity => self.evaluate_session_liquidity(candles),
             }
-            FactorCategory::StructureIct => self.evaluate_structure_ict(candles, context),
-            FactorCategory::CrossMarketSmt => self.evaluate_cross_market_smt(candles, context),
-            FactorCategory::OptionsHedging => self.evaluate_options_hedging(candles, context),
-            FactorCategory::CrowdingHerding => self.evaluate_crowding_herding(candles),
-            FactorCategory::SpectralRhythm => self.evaluate_spectral_rhythm(candles),
-            FactorCategory::SessionLiquidity => self.evaluate_session_liquidity(candles),
         };
 
         Ok(FactorSeries {
@@ -1128,6 +1149,150 @@ impl FactorDefinition {
                 )
             })
             .collect()
+    }
+
+    fn evaluate_bayesian_markov_trend_detector(&self, candles: &[Candle]) -> Vec<FactorSignal> {
+        let lookback = self.parameter("fast_period", 30.0) as usize;
+        let transition_window = self.parameter("slow_period", 60.0) as usize;
+        let posterior_fusion = (self.parameter("rsi_period", 30.0) / 100.0).clamp(0.05, 0.60);
+        let emission_scale = (self.parameter("adx_period", 16.0) / 8.0).clamp(0.5, 4.0);
+        let closes = candles.iter().map(|c| c.close).collect::<Vec<_>>();
+        let mut signals = Vec::with_capacity(candles.len());
+        let mut prev_p_up = 0.5;
+
+        for (index, candle) in candles.iter().enumerate() {
+            if index == 0 {
+                signals.push(build_signal(
+                    &self.name,
+                    self.category,
+                    candle.timestamp,
+                    0.0,
+                    0.05,
+                    "warmup=insufficient_history".to_string(),
+                ));
+                continue;
+            }
+
+            let start = index.saturating_sub(lookback);
+            let returns = closes[start..=index]
+                .windows(2)
+                .map(|window| {
+                    if window[0].abs() <= f64::EPSILON {
+                        0.0
+                    } else {
+                        (window[1] - window[0]) / window[0]
+                    }
+                })
+                .collect::<Vec<_>>();
+
+            if returns.is_empty() {
+                signals.push(build_signal(
+                    &self.name,
+                    self.category,
+                    candle.timestamp,
+                    0.0,
+                    0.05,
+                    "warmup=insufficient_return_window".to_string(),
+                ));
+                continue;
+            }
+
+            let wins = returns.iter().filter(|ret| **ret > 0.0).count() as f64;
+            let losses = returns.iter().filter(|ret| **ret < 0.0).count() as f64;
+            let bayes_alpha = 2.0 + wins;
+            let bayes_beta = 2.0 + losses;
+            let bayes_up = bayes_alpha / (bayes_alpha + bayes_beta);
+
+            let transition_start = index.saturating_sub(transition_window);
+            let transition_returns = closes[transition_start..=index]
+                .windows(2)
+                .map(|window| {
+                    if window[0].abs() <= f64::EPSILON {
+                        0.0
+                    } else {
+                        (window[1] - window[0]) / window[0]
+                    }
+                })
+                .collect::<Vec<_>>();
+            let mut uu = 0.0f64;
+            let mut ud = 0.0f64;
+            let mut du = 0.0f64;
+            let mut dd = 0.0f64;
+            for pair in transition_returns.windows(2) {
+                let prev = pair[0].signum();
+                let curr = pair[1].signum();
+                if prev.abs() <= f64::EPSILON || curr.abs() <= f64::EPSILON {
+                    continue;
+                }
+                if prev > 0.0 {
+                    if curr > 0.0 {
+                        uu += 1.0;
+                    } else {
+                        ud += 1.0;
+                    }
+                } else if curr > 0.0 {
+                    du += 1.0;
+                } else {
+                    dd += 1.0;
+                }
+            }
+
+            let stickiness = 1.8;
+            let switchiness = 1.0;
+            let p_uu = (uu + stickiness) / (uu + ud + stickiness + switchiness);
+            let p_du = (du + switchiness) / (du + dd + stickiness + switchiness);
+            let p_up_pred = prev_p_up * p_uu + (1.0 - prev_p_up) * p_du;
+
+            let mean_abs_return =
+                returns.iter().map(|ret| ret.abs()).sum::<f64>() / returns.len() as f64;
+            let latest_return = *returns.last().unwrap_or(&0.0);
+            let zscore = latest_return / mean_abs_return.max(1e-9);
+            let obs_signal = (zscore * emission_scale).tanh();
+            let obs_up = 0.5 + 0.5 * obs_signal;
+            let numer = (p_up_pred * obs_up).max(1e-12);
+            let denom = numer + ((1.0 - p_up_pred) * (1.0 - obs_up)).max(1e-12);
+            let markov_posterior_up = if denom > f64::EPSILON {
+                numer / denom
+            } else {
+                0.5
+            };
+            let fused_up = (bayes_up * (1.0 - posterior_fusion)
+                + markov_posterior_up * posterior_fusion)
+                .clamp(0.0, 1.0);
+            let smoothed_up = (prev_p_up * 0.65 + fused_up * 0.35).clamp(0.0, 1.0);
+            prev_p_up = smoothed_up;
+
+            let value = normalize_signed((smoothed_up - 0.5) * 2.0, 1.0);
+            let entropy = if smoothed_up > 0.0 && smoothed_up < 1.0 {
+                -(smoothed_up * smoothed_up.ln() + (1.0 - smoothed_up) * (1.0 - smoothed_up).ln())
+                    / std::f64::consts::LN_2
+            } else {
+                0.0
+            };
+            let transition_certainty = (p_uu - p_du).abs().clamp(0.0, 1.0);
+            let confidence = ((1.0 - entropy) * 0.65 + transition_certainty * 0.35).clamp(0.0, 1.0);
+
+            signals.push(build_signal(
+                &self.name,
+                self.category,
+                candle.timestamp,
+                value,
+                confidence,
+                format!(
+                    "bayes_up={:.4};markov_posterior_up={:.4};smoothed_up={:.4};p_uu={:.4};p_du={:.4};entropy={:.4};ret_z={:.4};posterior_fusion={:.3}",
+                    bayes_up,
+                    markov_posterior_up,
+                    smoothed_up,
+                    p_uu,
+                    p_du,
+                    entropy,
+                    zscore,
+                    posterior_fusion
+                ),
+            ));
+        }
+
+        signals
     }
 
     fn evaluate_volatility_mean_reversion(&self, candles: &[Candle]) -> Vec<FactorSignal> {
@@ -1708,7 +1873,24 @@ fn collect_structure_ict_setup_matches(
     context: &FactorContext<'_>,
     setup_horizon_bars: usize,
 ) -> Vec<SetupMatch> {
+    const LARGE_FRAME_SETUP_MATCH_THRESHOLD: usize = 4_096;
+    const MAX_LARGE_FRAME_SETUP_MATCH_BARS: usize = 768;
     let mut all_matches = Vec::new();
+    let setup_match_base_bar = if primary_candles.len() > LARGE_FRAME_SETUP_MATCH_THRESHOLD {
+        primary_candles
+            .len()
+            .saturating_sub(MAX_LARGE_FRAME_SETUP_MATCH_BARS)
+    } else {
+        0
+    };
+    let primary_candles = &primary_candles[setup_match_base_bar..];
+    let timeline_recent;
+    let timeline = if setup_match_base_bar > 0 {
+        timeline_recent = recent_setup_events(timeline, setup_match_base_bar);
+        timeline_recent.as_slice()
+    } else {
+        timeline
+    };
 
     let base_context = SetupContext {
         primary_candles: Some(primary_candles),
@@ -1731,6 +1913,13 @@ fn collect_structure_ict_setup_matches(
     .into_iter()
     .flatten()
     {
+        let lower_recent;
+        let lower_events = if setup_match_base_bar > 0 {
+            lower_recent = recent_setup_events(lower_events, setup_match_base_bar);
+            lower_recent.as_slice()
+        } else {
+            lower_events
+        };
         all_matches.extend(match_all_setups_extended(
             lower_events,
             &base_context,
@@ -1746,6 +1935,20 @@ fn collect_structure_ict_setup_matches(
         (context.h1_events, context.h4_events),
     ] {
         if let (Some(lower), Some(higher)) = (lower_events, higher_events) {
+            let lower_recent;
+            let higher_recent;
+            let lower = if setup_match_base_bar > 0 {
+                lower_recent = recent_setup_events(lower, setup_match_base_bar);
+                lower_recent.as_slice()
+            } else {
+                lower
+            };
+            let higher = if setup_match_base_bar > 0 {
+                higher_recent = recent_setup_events(higher, setup_match_base_bar);
+                higher_recent.as_slice()
+            } else {
+                higher
+            };
             let context = SetupContext {
                 primary_candles: Some(primary_candles),
                 paired_candles: context.paired_candles,
@@ -1761,6 +1964,13 @@ fn collect_structure_ict_setup_matches(
     }
 
     if let Some(h1) = context.h1_events {
+        let h1_recent;
+        let h1 = if setup_match_base_bar > 0 {
+            h1_recent = recent_setup_events(h1, setup_match_base_bar);
+            h1_recent.as_slice()
+        } else {
+            h1
+        };
         let context = SetupContext {
             primary_candles: Some(primary_candles),
             paired_candles: context.paired_candles,
@@ -1775,6 +1985,13 @@ fn collect_structure_ict_setup_matches(
     }
 
     if let Some(h4) = context.h4_events {
+        let h4_recent;
+        let h4 = if setup_match_base_bar > 0 {
+            h4_recent = recent_setup_events(h4, setup_match_base_bar);
+            h4_recent.as_slice()
+        } else {
+            h4
+        };
         let context = SetupContext {
             primary_candles: Some(primary_candles),
             paired_candles: context.paired_candles,
@@ -1788,6 +2005,13 @@ fn collect_structure_ict_setup_matches(
         ));
     }
     if let Some(d1) = context.d1_events {
+        let d1_recent;
+        let d1 = if setup_match_base_bar > 0 {
+            d1_recent = recent_setup_events(d1, setup_match_base_bar);
+            d1_recent.as_slice()
+        } else {
+            d1
+        };
         let context = SetupContext {
             primary_candles: Some(primary_candles),
             paired_candles: context.paired_candles,
@@ -1801,6 +2025,20 @@ fn collect_structure_ict_setup_matches(
         ));
     }
     if let (Some(w1), Some(d1)) = (context.w1_events, context.d1_events) {
+        let w1_recent;
+        let d1_recent;
+        let w1 = if setup_match_base_bar > 0 {
+            w1_recent = recent_setup_events(w1, setup_match_base_bar);
+            w1_recent.as_slice()
+        } else {
+            w1
+        };
+        let d1 = if setup_match_base_bar > 0 {
+            d1_recent = recent_setup_events(d1, setup_match_base_bar);
+            d1_recent.as_slice()
+        } else {
+            d1
+        };
         let context = SetupContext {
             primary_candles: Some(primary_candles),
             paired_candles: context.paired_candles,
@@ -1827,12 +2065,35 @@ fn collect_structure_ict_setup_matches(
             deduped.push(item);
         }
     }
+    if setup_match_base_bar > 0 {
+        for item in &mut deduped {
+            item.anchor_bar += setup_match_base_bar;
+            item.confirm_bar += setup_match_base_bar;
+            for bar in &mut item.event_bars {
+                *bar += setup_match_base_bar;
+            }
+        }
+    }
     deduped.sort_by(|left, right| {
         left.confirm_bar
             .cmp(&right.confirm_bar)
             .then_with(|| left.label().cmp(right.label()))
     });
     deduped
+}
+
+fn recent_setup_events(events: &[PdaEvent], min_bar: usize) -> Vec<PdaEvent> {
+    events
+        .iter()
+        .filter_map(|event| {
+            if event.bar_index < min_bar {
+                return None;
+            }
+            let mut event = event.clone();
+            event.bar_index -= min_bar;
+            Some(event)
+        })
+        .collect()
 }
 
 fn pad_bollinger(bands: BollingerBands, target_len: usize) -> BollingerBands {
@@ -2523,6 +2784,40 @@ mod tests {
     }
 
     #[test]
+    fn test_bayesian_markov_trend_detector_prefers_bull_on_rising_series() {
+        let factor = FactorDefinition::bayesian_markov_trend_detector();
+        let candles = slope_candles(140, 100.0, 0.55);
+        let series = factor
+            .evaluate(&candles, &FactorContext::default())
+            .unwrap();
+        let last = series.latest_signal().unwrap();
+
+        assert_eq!(series.signals.len(), candles.len());
+        assert!(last.value > 0.0);
+        assert!(matches!(
+            last.direction,
+            Direction::Bull | Direction::Neutral
+        ));
+    }
+
+    #[test]
+    fn test_bayesian_markov_trend_detector_prefers_bear_on_falling_series() {
+        let factor = FactorDefinition::bayesian_markov_trend_detector();
+        let candles = slope_candles(140, 220.0, -0.55);
+        let series = factor
+            .evaluate(&candles, &FactorContext::default())
+            .unwrap();
+        let last = series.latest_signal().unwrap();
+
+        assert_eq!(series.signals.len(), candles.len());
+        assert!(last.value < 0.0);
+        assert!(matches!(
+            last.direction,
+            Direction::Bear | Direction::Neutral
+        ));
+    }
+
+    #[test]
     fn test_cross_market_smt_handles_short_aligned_series_without_panic() {
         let definition = FactorDefinition::cross_market_smt();
         let candles = candles(25);
@@ -2766,5 +3061,35 @@ mod tests {
         assert!(matches
             .iter()
             .any(|item| item.kind == CanonicalSetupKind::WeeklyOpenSweepDailyMss));
+    }
+
+    #[test]
+    fn test_structure_ict_large_frame_setup_matches_are_recent_and_rebased() {
+        let series_candles = candles(5_000);
+        let recent_events = vec![
+            PdaEvent::new(PdaEventKind::MarketStructureShift, 4_400, Direction::Bear),
+            PdaEvent::new(PdaEventKind::InverseFairValueGap, 4_402, Direction::Bear),
+            PdaEvent::new(PdaEventKind::OrderBlock, 4_998, Direction::Bear),
+        ];
+
+        let matches = collect_structure_ict_setup_matches(
+            &recent_events,
+            &series_candles,
+            &FactorContext::default(),
+            30,
+        );
+
+        assert!(!matches.is_empty());
+        assert!(matches.iter().all(|item| item.confirm_bar >= 4_232));
+        assert!(matches
+            .iter()
+            .all(|item| item.confirm_bar < series_candles.len()));
+        assert!(matches
+            .iter()
+            .all(|item| item.anchor_bar <= item.confirm_bar));
+        assert!(matches
+            .iter()
+            .flat_map(|item| item.event_bars.iter())
+            .all(|bar| *bar >= 4_232 && *bar < series_candles.len()));
     }
 }

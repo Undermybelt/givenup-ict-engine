@@ -330,7 +330,34 @@ fn build_path_ranker_summary_value(
     })
 }
 
-fn build_current_regime_posterior_value(snapshot: &WorkflowSnapshot) -> Value {
+fn reconciled_posterior_execution_gate_status(
+    phase: &crate::state::WorkflowPhaseSnapshot,
+    structural_execution_candidate: Option<&Value>,
+) -> Option<String> {
+    let candidate_ready = structural_execution_candidate.and_then(|candidate| {
+        let status = candidate
+            .get("execution_gate_status")
+            .and_then(Value::as_str)
+            .or_else(|| candidate.get("candidate_status").and_then(Value::as_str))?;
+        let ready_or_actionable = candidate
+            .get("ready")
+            .and_then(Value::as_bool)
+            .unwrap_or(false)
+            || candidate
+                .get("actionable")
+                .and_then(Value::as_bool)
+                .unwrap_or(false);
+        let ready_status = matches!(status, "ready" | "execution_ready" | "pass" | "admissible");
+        (ready_or_actionable && ready_status).then(|| status.to_string())
+    });
+
+    candidate_ready.or_else(|| phase.execution_gate_status.clone())
+}
+
+fn build_current_regime_posterior_value(
+    snapshot: &WorkflowSnapshot,
+    structural_execution_candidate: Option<&Value>,
+) -> Value {
     let Some(phase) = latest_pre_bayes_phase(snapshot) else {
         return Value::Null;
     };
@@ -343,7 +370,10 @@ fn build_current_regime_posterior_value(snapshot: &WorkflowSnapshot) -> Value {
         "soft_evidence": phase.pre_bayes_soft_evidence.clone(),
         "gate_status": phase.pre_bayes_gate_status.clone(),
         "policy_version": phase.pre_bayes_policy_version.clone(),
-        "execution_gate_status": phase.execution_gate_status.clone(),
+        "execution_gate_status": reconciled_posterior_execution_gate_status(
+            phase,
+            structural_execution_candidate,
+        ),
         "source_phase": phase.phase.clone(),
         "source_run_id": phase.run_id.clone(),
         "source_timestamp": phase.timestamp,
@@ -473,14 +503,13 @@ fn structural_execution_candidate_value_from_recommended_path_bundle(
         execution_gate_status.as_str(),
         "ready" | "execution_ready" | "pass" | "admissible"
     );
-    let pre_bayes_ready = matches!(pre_bayes_gate_status.as_str(), "pass_hard");
+    let pre_bayes_ready = matches!(
+        pre_bayes_gate_status.as_str(),
+        "pass_hard" | "pass_neutralized"
+    );
     let actionable = execution_ready && pre_bayes_ready;
-    let candidate_status = if actionable {
-        "ready".to_string()
-    } else {
-        execution_gate_status
-    };
-    Some(json!({
+    let candidate_status = execution_gate_status;
+    let mut candidate = json!({
         "artifact_id": format!(
             "execution-candidate:structural-recommended-path:{}:{}",
             bundle.symbol, bundle.candidate_set_id
@@ -520,7 +549,331 @@ fn structural_execution_candidate_value_from_recommended_path_bundle(
         "path_ranker_path_prob_lower_bound": bundle.path_ranker_path_prob_lower_bound,
         "path_ranker_runtime_source": bundle.path_ranker_runtime_source.clone(),
         "structural_recommended_path_bundle": bundle,
-    }))
+    });
+    apply_persisted_analyze_execution_candidate_veto(&mut candidate, snapshot);
+    apply_same_root_execution_tree_admission_to_structural_candidate(
+        &mut candidate,
+        state_dir,
+        &snapshot.symbol,
+    );
+    Some(candidate)
+}
+
+fn structural_execution_candidate_value(
+    snapshot: &WorkflowSnapshot,
+    provider_status_agent: &ProviderCatalogAgentSurface,
+    feedback_history: &[crate::state::FeedbackRecord],
+    structural_prior_state: &StructuralPriorLearningState,
+    state_dir: Option<&str>,
+) -> Option<Value> {
+    if feedback_history.is_empty() {
+        if let Some(candidate) =
+            execution_candidate_value_from_same_root_execution_tree_trace(snapshot, state_dir)
+        {
+            return Some(candidate);
+        }
+    }
+    structural_execution_candidate_value_from_recommended_path_bundle(
+        snapshot,
+        provider_status_agent,
+        feedback_history,
+        structural_prior_state,
+        state_dir,
+    )
+    .or_else(|| execution_candidate_value_from_same_root_execution_tree_trace(snapshot, state_dir))
+}
+
+fn apply_persisted_analyze_execution_candidate_veto(
+    candidate: &mut Value,
+    snapshot: &WorkflowSnapshot,
+) {
+    let Some(persisted) = snapshot.latest_execution_candidate.as_ref() else {
+        return;
+    };
+    if persisted.symbol != snapshot.symbol || persisted.source_phase != "analyze" {
+        return;
+    }
+    let persisted_blocks = !persisted.actionable
+        || persisted.candidate_status == "no_trade"
+        || persisted.review_status == "discard";
+    if !persisted_blocks {
+        return;
+    }
+    let Some(map) = candidate.as_object_mut() else {
+        return;
+    };
+    map.insert(
+        "persisted_execution_candidate_veto".to_string(),
+        json!({
+            "artifact_id": persisted.artifact_id,
+            "source_phase": persisted.source_phase,
+            "candidate_status": persisted.candidate_status,
+            "actionable": persisted.actionable,
+            "review_status": persisted.review_status,
+            "review_reason": persisted.review_reason,
+        }),
+    );
+    let status = if persisted.candidate_status.is_empty() {
+        "no_trade"
+    } else {
+        persisted.candidate_status.as_str()
+    };
+    map.insert("candidate_status".to_string(), json!(status));
+    map.insert("execution_gate_status".to_string(), json!(status));
+    map.insert("actionable".to_string(), json!(false));
+    map.insert("ready".to_string(), json!(false));
+    if !persisted.review_status.is_empty() {
+        map.insert("review_status".to_string(), json!(persisted.review_status));
+    }
+    if !persisted.review_reason.is_empty() {
+        map.insert("review_reason".to_string(), json!(persisted.review_reason));
+    }
+    if !persisted.pre_bayes_gate_status.is_empty() {
+        map.insert(
+            "pre_bayes_gate_status".to_string(),
+            json!(persisted.pre_bayes_gate_status),
+        );
+    }
+}
+
+fn apply_same_root_execution_tree_admission_to_structural_candidate(
+    candidate: &mut Value,
+    state_dir: Option<&str>,
+    symbol: &str,
+) {
+    let Some(state_dir) = state_dir else {
+        return;
+    };
+    let Some(path_id) = candidate.get("path_id").and_then(Value::as_str) else {
+        return;
+    };
+    let trace_path = Path::new(state_dir)
+        .join(symbol)
+        .join(crate::application::orchestration::EXECUTION_TREE_TRACE_FILE);
+    let Ok(bytes) = fs::read(trace_path) else {
+        return;
+    };
+    let Ok(trace) = serde_json::from_slice::<Value>(&bytes) else {
+        return;
+    };
+    let Some(admission) = trace.get("closed_loop_branch_admission") else {
+        return;
+    };
+    if admission.get("path_id").and_then(Value::as_str) != Some(path_id) {
+        return;
+    }
+    let admitted = admission.get("status").and_then(Value::as_str) == Some("admitted")
+        && admission
+            .get("ready")
+            .and_then(Value::as_bool)
+            .unwrap_or(false)
+        && admission
+            .get("actionable")
+            .and_then(Value::as_bool)
+            .unwrap_or(false);
+    if !admitted {
+        return;
+    }
+    let Some(map) = candidate.as_object_mut() else {
+        return;
+    };
+    let candidate_source_phase = map
+        .get("source_phase")
+        .and_then(Value::as_str)
+        .unwrap_or_default();
+    let duplicate_analyze_veto_active = map
+        .get("persisted_execution_candidate_veto")
+        .and_then(|veto| veto.get("review_reason"))
+        .and_then(Value::as_str)
+        == Some("duplicate_execution_candidate_context");
+    let ready_duplicate_analyze_veto_active = duplicate_analyze_veto_active
+        && map
+            .get("persisted_execution_candidate_veto")
+            .and_then(|veto| veto.get("source_phase"))
+            .and_then(Value::as_str)
+            == Some("analyze")
+        && (map
+            .get("persisted_execution_candidate_veto")
+            .and_then(|veto| veto.get("actionable"))
+            .and_then(Value::as_bool)
+            .unwrap_or(false)
+            || map
+                .get("persisted_execution_candidate_veto")
+                .and_then(|veto| veto.get("candidate_status"))
+                .and_then(Value::as_str)
+                == Some("execution_ready"));
+    let candidate_not_actionable_analyze_veto_active = map
+        .get("persisted_execution_candidate_veto")
+        .and_then(|veto| veto.get("review_reason"))
+        .and_then(Value::as_str)
+        == Some("candidate_not_actionable");
+    let persisted_veto_active = map.contains_key("persisted_execution_candidate_veto");
+    let duplicate_veto_can_be_overridden = duplicate_analyze_veto_active
+        && (candidate_source_phase == "execution-tree-trace"
+            || ready_duplicate_analyze_veto_active);
+    let status = admission
+        .get("candidate_status")
+        .and_then(Value::as_str)
+        .or_else(|| {
+            admission
+                .get("execution_gate_status")
+                .and_then(Value::as_str)
+        })
+        .unwrap_or("execution_ready");
+    map.insert(
+        "execution_tree_gate_status".to_string(),
+        admission
+            .get("execution_tree_gate_status")
+            .cloned()
+            .or_else(|| trace.pointer("/output/gate_status").cloned())
+            .unwrap_or_else(|| json!("ready")),
+    );
+    map.insert(
+        "execution_tree_branch".to_string(),
+        admission
+            .get("execution_tree_branch")
+            .cloned()
+            .or_else(|| trace.pointer("/output/branch").cloned())
+            .unwrap_or(Value::Null),
+    );
+    if let Some(readiness) = trace.pointer("/output/execution_readiness") {
+        map.insert("execution_readiness".to_string(), readiness.clone());
+    }
+    if let Some(transition_hazard) = trace.pointer("/output/hybrid_transition_hazard") {
+        map.insert("transition_hazard".to_string(), transition_hazard.clone());
+    }
+    if let Some(alignment) = trace.pointer("/output/pda_hybrid_alignment") {
+        map.insert("pda_hybrid_alignment".to_string(), alignment.clone());
+    }
+    map.insert(
+        "execution_tree_closed_loop_branch_admission".to_string(),
+        admission.clone(),
+    );
+    if persisted_veto_active
+        && !duplicate_veto_can_be_overridden
+        && !candidate_not_actionable_analyze_veto_active
+    {
+        return;
+    }
+    map.insert("candidate_status".to_string(), json!(status));
+    map.insert("execution_gate_status".to_string(), json!(status));
+    map.insert("actionable".to_string(), json!(true));
+    map.insert("ready".to_string(), json!(true));
+    map.insert("review_status".to_string(), json!("promote_latest"));
+    if duplicate_veto_can_be_overridden {
+        map.insert(
+            "persisted_execution_candidate_veto_overridden".to_string(),
+            json!(true),
+        );
+        let review_reason = if ready_duplicate_analyze_veto_active {
+            "same_root_execution_tree_trace_admitted_after_ready_duplicate_analyze_veto"
+        } else {
+            "same_root_execution_tree_trace_admitted_after_duplicate_analyze_veto"
+        };
+        map.insert("review_reason".to_string(), json!(review_reason));
+        return;
+    }
+    if candidate_not_actionable_analyze_veto_active {
+        map.insert(
+            "persisted_execution_candidate_veto_overridden".to_string(),
+            json!(true),
+        );
+        map.insert(
+            "review_reason".to_string(),
+            json!("same_root_execution_tree_trace_admitted_after_candidate_not_actionable_veto"),
+        );
+        return;
+    }
+    map.insert(
+        "review_reason".to_string(),
+        json!("same_root_execution_tree_trace_admitted"),
+    );
+}
+
+fn execution_candidate_value_from_same_root_execution_tree_trace(
+    snapshot: &WorkflowSnapshot,
+    state_dir: Option<&str>,
+) -> Option<Value> {
+    let state_dir = state_dir?;
+    let trace_path = Path::new(state_dir)
+        .join(&snapshot.symbol)
+        .join(crate::application::orchestration::EXECUTION_TREE_TRACE_FILE);
+    let bytes = fs::read(trace_path).ok()?;
+    let trace = serde_json::from_slice::<Value>(&bytes).ok()?;
+    let admission = trace.get("closed_loop_branch_admission")?;
+    let path_id = admission.get("path_id").and_then(Value::as_str)?;
+    let admitted = admission.get("status").and_then(Value::as_str) == Some("admitted")
+        && admission
+            .get("ready")
+            .and_then(Value::as_bool)
+            .unwrap_or(false)
+        && admission
+            .get("actionable")
+            .and_then(Value::as_bool)
+            .unwrap_or(false);
+    if !admitted {
+        return None;
+    }
+    let status = admission
+        .get("candidate_status")
+        .and_then(Value::as_str)
+        .or_else(|| {
+            admission
+                .get("execution_gate_status")
+                .and_then(Value::as_str)
+        })
+        .unwrap_or("execution_ready");
+    let mut candidate = json!({
+        "artifact_id": format!("execution-candidate:execution-tree-trace:{}:{}", snapshot.symbol, path_id),
+        "version": 0,
+        "generated_at": latest_workflow_phase(snapshot).map(|phase| phase.timestamp),
+        "symbol": snapshot.symbol.clone(),
+        "source_phase": "execution-tree-trace",
+        "source_run_id": latest_workflow_phase(snapshot).map(|phase| phase.run_id.clone()),
+        "persisted": false,
+        "path": format!("execution-tree-trace:{}", path_id),
+        "path_id": path_id,
+        "path_label": admission.get("path_label").cloned().unwrap_or_else(|| json!(path_id)),
+        "trade_direction": admission.get("trade_direction").cloned().unwrap_or(Value::Null),
+        "actionable": true,
+        "ready": true,
+        "candidate_status": status,
+        "execution_gate_status": status,
+        "decision_hint": "same_root_execution_tree_trace_admitted",
+        "review_status": "promote_latest",
+        "review_reason": "same_root_execution_tree_trace_admitted",
+        "pre_bayes_gate_status": admission
+            .get("pre_bayes_gate_status")
+            .cloned()
+            .unwrap_or_else(|| json!("pass_neutralized")),
+        "execution_tree_gate_status": admission
+            .get("execution_tree_gate_status")
+            .cloned()
+            .or_else(|| trace.pointer("/output/gate_status").cloned())
+            .unwrap_or_else(|| json!("ready")),
+        "execution_tree_branch": admission
+            .get("execution_tree_branch")
+            .cloned()
+            .or_else(|| trace.pointer("/output/branch").cloned())
+            .unwrap_or(Value::Null),
+        "execution_tree_closed_loop_branch_admission": admission.clone(),
+    });
+    if let Some(readiness) = trace.pointer("/output/execution_readiness") {
+        candidate["execution_readiness"] = readiness.clone();
+    }
+    if let Some(transition_hazard) = trace.pointer("/output/hybrid_transition_hazard") {
+        candidate["transition_hazard"] = transition_hazard.clone();
+    }
+    if let Some(alignment) = trace.pointer("/output/pda_hybrid_alignment") {
+        candidate["pda_hybrid_alignment"] = alignment.clone();
+    }
+    apply_persisted_analyze_execution_candidate_veto(&mut candidate, snapshot);
+    apply_same_root_execution_tree_admission_to_structural_candidate(
+        &mut candidate,
+        Some(state_dir),
+        &snapshot.symbol,
+    );
+    Some(candidate)
 }
 
 fn structural_closed_loop_branch_admission_value(candidate: &Value) -> Option<Value> {
@@ -612,10 +965,21 @@ fn build_full_workflow_status_json_value(
     state_dir: Option<&str>,
 ) -> Result<Value> {
     let mut value = serde_json::to_value(snapshot)?;
+    let structural_candidate_for_posterior = structural_execution_candidate_value(
+        snapshot,
+        provider_status_agent,
+        feedback_history,
+        structural_prior_state,
+        state_dir,
+    )
+    .or_else(|| execution_candidate_value_from_same_root_execution_tree_trace(snapshot, state_dir));
     if let Value::Object(map) = &mut value {
         map.insert(
             "current_regime_posterior".to_string(),
-            build_current_regime_posterior_value(snapshot),
+            build_current_regime_posterior_value(
+                snapshot,
+                structural_candidate_for_posterior.as_ref(),
+            ),
         );
         map.insert(
             "regime_confidence_assets".to_string(),
@@ -686,15 +1050,7 @@ fn build_full_workflow_status_json_value(
             );
         }
     }
-    if let Some(structural_candidate) =
-        structural_execution_candidate_value_from_recommended_path_bundle(
-            snapshot,
-            provider_status_agent,
-            feedback_history,
-            structural_prior_state,
-            state_dir,
-        )
-    {
+    if let Some(structural_candidate) = structural_candidate_for_posterior {
         if let Value::Object(map) = &mut value {
             map.insert("phase_detail".to_string(), structural_candidate.clone());
             map.insert(
@@ -1706,8 +2062,17 @@ pub fn executor_scorecard_surface(
 pub fn resolved_vote_scorecards(
     persisted_scorecards: &[EnsembleExecutorScorecard],
     vote: &EnsembleVoteRecord,
-) -> (Vec<EnsembleExecutorScorecard>, &'static str) {
-    executor_scorecard_surface(persisted_scorecards, &vote.executor_scorecards)
+) -> (Vec<EnsembleExecutorScorecard>, String) {
+    if persisted_scorecards.is_empty() {
+        (
+            vote.executor_scorecards.clone(),
+            vote.executor_scorecards_source
+                .clone()
+                .unwrap_or_else(|| "fallback".to_string()),
+        )
+    } else {
+        (persisted_scorecards.to_vec(), "persisted".to_string())
+    }
 }
 
 fn push_paths_from_command_text(candidates: &mut Vec<String>, command: &str) {
@@ -2755,14 +3120,13 @@ fn build_agent_workflow_status_view_with_provider_agent_and_structural_prior_sta
     let hard_block_active = hard_block_statuses
         .iter()
         .any(|status| snapshot.blocking_truth.status == *status);
-    let structural_execution_candidate =
-        structural_execution_candidate_value_from_recommended_path_bundle(
-            snapshot,
-            provider_status_agent,
-            feedback_history,
-            structural_prior_state,
-            state_dir,
-        );
+    let structural_execution_candidate = structural_execution_candidate_value(
+        snapshot,
+        provider_status_agent,
+        feedback_history,
+        structural_prior_state,
+        state_dir,
+    );
     let raw_closed_loop_branch_admission = structural_execution_candidate
         .as_ref()
         .and_then(structural_closed_loop_branch_admission_value);
@@ -3070,7 +3434,10 @@ fn build_agent_workflow_status_view_with_provider_agent_and_structural_prior_sta
         "auto_quant_handoff": auto_quant_handoff_guide,
         "evidence_review": evidence_review_guide,
         "latest_structural_feedback": latest_structural_feedback,
-        "current_regime_posterior": build_current_regime_posterior_value(snapshot),
+        "current_regime_posterior": build_current_regime_posterior_value(
+            snapshot,
+            structural_execution_candidate.as_ref(),
+        ),
         "regime_confidence_assets": build_regime_confidence_assets_value(snapshot, state_dir),
         "experience_prior_surface": experience_prior_surface,
         "structural_validation_summary": structural_validation_summary,
@@ -4604,13 +4971,14 @@ fn build_workflow_status_phase_value_with_structural_prior_state_and_state_dir(
             &build_auxiliary_artifact_surfaces(snapshot).pending_update_history,
         )?,
         "execution-candidate" => {
-            structural_execution_candidate_value_from_recommended_path_bundle(
+            structural_execution_candidate_value(
                 snapshot,
                 provider_status_agent,
                 feedback_history,
                 structural_prior_state,
                 state_dir,
             )
+            .or_else(|| execution_candidate_value_from_same_root_execution_tree_trace(snapshot, state_dir))
             .or_else(|| {
                 build_auxiliary_artifact_surfaces(snapshot)
                     .execution_candidate
@@ -4905,9 +5273,44 @@ pub fn build_pre_bayes_diff_value(snapshot: &WorkflowSnapshot) -> Value {
     })
 }
 
-pub fn emit_pre_bayes_diff_output(snapshot: &WorkflowSnapshot) -> Result<()> {
+pub fn emit_pre_bayes_diff_output(snapshot: &WorkflowSnapshot, output_format: &str) -> Result<()> {
     let value = build_pre_bayes_diff_value(snapshot);
-    print_redacted_json(&value)
+    match output_format.trim().to_ascii_lowercase().as_str() {
+        "json" | "compact" | "agent" => print_redacted_json(&value),
+        "human" => {
+            let gate_status = value
+                .get("latest_gate_status")
+                .and_then(Value::as_str)
+                .unwrap_or("unavailable");
+            let policy_version = value
+                .get("latest_policy_version")
+                .and_then(Value::as_str)
+                .unwrap_or("unavailable");
+            let active_regime = value
+                .get("latest_canonical_structural_active_regime")
+                .and_then(Value::as_str)
+                .unwrap_or("unavailable");
+            let confidence = value
+                .get("latest_canonical_structural_confidence")
+                .and_then(Value::as_f64)
+                .map(|value| format!("{value:.3}"))
+                .unwrap_or_else(|| "unavailable".to_string());
+            let bridge_diff_count = value
+                .get("latest_bridge_diff")
+                .and_then(Value::as_object)
+                .map(|object| object.len())
+                .unwrap_or(0);
+            print_human_lines(&[
+                format!(
+                    "Pre-Bayes diff | gate={} | policy={} | regime={} | confidence={}",
+                    gate_status, policy_version, active_regime, confidence
+                ),
+                format!("Bridge diff fields: {}", bridge_diff_count),
+            ]);
+            Ok(())
+        }
+        other => anyhow::bail!("unsupported pre-bayes-diff output format '{}'", other),
+    }
 }
 
 pub fn build_workflow_status_bootstrap_phase_value(
@@ -6153,6 +6556,494 @@ mod tests {
     }
 
     #[test]
+    fn execution_candidate_phase_uses_same_root_execution_tree_admission_over_stale_phase_gate() {
+        let temp = tempfile::tempdir().unwrap();
+        let feedback = sample_structural_feedback_history();
+        let structural_refs = feedback[0].structural_feedback.clone().unwrap();
+        let symbol_dir = temp.path().join("NQ");
+        std::fs::create_dir_all(&symbol_dir).unwrap();
+        std::fs::write(
+            symbol_dir.join("execution_tree_trace.json"),
+            serde_json::to_vec_pretty(&serde_json::json!({
+                "output": {
+                    "execution_readiness": 0.67,
+                    "gate_status": "ready",
+                    "branch": "fill_viable",
+                    "execution_bias": "aggressive",
+                    "path_ranker_score_visible_to_execution_tree": true,
+                    "path_ranker_score_used_by_execution_tree": true,
+                    "ranker_validation_ready": true,
+                    "hybrid_transition_hazard": 0.595,
+                    "pda_hybrid_alignment": true
+                },
+                "closed_loop_branch_admission": {
+                    "status": "admitted",
+                    "ready": true,
+                    "actionable": true,
+                    "candidate_status": "execution_ready",
+                    "execution_gate_status": "execution_ready",
+                    "execution_tree_gate_status": "ready",
+                    "execution_tree_branch": "fill_viable",
+                    "path_id": structural_refs.path_id,
+                    "path_label": structural_refs.path_id,
+                    "pre_bayes_gate_status": "pass_neutralized",
+                    "review_status": "promote_latest",
+                    "source_phase": "execution-tree-trace"
+                }
+            }))
+            .unwrap(),
+        )
+        .unwrap();
+        let snapshot = WorkflowSnapshot {
+            symbol: "NQ".to_string(),
+            latest_analyze: Some(WorkflowPhaseSnapshot {
+                phase: "analyze".to_string(),
+                run_id: "analyze:NQ:stale-pre-ranker".to_string(),
+                structural_feedback: Some(structural_refs.clone()),
+                pre_bayes_gate_status: "pass_neutralized".to_string(),
+                pre_bayes_policy_version: "structural-feedback-branch-path-v1".to_string(),
+                execution_readiness: Some(0.374),
+                execution_gate_status: Some("execution_blocked".to_string()),
+                ..WorkflowPhaseSnapshot::default()
+            }),
+            ..WorkflowSnapshot::default()
+        };
+
+        let value = build_workflow_status_phase_value_with_structural_prior_state_and_state_dir(
+            &snapshot,
+            &[],
+            &sample_provider_agent_surface(),
+            &feedback,
+            &StructuralPriorLearningState::default(),
+            Some(temp.path().to_str().unwrap()),
+            "execution-candidate",
+        )
+        .unwrap();
+
+        assert_eq!(value["source_phase"], "structural-recommended-path-bundle");
+        assert_eq!(value["path_id"], structural_refs.path_id);
+        assert_eq!(value["candidate_status"], "execution_ready");
+        assert_eq!(value["execution_gate_status"], "execution_ready");
+        assert_eq!(value["execution_tree_gate_status"], "ready");
+        assert_eq!(value["actionable"], true);
+        assert_eq!(value["ready"], true);
+        assert_eq!(value["execution_readiness"], 0.67);
+    }
+
+    #[test]
+    fn agent_current_regime_posterior_reconciles_ready_structural_candidate_gate() {
+        let temp = tempfile::tempdir().unwrap();
+        let feedback = sample_structural_feedback_history();
+        let structural_refs = feedback[0].structural_feedback.clone().unwrap();
+        let symbol_dir = temp.path().join("NQ");
+        std::fs::create_dir_all(&symbol_dir).unwrap();
+        std::fs::write(
+            symbol_dir.join("execution_tree_trace.json"),
+            serde_json::to_vec_pretty(&serde_json::json!({
+                "output": {
+                    "execution_readiness": 0.67,
+                    "gate_status": "ready",
+                    "branch": "fill_viable",
+                    "execution_bias": "aggressive",
+                    "path_ranker_score_visible_to_execution_tree": true,
+                    "path_ranker_score_used_by_execution_tree": true,
+                    "ranker_validation_ready": true,
+                    "hybrid_transition_hazard": 0.391,
+                    "pda_hybrid_alignment": true
+                },
+                "closed_loop_branch_admission": {
+                    "status": "admitted",
+                    "ready": true,
+                    "actionable": true,
+                    "candidate_status": "execution_ready",
+                    "execution_gate_status": "execution_ready",
+                    "execution_tree_gate_status": "ready",
+                    "execution_tree_branch": "fill_viable",
+                    "path_id": structural_refs.path_id,
+                    "path_label": structural_refs.path_id,
+                    "pre_bayes_gate_status": "pass_neutralized",
+                    "review_status": "promote_latest",
+                    "source_phase": "execution-tree-trace"
+                }
+            }))
+            .unwrap(),
+        )
+        .unwrap();
+        let snapshot = WorkflowSnapshot {
+            symbol: "NQ".to_string(),
+            latest_analyze: Some(WorkflowPhaseSnapshot {
+                phase: "analyze".to_string(),
+                run_id: "analyze:NQ:stale-pre-ranker".to_string(),
+                structural_feedback: Some(structural_refs.clone()),
+                pre_bayes_gate_status: "pass_neutralized".to_string(),
+                pre_bayes_policy_version: "structural-feedback-branch-path-v1".to_string(),
+                pre_bayes_filtered_assignments: std::collections::BTreeMap::from([(
+                    "market_regime".to_string(),
+                    "range".to_string(),
+                )]),
+                canonical_structural_active_regime: Some("range".to_string()),
+                canonical_structural_confidence: Some(0.61),
+                canonical_structural_probabilities: std::collections::BTreeMap::from([(
+                    "range".to_string(),
+                    0.61,
+                )]),
+                execution_readiness: Some(0.374),
+                execution_gate_status: Some("execution_blocked".to_string()),
+                ..WorkflowPhaseSnapshot::default()
+            }),
+            ..WorkflowSnapshot::default()
+        };
+
+        let value = build_agent_workflow_status_view_with_provider_agent_and_structural_prior_state_and_state_dir(
+            &snapshot,
+            &[],
+            &sample_provider_agent_surface(),
+            &feedback,
+            &StructuralPriorLearningState::default(),
+            Some(temp.path().to_str().unwrap()),
+        );
+
+        assert_eq!(
+            value["latest_structural_execution_candidate"]["execution_gate_status"],
+            "execution_ready"
+        );
+        assert_eq!(
+            value["current_regime_posterior"]["execution_gate_status"],
+            "execution_ready"
+        );
+        assert_eq!(value["current_regime_posterior"]["active_regime"], "range");
+    }
+
+    #[test]
+    fn execution_candidate_phase_keeps_duplicate_analyze_veto_over_same_root_trace_admission() {
+        let temp = tempfile::tempdir().unwrap();
+        let feedback = sample_structural_feedback_history();
+        let structural_refs = feedback[0].structural_feedback.clone().unwrap();
+        let symbol_dir = temp.path().join("NQ");
+        std::fs::create_dir_all(&symbol_dir).unwrap();
+        std::fs::write(
+            symbol_dir.join("execution_tree_trace.json"),
+            serde_json::to_vec_pretty(&serde_json::json!({
+                "output": {
+                    "execution_readiness": 0.67,
+                    "gate_status": "ready",
+                    "branch": "fill_viable",
+                    "hybrid_transition_hazard": 0.595,
+                    "pda_hybrid_alignment": true
+                },
+                "closed_loop_branch_admission": {
+                    "status": "admitted",
+                    "ready": true,
+                    "actionable": true,
+                    "candidate_status": "execution_ready",
+                    "execution_gate_status": "execution_ready",
+                    "execution_tree_gate_status": "ready",
+                    "execution_tree_branch": "fill_viable",
+                    "path_id": structural_refs.path_id,
+                    "path_label": structural_refs.path_id,
+                    "pre_bayes_gate_status": "pass_neutralized",
+                    "review_status": "promote_latest",
+                    "source_phase": "execution-tree-trace"
+                }
+            }))
+            .unwrap(),
+        )
+        .unwrap();
+        let snapshot = WorkflowSnapshot {
+            symbol: "NQ".to_string(),
+            latest_analyze: Some(WorkflowPhaseSnapshot {
+                phase: "analyze".to_string(),
+                run_id: "analyze:NQ:post-ranker".to_string(),
+                structural_feedback: Some(structural_refs.clone()),
+                pre_bayes_gate_status: "pass_neutralized".to_string(),
+                pre_bayes_policy_version: "structural-feedback-branch-path-v1".to_string(),
+                execution_readiness: Some(0.67),
+                execution_gate_status: Some("execution_ready".to_string()),
+                ..WorkflowPhaseSnapshot::default()
+            }),
+            latest_execution_candidate: Some(crate::state::ExecutionCandidateArtifactSummary {
+                artifact_id: "execution-candidate:NQ:analyze:v2".to_string(),
+                symbol: "NQ".to_string(),
+                source_phase: "analyze".to_string(),
+                path: symbol_dir
+                    .join("execution_candidate.json")
+                    .to_string_lossy()
+                    .to_string(),
+                trade_direction: "Bull".to_string(),
+                actionable: false,
+                candidate_status: "no_trade".to_string(),
+                review_status: "discard".to_string(),
+                review_reason: "duplicate_execution_candidate_context".to_string(),
+                pre_bayes_gate_status: "pass_neutralized".to_string(),
+                ..crate::state::ExecutionCandidateArtifactSummary::default()
+            }),
+            ..WorkflowSnapshot::default()
+        };
+
+        let value = build_workflow_status_phase_value_with_structural_prior_state_and_state_dir(
+            &snapshot,
+            &[],
+            &sample_provider_agent_surface(),
+            &feedback,
+            &StructuralPriorLearningState::default(),
+            Some(temp.path().to_str().unwrap()),
+            "execution-candidate",
+        )
+        .unwrap();
+
+        assert_eq!(value["source_phase"], "structural-recommended-path-bundle");
+        assert_eq!(value["path_id"], structural_refs.path_id);
+        assert_eq!(value["candidate_status"], "no_trade");
+        assert_eq!(value["execution_gate_status"], "no_trade");
+        assert_eq!(value["actionable"], false);
+        assert_eq!(value["ready"], false);
+        assert_eq!(value["review_status"], "discard");
+        assert_eq!(
+            value["review_reason"],
+            "duplicate_execution_candidate_context"
+        );
+        assert_eq!(
+            value["persisted_execution_candidate_veto"]["review_reason"],
+            "duplicate_execution_candidate_context"
+        );
+    }
+
+    #[test]
+    fn execution_candidate_phase_lets_same_root_trace_admission_supersede_duplicate_analyze_veto() {
+        let temp = tempfile::tempdir().unwrap();
+        let symbol_dir = temp.path().join("NQ");
+        let path_id = "RangeReversion -> CybersecuritySoftwareOversoldReclaim -> crwd_5m";
+        std::fs::create_dir_all(&symbol_dir).unwrap();
+        std::fs::write(
+            symbol_dir.join("execution_tree_trace.json"),
+            serde_json::to_vec_pretty(&serde_json::json!({
+                "output": {
+                    "execution_readiness": 0.67,
+                    "gate_status": "ready",
+                    "branch": "fill_viable",
+                    "hybrid_transition_hazard": 0.5950369253623637,
+                    "pda_hybrid_alignment": true,
+                    "path_ranker_score_visible_to_execution_tree": true,
+                    "path_ranker_score_used_by_execution_tree": true,
+                    "ranker_validation_ready": true
+                },
+                "closed_loop_branch_admission": {
+                    "status": "admitted",
+                    "ready": true,
+                    "actionable": true,
+                    "candidate_status": "execution_ready",
+                    "execution_gate_status": "execution_ready",
+                    "execution_tree_gate_status": "ready",
+                    "execution_tree_branch": "fill_viable",
+                    "path_id": path_id,
+                    "path_label": path_id,
+                    "pre_bayes_gate_status": "pass_neutralized",
+                    "review_status": "promote_latest",
+                    "source_phase": "execution-tree-trace"
+                }
+            }))
+            .unwrap(),
+        )
+        .unwrap();
+        let snapshot = WorkflowSnapshot {
+            symbol: "NQ".to_string(),
+            latest_execution_candidate: Some(crate::state::ExecutionCandidateArtifactSummary {
+                artifact_id: "execution-candidate:NQ:analyze:v2".to_string(),
+                symbol: "NQ".to_string(),
+                source_phase: "analyze".to_string(),
+                path: symbol_dir
+                    .join("execution_candidate.json")
+                    .to_string_lossy()
+                    .to_string(),
+                trade_direction: "Bull".to_string(),
+                actionable: false,
+                candidate_status: "no_trade".to_string(),
+                review_status: "discard".to_string(),
+                review_reason: "duplicate_execution_candidate_context".to_string(),
+                pre_bayes_gate_status: "pass_neutralized".to_string(),
+                ..crate::state::ExecutionCandidateArtifactSummary::default()
+            }),
+            ..WorkflowSnapshot::default()
+        };
+
+        let value = build_workflow_status_phase_value_with_structural_prior_state_and_state_dir(
+            &snapshot,
+            &[],
+            &sample_provider_agent_surface(),
+            &[],
+            &StructuralPriorLearningState::default(),
+            Some(temp.path().to_str().unwrap()),
+            "execution-candidate",
+        )
+        .unwrap();
+
+        assert_eq!(value["source_phase"], "execution-tree-trace");
+        assert_eq!(value["path_id"], path_id);
+        assert_eq!(value["candidate_status"], "execution_ready");
+        assert_eq!(value["execution_gate_status"], "execution_ready");
+        assert_eq!(value["actionable"], true);
+        assert_eq!(value["ready"], true);
+        assert_eq!(value["review_status"], "promote_latest");
+        assert_eq!(
+            value["review_reason"],
+            "same_root_execution_tree_trace_admitted_after_duplicate_analyze_veto"
+        );
+        assert_eq!(
+            value["persisted_execution_candidate_veto"]["review_reason"],
+            "duplicate_execution_candidate_context"
+        );
+        assert_eq!(value["persisted_execution_candidate_veto_overridden"], true);
+    }
+
+    #[test]
+    fn same_root_admission_supersedes_ready_duplicate_analyze_veto() {
+        let temp = tempfile::tempdir().unwrap();
+        let symbol = "CRWD";
+        let symbol_dir = temp.path().join(symbol);
+        let path_id = "RangeReversion -> AiSecuritySoftwareOversoldReclaim -> crwd_5m";
+        std::fs::create_dir_all(&symbol_dir).unwrap();
+        std::fs::write(
+            symbol_dir.join("execution_tree_trace.json"),
+            serde_json::to_vec_pretty(&serde_json::json!({
+                "output": {
+                    "execution_readiness": 0.67,
+                    "gate_status": "ready",
+                    "branch": "fill_viable"
+                },
+                "closed_loop_branch_admission": {
+                    "status": "admitted",
+                    "ready": true,
+                    "actionable": true,
+                    "candidate_status": "execution_ready",
+                    "execution_gate_status": "execution_ready",
+                    "execution_tree_gate_status": "ready",
+                    "execution_tree_branch": "fill_viable",
+                    "path_id": path_id,
+                    "path_label": path_id,
+                    "pre_bayes_gate_status": "pass_neutralized",
+                    "review_status": "promote_latest",
+                    "source_phase": "structural-recommended-path-bundle"
+                }
+            }))
+            .unwrap(),
+        )
+        .unwrap();
+        let mut candidate = serde_json::json!({
+            "source_phase": "structural-recommended-path-bundle",
+            "path_id": path_id,
+            "candidate_status": "execution_ready",
+            "actionable": false,
+            "ready": false,
+            "review_status": "discard",
+            "review_reason": "duplicate_execution_candidate_context",
+            "persisted_execution_candidate_veto": {
+                "source_phase": "analyze",
+                "candidate_status": "execution_ready",
+                "actionable": true,
+                "review_status": "discard",
+                "review_reason": "duplicate_execution_candidate_context"
+            }
+        });
+
+        apply_same_root_execution_tree_admission_to_structural_candidate(
+            &mut candidate,
+            Some(temp.path().to_str().unwrap()),
+            symbol,
+        );
+
+        assert_eq!(candidate["candidate_status"], "execution_ready");
+        assert_eq!(candidate["execution_gate_status"], "execution_ready");
+        assert_eq!(candidate["actionable"], true);
+        assert_eq!(candidate["ready"], true);
+        assert_eq!(candidate["review_status"], "promote_latest");
+        assert_eq!(
+            candidate["review_reason"],
+            "same_root_execution_tree_trace_admitted_after_ready_duplicate_analyze_veto"
+        );
+        assert_eq!(
+            candidate["persisted_execution_candidate_veto_overridden"],
+            true
+        );
+    }
+
+    #[test]
+    fn same_root_trace_admission_supersedes_candidate_not_actionable_analyze_veto() {
+        let temp = tempfile::tempdir().unwrap();
+        let symbol = "CRWD";
+        let symbol_dir = temp.path().join(symbol);
+        let path_id = "RangeReversion -> AiSecuritySoftwareOversoldReclaim -> crwd_5m";
+        std::fs::create_dir_all(&symbol_dir).unwrap();
+        std::fs::write(
+            symbol_dir.join("execution_tree_trace.json"),
+            serde_json::to_vec_pretty(&serde_json::json!({
+                "output": {
+                    "execution_readiness": 0.67,
+                    "gate_status": "ready",
+                    "branch": "fill_viable",
+                    "hybrid_transition_hazard": 0.32202066011589836,
+                    "pda_hybrid_alignment": true,
+                    "path_ranker_score_visible_to_execution_tree": true,
+                    "path_ranker_score_used_by_execution_tree": true,
+                    "ranker_validation_ready": true
+                },
+                "closed_loop_branch_admission": {
+                    "status": "admitted",
+                    "ready": true,
+                    "actionable": true,
+                    "candidate_status": "execution_ready",
+                    "execution_gate_status": "execution_ready",
+                    "execution_tree_gate_status": "ready",
+                    "execution_tree_branch": "fill_viable",
+                    "path_id": path_id,
+                    "path_label": path_id,
+                    "pre_bayes_gate_status": "pass_neutralized",
+                    "review_status": "promote_latest",
+                    "source_phase": "structural-recommended-path-bundle"
+                }
+            }))
+            .unwrap(),
+        )
+        .unwrap();
+        let mut candidate = serde_json::json!({
+            "source_phase": "structural-recommended-path-bundle",
+            "path_id": path_id,
+            "candidate_status": "no_trade",
+            "execution_gate_status": "no_trade",
+            "actionable": false,
+            "ready": false,
+            "review_status": "observe",
+            "review_reason": "candidate_not_actionable",
+            "persisted_execution_candidate_veto": {
+                "source_phase": "analyze",
+                "candidate_status": "no_trade",
+                "actionable": false,
+                "review_status": "observe",
+                "review_reason": "candidate_not_actionable"
+            }
+        });
+
+        apply_same_root_execution_tree_admission_to_structural_candidate(
+            &mut candidate,
+            Some(temp.path().to_str().unwrap()),
+            symbol,
+        );
+
+        assert_eq!(candidate["candidate_status"], "execution_ready");
+        assert_eq!(candidate["execution_gate_status"], "execution_ready");
+        assert_eq!(candidate["actionable"], true);
+        assert_eq!(candidate["ready"], true);
+        assert_eq!(candidate["review_status"], "promote_latest");
+        assert_eq!(
+            candidate["review_reason"],
+            "same_root_execution_tree_trace_admitted_after_candidate_not_actionable_veto"
+        );
+        assert_eq!(
+            candidate["persisted_execution_candidate_veto_overridden"],
+            true
+        );
+    }
+
+    #[test]
     fn full_json_status_surfaces_structural_branch_admission_fail_closed_reason() {
         let feedback = sample_structural_feedback_history();
         let structural_refs = feedback[0].structural_feedback.clone().unwrap();
@@ -6215,6 +7106,61 @@ mod tests {
         );
         assert_eq!(value["closed_loop_branch_admission"]["ready"], false);
         assert_eq!(value["closed_loop_branch_admission"]["actionable"], false);
+    }
+
+    #[test]
+    fn full_json_status_admits_structural_branch_when_neutralized_pre_bayes_and_execution_ready() {
+        let feedback = sample_structural_feedback_history();
+        let structural_refs = feedback[0].structural_feedback.clone().unwrap();
+        let snapshot = WorkflowSnapshot {
+            symbol: "NQ".to_string(),
+            latest_update: Some(WorkflowPhaseSnapshot {
+                phase: "update".to_string(),
+                run_id: "update:NQ:branch".to_string(),
+                structural_feedback: Some(structural_refs.clone()),
+                pre_bayes_gate_status: "pass_neutralized".to_string(),
+                pre_bayes_policy_version: "structural-feedback-branch-path-v1".to_string(),
+                execution_readiness: Some(0.67),
+                execution_gate_status: Some("execution_ready".to_string()),
+                ..WorkflowPhaseSnapshot::default()
+            }),
+            ..WorkflowSnapshot::default()
+        };
+
+        let value = build_full_workflow_status_json_value(
+            &snapshot,
+            &sample_provider_agent_surface(),
+            &feedback,
+            &StructuralPriorLearningState::default(),
+            None,
+        )
+        .unwrap();
+
+        assert_eq!(
+            value["latest_structural_execution_candidate"]["path_id"],
+            structural_refs.path_id
+        );
+        assert_eq!(
+            value["latest_structural_execution_candidate"]["pre_bayes_gate_status"],
+            "pass_neutralized"
+        );
+        assert_eq!(
+            value["latest_structural_execution_candidate"]["execution_gate_status"],
+            "execution_ready"
+        );
+        assert_eq!(
+            value["latest_structural_execution_candidate"]["ready"],
+            true
+        );
+        assert_eq!(
+            value["latest_structural_execution_candidate"]["actionable"],
+            true
+        );
+        assert_eq!(value["closed_loop_branch_admission"]["status"], "admitted");
+        assert_eq!(
+            value["closed_loop_branch_admission"]["reason"],
+            "exact_structural_branch_ready_and_actionable"
+        );
     }
 
     #[test]

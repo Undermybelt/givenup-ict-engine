@@ -14,9 +14,55 @@ pub struct ValidateMarketStateInput {
     pub step_size: usize,
     pub verbose: bool,
     pub compact: bool,
+    pub output_format: String,
+    pub agent: bool,
+    pub human: bool,
     pub enhanced: bool,
     pub config_path: Option<String>,
     pub profile: Option<String>,
+}
+
+#[derive(Debug)]
+enum ValidateMarketStateOutputMode {
+    Human,
+    Compact,
+}
+
+impl ValidateMarketStateInput {
+    fn resolved_output_mode(&self) -> Result<ValidateMarketStateOutputMode> {
+        let alias_count = self.compact as u8 + self.agent as u8 + self.human as u8;
+        if alias_count > 1 {
+            anyhow::bail!("choose at most one of --compact, --agent, or --human");
+        }
+        if alias_count == 1 && !self.output_format.trim().is_empty() {
+            anyhow::bail!("do not combine --output-format with --compact/--agent/--human");
+        }
+        if self.agent {
+            return unsupported_structured_output();
+        }
+        if self.compact {
+            return Ok(ValidateMarketStateOutputMode::Compact);
+        }
+        if self.human {
+            return Ok(ValidateMarketStateOutputMode::Human);
+        }
+
+        match self.output_format.trim().to_ascii_lowercase().as_str() {
+            "" | "human" => Ok(ValidateMarketStateOutputMode::Human),
+            "compact" => Ok(ValidateMarketStateOutputMode::Compact),
+            "json" | "agent" => unsupported_structured_output(),
+            other => anyhow::bail!(
+                "unsupported output format '{}'; expected human or compact",
+                other
+            ),
+        }
+    }
+}
+
+fn unsupported_structured_output<T>() -> Result<T> {
+    anyhow::bail!(
+        "validate-market-state does not yet support structured json/agent output; use --human or --compact, or add a stable validation-result schema before enabling automation output"
+    )
 }
 
 pub fn validate_market_state_shell(input: ValidateMarketStateInput) -> Result<()> {
@@ -82,7 +128,7 @@ pub fn validate_market_state_shell(input: ValidateMarketStateInput) -> Result<()
     let validator = MarketStateValidator::with_classifier(classifier, config);
 
     let result = validator.validate(&candles);
-    let output = format_validate_market_state_output(&input, candles.len(), &result, &validator);
+    let output = format_validate_market_state_output(&input, candles.len(), &result, &validator)?;
     print!("{}", output);
 
     Ok(())
@@ -93,9 +139,12 @@ fn format_validate_market_state_output(
     candle_count: usize,
     result: &ValidationResult,
     validator: &MarketStateValidator,
-) -> String {
-    if input.compact {
-        return format!("{}\n", validator.generate_compact_report(result));
+) -> Result<String> {
+    match input.resolved_output_mode()? {
+        ValidateMarketStateOutputMode::Compact => {
+            return Ok(format!("{}\n", validator.generate_compact_report(result)));
+        }
+        ValidateMarketStateOutputMode::Human => {}
     }
 
     let mut output = String::new();
@@ -112,7 +161,7 @@ fn format_validate_market_state_output(
         input.window_size, input.step_size, result.total_samples
     ));
     output.push_str(&validator.generate_report(result));
-    output
+    Ok(output)
 }
 
 #[cfg(test)]
@@ -153,6 +202,9 @@ mod tests {
             step_size: 50,
             verbose: false,
             compact,
+            output_format: "".to_string(),
+            agent: false,
+            human: false,
             enhanced: true,
             config_path: None,
             profile: None,
@@ -160,11 +212,29 @@ mod tests {
     }
 
     #[test]
+    fn json_and_agent_output_are_clear_unsupported_exceptions() {
+        let mut input = sample_input(false);
+        input.output_format = "json".to_string();
+        let error = input.resolved_output_mode().unwrap_err();
+        assert!(error
+            .to_string()
+            .contains("does not yet support structured json"));
+
+        let mut agent_input = sample_input(false);
+        agent_input.agent = true;
+        let error = agent_input.resolved_output_mode().unwrap_err();
+        assert!(error
+            .to_string()
+            .contains("does not yet support structured json"));
+    }
+
+    #[test]
     fn compact_output_is_thin() {
         let input = sample_input(true);
         let validator = MarketStateValidator::new();
         let rendered =
-            format_validate_market_state_output(&input, 2000, &sample_result(), &validator);
+            format_validate_market_state_output(&input, 2000, &sample_result(), &validator)
+                .unwrap();
 
         assert!(rendered.contains("samples=20"));
         assert!(rendered.contains("avg_confidence=71.23%"));
@@ -177,7 +247,8 @@ mod tests {
         let input = sample_input(false);
         let validator = MarketStateValidator::new();
         let rendered =
-            format_validate_market_state_output(&input, 2000, &sample_result(), &validator);
+            format_validate_market_state_output(&input, 2000, &sample_result(), &validator)
+                .unwrap();
 
         assert!(rendered.contains("Window: 200 | Step: 50 | Samples: 20"));
         assert!(rendered.contains("Loading data from: candles.json"));

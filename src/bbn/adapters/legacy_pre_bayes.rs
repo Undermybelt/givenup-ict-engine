@@ -9,7 +9,10 @@ use crate::domain::regime::{
     RegimeSegmentationPacket,
 };
 use crate::domain::strategy::StrategyRecommendation;
-use crate::pda_sequence::{summarize_pda_sequence_artifact, PdaSequenceAnalysisArtifact};
+use crate::pda_sequence::{
+    ordered_second_expansion_h1_h0_support, summarize_pda_sequence_artifact,
+    PdaSequenceAnalysisArtifact,
+};
 use crate::state::{FactorPipelineLabelSource, PreBayesEvidenceFilter, PreBayesEvidencePacket};
 
 fn market_category(market: Option<&str>) -> Option<String> {
@@ -46,6 +49,118 @@ fn packet_market_behavior_profile(packet: &BeliefEvidencePacket) -> Option<Strin
         .iter()
         .find_map(|line| line.strip_prefix("market_behavior_profile="))
         .map(str::to_string)
+}
+
+fn trend_direction_label(packet: &BeliefEvidencePacket) -> Option<&'static str> {
+    match packet
+        .regime_features
+        .market_regime_label
+        .as_deref()
+        .unwrap_or_default()
+    {
+        "bull" => Some("bull"),
+        "bear" => Some("bear"),
+        _ => {
+            let bull = packet
+                .soft_market_regime_distribution
+                .get("bull")
+                .copied()
+                .unwrap_or(0.0);
+            let bear = packet
+                .soft_market_regime_distribution
+                .get("bear")
+                .copied()
+                .unwrap_or(0.0);
+            if bull > 0.0 || bear > 0.0 {
+                Some(if bull >= bear { "bull" } else { "bear" })
+            } else {
+                None
+            }
+        }
+    }
+}
+
+fn normalize_distribution(distribution: &mut BTreeMap<String, f64>) {
+    let sum: f64 = distribution.values().sum();
+    if sum <= f64::EPSILON {
+        return;
+    }
+    for value in distribution.values_mut() {
+        *value = (*value / sum).clamp(0.0, 1.0);
+    }
+}
+
+fn apply_pda_sequence_h1_h0_soft_evidence(
+    packet: &mut BeliefEvidencePacket,
+    family: Option<&str>,
+    consistency_ratio: f64,
+    ensemble_mean_confidence: f64,
+    valid_sessions: usize,
+    total_sessions: usize,
+) {
+    let (h1_second_expansion, h0_no_second_expansion) = ordered_second_expansion_h1_h0_support(
+        family,
+        consistency_ratio,
+        ensemble_mean_confidence,
+        valid_sessions,
+        total_sessions,
+    );
+
+    packet.uses_soft_evidence = true;
+    packet.timed_pda_summary.insert(
+        "pda_sequence_evidence_mode".to_string(),
+        "ordered_footprint_h1_h0_soft_evidence".to_string(),
+    );
+    packet.timed_pda_summary.insert(
+        "pda_sequence_h1_second_expansion_support".to_string(),
+        format!("{h1_second_expansion:.4}"),
+    );
+    packet.timed_pda_summary.insert(
+        "pda_sequence_h0_no_second_expansion_support".to_string(),
+        format!("{h0_no_second_expansion:.4}"),
+    );
+    packet
+        .soft_factor_alignment_distribution
+        .insert("h1_second_expansion".to_string(), h1_second_expansion);
+    packet
+        .soft_factor_alignment_distribution
+        .insert("h0_no_second_expansion".to_string(), h0_no_second_expansion);
+    normalize_distribution(&mut packet.soft_factor_alignment_distribution);
+
+    match family {
+        Some("trend") if h1_second_expansion > 0.5 => {
+            if let Some(direction) = trend_direction_label(packet) {
+                packet
+                    .soft_market_regime_distribution
+                    .insert(direction.to_string(), h1_second_expansion);
+                packet
+                    .soft_market_regime_distribution
+                    .entry("range".to_string())
+                    .or_insert(h0_no_second_expansion);
+                normalize_distribution(&mut packet.soft_market_regime_distribution);
+            }
+        }
+        Some("range") if h0_no_second_expansion > 0.5 => {
+            packet
+                .soft_market_regime_distribution
+                .insert("range".to_string(), h0_no_second_expansion);
+            if let Some(direction) = trend_direction_label(packet) {
+                packet
+                    .soft_market_regime_distribution
+                    .entry(direction.to_string())
+                    .or_insert(h1_second_expansion);
+            }
+            normalize_distribution(&mut packet.soft_market_regime_distribution);
+        }
+        _ => {}
+    }
+
+    packet.factor_evidence.push(format!(
+        "pda_sequence_h1_second_expansion_support={h1_second_expansion:.4}"
+    ));
+    packet.factor_evidence.push(format!(
+        "pda_sequence_h0_no_second_expansion_support={h0_no_second_expansion:.4}"
+    ));
 }
 
 pub fn belief_evidence_packet_from_pre_bayes_filter(
@@ -231,6 +346,15 @@ pub fn apply_pda_sequence_artifact_to_belief_packet(
             "pda_sequence_primary_cluster_confidence={confidence:.4}"
         ));
     }
+    if let Some(family) = summary.primary_cluster_family.clone() {
+        packet.timed_pda_summary.insert(
+            "pda_sequence_primary_cluster_family".to_string(),
+            family.clone(),
+        );
+        packet
+            .factor_evidence
+            .push(format!("pda_sequence_primary_cluster_family={family}"));
+    }
     packet.factor_evidence.push(format!(
         "pda_sequence_consistency_ratio={:.4}",
         summary.consistency_ratio
@@ -239,6 +363,14 @@ pub fn apply_pda_sequence_artifact_to_belief_packet(
         "pda_sequence_ensemble_mean_confidence={:.4}",
         summary.ensemble_mean_confidence
     ));
+    apply_pda_sequence_h1_h0_soft_evidence(
+        packet,
+        summary.primary_cluster_family.as_deref(),
+        summary.consistency_ratio,
+        summary.ensemble_mean_confidence,
+        summary.valid_sessions,
+        artifact.total_sessions,
+    );
 
     let latest_packet = artifact.ensemble_packets.last();
     let regime_membership = latest_packet
@@ -400,7 +532,14 @@ pub fn regime_posterior_from_belief_packet(packet: &BeliefEvidencePacket) -> Reg
                 .stress_score
                 .unwrap_or(0.5)
                 .clamp(0.0, 1.0),
-        uses_soft_evidence: false,
+        uses_soft_evidence: packet.uses_soft_evidence,
+        soft_market_regime_distribution: packet.soft_market_regime_distribution.clone(),
+        soft_liquidity_context_distribution: packet.soft_liquidity_context_distribution.clone(),
+        soft_factor_alignment_distribution: packet.soft_factor_alignment_distribution.clone(),
+        soft_factor_uncertainty_distribution: packet.soft_factor_uncertainty_distribution.clone(),
+        soft_multi_timeframe_resonance_distribution: packet
+            .soft_multi_timeframe_resonance_distribution
+            .clone(),
         rationale: packet.factor_evidence.clone(),
         ..PreBayesEvidenceFilter::default()
     });
@@ -769,5 +908,95 @@ mod tests {
         assert!(segmentation
             .feature_attribution
             .contains_key("ensemble_mean_confidence"));
+    }
+
+    #[test]
+    fn pda_sequence_artifact_adds_graded_h1_h0_soft_evidence_not_only_cluster_labels() {
+        let mut packet = BeliefEvidencePacket {
+            regime_features: RegimeFeatures {
+                market_regime_label: Some("bull".to_string()),
+                liquidity_regime_label: Some("favorable".to_string()),
+                stress_score: Some(0.20),
+                ..RegimeFeatures::default()
+            },
+            multi_timeframe_evidence: BTreeMap::from([(
+                "filtered_resonance_label".to_string(),
+                "aligned".to_string(),
+            )]),
+            ..BeliefEvidencePacket::default()
+        };
+        let artifact = PdaSequenceAnalysisArtifact {
+            artifact_id: "pda-sequence-NQ-second-expansion".to_string(),
+            generated_at: chrono::Utc::now(),
+            symbol: "NQ".to_string(),
+            method: "pda_sequence_analysis_v2".to_string(),
+            k: 2,
+            n_states: 3,
+            kmer_k: 2,
+            total_sessions: 3,
+            valid_sessions: 3,
+            silhouette_score: 0.4,
+            consistency_ratio: 0.80,
+            ensemble_mean_confidence: 0.90,
+            dtw_packets: vec![crate::pda_sequence::PdaDtwClusterPacket {
+                method: "dtw_kmedoids_v1".to_string(),
+                regime_cluster: 1,
+                cluster_name: "cluster_1::structure_break->fair_value_gap->order_block".to_string(),
+                dtw_distance_to_medoid: 0.0,
+                dtw_alignment_path: vec![(0, 0), (1, 1), (2, 2)],
+                medoid_pda_sequence: vec![
+                    crate::pda_sequence::PdaToken::new(
+                        crate::pda_sequence::PdaTokenKind::StructureBreak,
+                        0,
+                    ),
+                    crate::pda_sequence::PdaToken::new(
+                        crate::pda_sequence::PdaTokenKind::FairValueGap,
+                        1,
+                    ),
+                    crate::pda_sequence::PdaToken::new(
+                        crate::pda_sequence::PdaTokenKind::OrderBlock,
+                        2,
+                    ),
+                ],
+                cluster_size: 3,
+                silhouette_score: 0.4,
+            }],
+            hmm_classifications: Vec::new(),
+            fcgr_labels: vec![1, 1, 1],
+            ensemble_packets: vec![crate::pda_sequence::PdaClusteringPacket {
+                method: "pda_ensemble_majority_v1".to_string(),
+                primary_cluster: 1,
+                confidence: 1.0,
+                vote_distribution: vec![0, 3],
+                votes: [1, 1, 1],
+                voter_names: ["dtw".to_string(), "hmm".to_string(), "fcgr".to_string()],
+            }],
+            provenance: crate::state::RunProvenance::default(),
+        };
+
+        apply_pda_sequence_artifact_to_belief_packet(&mut packet, &artifact);
+        let posterior = regime_posterior_from_belief_packet(&packet);
+
+        assert!(packet.uses_soft_evidence);
+        assert_eq!(
+            packet
+                .timed_pda_summary
+                .get("pda_sequence_evidence_mode")
+                .map(String::as_str),
+            Some("ordered_footprint_h1_h0_soft_evidence")
+        );
+        assert!(
+            packet
+                .soft_factor_alignment_distribution
+                .get("h1_second_expansion")
+                .copied()
+                .unwrap_or(0.0)
+                > packet
+                    .soft_factor_alignment_distribution
+                    .get("h0_no_second_expansion")
+                    .copied()
+                    .unwrap_or(1.0)
+        );
+        assert!(posterior.probabilities.get("trend").copied().unwrap_or(0.0) > 0.70);
     }
 }

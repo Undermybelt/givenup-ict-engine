@@ -15,6 +15,14 @@ pub fn auto_quant_bootstrap(
     tracked_branch: Option<&str>,
 ) -> Result<AutoQuantDependencyStatus> {
     let mut config = ensure_bootstrapped_config(state_dir, repo_url, tracked_branch);
+    if let Some(repo_url) = repo_url {
+        if is_missing_local_repo_url(repo_url) {
+            bail!(
+                "auto_quant_bootstrap_repo_missing repo-url={} expected=existing local git repository or reachable Auto-Quant git URL recovery=pass an existing local Auto-Quant checkout with --repo-url or omit --repo-url to use the default upstream",
+                repo_url
+            );
+        }
+    }
     let managed_dir = PathBuf::from(&config.managed_dir);
     if managed_dir.exists() {
         if !is_git_repo(&managed_dir) {
@@ -45,6 +53,11 @@ pub fn auto_quant_bootstrap(
     config.last_sync = Some(Utc::now());
     save_config(state_dir, &config)?;
     auto_quant_status(state_dir)
+}
+
+fn is_missing_local_repo_url(repo_url: &str) -> bool {
+    let looks_remote = repo_url.contains("://") || repo_url.starts_with("git@");
+    !looks_remote && !PathBuf::from(repo_url).exists()
 }
 
 pub fn auto_quant_update(

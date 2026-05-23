@@ -1,5 +1,9 @@
 use super::*;
+use ict_engine::application::auto_quant::FuturesCostCatalog;
 use std::path::Path;
+
+pub(crate) const AUTO_QUANT_OUTPUT_DIR_ENV_VAR: &str = "ICT_ENGINE_AUTO_QUANT_OUTPUT_DIR";
+pub(crate) const DEFAULT_AUTO_QUANT_SUBDIR: &str = "auto-quant";
 
 /// Resolve the Auto-Quant output directory from the given state_dir.
 /// Auto-Quant artifacts are always isolated from the repo root:
@@ -23,14 +27,140 @@ fn aq_state_dir_with_custom(state_dir: &str, custom_output_dir: Option<&str>) ->
     resolve_auto_quant_output_dir(state_dir)
 }
 
+pub(crate) fn resolve_auto_quant_output_dir(state_dir: &str) -> String {
+    if let Ok(custom) = std::env::var(AUTO_QUANT_OUTPUT_DIR_ENV_VAR) {
+        if !custom.trim().is_empty() {
+            return custom;
+        }
+    }
+    format!("{}/{}", state_dir, DEFAULT_AUTO_QUANT_SUBDIR)
+}
+
 fn state_dir_has_auto_quant_workspace(state_dir: &Path) -> bool {
     state_dir.join("auto_quant_config.json").exists()
+        || state_dir.join("auto_quant_workspace_profile.json").exists()
         || state_dir.join(".deps").join("auto-quant").exists()
+        || state_dir_has_auto_quant_handoff(state_dir)
+}
+
+fn state_dir_has_auto_quant_handoff(state_dir: &Path) -> bool {
+    let Ok(entries) = std::fs::read_dir(state_dir) else {
+        return false;
+    };
+    entries.filter_map(Result::ok).any(|entry| {
+        let ledger_path = entry.path().join("artifact_ledger.json");
+        if !ledger_path.exists() {
+            return false;
+        }
+        std::fs::read_to_string(&ledger_path)
+            .map(|content| content.contains("auto_quant_handoff_candidate"))
+            .unwrap_or(false)
+    })
 }
 
 pub(crate) fn auto_quant_status_shell(state_dir: &str, output_format: &str) -> Result<()> {
     let aq_dir = aq_state_dir(state_dir);
     auto_quant_status_command(&aq_dir, output_format)
+}
+
+pub(crate) fn auto_quant_futures_cost_shell(
+    symbol: &str,
+    price: f64,
+    profile_path: Option<&str>,
+    output_format: &str,
+) -> Result<()> {
+    let mut catalog = FuturesCostCatalog::default();
+    if let Some(path) = profile_path
+        .map(str::trim)
+        .filter(|value| !value.is_empty())
+    {
+        let json = std::fs::read_to_string(path)
+            .with_context(|| format!("reading futures cost profile override '{}'", path))?;
+        catalog = catalog.with_json_overrides(&json)?;
+    }
+    let profile = catalog.profile_for(symbol).ok_or_else(|| {
+        anyhow!(
+            "unknown futures cost profile: {}",
+            futures_root_for_error(symbol)
+        )
+    })?;
+    let round_trip_cost_pct = profile.round_trip_cost_percent(price)?;
+    let report = serde_json::json!({
+        "command": "auto-quant-futures-cost",
+        "symbol": profile.root_symbol,
+        "input_symbol": symbol,
+        "profile_id": profile.profile_id,
+        "exchange": profile.exchange,
+        "representative_price": price,
+        "tick_size": profile.tick_size,
+        "tick_value": profile.tick_value,
+        "point_value": profile.point_value(),
+        "round_trip_cost_points": profile.round_trip_cost_points(),
+        "round_trip_cost_pct": round_trip_cost_pct,
+        "commission_per_contract_side": profile.commission_per_contract_side,
+        "exchange_fees_per_contract_side": profile.exchange_fees_per_contract_side,
+        "regulatory_fees_per_contract_side": profile.regulatory_fees_per_contract_side,
+        "assumed_spread_ticks": profile.assumed_spread_ticks,
+        "assumed_slippage_ticks_per_side": profile.assumed_slippage_ticks_per_side,
+        "source": profile.source,
+        "notes": profile.notes,
+        "gate_note": "fixed_bps_is_diagnostic_only; futures_gate_uses_instrument_cost_profile",
+        "override": profile_path.is_some(),
+    });
+    match output_format {
+        "json" => println!("{}", serde_json::to_string_pretty(&report)?),
+        "compact" => println!(
+            "symbol={} profile={} price={} round_trip_cost_pct={:.6} round_trip_cost_points={:.6} spread_ticks={} slippage_ticks_side={} source={} fixed_bps_is_diagnostic_only",
+            profile.root_symbol,
+            profile.profile_id,
+            price,
+            round_trip_cost_pct,
+            profile.round_trip_cost_points(),
+            profile.assumed_spread_ticks,
+            profile.assumed_slippage_ticks_per_side,
+            profile.source,
+        ),
+        "human" => {
+            println!(
+                "Futures cost | {} | {}",
+                profile.root_symbol, profile.profile_id
+            );
+            println!("Exchange: {}", profile.exchange);
+            println!(
+                "Tick: size={} value={} point_value={}",
+                profile.tick_size,
+                profile.tick_value,
+                profile.point_value()
+            );
+            println!(
+                "Round trip: {:.6}% ({:.6} points)",
+                round_trip_cost_pct,
+                profile.round_trip_cost_points()
+            );
+            println!(
+                "Assumptions: commission_side={} exchange_fees_side={} regulatory_side={} spread_ticks={} slippage_ticks_side={}",
+                profile.commission_per_contract_side,
+                profile.exchange_fees_per_contract_side,
+                profile.regulatory_fees_per_contract_side,
+                profile.assumed_spread_ticks,
+                profile.assumed_slippage_ticks_per_side
+            );
+            println!(
+                "Gate: fixed_bps_is_diagnostic_only; use instrument profile or hotplug override for futures."
+            );
+        }
+        other => bail!("unsupported auto-quant-futures-cost output format '{}'", other),
+    }
+    Ok(())
+}
+
+fn futures_root_for_error(symbol: &str) -> String {
+    symbol
+        .trim()
+        .chars()
+        .take_while(|ch| ch.is_ascii_alphabetic())
+        .collect::<String>()
+        .to_ascii_uppercase()
 }
 
 pub(crate) fn auto_quant_bootstrap_shell(
@@ -64,9 +194,19 @@ pub(crate) fn auto_quant_adoption_review_shell(
     symbol: &str,
     state_dir: &str,
     artifact_id: Option<&str>,
+    output_format: &str,
 ) -> Result<()> {
     let aq_dir = aq_state_dir(state_dir);
-    auto_quant_adoption_review_command(symbol, &aq_dir, artifact_id)
+    match auto_quant_adoption_review_command(symbol, &aq_dir, artifact_id, output_format) {
+        Ok(()) => Ok(()),
+        Err(error)
+            if aq_dir != state_dir
+                && error.to_string().contains("no auto-quant handoff artifact") =>
+        {
+            auto_quant_adoption_review_command(symbol, state_dir, artifact_id, output_format)
+        }
+        Err(error) => Err(error),
+    }
 }
 
 pub(crate) fn auto_quant_adoption_decision_shell(
@@ -78,14 +218,33 @@ pub(crate) fn auto_quant_adoption_decision_shell(
     requested_by: &str,
 ) -> Result<()> {
     let aq_dir = aq_state_dir(state_dir);
-    auto_quant_adoption_decision_command(
+    match auto_quant_adoption_decision_command(
         symbol,
         &aq_dir,
         artifact_id,
         decision,
         rationale,
         requested_by,
-    )
+    ) {
+        Ok(()) => Ok(()),
+        Err(error)
+            if aq_dir != state_dir
+                && (error.to_string().contains("no auto-quant handoff artifact")
+                    || error
+                        .to_string()
+                        .contains("auto_quant_adoption_handoff_missing")) =>
+        {
+            auto_quant_adoption_decision_command(
+                symbol,
+                state_dir,
+                artifact_id,
+                decision,
+                rationale,
+                requested_by,
+            )
+        }
+        Err(error) => Err(error),
+    }
 }
 
 pub(crate) fn auto_quant_seed_evidence_shell(
@@ -230,6 +389,34 @@ mod tests {
     }
 
     #[test]
+    fn aq_state_dir_uses_profile_state_without_extra_subdir() {
+        let temp = tempfile::tempdir().unwrap();
+        std::fs::write(temp.path().join("auto_quant_workspace_profile.json"), "{}").unwrap();
+
+        assert_eq!(
+            aq_state_dir_with_custom(temp.path().to_str().unwrap(), None),
+            temp.path().to_string_lossy()
+        );
+    }
+
+    #[test]
+    fn aq_state_dir_uses_symbol_handoff_state_without_extra_subdir() {
+        let temp = tempfile::tempdir().unwrap();
+        let symbol_dir = temp.path().join("M2K");
+        std::fs::create_dir_all(&symbol_dir).unwrap();
+        std::fs::write(
+            symbol_dir.join("artifact_ledger.json"),
+            r#"[{"artifact_kind":"auto_quant_handoff_candidate"}]"#,
+        )
+        .unwrap();
+
+        assert_eq!(
+            aq_state_dir_with_custom(temp.path().to_str().unwrap(), None),
+            temp.path().to_string_lossy()
+        );
+    }
+
+    #[test]
     fn aq_state_dir_keeps_isolated_subdir_for_fresh_state() {
         let temp = tempfile::tempdir().unwrap();
 
@@ -292,12 +479,6 @@ mod tests {
         })
         .unwrap();
 
-        ict_engine::application::entry_models::export_structural_path_ranking_target_command(
-            temp.path().to_str().unwrap(),
-            "NQ",
-        )
-        .unwrap();
-
         let target_jsonl = temp
             .path()
             .join("NQ")
@@ -307,6 +488,30 @@ mod tests {
         assert!(
             target_rows.contains(branch_path),
             "real-trade branch feedback must be visible to downstream structural target export"
+        );
+
+        let policy = ict_engine::application::entry_models::policy_training_status(
+            temp.path().to_str().unwrap(),
+            "NQ",
+            None,
+        )
+        .unwrap();
+        let real_trade_entry = policy
+            .providers
+            .iter()
+            .find(|provider| provider.provider_id == "auto_quant_real_trade_entry_v1")
+            .expect("real-trade feedback entry-model provider");
+        assert_eq!(real_trade_entry.matched_rows, 1);
+        assert!(
+            policy.structural_path_ranking_target.mature_rows >= 1,
+            "real-trade structural feedback must become mature path-ranker rows"
+        );
+        assert!(
+            policy
+                .structural_path_ranking_target
+                .rows_with_training_weight
+                >= 1,
+            "real-trade structural feedback must carry supervised training weight"
         );
     }
 }

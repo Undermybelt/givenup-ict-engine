@@ -6309,6 +6309,7 @@ fn family_decision_reason(
 fn factor_family(name: &str) -> &'static str {
     match name {
         "trend_momentum" => "trend_momentum",
+        "bayesian_markov_trend_detector" => "trend_momentum",
         "volatility_mean_reversion" => "volatility_mean_reversion",
         "structure_ict" => "structure_ict",
         "cross_market_smt" => "cross_market_smt",

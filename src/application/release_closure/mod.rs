@@ -6,6 +6,7 @@ use std::collections::{BTreeMap, BTreeSet};
 use crate::application::backtest::{
     pre_bayes_entry_quality_bridge_diff, pre_bayes_soft_evidence_diff,
 };
+use crate::application::output_foundation::print_redacted_json;
 use crate::config::shell_quote;
 use crate::state::{
     load_artifact_ledger, load_factor_autoresearch_attempts, load_factor_autoresearch_sessions,
@@ -102,7 +103,7 @@ pub fn workflow_next_step_view(command: &str, blocked_reason: Option<&str>) -> V
     }
 }
 
-pub fn research_verdict_command(symbol: &str, state_dir: &str) -> Result<()> {
+pub fn research_verdict_command(symbol: &str, state_dir: &str, output_format: &str) -> Result<()> {
     let sessions = load_factor_autoresearch_sessions(state_dir, symbol)?;
     let attempts = load_factor_autoresearch_attempts(state_dir, symbol)?;
     let research_runs: Vec<ResearchRunRecord> =
@@ -123,8 +124,21 @@ pub fn research_verdict_command(symbol: &str, state_dir: &str) -> Result<()> {
         &mutation_runs,
         &artifact_ledger,
     );
-    println!("{}", serde_json::to_string_pretty(&report)?);
-    Ok(())
+    match output_format.trim().to_ascii_lowercase().as_str() {
+        "json" | "compact" | "agent" => print_redacted_json(&report),
+        "human" => {
+            println!(
+                "Research verdict | symbol={} | stop_or_continue={} | bottleneck={} | next={} | contaminated={}",
+                symbol,
+                report.stop_or_continue,
+                report.current_bottleneck,
+                report.recommended_next_experiment,
+                report.comparison_contaminated
+            );
+            Ok(())
+        }
+        other => anyhow::bail!("unsupported research-verdict output format '{}'", other),
+    }
 }
 
 #[allow(clippy::too_many_arguments)]
@@ -441,6 +455,7 @@ pub fn evidence_quality_breakdown_command(
     symbol: &str,
     state_dir: &str,
     _refresh: bool,
+    output_format: &str,
 ) -> Result<()> {
     let snapshot = load_workflow_snapshot(state_dir, symbol)?;
     snapshot
@@ -453,8 +468,29 @@ pub fn evidence_quality_breakdown_command(
         .last()
         .ok_or_else(|| anyhow!("no latest analyze run found for '{}'", symbol))?;
     let report = build_evidence_quality_breakdown_report(symbol, state_dir, analyze_run);
-    println!("{}", serde_json::to_string_pretty(&report)?);
-    Ok(())
+    match output_format.trim().to_ascii_lowercase().as_str() {
+        "json" | "compact" | "agent" => print_redacted_json(&report),
+        "human" => {
+            println!(
+                "Evidence quality | symbol={} | status={} | score={:.3} | hard_pass_gap={:.3} | neutralized_gap={:.3} | soft_divergences={} | bridge_entry_quality={}",
+                symbol,
+                report.gating_status,
+                report.final_evidence_quality_score,
+                report.hard_pass_gap,
+                report.neutralized_gap,
+                report.soft_evidence_divergence_count,
+                report
+                    .bridge_selected_entry_quality
+                    .as_deref()
+                    .unwrap_or("unavailable")
+            );
+            Ok(())
+        }
+        other => anyhow::bail!(
+            "unsupported evidence-quality-breakdown output format '{}'",
+            other
+        ),
+    }
 }
 
 pub fn build_evidence_quality_breakdown_report(

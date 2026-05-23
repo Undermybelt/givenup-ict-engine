@@ -330,6 +330,16 @@ impl RegimeConsumerBundleAdapter {
                 format!("{score:.6}"),
             ));
         }
+        if let Some(direction) = self
+            .consumer_hints
+            .as_ref()
+            .and_then(|hints| hints.path_ranker_context.get("trade_direction"))
+            .and_then(Value::as_str)
+            .map(str::trim)
+            .filter(|value| !value.is_empty())
+        {
+            entries.push(("trade_direction".to_string(), direction.to_string()));
+        }
         entries.extend(self.user_vrp_nq_context_assignment_entries());
         entries
     }
@@ -411,6 +421,7 @@ impl RegimeConsumerBundleAdapter {
                     .as_ref()
                     .map(|decision| decision.label_set.clone())
             })
+            .map(canonicalize_regime_bbn_label_set)
             .unwrap_or_default();
         let transition_hazard = hint
             .and_then(|value| value.get("regime_transition_hazard"))
@@ -629,6 +640,7 @@ struct StrategyLibraryBranchContext {
     sub_regime: String,
     sub_sub_regime_or_profit_factor: String,
     profit_factor: String,
+    trade_direction: Option<String>,
     stable_profit_score: Option<f64>,
     quality_score: f64,
     strategy_name: String,
@@ -645,13 +657,6 @@ fn strategy_library_branch_context(
         .filter(|entry| matches!(entry.status_kind(), StrategyLibraryEntryStatus::Ok))
         .filter_map(strategy_library_entry_branch_context)
         .collect::<Vec<_>>();
-    let unique_branch_paths = contexts
-        .iter()
-        .map(|context| context.branch_path.as_str())
-        .collect::<BTreeSet<_>>();
-    if unique_branch_paths.len() != 1 {
-        return None;
-    }
     contexts.into_iter().max_by(|left, right| {
         strategy_library_branch_rank_key(left).cmp(&strategy_library_branch_rank_key(right))
     })
@@ -661,18 +666,19 @@ fn strategy_library_entry_branch_context(
     entry: &StrategyLibraryEntry,
 ) -> Option<StrategyLibraryBranchContext> {
     let metadata = &entry.metadata;
-    let branch_path = first_non_empty([
+    let raw_branch_path = first_non_empty([
         metadata.regime_profit_branch_path.as_str(),
         metadata.expected_regime.as_str(),
     ])?;
-    if !branch_path.contains(" -> ") {
+    if !raw_branch_path.contains(" -> ") {
         return None;
     }
-    let segments = branch_path_segments(branch_path);
+    let segments = regime_segments_for_assignment(raw_branch_path);
     if segments.len() < 4 {
         return None;
     }
     let profit_factor_fallback = segments[3..].join(" -> ");
+    let branch_path = segments.join(" -> ");
     let stable_profit_score = entry.validation_metrics.as_ref().and_then(|metrics| {
         if metrics.win_rate_pct > 0.0 {
             Some(metrics.win_rate_pct)
@@ -683,7 +689,7 @@ fn strategy_library_entry_branch_context(
         }
     });
     Some(StrategyLibraryBranchContext {
-        branch_path: branch_path.to_string(),
+        branch_path,
         main_regime: first_non_empty([
             metadata.main_regime.as_str(),
             segments.first().copied().unwrap_or_default(),
@@ -704,6 +710,7 @@ fn strategy_library_entry_branch_context(
             profit_factor_fallback.as_str(),
         ])?
         .to_string(),
+        trade_direction: normalized_strategy_trade_direction(metadata),
         stable_profit_score,
         quality_score: strategy_library_quality_score(entry.validation_metrics.as_ref()),
         strategy_name: entry.name.clone(),
@@ -790,6 +797,7 @@ fn strategy_library_branch_context_to_adapter(
                 "sub_regime": context.sub_regime,
                 "sub_sub_regime_or_profit_factor": context.sub_sub_regime_or_profit_factor,
                 "profit_factor": context.profit_factor,
+                "trade_direction": context.trade_direction,
                 "stable_profit_score": context.stable_profit_score
             }),
             user_vrp_nq_context: Value::Null,
@@ -799,6 +807,21 @@ fn strategy_library_branch_context_to_adapter(
             "source=auto_quant_strategy_library strategy={}",
             context.strategy_name
         )),
+    }
+}
+
+fn normalized_strategy_trade_direction(
+    metadata: &crate::application::auto_quant::results::StrategyLibraryMetadata,
+) -> Option<String> {
+    let raw = first_non_empty([
+        metadata.trade_direction.as_str(),
+        metadata.direction.as_str(),
+    ])?;
+    match raw.trim().to_ascii_lowercase().as_str() {
+        "bear" | "short" | "sell" => Some("Bear".to_string()),
+        "bull" | "long" | "buy" => Some("Bull".to_string()),
+        "neutral" | "observe" => Some("Neutral".to_string()),
+        _ => None,
     }
 }
 
@@ -922,10 +945,11 @@ fn regime_bundle_label_to_bbn_market_regime(label: &str) -> Option<&'static str>
 }
 
 fn regime_profit_branch_assignment_entries(branch_path: &str) -> Vec<(String, String)> {
-    let segments = branch_path_segments(branch_path);
+    let segments = regime_segments_for_assignment(branch_path);
+    let canonical_branch_path = segments.join(" -> ");
     let mut entries = vec![(
         "regime_profit_branch_path".to_string(),
-        branch_path.to_string(),
+        canonical_branch_path,
     )];
     if let Some(main) = segments.first() {
         entries.push(("parent_regime_root".to_string(), (*main).to_string()));
@@ -946,12 +970,55 @@ fn regime_profit_branch_assignment_entries(branch_path: &str) -> Vec<(String, St
     entries
 }
 
+fn canonicalize_regime_bbn_label_set(labels: Vec<String>) -> Vec<String> {
+    let mut seen = BTreeSet::new();
+    let mut canonical = Vec::new();
+    for label in labels {
+        let trimmed = label.trim();
+        if trimmed.is_empty() {
+            continue;
+        }
+        let normalized = if trimmed.contains(" -> ") {
+            let segments = regime_segments_for_assignment(trimmed);
+            segments.join(" -> ")
+        } else {
+            trimmed.to_string()
+        };
+        if seen.insert(normalized.clone()) {
+            canonical.push(normalized);
+        }
+    }
+    canonical
+}
+
 fn branch_path_segments(branch_path: &str) -> Vec<&str> {
     branch_path
         .split(" -> ")
         .map(str::trim)
         .filter(|segment| !segment.is_empty())
         .collect()
+}
+
+fn regime_segments_for_assignment(branch_path: &str) -> Vec<&str> {
+    let segments = branch_path_segments(branch_path);
+    if segments.len() >= 7 && looks_like_market_rooted_branch(&segments) {
+        return segments[4..].to_vec();
+    }
+    segments
+}
+
+fn looks_like_market_rooted_branch(segments: &[&str]) -> bool {
+    matches!(
+        segments.first().copied(),
+        Some("FUTURES")
+            | Some("FUTURES_LIKE")
+            | Some("US_EQ")
+            | Some("EQUITIES")
+            | Some("ETF")
+            | Some("CRYPTO")
+            | Some("FX")
+            | Some("OPTIONS")
+    )
 }
 
 fn market_regime_distribution(selected: &str, weight: f64) -> BTreeMap<String, f64> {
@@ -1032,6 +1099,8 @@ mod tests {
                     "sub_regime": "MarketStructureEvent",
                     "sub_sub_regime_or_profit_factor": "atr_cisd_direct_limit",
                     "profit_factor": "market_structure_event_classifier_atr_cisd_direct_limit_v1",
+                    "direction": "short",
+                    "trade_direction": "Bear",
                     "regime_profit_branch_path": "Transition -> MarketStructureEvent -> atr_cisd_direct_limit -> market_structure_event_classifier_atr_cisd_direct_limit_v1",
                     "promotion_allowed": false,
                     "trade_usable": false
@@ -1069,6 +1138,138 @@ mod tests {
             assignment_map.get("sub_regime"),
             Some(&"MarketStructureEvent".to_string())
         );
+        assert_eq!(
+            assignment_map.get("trade_direction"),
+            Some(&"Bear".to_string())
+        );
+    }
+
+    #[test]
+    fn market_rooted_branch_uses_canonical_branch_identity_for_bbn_assignments() {
+        let canonical_branch = "TrendExpansion -> OpeningVwapRvolReclaim -> ibkr_mnq_1h_opening_vwap_rvol_reclaim_exact_v1 -> pda_transition_light_guard_v1";
+        let manifest: StrategyLibraryManifest = serde_json::from_value(serde_json::json!({
+            "manifest_version": "1.0",
+            "strategies": [{
+                "name": "IbkrMnqPdaTransitionLightGuard",
+                "status": "ok",
+                "metadata": {
+                    "regime_profit_branch_path": "FUTURES -> equity_index -> MNQ -> 1h -> TrendExpansion -> OpeningVwapRvolReclaim -> ibkr_mnq_1h_opening_vwap_rvol_reclaim_exact_v1 -> pda_transition_light_guard_v1",
+                    "main_regime": "TrendExpansion",
+                    "sub_regime": "OpeningVwapRvolReclaim",
+                    "sub_sub_regime_or_profit_factor": "ibkr_mnq_1h_opening_vwap_rvol_reclaim_exact_v1",
+                    "profit_factor": "pda_transition_light_guard_v1",
+                    "promotion_allowed": false,
+                    "trade_usable": false
+                },
+                "validation_metrics": {
+                    "win_rate_pct": 72.7273,
+                    "total_profit_pct": 2.01
+                }
+            }]
+        }))
+        .unwrap();
+
+        let adapter =
+            RegimeConsumerBundleAdapter::from_strategy_library_manifest(&manifest).unwrap();
+        let assignment_map = adapter
+            .path_ranker_assignment_entries()
+            .into_iter()
+            .collect::<BTreeMap<_, _>>();
+
+        assert_eq!(
+            assignment_map.get("regime_profit_branch_path"),
+            Some(&canonical_branch.to_string())
+        );
+        assert_eq!(
+            assignment_map.get("parent_regime_root"),
+            Some(&"TrendExpansion".to_string())
+        );
+        assert_eq!(
+            assignment_map.get("main_regime"),
+            Some(&"TrendExpansion".to_string())
+        );
+        assert_eq!(
+            assignment_map.get("sub_regime"),
+            Some(&"OpeningVwapRvolReclaim".to_string())
+        );
+        assert_eq!(
+            assignment_map.get("sub_sub_regime_or_profit_factor"),
+            Some(&"ibkr_mnq_1h_opening_vwap_rvol_reclaim_exact_v1".to_string())
+        );
+        assert_eq!(
+            assignment_map.get("profit_factor"),
+            Some(&"pda_transition_light_guard_v1".to_string())
+        );
+    }
+
+    #[test]
+    fn us_equity_rooted_branch_uses_canonical_branch_identity_for_bbn_assignments() {
+        let canonical_branch = "RangeReversion -> AiSecuritySoftwareOversoldReclaim -> rsi_vwap_reclaim_dense -> yf_ai_security_software_rsi_vwap_reclaim_crwd_5m_v1 -> session_liquidity_transition_stability_v1 -> pda_mtf_soft_confirmation_v1";
+        let manifest: StrategyLibraryManifest = serde_json::from_value(serde_json::json!({
+            "manifest_version": "1.0",
+            "strategies": [{
+                "name": "YfAiSecurityCrwd5mPdaMtfSoftConfirmation",
+                "status": "ok",
+                "metadata": {
+                    "regime_profit_branch_path": "US_EQ -> single_stock -> CRWD -> 5m -> RangeReversion -> AiSecuritySoftwareOversoldReclaim -> rsi_vwap_reclaim_dense -> yf_ai_security_software_rsi_vwap_reclaim_crwd_5m_v1 -> session_liquidity_transition_stability_v1 -> pda_mtf_soft_confirmation_v1",
+                    "main_regime": "RangeReversion",
+                    "sub_regime": "AiSecuritySoftwareOversoldReclaim",
+                    "sub_sub_regime_or_profit_factor": "rsi_vwap_reclaim_dense",
+                    "profit_factor": "yf_ai_security_software_rsi_vwap_reclaim_crwd_5m_v1",
+                    "promotion_allowed": false,
+                    "trade_usable": false
+                },
+                "validation_metrics": {
+                    "win_rate_pct": 62.7907,
+                    "total_profit_pct": 5.81
+                }
+            }]
+        }))
+        .unwrap();
+
+        let adapter =
+            RegimeConsumerBundleAdapter::from_strategy_library_manifest(&manifest).unwrap();
+        let assignment_map = adapter
+            .path_ranker_assignment_entries()
+            .into_iter()
+            .collect::<BTreeMap<_, _>>();
+
+        assert_eq!(
+            assignment_map.get("regime_profit_branch_path"),
+            Some(&canonical_branch.to_string())
+        );
+        assert_eq!(
+            assignment_map.get("parent_regime_root"),
+            Some(&"RangeReversion".to_string())
+        );
+        assert_eq!(
+            assignment_map.get("main_regime"),
+            Some(&"RangeReversion".to_string())
+        );
+        assert_eq!(
+            assignment_map.get("sub_regime"),
+            Some(&"AiSecuritySoftwareOversoldReclaim".to_string())
+        );
+        assert_eq!(
+            assignment_map.get("sub_sub_regime_or_profit_factor"),
+            Some(&"rsi_vwap_reclaim_dense".to_string())
+        );
+        assert_eq!(
+            assignment_map.get("profit_factor"),
+            Some(&"yf_ai_security_software_rsi_vwap_reclaim_crwd_5m_v1 -> session_liquidity_transition_stability_v1 -> pda_mtf_soft_confirmation_v1".to_string())
+        );
+        let read_only = adapter.to_read_only_bbn_soft_evidence();
+        assert_eq!(
+            read_only.label_set,
+            vec![
+                "primary::RangeReversion".to_string(),
+                canonical_branch.to_string()
+            ]
+        );
+        assert!(!read_only
+            .label_set
+            .iter()
+            .any(|label| label.starts_with("US_EQ -> single_stock -> CRWD -> 5m ->")));
     }
 
     #[test]
@@ -1143,6 +1344,81 @@ mod tests {
             assignment_map.get("regime_bundle_stable_profit_score"),
             Some(&"0.338977".to_string())
         );
+    }
+
+    #[test]
+    fn strategy_library_branch_context_selects_best_profitable_branch_across_multiple_paths() {
+        let losing_branch =
+            "TrendExpansion -> MomentumPersistence -> macd_signal_pullback -> macd_signal_pullback_continuation_v1";
+        let winning_branch =
+            "TrendExpansion -> MomentumPersistence -> macd_zero_line_reclaim -> macd_zero_line_reclaim_long_v1";
+        let manifest: StrategyLibraryManifest = serde_json::from_value(serde_json::json!({
+            "manifest_version": "1.0",
+            "strategies": [
+                {
+                    "name": "MacdSignalPullbackLosing",
+                    "status": "ok",
+                    "metadata": {
+                        "main_regime": "TrendExpansion",
+                        "sub_regime": "MomentumPersistence",
+                        "sub_sub_regime_or_profit_factor": "macd_signal_pullback",
+                        "profit_factor": "macd_signal_pullback_continuation_v1",
+                        "regime_profit_branch_path": losing_branch,
+                        "promotion_allowed": false,
+                        "trade_usable": false
+                    },
+                    "validation_metrics": {
+                        "sharpe": -0.4972,
+                        "total_profit_pct": -2.36,
+                        "trade_count": 16,
+                        "win_rate_pct": 25.0,
+                        "profit_factor": 0.7424
+                    }
+                },
+                {
+                    "name": "MacdZeroLineIbkrSpy",
+                    "status": "ok",
+                    "metadata": {
+                        "main_regime": "TrendExpansion",
+                        "sub_regime": "MomentumPersistence",
+                        "sub_sub_regime_or_profit_factor": "macd_zero_line_reclaim",
+                        "profit_factor": "macd_zero_line_reclaim_long_v1",
+                        "regime_profit_branch_path": winning_branch,
+                        "promotion_allowed": false,
+                        "trade_usable": false
+                    },
+                    "validation_metrics": {
+                        "sharpe": 0.6358,
+                        "total_profit_pct": 3.15,
+                        "trade_count": 17,
+                        "win_rate_pct": 58.8235,
+                        "profit_factor": 1.20
+                    }
+                }
+            ]
+        }))
+        .unwrap();
+
+        let adapter =
+            RegimeConsumerBundleAdapter::from_strategy_library_manifest(&manifest).unwrap();
+        let assignment_map = adapter
+            .path_ranker_assignment_entries()
+            .into_iter()
+            .collect::<BTreeMap<_, _>>();
+
+        assert_eq!(
+            assignment_map.get("regime_profit_branch_path"),
+            Some(&winning_branch.to_string())
+        );
+        assert_eq!(
+            assignment_map.get("profit_factor"),
+            Some(&"macd_zero_line_reclaim_long_v1".to_string())
+        );
+        let read_only = adapter.to_read_only_bbn_soft_evidence();
+        assert!(read_only
+            .reasons
+            .iter()
+            .any(|reason| reason.contains("strategy_name=MacdZeroLineIbkrSpy")));
     }
 
     #[test]

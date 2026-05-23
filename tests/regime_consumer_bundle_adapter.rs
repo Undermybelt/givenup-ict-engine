@@ -187,6 +187,62 @@ fn single_branch_path_survives_pre_bayes_into_bbn_assignments() {
 }
 
 #[test]
+fn read_only_bbn_label_set_strips_market_provenance_prefix() {
+    let dir = tempfile::tempdir().unwrap();
+    let path = dir.path().join("regime_consumer_bundle.json");
+    let canonical_branch = "RangeReversion -> AiSecuritySoftwareOversoldReclaim -> rsi_vwap_reclaim_dense -> yf_ai_security_software_rsi_vwap_reclaim_crwd_5m_v1 -> session_liquidity_transition_stability_v1 -> pda_mtf_soft_confirmation_v1";
+    let market_prefixed_branch =
+        format!("US_EQ -> single_stock -> CRWD -> 5m -> {canonical_branch}");
+    fs::write(
+        &path,
+        json!({
+            "schema_version": "regime-consumer-bundle/v1",
+            "latest_decision": {
+                "decision_state": "single_label_95",
+                "trade_usable": true,
+                "final_label": "primary::RangeReversion",
+                "label_set": ["primary::RangeReversion", market_prefixed_branch],
+                "abstain_reasons": []
+            },
+            "consumer_hints": {
+                "execution_tree_hint": "accept_regime",
+                "bbn_evidence_hint": {
+                    "regime_decision_state": "single_label_95",
+                    "regime_trade_usable": true,
+                    "regime_label": "primary::RangeReversion",
+                    "regime_label_set": ["primary::RangeReversion", market_prefixed_branch],
+                    "regime_transition_hazard": 0.0,
+                    "regime_decision_reasons": ["branch_rc_spa_passed"]
+                },
+                "path_ranker_context": {
+                    "regime_profit_branch_path": market_prefixed_branch,
+                    "stable_profit_score": 85.7407
+                }
+            }
+        })
+        .to_string(),
+    )
+    .unwrap();
+
+    let adapter = RegimeConsumerBundleAdapter::load_optional(Some(&path), false).unwrap();
+    let mut filter = PreBayesEvidenceFilter::default();
+    for (key, value) in adapter.path_ranker_assignment_entries() {
+        filter.evidence_assignments.insert(key, value);
+    }
+    adapter.append_read_only_bbn_filter_diagnostics(&mut filter);
+
+    assert_eq!(
+        filter.evidence_assignments["regime_profit_branch_path"],
+        canonical_branch
+    );
+    let label_set = &filter.evidence_assignments["read_only_regime_bbn_label_set"];
+    assert!(label_set.contains("RangeReversion_->_AiSecuritySoftwareOversoldReclaim"));
+    assert!(!label_set.contains("US_EQ"));
+    assert!(!label_set.contains("single_stock"));
+    assert!(!label_set.contains("CRWD_->_5m"));
+}
+
+#[test]
 fn missing_bundle_non_strict_is_neutral_noop() {
     let dir = tempfile::tempdir().unwrap();
     let path = dir.path().join("missing.json");

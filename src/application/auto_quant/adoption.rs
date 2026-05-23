@@ -2,6 +2,7 @@ use anyhow::{anyhow, Result};
 use chrono::Utc;
 use serde::Serialize;
 use serde_json::Value;
+use std::path::Path;
 
 use crate::state::{
     append_artifact_ledger_entry, artifact_state_path, load_artifact_ledger, load_state,
@@ -14,6 +15,7 @@ use super::handoff::{
 };
 use super::readiness::auto_quant_readiness_from_status_and_data;
 use super::types::AutoQuantAdoptionDecisionArtifact;
+use super::workspace_profile::apply_handoff_workspace_profile;
 
 #[derive(Debug, Clone, Serialize)]
 pub struct AutoQuantAdoptionReview {
@@ -43,6 +45,10 @@ fn load_handoff_payload(
     symbol: &str,
     entry: &ArtifactLedgerEntry,
 ) -> Result<AutoQuantResearchHandoffPayload> {
+    if Path::new(&entry.path).exists() {
+        let content = std::fs::read_to_string(&entry.path)?;
+        return Ok(serde_json::from_str(&content)?);
+    }
     let filename = std::path::Path::new(&entry.path)
         .file_name()
         .and_then(|value| value.to_str())
@@ -50,42 +56,128 @@ fn load_handoff_payload(
     load_state(state_dir, symbol, filename)
 }
 
+fn find_handoff_entry(
+    state_dir: &str,
+    symbol: &str,
+    artifact_id: Option<&str>,
+) -> Result<ArtifactLedgerEntry> {
+    let symbol_ledger = load_artifact_ledger(state_dir, symbol)?;
+    if let Some(artifact_id) = artifact_id {
+        if let Some(entry) = symbol_ledger
+            .iter()
+            .rev()
+            .find(|entry| entry.artifact_id == artifact_id)
+        {
+            return Ok(entry.clone());
+        }
+    } else if let Some(entry) = symbol_ledger
+        .iter()
+        .rev()
+        .find(|entry| entry.artifact_kind == "auto_quant_handoff_candidate")
+    {
+        return Ok(entry.clone());
+    }
+
+    let mut fallback_entry = None;
+    let state_children = match std::fs::read_dir(state_dir) {
+        Ok(children) => children,
+        Err(err) if err.kind() == std::io::ErrorKind::NotFound => {
+            if let Some(artifact_id) = artifact_id {
+                return Err(anyhow!(
+                    "auto_quant_adoption_handoff_missing: symbol={} artifact_id={} expected=auto_quant_handoff_candidate artifact before adoption decision recovery=run `ict-engine auto-quant-adoption-review --symbol {} --state-dir {}` after creating an Auto-Quant handoff, then rerun adoption-decision with --artifact-id <handoff-artifact-id>",
+                    symbol,
+                    artifact_id,
+                    symbol,
+                    state_dir
+                ));
+            }
+            return Err(anyhow!(
+                "auto_quant_adoption_handoff_missing: symbol={} expected=auto_quant_handoff_candidate artifact before adoption decision recovery=run `ict-engine auto-quant-adoption-review --symbol {} --state-dir {}` after creating an Auto-Quant handoff, then rerun adoption-decision",
+                symbol,
+                symbol,
+                state_dir
+            ));
+        }
+        Err(err) => return Err(err.into()),
+    };
+    for state_child in state_children.filter_map(std::result::Result::ok) {
+        let symbol_path = state_child.path();
+        if !symbol_path.is_dir() {
+            continue;
+        }
+        let Some(child_symbol) = symbol_path.file_name().and_then(|value| value.to_str()) else {
+            continue;
+        };
+        if child_symbol == symbol {
+            continue;
+        }
+        let Ok(child_ledger) = load_artifact_ledger(state_dir, child_symbol) else {
+            continue;
+        };
+        let child_entry = if let Some(artifact_id) = artifact_id {
+            child_ledger
+                .iter()
+                .rev()
+                .find(|entry| entry.artifact_id == artifact_id)
+        } else {
+            child_ledger
+                .iter()
+                .rev()
+                .find(|entry| entry.artifact_kind == "auto_quant_handoff_candidate")
+        };
+        let Some(entry) = child_entry else {
+            continue;
+        };
+        if artifact_id.is_some() {
+            return Ok(entry.clone());
+        }
+        if let Ok(payload) = load_handoff_payload(state_dir, child_symbol, entry) {
+            if payload.symbol == symbol || payload.symbol.starts_with(symbol) {
+                fallback_entry = Some(entry.clone());
+            }
+        }
+    }
+    if let Some(entry) = fallback_entry {
+        return Ok(entry);
+    }
+
+    if let Some(artifact_id) = artifact_id {
+        Err(anyhow!(
+            "auto_quant_adoption_handoff_missing: symbol={} artifact_id={} expected=auto_quant_handoff_candidate artifact before adoption decision recovery=run `ict-engine auto-quant-adoption-review --symbol {} --state-dir {}` after creating an Auto-Quant handoff, then rerun adoption-decision with --artifact-id <handoff-artifact-id>",
+            symbol,
+            artifact_id,
+            symbol,
+            state_dir
+        ))
+    } else {
+        Err(anyhow!(
+            "auto_quant_adoption_handoff_missing: symbol={} expected=auto_quant_handoff_candidate artifact before adoption decision recovery=run `ict-engine auto-quant-adoption-review --symbol {} --state-dir {}` after creating an Auto-Quant handoff, then rerun adoption-decision",
+            symbol,
+            symbol,
+            state_dir
+        ))
+    }
+}
+
 pub fn build_auto_quant_adoption_review(
     symbol: &str,
     state_dir: &str,
     artifact_id: Option<&str>,
 ) -> Result<AutoQuantAdoptionReview> {
-    let ledger = load_artifact_ledger(state_dir, symbol)?;
-    let entry = if let Some(artifact_id) = artifact_id {
-        ledger
-            .iter()
-            .rev()
-            .find(|entry| entry.artifact_id == artifact_id)
-            .ok_or_else(|| {
-                anyhow!(
-                    "no auto-quant handoff artifact '{}' for '{}'",
-                    artifact_id,
-                    symbol
-                )
-            })?
-    } else {
-        ledger
-            .iter()
-            .rev()
-            .find(|entry| entry.artifact_kind == "auto_quant_handoff_candidate")
-            .ok_or_else(|| anyhow!("no auto-quant handoff artifact found for '{}'", symbol))?
-    };
-    let payload = load_handoff_payload(state_dir, symbol, entry)?;
+    let entry = find_handoff_entry(state_dir, symbol, artifact_id)?;
+    let payload = load_handoff_payload(state_dir, symbol, &entry)?;
+    let mut workspace = payload.workspace.clone();
+    apply_handoff_workspace_profile(&payload, &mut workspace);
     let data_ready = auto_quant_handoff_data_ready(
-        &payload.workspace,
+        &workspace,
         &payload.data_path,
         payload.paired_data_path.as_deref(),
     );
-    let active_strategy_count = auto_quant_active_strategy_count(&payload.workspace);
+    let active_strategy_count = auto_quant_active_strategy_count(&workspace);
     let readiness = auto_quant_readiness_from_status_and_data(
         &payload.dependency_status,
         &payload.state_dir,
-        payload.workspace.clone(),
+        workspace.clone(),
         data_ready,
     );
     let (review_status, review_summary) = if !readiness.dependency_healthy {
@@ -112,7 +204,7 @@ pub fn build_auto_quant_adoption_review(
         )
     };
     let suggested_commands = base_suggested_commands(
-        &payload.workspace,
+        &workspace,
         &payload.state_dir,
         readiness.data_ready,
         active_strategy_count,
@@ -268,7 +360,7 @@ mod tests {
         for index in 0..15 {
             std::fs::write(
                 std::path::Path::new(&payload.workspace.data_dir)
-                    .join(format!("prepared-{index}.feather")),
+                    .join(format!("demo-{index}.feather")),
                 "prepared",
             )
             .unwrap();
@@ -319,6 +411,38 @@ mod tests {
     }
 
     #[test]
+    fn review_finds_explicit_handoff_artifact_under_exact_root_symbol() {
+        let temp = tempfile::tempdir().unwrap();
+        let exact_root_symbol =
+            "IBKR_M2K1M_LIQUIDITY_SWEEP_REJECT_SHORT_RVOL_PDA_GUARD_7D_GATE1_V1";
+        let payload =
+            build_factor_research_handoff_payload(BuildFactorResearchHandoffPayloadInput {
+                symbol: exact_root_symbol,
+                data: "demo.json",
+                objective: "expansion_manipulation",
+                provider_profile_selector: None,
+                paired_data: None,
+                auxiliary_evidence_path: None,
+                mutation_spec_path: None,
+                strategy_material_root: None,
+                state_dir: temp.path().to_str().unwrap(),
+                dependency_status: healthy_dependency_status(),
+            });
+        let artifact_id = payload.artifact_id.clone();
+        persist_handoff_payload(temp.path().to_str().unwrap(), &payload).unwrap();
+
+        let review = build_auto_quant_adoption_review(
+            "M2K",
+            temp.path().to_str().unwrap(),
+            Some(&artifact_id),
+        )
+        .unwrap();
+
+        assert_eq!(review.artifact_id, artifact_id);
+        assert_eq!(review.symbol, "M2K");
+    }
+
+    #[test]
     fn persist_adoption_decision_writes_decision_artifact_and_ledger_entry() {
         let temp = tempfile::tempdir().unwrap();
         let payload =
@@ -349,6 +473,55 @@ mod tests {
             std::fs::read_to_string(temp.path().join("NQ").join(ARTIFACT_LEDGER_FILE)).unwrap();
         assert!(ledger.contains("auto_quant_adoption_decision"));
         assert!(ledger.contains(AUTO_QUANT_ADOPTION_DECISION_REVIEW_RULE_VERSION));
+    }
+
+    #[test]
+    fn decision_missing_handoff_error_names_prerequisite_and_recovery() {
+        let temp = tempfile::tempdir().unwrap();
+
+        let err = persist_auto_quant_adoption_decision(
+            "NQ",
+            temp.path().to_str().unwrap(),
+            None,
+            "adopt",
+            "probe",
+            "test",
+        )
+        .unwrap_err();
+        let message = format!("{err:#}");
+
+        assert!(
+            message.contains("auto_quant_adoption_handoff_missing"),
+            "{message}"
+        );
+        assert!(message.contains("symbol=NQ"), "{message}");
+        assert!(message.contains("auto-quant-adoption-review"), "{message}");
+        assert!(message.contains("recovery="), "{message}");
+    }
+
+    #[test]
+    fn decision_missing_handoff_error_handles_missing_state_root() {
+        let temp = tempfile::tempdir().unwrap();
+        let missing_state_dir = temp.path().join("missing-state-root");
+
+        let err = persist_auto_quant_adoption_decision(
+            "NQ",
+            missing_state_dir.to_str().unwrap(),
+            None,
+            "adopt",
+            "probe",
+            "test",
+        )
+        .unwrap_err();
+        let message = format!("{err:#}");
+
+        assert!(
+            message.contains("auto_quant_adoption_handoff_missing"),
+            "{message}"
+        );
+        assert!(message.contains("symbol=NQ"), "{message}");
+        assert!(!message.contains("os error 2"), "{message}");
+        assert!(message.contains("recovery="), "{message}");
     }
 
     #[test]

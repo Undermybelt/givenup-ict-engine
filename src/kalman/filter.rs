@@ -143,37 +143,6 @@ impl KalmanFilter {
     pub fn current_velocity(&self) -> f64 {
         self.state.x[1]
     }
-
-    /// Pseudo-inverse for 1x1 matrix (simplified)
-    pub(crate) fn pseudo_inverse(&self, m: &Array2<f64>) -> Array2<f64> {
-        if m.shape() == [1, 1] {
-            let val = if m[[0, 0]].abs() > 1e-10 {
-                1.0 / m[[0, 0]]
-            } else {
-                0.0
-            };
-            Array2::from_shape_vec((1, 1), vec![val]).unwrap()
-        } else {
-            // For larger matrices, use a more sophisticated approach
-            // This is a simplified version
-            let det = m[[0, 0]] * m[[1, 1]] - m[[0, 1]] * m[[1, 0]];
-            if det.abs() < 1e-10 {
-                Array2::zeros(m.raw_dim())
-            } else {
-                let inv_det = 1.0 / det;
-                Array2::from_shape_vec(
-                    (2, 2),
-                    vec![
-                        m[[1, 1]] * inv_det,
-                        -m[[0, 1]] * inv_det,
-                        -m[[1, 0]] * inv_det,
-                        m[[0, 0]] * inv_det,
-                    ],
-                )
-                .unwrap()
-            }
-        }
-    }
 }
 
 #[cfg(test)]

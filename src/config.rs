@@ -647,6 +647,40 @@ pub fn pre_bayes_market_policy_override(
         .unwrap_or_default()
 }
 
+#[derive(Debug, Clone, Copy)]
+pub struct PreBayesBranchDirectionContext<'a> {
+    pub regime_profit_branch_path: &'a str,
+    pub trade_direction: &'a str,
+}
+
+#[derive(Debug, Clone, Copy)]
+pub struct PreBayesEvidenceFilterInput<'a> {
+    pub policy: &'a PreBayesEvidencePolicy,
+    pub regime_label: &'a str,
+    pub liquidity_label: &'a str,
+    pub factor_diagnostics: &'a FactorDiagnostics,
+    pub multi_timeframe_evidence: &'a ParsedMultiTimeframeEvidence,
+    pub market: Option<&'a str>,
+    pub pda_sequence_summary: Option<&'a PdaSequenceArtifactSummary>,
+    pub branch_direction_context: Option<PreBayesBranchDirectionContext<'a>>,
+}
+
+fn regime_profit_branch_path_is_exact(path: &str) -> bool {
+    path.split(" -> ")
+        .map(str::trim)
+        .filter(|segment| !segment.is_empty())
+        .count()
+        >= 4
+}
+
+fn normalize_branch_trade_direction(direction: &str) -> Option<&'static str> {
+    match direction.trim().to_ascii_lowercase().as_str() {
+        "bear" | "bearish" | "short" | "sell" => Some("bearish"),
+        "bull" | "bullish" | "long" | "buy" => Some("bullish"),
+        _ => None,
+    }
+}
+
 pub fn build_pre_bayes_evidence_filter(
     policy: &PreBayesEvidencePolicy,
     regime_label: &str,
@@ -656,6 +690,31 @@ pub fn build_pre_bayes_evidence_filter(
     market: Option<&str>,
     pda_sequence_summary: Option<&PdaSequenceArtifactSummary>,
 ) -> PreBayesEvidenceFilter {
+    build_pre_bayes_evidence_filter_with_branch_context(PreBayesEvidenceFilterInput {
+        policy,
+        regime_label,
+        liquidity_label,
+        factor_diagnostics,
+        multi_timeframe_evidence,
+        market,
+        pda_sequence_summary,
+        branch_direction_context: None,
+    })
+}
+
+pub fn build_pre_bayes_evidence_filter_with_branch_context(
+    input: PreBayesEvidenceFilterInput<'_>,
+) -> PreBayesEvidenceFilter {
+    let PreBayesEvidenceFilterInput {
+        policy,
+        regime_label,
+        liquidity_label,
+        factor_diagnostics,
+        multi_timeframe_evidence,
+        market,
+        pda_sequence_summary,
+        branch_direction_context,
+    } = input;
     let market_policy = pre_bayes_market_policy_override(market, &policy.market_overrides);
     let hostile_liquidity_penalty = market_policy
         .hostile_liquidity_penalty
@@ -680,6 +739,19 @@ pub fn build_pre_bayes_evidence_filter(
     let filtered_multi_timeframe_entry_alignment_score = raw_multi_timeframe_entry_alignment_score;
     let mut conflict_flags = Vec::new();
     let mut rationale = Vec::new();
+    let rooted_branch_direction = branch_direction_context.and_then(|context| {
+        let branch_path = context.regime_profit_branch_path.trim();
+        if !regime_profit_branch_path_is_exact(branch_path) {
+            return None;
+        }
+        normalize_branch_trade_direction(context.trade_direction).map(|directional_reference| {
+            (
+                branch_path,
+                context.trade_direction.trim(),
+                directional_reference,
+            )
+        })
+    });
 
     if let Some(market) = market {
         rationale.push(format!(
@@ -714,14 +786,24 @@ pub fn build_pre_bayes_evidence_filter(
             summary.ensemble_mean_confidence
         ));
     }
+    if let Some((branch_path, trade_direction, directional_reference)) = rooted_branch_direction {
+        filtered_factor_alignment = directional_reference.to_string();
+        rationale.push(format!(
+            "rooted_branch_trade_direction={} directional_reference={}",
+            trade_direction, directional_reference
+        ));
+        rationale.push(format!("regime_profit_branch_path={branch_path}"));
+    }
+    let directional_alignment_reference = rooted_branch_direction
+        .map_or(raw_factor_alignment.as_str(), |(_, _, reference)| reference);
     let directional_conflict = matches!(
-        (regime_label, raw_factor_alignment.as_str()),
+        (regime_label, directional_alignment_reference),
         ("bull", "bearish") | ("bear", "bullish")
     );
     let multi_timeframe_direction_conflict =
         multi_timeframe_direction_conflicts_with(regime_label, &raw_multi_timeframe_direction_bias)
             || multi_timeframe_direction_conflicts_with(
-                raw_factor_alignment.as_str(),
+                directional_alignment_reference,
                 &raw_multi_timeframe_direction_bias,
             );
     let raw_multi_timeframe_resonance_label = classify_multi_timeframe_resonance(
@@ -1003,7 +1085,7 @@ pub fn build_pre_bayes_evidence_filter(
         );
     }
 
-    let evidence_assignments = BTreeMap::from([
+    let mut evidence_assignments = BTreeMap::from([
         (
             "market_regime".to_string(),
             filtered_market_regime_label.clone(),
@@ -1025,6 +1107,13 @@ pub fn build_pre_bayes_evidence_filter(
             filtered_multi_timeframe_resonance_label.clone(),
         ),
     ]);
+    if let Some((branch_path, trade_direction, _)) = rooted_branch_direction {
+        evidence_assignments.insert(
+            "regime_profit_branch_path".to_string(),
+            branch_path.to_string(),
+        );
+        evidence_assignments.insert("trade_direction".to_string(), trade_direction.to_string());
+    }
     rationale.push(format!(
         "pre_bayes_quality_score={:.3} gating_status={}",
         evidence_quality_score, gating_status
@@ -1310,5 +1399,67 @@ mod frame_feature_tests {
         let dy = (candles.len() as f64 / 100.0).clamp(0.0, 1.0) * 10_000.0;
         let expected_speed = (dx.powi(2) + dy.powi(2)).sqrt() / candles.len() as f64;
         assert!((frame.pythagorean_speed_bps_per_bar - expected_speed).abs() < 1e-6);
+    }
+
+    #[test]
+    fn rooted_short_branch_direction_prevents_false_mtf_factor_conflict() {
+        let policy = PreBayesEvidencePolicy {
+            min_directional_support_gap: 0.05,
+            min_multi_timeframe_alignment_score: 0.55,
+            min_multi_timeframe_entry_alignment_score: 0.50,
+            hard_pass_quality_threshold: 0.75,
+            neutralized_quality_threshold: 0.40,
+            ..PreBayesEvidencePolicy::default()
+        };
+        let diagnostics = FactorDiagnostics {
+            long_support: 0.70,
+            short_support: 0.12,
+            uncertainty: 0.12,
+            alignment_label: "bullish".to_string(),
+            uncertainty_label: "low".to_string(),
+            ..FactorDiagnostics::default()
+        };
+        let mtf = ParsedMultiTimeframeEvidence {
+            direction_bias: "bearish".to_string(),
+            alignment_score: Some(0.99),
+            entry_alignment_score: Some(0.96),
+            covered_count: 6,
+        };
+
+        let filter = build_pre_bayes_evidence_filter_with_branch_context(
+            PreBayesEvidenceFilterInput {
+                policy: &policy,
+                regime_label: "range",
+                liquidity_label: "neutral",
+                factor_diagnostics: &diagnostics,
+                multi_timeframe_evidence: &mtf,
+                market: Some("IBKR"),
+                pda_sequence_summary: None,
+                branch_direction_context: Some(PreBayesBranchDirectionContext {
+                    regime_profit_branch_path:
+                        "RangeReversion -> LiquiditySweepRejectShort -> short_seed -> rvol_pda_guard",
+                    trade_direction: "Bear",
+                }),
+            },
+        );
+
+        assert_eq!(filter.raw_factor_alignment, "bullish");
+        assert_eq!(
+            filter.evidence_assignments.get("trade_direction"),
+            Some(&"Bear".to_string())
+        );
+        assert_eq!(
+            filter.evidence_assignments.get("regime_profit_branch_path"),
+            Some(
+                &"RangeReversion -> LiquiditySweepRejectShort -> short_seed -> rvol_pda_guard"
+                    .to_string()
+            )
+        );
+        assert!(!filter
+            .conflict_flags
+            .iter()
+            .any(|flag| flag == "multi_timeframe_direction_conflict"));
+        assert_eq!(filter.filtered_factor_alignment, "bearish");
+        assert_eq!(filter.filtered_multi_timeframe_resonance_label, "aligned");
     }
 }

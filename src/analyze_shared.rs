@@ -119,6 +119,288 @@ pub(crate) fn offline_structural_support_hint(input: OfflineStructuralSupportHin
     support
 }
 
+pub(crate) struct BuildAnalyzeAgentPromptsInput<'a> {
+    pub(crate) symbol: &'a str,
+    pub(crate) decision: &'a ProbabilisticDecisionSnapshot,
+    pub(crate) factor_diagnostics: &'a FactorDiagnostics,
+    pub(crate) pre_bayes_evidence_filter: &'a PreBayesEvidenceFilter,
+    pub(crate) canonical_structural_regime_posterior:
+        Option<&'a ict_engine::state::CanonicalStructuralRegimePosterior>,
+    pub(crate) factor_ranking: &'a [PersistedFactorRanking],
+    pub(crate) factor_iteration_queue: &'a [FactorIterationPrompt],
+    pub(crate) feedback_history_summary: &'a FeedbackHistorySummary,
+    pub(crate) trade_plan: &'a TradePlan,
+    pub(crate) dataset_comparability: &'a DatasetComparability,
+    pub(crate) decision_hint: &'a str,
+    pub(crate) multi_timeframe_summary: &'a [String],
+}
+
+pub(crate) fn build_analyze_agent_prompts(
+    input: BuildAnalyzeAgentPromptsInput<'_>,
+) -> AgentPromptPack {
+    let BuildAnalyzeAgentPromptsInput {
+        symbol,
+        decision,
+        factor_diagnostics,
+        pre_bayes_evidence_filter,
+        canonical_structural_regime_posterior,
+        factor_ranking,
+        factor_iteration_queue,
+        feedback_history_summary,
+        trade_plan,
+        dataset_comparability,
+        decision_hint,
+        multi_timeframe_summary,
+    } = input;
+    let canonical_structural_regime_summary =
+        compact_canonical_structural_regime_summary(canonical_structural_regime_posterior);
+    let mut pack = factor_iteration_prompt_pack(
+        symbol,
+        factor_ranking,
+        factor_iteration_queue,
+        feedback_history_summary,
+    );
+    pack.workflow = format!(
+        "Use current market analysis plus stored factor scorecards to decide whether the present trade plan is supported, overfit, or missing evidence for {}.",
+        symbol
+    );
+    pack.prompts.insert(
+        0,
+        dataset_audit_prompt(symbol, "analyze", None, 0, None, "analyze"),
+    );
+    pack.prompts.insert(
+        1,
+        AgentPrompt::new(AgentPromptInput {
+            id: "pre_bayes_evidence_review".to_string(),
+            stage: "pre_bayes_filter".to_string(),
+            priority: "high".to_string(),
+            objective: "Review whether raw regime/liquidity/factor evidence should be passed to BBN directly or neutralized first.".to_string(),
+            system_prompt: "You are the pre-bayes evidence gate. Compare raw labels with filtered labels, conflicts, and evidence quality before trusting the downstream Bayesian inference.".to_string(),
+            user_prompt: format!(
+                "Symbol={} raw_market_regime={} raw_liquidity_context={} raw_factor_alignment={} raw_factor_uncertainty={} raw_mtf_direction={} raw_mtf_alignment={:.3} raw_mtf_entry_alignment={:.3} raw_mtf_resonance={} filtered_market_regime={} filtered_liquidity_context={} filtered_factor_alignment={} filtered_factor_uncertainty={} filtered_mtf_direction={} filtered_mtf_alignment={:.3} filtered_mtf_entry_alignment={:.3} filtered_mtf_resonance={} evidence_quality_score={:.3} gating_status={} uses_soft_evidence={} conflict_flags={:?} rationale={:?} soft_market_regime={:?} soft_liquidity_context={:?} soft_factor_alignment={:?} soft_factor_uncertainty={:?} soft_mtf_resonance={:?}",
+                symbol,
+                pre_bayes_evidence_filter.raw_market_regime_label,
+                pre_bayes_evidence_filter.raw_liquidity_context_label,
+                pre_bayes_evidence_filter.raw_factor_alignment,
+                pre_bayes_evidence_filter.raw_factor_uncertainty,
+                pre_bayes_evidence_filter.raw_multi_timeframe_direction_bias,
+                pre_bayes_evidence_filter
+                    .raw_multi_timeframe_alignment_score
+                    .unwrap_or_default(),
+                pre_bayes_evidence_filter
+                    .raw_multi_timeframe_entry_alignment_score
+                    .unwrap_or_default(),
+                pre_bayes_evidence_filter.raw_multi_timeframe_resonance_label,
+                pre_bayes_evidence_filter.filtered_market_regime_label,
+                pre_bayes_evidence_filter.filtered_liquidity_context_label,
+                pre_bayes_evidence_filter.filtered_factor_alignment,
+                pre_bayes_evidence_filter.filtered_factor_uncertainty,
+                pre_bayes_evidence_filter.filtered_multi_timeframe_direction_bias,
+                pre_bayes_evidence_filter
+                    .filtered_multi_timeframe_alignment_score
+                    .unwrap_or_default(),
+                pre_bayes_evidence_filter
+                    .filtered_multi_timeframe_entry_alignment_score
+                    .unwrap_or_default(),
+                pre_bayes_evidence_filter.filtered_multi_timeframe_resonance_label,
+                pre_bayes_evidence_filter.evidence_quality_score,
+                pre_bayes_evidence_filter.gating_status,
+                pre_bayes_evidence_filter.uses_soft_evidence,
+                pre_bayes_evidence_filter.conflict_flags,
+                pre_bayes_evidence_filter.rationale,
+                pre_bayes_evidence_filter.soft_market_regime_distribution,
+                pre_bayes_evidence_filter.soft_liquidity_context_distribution,
+                pre_bayes_evidence_filter.soft_factor_alignment_distribution,
+                pre_bayes_evidence_filter.soft_factor_uncertainty_distribution,
+                pre_bayes_evidence_filter.soft_multi_timeframe_resonance_distribution
+            ),
+            success_criteria: vec![
+                "State explicitly whether the filtered evidence should be trusted as hard evidence or soft evidence".to_string(),
+                "If regime and factor alignment conflict, prefer neutralization over direct Bayesian commitment".to_string(),
+            ],
+            suggested_files: vec![
+                "src/analyze_shared.rs".to_string(),
+                "src/bbn/trading/update.rs".to_string(),
+                "src/factor_lab/engine.rs".to_string(),
+            ],
+        }),
+    );
+    if pre_bayes_evidence_filter.uses_soft_evidence {
+        pack.prompts.insert(
+            2,
+            AgentPrompt::new(AgentPromptInput {
+                id: "pre_bayes_soft_evidence_review".to_string(),
+                stage: "pre_bayes_soft_evidence".to_string(),
+                priority: "high".to_string(),
+                objective: "Review whether soft evidence diverges materially from filtered labels before trusting BBN output.".to_string(),
+                system_prompt: "You are the pre-bayes soft-evidence reviewer. Compare filtered states with soft evidence distributions and explain whether the Bayesian layer is receiving stable or ambiguous evidence.".to_string(),
+                user_prompt: format!(
+                    "Symbol={} filtered_assignments={:?} soft_market_regime={:?} soft_liquidity_context={:?} soft_factor_alignment={:?} soft_factor_uncertainty={:?} soft_mtf_resonance={:?}",
+                    symbol,
+                    pre_bayes_evidence_filter.evidence_assignments,
+                    pre_bayes_evidence_filter.soft_market_regime_distribution,
+                    pre_bayes_evidence_filter.soft_liquidity_context_distribution,
+                    pre_bayes_evidence_filter.soft_factor_alignment_distribution,
+                    pre_bayes_evidence_filter.soft_factor_uncertainty_distribution,
+                    pre_bayes_evidence_filter.soft_multi_timeframe_resonance_distribution
+                ),
+                success_criteria: vec![
+                    "Call out when the dominant soft-evidence state diverges from the filtered hard label".to_string(),
+                    "If entropy is high, prefer observe-only or neutralized review over confident Bayesian commitment".to_string(),
+                ],
+                suggested_files: vec![
+                    "src/analyze_shared.rs".to_string(),
+                    "src/bbn/node.rs".to_string(),
+                    "src/bbn/trading/update.rs".to_string(),
+                ],
+            }),
+        );
+    }
+    pack.prompts.insert(
+        if pre_bayes_evidence_filter.uses_soft_evidence { 3 } else { 2 },
+        AgentPrompt::new(AgentPromptInput {
+            id: "analysis_market_review".to_string(),
+            stage: "market_analysis".to_string(),
+            priority: "high".to_string(),
+            objective: "Review the current market conclusion and identify whether factor evidence supports the selected direction.".to_string(),
+            system_prompt: "You are the market-review agent. Challenge the current trade direction using price-action evidence, factor diagnostics, and uncertainty. Do not change factor definitions here; decide whether the current conclusion is supported or should be downgraded.".to_string(),
+            user_prompt: format!(
+                "Symbol={} decision_hint={} dataset_comparability={{comparable:{}, reason:{}}} canonical_structural_regime={} multi_timeframe_summary={:?} selected_direction={:?} selected_score={:.3} selected_win_probability={:.3} trade_direction={:?} posterior={:.3} factor_alignment={} factor_uncertainty={} long_support={:.3} short_support={:.3} uncertainty={:.3} bullish_factors={:?} bearish_factors={:?}",
+                symbol,
+                decision_hint,
+                dataset_comparability.comparable,
+                dataset_comparability.reason,
+                canonical_structural_regime_summary,
+                multi_timeframe_summary,
+                decision.selected_direction,
+                decision.selected_score,
+                decision.selected_win_probability,
+                trade_plan.direction,
+                trade_plan.posterior,
+                factor_diagnostics.alignment_label,
+                factor_diagnostics.uncertainty_label,
+                factor_diagnostics.long_support,
+                factor_diagnostics.short_support,
+                factor_diagnostics.uncertainty,
+                factor_diagnostics
+                    .bullish_factors
+                    .iter()
+                    .take(3)
+                    .map(|factor| format!("{}:{:.3}", factor.factor_name, factor.weighted_score))
+                    .collect::<Vec<_>>(),
+                factor_diagnostics
+                    .bearish_factors
+                    .iter()
+                    .take(3)
+                    .map(|factor| format!("{}:{:.3}", factor.factor_name, factor.weighted_score))
+                    .collect::<Vec<_>>()
+            ),
+            success_criteria: vec![
+                "Explicitly name which factors support long, which support short, and which only add uncertainty".to_string(),
+                "If uncertainty is high, recommend what evidence the next agent should wait for".to_string(),
+            ],
+            suggested_files: vec![
+                "src/analyze_shared.rs".to_string(),
+                "src/factor_lab/engine.rs".to_string(),
+                "src/bbn/trading/topology.rs".to_string(),
+            ],
+        }),
+    );
+    pack
+}
+
+pub(crate) fn analyze_signal_rankings(
+    signals: &[ict_engine::factor_lab::FactorSignal],
+    regime: Regime,
+) -> Vec<PersistedFactorRanking> {
+    let mut rankings = signals
+        .iter()
+        .map(|signal| {
+            let confidence_score = signal.confidence.clamp(0.0, 1.0);
+            let signal_score = signal.regime_adjusted_score.abs().clamp(0.0, 1.0);
+            let reliability_score = signal.posterior_reliability.clamp(0.0, 1.0);
+            let composite_score =
+                (0.45 * confidence_score + 0.35 * signal_score + 0.20 * reliability_score)
+                    .clamp(0.0, 1.0);
+            let mut weaknesses = Vec::new();
+            if signal.direction == Direction::Neutral {
+                weaknesses.push("neutral_signal".to_string());
+            }
+            if signal.confidence < 0.35 {
+                weaknesses.push("low_live_confidence".to_string());
+            }
+            if signal.posterior_reliability < 0.45 {
+                weaknesses.push("low_posterior_reliability".to_string());
+            }
+
+            let iteration_action = if signal.direction == Direction::Neutral || signal.confidence < 0.35
+            {
+                "observe"
+            } else if composite_score >= 0.65 {
+                "keep"
+            } else {
+                "tune"
+            };
+
+            PersistedFactorRanking {
+                factor_name: signal.factor_name.clone(),
+                regime: ict_engine::state::regime_key(regime).to_string(),
+                ic: 0.0,
+                ir: 0.0,
+                backtest_return: 0.0,
+                sharpe: 0.0,
+                stability: reliability_score,
+                win_rate: 0.0,
+                profit_factor: 1.0,
+                trade_count: 0,
+                conformal_coverage_1sigma: 0.0,
+                conformal_miscoverage_1sigma: 0.0,
+                mean_prediction_interval_half_width: 0.0,
+                worst_window_miscoverage: 0.0,
+                regime_break_penalty: 0.0,
+                weight: signal.weight,
+                regime_scores: BTreeMap::from([(
+                    ict_engine::state::regime_key(regime).to_string(),
+                    signal_score,
+                )]),
+                composite_score,
+                score_breakdown: BTreeMap::from([
+                    ("current_confidence".to_string(), confidence_score),
+                    ("current_signal_strength".to_string(), signal_score),
+                    ("posterior_reliability".to_string(), reliability_score),
+                ]),
+                grade: if composite_score >= 0.85 {
+                    "A".to_string()
+                } else if composite_score >= 0.70 {
+                    "B".to_string()
+                } else if composite_score >= 0.55 {
+                    "C".to_string()
+                } else if composite_score >= 0.40 {
+                    "D".to_string()
+                } else {
+                    "F".to_string()
+                },
+                iteration_action: iteration_action.to_string(),
+                replacement_candidate: false,
+                weaknesses,
+                agent_prompt: format!(
+                    "Analyze-phase snapshot for '{}'. direction={:?} confidence={:.2} weighted_signal={:.2}. Treat as provisional evidence and confirm with factor-research before any promotion or replacement decision.",
+                    signal.factor_name,
+                    signal.direction,
+                    signal.confidence,
+                    signal.regime_adjusted_score
+                ),
+            }
+        })
+        .collect::<Vec<_>>();
+    rankings.sort_by(|a, b| {
+        b.composite_score
+            .partial_cmp(&a.composite_score)
+            .unwrap_or(std::cmp::Ordering::Equal)
+    });
+    rankings
+}
+
 pub(crate) fn structural_baseline_support(score: Option<f64>, fallback: f64) -> f64 {
     score.unwrap_or(fallback).clamp(0.0, 1.0)
 }
@@ -165,6 +447,104 @@ pub(crate) fn structural_support_hint_for_analyze(
         baseline_available: None,
         accepted: None,
         artifact_validation_bias: None,
+    })
+}
+
+pub(crate) fn regime_profit_branch_assignment_entries_from_feedback_history(
+    learning_state: &LearningState,
+) -> Option<Vec<(String, String)>> {
+    let mut counts: BTreeMap<String, usize> = BTreeMap::new();
+    for record in &learning_state.feedback_history {
+        let Some(refs) = record.structural_feedback.as_ref() else {
+            continue;
+        };
+        let path = refs.path_id.trim();
+        if !refs.followed_path || !regime_profit_branch_path_is_exact(path) {
+            continue;
+        }
+        *counts.entry(path.to_string()).or_default() += 1;
+    }
+
+    let mut ranked: Vec<(String, usize)> = counts.into_iter().collect();
+    ranked.sort_by(|left, right| right.1.cmp(&left.1).then_with(|| left.0.cmp(&right.0)));
+    let (branch_path, count) = ranked.first()?;
+    if *count < 2 {
+        return None;
+    }
+    if ranked
+        .get(1)
+        .is_some_and(|(_, next_count)| next_count == count)
+    {
+        return None;
+    }
+
+    let mut entries = regime_profit_branch_assignment_entries_from_path(branch_path);
+    entries.push((
+        "regime_profit_branch_path_source".to_string(),
+        "structural_feedback_history".to_string(),
+    ));
+    entries.push((
+        "regime_profit_branch_path_feedback_count".to_string(),
+        count.to_string(),
+    ));
+    Some(entries)
+}
+
+pub(crate) fn regime_profit_branch_path_is_exact(path: &str) -> bool {
+    path.split(" -> ")
+        .map(str::trim)
+        .filter(|segment| !segment.is_empty())
+        .count()
+        >= 4
+}
+
+pub(crate) fn regime_profit_branch_assignment_entries_from_path(
+    branch_path: &str,
+) -> Vec<(String, String)> {
+    let segments: Vec<&str> = branch_path
+        .split(" -> ")
+        .map(str::trim)
+        .filter(|segment| !segment.is_empty())
+        .collect();
+    let mut entries = vec![(
+        "regime_profit_branch_path".to_string(),
+        branch_path.to_string(),
+    )];
+    if let Some(main) = segments.first() {
+        entries.push(("parent_regime_root".to_string(), (*main).to_string()));
+        entries.push(("main_regime".to_string(), (*main).to_string()));
+    }
+    if let Some(sub) = segments.get(1) {
+        entries.push(("sub_regime".to_string(), (*sub).to_string()));
+    }
+    if let Some(sub_sub) = segments.get(2) {
+        entries.push((
+            "sub_sub_regime_or_profit_factor".to_string(),
+            (*sub_sub).to_string(),
+        ));
+    }
+    if segments.len() > 3 {
+        entries.push(("profit_factor".to_string(), segments[3..].join(" -> ")));
+    }
+    entries
+}
+
+pub(crate) fn pre_bayes_branch_direction_context_from_assignment_entries(
+    entries: &[(String, String)],
+) -> Option<PreBayesBranchDirectionContext<'_>> {
+    let branch_path = entries
+        .iter()
+        .find(|(key, _)| key == "regime_profit_branch_path")
+        .map(|(_, value)| value.trim())
+        .filter(|value| !value.is_empty())?;
+    let trade_direction = entries
+        .iter()
+        .find(|(key, _)| key == "trade_direction")
+        .map(|(_, value)| value.trim())
+        .filter(|value| !value.is_empty())?;
+    Some(PreBayesBranchDirectionContext {
+        regime_profit_branch_path: branch_path,
+        trade_direction,
     })
 }
 
@@ -318,6 +698,7 @@ pub(crate) struct AnalyzeStageTrace {
 
 impl AnalyzeStageTrace {
     pub(crate) fn maybe_from_env() -> Self {
+        static STARTED_AT: std::sync::OnceLock<std::time::Instant> = std::sync::OnceLock::new();
         let path = std::env::var("ICT_ENGINE_ANALYZE_STAGE_TRACE_FILE")
             .ok()
             .map(|value| value.trim().to_string())
@@ -325,7 +706,7 @@ impl AnalyzeStageTrace {
             .map(std::path::PathBuf::from);
         Self {
             path,
-            started_at: std::time::Instant::now(),
+            started_at: *STARTED_AT.get_or_init(std::time::Instant::now),
         }
     }
 
@@ -978,6 +1359,126 @@ fn execution_candidate_artifact_decision(
     }
 }
 
+fn report_same_root_branch_paths(report: &AnalyzeReport) -> Vec<String> {
+    let assignments = &report
+        .supporting
+        .pre_bayes_evidence_filter
+        .evidence_assignments;
+    let mut paths = Vec::new();
+    if let Some(path) = assignments
+        .get("regime_profit_branch_path")
+        .map(|value| value.trim())
+        .filter(|value| !value.is_empty())
+    {
+        paths.push(path.to_string());
+    }
+    if let Some(raw_paths) = assignments.get("regime_bundle_branch_paths_json") {
+        if let Ok(parsed) = serde_json::from_str::<Vec<String>>(raw_paths) {
+            paths.extend(
+                parsed
+                    .into_iter()
+                    .map(|value| value.trim().to_string())
+                    .filter(|value| !value.is_empty()),
+            );
+        }
+    }
+    paths.sort();
+    paths.dedup();
+    paths
+}
+
+fn trace_output_number(output: &serde_json::Value, key: &str) -> Option<f64> {
+    output.get(key).and_then(|value| {
+        value.as_f64().or_else(|| {
+            value
+                .as_str()
+                .and_then(|text| text.trim().parse::<f64>().ok())
+        })
+    })
+}
+
+fn same_root_execution_tree_admission_status_for_analyze(
+    state_dir: &str,
+    report: &AnalyzeReport,
+    trade_direction: Direction,
+) -> Option<String> {
+    if matches!(trade_direction, Direction::Neutral) {
+        return None;
+    }
+    let branch_paths = report_same_root_branch_paths(report);
+    if branch_paths.is_empty() {
+        return None;
+    }
+    let trace_path = std::path::Path::new(state_dir)
+        .join(&report.symbol)
+        .join(ict_engine::application::orchestration::EXECUTION_TREE_TRACE_FILE);
+    let trace = std::fs::read(trace_path).ok()?;
+    let trace: serde_json::Value = serde_json::from_slice(&trace).ok()?;
+    let output = trace.get("output")?;
+    let admission = trace.get("closed_loop_branch_admission")?;
+    let path_id = admission
+        .get("path_id")
+        .and_then(serde_json::Value::as_str)?;
+    if !branch_paths.iter().any(|path| path == path_id) {
+        return None;
+    }
+    let pre_bayes_ready = matches!(
+        admission
+            .get("pre_bayes_gate_status")
+            .and_then(serde_json::Value::as_str)
+            .unwrap_or_default(),
+        "pass_hard" | "pass_neutralized"
+    );
+    let admitted = admission.get("status").and_then(serde_json::Value::as_str) == Some("admitted")
+        && admission
+            .get("ready")
+            .and_then(serde_json::Value::as_bool)
+            .unwrap_or(false)
+        && admission
+            .get("actionable")
+            .and_then(serde_json::Value::as_bool)
+            .unwrap_or(false);
+    let execution_tree_ready = output
+        .get("gate_status")
+        .and_then(serde_json::Value::as_str)
+        == Some("ready")
+        && output.get("branch").and_then(serde_json::Value::as_str) == Some("fill_viable");
+    let ranker_used = output
+        .get("path_ranker_score_used_by_execution_tree")
+        .and_then(serde_json::Value::as_bool)
+        .unwrap_or(false)
+        && output
+            .get("ranker_validation_ready")
+            .and_then(serde_json::Value::as_bool)
+            .unwrap_or(false);
+    let execution_readiness = trace_output_number(output, "execution_readiness")?;
+    let transition_hazard = trace_output_number(output, "hybrid_transition_hazard")?;
+    let pda_hybrid_alignment = output
+        .get("pda_hybrid_alignment")
+        .and_then(serde_json::Value::as_bool)
+        .unwrap_or(false);
+    if !(pre_bayes_ready
+        && admitted
+        && execution_tree_ready
+        && ranker_used
+        && execution_readiness >= 0.65
+        && transition_hazard < 0.60
+        && pda_hybrid_alignment)
+    {
+        return None;
+    }
+    admission
+        .get("candidate_status")
+        .and_then(serde_json::Value::as_str)
+        .or_else(|| {
+            admission
+                .get("execution_gate_status")
+                .and_then(serde_json::Value::as_str)
+        })
+        .map(|status| status.to_string())
+        .or_else(|| Some("execution_ready".to_string()))
+}
+
 pub(crate) fn persist_execution_candidate_from_analyze(
     state_dir: &str,
     report: &AnalyzeReport,
@@ -988,6 +1489,23 @@ pub(crate) fn persist_execution_candidate_from_analyze(
     let history = load_execution_candidate_history(state_dir, &report.symbol)?;
     let version = history.len() + 1;
     let trade_plan = &report.supporting.raw_trade_plan;
+    let branch_direction = execution_candidate_branch_trade_direction(report);
+    let selected_direction =
+        branch_direction.unwrap_or(report.supporting.decision.selected_direction);
+    let trade_direction = branch_direction.unwrap_or(trade_plan.direction);
+    let same_root_execution_tree_admission =
+        same_root_execution_tree_admission_status_for_analyze(state_dir, report, trade_direction);
+    let materialized_from_same_root_execution_tree = same_root_execution_tree_admission.is_some();
+    let actionability_from_trade_plan =
+        trade_direction != Direction::Neutral && trade_plan.position_size > 0.0;
+    let actionable = actionability_from_trade_plan || materialized_from_same_root_execution_tree;
+    let candidate_status = same_root_execution_tree_admission.unwrap_or_else(|| {
+        if actionability_from_trade_plan {
+            "ready".to_string()
+        } else {
+            "no_trade".to_string()
+        }
+    });
     let artifact = ExecutionCandidateArtifact {
         artifact_id: format!(
             "execution-candidate:{}:{}:v{}",
@@ -1005,9 +1523,9 @@ pub(crate) fn persist_execution_candidate_from_analyze(
         )),
         provenance: report.supporting.provenance.clone(),
         decision_hint: report.supporting.decision_hint.clone(),
-        selected_direction: report.supporting.decision.selected_direction,
-        trade_direction: trade_plan.direction,
-        actionable: trade_plan.direction != Direction::Neutral && trade_plan.position_size > 0.0,
+        selected_direction,
+        trade_direction,
+        actionable,
         entry: trade_plan.entry,
         stop_loss: trade_plan.stop_loss,
         take_profits: vec![trade_plan.tp1, trade_plan.tp2, trade_plan.tp3],
@@ -1019,13 +1537,7 @@ pub(crate) fn persist_execution_candidate_from_analyze(
             .factor_diagnostics
             .uncertainty_label
             .clone(),
-        candidate_status: if trade_plan.direction != Direction::Neutral
-            && trade_plan.position_size > 0.0
-        {
-            "ready".to_string()
-        } else {
-            "no_trade".to_string()
-        },
+        candidate_status,
         top_factor_name: report
             .supporting
             .factor_ranking
@@ -1056,7 +1568,17 @@ pub(crate) fn persist_execution_candidate_from_analyze(
     let mut artifact = artifact;
     if let Some(previous) = history.last() {
         artifact.diff_from_previous = execution_candidate_artifact_diff(previous, &artifact);
-        artifact.review_decision = execution_candidate_artifact_decision(previous, &artifact);
+        let newly_materialized_same_root_execution_tree = materialized_from_same_root_execution_tree
+            && !(previous.actionable && previous.candidate_status == "execution_ready");
+        artifact.review_decision = if newly_materialized_same_root_execution_tree {
+            ExecutionCandidateArtifactDecision {
+                status: "promote_latest".to_string(),
+                reason: "same_root_execution_tree_admitted".to_string(),
+                supersedes_artifact_id: Some(previous.artifact_id.clone()),
+            }
+        } else {
+            execution_candidate_artifact_decision(previous, &artifact)
+        };
     } else {
         artifact.review_decision = ExecutionCandidateArtifactDecision {
             status: if artifact.actionable {
@@ -1064,7 +1586,11 @@ pub(crate) fn persist_execution_candidate_from_analyze(
             } else {
                 "observe".to_string()
             },
-            reason: "first_execution_candidate_artifact".to_string(),
+            reason: if materialized_from_same_root_execution_tree {
+                "same_root_execution_tree_admitted".to_string()
+            } else {
+                "first_execution_candidate_artifact".to_string()
+            },
             supersedes_artifact_id: None,
         };
     }
@@ -1113,10 +1639,47 @@ pub(crate) fn persist_execution_candidate_from_analyze(
         .to_string())
 }
 
+fn execution_candidate_branch_trade_direction(report: &AnalyzeReport) -> Option<Direction> {
+    let assignments = &report
+        .supporting
+        .pre_bayes_evidence_filter
+        .evidence_assignments;
+    let has_rooted_branch = assignments
+        .get("regime_profit_branch_path")
+        .is_some_and(|value| !value.trim().is_empty())
+        || assignments
+            .get("regime_bundle_branch_paths_json")
+            .is_some_and(|value| !value.trim().is_empty())
+        || assignments
+            .get("profit_factor")
+            .is_some_and(|value| !value.trim().is_empty());
+    if !has_rooted_branch {
+        return None;
+    }
+    assignments
+        .get("trade_direction")
+        .and_then(|value| parse_execution_candidate_direction(value))
+}
+
+fn parse_execution_candidate_direction(value: &str) -> Option<Direction> {
+    match value.trim().to_ascii_lowercase().as_str() {
+        "bear" | "short" | "sell" | "sold" => Some(Direction::Bear),
+        "bull" | "long" | "buy" | "bought" => Some(Direction::Bull),
+        "neutral" | "none" | "flat" | "no_trade" => Some(Direction::Neutral),
+        _ => None,
+    }
+}
+
 pub(crate) fn apply_command_context_to_analyze_report(
     report: &mut AnalyzeReport,
     command_context: &CommandContext,
 ) {
+    let pda_sequence_summary = ict_engine::pda_sequence::load_pda_sequence_analysis(
+        &command_context.state_dir,
+        &command_context.symbol,
+    )
+    .ok()
+    .map(|artifact| ict_engine::pda_sequence::summarize_pda_sequence_artifact(&artifact));
     report.supporting.recommended_commands = command_recommendations(command_context);
     concretize_action_plan_commands(
         &mut report.supporting.agent_action_plan,
@@ -1139,7 +1702,7 @@ pub(crate) fn apply_command_context_to_analyze_report(
             family_outcomes: &report.supporting.factor_family_outcomes,
             pre_bayes_evidence_filter: Some(&report.supporting.pre_bayes_evidence_filter),
             pre_bayes_entry_quality_bridge: Some(&report.supporting.pre_bayes_entry_quality_bridge),
-            pda_sequence_summary: None,
+            pda_sequence_summary: pda_sequence_summary.as_ref(),
             factor_mutation_evaluation: None,
             artifact_decision_summary: Some(&report.supporting.artifact_decision_summary),
         });
@@ -1409,6 +1972,131 @@ mod tests {
     }
 
     #[test]
+    fn execution_candidate_uses_branch_trade_direction_over_report_fallback() {
+        let temp = tempfile::tempdir().unwrap();
+        let mut report = sample_analyze_report_with_factor_ranking(Vec::new());
+        report.symbol = "M2K".to_string();
+        report.supporting.decision.selected_direction = Direction::Bull;
+        report.supporting.raw_trade_plan.direction = Direction::Bull;
+        report.supporting.raw_trade_plan.position_size = 0.0;
+        report
+            .supporting
+            .pre_bayes_evidence_filter
+            .evidence_assignments
+            .insert(
+                "regime_profit_branch_path".to_string(),
+                "FUTURES -> equity_index -> M2K -> 1m -> RangeReversion -> LiquiditySweepRejectShort -> ibkr_m2k1m_liquidity_sweep_reject_short_7d_gate1_v1 -> ibkr_m2k1m_liquidity_sweep_reject_short_rvol_pda_guard_7d_gate1_v1".to_string(),
+            );
+        report
+            .supporting
+            .pre_bayes_evidence_filter
+            .evidence_assignments
+            .insert("trade_direction".to_string(), "Bear".to_string());
+
+        persist_execution_candidate_from_analyze(temp.path().to_str().unwrap(), &report, "analyze")
+            .unwrap();
+
+        let candidate: ict_engine::state::ExecutionCandidateArtifact =
+            ict_engine::state::load_state(
+                temp.path(),
+                "M2K",
+                ict_engine::state::EXECUTION_CANDIDATE_FILE,
+            )
+            .unwrap();
+
+        assert_eq!(candidate.selected_direction, Direction::Bear);
+        assert_eq!(candidate.trade_direction, Direction::Bear);
+        assert!(!candidate.actionable);
+        assert_eq!(candidate.candidate_status, "no_trade");
+    }
+
+    #[test]
+    fn execution_candidate_materializes_same_root_execution_tree_admission_when_trade_plan_size_is_zero(
+    ) {
+        let temp = tempfile::tempdir().unwrap();
+        let mut report = sample_analyze_report_with_factor_ranking(Vec::new());
+        report.symbol = "CRWD".to_string();
+        report.supporting.raw_trade_plan.direction = Direction::Bull;
+        report.supporting.raw_trade_plan.position_size = 0.0;
+        report.supporting.raw_trade_plan.entry = 596.0;
+        report.supporting.raw_trade_plan.stop_loss = 591.8;
+        report.supporting.raw_trade_plan.tp1 = 598.8;
+        report.supporting.raw_trade_plan.tp2 = 601.6;
+        report.supporting.raw_trade_plan.tp3 = 604.4;
+        report.supporting.raw_trade_plan.posterior = 0.2159;
+        report.supporting.raw_trade_plan.win_probability = 0.5037;
+        report.supporting.pre_bayes_evidence_filter.gating_status = "pass_neutralized".to_string();
+        let branch_path = "RangeReversion -> AiSecuritySoftwareOversoldReclaim -> rsi_vwap_reclaim_dense -> yf_ai_security_software_rsi_vwap_reclaim_crwd_5m_v1 -> session_liquidity_transition_stability_v1 -> pda_mtf_soft_confirmation_v1";
+        report
+            .supporting
+            .pre_bayes_evidence_filter
+            .evidence_assignments
+            .insert(
+                "regime_profit_branch_path".to_string(),
+                branch_path.to_string(),
+            );
+        report
+            .supporting
+            .pre_bayes_evidence_filter
+            .evidence_assignments
+            .insert("trade_direction".to_string(), "Bull".to_string());
+
+        let symbol_dir = temp.path().join("CRWD");
+        std::fs::create_dir_all(&symbol_dir).unwrap();
+        std::fs::write(
+            symbol_dir.join(ict_engine::application::orchestration::EXECUTION_TREE_TRACE_FILE),
+            serde_json::to_vec_pretty(&serde_json::json!({
+                "output": {
+                    "execution_readiness": 0.67,
+                    "gate_status": "ready",
+                    "branch": "fill_viable",
+                    "path_ranker_score_visible_to_execution_tree": true,
+                    "path_ranker_score_used_by_execution_tree": true,
+                    "ranker_validation_ready": true,
+                    "hybrid_transition_hazard": 0.595,
+                    "pda_hybrid_alignment": true
+                },
+                "closed_loop_branch_admission": {
+                    "status": "admitted",
+                    "ready": true,
+                    "actionable": true,
+                    "candidate_status": "execution_ready",
+                    "execution_gate_status": "execution_ready",
+                    "execution_tree_gate_status": "ready",
+                    "execution_tree_branch": "fill_viable",
+                    "path_id": branch_path,
+                    "path_label": branch_path,
+                    "pre_bayes_gate_status": "pass_neutralized",
+                    "review_status": "promote_latest",
+                    "source_phase": "structural-recommended-path-bundle"
+                }
+            }))
+            .unwrap(),
+        )
+        .unwrap();
+
+        persist_execution_candidate_from_analyze(temp.path().to_str().unwrap(), &report, "analyze")
+            .unwrap();
+
+        let candidate: ict_engine::state::ExecutionCandidateArtifact =
+            ict_engine::state::load_state(
+                temp.path(),
+                "CRWD",
+                ict_engine::state::EXECUTION_CANDIDATE_FILE,
+            )
+            .unwrap();
+
+        assert_eq!(candidate.trade_direction, Direction::Bull);
+        assert!(candidate.actionable);
+        assert_eq!(candidate.candidate_status, "execution_ready");
+        assert_eq!(candidate.review_decision.status, "promote_latest");
+        assert_eq!(
+            candidate.review_decision.reason,
+            "same_root_execution_tree_admitted"
+        );
+    }
+
+    #[test]
     fn persist_analyze_run_threads_top_factor_ranking_conformal_metrics_into_latest_analyze_snapshot(
     ) {
         let temp = tempfile::tempdir().unwrap();
@@ -1440,6 +2128,125 @@ mod tests {
         assert_eq!(latest.conformal_miscoverage_1sigma, Some(0.19));
         assert_eq!(latest.mean_prediction_interval_half_width, Some(0.07));
         assert_eq!(latest.worst_window_miscoverage, Some(0.11));
+    }
+
+    #[test]
+    fn persist_analyze_run_threads_liquidity_pool_texture_into_latest_analyze_snapshot() {
+        let temp = tempfile::tempdir().unwrap();
+        let mut report = sample_analyze_report_with_factor_ranking(Vec::new());
+        report.analysis.price_action.liquidity_pool_texture =
+            ict_engine::analyze_sections::LiquidityPoolTextureEvidence {
+                factor_name: "liquidity_pool_texture".to_string(),
+                texture: "smooth".to_string(),
+                subtype: "equal_low_pool".to_string(),
+                level: Some(428.25),
+                high: Some(429.0),
+                low: Some(427.5),
+                touch_count: 5,
+                spacing_consistency: Some(0.82),
+                clean_sweep_likelihood: Some(0.74),
+                confidence: 0.69,
+                fail_closed_reason: None,
+            };
+        report.analysis.price_action.liquidity_sweep_quality =
+            ict_engine::analyze_sections::LiquiditySweepQualityEvidence {
+                factor_name: "liquidity_sweep_quality".to_string(),
+                quality: "clean".to_string(),
+                sweep_bar: Some(12),
+                return_bar: Some(13),
+                pool_price: Some(428.25),
+                displacement_atr: Some(0.35),
+                return_bars: Some(1),
+                close_reclaim: Some(true),
+                confidence: 0.71,
+                fail_closed_reason: None,
+            };
+
+        let snapshot = persist_analyze_run(
+            temp.path().to_str().unwrap(),
+            &report,
+            "analyze",
+            None,
+            None,
+            None,
+            None,
+        )
+        .unwrap();
+
+        let latest = snapshot.latest_analyze.expect("latest analyze snapshot");
+        let texture = latest
+            .liquidity_pool_texture
+            .expect("liquidity pool texture runtime evidence");
+        assert_eq!(texture.factor_name, "liquidity_pool_texture");
+        assert_eq!(texture.texture, "smooth");
+        assert_eq!(texture.subtype, "equal_low_pool");
+        assert_eq!(texture.level, Some(428.25));
+        assert_eq!(texture.touch_count, 5);
+        assert_eq!(texture.spacing_consistency, Some(0.82));
+        assert_eq!(texture.clean_sweep_likelihood, Some(0.74));
+        assert_eq!(texture.confidence, 0.69);
+        assert_eq!(texture.fail_closed_reason, None);
+        let sweep_quality = latest
+            .liquidity_sweep_quality
+            .expect("liquidity sweep quality runtime evidence");
+        assert_eq!(sweep_quality.factor_name, "liquidity_sweep_quality");
+        assert_eq!(sweep_quality.quality, "clean");
+        assert_eq!(sweep_quality.sweep_bar, Some(12));
+        assert_eq!(sweep_quality.return_bar, Some(13));
+        assert_eq!(sweep_quality.pool_price, Some(428.25));
+        assert_eq!(sweep_quality.displacement_atr, Some(0.35));
+        assert_eq!(sweep_quality.return_bars, Some(1));
+        assert_eq!(sweep_quality.close_reclaim, Some(true));
+        assert_eq!(sweep_quality.confidence, 0.71);
+        assert_eq!(sweep_quality.fail_closed_reason, None);
+    }
+
+    #[test]
+    fn persist_analyze_run_threads_volume_imbalance_gap_into_latest_analyze_snapshot() {
+        let temp = tempfile::tempdir().unwrap();
+        let mut report = sample_analyze_report_with_factor_ranking(Vec::new());
+        report.analysis.price_action.volume_imbalance_gap =
+            ict_engine::analyze_sections::VolumeImbalanceGapEvidence {
+                factor_name: "volume_imbalance_gap".to_string(),
+                direction: Direction::Bear,
+                top: Some(431.5),
+                bottom: Some(430.25),
+                midpoint: Some(430.875),
+                start_bar: Some(27),
+                filled: false,
+                active: true,
+                mitigation_pct: Some(0.25),
+                failed_mitigation: false,
+                partial_fill_state: "partial".to_string(),
+                confidence: 0.63,
+                fail_closed_reason: None,
+            };
+
+        let snapshot = persist_analyze_run(
+            temp.path().to_str().unwrap(),
+            &report,
+            "analyze",
+            None,
+            None,
+            None,
+            None,
+        )
+        .unwrap();
+
+        let latest = snapshot.latest_analyze.expect("latest analyze snapshot");
+        let gap = latest
+            .volume_imbalance_gap
+            .expect("volume imbalance gap runtime evidence");
+        assert_eq!(gap.factor_name, "volume_imbalance_gap");
+        assert_eq!(gap.direction, Direction::Bear);
+        assert_eq!(gap.top, Some(431.5));
+        assert_eq!(gap.bottom, Some(430.25));
+        assert_eq!(gap.midpoint, Some(430.875));
+        assert_eq!(gap.start_bar, Some(27));
+        assert!(!gap.filled);
+        assert!(gap.active);
+        assert_eq!(gap.confidence, 0.63);
+        assert_eq!(gap.fail_closed_reason, None);
     }
 
     #[test]
@@ -1690,5 +2497,97 @@ mod tests {
         });
 
         assert!(strong > weak);
+    }
+
+    #[test]
+    fn test_regime_profit_branch_assignments_derive_from_feedback_history() {
+        let branch_path = "TrendExpansion -> OpeningDrive -> vwap_reclaim -> mnq_opening_drive_v1";
+        let mut learning_state = LearningState::default();
+        learning_state.feedback_history.push(FeedbackRecord {
+            timestamp: Utc::now(),
+            symbol: "MNQ".to_string(),
+            source: "structural_feedback_submission".to_string(),
+            run_id: Some("analyze:one".to_string()),
+            trade_id: None,
+            prompt_version: None,
+            factor_version: None,
+            data_fingerprint: None,
+            factors_used: Vec::new(),
+            model_probabilities_before_trade: ModelProbabilitySnapshot {
+                selected_direction: Direction::Bull,
+                selected_probability: 0.62,
+                long_score: 0.62,
+                short_score: 0.38,
+                win_prob_long: 0.62,
+                win_prob_short: 0.38,
+                uncertainty: 0.18,
+            },
+            realized_outcome: "win".to_string(),
+            pnl: 1.0,
+            regime_at_entry: Regime::ManipulationExpansion,
+            structural_feedback: Some(ict_engine::state::StructuralFeedbackRefs {
+                protocol_version: "structural-feedback-v1".to_string(),
+                recommendation_id: "structural-feedback:MNQ:one".to_string(),
+                recommended_at: Utc::now().to_rfc3339(),
+                node_id: "node".to_string(),
+                branch_id: "branch".to_string(),
+                scenario_id: "scenario".to_string(),
+                path_id: branch_path.to_string(),
+                followed_path: true,
+                exit_reason: None,
+                notes: None,
+            }),
+            reflection_mismatch_tags: Vec::new(),
+        });
+        learning_state.feedback_history.push(FeedbackRecord {
+            timestamp: Utc::now(),
+            symbol: "MNQ".to_string(),
+            source: "structural_feedback_submission".to_string(),
+            run_id: Some("analyze:two".to_string()),
+            trade_id: None,
+            prompt_version: None,
+            factor_version: None,
+            data_fingerprint: None,
+            factors_used: Vec::new(),
+            model_probabilities_before_trade: ModelProbabilitySnapshot {
+                selected_direction: Direction::Bull,
+                selected_probability: 0.62,
+                long_score: 0.62,
+                short_score: 0.38,
+                win_prob_long: 0.62,
+                win_prob_short: 0.38,
+                uncertainty: 0.18,
+            },
+            realized_outcome: "win".to_string(),
+            pnl: 1.0,
+            regime_at_entry: Regime::ManipulationExpansion,
+            structural_feedback: Some(ict_engine::state::StructuralFeedbackRefs {
+                protocol_version: "structural-feedback-v1".to_string(),
+                recommendation_id: "structural-feedback:MNQ:two".to_string(),
+                recommended_at: Utc::now().to_rfc3339(),
+                node_id: "node".to_string(),
+                branch_id: "branch".to_string(),
+                scenario_id: "scenario".to_string(),
+                path_id: branch_path.to_string(),
+                followed_path: true,
+                exit_reason: None,
+                notes: None,
+            }),
+            reflection_mismatch_tags: Vec::new(),
+        });
+
+        let entries =
+            regime_profit_branch_assignment_entries_from_feedback_history(&learning_state)
+                .expect("dominant exact branch path");
+
+        assert!(entries
+            .iter()
+            .any(|(key, value)| { key == "regime_profit_branch_path" && value == branch_path }));
+        assert!(entries.iter().any(|(key, value)| {
+            key == "regime_profit_branch_path_source" && value == "structural_feedback_history"
+        }));
+        assert!(entries.iter().any(|(key, value)| {
+            key == "regime_profit_branch_path_feedback_count" && value == "2"
+        }));
     }
 }

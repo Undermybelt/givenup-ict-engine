@@ -9,11 +9,10 @@ use crate::state::types::{
     AnalyzeRunRecord, ArtifactLedgerEntry, BacktestRunRecord, EnsembleExecutorScorecard,
     EnsembleVoteRecord, ExecutionCandidateArtifact, FactorAutoresearchAttempt,
     FactorAutoresearchLiveSnapshot, FactorAutoresearchSession, FactorMutationRunRecord,
-    LearningState, PendingUpdateArtifact, PreBayesPolicyRecord, ResearchRunRecord,
-    StructuralFeedbackRefs, TrainRunRecord, UpdateRunRecord, ANALYZE_RUNS_FILE,
-    ARTIFACT_LEDGER_FILE, BACKTEST_RUNS_FILE, ENSEMBLE_EXECUTOR_SCORECARDS_FILE,
-    ENSEMBLE_VOTE_FILE, ENSEMBLE_VOTE_HISTORY_FILE, EXECUTION_CANDIDATE_FILE,
-    EXECUTION_CANDIDATE_HISTORY_FILE, FACTOR_AUTORESEARCH_ATTEMPTS_FILE,
+    LearningState, PendingUpdateArtifact, PreBayesPolicyRecord, ResearchRunRecord, TrainRunRecord,
+    UpdateRunRecord, ANALYZE_RUNS_FILE, ARTIFACT_LEDGER_FILE, BACKTEST_RUNS_FILE,
+    ENSEMBLE_EXECUTOR_SCORECARDS_FILE, ENSEMBLE_VOTE_FILE, ENSEMBLE_VOTE_HISTORY_FILE,
+    EXECUTION_CANDIDATE_FILE, EXECUTION_CANDIDATE_HISTORY_FILE, FACTOR_AUTORESEARCH_ATTEMPTS_FILE,
     FACTOR_AUTORESEARCH_FINAL_FILE, FACTOR_AUTORESEARCH_LIVE_FILE,
     FACTOR_AUTORESEARCH_SESSIONS_FILE, FACTOR_MUTATION_RUNS_FILE, LEARNING_STATE_FILE,
     PENDING_UPDATE_ARTIFACT_FILE, PENDING_UPDATE_HISTORY_FILE, PRE_BAYES_POLICY_HISTORY_FILE,
@@ -554,7 +553,7 @@ mod tests {
     use crate::bbn::trading::topology::build_trading_network;
     use crate::state::types::{
         AnalyzeRunRecord, BacktestRunRecord, FeedbackFactorUsage, FeedbackRecord,
-        ModelProbabilitySnapshot, ResearchRunRecord, TRADE_HISTORY_FILE,
+        ModelProbabilitySnapshot, ResearchRunRecord, StructuralFeedbackRefs, TRADE_HISTORY_FILE,
     };
     use crate::types::{Direction, Regime, TradeRecord};
     use chrono::Utc;

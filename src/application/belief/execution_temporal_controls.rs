@@ -99,6 +99,8 @@ pub fn apply_regime_execution_guardrail(
         .evidence
         .iter()
         .any(|line| line == "pda_hybrid_alignment=false");
+    output.hybrid_transition_hazard = hybrid_regime.transition_hazard;
+    output.pda_hybrid_alignment = Some(!pda_disagreement);
     let low_remaining_duration = hybrid_regime
         .duration_remaining_expected_bars
         .unwrap_or(f64::INFINITY)
@@ -129,6 +131,18 @@ pub fn apply_regime_execution_guardrail(
             output
                 .split_reason_lineage
                 .push("pda_hybrid_alignment=false".to_string());
+            for prefix in [
+                "pda_sequence_h1_second_expansion_support=",
+                "pda_sequence_h0_no_second_expansion_support=",
+            ] {
+                if let Some(line) = hybrid_regime
+                    .evidence
+                    .iter()
+                    .find(|line| line.starts_with(prefix))
+                {
+                    output.split_reason_lineage.push(line.clone());
+                }
+            }
         }
         if low_remaining_duration || short_remaining_duration {
             output.split_reason_lineage.push(format!(
@@ -148,4 +162,69 @@ pub fn apply_regime_execution_guardrail(
         ));
     }
     output
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use std::collections::BTreeMap;
+
+    fn ready_execution_output() -> ExecutionTreeOutput {
+        ExecutionTreeOutput {
+            gate_status: "ready".to_string(),
+            branch: "fill_viable".to_string(),
+            execution_bias: "aggressive".to_string(),
+            branch_probability: 0.72,
+            posterior_uncertainty: 0.30,
+            decision_hint: "execution_first_fill".to_string(),
+            ..ExecutionTreeOutput::default()
+        }
+    }
+
+    fn regime_packet(evidence: Vec<String>) -> RegimeSegmentationPacket {
+        RegimeSegmentationPacket {
+            method: "hybrid_regime_first_pass_v1".to_string(),
+            segmentation_version: "v2".to_string(),
+            active_regime_cluster: Some("trend_impulse".to_string()),
+            transition_hazard: Some(0.22),
+            duration_elapsed_bars: Some(2),
+            duration_model: Some("negative_binomial".to_string()),
+            duration_remaining_expected_bars: Some(4.0),
+            regime_membership: BTreeMap::new(),
+            feature_attribution: BTreeMap::new(),
+            evidence,
+            wasserstein_label: Some("trend_impulse".to_string()),
+            wasserstein_distance: Some(0.12),
+            governor_confidence: Some(0.70),
+            governor_entropy: Some(0.90),
+            governor_min_hold_active: Some(false),
+            timeframe_alignment: Some(true),
+            timeframe_alignment_score: Some(1.0),
+        }
+    }
+
+    #[test]
+    fn guardrail_keeps_pda_disagreement_observe_but_preserves_h1_h0_lineage() {
+        let output = apply_regime_execution_guardrail(
+            ready_execution_output(),
+            &regime_packet(vec![
+                "pda_hybrid_alignment=false".to_string(),
+                "pda_sequence_h1_second_expansion_support=0.7715".to_string(),
+                "pda_sequence_h0_no_second_expansion_support=0.2285".to_string(),
+            ]),
+        );
+
+        assert_eq!(output.gate_status, "observe");
+        assert_eq!(output.branch, "transition_guardrail");
+        assert_eq!(
+            output.decision_hint,
+            "execution_guarded_due_to_pda_hybrid_disagreement"
+        );
+        assert!(output
+            .split_reason_lineage
+            .contains(&"pda_sequence_h1_second_expansion_support=0.7715".to_string()));
+        assert!(output
+            .split_reason_lineage
+            .contains(&"pda_sequence_h0_no_second_expansion_support=0.2285".to_string()));
+    }
 }

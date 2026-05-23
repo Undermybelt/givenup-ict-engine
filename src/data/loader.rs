@@ -148,7 +148,7 @@ pub fn load_candles_csv<P: AsRef<Path>>(path: P) -> Result<Vec<Candle>> {
 
     let timestamp_idx = find_header_index(
         &headers,
-        &["timestamp", "time", "datetime", "ts_event", "date"],
+        &["timestamp", "time", "datetime", "ts_event", "ts", "date"],
     )?;
     let open_idx = find_header_index(&headers, &["open", "o"])?;
     let high_idx = find_header_index(&headers, &["high", "h"])?;

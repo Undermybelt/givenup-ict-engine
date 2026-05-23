@@ -58,7 +58,13 @@ fn auto_quant_promote_canonical_setup_command_with_repo_root(
             .ok_or_else(|| anyhow::anyhow!("unknown pb12 sweep_id '{}'", target))?,
         None => artifacts
             .last()
-            .ok_or_else(|| anyhow::anyhow!("no pb12 research artifacts found for {}", symbol))?,
+            .ok_or_else(|| {
+                anyhow::anyhow!(
+                    "auto_quant_promote_canonical_setup_pb12_missing symbol={} expected=PB12 control-matrix research artifact recovery=run `ict-engine factor-research --symbol {} --control-matrix-pb12 --state-dir <state-dir>` or pass --sweep-id for an existing PB12 artifact before promoting a canonical setup",
+                    symbol,
+                    symbol
+                )
+            })?,
     };
     let parsed_direction = direction.map(parse_direction).transpose()?;
     let candidate = artifact
@@ -201,5 +207,39 @@ mod tests {
         assert_eq!(report.setup_name, "SweepMssContinuation");
         assert!(std::path::Path::new(&report.config_path).exists());
         assert!(std::path::Path::new(&report.generated_path).exists());
+    }
+
+    #[test]
+    fn promote_canonical_setup_missing_pb12_artifact_names_prerequisite_and_recovery() {
+        let temp = tempfile::tempdir().unwrap();
+
+        let result = auto_quant_promote_canonical_setup_command_with_repo_root(
+            PromoteCanonicalSetupCommandInput {
+                symbol: "DEMO",
+                state_dir: temp.path().to_str().unwrap(),
+                setup_name: "Probe Setup",
+                sequence_label: "liquidity_sweep -> market_structure_shift",
+                direction: Some("bull"),
+                sweep_id: None,
+                horizon_bars: 30,
+            },
+            temp.path(),
+        );
+
+        let err = result.expect_err("missing PB12 artifact must fail clearly");
+        let message = format!("{err:#}");
+        assert!(
+            message.contains("auto_quant_promote_canonical_setup_pb12_missing"),
+            "unexpected error: {message}"
+        );
+        assert!(
+            message.contains("symbol=DEMO"),
+            "unexpected error: {message}"
+        );
+        assert!(
+            message.contains("PB12") || message.contains("pb12"),
+            "unexpected error: {message}"
+        );
+        assert!(message.contains("recovery="), "unexpected error: {message}");
     }
 }

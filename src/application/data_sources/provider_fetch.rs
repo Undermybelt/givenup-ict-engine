@@ -289,7 +289,7 @@ fn parse_hubble_candles_payload(payload: &Value) -> Result<Vec<Candle>> {
         .collect::<Result<Vec<_>>>()
 }
 
-fn extract_hubble_rows<'a>(payload: &'a Value) -> Vec<&'a Value> {
+fn extract_hubble_rows(payload: &Value) -> Vec<&Value> {
     if let Some(items) = payload.as_array() {
         return items.iter().collect();
     }
@@ -374,7 +374,8 @@ fn parse_hubble_options_summary(symbol: &str, payload: &Value) -> Result<Options
     let mut call_volume = 0.0;
     let mut put_volume = 0.0;
     let mut nearest_expiration: Option<NaiveDate> = None;
-    let mut nearest_atm: Option<(f64, f64, Option<f64>, Option<f64>, Option<f64>)> = None;
+    type AtmOptionSummary = (f64, f64, Option<f64>, Option<f64>, Option<f64>);
+    let mut nearest_atm: Option<AtmOptionSummary> = None;
     let mut call_gamma_oi = 0.0;
     let mut put_gamma_oi = 0.0;
     let mut saw_call_gamma = false;

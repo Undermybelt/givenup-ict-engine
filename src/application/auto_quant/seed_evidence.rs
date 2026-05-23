@@ -475,6 +475,16 @@ fn render_seed_strategy_scaffold(
     let strategy_excerpt = sanitize_docstring_excerpt(packet.strategy_excerpt.as_deref());
     let evidence_excerpt = sanitize_docstring_excerpt(packet.evidence_excerpt.as_deref());
 
+    if let Some(exact_source) = render_exact_freqtrade_seed_strategy(
+        artifact_id,
+        generated_at,
+        strategy_material_root,
+        packet,
+        source_material,
+    ) {
+        return exact_source;
+    }
+
     let template = r#"# AUTO-GENERATED SEED SCAFFOLD - DO NOT REMOVE THIS HEADER
 # auto_quant_seed_material_evidence_artifact_id: {ARTIFACT_ID}
 # source_material: {SOURCE_MATERIAL}
@@ -577,6 +587,82 @@ class {CLASS_NAME}(IStrategy):
         .replace("{STRATEGY_EXCERPT}", &strategy_excerpt)
         .replace("{EVIDENCE_EXCERPT}", &evidence_excerpt)
         .replace("{CLASS_NAME}", class_name)
+}
+
+fn render_exact_freqtrade_seed_strategy(
+    artifact_id: &str,
+    generated_at: &DateTime<Utc>,
+    strategy_material_root: &str,
+    packet: &AutoQuantSeedMaterialPacket,
+    source_material: &str,
+) -> Option<String> {
+    let source_path = Path::new(source_material);
+    let source_path = if source_path.is_absolute() {
+        source_path.to_path_buf()
+    } else {
+        Path::new(strategy_material_root).join(source_path)
+    };
+    let source = std::fs::read_to_string(source_path).ok()?;
+    if !source_looks_like_standalone_freqtrade_strategy(&source) {
+        return None;
+    }
+    let timestamp = generated_at.format("%Y-%m-%dT%H:%M:%SZ").to_string();
+    let evidence_csv = packet
+        .summary
+        .evidence_csv_path
+        .as_deref()
+        .unwrap_or("(none)");
+    let header = format!(
+        "# AUTO-GENERATED EXACT SEED COPY - DO NOT REMOVE THIS HEADER\n# auto_quant_seed_material_evidence_artifact_id: {artifact_id}\n# source_material: {source_material}\n# source_evidence_csv: {evidence_csv}\n# source_root: {strategy_material_root}\n# generated_at: {timestamp}\n# exact_freqtrade_strategy_preserved: true\n"
+    );
+    let source = rewrite_first_freqtrade_strategy_class_name(&source, &packet.seed_strategy_name)?;
+    Some(format!("{header}\n{source}"))
+}
+
+fn source_looks_like_standalone_freqtrade_strategy(source: &str) -> bool {
+    let lowered = source.to_ascii_lowercase();
+    if lowered.contains("import tomac") || lowered.contains("from tomac") {
+        return false;
+    }
+    source.contains("IStrategy")
+        && source.contains("populate_indicators")
+        && source.contains("populate_entry_trend")
+        && source.contains("populate_exit_trend")
+}
+
+fn rewrite_first_freqtrade_strategy_class_name(source: &str, class_name: &str) -> Option<String> {
+    let mut rewritten = Vec::new();
+    let mut replaced = false;
+    for line in source.lines() {
+        if !replaced {
+            if let Some(class_offset) = line.find("class ") {
+                if let Some(strategy_offset) = line[class_offset..].find("(IStrategy)") {
+                    let prefix_end = class_offset + "class ".len();
+                    let suffix_start = class_offset + strategy_offset;
+                    let original_name = line[prefix_end..suffix_start].trim();
+                    if !original_name.is_empty()
+                        && original_name
+                            .chars()
+                            .all(|ch| ch == '_' || ch.is_ascii_alphanumeric())
+                    {
+                        let indent_and_class = &line[..prefix_end];
+                        let suffix = &line[suffix_start..];
+                        rewritten.push(format!("{indent_and_class}{class_name}{suffix}"));
+                        replaced = true;
+                        continue;
+                    }
+                }
+            }
+        }
+        rewritten.push(line.to_string());
+    }
+    replaced.then(|| {
+        let mut rendered = rewritten.join("\n");
+        if source.ends_with('\n') {
+            rendered.push('\n');
+        }
+        rendered
+    })
 }
 
 fn sanitize_docstring_excerpt(excerpt: Option<&str>) -> String {
@@ -685,6 +771,75 @@ mod tests {
     }
 
     #[test]
+    fn render_exact_freqtrade_seed_strategy_preserves_exact_short_strategy() {
+        let root = tempfile::tempdir().unwrap();
+        let strategy_root = root.path().join("materials");
+        std::fs::create_dir_all(&strategy_root).unwrap();
+        let strategy_path = strategy_root.join("exact_short.py");
+        std::fs::write(
+            &strategy_path,
+            r#"from freqtrade.strategy import IStrategy
+from pandas import DataFrame
+
+
+class ExactShort(IStrategy):
+    INTERFACE_VERSION = 3
+    timeframe = "1m"
+    can_short = True
+
+    def populate_indicators(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
+        dataframe["x"] = 1
+        return dataframe
+
+    def populate_entry_trend(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
+        dataframe.loc[:, "enter_short"] = 1
+        return dataframe
+
+    def populate_exit_trend(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
+        dataframe.loc[:, "exit_short"] = 1
+        return dataframe
+"#,
+        )
+        .unwrap();
+        let packet = AutoQuantSeedMaterialPacket {
+            summary: AutoQuantStrategyMaterialSummary {
+                name: "exact_short".to_string(),
+                strategy_path: "exact_short.py".to_string(),
+                evidence_csv_path: None,
+                trade_rows: 1,
+                total_net_pnl: None,
+                tp_count: 0,
+                sl_count: 0,
+                be_count: 0,
+                average_score: None,
+            },
+            evidence_strength_score: 1.0,
+            inferred_tags: vec![],
+            seed_strategy_name: "TomacExactShortSeed".to_string(),
+            seed_strategy_path: strategy_path.to_string_lossy().to_string(),
+            authoring_focus: vec!["exact short seed".to_string()],
+            strategy_excerpt: Some("Exact short seed".to_string()),
+            evidence_excerpt: None,
+            materialized_strategy_path: None,
+            materialization_status: String::new(),
+        };
+        let rendered = render_exact_freqtrade_seed_strategy(
+            "artifact-1",
+            &Utc::now(),
+            strategy_root.to_str().unwrap(),
+            &packet,
+            "exact_short.py",
+        )
+        .unwrap();
+        assert!(rendered.contains("AUTO-GENERATED EXACT SEED COPY"));
+        assert!(rendered.contains("exact_freqtrade_strategy_preserved: true"));
+        assert!(rendered.contains("class TomacExactShortSeed(IStrategy):"));
+        assert!(rendered.contains("can_short = True"));
+        assert!(rendered.contains("enter_short"));
+        assert!(!rendered.contains("AUTO-GENERATED SEED SCAFFOLD"));
+    }
+
+    #[test]
     fn persist_seed_material_evidence_is_idempotent_for_existing_scaffolds() {
         let state = tempfile::tempdir().unwrap();
         let workspace_dir = tempfile::tempdir().unwrap();
@@ -729,6 +884,62 @@ mod tests {
         assert!(second.materialized_strategy_paths.is_empty());
         let preserved = std::fs::read_to_string(&scaffold_path).unwrap();
         assert_eq!(preserved, "# user-edited body\n");
+    }
+
+    #[test]
+    fn materializes_exact_freqtrade_source_without_long_scaffold_substitution() {
+        let state = tempfile::tempdir().unwrap();
+        let workspace_dir = tempfile::tempdir().unwrap();
+        let root = tempfile::tempdir().unwrap();
+        init_workspace(workspace_dir.path());
+        std::fs::write(
+            root.path().join("IbkrFutM2KExactShort1Min.py"),
+            r#"from freqtrade.strategy import IStrategy
+from pandas import DataFrame
+
+
+class IbkrFutM2KExactShort1Min(IStrategy):
+    INTERFACE_VERSION = 3
+    timeframe = "1m"
+    can_short = True
+
+    def populate_indicators(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
+        dataframe["rvol"] = dataframe["volume"] / dataframe["volume"].rolling(30).mean().replace(0, 1)
+        return dataframe
+
+    def populate_entry_trend(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
+        signal = dataframe["rvol"] > 1.2
+        dataframe.loc[signal, "enter_short"] = 1
+        return dataframe
+
+    def populate_exit_trend(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
+        dataframe.loc[dataframe["rvol"] < 0.8, "exit_short"] = 1
+        return dataframe
+"#,
+        )
+        .unwrap();
+
+        let workspace = auto_quant_workspace_config(workspace_dir.path().to_str().unwrap());
+        let artifact = persist_auto_quant_seed_material_evidence(
+            "IBKR_M2K1M_RVOL_PDA_EXACT_SEED_PRIMARY1M_V1",
+            state.path().to_str().unwrap(),
+            Some(root.path().to_str().unwrap()),
+            &workspace,
+            3,
+        )
+        .unwrap()
+        .unwrap();
+
+        let packet = artifact.selected_materials.first().unwrap();
+        let materialized_path = packet.materialized_strategy_path.as_deref().unwrap();
+        let body = std::fs::read_to_string(materialized_path).unwrap();
+        assert!(body.contains(&format!("class {}(IStrategy)", packet.seed_strategy_name)));
+        assert!(body.contains("timeframe = \"1m\""));
+        assert!(body.contains("can_short = True"));
+        assert!(body.contains("\"enter_short\"] = 1"));
+        assert!(body.contains("\"exit_short\"] = 1"));
+        assert!(!body.contains("\"enter_long\"] = 1"));
+        assert!(!body.contains("ema_fast_period"));
     }
 
     #[test]

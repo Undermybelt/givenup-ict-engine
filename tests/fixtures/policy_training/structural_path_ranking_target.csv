@@ -1,0 +1,2 @@
+candidate_set_id,path_id,structural_baseline_score,maturity_mask,calibrated_label
+structural-candidates:NQ:contract,path:scenario:NQ:contract:trend-follow-through:primary,0.70,false,

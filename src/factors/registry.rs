@@ -14,6 +14,7 @@ impl Default for FactorRegistry {
             factors: BTreeMap::new(),
         };
         registry.register(FactorDefinition::trend_momentum());
+        registry.register(FactorDefinition::bayesian_markov_trend_detector());
         registry.register(FactorDefinition::volatility_mean_reversion());
         registry.register(FactorDefinition::structure_ict());
         registry.register(FactorDefinition::cross_market_smt());

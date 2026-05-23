@@ -1,4 +1,4 @@
-use anyhow::{bail, Result};
+use anyhow::{bail, Context, Result};
 use chrono::Utc;
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
@@ -7,6 +7,9 @@ use std::fs;
 use std::io::{BufRead, BufReader};
 use std::path::Path;
 
+use crate::application::auto_quant::results::{
+    load_strategy_library_manifest, ARTIFACT_KIND_LIBRARY,
+};
 use crate::application::orchestration::{
     apply_structural_path_ranking_external_scores,
     export_structural_path_ranking_target_with_agent_material_rank,
@@ -32,12 +35,12 @@ use crate::belief_core::ranking_label::{
     STRUCTURAL_PATH_RANKING_RUNTIME_SELECTION_PROTOCOL_VERSION,
 };
 #[cfg(test)]
-use crate::state::{append_artifact_ledger_entry, ArtifactLedgerEntry};
+use crate::state::append_artifact_ledger_entry;
 use crate::state::{
     load_artifact_ledger, load_learning_state, load_pending_update_history, load_state_or_default,
     load_workflow_snapshot, save_text_state, structural_feedback_counter_outcome,
-    structural_feedback_outcome_is_unresolved, AnalyzeRunRecord, UpdateRunRecord,
-    ANALYZE_RUNS_FILE, PENDING_UPDATE_ARTIFACT_FILE, UPDATE_RUNS_FILE,
+    structural_feedback_outcome_is_unresolved, AnalyzeRunRecord, ArtifactLedgerEntry,
+    UpdateRunRecord, ANALYZE_RUNS_FILE, PENDING_UPDATE_ARTIFACT_FILE, UPDATE_RUNS_FILE,
 };
 use crate::types::RegimeProbs;
 
@@ -56,6 +59,13 @@ pub const CISD_RB_TRAINING_SUMMARY_FILE: &str = "cisd_rb_training_export_summary
 pub const BREAKER_RB_BBN_TRAINING_FILE: &str = "breaker_rb_bbn_training.csv";
 pub const BREAKER_RB_CATBOOST_TRAINING_FILE: &str = "breaker_rb_catboost_training.csv";
 pub const BREAKER_RB_TRAINING_SUMMARY_FILE: &str = "breaker_rb_training_export_summary.json";
+pub const AUTO_QUANT_REAL_TRADE_FEEDBACK_MODEL_ID: &str = "auto_quant_real_trade_entry_v1";
+pub const AUTO_QUANT_REAL_TRADE_BBN_TRAINING_FILE: &str =
+    "auto_quant_real_trade_feedback_bbn_training.csv";
+pub const AUTO_QUANT_REAL_TRADE_CATBOOST_TRAINING_FILE: &str =
+    "auto_quant_real_trade_feedback_catboost_training.csv";
+pub const AUTO_QUANT_REAL_TRADE_TRAINING_SUMMARY_FILE: &str =
+    "auto_quant_real_trade_feedback_training_export_summary.json";
 pub const STRUCTURAL_PATH_RANKING_TRAINER_ARTIFACT_FILE: &str =
     "structural_path_ranking_trainer_artifact.json";
 const STRUCTURAL_PATH_RANKING_TRAINER_ARTIFACT_PROTOCOL_VERSION: &str =
@@ -110,6 +120,13 @@ struct BreakerCollectedTrainingRows {
     linkage: EntryModelTrainingLinkageDiagnostics,
     bbn_rows: Vec<BreakerRbBbnTrainingRow>,
     catboost_rows: Vec<BreakerRbCatBoostTrainingRow>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, Default, PartialEq)]
+struct AutoQuantRealTradeCollectedTrainingRows {
+    feedback_rows: usize,
+    feedback_rows_with_structural_feedback: usize,
+    matched_rows: Vec<AutoQuantRealTradeTrainingRow>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, Default, PartialEq)]
@@ -239,6 +256,26 @@ pub struct BreakerRbTrainingStatusSurface {
     pub bbn: BbnTrainingStatusSurface,
     pub catboost: CatBoostTrainingStatusSurface,
     pub summary_line: String,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+pub struct AutoQuantRealTradeTrainingRow {
+    pub timestamp: String,
+    pub symbol: String,
+    pub source: String,
+    pub run_id: String,
+    pub trade_id: String,
+    pub strategy_or_factor: String,
+    pub regime_profit_branch_path: String,
+    pub main_regime: String,
+    pub sub_regime: String,
+    pub sub_sub_regime_or_profit_factor: String,
+    pub profit_factor: String,
+    pub followed_path: bool,
+    pub direction: String,
+    pub selected_probability: f64,
+    pub pnl: f64,
+    pub realized_outcome: String,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
@@ -625,6 +662,9 @@ pub struct CisdRbEntryModelProvider;
 #[derive(Debug, Clone, Copy, Default)]
 pub struct BreakerRbEntryModelProvider;
 
+#[derive(Debug, Clone, Copy, Default)]
+pub struct AutoQuantRealTradeFeedbackEntryModelProvider;
+
 impl EntryModelProvider for CisdRbEntryModelProvider {
     fn provider_id(&self) -> &'static str {
         CISD_RB_SETUP_MODEL_ID
@@ -707,6 +747,48 @@ impl EntryModelProvider for BreakerRbEntryModelProvider {
     }
 }
 
+impl EntryModelProvider for AutoQuantRealTradeFeedbackEntryModelProvider {
+    fn provider_id(&self) -> &'static str {
+        AUTO_QUANT_REAL_TRADE_FEEDBACK_MODEL_ID
+    }
+
+    fn consumer_default_mode(&self) -> ConsumerDefaultMode {
+        ConsumerDefaultMode::InternalTrainingOnly
+    }
+
+    fn training_rows(&self, state_dir: &str, symbol: &str) -> Result<EntryModelTrainingRows> {
+        build_auto_quant_real_trade_feedback_training_rows(state_dir, symbol)
+    }
+
+    fn status_surface(
+        &self,
+        state_dir: &str,
+        symbol: &str,
+    ) -> Result<PolicyTrainingProviderStatusSurface> {
+        let rows = collect_auto_quant_real_trade_feedback_rows(state_dir, symbol)?;
+        let outcome_counts = count_strings(
+            rows.matched_rows
+                .iter()
+                .map(|row| row.realized_outcome.as_str()),
+        );
+        let warnings = auto_quant_real_trade_feedback_warnings(&rows, &outcome_counts);
+        Ok(PolicyTrainingProviderStatusSurface {
+            provider_id: self.provider_id().to_string(),
+            consumer_adopted_by_default: self.consumer_default_mode().adopted_by_default(),
+            consumer_effect: self.consumer_default_mode().effect_label().to_string(),
+            ready: warnings.is_empty(),
+            matched_rows: rows.matched_rows.len(),
+            summary_line: format!(
+                "Auto-Quant real-trade feedback policy training: matched_rows={} structural_feedback_rows={} outcomes={} warnings={}",
+                rows.matched_rows.len(),
+                rows.feedback_rows_with_structural_feedback,
+                format_counts(&outcome_counts),
+                warnings.join("; ")
+            ),
+        })
+    }
+}
+
 pub fn export_cisd_rb_training_tables(
     state_dir: &str,
     symbol: &str,
@@ -725,6 +807,50 @@ pub fn export_breaker_rb_training_tables(
     persist_training_rows(state_dir, symbol, &rows)?;
     let summary: BreakerRbTrainingExportSummary = serde_json::from_str(&rows.summary_json)?;
     Ok(summary)
+}
+
+fn build_auto_quant_real_trade_feedback_training_rows(
+    state_dir: &str,
+    symbol: &str,
+) -> Result<EntryModelTrainingRows> {
+    let rows = collect_auto_quant_real_trade_feedback_rows(state_dir, symbol)?;
+    let csv = render_auto_quant_real_trade_feedback_csv(&rows.matched_rows);
+    let outcome_counts = count_strings(
+        rows.matched_rows
+            .iter()
+            .map(|row| row.realized_outcome.as_str()),
+    );
+    let warnings = auto_quant_real_trade_feedback_warnings(&rows, &outcome_counts);
+    let summary = serde_json::json!({
+        "symbol": symbol,
+        "feedback_rows": rows.feedback_rows,
+        "feedback_rows_with_structural_feedback": rows.feedback_rows_with_structural_feedback,
+        "matched_rows": rows.matched_rows.len(),
+        "outcome_counts": outcome_counts,
+        "warnings": warnings,
+        "bbn_training_path": Path::new(state_dir)
+            .join(symbol)
+            .join(POLICY_TRAINING_DIR)
+            .join(AUTO_QUANT_REAL_TRADE_BBN_TRAINING_FILE)
+            .to_string_lossy()
+            .to_string(),
+        "catboost_training_path": Path::new(state_dir)
+            .join(symbol)
+            .join(POLICY_TRAINING_DIR)
+            .join(AUTO_QUANT_REAL_TRADE_CATBOOST_TRAINING_FILE)
+            .to_string_lossy()
+            .to_string(),
+    });
+    Ok(EntryModelTrainingRows {
+        provider_id: AUTO_QUANT_REAL_TRADE_FEEDBACK_MODEL_ID.to_string(),
+        matched_rows: rows.matched_rows.len(),
+        bbn_training_filename: AUTO_QUANT_REAL_TRADE_BBN_TRAINING_FILE.to_string(),
+        bbn_csv: csv.clone(),
+        catboost_training_filename: AUTO_QUANT_REAL_TRADE_CATBOOST_TRAINING_FILE.to_string(),
+        catboost_csv: csv,
+        summary_filename: AUTO_QUANT_REAL_TRADE_TRAINING_SUMMARY_FILE.to_string(),
+        summary_json: serde_json::to_string_pretty(&summary)?,
+    })
 }
 
 fn build_breaker_rb_training_rows(state_dir: &str, symbol: &str) -> Result<EntryModelTrainingRows> {
@@ -1295,7 +1421,43 @@ pub fn structural_path_ranking_target_training_status(
         .join(POLICY_TRAINING_DIR)
         .join(STRUCTURAL_PATH_RANKING_TARGET_SUMMARY_FILE);
     if !summary_path.exists() {
+        let validation_min_rows = STRUCTURAL_PATH_RANKING_PRODUCTION_VALIDATION_MIN_ROWS;
+        let target_row_validation = StructuralPathRankingTargetRowValidationSurface {
+            raw_scored_mature_rows: 0,
+            raw_scored_mature_min_rows: validation_min_rows,
+            raw_scored_mature_shortfall_rows: validation_min_rows,
+            production_validation_ready: false,
+            production_validation_rows: 0,
+            production_validation_min_rows: validation_min_rows,
+            production_validation_shortfall_rows: validation_min_rows,
+            summary_line: format!(
+                "target_rows raw_scored_mature=0/{} production_validation=0/{} ready=false",
+                validation_min_rows, validation_min_rows
+            ),
+        };
+        let feedback_observation_validation =
+            StructuralPathRankingFeedbackObservationValidationSurface {
+                ready: false,
+                mature_observations: 0,
+                min_observations: validation_min_rows,
+                shortfall_observations: validation_min_rows,
+                pending_observations: 0,
+                total_observations: 0,
+                outcome_distribution: BTreeMap::new(),
+                summary_line: format!(
+                    "observations mature=0/{} pending=0 total=0 ready=false",
+                    validation_min_rows
+                ),
+            };
         return Ok(StructuralPathRankingTargetTrainingStatusSurface {
+            raw_scored_mature_min_rows: validation_min_rows,
+            raw_scored_mature_shortfall_rows: validation_min_rows,
+            production_validation_min_rows: validation_min_rows,
+            production_validation_shortfall_rows: validation_min_rows,
+            observation_validation_min_rows: validation_min_rows,
+            observation_validation_shortfall_rows: validation_min_rows,
+            target_row_validation,
+            feedback_observation_validation,
             summary_path: summary_path.to_string_lossy().to_string(),
             warnings: vec!["structural_path_ranking_target_export_missing".to_string()],
             runtime_selection_status: "disabled".to_string(),
@@ -2185,26 +2347,124 @@ fn structural_path_ranking_source_artifact_path(artifact_uri: &str) -> Option<st
     Some(std::path::PathBuf::from(trimmed))
 }
 
+fn resolve_structural_path_ranking_source_artifact_path(
+    state_dir: &str,
+    symbol: &str,
+    artifact_uri: &str,
+) -> Option<std::path::PathBuf> {
+    let path = structural_path_ranking_source_artifact_path(artifact_uri)?;
+    if path.exists() || path.is_absolute() || artifact_uri.trim().starts_with("file://") {
+        return Some(path);
+    }
+    let policy_training_path = Path::new(state_dir)
+        .join(symbol)
+        .join(POLICY_TRAINING_DIR)
+        .join(&path);
+    if policy_training_path.exists() {
+        return Some(policy_training_path);
+    }
+    Some(path)
+}
+
+fn structural_path_ranking_non_explicit_local_artifact_looks_supported(
+    path: &std::path::Path,
+) -> bool {
+    matches!(
+        path.extension().and_then(|extension| extension.to_str()),
+        Some("csv") | Some("jsonl") | Some("cbm") | Some("bin") | Some("model")
+    )
+}
+
+fn validate_structural_path_ranking_non_explicit_local_artifact(
+    state_dir: &str,
+    symbol: &str,
+    artifact_uri: &str,
+    merged_source: bool,
+    model_family: &str,
+) -> Result<()> {
+    let Some(path) =
+        resolve_structural_path_ranking_source_artifact_path(state_dir, symbol, artifact_uri)
+    else {
+        return Ok(());
+    };
+    let schema_hint = format!(
+        "flag=--artifact-uri model_family={model_family} expected=existing local score artifact CSV/JSONL, existing local model artifact, readable trainer artifact JSON, or remote URI recovery=rerun `ict-engine register-structural-path-ranking-trainer-artifact --artifact-uri <score-or-model-artifact> --model-family {model_family}` with an existing compatible artifact"
+    );
+    if !path.exists() {
+        bail!(
+            "structural_path_ranker_score_artifact_missing: path={}; {schema_hint}",
+            path.to_string_lossy()
+        );
+    }
+    if merged_source || structural_path_ranking_non_explicit_local_artifact_looks_supported(&path) {
+        return Ok(());
+    }
+    if path.extension().and_then(|extension| extension.to_str()) == Some("json") {
+        let raw = fs::read_to_string(&path).with_context(|| {
+            format!(
+                "failed to read structural path ranking score/model artifact {}; {schema_hint}",
+                path.to_string_lossy()
+            )
+        })?;
+        if let Err(err) = serde_json::from_str::<StructuralPathRankingTrainerArtifact>(&raw) {
+            bail!(
+                "structural_path_ranker_score_artifact_invalid_json: path={} parse_error={}; {schema_hint}",
+                path.to_string_lossy(),
+                err
+            );
+        }
+    }
+    bail!(
+        "structural_path_ranker_score_artifact_schema_invalid: path={}; {schema_hint}",
+        path.to_string_lossy()
+    );
+}
+
 fn merge_structural_path_ranking_source_artifact(
+    state_dir: &str,
+    symbol: &str,
     artifact: &mut StructuralPathRankingTrainerArtifact,
     artifact_uri: &str,
+    require_readable_json: bool,
 ) -> Result<bool> {
-    let Some(path) = structural_path_ranking_source_artifact_path(artifact_uri) else {
+    let schema_hint = "flag=--artifact-uri expected=structural path ranking trainer artifact JSON with rule_list or tree_json recovery=rerun `ict-engine register-structural-path-ranking-trainer-artifact --artifact-uri <explicit-artifact.json> --model-family <explicit-family>` with a readable artifact path";
+    let Some(path) =
+        resolve_structural_path_ranking_source_artifact_path(state_dir, symbol, artifact_uri)
+    else {
         return Ok(false);
     };
     if !path.exists() {
+        if require_readable_json {
+            bail!(
+                "structural_path_ranker_explicit_artifact_missing: path={}; {schema_hint}",
+                path.to_string_lossy()
+            );
+        }
         return Ok(false);
     }
-    let raw = fs::read_to_string(path)?;
+    let raw = fs::read_to_string(&path).with_context(|| {
+        format!(
+            "failed to read structural path ranking trainer artifact {}; {schema_hint}",
+            path.to_string_lossy()
+        )
+    })?;
     let source = match serde_json::from_str::<StructuralPathRankingTrainerArtifact>(&raw) {
         Ok(source) => source,
+        Err(err) if require_readable_json => {
+            bail!(
+                "structural_path_ranker_explicit_artifact_invalid_json: path={} parse_error={}; {schema_hint}",
+                path.to_string_lossy(),
+                err
+            );
+        }
         Err(_) => return Ok(false),
     };
     if let Some(source_family) = non_empty_string(&source.model_family) {
         if source_family != artifact.model_family {
             bail!(
-                "structural path ranking trainer artifact family mismatch: cli='{}' source='{}'",
+                "structural_path_ranker_explicit_artifact_family_mismatch: flag=--model-family cli={} source={} recovery=rerun `ict-engine register-structural-path-ranking-trainer-artifact --model-family {}` with a matching explicit artifact",
                 artifact.model_family,
+                source_family,
                 source_family
             );
         }
@@ -2355,8 +2615,8 @@ fn structural_path_ranking_target_history_status_inputs_from_summary(
     let artifact = trainer_artifact?;
     let validation = &artifact.validation_metrics;
     let calibration = &artifact.calibration_metrics;
-    if summary.history_rows == 0
-        || summary.history_rows_with_training_weight == 0
+    if artifact.history_rows == 0
+        || artifact.trained_rows == 0
         || validation.raw_scored_mature_rows == 0
         || validation.production_validation_rows == 0
         || calibration.eligible_rows == 0
@@ -2617,19 +2877,46 @@ fn structural_path_ranking_target_raw_scored_mature_rows(jsonl_path: &str) -> Re
 fn load_structural_path_ranking_external_scores(
     scores_path: &str,
 ) -> Result<Vec<StructuralPathRankingExternalScoreInput>> {
+    let schema_hint = "expected structural path ranking scores file with columns/fields candidate_set_id,path_id,raw_path_score; generate target rows first with export-structural-path-ranking-target, then score those rows";
+    let path = Path::new(scores_path);
+    if !path.exists() {
+        bail!("structural path ranking scores file does not exist: {scores_path}; {schema_hint}");
+    }
     if scores_path.ends_with(".jsonl") {
-        let raw = fs::read_to_string(scores_path)?;
+        let raw = fs::read_to_string(scores_path).with_context(|| {
+            format!(
+                "failed to read structural path ranking scores file {scores_path}; {schema_hint}"
+            )
+        })?;
         return raw
             .lines()
             .filter(|line| !line.trim().is_empty())
-            .map(serde_json::from_str::<StructuralPathRankingExternalScoreInput>)
-            .collect::<std::result::Result<Vec<_>, _>>()
-            .map_err(Into::into);
+            .enumerate()
+            .map(|(index, line)| {
+                serde_json::from_str::<StructuralPathRankingExternalScoreInput>(line)
+                    .with_context(|| {
+                        format!(
+                            "failed to parse structural path ranking scores file {scores_path} JSONL line {}; {schema_hint}",
+                            index + 1
+                        )
+                    })
+            })
+            .collect::<std::result::Result<Vec<_>, _>>();
     }
-    let mut reader = csv::Reader::from_path(scores_path)?;
+    let mut reader = csv::Reader::from_path(scores_path).with_context(|| {
+        format!("failed to open structural path ranking scores file {scores_path}; {schema_hint}")
+    })?;
     let mut rows = Vec::new();
-    for row in reader.deserialize::<StructuralPathRankingExternalScoreInput>() {
-        rows.push(row?);
+    for (index, row) in reader
+        .deserialize::<StructuralPathRankingExternalScoreInput>()
+        .enumerate()
+    {
+        rows.push(row.with_context(|| {
+            format!(
+                "failed to parse structural path ranking scores file {scores_path} CSV record {}; {schema_hint}",
+                index + 1
+            )
+        })?);
     }
     Ok(rows)
 }
@@ -2655,27 +2942,51 @@ fn register_structural_path_ranking_trainer_artifact(
 ) -> Result<(String, StructuralPathRankingTrainerArtifact)> {
     let artifact_uri = artifact_uri.trim();
     if artifact_uri.is_empty() {
-        bail!("artifact uri must not be empty");
+        bail!(
+            "structural_path_ranker_trainer_artifact_uri_missing: flag=--artifact-uri expected=trainer artifact JSON, score artifact CSV/JSONL, model URI, or compatible local path recovery=rerun `ict-engine register-structural-path-ranking-trainer-artifact --symbol {} --state-dir {} --artifact-uri <trainer-artifact-or-score-uri> --model-family <family>` after exporting structural path ranking targets",
+            symbol,
+            state_dir
+        );
     }
     let model_family = model_family.trim();
     if model_family.is_empty() {
-        bail!("model family must not be empty");
+        bail!(
+            "structural_path_ranker_model_family_missing: flag=--model-family expected=model family such as catboost, corels, decision_tree, rule_list, or service recovery=rerun `ict-engine register-structural-path-ranking-trainer-artifact --symbol {} --state-dir {} --artifact-uri {} --model-family catboost` with the trained artifact family",
+            symbol,
+            state_dir,
+            artifact_uri
+        );
     }
     let summary_path = Path::new(state_dir)
         .join(symbol)
         .join(POLICY_TRAINING_DIR)
         .join(STRUCTURAL_PATH_RANKING_TARGET_SUMMARY_FILE);
+    let summary_hint = "expected structural_path_ranking_target export summary JSON; run export-structural-path-ranking-target before register-structural-path-ranking-trainer-artifact";
     if !summary_path.exists() {
         bail!(
-            "structural path ranking target export missing at {}; export target rows before registering an external trainer artifact",
-            summary_path.to_string_lossy()
+            "structural path ranking target export summary missing at {}; {summary_hint}",
+            summary_path.to_string_lossy(),
         );
     }
-    let raw = fs::read_to_string(&summary_path)?;
+    let raw = fs::read_to_string(&summary_path).with_context(|| {
+        format!(
+            "failed to read structural path ranking target export summary {}; {summary_hint}",
+            summary_path.to_string_lossy()
+        )
+    })?;
+    let summary =
+        serde_json::from_str::<StructuralPathRankingTargetExportSummary>(&raw).with_context(
+            || {
+                format!(
+                    "failed to parse structural path ranking target export summary {} as structural_path_ranking_target JSON; {summary_hint}",
+                    summary_path.to_string_lossy()
+                )
+            },
+        )?;
     let summary = crate::belief_core::ranking_label::rebase_structural_path_ranking_target_export_summary_paths(
         state_dir,
         symbol,
-        serde_json::from_str::<StructuralPathRankingTargetExportSummary>(&raw)?,
+        summary,
     );
     let evaluation_jsonl_path = if !summary.history_jsonl_path.trim().is_empty() {
         summary.history_jsonl_path.as_str()
@@ -2745,14 +3056,40 @@ fn register_structural_path_ranking_trainer_artifact(
         ],
     };
     let mut artifact = artifact;
-    let merged_source = merge_structural_path_ranking_source_artifact(&mut artifact, artifact_uri)?;
-    if structural_path_ranker_supports_explicit_family(model_family)
+    let explicit_family = structural_path_ranker_supports_explicit_family(model_family);
+    let merged_source = merge_structural_path_ranking_source_artifact(
+        state_dir,
+        symbol,
+        &mut artifact,
+        artifact_uri,
+        explicit_family,
+    )?;
+    if let Some(resolved_path) =
+        resolve_structural_path_ranking_source_artifact_path(state_dir, symbol, artifact_uri)
+    {
+        let raw_path = Path::new(artifact_uri);
+        if raw_path.is_relative() && resolved_path != raw_path {
+            artifact.artifact_uri = resolved_path.to_string_lossy().to_string();
+        }
+    }
+    if explicit_family
         && (!merged_source || (artifact.rule_list.is_empty() && artifact.tree_json.is_none()))
     {
         bail!(
-            "explicit path-ranker family '{}' requires a readable JSON artifact with either rule_list or tree_json",
+            "structural_path_ranker_explicit_artifact_schema_invalid: flag=--artifact-uri path={} model_family={} expected=readable JSON trainer artifact with rule_list or tree_json recovery=rerun `ict-engine register-structural-path-ranking-trainer-artifact --artifact-uri <explicit-artifact.json> --model-family {}` with a compatible artifact",
+            artifact_uri,
+            model_family,
             model_family
         );
+    }
+    if !explicit_family {
+        validate_structural_path_ranking_non_explicit_local_artifact(
+            state_dir,
+            symbol,
+            artifact_uri,
+            merged_source,
+            model_family,
+        )?;
     }
     let artifact_filename =
         format!("{POLICY_TRAINING_DIR}/{STRUCTURAL_PATH_RANKING_TRAINER_ARTIFACT_FILE}");
@@ -2825,10 +3162,11 @@ fn normalize_structural_path_ranking_runtime_reuse_mode(mode: &str) -> Result<&'
             Ok(STRUCTURAL_PATH_RANKING_RUNTIME_MODE_PREFER_HISTORY)
         }
         _ => bail!(
-            "unsupported runtime reuse mode '{}'; expected '{}' or '{}'",
+            "structural_path_ranker_runtime_reuse_mode_invalid: flag=--reuse-mode value={} expected={} or {} recovery=rerun `ict-engine enable-structural-path-ranking-runtime --symbol <symbol> --state-dir <state-dir> --reuse-mode {}` after exporting structural path ranking targets",
             mode,
             STRUCTURAL_PATH_RANKING_RUNTIME_MODE_CANDIDATE_SET_ONLY,
-            STRUCTURAL_PATH_RANKING_RUNTIME_MODE_PREFER_HISTORY
+            STRUCTURAL_PATH_RANKING_RUNTIME_MODE_PREFER_HISTORY,
+            STRUCTURAL_PATH_RANKING_RUNTIME_MODE_CANDIDATE_SET_ONLY
         ),
     }
 }
@@ -2838,6 +3176,7 @@ fn set_structural_path_ranking_runtime_selection(
     symbol: &str,
     reuse_mode: &str,
 ) -> Result<String> {
+    let reuse_mode = normalize_structural_path_ranking_runtime_reuse_mode(reuse_mode)?;
     let summary_path = Path::new(state_dir)
         .join(symbol)
         .join(POLICY_TRAINING_DIR)
@@ -2848,7 +3187,6 @@ fn set_structural_path_ranking_runtime_selection(
             summary_path.to_string_lossy()
         );
     }
-    let reuse_mode = normalize_structural_path_ranking_runtime_reuse_mode(reuse_mode)?;
     let selection = StructuralPathRankingRuntimeSelection {
         protocol_version: STRUCTURAL_PATH_RANKING_RUNTIME_SELECTION_PROTOCOL_VERSION.to_string(),
         enabled: true,
@@ -2931,6 +3269,29 @@ fn load_latest_agent_material_rank_artifact(
     symbol: &str,
 ) -> Result<Option<crate::application::auto_quant::AgentMaterialRankArtifact>> {
     let ledger = load_artifact_ledger(state_dir, symbol)?;
+    if let Some(artifact) = load_agent_material_rank_from_ledger(&ledger)? {
+        return Ok(Some(artifact));
+    }
+
+    let auto_quant_state_dir = Path::new(state_dir).join("auto-quant");
+    if auto_quant_state_dir.exists() {
+        let auto_quant_ledger = load_artifact_ledger(&auto_quant_state_dir, symbol)?;
+        if let Some(artifact) = load_agent_material_rank_from_ledger(&auto_quant_ledger)? {
+            return Ok(Some(artifact));
+        }
+        if let Some(artifact) =
+            load_agent_material_rank_from_strategy_library_ledger(symbol, &auto_quant_ledger)?
+        {
+            return Ok(Some(artifact));
+        }
+    }
+
+    load_agent_material_rank_from_strategy_library_ledger(symbol, &ledger)
+}
+
+fn load_agent_material_rank_from_ledger(
+    ledger: &[ArtifactLedgerEntry],
+) -> Result<Option<crate::application::auto_quant::AgentMaterialRankArtifact>> {
     let Some(entry) = ledger
         .iter()
         .rev()
@@ -2944,9 +3305,83 @@ fn load_latest_agent_material_rank_artifact(
         .map_err(Into::into)
 }
 
+fn load_agent_material_rank_from_strategy_library_ledger(
+    symbol: &str,
+    ledger: &[ArtifactLedgerEntry],
+) -> Result<Option<crate::application::auto_quant::AgentMaterialRankArtifact>> {
+    let Some(entry) = ledger
+        .iter()
+        .rev()
+        .find(|entry| entry.artifact_kind == ARTIFACT_KIND_LIBRARY)
+    else {
+        return Ok(None);
+    };
+    let manifest = load_strategy_library_manifest(&entry.path)?;
+    let ranking = manifest
+        .strategies
+        .iter()
+        .map(|strategy| {
+            let metrics = strategy.validation_metrics.as_ref();
+            crate::application::auto_quant::AgentMaterialRankRow {
+                unit_label: strategy.name.clone(),
+                status: if strategy.status == "ok" {
+                    "completed".to_string()
+                } else {
+                    strategy.status.clone()
+                },
+                branch_path: non_empty_string(&strategy.metadata.regime_profit_branch_path),
+                package_id: non_empty_string(&strategy.metadata.strategy)
+                    .or_else(|| non_empty_string(&strategy.metadata.mutation_id)),
+                regime_profit_branch_path: non_empty_string(
+                    &strategy.metadata.regime_profit_branch_path,
+                ),
+                main_regime: non_empty_string(&strategy.metadata.main_regime),
+                sub_regime: non_empty_string(&strategy.metadata.sub_regime),
+                sub_sub_regime_or_profit_factor: non_empty_string(
+                    &strategy.metadata.sub_sub_regime_or_profit_factor,
+                ),
+                profit_factor: non_empty_string(&strategy.metadata.profit_factor),
+                provider_provenance: non_empty_string(&strategy.file_path),
+                win_rate_pct: metrics.map(|value| value.win_rate_pct),
+                sharpe: metrics.map(|value| value.sharpe),
+                total_profit_pct: metrics.map(|value| value.total_profit_pct),
+                trade_count: metrics.map(|value| value.trade_count as usize),
+            }
+        })
+        .collect::<Vec<_>>();
+    Ok(Some(
+        crate::application::auto_quant::AgentMaterialRankArtifact {
+            artifact_id: format!(
+                "auto-quant-agent-material-rank:strategy-library:{}:{}",
+                symbol, entry.artifact_id
+            ),
+            generated_at: entry.generated_at,
+            symbol: symbol.to_string(),
+            source_dispatch_artifact_id: entry.artifact_id.clone(),
+            ranking,
+        },
+    ))
+}
+
 pub fn export_structural_path_ranking_target_command(state_dir: &str, symbol: &str) -> Result<()> {
+    export_structural_path_ranking_target_command_with_format(state_dir, symbol, "json")
+}
+
+pub fn export_structural_path_ranking_target_command_with_format(
+    state_dir: &str,
+    symbol: &str,
+    output_format: &str,
+) -> Result<()> {
     let summary = export_structural_path_ranking_target_from_state_dir(state_dir, symbol)?;
-    println!("{}", serde_json::to_string_pretty(&summary)?);
+    match output_format {
+        "json" | "agent" => println!("{}", serde_json::to_string_pretty(&summary)?),
+        "compact" => println!("{}", serde_json::to_string(&summary)?),
+        "human" => println!("{}", render_structural_path_ranking_target_summary(&summary)),
+        other => bail!(
+            "unsupported export-structural-path-ranking-target output format '{}'; expected json, compact, agent, or human",
+            other
+        ),
+    }
     Ok(())
 }
 
@@ -2954,6 +3389,20 @@ pub fn apply_structural_path_ranking_external_scores_command(
     state_dir: &str,
     symbol: &str,
     scores_path: &str,
+) -> Result<()> {
+    apply_structural_path_ranking_external_scores_command_with_format(
+        state_dir,
+        symbol,
+        scores_path,
+        "json",
+    )
+}
+
+pub fn apply_structural_path_ranking_external_scores_command_with_format(
+    state_dir: &str,
+    symbol: &str,
+    scores_path: &str,
+    output_format: &str,
 ) -> Result<()> {
     let scores = load_structural_path_ranking_external_scores(scores_path)?;
     if scores.is_empty() {
@@ -2963,8 +3412,38 @@ pub fn apply_structural_path_ranking_external_scores_command(
         );
     }
     let summary = apply_structural_path_ranking_external_scores(state_dir, symbol, &scores)?;
-    println!("{}", serde_json::to_string_pretty(&summary)?);
+    match output_format {
+        "json" | "agent" => println!("{}", serde_json::to_string_pretty(&summary)?),
+        "compact" => println!("{}", serde_json::to_string(&summary)?),
+        "human" => println!("{}", render_structural_path_ranking_target_summary(&summary)),
+        other => bail!(
+            "unsupported apply-structural-path-ranking-external-scores output format '{}'; expected json, compact, agent, or human",
+            other
+        ),
+    }
     Ok(())
+}
+
+fn render_structural_path_ranking_target_summary(
+    summary: &StructuralPathRankingTargetExportSummary,
+) -> String {
+    format!(
+        "structural_path_ranking_target symbol={} rows={} history_rows={} mature_rows={} raw_scores={}/{} calibrated={}/{} lower_bounds={}/{} training_weight={}/{} execution_gate_rows={} candidate_set_id={}",
+        summary.symbol,
+        summary.rows,
+        summary.history_rows,
+        summary.mature_rows,
+        summary.rows_with_raw_path_score,
+        summary.rows,
+        summary.rows_with_calibrated_path_prob,
+        summary.rows,
+        summary.rows_with_path_prob_lower_bound,
+        summary.rows,
+        summary.rows_with_training_weight,
+        summary.rows,
+        summary.rows_with_execution_gate_status,
+        summary.candidate_set_id
+    )
 }
 
 fn collect_training_rows(state_dir: &str, symbol: &str) -> Result<CisdRbCollectedTrainingRows> {
@@ -3320,6 +3799,110 @@ fn count_strings<'a>(values: impl Iterator<Item = &'a str>) -> BTreeMap<String, 
     counts
 }
 
+fn collect_auto_quant_real_trade_feedback_rows(
+    state_dir: &str,
+    symbol: &str,
+) -> Result<AutoQuantRealTradeCollectedTrainingRows> {
+    let learning_state = load_learning_state(state_dir, symbol)?;
+    let feedback_rows = learning_state.feedback_history.len();
+    let feedback_rows_with_structural_feedback = learning_state
+        .feedback_history
+        .iter()
+        .filter(|record| record.structural_feedback.is_some())
+        .count();
+    let matched_rows = learning_state
+        .feedback_history
+        .iter()
+        .filter(|record| auto_quant_real_trade_feedback_is_consumable(record))
+        .filter(|record| !structural_feedback_outcome_is_unresolved(&record.realized_outcome))
+        .filter_map(auto_quant_real_trade_feedback_training_row)
+        .collect::<Vec<_>>();
+    Ok(AutoQuantRealTradeCollectedTrainingRows {
+        feedback_rows,
+        feedback_rows_with_structural_feedback,
+        matched_rows,
+    })
+}
+
+fn auto_quant_real_trade_feedback_training_row(
+    record: &crate::state::FeedbackRecord,
+) -> Option<AutoQuantRealTradeTrainingRow> {
+    let refs = record.structural_feedback.as_ref()?;
+    let segments = refs
+        .path_id
+        .split(" -> ")
+        .map(str::trim)
+        .filter(|value| !value.is_empty())
+        .collect::<Vec<_>>();
+    let strategy_or_factor = record
+        .factors_used
+        .iter()
+        .find(|factor| factor.category != "regime_profit_branch_path")
+        .map(|factor| factor.factor_name.clone())
+        .or_else(|| segments.get(3).map(|value| (*value).to_string()))
+        .unwrap_or_else(|| refs.path_id.clone());
+    Some(AutoQuantRealTradeTrainingRow {
+        timestamp: record.timestamp.to_rfc3339(),
+        symbol: record.symbol.clone(),
+        source: record.source.clone(),
+        run_id: record.run_id.clone().unwrap_or_default(),
+        trade_id: record.trade_id.clone().unwrap_or_default(),
+        strategy_or_factor,
+        regime_profit_branch_path: refs.path_id.clone(),
+        main_regime: segments
+            .first()
+            .map(|value| (*value).to_string())
+            .unwrap_or_else(|| refs.node_id.clone()),
+        sub_regime: segments
+            .get(1)
+            .map(|value| (*value).to_string())
+            .unwrap_or_else(|| refs.branch_id.clone()),
+        sub_sub_regime_or_profit_factor: segments
+            .get(2)
+            .map(|value| (*value).to_string())
+            .unwrap_or_else(|| refs.scenario_id.clone()),
+        profit_factor: if segments.len() > 3 {
+            segments[3..].join(" -> ")
+        } else {
+            refs.path_id.clone()
+        },
+        followed_path: refs.followed_path,
+        direction: format!(
+            "{:?}",
+            record.model_probabilities_before_trade.selected_direction
+        ),
+        selected_probability: record.model_probabilities_before_trade.selected_probability,
+        pnl: record.pnl,
+        realized_outcome: record.realized_outcome.clone(),
+    })
+}
+
+fn auto_quant_real_trade_feedback_is_consumable(record: &crate::state::FeedbackRecord) -> bool {
+    record.source.starts_with("auto_quant_real_trades")
+        || (record.source == "structural_feedback_submission"
+            && record.structural_feedback.is_some())
+}
+
+fn auto_quant_real_trade_feedback_warnings(
+    rows: &AutoQuantRealTradeCollectedTrainingRows,
+    outcome_counts: &BTreeMap<String, usize>,
+) -> Vec<String> {
+    let mut warnings = Vec::new();
+    if rows.matched_rows.is_empty() {
+        warnings.push("auto_quant_real_trade_feedback_rows_missing".to_string());
+    }
+    if rows.matched_rows.len() < 30 {
+        warnings.push(format!(
+            "matched_rows_below_minimum: {}",
+            rows.matched_rows.len()
+        ));
+    }
+    if outcome_counts.len() < 2 {
+        warnings.push("outcome_labels_do_not_cover_win_loss".to_string());
+    }
+    warnings
+}
+
 fn range_of(values: impl Iterator<Item = f64>) -> NumericRangeSummary {
     let vals = values.collect::<Vec<_>>();
     if vals.is_empty() {
@@ -3584,6 +4167,42 @@ fn render_breaker_catboost_training_csv(rows: &[BreakerRbCatBoostTrainingRow]) -
         ));
     }
     out
+}
+
+fn render_auto_quant_real_trade_feedback_csv(rows: &[AutoQuantRealTradeTrainingRow]) -> String {
+    let mut out = String::from(
+        "timestamp,symbol,source,run_id,trade_id,strategy_or_factor,regime_profit_branch_path,main_regime,sub_regime,sub_sub_regime_or_profit_factor,profit_factor,followed_path,direction,selected_probability,pnl,realized_outcome\n",
+    );
+    for row in rows {
+        out.push_str(&format!(
+            "{},{},{},{},{},{},{},{},{},{},{},{},{},{:.6},{:.6},{}\n",
+            csv_cell(&row.timestamp),
+            csv_cell(&row.symbol),
+            csv_cell(&row.source),
+            csv_cell(&row.run_id),
+            csv_cell(&row.trade_id),
+            csv_cell(&row.strategy_or_factor),
+            csv_cell(&row.regime_profit_branch_path),
+            csv_cell(&row.main_regime),
+            csv_cell(&row.sub_regime),
+            csv_cell(&row.sub_sub_regime_or_profit_factor),
+            csv_cell(&row.profit_factor),
+            row.followed_path,
+            csv_cell(&row.direction),
+            row.selected_probability,
+            row.pnl,
+            csv_cell(&row.realized_outcome)
+        ));
+    }
+    out
+}
+
+fn csv_cell(value: &str) -> String {
+    if value.contains([',', '"', '\n', '\r']) {
+        format!("\"{}\"", value.replace('"', "\"\""))
+    } else {
+        value.to_string()
+    }
 }
 
 #[cfg(test)]
@@ -3942,6 +4561,71 @@ mod tests {
     }
 
     #[test]
+    fn policy_training_status_preserves_ranker_validation_minima_when_export_missing() {
+        let temp = tempfile::tempdir().unwrap();
+        let status = policy_training_status(temp.path().to_str().unwrap(), "NQ", None).unwrap();
+
+        assert_eq!(
+            status
+                .structural_path_ranking_validation
+                .raw_scored_mature_rows,
+            0
+        );
+        assert_eq!(
+            status
+                .structural_path_ranking_validation
+                .raw_scored_mature_min_rows,
+            30
+        );
+        assert_eq!(
+            status
+                .structural_path_ranking_validation
+                .production_validation_rows,
+            0
+        );
+        assert_eq!(
+            status
+                .structural_path_ranking_validation
+                .production_validation_min_rows,
+            30
+        );
+        assert_eq!(
+            status
+                .structural_path_ranking_validation
+                .observation_validation_rows,
+            0
+        );
+        assert_eq!(
+            status
+                .structural_path_ranking_validation
+                .observation_validation_min_rows,
+            30
+        );
+        assert!(status
+            .structural_path_ranking_validation
+            .summary_line
+            .contains("raw_scored_mature=0/30"));
+        assert!(status
+            .structural_path_ranking_validation
+            .summary_line
+            .contains("production_validation=0/30"));
+        assert!(status
+            .structural_path_ranking_validation
+            .summary_line
+            .contains("observation_validation=0/30"));
+        assert!(status
+            .structural_path_ranking_target
+            .target_row_validation
+            .summary_line
+            .contains("target_rows raw_scored_mature=0/30 production_validation=0/30 ready=false"));
+        assert!(status
+            .structural_path_ranking_target
+            .feedback_observation_validation
+            .summary_line
+            .contains("observations mature=0/30 pending=0 total=0 ready=false"));
+    }
+
+    #[test]
     fn policy_training_status_redacts_opt_in_detector_hotplug_context_values() {
         let temp = tempfile::tempdir().unwrap();
         std::fs::write(
@@ -4006,6 +4690,170 @@ detector_context:
         assert!(status
             .summary_line
             .contains("linkage_warnings=symbol_state_missing_analyze_history"));
+    }
+
+    #[test]
+    fn policy_training_status_projects_structural_feedback_into_entry_model_rows() {
+        let temp = tempfile::tempdir().unwrap();
+        let feedback = vec![
+            FeedbackRecord {
+                timestamp: Utc::now(),
+                symbol: "PROVIDER_QUARTET_RECLAIM".to_string(),
+                source: "structural_feedback_submission".to_string(),
+                run_id: Some("structural-feedback:PROVIDER_QUARTET_RECLAIM:test:1".to_string()),
+                trade_id: Some("trade:1".to_string()),
+                prompt_version: None,
+                factor_version: None,
+                data_fingerprint: None,
+                factors_used: Vec::new(),
+                model_probabilities_before_trade: crate::state::ModelProbabilitySnapshot {
+                    selected_direction: crate::types::Direction::Bull,
+                    selected_probability: 0.61,
+                    long_score: 0.61,
+                    short_score: 0.39,
+                    win_prob_long: 0.61,
+                    win_prob_short: 0.39,
+                    uncertainty: 0.22,
+                },
+                realized_outcome: "win".to_string(),
+                pnl: 0.012,
+                regime_at_entry: crate::types::Regime::ManipulationExpansion,
+                structural_feedback: Some(StructuralFeedbackRefs {
+                    protocol_version: "structural-feedback-v1".to_string(),
+                    recommendation_id: "structural-feedback:test:1".to_string(),
+                    recommended_at: "2026-05-16T00:00:00Z".to_string(),
+                    node_id: "TrendExpansion".to_string(),
+                    branch_id: "TrendExpansion -> SessionLiquidity".to_string(),
+                    scenario_id: "TrendExpansion -> SessionLiquidity -> dense_kline".to_string(),
+                    path_id:
+                        "TrendExpansion -> SessionLiquidity -> dense_kline -> dense_kline_long_v1"
+                            .to_string(),
+                    followed_path: true,
+                    exit_reason: Some("target".to_string()),
+                    notes: Some("structural feedback projection test".to_string()),
+                }),
+                reflection_mismatch_tags: Vec::new(),
+            },
+            FeedbackRecord {
+                timestamp: Utc::now(),
+                symbol: "PROVIDER_QUARTET_RECLAIM".to_string(),
+                source: "structural_feedback_submission".to_string(),
+                run_id: Some("structural-feedback:PROVIDER_QUARTET_RECLAIM:test:2".to_string()),
+                trade_id: Some("trade:2".to_string()),
+                prompt_version: None,
+                factor_version: None,
+                data_fingerprint: None,
+                factors_used: Vec::new(),
+                model_probabilities_before_trade: crate::state::ModelProbabilitySnapshot {
+                    selected_direction: crate::types::Direction::Bull,
+                    selected_probability: 0.42,
+                    long_score: 0.42,
+                    short_score: 0.58,
+                    win_prob_long: 0.42,
+                    win_prob_short: 0.58,
+                    uncertainty: 0.37,
+                },
+                realized_outcome: "loss".to_string(),
+                pnl: -0.007,
+                regime_at_entry: crate::types::Regime::ManipulationExpansion,
+                structural_feedback: Some(StructuralFeedbackRefs {
+                    protocol_version: "structural-feedback-v1".to_string(),
+                    recommendation_id: "structural-feedback:test:2".to_string(),
+                    recommended_at: "2026-05-16T01:00:00Z".to_string(),
+                    node_id: "TrendExpansion".to_string(),
+                    branch_id: "TrendExpansion -> SessionLiquidity".to_string(),
+                    scenario_id: "TrendExpansion -> SessionLiquidity -> dense_kline".to_string(),
+                    path_id:
+                        "TrendExpansion -> SessionLiquidity -> dense_kline -> dense_kline_long_v1"
+                            .to_string(),
+                    followed_path: true,
+                    exit_reason: Some("stop".to_string()),
+                    notes: Some("structural feedback projection test".to_string()),
+                }),
+                reflection_mismatch_tags: Vec::new(),
+            },
+        ];
+        save_learning_state(
+            temp.path(),
+            "PROVIDER_QUARTET_RECLAIM",
+            &LearningState {
+                feedback_history: feedback,
+                ..LearningState::default()
+            },
+        )
+        .unwrap();
+
+        let status = policy_training_status(
+            temp.path().to_str().unwrap(),
+            "PROVIDER_QUARTET_RECLAIM",
+            None,
+        )
+        .unwrap();
+
+        let provider = status
+            .providers
+            .iter()
+            .find(|provider| provider.provider_id == AUTO_QUANT_REAL_TRADE_FEEDBACK_MODEL_ID)
+            .expect("structural feedback entry model provider");
+        assert_eq!(provider.matched_rows, 2);
+        assert!(provider
+            .summary_line
+            .contains("Auto-Quant real-trade feedback policy training"));
+    }
+
+    #[test]
+    fn auto_quant_real_trade_feedback_row_preserves_recursive_profit_factor_suffix() {
+        let branch_path = "Crisis -> CrisisReliefCarry -> StopManagedPanicRecovery -> VolatilityCompression -> SweepReclaim -> NQRootAdaptiveCostCrisisRepairV3:crisis_carry_h8_sl048_tp12";
+        let record = FeedbackRecord {
+            timestamp: Utc::now(),
+            symbol: "NQ".to_string(),
+            source: "auto_quant_real_trades:test".to_string(),
+            run_id: Some("aq:test:recursive-branch".to_string()),
+            trade_id: Some("trade:recursive-branch:1".to_string()),
+            prompt_version: None,
+            factor_version: None,
+            data_fingerprint: None,
+            factors_used: Vec::new(),
+            model_probabilities_before_trade: crate::state::ModelProbabilitySnapshot {
+                selected_direction: crate::types::Direction::Bull,
+                selected_probability: 0.64,
+                long_score: 0.64,
+                short_score: 0.36,
+                win_prob_long: 0.64,
+                win_prob_short: 0.36,
+                uncertainty: 0.18,
+            },
+            realized_outcome: "win".to_string(),
+            pnl: 0.018,
+            regime_at_entry: crate::types::Regime::ManipulationExpansion,
+            structural_feedback: Some(StructuralFeedbackRefs {
+                protocol_version: "structural-feedback-v1".to_string(),
+                recommendation_id: "structural-feedback:test:recursive-branch".to_string(),
+                recommended_at: "2026-05-17T00:00:00Z".to_string(),
+                node_id: "Crisis".to_string(),
+                branch_id: "Crisis -> CrisisReliefCarry".to_string(),
+                scenario_id: "Crisis -> CrisisReliefCarry -> StopManagedPanicRecovery".to_string(),
+                path_id: branch_path.to_string(),
+                followed_path: true,
+                exit_reason: Some("target".to_string()),
+                notes: Some("recursive branch path projection test".to_string()),
+            }),
+            reflection_mismatch_tags: Vec::new(),
+        };
+
+        let row = auto_quant_real_trade_feedback_training_row(&record).unwrap();
+
+        assert_eq!(row.regime_profit_branch_path, branch_path);
+        assert_eq!(row.main_regime, "Crisis");
+        assert_eq!(row.sub_regime, "CrisisReliefCarry");
+        assert_eq!(
+            row.sub_sub_regime_or_profit_factor,
+            "StopManagedPanicRecovery"
+        );
+        assert_eq!(
+            row.profit_factor,
+            "VolatilityCompression -> SweepReclaim -> NQRootAdaptiveCostCrisisRepairV3:crisis_carry_h8_sl048_tp12"
+        );
     }
 
     #[test]
@@ -5031,6 +5879,67 @@ detector_context:
     }
 
     #[test]
+    fn register_structural_path_ranking_trainer_artifact_empty_flags_name_recovery() {
+        let temp = tempfile::tempdir().unwrap();
+
+        let empty_uri = register_structural_path_ranking_trainer_artifact(
+            temp.path().to_str().unwrap(),
+            "NQ",
+            "",
+            "catboost",
+            None,
+            None,
+            None,
+        )
+        .unwrap_err();
+        let empty_uri_message = format!("{empty_uri:#}");
+        assert!(
+            empty_uri_message.contains("structural_path_ranker_trainer_artifact_uri_missing"),
+            "{empty_uri_message}"
+        );
+        assert!(
+            empty_uri_message.contains("flag=--artifact-uri"),
+            "{empty_uri_message}"
+        );
+        assert!(
+            empty_uri_message.contains("trainer artifact JSON"),
+            "{empty_uri_message}"
+        );
+        assert!(
+            empty_uri_message.contains("recovery="),
+            "{empty_uri_message}"
+        );
+
+        let empty_family = register_structural_path_ranking_trainer_artifact(
+            temp.path().to_str().unwrap(),
+            "NQ",
+            "/tmp/path-ranker-artifact.json",
+            "",
+            None,
+            None,
+            None,
+        )
+        .unwrap_err();
+        let empty_family_message = format!("{empty_family:#}");
+        assert!(
+            empty_family_message.contains("structural_path_ranker_model_family_missing"),
+            "{empty_family_message}"
+        );
+        assert!(
+            empty_family_message.contains("flag=--model-family"),
+            "{empty_family_message}"
+        );
+        assert!(
+            empty_family_message.contains("catboost"),
+            "{empty_family_message}"
+        );
+        assert!(
+            empty_family_message.contains("recovery="),
+            "{empty_family_message}"
+        );
+    }
+
+    #[test]
     fn register_structural_path_ranking_trainer_artifact_requires_rule_or_tree_for_explicit_family()
     {
         let temp = tempfile::tempdir().unwrap();
@@ -5123,7 +6032,321 @@ detector_context:
 
         assert!(err
             .to_string()
-            .contains("requires a readable JSON artifact with either rule_list or tree_json"));
+            .contains("expected=readable JSON trainer artifact with rule_list or tree_json"));
+    }
+
+    #[test]
+    fn register_structural_path_ranking_explicit_family_artifact_errors_name_flag_schema_recovery()
+    {
+        let temp = tempfile::tempdir().unwrap();
+        let summary_dir = temp.path().join("NQ").join(POLICY_TRAINING_DIR);
+        std::fs::create_dir_all(&summary_dir).unwrap();
+        let jsonl_path = summary_dir.join("structural_path_ranking_target.jsonl");
+        let summary = StructuralPathRankingTargetExportSummary {
+            symbol: "NQ".to_string(),
+            rows: 2,
+            candidate_set_id: "structural-candidates:NQ:test".to_string(),
+            candidate_set_size: 2,
+            mature_rows: 2,
+            rows_with_training_weight: 2,
+            rows_with_propensity_estimate: 2,
+            rows_with_calibrated_path_prob: 2,
+            rows_with_path_prob_lower_bound: 2,
+            history_rows: 2,
+            history_mature_rows: 2,
+            csv_path: summary_dir
+                .join("structural_path_ranking_target.csv")
+                .to_string_lossy()
+                .to_string(),
+            jsonl_path: jsonl_path.to_string_lossy().to_string(),
+            summary_path: summary_dir
+                .join(STRUCTURAL_PATH_RANKING_TARGET_SUMMARY_FILE)
+                .to_string_lossy()
+                .to_string(),
+            trainer_manifest: structural_path_ranking_trainer_manifest_for_test(),
+            summary_line: "structural_path_ranking_target rows=2".to_string(),
+            ..StructuralPathRankingTargetExportSummary::default()
+        };
+        std::fs::write(
+            summary_dir.join(STRUCTURAL_PATH_RANKING_TARGET_SUMMARY_FILE),
+            serde_json::to_string_pretty(&summary).unwrap(),
+        )
+        .unwrap();
+        std::fs::write(
+            &jsonl_path,
+            format!(
+                "{}\n{}\n",
+                serde_json::to_string(&structural_path_ranking_row(
+                    "path-win",
+                    0.8,
+                    "matured_success",
+                ))
+                .unwrap(),
+                serde_json::to_string(&structural_path_ranking_row(
+                    "path-loss",
+                    0.2,
+                    "matured_failure",
+                ))
+                .unwrap()
+            ),
+        )
+        .unwrap();
+
+        let missing_artifact = temp.path().join("missing-corels-artifact.json");
+        let missing_err = register_structural_path_ranking_trainer_artifact(
+            temp.path().to_str().unwrap(),
+            "NQ",
+            missing_artifact.to_str().unwrap(),
+            crate::belief_core::ranking_label::STRUCTURAL_PATH_RANKER_EXPLICIT_FAMILY_CORELS,
+            None,
+            None,
+            None,
+        )
+        .unwrap_err();
+        let missing_message = format!("{missing_err:#}");
+        assert!(
+            missing_message.contains("structural_path_ranker_explicit_artifact_missing"),
+            "{missing_message}"
+        );
+        assert!(
+            missing_message.contains("flag=--artifact-uri"),
+            "{missing_message}"
+        );
+        assert!(
+            missing_message.contains(missing_artifact.to_str().unwrap()),
+            "{missing_message}"
+        );
+        assert!(missing_message.contains("rule_list"), "{missing_message}");
+        assert!(missing_message.contains("tree_json"), "{missing_message}");
+        assert!(missing_message.contains("recovery="), "{missing_message}");
+
+        let incompatible_artifact = temp.path().join("incompatible-corels-artifact.json");
+        std::fs::write(
+            &incompatible_artifact,
+            serde_json::to_string_pretty(&serde_json::json!({
+                "protocol_version": STRUCTURAL_PATH_RANKING_TRAINER_ARTIFACT_PROTOCOL_VERSION,
+                "dataset_role": "external_path_ranker_training_dataset",
+                "model_family": crate::belief_core::ranking_label::STRUCTURAL_PATH_RANKER_EXPLICIT_FAMILY_CORELS,
+                "artifact_uri": "scores.jsonl",
+                "score_column": "raw_path_score",
+                "trained_rows": 2,
+                "history_rows": 2,
+                "selected_features": ["rank"]
+            }))
+            .unwrap(),
+        )
+        .unwrap();
+        let incompatible_err = register_structural_path_ranking_trainer_artifact(
+            temp.path().to_str().unwrap(),
+            "NQ",
+            incompatible_artifact.to_str().unwrap(),
+            crate::belief_core::ranking_label::STRUCTURAL_PATH_RANKER_EXPLICIT_FAMILY_CORELS,
+            None,
+            None,
+            None,
+        )
+        .unwrap_err();
+        let incompatible_message = format!("{incompatible_err:#}");
+        assert!(
+            incompatible_message
+                .contains("structural_path_ranker_explicit_artifact_schema_invalid"),
+            "{incompatible_message}"
+        );
+        assert!(
+            incompatible_message.contains("flag=--artifact-uri"),
+            "{incompatible_message}"
+        );
+        assert!(
+            incompatible_message.contains("rule_list"),
+            "{incompatible_message}"
+        );
+        assert!(
+            incompatible_message.contains("tree_json"),
+            "{incompatible_message}"
+        );
+        assert!(
+            incompatible_message.contains("recovery="),
+            "{incompatible_message}"
+        );
+    }
+
+    #[test]
+    fn register_structural_path_ranking_catboost_local_artifact_errors_name_flag_schema_recovery() {
+        let temp = tempfile::tempdir().unwrap();
+        let summary_dir = temp.path().join("NQ").join(POLICY_TRAINING_DIR);
+        std::fs::create_dir_all(&summary_dir).unwrap();
+        let jsonl_path = summary_dir.join("structural_path_ranking_target.jsonl");
+        let summary = StructuralPathRankingTargetExportSummary {
+            symbol: "NQ".to_string(),
+            rows: 2,
+            candidate_set_id: "structural-candidates:NQ:test".to_string(),
+            candidate_set_size: 2,
+            mature_rows: 2,
+            rows_with_training_weight: 2,
+            rows_with_propensity_estimate: 2,
+            rows_with_calibrated_path_prob: 2,
+            rows_with_path_prob_lower_bound: 2,
+            history_rows: 2,
+            history_mature_rows: 2,
+            csv_path: summary_dir
+                .join("structural_path_ranking_target.csv")
+                .to_string_lossy()
+                .to_string(),
+            jsonl_path: jsonl_path.to_string_lossy().to_string(),
+            summary_path: summary_dir
+                .join(STRUCTURAL_PATH_RANKING_TARGET_SUMMARY_FILE)
+                .to_string_lossy()
+                .to_string(),
+            trainer_manifest: structural_path_ranking_trainer_manifest_for_test(),
+            summary_line: "structural_path_ranking_target rows=2".to_string(),
+            ..StructuralPathRankingTargetExportSummary::default()
+        };
+        std::fs::write(
+            summary_dir.join(STRUCTURAL_PATH_RANKING_TARGET_SUMMARY_FILE),
+            serde_json::to_string_pretty(&summary).unwrap(),
+        )
+        .unwrap();
+        std::fs::write(
+            &jsonl_path,
+            format!(
+                "{}\n{}\n",
+                serde_json::to_string(&structural_path_ranking_row(
+                    "path-win",
+                    0.8,
+                    "matured_success",
+                ))
+                .unwrap(),
+                serde_json::to_string(&structural_path_ranking_row(
+                    "path-loss",
+                    0.2,
+                    "matured_failure",
+                ))
+                .unwrap()
+            ),
+        )
+        .unwrap();
+
+        let missing_artifact = temp.path().join("missing-catboost-scores.json");
+        let missing_err = register_structural_path_ranking_trainer_artifact(
+            temp.path().to_str().unwrap(),
+            "NQ",
+            missing_artifact.to_str().unwrap(),
+            "catboost",
+            None,
+            None,
+            None,
+        )
+        .unwrap_err();
+        let missing_message = format!("{missing_err:#}");
+        assert!(
+            missing_message.contains("structural_path_ranker_score_artifact_missing"),
+            "{missing_message}"
+        );
+        assert!(
+            missing_message.contains("flag=--artifact-uri"),
+            "{missing_message}"
+        );
+        assert!(
+            missing_message.contains("score artifact CSV/JSONL"),
+            "{missing_message}"
+        );
+        assert!(missing_message.contains("recovery="), "{missing_message}");
+
+        let invalid_json = temp.path().join("invalid-catboost-artifact.json");
+        std::fs::write(&invalid_json, "not-json").unwrap();
+        let invalid_err = register_structural_path_ranking_trainer_artifact(
+            temp.path().to_str().unwrap(),
+            "NQ",
+            invalid_json.to_str().unwrap(),
+            "catboost",
+            None,
+            None,
+            None,
+        )
+        .unwrap_err();
+        let invalid_message = format!("{invalid_err:#}");
+        assert!(
+            invalid_message.contains("structural_path_ranker_score_artifact_invalid_json"),
+            "{invalid_message}"
+        );
+        assert!(
+            invalid_message.contains("flag=--artifact-uri"),
+            "{invalid_message}"
+        );
+        assert!(invalid_message.contains("recovery="), "{invalid_message}");
+    }
+
+    #[test]
+    fn register_structural_path_ranking_accepts_policy_training_relative_score_uri() {
+        let temp = tempfile::tempdir().unwrap();
+        let summary_dir = temp.path().join("NQ").join(POLICY_TRAINING_DIR);
+        std::fs::create_dir_all(&summary_dir).unwrap();
+        let jsonl_path = summary_dir.join("structural_path_ranking_target.jsonl");
+        let summary = StructuralPathRankingTargetExportSummary {
+            symbol: "NQ".to_string(),
+            rows: 2,
+            candidate_set_id: "structural-candidates:NQ:test".to_string(),
+            candidate_set_size: 2,
+            mature_rows: 2,
+            rows_with_training_weight: 2,
+            rows_with_propensity_estimate: 2,
+            rows_with_calibrated_path_prob: 2,
+            rows_with_path_prob_lower_bound: 2,
+            history_rows: 2,
+            history_mature_rows: 2,
+            jsonl_path: jsonl_path.to_string_lossy().to_string(),
+            summary_path: summary_dir
+                .join(STRUCTURAL_PATH_RANKING_TARGET_SUMMARY_FILE)
+                .to_string_lossy()
+                .to_string(),
+            trainer_manifest: structural_path_ranking_trainer_manifest_for_test(),
+            summary_line: "structural_path_ranking_target rows=2".to_string(),
+            ..StructuralPathRankingTargetExportSummary::default()
+        };
+        std::fs::write(
+            summary_dir.join(STRUCTURAL_PATH_RANKING_TARGET_SUMMARY_FILE),
+            serde_json::to_string_pretty(&summary).unwrap(),
+        )
+        .unwrap();
+        std::fs::write(
+            &jsonl_path,
+            format!(
+                "{}\n{}\n",
+                serde_json::to_string(&structural_path_ranking_row(
+                    "path-win",
+                    0.8,
+                    "matured_success",
+                ))
+                .unwrap(),
+                serde_json::to_string(&structural_path_ranking_row(
+                    "path-loss",
+                    0.2,
+                    "matured_failure",
+                ))
+                .unwrap()
+            ),
+        )
+        .unwrap();
+        std::fs::write(
+            summary_dir.join("current_analyze_scores.jsonl"),
+            "{\"candidate_set_id\":\"structural-candidates:NQ:test\",\"path_id\":\"path-win\",\"raw_path_score\":0.91}\n",
+        )
+        .unwrap();
+
+        let (_, artifact) = register_structural_path_ranking_trainer_artifact(
+            temp.path().to_str().unwrap(),
+            "NQ",
+            "current_analyze_scores.jsonl",
+            "catboost",
+            Some("raw_path_score"),
+            Some(2),
+            Some(2),
+        )
+        .unwrap();
+
+        assert!(artifact
+            .artifact_uri
+            .ends_with("NQ/policy_training/current_analyze_scores.jsonl"));
     }
 
     #[test]
@@ -5515,6 +6738,35 @@ detector_context:
         assert_eq!(disabled.runtime_selection_status, "disabled");
         assert!(disabled.runtime_source_kind.is_none());
         assert_eq!(disabled.runtime_active_match_count, 0);
+    }
+
+    #[test]
+    fn enable_structural_path_ranking_runtime_invalid_reuse_mode_names_flag_before_state() {
+        let temp = tempfile::tempdir().unwrap();
+
+        let err = enable_structural_path_ranking_runtime_command(
+            temp.path().to_str().unwrap(),
+            "NQ",
+            "banana",
+        )
+        .unwrap_err();
+        let message = format!("{err:#}");
+
+        assert!(
+            message.contains("structural_path_ranker_runtime_reuse_mode_invalid"),
+            "{message}"
+        );
+        assert!(message.contains("flag=--reuse-mode"), "{message}");
+        assert!(message.contains("banana"), "{message}");
+        assert!(
+            message.contains(STRUCTURAL_PATH_RANKING_RUNTIME_MODE_CANDIDATE_SET_ONLY),
+            "{message}"
+        );
+        assert!(
+            message.contains(STRUCTURAL_PATH_RANKING_RUNTIME_MODE_PREFER_HISTORY),
+            "{message}"
+        );
+        assert!(message.contains("recovery="), "{message}");
     }
 
     #[test]
@@ -5962,5 +7214,124 @@ detector_context:
         )
         .unwrap();
         assert_eq!(second_summary.history_rows, summary.history_rows);
+    }
+
+    #[test]
+    fn export_structural_path_ranking_target_from_state_dir_uses_auto_quant_strategy_library_when_rank_ledger_is_separate(
+    ) {
+        let temp = tempfile::tempdir().unwrap();
+        let symbol = "IBKR_PUBLIC_ELDER_IMPULSE_MACD_QQQ_DOWNSTREAM";
+        let branch_path =
+            "TrendExpansion -> MomentumPersistence -> public_elder_impulse_macd_histogram -> ibkr_public_elder_impulse_macd_histogram_v1";
+        let snapshot =
+            crate::application::orchestration::workflow_status::sample_human_workflow_snapshot();
+        crate::state::save_workflow_snapshot(temp.path(), symbol, &snapshot).unwrap();
+        crate::state::save_learning_state(
+            temp.path(),
+            symbol,
+            &crate::state::LearningState::default(),
+        )
+        .unwrap();
+
+        let aq_state_dir = temp.path().join("auto-quant");
+        let aq_symbol_dir = aq_state_dir.join(symbol);
+        std::fs::create_dir_all(&aq_symbol_dir).unwrap();
+        let library_path = aq_symbol_dir.join("auto_quant_strategy_library.json");
+        let manifest = serde_json::json!({
+            "manifest_version": "1.0",
+            "exported_at": "2026-05-17T13:34:54Z",
+            "auto_quant_repo_url": "local",
+            "auto_quant_pinned_ref": "test-ref",
+            "config_path": "",
+            "timeframe": "30m",
+            "log_path": "",
+            "strategies": [
+                {
+                    "name": "ibkr_public_elder_impulse_macd_histogram_qqq_30m_3m_v1",
+                    "file_path": "/tmp/agent-material",
+                    "metadata": {
+                        "main_regime": "TrendExpansion",
+                        "sub_regime": "MomentumPersistence",
+                        "sub_sub_regime_or_profit_factor": "public_elder_impulse_macd_histogram",
+                        "profit_factor": "ibkr_public_elder_impulse_macd_histogram_v1",
+                        "regime_profit_branch_path": branch_path
+                    },
+                    "status": "ok",
+                    "validation_metrics": {
+                        "sharpe": 1.947,
+                        "total_profit_pct": 3.31,
+                        "trade_count": 72,
+                        "win_rate_pct": 48.6111,
+                        "profit_factor": 1.71
+                    },
+                    "pairs": ["QQQ"],
+                    "timerange": "branch_path=TrendExpansion -> MomentumPersistence -> public_elder_impulse_macd_histogram -> ibkr_public_elder_impulse_macd_histogram_v1;timeframe=30m",
+                    "commit": "",
+                    "error": null
+                }
+            ],
+            "validation_errors": []
+        });
+        std::fs::write(
+            &library_path,
+            serde_json::to_string_pretty(&manifest).unwrap(),
+        )
+        .unwrap();
+        append_artifact_ledger_entry(
+            &aq_state_dir,
+            symbol,
+            ArtifactLedgerEntry {
+                entry_id: "ledger:auto_quant_strategy_library:test".to_string(),
+                artifact_kind: "auto_quant_strategy_library_validated".to_string(),
+                artifact_id: "auto_quant_strategy_library:test".to_string(),
+                version: 1,
+                generated_at: Utc::now(),
+                symbol: symbol.to_string(),
+                source_phase: "auto_quant_results_import".to_string(),
+                source_run_id: Some("test-ref".to_string()),
+                path: library_path.to_string_lossy().to_string(),
+                status: "ready_for_prior_init".to_string(),
+                promote_candidate: false,
+                actionable: true,
+                decision_hint: "imported_strategy_library_available".to_string(),
+                review_reason: "imported 1 ok / 0 error / 0 not_run from test".to_string(),
+                review_rule_version: "auto-quant-strategy-library-v1".to_string(),
+                top_factor_name: Some(
+                    "ibkr_public_elder_impulse_macd_histogram_qqq_30m_3m_v1".to_string(),
+                ),
+                top_factor_action: Some("review".to_string()),
+                family_scores: BTreeMap::new(),
+                supersedes_artifact_id: None,
+                quality_score: 1,
+                consumed_by_update_run_id: None,
+                consumed_at: None,
+                consumed_outcome: None,
+                regraded_at: None,
+                consumption_regrade_status: None,
+                consumption_regrade_reason: None,
+            },
+        )
+        .unwrap();
+
+        let summary = export_structural_path_ranking_target_from_state_dir(
+            temp.path().to_str().unwrap(),
+            symbol,
+        )
+        .unwrap();
+        let rows =
+            load_structural_path_ranking_target_rows_from_jsonl(&summary.jsonl_path).unwrap();
+        let branch_row = rows
+            .iter()
+            .find(|row| row.path_id == branch_path)
+            .expect("imported strategy library branch row");
+
+        assert_eq!(branch_row.pending_reward_state, "matured_success");
+        assert!(branch_row.maturity_mask);
+        assert_eq!(branch_row.calibrated_label, Some(1.0));
+        assert!(branch_row.training_weight.is_some());
+        assert_eq!(
+            branch_row.score_source_kind.as_deref(),
+            Some("agent_material_rank")
+        );
     }
 }

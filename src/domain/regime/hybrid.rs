@@ -51,6 +51,41 @@ fn baseline_duration_distribution(label: &str, market: Option<&str>) -> Duration
     }
 }
 
+fn aligned_pda_confidence_floor(
+    hybrid_label: &str,
+    pda_sequence_summary: Option<&PdaSequenceArtifactSummary>,
+    pda_alignment: Option<bool>,
+) -> Option<f64> {
+    if !matches!(pda_alignment, Some(true)) {
+        return None;
+    }
+    let summary = pda_sequence_summary?;
+    let family = summary.primary_cluster_family.as_deref()?;
+    if family != regime_family_from_label(hybrid_label) || family == "transition" {
+        return None;
+    }
+    let session_density = if summary.total_sessions == 0 {
+        0.0
+    } else {
+        summary.valid_sessions as f64 / summary.total_sessions as f64
+    }
+    .clamp(0.0, 1.0);
+    let confidence = summary.primary_cluster_confidence.unwrap_or_default();
+    let directional = summary
+        .primary_cluster_directional_confirmation_ratio
+        .unwrap_or_default()
+        .clamp(0.0, 1.0);
+    let support = (confidence
+        * summary.consistency_ratio
+        * summary.ensemble_mean_confidence
+        * session_density)
+        .clamp(0.0, 1.0);
+    if support < 0.55 || directional <= 0.0 {
+        return None;
+    }
+    Some((0.40 + support * 0.30).clamp(0.40, 0.70))
+}
+
 pub fn build_hybrid_regime_packet(
     higher_timeframe: Option<&FrameFeatures>,
     current: &FrameFeatures,
@@ -105,11 +140,19 @@ pub fn build_hybrid_regime_packet(
     let duration_distribution = empirical_duration_distribution(historical_regime_ages)
         .unwrap_or_else(|| baseline_duration_distribution(&decision.selected_label, market));
     let duration_state = estimate_duration_state(elapsed_bars, &duration_distribution);
-    let adjusted_confidence = if matches!(pda_alignment, Some(false)) {
+    let mut adjusted_confidence = if matches!(pda_alignment, Some(false)) {
         (decision.confidence - 0.10).clamp(0.0, 1.0)
     } else {
         decision.confidence
     };
+    let pda_confidence_floor = aligned_pda_confidence_floor(
+        &decision.selected_label,
+        pda_sequence_summary,
+        pda_alignment,
+    );
+    if let Some(floor) = pda_confidence_floor {
+        adjusted_confidence = adjusted_confidence.max(floor);
+    }
     let transition_hazard = if matches!(pda_alignment, Some(false)) {
         duration_state
             .hazard_rate
@@ -134,6 +177,12 @@ pub fn build_hybrid_regime_packet(
         format!("duration_history_samples={}", historical_regime_ages.len()),
     ];
     evidence.extend(decision.evidence.clone());
+    if let Some(floor) = pda_confidence_floor {
+        evidence.push(format!("aligned_pda_confidence_floor={floor:.4}"));
+        evidence.push(format!(
+            "hybrid_effective_confidence={adjusted_confidence:.4}"
+        ));
+    }
     if let Some(summary) = pda_sequence_summary {
         let (h1_second_expansion, h0_no_second_expansion) = ordered_second_expansion_h1_h0_support(
             summary.primary_cluster_family.as_deref(),
@@ -216,4 +265,62 @@ pub fn build_hybrid_regime_packet(
         timeframe_alignment: alignment.as_ref().map(|item| item.aligned),
         timeframe_alignment_score: alignment.as_ref().map(|item| item.score),
     })
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn range_pda_summary() -> PdaSequenceArtifactSummary {
+        PdaSequenceArtifactSummary {
+            method: "pda_sequence_analysis_v2".to_string(),
+            primary_cluster: Some(0),
+            primary_cluster_label: Some("cluster_0".to_string()),
+            primary_cluster_family: Some("range".to_string()),
+            primary_cluster_direction: Some("bull".to_string()),
+            primary_cluster_directional_confirmation_ratio: Some(0.052),
+            primary_cluster_confidence: Some(1.0),
+            consistency_ratio: 0.716,
+            ensemble_mean_confidence: 0.970,
+            valid_sessions: 67,
+            total_sessions: 67,
+            kmer_k: 2,
+        }
+    }
+
+    #[test]
+    fn aligned_pda_range_evidence_reduces_confidence_owned_transition_hazard() {
+        let current = FrameFeatures {
+            normalized_distance_to_projected_trend_bps: 9_460.651771625335,
+            ou_pullback_expectation_zscore: 2.944661438011532,
+            fvg_count: 78,
+            sweep_count: 22,
+            ..FrameFeatures::default()
+        };
+
+        let packet = build_hybrid_regime_packet(
+            None,
+            &current,
+            None,
+            Some(4),
+            Some("TOMAC"),
+            &[],
+            Some(&range_pda_summary()),
+        )
+        .expect("hybrid packet");
+
+        assert_eq!(
+            packet.active_regime_cluster.as_deref(),
+            Some("range_choppy")
+        );
+        assert!(packet
+            .evidence
+            .iter()
+            .any(|line| line == "pda_hybrid_alignment=true"));
+        assert!(
+            packet.transition_hazard.unwrap() < 0.60,
+            "aligned range PDA evidence should prevent confidence-owned hazard from blocking: {:?}",
+            packet.evidence
+        );
+    }
 }

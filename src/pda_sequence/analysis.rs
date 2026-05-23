@@ -104,6 +104,32 @@ fn infer_pda_cluster_family_from_tokens(tokens: &[PdaToken]) -> Option<String> {
     if tokens.is_empty() {
         return None;
     }
+    let confirmed: Vec<&PdaToken> = tokens
+        .iter()
+        .filter(|token| token.directional_confirmation)
+        .collect();
+    let all_scores = pda_family_scores(tokens.iter());
+    let confirmed_scores = pda_family_scores(confirmed.iter().copied());
+    if let Some(confirmed_family) = pda_family_from_scores(confirmed_scores) {
+        let all_family = pda_family_from_scores(all_scores);
+        let dominant_sweep_rejection = all_scores.1 > all_scores.0
+            && tokens.iter().any(|token| {
+                matches!(
+                    token.kind,
+                    PdaTokenKind::LiquiditySweep
+                        | PdaTokenKind::RejectionBlock
+                        | PdaTokenKind::Cisd
+                )
+            });
+        if confirmed_family == "trend" && dominant_sweep_rejection {
+            return all_family;
+        }
+        return Some(confirmed_family);
+    }
+    pda_family_from_scores(all_scores)
+}
+
+fn pda_family_scores<'a>(tokens: impl Iterator<Item = &'a PdaToken>) -> (usize, usize) {
     let mut trend_score = 0usize;
     let mut range_score = 0usize;
     for token in tokens {
@@ -117,16 +143,20 @@ fn infer_pda_cluster_family_from_tokens(tokens: &[PdaToken]) -> Option<String> {
             }
         }
     }
-    Some(
-        if trend_score > range_score {
-            "trend"
-        } else if range_score > trend_score {
-            "range"
-        } else {
-            "transition"
-        }
-        .to_string(),
-    )
+    (trend_score, range_score)
+}
+
+fn pda_family_from_scores((trend_score, range_score): (usize, usize)) -> Option<String> {
+    if trend_score == 0 && range_score == 0 {
+        return None;
+    }
+    if trend_score > range_score {
+        Some("trend".to_string())
+    } else if range_score > trend_score {
+        Some("range".to_string())
+    } else {
+        None
+    }
 }
 
 fn infer_pda_cluster_direction_from_tokens(tokens: &[PdaToken]) -> Option<String> {
@@ -319,6 +349,9 @@ pub fn analyze_pda_sequences(
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::pda_sequence::cluster::PDA_DTW_CLUSTER_METHOD;
+    use crate::pda_sequence::ensemble_cluster::PDA_ENSEMBLE_METHOD;
+    use crate::types::Direction;
     use chrono::{Duration, TimeZone};
 
     fn ts(n: i64) -> DateTime<Utc> {
@@ -483,5 +516,134 @@ mod tests {
         assert_eq!(a.hmm_classifications, b.hmm_classifications);
         assert_eq!(a.fcgr_labels, b.fcgr_labels);
         assert_eq!(a.ensemble_packets, b.ensemble_packets);
+    }
+
+    #[test]
+    fn summary_prefers_directionally_confirmed_family_when_available() {
+        let medoid = vec![
+            PdaToken::new(PdaTokenKind::FairValueGap, 1),
+            PdaToken::new(PdaTokenKind::FairValueGap, 2),
+            PdaToken::new(PdaTokenKind::StructureBreak, 3),
+            PdaToken::new(PdaTokenKind::StructureBreak, 4),
+            PdaToken::new(PdaTokenKind::Cisd, 5)
+                .with_direction(Direction::Bear)
+                .with_directional_confirmation(true),
+            PdaToken::new(PdaTokenKind::Cisd, 6)
+                .with_direction(Direction::Bear)
+                .with_directional_confirmation(true),
+            PdaToken::new(PdaTokenKind::RejectionBlock, 7)
+                .with_direction(Direction::Bear)
+                .with_directional_confirmation(true),
+        ];
+        let artifact = PdaSequenceAnalysisArtifact {
+            artifact_id: "fixture".to_string(),
+            generated_at: Utc.timestamp_opt(0, 0).unwrap(),
+            symbol: "SI".to_string(),
+            method: PDA_SEQUENCE_ANALYSIS_METHOD.to_string(),
+            k: 1,
+            n_states: 1,
+            kmer_k: PDA_SEQUENCE_DEFAULT_KMER_K,
+            total_sessions: 1,
+            valid_sessions: 1,
+            silhouette_score: 1.0,
+            consistency_ratio: 1.0,
+            ensemble_mean_confidence: 1.0,
+            dtw_packets: vec![PdaDtwClusterPacket {
+                method: PDA_DTW_CLUSTER_METHOD.to_string(),
+                regime_cluster: 0,
+                cluster_name: "fixture".to_string(),
+                dtw_distance_to_medoid: 0.0,
+                dtw_alignment_path: vec![],
+                medoid_pda_sequence: medoid,
+                cluster_size: 1,
+                silhouette_score: 1.0,
+            }],
+            hmm_classifications: vec![],
+            fcgr_labels: vec![],
+            ensemble_packets: vec![PdaClusteringPacket {
+                method: PDA_ENSEMBLE_METHOD.to_string(),
+                primary_cluster: 0,
+                confidence: 1.0,
+                vote_distribution: vec![1],
+                votes: [0, 0, 0],
+                voter_names: [
+                    "dtw_kmedoids".to_string(),
+                    "hmm_sequence".to_string(),
+                    "fcgr_kmedoids".to_string(),
+                ],
+            }],
+            provenance: RunProvenance::default(),
+        };
+
+        let summary = summarize_pda_sequence_artifact(&artifact);
+
+        assert_eq!(summary.primary_cluster_family.as_deref(), Some("range"));
+        assert_eq!(summary.primary_cluster_direction.as_deref(), Some("bear"));
+    }
+
+    #[test]
+    fn summary_preserves_liquidity_sweep_reversion_family_with_incidental_directional_trend_tokens()
+    {
+        let medoid = vec![
+            PdaToken::new(PdaTokenKind::LiquiditySweep, 1),
+            PdaToken::new(PdaTokenKind::RejectionBlock, 2)
+                .with_direction(Direction::Bear)
+                .with_directional_confirmation(true),
+            PdaToken::new(PdaTokenKind::Cisd, 3)
+                .with_direction(Direction::Bear)
+                .with_directional_confirmation(true),
+            PdaToken::new(PdaTokenKind::LiquiditySweep, 4),
+            PdaToken::new(PdaTokenKind::RejectionBlock, 5),
+            PdaToken::new(PdaTokenKind::FairValueGap, 6)
+                .with_direction(Direction::Bear)
+                .with_directional_confirmation(true),
+            PdaToken::new(PdaTokenKind::StructureBreak, 7)
+                .with_direction(Direction::Bear)
+                .with_directional_confirmation(true),
+        ];
+        let artifact = PdaSequenceAnalysisArtifact {
+            artifact_id: "m2k-liquidity-sweep-reject-short-fixture".to_string(),
+            generated_at: Utc.timestamp_opt(0, 0).unwrap(),
+            symbol: "M2K".to_string(),
+            method: PDA_SEQUENCE_ANALYSIS_METHOD.to_string(),
+            k: 1,
+            n_states: 1,
+            kmer_k: PDA_SEQUENCE_DEFAULT_KMER_K,
+            total_sessions: 1,
+            valid_sessions: 1,
+            silhouette_score: 1.0,
+            consistency_ratio: 1.0,
+            ensemble_mean_confidence: 1.0,
+            dtw_packets: vec![PdaDtwClusterPacket {
+                method: PDA_DTW_CLUSTER_METHOD.to_string(),
+                regime_cluster: 0,
+                cluster_name: "fixture".to_string(),
+                dtw_distance_to_medoid: 0.0,
+                dtw_alignment_path: vec![],
+                medoid_pda_sequence: medoid,
+                cluster_size: 1,
+                silhouette_score: 1.0,
+            }],
+            hmm_classifications: vec![],
+            fcgr_labels: vec![],
+            ensemble_packets: vec![PdaClusteringPacket {
+                method: PDA_ENSEMBLE_METHOD.to_string(),
+                primary_cluster: 0,
+                confidence: 1.0,
+                vote_distribution: vec![1],
+                votes: [0, 0, 0],
+                voter_names: [
+                    "dtw_kmedoids".to_string(),
+                    "hmm_sequence".to_string(),
+                    "fcgr_kmedoids".to_string(),
+                ],
+            }],
+            provenance: RunProvenance::default(),
+        };
+
+        let summary = summarize_pda_sequence_artifact(&artifact);
+
+        assert_eq!(summary.primary_cluster_family.as_deref(), Some("range"));
+        assert_eq!(summary.primary_cluster_direction.as_deref(), Some("bear"));
     }
 }

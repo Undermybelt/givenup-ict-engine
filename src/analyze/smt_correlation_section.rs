@@ -596,7 +596,7 @@ fn classify_relationship(corr20: Option<f64>, corr50: Option<f64>) -> (String, f
 
 fn derive_smt_context_hints(candles: &[Candle]) -> SmtContextHints {
     let timeframe = infer_timeframe_label(candles);
-    let session = candles.last().map(|candle| classify_session_label(candle));
+    let session = candles.last().map(classify_session_label);
     let current_close = candles.last().map(|candle| candle.close);
     let atr = compute_atr(candles, 14);
     let latest_atr = atr.last().copied().filter(|value| *value > f64::EPSILON);

@@ -261,7 +261,72 @@ pub fn auto_quant_handoff_data_ready(
             return false;
         }
     }
-    true
+    workspace.expected_data_files.is_empty()
+        && default_workspace_contains_requested_data(workspace, data_path)
+        || !workspace.expected_data_files.is_empty()
+}
+
+fn default_workspace_contains_requested_data(
+    workspace: &AutoQuantWorkspaceConfig,
+    data_path: &str,
+) -> bool {
+    let Some(stem) = Path::new(data_path)
+        .file_stem()
+        .and_then(|value| value.to_str())
+    else {
+        return false;
+    };
+    let normalized_stem = normalize_workspace_data_key(stem);
+    std::fs::read_dir(&workspace.data_dir)
+        .map(|entries| {
+            entries.filter_map(Result::ok).any(|entry| {
+                let path = entry.path();
+                let is_feather = path
+                    .extension()
+                    .and_then(|ext| ext.to_str())
+                    .map(|ext| ext.eq_ignore_ascii_case("feather"))
+                    .unwrap_or(false);
+                let Some(candidate_stem) = path.file_stem().and_then(|value| value.to_str()) else {
+                    return false;
+                };
+                is_feather
+                    && normalize_workspace_data_key(candidate_stem).starts_with(&normalized_stem)
+            })
+        })
+        .unwrap_or(false)
+}
+
+fn normalize_workspace_data_key(value: &str) -> String {
+    value
+        .chars()
+        .filter(|ch| ch.is_ascii_alphanumeric())
+        .flat_map(|ch| ch.to_lowercase())
+        .collect()
+}
+
+fn requested_data_missing_notes(
+    data_path: &str,
+    paired_data_path: Option<&str>,
+    state_dir: &str,
+) -> Vec<String> {
+    let mut notes = Vec::new();
+    if !Path::new(data_path).exists() {
+        notes.push(format!(
+            "auto_quant_requested_data_missing: flag=--data path={} expected=cleaned candle JSON/CSV with timestamp/open/high/low/close fields or columns recovery=ict-engine auto-quant-prepare --state-dir {}",
+            data_path,
+            shell_quote(state_dir)
+        ));
+    }
+    if let Some(path) = paired_data_path.filter(|value| !value.trim().is_empty()) {
+        if !Path::new(path).exists() {
+            notes.push(format!(
+                "auto_quant_requested_data_missing: flag=--paired-data path={} expected=cleaned candle JSON/CSV with timestamp/open/high/low/close fields or columns recovery=ict-engine auto-quant-prepare --state-dir {}",
+                path,
+                shell_quote(state_dir)
+            ));
+        }
+    }
+    notes
 }
 
 pub fn auto_quant_active_strategy_count(workspace: &AutoQuantWorkspaceConfig) -> usize {
@@ -575,6 +640,11 @@ pub fn build_factor_research_handoff_payload(
         payload
             .notes
             .push("auto_quant_prepare_required_before_run".to_string());
+        payload.notes.extend(requested_data_missing_notes(
+            &payload.data_path,
+            payload.paired_data_path.as_deref(),
+            &payload.state_dir,
+        ));
     }
     if active_strategy_count == 0 {
         payload
@@ -698,6 +768,11 @@ pub fn build_factor_autoresearch_handoff_payload(
         payload
             .notes
             .push("auto_quant_prepare_required_before_run".to_string());
+        payload.notes.extend(requested_data_missing_notes(
+            &payload.data_path,
+            payload.paired_data_path.as_deref(),
+            &payload.state_dir,
+        ));
     }
     if active_strategy_count == 0 {
         payload
@@ -905,15 +980,14 @@ mod tests {
             .iter()
             .any(|command| command.contains("ict-engine auto-quant-prepare --state-dir")));
 
+        let requested_data = temp.path().join("demo.json");
+        std::fs::write(&requested_data, "[]").unwrap();
         let data_dir = managed_dir.join("user_data/data");
         std::fs::create_dir_all(&data_dir).unwrap();
         for index in 0..15 {
-            std::fs::write(data_dir.join(format!("prepared-{index}.feather")), "ready").unwrap();
+            std::fs::write(data_dir.join(format!("demo-{index}.feather")), "ready").unwrap();
         }
         std::fs::write(strategies_dir.join("SeedAlpha.py"), "class SeedAlpha: pass").unwrap();
-
-        let requested_data = temp.path().join("demo.json");
-        std::fs::write(&requested_data, "[]").unwrap();
 
         let ready = build_factor_research_handoff_payload(BuildFactorResearchHandoffPayloadInput {
             symbol: "NQ",
@@ -959,6 +1033,114 @@ mod tests {
                 symbol: "NQ",
                 data: temp.path().join("missing-primary.json").to_str().unwrap(),
                 objective: "generic",
+                provider_profile_selector: None,
+                paired_data: None,
+                auxiliary_evidence_path: None,
+                mutation_spec_path: None,
+                strategy_material_root: None,
+                state_dir: temp.path().to_str().unwrap(),
+                dependency_status: healthy_dependency_status_for(managed_dir.to_str().unwrap()),
+            });
+
+        assert!(!payload.data_ready);
+        assert_eq!(
+            payload
+                .readiness
+                .as_ref()
+                .map(|value| value.status.as_str()),
+            Some("dependency_ready_data_missing")
+        );
+        assert!(payload
+            .suggested_commands
+            .iter()
+            .any(|command| command.contains("ict-engine auto-quant-prepare --state-dir")));
+    }
+
+    #[test]
+    fn handoff_notes_name_missing_requested_data_schema_and_prepare_recovery() {
+        let temp = tempfile::tempdir().unwrap();
+        let managed_dir = temp.path().join("managed-auto-quant");
+        let strategies_dir = managed_dir.join("user_data/strategies");
+        let data_dir = managed_dir.join("user_data/data");
+        std::fs::create_dir_all(&strategies_dir).unwrap();
+        std::fs::create_dir_all(&data_dir).unwrap();
+        std::fs::write(managed_dir.join("program.md"), "program").unwrap();
+        std::fs::write(managed_dir.join("prepare.py"), "print('prepare')").unwrap();
+        std::fs::write(managed_dir.join("run.py"), "print('run')").unwrap();
+        std::fs::write(
+            strategies_dir.join("_template.py.example"),
+            "class Template: pass",
+        )
+        .unwrap();
+        std::fs::write(strategies_dir.join("SeedAlpha.py"), "class SeedAlpha: pass").unwrap();
+        for index in 0..15 {
+            std::fs::write(data_dir.join(format!("prepared-{index}.feather")), "ready").unwrap();
+        }
+        let missing_data = temp.path().join("missing-primary.csv");
+
+        let payload =
+            build_factor_research_handoff_payload(BuildFactorResearchHandoffPayloadInput {
+                symbol: "NQ",
+                data: missing_data.to_str().unwrap(),
+                objective: "generic",
+                provider_profile_selector: None,
+                paired_data: None,
+                auxiliary_evidence_path: None,
+                mutation_spec_path: None,
+                strategy_material_root: None,
+                state_dir: temp.path().to_str().unwrap(),
+                dependency_status: healthy_dependency_status_for(managed_dir.to_str().unwrap()),
+            });
+        let notes = payload.notes.join(" | ");
+
+        assert!(!payload.data_ready);
+        assert!(notes.contains("missing-primary.csv"), "{notes}");
+        assert!(notes.contains("cleaned candle JSON/CSV"), "{notes}");
+        assert!(notes.contains("timestamp/open/high/low/close"), "{notes}");
+        assert!(
+            notes.contains("ict-engine auto-quant-prepare --state-dir"),
+            "{notes}"
+        );
+        assert!(payload
+            .suggested_commands
+            .iter()
+            .any(|command| command.contains("ict-engine auto-quant-prepare --state-dir")));
+    }
+
+    #[test]
+    fn handoff_does_not_treat_unrelated_default_workspace_feathers_as_requested_data_ready() {
+        let temp = tempfile::tempdir().unwrap();
+        let managed_dir = temp.path().join("managed-auto-quant");
+        let strategies_dir = managed_dir.join("user_data/strategies");
+        let data_dir = managed_dir.join("user_data/data");
+        std::fs::create_dir_all(&strategies_dir).unwrap();
+        std::fs::create_dir_all(&data_dir).unwrap();
+        std::fs::write(managed_dir.join("program.md"), "program").unwrap();
+        std::fs::write(managed_dir.join("prepare.py"), "print('prepare')").unwrap();
+        std::fs::write(managed_dir.join("run.py"), "print('run')").unwrap();
+        std::fs::write(
+            strategies_dir.join("_template.py.example"),
+            "class Template: pass",
+        )
+        .unwrap();
+        std::fs::write(strategies_dir.join("SeedAlpha.py"), "class SeedAlpha: pass").unwrap();
+        for pair in ["BTC_USDT", "ETH_USDT", "SOL_USDT", "BNB_USDT", "AVAX_USDT"] {
+            for timeframe in ["1h", "4h", "1d"] {
+                std::fs::write(
+                    data_dir.join(format!("{pair}-{timeframe}.feather")),
+                    "ready",
+                )
+                .unwrap();
+            }
+        }
+        let requested_data = temp.path().join("yf_crwd_5m.csv");
+        std::fs::write(&requested_data, "timestamp,open,high,low,close,volume\n").unwrap();
+
+        let payload =
+            build_factor_research_handoff_payload(BuildFactorResearchHandoffPayloadInput {
+                symbol: "YF_AI_SECURITY_CRWD5M_PDA_MTF_SOFT_CONFIRMATION_DOWNSTREAM",
+                data: requested_data.to_str().unwrap(),
+                objective: "expansion_manipulation",
                 provider_profile_selector: None,
                 paired_data: None,
                 auxiliary_evidence_path: None,

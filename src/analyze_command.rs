@@ -6,7 +6,31 @@ use ict_engine::application::structure_direction_hotplug::{
     evaluate_structure_direction_confirmation, load_structure_direction_event_bundle,
     structure_direction_summary_lines, structure_event_bundle_summary_line,
 };
+use ict_engine::types::Candle;
 use std::path::Path;
+
+fn load_analyze_slot_candles(slot_flag: &str, path: &str) -> Result<Vec<Candle>> {
+    load_candles(path).with_context(|| {
+        format!(
+            "analyze {slot_flag} failed to load '{path}': expected cleaned candle JSON/CSV with timestamp/open/high/low/close fields or columns. Recovery: run `ict-engine analyze --symbol <symbol> --demo --state-dir <tmp-state>` for demo data, provide all three flags `--data-htf <file> --data-mtf <file> --data-ltf <file>`, or use `--data-root <clean-root>`."
+        )
+    })
+}
+
+pub(crate) fn emit_analyze_output(
+    report: &AnalyzeReport,
+    output_format: OutputFormat,
+    inline_ledger: bool,
+) -> Result<()> {
+    let output_format = crate::output_format::output_format_label(output_format);
+    ict_engine::application::reporting::dispatch_analyze_output(
+        report,
+        ict_engine::application::reporting::AnalyzeOutputDispatchInput {
+            output_format,
+            inline_ledger,
+        },
+    )
+}
 
 #[allow(clippy::too_many_arguments)]
 pub(crate) fn analyze_command(
@@ -34,9 +58,9 @@ pub(crate) fn analyze_command(
     stage_trace.event("analyze_command:regime_bundle_ready");
     let _ = migrate_ensemble_executor_scorecards(state_dir, symbol)?;
     stage_trace.event("analyze_command:scorecards_ready");
-    let htf = load_candles(data_htf)?;
-    let mtf = load_candles(data_mtf)?;
-    let ltf = load_candles(data_ltf)?;
+    let htf = load_analyze_slot_candles("--data-htf", data_htf)?;
+    let mtf = load_analyze_slot_candles("--data-mtf", data_mtf)?;
+    let ltf = load_analyze_slot_candles("--data-ltf", data_ltf)?;
     stage_trace.event("analyze_command:primary_candles_loaded");
     persist_pda_sequence_artifact_from_analyze_frames(symbol, state_dir, &htf, &mtf, &ltf)?;
     stage_trace.event("analyze_command:pda_sequence_artifact_ready");
@@ -337,25 +361,47 @@ fn persist_pda_sequence_artifact_from_analyze_frames(
 }
 
 fn pda_sequence_sessions_from_analyze_frames(frames: &[&[Candle]]) -> Vec<Vec<Candle>> {
+    const MAX_PDA_SEQUENCE_SESSIONS_PER_FRAME: usize = 32;
+
     let mut sessions = Vec::new();
     for frame in frames {
         if frame.is_empty() {
             continue;
         }
-        sessions.push((*frame).to_vec());
         if frame.len() < 48 {
+            sessions.push((*frame).to_vec());
             continue;
         }
         let window = frame.len().min(96);
+        if frame.len() <= window {
+            sessions.push((*frame).to_vec());
+        }
         let step = (window / 2).max(1);
+        let mut starts = Vec::new();
         let mut start = 0;
         while start + window <= frame.len() {
-            sessions.push(frame[start..start + window].to_vec());
+            starts.push(start);
             start += step;
         }
         let tail_start = frame.len().saturating_sub(window);
-        if tail_start > 0 && (start < tail_start || (start - step) != tail_start) {
-            sessions.push(frame[tail_start..].to_vec());
+        if tail_start > 0 && starts.last().copied() != Some(tail_start) {
+            starts.push(tail_start);
+        }
+
+        if starts.len() > MAX_PDA_SEQUENCE_SESSIONS_PER_FRAME {
+            let last = starts.len() - 1;
+            let mut sampled = Vec::with_capacity(MAX_PDA_SEQUENCE_SESSIONS_PER_FRAME);
+            for index in 0..MAX_PDA_SEQUENCE_SESSIONS_PER_FRAME {
+                let source_index = index * last / (MAX_PDA_SEQUENCE_SESSIONS_PER_FRAME - 1);
+                if sampled.last().copied() != Some(starts[source_index]) {
+                    sampled.push(starts[source_index]);
+                }
+            }
+            starts = sampled;
+        }
+
+        for start in starts {
+            sessions.push(frame[start..start + window].to_vec());
         }
     }
     sessions
@@ -388,6 +434,29 @@ mod tests {
 
     fn write_test_candles(path: &Path, count: usize) {
         std::fs::write(path, serde_json::to_string(&sample_candles(count)).unwrap()).unwrap();
+    }
+
+    #[test]
+    fn load_analyze_slot_candles_wraps_missing_file_with_flag_schema_and_recovery() {
+        let temp = tempfile::tempdir().unwrap();
+        let missing = temp.path().join("missing-htf.json");
+        let error = load_analyze_slot_candles("--data-htf", missing.to_str().unwrap())
+            .expect_err("missing analyze data should fail with command-specific context")
+            .to_string();
+
+        assert!(error.contains("--data-htf"), "{error}");
+        assert!(error.contains("missing-htf.json"), "{error}");
+        assert!(error.contains("cleaned candle JSON/CSV"), "{error}");
+        assert!(error.contains("timestamp/open/high/low/close"), "{error}");
+        assert!(
+            error.contains("ict-engine analyze --symbol <symbol> --demo"),
+            "{error}"
+        );
+        assert!(
+            error.contains("--data-htf <file> --data-mtf <file> --data-ltf <file>"),
+            "{error}"
+        );
+        assert!(error.contains("--data-root <clean-root>"), "{error}");
     }
 
     fn pda_test_candle(index: i64, open: f64, high: f64, low: f64, close: f64) -> Candle {
@@ -465,6 +534,32 @@ mod tests {
         );
         assert!(artifact.valid_sessions > 3);
         assert!(summary.primary_cluster_label.is_some());
+    }
+
+    #[test]
+    fn pda_sequence_sessions_from_analyze_frames_caps_large_frames_representatively() {
+        let frame = pda_trending_up_series(20_000, 0);
+        let sessions = pda_sequence_sessions_from_analyze_frames(&[&frame]);
+
+        assert!(sessions.len() <= 32);
+        assert_eq!(
+            sessions
+                .first()
+                .and_then(|session| session.first())
+                .map(|c| c.timestamp),
+            frame.first().map(|c| c.timestamp)
+        );
+        assert_eq!(
+            sessions
+                .last()
+                .and_then(|session| session.last())
+                .map(|c| c.timestamp),
+            frame.last().map(|c| c.timestamp)
+        );
+        assert!(
+            sessions.iter().all(|session| session.len() <= 96),
+            "long analyze frames must use bounded rolling PDA windows"
+        );
     }
 
     #[test]

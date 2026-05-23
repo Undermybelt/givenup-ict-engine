@@ -2,6 +2,156 @@ use super::*;
 use ict_engine::application::entry_models::export_policy_training_tables;
 use ict_engine::application::orchestration::export_structural_path_ranking_target;
 use ict_engine::application::provider_catalog::provider_status_agent_surface;
+use std::path::Path;
+
+pub(crate) struct UpdateCommandInput<'a> {
+    pub(crate) symbol: &'a str,
+    pub(crate) outcome: &'a str,
+    pub(crate) entry_signal: Option<&'a str>,
+    pub(crate) feedback_file: Option<&'a str>,
+    pub(crate) state_dir: &'a str,
+    pub(crate) pnl: Option<f64>,
+    pub(crate) regime: Option<&'a str>,
+    pub(crate) direction: Option<&'a str>,
+    pub(crate) ensemble: bool,
+}
+
+pub(crate) struct BuildUpdateAgentPromptsInput<'a> {
+    pub(crate) symbol: &'a str,
+    pub(crate) factor_ranking: &'a [PersistedFactorRanking],
+    pub(crate) factor_iteration_queue: &'a [FactorIterationPrompt],
+    pub(crate) feedback_history_summary: &'a FeedbackHistorySummary,
+    pub(crate) updated_trade_outcome: &'a BTreeMap<String, f64>,
+    pub(crate) normalized_entry_quality: &'a str,
+    pub(crate) factor_alignment: &'a str,
+    pub(crate) factor_uncertainty: &'a str,
+    pub(crate) realized_outcome: &'a str,
+    pub(crate) structural_learning_credit_class: Option<&'a str>,
+    pub(crate) structural_learning_success_credit: Option<f64>,
+    pub(crate) structural_learning_observation_weight: Option<f64>,
+    pub(crate) feedback_records_applied: usize,
+    pub(crate) consumed_pre_bayes_evidence_filter: Option<&'a PreBayesEvidenceFilter>,
+    pub(crate) consumed_pre_bayes_entry_quality_bridge:
+        Option<&'a ict_engine::state::PreBayesEntryQualityBridge>,
+    pub(crate) consumed_canonical_structural_regime_posterior:
+        Option<&'a ict_engine::state::CanonicalStructuralRegimePosterior>,
+    pub(crate) consumed_multi_timeframe_summary: &'a [String],
+}
+
+pub(crate) fn build_update_agent_prompts(
+    input: BuildUpdateAgentPromptsInput<'_>,
+) -> AgentPromptPack {
+    let BuildUpdateAgentPromptsInput {
+        symbol,
+        factor_ranking,
+        factor_iteration_queue,
+        feedback_history_summary,
+        updated_trade_outcome,
+        normalized_entry_quality,
+        factor_alignment,
+        factor_uncertainty,
+        realized_outcome,
+        structural_learning_credit_class,
+        structural_learning_success_credit,
+        structural_learning_observation_weight,
+        feedback_records_applied,
+        consumed_pre_bayes_evidence_filter,
+        consumed_pre_bayes_entry_quality_bridge,
+        consumed_canonical_structural_regime_posterior,
+        consumed_multi_timeframe_summary,
+    } = input;
+    let consumed_canonical_structural_regime_summary =
+        compact_canonical_structural_regime_summary(consumed_canonical_structural_regime_posterior);
+    let structural_learning_semantics_summary =
+        ict_engine::state::structural_learning_semantics_summary(
+            structural_learning_credit_class,
+            structural_learning_success_credit,
+            structural_learning_observation_weight,
+        );
+    let mut pack = factor_iteration_prompt_pack(
+        symbol,
+        factor_ranking,
+        factor_iteration_queue,
+        feedback_history_summary,
+    );
+    pack.workflow = format!(
+        "Use the realized update for {} to review whether the latest result should change factor weights, factor evidence interpretation, or future trade acceptance thresholds.",
+        symbol
+    );
+    pack.prompts.insert(
+        0,
+        AgentPrompt::new(AgentPromptInput {
+            id: "update_feedback_review".to_string(),
+            stage: "feedback_update".to_string(),
+            priority: "high".to_string(),
+            objective: "Review the newly realized outcome and decide what the next agent iteration should target.".to_string(),
+            system_prompt: "You are the realized-feedback agent. Use the updated trade_outcome distribution plus factor scorecards to decide whether the latest result strengthens confidence, exposes a factor weakness, or suggests a problem in evidence mapping.".to_string(),
+            user_prompt: format!(
+                "Symbol={} entry_quality={} factor_alignment={} factor_uncertainty={} realized_outcome={} structural_learning_semantics={} feedback_records_applied={} updated_trade_outcome={:?} iteration_queue={:?}",
+                symbol,
+                normalized_entry_quality,
+                factor_alignment,
+                factor_uncertainty,
+                realized_outcome,
+                structural_learning_semantics_summary,
+                feedback_records_applied,
+                updated_trade_outcome,
+                factor_iteration_queue
+            ),
+            success_criteria: vec![
+                "If duplicate_feedback_skipped is true, do not infer a new learning event".to_string(),
+                "If factor_alignment and realized_outcome disagree repeatedly, prioritize evidence-mapping review or factor replacement".to_string(),
+                "If updated_trade_outcome improves while factor scores stay weak, review BBN calibration before editing factor code".to_string(),
+            ],
+            suggested_files: vec![
+                "src/update_command.rs".to_string(),
+                "src/factors/weight_updater.rs".to_string(),
+                "src/bbn/trading/topology.rs".to_string(),
+                "src/agent/prompts.rs".to_string(),
+            ],
+        }),
+    );
+    if let Some(filter) = consumed_pre_bayes_evidence_filter {
+        let bridge_diff =
+            consumed_pre_bayes_entry_quality_bridge.map(pre_bayes_entry_quality_bridge_diff);
+        pack.prompts.insert(
+            1,
+            AgentPrompt::new(AgentPromptInput {
+                id: "update_consumed_pre_bayes_review".to_string(),
+                stage: "feedback_update".to_string(),
+                priority: "high".to_string(),
+                objective: "Review the consumed analyze pre-bayes evidence against the realized outcome.".to_string(),
+                system_prompt: "You are the update-pre-bayes reviewer. Compare the realized outcome with the consumed analyze pre-bayes gate, bridge, and multi-timeframe summary before deciding whether to revise factor logic, evidence mapping, or BBN calibration.".to_string(),
+                user_prompt: format!(
+                    "Symbol={} realized_outcome={} consumed_pre_bayes_gate_status={} consumed_pre_bayes_quality={:.3} consumed_pre_bayes_conflicts={:?} consumed_pre_bayes_filtered_assignments={:?} consumed_canonical_structural_regime={} consumed_multi_timeframe_summary={:?} consumed_bridge_selected_entry_quality={:?} consumed_bridge_probability_gap={:.3}",
+                    symbol,
+                    realized_outcome,
+                    filter.gating_status,
+                    filter.evidence_quality_score,
+                    filter.conflict_flags,
+                    filter.evidence_assignments,
+                    consumed_canonical_structural_regime_summary,
+                    consumed_multi_timeframe_summary,
+                    bridge_diff.as_ref().and_then(|diff| diff.selected_entry_quality.clone()),
+                    bridge_diff
+                        .as_ref()
+                        .map(|diff| diff.long_short_signal_probability_gap)
+                        .unwrap_or_default()
+                ),
+                success_criteria: vec![
+                    "If the consumed pre-bayes gate was weak or soft-evidence-heavy, prefer calibration review over factor churn".to_string(),
+                    "Use the consumed multi-timeframe context to judge whether the realized outcome invalidates the previous resonance mapping or only the execution result".to_string(),
+                ],
+                suggested_files: vec![
+                    "src/update_command.rs".to_string(),
+                    "src/bbn/trading/update.rs".to_string(),
+                    "src/state/types.rs".to_string(),
+                ],
+            }),
+        );
+    }
+    pack
+}
 
 fn structural_prior_seed_from_artifact_validation(
     summary: &ict_engine::state::ArtifactDecisionSummary,
@@ -272,6 +422,12 @@ pub(crate) fn update_command(input: UpdateCommandInput<'_>) -> Result<()> {
     let mut consumed_pending_update_artifact: Option<PendingUpdateArtifact> = None;
     let mut structural_submission_consumed_context = None;
     let feedback = if let Some(path) = feedback_file {
+        if !Path::new(path).exists() {
+            bail!(
+                "update_feedback_file_missing flag=--feedback-file path={} expected=PendingUpdateArtifact, FeedbackRecord, or StructuralFeedbackSubmission JSON recovery=run `ict-engine analyze`/`ict-engine backtest` to create pending update feedback or pass an existing realized trade feedback artifact",
+                path
+            );
+        }
         let content = std::fs::read_to_string(path)?;
         reject_proxy_non_trade_feedback_content(&content)?;
         match serde_json::from_str::<FeedbackRecord>(&content) {
@@ -1056,5 +1212,39 @@ mod tests {
             message.contains("proxy") && message.contains("trade_usable=false"),
             "unexpected error: {message}"
         );
+    }
+
+    #[test]
+    fn update_missing_feedback_file_error_names_flag_schema_and_recovery() {
+        let temp_dir = tempfile::tempdir().expect("tempdir");
+        let feedback_path = temp_dir.path().join("missing-feedback.json");
+
+        let result = update_command(UpdateCommandInput {
+            symbol: "DEMO",
+            outcome: "win",
+            entry_signal: Some("medium"),
+            feedback_file: Some(feedback_path.to_str().expect("feedback path")),
+            state_dir: temp_dir.path().to_str().expect("state dir"),
+            pnl: Some(1.0),
+            regime: Some("trend"),
+            direction: Some("bull"),
+            ensemble: false,
+        });
+
+        let err = result.expect_err("missing feedback file must fail clearly");
+        let message = format!("{err:#}");
+        assert!(
+            message.contains("update_feedback_file_missing"),
+            "unexpected error: {message}"
+        );
+        assert!(
+            message.contains("flag=--feedback-file"),
+            "unexpected error: {message}"
+        );
+        assert!(
+            message.contains("PendingUpdateArtifact") || message.contains("FeedbackRecord"),
+            "unexpected error: {message}"
+        );
+        assert!(message.contains("recovery="), "unexpected error: {message}");
     }
 }

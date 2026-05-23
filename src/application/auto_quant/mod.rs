@@ -89,10 +89,14 @@ mod tests {
     }
 
     fn seed_data(path: &Path) {
+        seed_data_for_stem(path, "seed");
+    }
+
+    fn seed_data_for_stem(path: &Path, stem: &str) {
         let data_dir = path.join("user_data/data");
         std::fs::create_dir_all(&data_dir).unwrap();
         for index in 0..15 {
-            std::fs::write(data_dir.join(format!("seed-{index}.feather")), "").unwrap();
+            std::fs::write(data_dir.join(format!("{stem}-{index}.feather")), "").unwrap();
         }
     }
 
@@ -183,6 +187,28 @@ mod tests {
     }
 
     #[test]
+    fn bootstrap_missing_local_repo_error_names_input_and_recovery() {
+        let temp = tempfile::tempdir().unwrap();
+        let missing_repo = temp.path().join("missing-auto-quant-repo");
+        let state = temp.path().join("state");
+
+        let result = auto_quant_bootstrap(
+            state.to_str().unwrap(),
+            Some(missing_repo.to_str().unwrap()),
+            Some("master"),
+        );
+
+        let err = result.expect_err("missing local repo must fail clearly");
+        let message = format!("{err:#}");
+        assert!(
+            message.contains("auto_quant_bootstrap_repo_missing"),
+            "unexpected error: {message}"
+        );
+        assert!(message.contains("repo-url"), "unexpected error: {message}");
+        assert!(message.contains("recovery="), "unexpected error: {message}");
+    }
+
+    #[test]
     fn readiness_reports_data_missing_after_healthy_bootstrap() {
         let upstream = tempfile::tempdir().unwrap();
         init_repo(upstream.path());
@@ -261,6 +287,53 @@ mod tests {
     }
 
     #[test]
+    fn readiness_does_not_recommend_run_py_when_latest_handoff_exact_data_is_missing() {
+        let upstream = tempfile::tempdir().unwrap();
+        init_repo(upstream.path());
+        let state = tempfile::tempdir().unwrap();
+        let status = auto_quant_bootstrap(
+            state.path().to_str().unwrap(),
+            Some(upstream.path().to_str().unwrap()),
+            Some("master"),
+        )
+        .unwrap();
+        seed_data(Path::new(&status.managed_dir));
+        seed_strategy(Path::new(&status.managed_dir), "SeedAlpha");
+
+        let requested_data = state.path().join("yf_crwd_5m.csv");
+        std::fs::write(&requested_data, "timestamp,open,high,low,close,volume\n").unwrap();
+        let payload = super::handoff::build_factor_research_handoff_payload(
+            super::handoff::BuildFactorResearchHandoffPayloadInput {
+                symbol: "YF_AI_SECURITY_CRWD5M_PDA_MTF_SOFT_CONFIRMATION_DOWNSTREAM",
+                data: requested_data.to_str().unwrap(),
+                objective: "expansion_manipulation",
+                provider_profile_selector: None,
+                paired_data: None,
+                auxiliary_evidence_path: None,
+                mutation_spec_path: None,
+                strategy_material_root: None,
+                state_dir: state.path().to_str().unwrap(),
+                dependency_status: status.clone(),
+            },
+        );
+        assert!(!payload.data_ready);
+        super::persistence::persist_handoff_payload(state.path().to_str().unwrap(), &payload)
+            .unwrap();
+
+        let readiness =
+            super::readiness::auto_quant_readiness(state.path().to_str().unwrap()).unwrap();
+
+        assert_eq!(readiness.status, "dependency_ready_data_missing");
+        assert!(!readiness.data_ready);
+        assert!(readiness
+            .recommended_next_command
+            .contains("auto-quant-prepare"));
+        assert!(readiness.notes.iter().any(|note| note.contains(
+            "auto_quant_latest_handoff_exact_data_missing:YF_AI_SECURITY_CRWD5M_PDA_MTF_SOFT_CONFIRMATION_DOWNSTREAM"
+        )));
+    }
+
+    #[test]
     fn readiness_uses_repo_local_venv_contract_for_synthetic_profile_run_tomac() {
         let upstream = tempfile::tempdir().unwrap();
         init_repo(upstream.path());
@@ -315,9 +388,9 @@ mod tests {
             Some("master"),
         )
         .unwrap();
-        seed_data(Path::new(&status.managed_dir));
         let requested_data = state.path().join("nq.json");
         std::fs::write(&requested_data, "[]").unwrap();
+        seed_data_for_stem(Path::new(&status.managed_dir), "nq");
         let payload = super::handoff::build_factor_research_handoff_payload(
             super::handoff::BuildFactorResearchHandoffPayloadInput {
                 symbol: "NQ",
@@ -344,6 +417,68 @@ mod tests {
             .notes
             .iter()
             .any(|note| note == "auto_quant_seed_strategies_required"));
+    }
+
+    #[test]
+    fn exact_runtime_synthetic_profile_ignores_generic_upstream_seed_strategy() {
+        let upstream = tempfile::tempdir().unwrap();
+        init_repo(upstream.path());
+        let state = tempfile::tempdir().unwrap();
+        let status = auto_quant_bootstrap(
+            state.path().to_str().unwrap(),
+            Some(upstream.path().to_str().unwrap()),
+            Some("master"),
+        )
+        .unwrap();
+        let requested_data = state.path().join("m2k_202606_5m.candles.json");
+        std::fs::write(&requested_data, "[]").unwrap();
+        super::workspace_profile::persist_workspace_profile_selection(
+            state.path().to_str().unwrap(),
+            Some(super::workspace_profile::AUTO_QUANT_PROFILE_SYNTHETIC_OHLCV),
+            "IBKR_M2K1M_RVOL_PDA_CONSISTENCY_FLOOR_AUTORESEARCH_REPAIR_V1",
+            requested_data.to_str().unwrap(),
+        )
+        .unwrap();
+        let workspace = super::handoff::auto_quant_workspace_config_for_state(
+            &status.managed_dir,
+            state.path().to_str().unwrap(),
+        );
+        std::fs::create_dir_all(&workspace.data_dir).unwrap();
+        for filename in &workspace.expected_data_files {
+            std::fs::write(Path::new(&workspace.data_dir).join(filename), "").unwrap();
+        }
+        seed_strategy(Path::new(&status.managed_dir), "TomacNQ_KillzoneBreakout");
+
+        let payload = super::handoff::build_factor_autoresearch_handoff_payload(
+            super::handoff::BuildFactorAutoresearchHandoffPayloadInput {
+                symbol: "IBKR_M2K1M_RVOL_PDA_CONSISTENCY_FLOOR_AUTORESEARCH_REPAIR_V1",
+                data: requested_data.to_str().unwrap(),
+                objective: "m2k_rvol_pda_same_root_transition_pda_repair",
+                provider_profile_selector: None,
+                paired_data: None,
+                auxiliary_evidence_path: None,
+                mutation_spec_path: None,
+                strategy_material_root: None,
+                iterations: 1,
+                session_id: None,
+                state_dir: state.path().to_str().unwrap(),
+                dependency_status: status,
+            },
+        );
+
+        assert!(payload.data_ready);
+        assert!(payload
+            .notes
+            .iter()
+            .any(|note| note == "auto_quant_seed_strategies_required"));
+        assert!(payload
+            .notes
+            .iter()
+            .any(|note| note == "auto_quant_active_strategy_count=0"));
+        assert!(payload
+            .suggested_next_steps
+            .iter()
+            .any(|step| step.contains("create 2-3 active non-underscore strategy files")));
     }
 
     #[test]

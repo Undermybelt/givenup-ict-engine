@@ -8,6 +8,7 @@ use crate::application::data_sources::{
     MarketDataHarnessRequest, MarketDataHarnessSymbolSpec,
 };
 use crate::application::multi_timeframe_inputs::resolve_tomac_root;
+use crate::application::output_foundation::print_redacted_json;
 
 pub struct ExpansionSopCommandInput<'a> {
     pub root: Option<&'a str>,
@@ -30,6 +31,7 @@ pub struct MarketDataHarnessCommandInput<'a> {
     pub request_stdin: bool,
     pub symbol_specs: &'a [String],
     pub options_volatility_proxy_symbol: Option<&'a str>,
+    pub output_format: &'a str,
 }
 
 pub fn clean_futures_command<FMulti, FSingle, TMulti, TSingle>(
@@ -134,17 +136,45 @@ where
 }
 
 pub fn market_data_harness_plan_command(input: MarketDataHarnessCommandInput<'_>) -> Result<()> {
+    let output_format = input.output_format.to_string();
     let request = load_or_build_market_data_harness_request(input)?;
     let plan = build_market_data_harness_plan(request)?;
-    println!("{}", serde_json::to_string_pretty(&plan)?);
-    Ok(())
+    match output_format.trim().to_ascii_lowercase().as_str() {
+        "json" | "compact" | "agent" => print_redacted_json(&plan),
+        "human" => {
+            println!(
+                "Market data harness plan | tasks={} | missing_roles={} | warnings={} | providers={}",
+                plan.tasks.len(),
+                plan.missing_roles.len(),
+                plan.warnings.len(),
+                plan.provider_summary.provider_statuses.len()
+            );
+            Ok(())
+        }
+        other => anyhow::bail!("unsupported market-data-harness output format '{}'", other),
+    }
 }
 
 pub fn market_data_harness_fetch_command(input: MarketDataHarnessCommandInput<'_>) -> Result<()> {
+    let output_format = input.output_format.to_string();
     let request = load_or_build_market_data_harness_request(input)?;
     let plan = build_market_data_harness_plan(request)?;
     let bundle = execute_market_data_harness_plan(&plan)?;
-    println!("{}", serde_json::to_string_pretty(&bundle)?);
+    match output_format.trim().to_ascii_lowercase().as_str() {
+        "json" | "compact" | "agent" => print_redacted_json(&bundle)?,
+        "human" => {
+            let ok_results = bundle.results.iter().filter(|result| result.ok).count();
+            println!(
+                "Market data harness fetch | tasks={} | ok_results={} | failed_results={} | missing_roles={} | warnings={}",
+                bundle.plan.tasks.len(),
+                ok_results,
+                bundle.results.len().saturating_sub(ok_results),
+                bundle.plan.missing_roles.len(),
+                bundle.plan.warnings.len()
+            );
+        }
+        other => anyhow::bail!("unsupported market-data-harness output format '{}'", other),
+    }
     let failures = collect_harness_failures(&bundle);
     if !failures.is_empty() {
         anyhow::bail!(

@@ -211,7 +211,7 @@ impl RealTradeRecord {
         self.regime_profit_branch_path
             .as_deref()
             .and_then(non_empty)
-            .map(ToString::to_string)
+            .map(canonicalize_regime_profit_branch_path)
             .or_else(|| {
                 let main = self.main_regime.as_deref().and_then(non_empty)?;
                 let sub = self.sub_regime.as_deref().and_then(non_empty)?;
@@ -279,6 +279,32 @@ fn branch_path_segments(branch_path: &str) -> Vec<&str> {
     branch_path.split(" -> ").filter_map(non_empty).collect()
 }
 
+fn canonicalize_regime_profit_branch_path(branch_path: &str) -> String {
+    regime_segments_for_assignment(branch_path).join(" -> ")
+}
+
+fn regime_segments_for_assignment(branch_path: &str) -> Vec<&str> {
+    let segments = branch_path_segments(branch_path);
+    if segments.len() >= 7 && looks_like_market_rooted_branch(&segments) {
+        return segments[4..].to_vec();
+    }
+    segments
+}
+
+fn looks_like_market_rooted_branch(segments: &[&str]) -> bool {
+    matches!(
+        segments.first().copied(),
+        Some("FUTURES")
+            | Some("FUTURES_LIKE")
+            | Some("US_EQ")
+            | Some("EQUITIES")
+            | Some("ETF")
+            | Some("CRYPTO")
+            | Some("FX")
+            | Some("OPTIONS")
+    )
+}
+
 fn push_branch_path_factor_usage(
     factors_used: &mut Vec<FeedbackFactorUsage>,
     branch_path: &str,
@@ -340,6 +366,11 @@ impl RealTradeFactorUsage {
             "Bear" => Direction::Bear,
             _ => Direction::Neutral,
         };
+        let factor_name = if self.category == "regime_profit_branch_path" {
+            canonicalize_regime_profit_branch_path(&self.factor_name)
+        } else {
+            self.factor_name
+        };
         let weight = self.weighted_score.abs();
         let long_support = if direction == Direction::Bull {
             self.weighted_score.max(0.0)
@@ -352,7 +383,7 @@ impl RealTradeFactorUsage {
             0.0
         };
         FeedbackFactorUsage {
-            factor_name: self.factor_name,
+            factor_name,
             category: self.category,
             direction,
             value: self.value,
@@ -424,9 +455,9 @@ impl RealTradeStructuralFeedbackRefs {
             recommendation_id: self.recommendation_id,
             recommended_at: self.recommended_at,
             node_id: self.node_id,
-            branch_id: self.branch_id,
-            scenario_id: self.scenario_id,
-            path_id: self.path_id,
+            branch_id: canonicalize_regime_profit_branch_path(&self.branch_id),
+            scenario_id: canonicalize_regime_profit_branch_path(&self.scenario_id),
+            path_id: canonicalize_regime_profit_branch_path(&self.path_id),
             followed_path: self.followed_path,
             exit_reason: self.exit_reason,
             notes: self.notes,
@@ -662,5 +693,51 @@ mod tests {
             "Bear -> BearMarketDrawdown -> NQHighVixOversoldRebound"
         );
         assert_eq!(refs.path_id, branch_path);
+    }
+
+    #[test]
+    fn market_prefixed_regime_branch_is_canonicalized_for_real_trade_feedback() {
+        let canonical_branch = "RangeReversion -> AiSecuritySoftwareOversoldReclaim -> rsi_vwap_reclaim_dense -> yf_ai_security_software_rsi_vwap_reclaim_crwd_5m_v1 -> session_liquidity_transition_stability_v1 -> pda_mtf_soft_confirmation_v1";
+        let market_prefixed_branch =
+            format!("US_EQ -> single_stock -> CRWD -> 5m -> {canonical_branch}");
+        let mut record = good_record();
+        record.regime_profit_branch_path = Some(market_prefixed_branch.clone());
+        record.factors_used = vec![RealTradeFactorUsage {
+            factor_name: market_prefixed_branch.clone(),
+            category: "regime_profit_branch_path".into(),
+            direction: "Bull".into(),
+            value: 1.0,
+            confidence: 1.0,
+            weighted_score: 1.0,
+            uncertainty_contribution: 0.0,
+        }];
+        record.structural_feedback = Some(RealTradeStructuralFeedbackRefs {
+            protocol_version: "structural-feedback-v1".into(),
+            recommendation_id: "auto-quant-real-trade-branch:CRWD:t-1".into(),
+            recommended_at: "2026-03-24T18:55:00Z".into(),
+            node_id: "RangeReversion".into(),
+            branch_id: "RangeReversion -> AiSecuritySoftwareOversoldReclaim".into(),
+            scenario_id:
+                "RangeReversion -> AiSecuritySoftwareOversoldReclaim -> rsi_vwap_reclaim_dense"
+                    .into(),
+            path_id: market_prefixed_branch,
+            followed_path: true,
+            exit_reason: Some("win".into()),
+            notes: Some("record_level_regime_profit_branch_path".into()),
+        });
+
+        let feedback = record.into_feedback_record("auto_quant_real_trades");
+
+        let refs = feedback.structural_feedback.expect("structural feedback");
+        assert_eq!(refs.path_id, canonical_branch);
+        assert!(feedback.factors_used.iter().any(|factor| {
+            factor.category == "regime_profit_branch_path" && factor.factor_name == canonical_branch
+        }));
+        assert!(!feedback.factors_used.iter().any(|factor| {
+            factor.category == "regime_profit_branch_path"
+                && factor
+                    .factor_name
+                    .contains("US_EQ -> single_stock -> CRWD -> 5m")
+        }));
     }
 }

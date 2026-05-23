@@ -5,6 +5,7 @@ use crate::application::data_sources::discover_tomac_futures_datasets;
 use crate::data::load_candles;
 
 pub const MULTI_TIMEFRAME_INTERVALS: [&str; 7] = ["1m", "5m", "15m", "30m", "1h", "4h", "1d"];
+const MIN_ANALYZE_FEATURE_BARS: usize = 29;
 
 #[derive(Debug, Clone, Default)]
 pub struct MultiTimeframeResearchSignal {
@@ -150,6 +151,75 @@ fn interval_rank(interval: &str) -> Option<usize> {
         .position(|candidate| candidate == &interval)
 }
 
+fn cleaned_interval_path(data_root: &str, market: &str, interval: &str) -> std::path::PathBuf {
+    std::path::Path::new(data_root)
+        .join(format!("cleaned-{}", interval))
+        .join(format!("{}.continuous-{}.json", market, interval))
+}
+
+fn resolve_valid_analyze_data_root_inputs(
+    data_root: &str,
+    market: &str,
+) -> Result<(String, String, String)> {
+    let mut valid = Vec::new();
+    let mut present = Vec::new();
+    for interval in MULTI_TIMEFRAME_INTERVALS {
+        let path = cleaned_interval_path(data_root, market, interval);
+        if !path.exists() {
+            continue;
+        }
+        let path_string = path.to_string_lossy().to_string();
+        let candles = load_candles(&path_string)?;
+        present.push(format!("{}:{} bars", interval, candles.len()));
+        if candles.len() >= MIN_ANALYZE_FEATURE_BARS {
+            valid.push((interval, path_string));
+        }
+    }
+
+    if valid.len() < 3 {
+        bail!(
+            "analyze data-root '{}' for symbol '{}' needs at least 3 cleaned intervals with >= {} bars; found {}",
+            data_root,
+            market,
+            MIN_ANALYZE_FEATURE_BARS,
+            if present.is_empty() {
+                "none".to_string()
+            } else {
+                present.join(", ")
+            }
+        );
+    }
+
+    let ltf_idx = 0;
+    let htf_idx = valid.len() - 1;
+    let ltf_rank = interval_rank(valid[ltf_idx].0).unwrap_or_default();
+    let htf_rank = interval_rank(valid[htf_idx].0).unwrap_or_default();
+    let mtf_idx = valid
+        .iter()
+        .position(|(interval, _)| {
+            *interval == "1h"
+                && interval_rank(interval).is_some_and(|rank| rank > ltf_rank && rank < htf_rank)
+        })
+        .unwrap_or_else(|| {
+            valid
+                .iter()
+                .enumerate()
+                .filter(|(idx, _)| *idx != ltf_idx && *idx != htf_idx)
+                .min_by_key(|(_, (interval, _))| {
+                    let rank = interval_rank(interval).unwrap_or_default();
+                    rank.abs_diff((ltf_rank + htf_rank) / 2)
+                })
+                .map(|(idx, _)| idx)
+                .unwrap_or(1)
+        });
+
+    Ok((
+        valid[htf_idx].1.clone(),
+        valid[mtf_idx].1.clone(),
+        valid[ltf_idx].1.clone(),
+    ))
+}
+
 pub fn resolve_interval_for_analyze_slot(path: &str, fallback: &str) -> String {
     let inferred = infer_interval_for_analyze_frame(path, fallback);
     match (interval_rank(&inferred), interval_rank(fallback)) {
@@ -220,21 +290,7 @@ pub fn resolve_analyze_cli_inputs(
         anyhow!("analyze requires either --demo, --data-htf/--data-mtf/--data-ltf, or --data-root")
     })?;
     let market = symbol.to_ascii_lowercase();
-    let resolve = |interval: &str| -> Result<String> {
-        let path = std::path::Path::new(data_root)
-            .join(format!("cleaned-{}", interval))
-            .join(format!("{}.continuous-{}.json", market, interval));
-        if path.exists() {
-            Ok(path.to_string_lossy().to_string())
-        } else {
-            bail!(
-                "missing analyze input for interval '{}' under root '{}'",
-                interval,
-                data_root
-            )
-        }
-    };
-    Ok((resolve("1d")?, resolve("1h")?, resolve("15m")?))
+    resolve_valid_analyze_data_root_inputs(data_root, &market)
 }
 
 pub fn default_tomac_root_candidates() -> Vec<String> {
@@ -317,6 +373,33 @@ pub fn build_multi_timeframe_summary(
         ));
     }
     Ok(summary)
+}
+
+pub fn multi_timeframe_phase_hint(summary: &[String]) -> String {
+    let direction = summary
+        .iter()
+        .find_map(|item| item.strip_prefix("higher_timeframe_direction_bias="));
+    let alignment = summary
+        .iter()
+        .find_map(|item| item.strip_prefix("higher_timeframe_alignment_score="));
+    let entry = summary
+        .iter()
+        .find_map(|item| item.strip_prefix("lower_timeframe_entry_alignment_score="));
+    let covered = summary
+        .iter()
+        .find_map(|item| item.strip_prefix("multi_timeframe_source="))
+        .unwrap_or("primary_only");
+    let mut parts = vec![format!("mtf_source={covered}")];
+    if let Some(direction) = direction {
+        parts.push(format!("mtf_direction={direction}"));
+    }
+    if let Some(alignment) = alignment {
+        parts.push(format!("mtf_alignment={alignment}"));
+    }
+    if let Some(entry) = entry {
+        parts.push(format!("mtf_entry_alignment={entry}"));
+    }
+    parts.join(" ")
 }
 
 fn candle_trend(candles: &[crate::types::Candle]) -> Option<f64> {
@@ -453,6 +536,33 @@ pub fn detected_multi_timeframe_clean_root(tomac_root: Option<&str>) -> Option<S
 #[cfg(test)]
 mod tests {
     use super::*;
+    use chrono::TimeZone;
+
+    fn write_cleaned_interval(root: &std::path::Path, market: &str, interval: &str, bars: usize) {
+        let dir = root.join(format!("cleaned-{}", interval));
+        std::fs::create_dir_all(&dir).unwrap();
+        let candles = (0..bars)
+            .map(|idx| crate::types::Candle {
+                timestamp: chrono::Utc
+                    .timestamp_opt(1_700_000_000 + idx as i64 * 60, 0)
+                    .unwrap(),
+                open: 100.0 + idx as f64,
+                high: 101.0 + idx as f64,
+                low: 99.0 + idx as f64,
+                close: 100.5 + idx as f64,
+                volume: 1_000.0 + idx as f64,
+            })
+            .collect::<Vec<_>>();
+        let payload = serde_json::json!({
+            "symbol": market.to_ascii_uppercase(),
+            "candles": candles,
+        });
+        std::fs::write(
+            dir.join(format!("{}.continuous-{}.json", market, interval)),
+            serde_json::to_string(&payload).unwrap(),
+        )
+        .unwrap();
+    }
 
     #[test]
     fn infer_interval_for_analyze_frame_accepts_provider_style_filenames() {
@@ -502,5 +612,36 @@ mod tests {
         assert_eq!(resolved.get("1d"), Some("yf_spy_1w.clean.json"));
         assert_eq!(resolved.get("1h"), Some("yf_spy_1d.clean.json"));
         assert_eq!(resolved.get("15m"), Some("yf_spy_1h.clean.json"));
+    }
+
+    #[test]
+    fn resolve_analyze_cli_inputs_from_data_root_excludes_insufficient_daily_context() {
+        let temp = tempfile::tempdir().unwrap();
+        let market = "ibkr_m2k1m_rvol_pda_consistency_floor_exact_seed_futures_downstream_v1";
+        for (interval, bars) in [
+            ("1m", 120),
+            ("5m", 80),
+            ("15m", 60),
+            ("30m", 50),
+            ("1h", 40),
+            ("4h", 30),
+            ("1d", 9),
+        ] {
+            write_cleaned_interval(temp.path(), market, interval, bars);
+        }
+
+        let (htf, mtf, ltf) = resolve_analyze_cli_inputs(
+            market,
+            None,
+            None,
+            None,
+            Some(temp.path().to_str().unwrap()),
+            false,
+        )
+        .unwrap();
+
+        assert!(htf.ends_with("cleaned-4h/ibkr_m2k1m_rvol_pda_consistency_floor_exact_seed_futures_downstream_v1.continuous-4h.json"));
+        assert!(mtf.ends_with("cleaned-1h/ibkr_m2k1m_rvol_pda_consistency_floor_exact_seed_futures_downstream_v1.continuous-1h.json"));
+        assert!(ltf.ends_with("cleaned-1m/ibkr_m2k1m_rvol_pda_consistency_floor_exact_seed_futures_downstream_v1.continuous-1m.json"));
     }
 }

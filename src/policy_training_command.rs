@@ -1,11 +1,12 @@
 use super::*;
 use ict_engine::application::entry_models::{
     apply_structural_path_ranking_external_scores_command,
+    apply_structural_path_ranking_external_scores_command_with_format,
     clear_structural_path_ranking_trainer_artifact_command,
     disable_structural_path_ranking_runtime_command,
     enable_structural_path_ranking_runtime_command, export_structural_path_ranking_target_command,
-    policy_training_status_command, register_structural_path_ranking_trainer_artifact_command,
-    PolicyTrainingStatusSurface,
+    export_structural_path_ranking_target_command_with_format, policy_training_status_command,
+    register_structural_path_ranking_trainer_artifact_command, PolicyTrainingStatusSurface,
 };
 
 fn render_policy_training_status_low_token(surface: &PolicyTrainingStatusSurface) -> String {
@@ -93,18 +94,33 @@ pub(crate) fn disable_structural_path_ranking_runtime_shell(
 pub(crate) fn export_structural_path_ranking_target_shell(
     symbol: &str,
     state_dir: &str,
+    output_format: &str,
 ) -> Result<()> {
     ensure_state_dir_ready(state_dir)?;
-    export_structural_path_ranking_target_command(state_dir, symbol)
+    if output_format == "json" {
+        export_structural_path_ranking_target_command(state_dir, symbol)
+    } else {
+        export_structural_path_ranking_target_command_with_format(state_dir, symbol, output_format)
+    }
 }
 
 pub(crate) fn apply_structural_path_ranking_external_scores_shell(
     symbol: &str,
     state_dir: &str,
     scores_file: &str,
+    output_format: &str,
 ) -> Result<()> {
     ensure_state_dir_ready(state_dir)?;
-    apply_structural_path_ranking_external_scores_command(state_dir, symbol, scores_file)
+    if output_format == "json" {
+        apply_structural_path_ranking_external_scores_command(state_dir, symbol, scores_file)
+    } else {
+        apply_structural_path_ranking_external_scores_command_with_format(
+            state_dir,
+            symbol,
+            scores_file,
+            output_format,
+        )
+    }
 }
 
 #[cfg(test)]

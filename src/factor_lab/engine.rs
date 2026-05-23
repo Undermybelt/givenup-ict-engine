@@ -94,7 +94,9 @@ impl FactorEngine {
         let mut latest_signals = Vec::new();
 
         for definition in self.registry.enabled_factors() {
+            factor_engine_trace_event(format!("factor_engine:{}:start", definition.name));
             let series = definition.evaluate(candles, context)?;
+            factor_engine_trace_event(format!("factor_engine:{}:done", definition.name));
             if let Some(signal) = series.latest_signal() {
                 latest_signals.push(signal);
             }
@@ -118,6 +120,29 @@ impl FactorEngine {
             diagnostics,
         })
     }
+}
+
+fn factor_engine_trace_event<S: AsRef<str>>(stage: S) {
+    static STARTED_AT: std::sync::OnceLock<std::time::Instant> = std::sync::OnceLock::new();
+    let Some(path) = std::env::var("ICT_ENGINE_ANALYZE_STAGE_TRACE_FILE")
+        .ok()
+        .map(|value| value.trim().to_string())
+        .filter(|value| !value.is_empty())
+        .map(std::path::PathBuf::from)
+    else {
+        return;
+    };
+    if let Some(parent) = path.parent() {
+        let _ = std::fs::create_dir_all(parent);
+    }
+    let started_at = *STARTED_AT.get_or_init(std::time::Instant::now);
+    let elapsed_ms = started_at.elapsed().as_millis();
+    let line = format!("{}ms {}\n", elapsed_ms, stage.as_ref());
+    let _ = std::fs::OpenOptions::new()
+        .create(true)
+        .append(true)
+        .open(path)
+        .and_then(|mut file| std::io::Write::write_all(&mut file, line.as_bytes()));
 }
 
 fn assign_live_signal_weights(

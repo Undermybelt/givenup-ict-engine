@@ -7,9 +7,10 @@ use super::{
     auto_quant_bootstrap, auto_quant_readiness, auto_quant_status, auto_quant_update,
     handoff::{
         auto_quant_prepare_command as auto_quant_prepare_script_command,
-        auto_quant_workspace_config, build_factor_autoresearch_handoff_payload,
+        auto_quant_workspace_config_for_state, build_factor_autoresearch_handoff_payload,
         build_factor_research_handoff_payload, AutoQuantFactorAutoresearchCommandInput,
-        AutoQuantFactorResearchCommandInput, BuildFactorAutoresearchHandoffPayloadInput,
+        AutoQuantFactorResearchCommandInput, AutoQuantResearchHandoffPayload,
+        AutoQuantWorkspaceConfig, BuildFactorAutoresearchHandoffPayloadInput,
         BuildFactorResearchHandoffPayloadInput,
     },
     live::{
@@ -248,6 +249,9 @@ fn render_auto_quant_handoff_human_output(
         "Workflow: {}",
         auto_quant_handoff_workflow_status_command(payload)
     ));
+    if !payload.notes.is_empty() {
+        lines.push(format!("Notes: {}", payload.notes.join(" | ")));
+    }
     redact_local_paths_in_human_text(&lines.join("\n"))
 }
 
@@ -364,13 +368,16 @@ pub fn auto_quant_prepare_workspace_command(state_dir: &str) -> Result<()> {
             state_dir
         );
     }
-    let prepare_command = auto_quant_prepare_script_command(&readiness_before.workspace);
-    let workspace_root = absolute_path(&readiness_before.workspace.repo_root)?;
-    let prepare_script = absolute_path(&readiness_before.workspace.prepare_script)?;
-    let output = if let Some(profile) = super::workspace_profile::materialize_workspace_profile(
+    let handoff_payload = super::readiness::latest_auto_quant_handoff_payload(state_dir);
+    let (execution_workspace, materialized_profile) = auto_quant_prepare_execution_workspace(
         state_dir,
         &readiness_before.workspace,
-    )? {
+        handoff_payload.as_ref(),
+    )?;
+    let prepare_command = auto_quant_prepare_script_command(&execution_workspace);
+    let workspace_root = absolute_path(&execution_workspace.repo_root)?;
+    let prepare_script = absolute_path(&execution_workspace.prepare_script)?;
+    let output = if let Some(profile) = materialized_profile {
         let csv_path = workspace_root.join("profile_source.csv");
         let timeframes = std::iter::once(profile.base_timeframe.clone())
             .chain(profile.additional_timeframes.clone())
@@ -425,7 +432,7 @@ pub fn auto_quant_prepare_workspace_command(state_dir: &str) -> Result<()> {
             "status": "prepared",
             "state_dir": state_dir,
             "prepare_command": "ict-engine auto-quant-prepare",
-            "workspace_repo_root": readiness_before.workspace.repo_root,
+            "workspace_repo_root": execution_workspace.repo_root,
             "dependency_status_before": readiness_before.status,
             "dependency_status_after": readiness_after.status,
             "data_ready": readiness_after.data_ready,
@@ -436,6 +443,37 @@ pub fn auto_quant_prepare_workspace_command(state_dir: &str) -> Result<()> {
         }))?
     );
     Ok(())
+}
+
+fn auto_quant_prepare_execution_workspace(
+    state_dir: &str,
+    workspace: &AutoQuantWorkspaceConfig,
+    handoff_payload: Option<&AutoQuantResearchHandoffPayload>,
+) -> Result<(
+    AutoQuantWorkspaceConfig,
+    Option<super::workspace_profile::AutoQuantWorkspaceProfileConfig>,
+)> {
+    let mut execution_workspace = workspace.clone();
+    let materialized_profile = if let Some(payload) = handoff_payload {
+        super::workspace_profile::apply_handoff_workspace_profile(
+            payload,
+            &mut execution_workspace,
+        );
+        super::workspace_profile::materialize_handoff_workspace_profile(
+            payload,
+            &execution_workspace,
+        )?
+    } else {
+        let profile = super::workspace_profile::materialize_workspace_profile(
+            state_dir,
+            &execution_workspace,
+        )?;
+        if profile.is_some() {
+            super::workspace_profile::apply_workspace_profile(state_dir, &mut execution_workspace)?;
+        }
+        profile
+    };
+    Ok((execution_workspace, materialized_profile))
 }
 
 fn absolute_path(path: &str) -> Result<PathBuf> {
@@ -456,10 +494,29 @@ pub fn auto_quant_adoption_review_command(
     symbol: &str,
     state_dir: &str,
     artifact_id: Option<&str>,
+    output_format: &str,
 ) -> Result<()> {
     let review = build_auto_quant_adoption_review(symbol, state_dir, artifact_id)?;
-    println!("{}", serde_json::to_string_pretty(&review)?);
-    Ok(())
+    match output_format.trim().to_ascii_lowercase().as_str() {
+        "json" | "compact" | "agent" => print_redacted_json(&review),
+        "human" => {
+            println!(
+                "Auto-Quant adoption review | symbol={} | status={} | handoff_kind={} | backend={} | data_ready={} | dependency_healthy={} | next={}",
+                review.symbol,
+                review.review_status,
+                review.handoff_kind,
+                review.backend,
+                review.data_ready,
+                review.dependency_healthy,
+                review.recommended_next_command
+            );
+            Ok(())
+        }
+        other => anyhow::bail!(
+            "unsupported auto-quant-adoption-review output format '{}'",
+            other
+        ),
+    }
 }
 
 pub fn auto_quant_adoption_decision_command(
@@ -488,8 +545,17 @@ pub fn auto_quant_seed_evidence_command(
     strategy_material_root: &str,
     limit: usize,
 ) -> Result<()> {
+    if !Path::new(strategy_material_root).exists() {
+        bail!(
+            "auto_quant_seed_evidence_material_root_missing: flag=--strategy-material-root path={} expected=external strategy material root containing usable Auto-Quant seed material and evidence CSV files recovery=export or place external strategy evidence under this root, then rerun `ict-engine auto-quant-seed-evidence --symbol {} --state-dir {} --strategy-material-root <material-root>`",
+            strategy_material_root,
+            symbol,
+            state_dir
+        );
+    }
     let dependency_status = ensure_dependency_ready(state_dir, None, None)?;
-    let workspace = auto_quant_workspace_config(&dependency_status.managed_dir);
+    let workspace =
+        auto_quant_workspace_config_for_state(&dependency_status.managed_dir, state_dir);
     let artifact = persist_auto_quant_seed_material_evidence(
         symbol,
         state_dir,
@@ -499,8 +565,10 @@ pub fn auto_quant_seed_evidence_command(
     )?
     .ok_or_else(|| {
         anyhow!(
-            "no external strategy materials with usable evidence were found under '{}'",
-            strategy_material_root
+            "auto_quant_seed_evidence_material_root_unusable: flag=--strategy-material-root path={} expected=external strategy material root containing usable Auto-Quant seed material and evidence CSV files recovery=verify exported material paths and evidence CSV files under this root, then rerun `ict-engine auto-quant-seed-evidence --symbol {} --state-dir {} --strategy-material-root <material-root>`",
+            strategy_material_root,
+            symbol,
+            state_dir
         )
     })?;
     println!("{}", serde_json::to_string_pretty(&artifact)?);
@@ -603,6 +671,16 @@ pub fn auto_quant_agent_material_batch_command(
 ) -> Result<()> {
     let dependency_status =
         ensure_dependency_ready(input.state_dir, input.repo_url, input.tracked_branch)?;
+    for path in input.material_paths {
+        if !Path::new(path).exists() {
+            bail!(
+                "auto_quant_agent_material_missing: flag=--material path={} expected=AgentMaterialPackage JSON with data_path and strategy_source_path recovery=generate or pass an existing agent material package JSON, then rerun `ict-engine auto-quant-agent-material-batch --symbol {} --state-dir {} --material <agent_material.json>`",
+                path,
+                input.symbol,
+                input.state_dir
+            );
+        }
+    }
     let artifact = persist_agent_material_batch(
         input.symbol,
         input.state_dir,
@@ -650,7 +728,8 @@ fn maybe_persist_seed_material_evidence(
     strategy_material_root: Option<&str>,
     dependency_status: &AutoQuantDependencyStatus,
 ) -> Result<Option<String>> {
-    let workspace = auto_quant_workspace_config(&dependency_status.managed_dir);
+    let workspace =
+        auto_quant_workspace_config_for_state(&dependency_status.managed_dir, state_dir);
     let artifact = persist_auto_quant_seed_material_evidence(
         symbol,
         state_dir,
@@ -838,6 +917,14 @@ pub fn auto_quant_results_import_command(
     library_path: &str,
     log_path: Option<&str>,
 ) -> Result<()> {
+    if !Path::new(library_path).exists() {
+        bail!(
+            "auto_quant_results_import_library_missing: flag=--library path={} expected=strategy_library.json from Auto-Quant/export_strategy_library.py recovery=run Auto-Quant export_strategy_library.py, then rerun `ict-engine auto-quant-results-import --symbol {} --state-dir {} --library <strategy_library.json>`",
+            library_path,
+            symbol,
+            state_dir
+        );
+    }
     let manifest = load_strategy_library_manifest(library_path)
         .with_context(|| format!("loading strategy library from '{}'", library_path))?;
     let persisted = persist_imported_library(state_dir, symbol, &manifest, library_path)?;
@@ -893,14 +980,23 @@ pub fn auto_quant_prior_init_command(input: AutoQuantPriorInitCommandInput<'_>) 
         None => {
             if !state_exists(state_dir, symbol, STRATEGY_LIBRARY_FILE) {
                 bail!(
-                    "no library found at '{}' and no --library override given; \
-                     run `ict-engine auto-quant-results-import` first",
-                    library_state_path
+                    "auto_quant_prior_init_library_missing: flag=--library path={} expected=strategy_library.json imported by auto-quant-results-import recovery=run `ict-engine auto-quant-results-import --symbol {} --state-dir {} --library <strategy_library.json>` first, or rerun prior-init with --library <strategy_library.json>",
+                    library_state_path,
+                    symbol,
+                    state_dir
                 );
             }
             library_state_path.clone()
         }
     };
+    if !Path::new(&resolved_path).exists() {
+        bail!(
+            "auto_quant_prior_init_library_missing: flag=--library path={} expected=strategy_library.json imported by auto-quant-results-import recovery=run `ict-engine auto-quant-results-import --symbol {} --state-dir {} --library <strategy_library.json>` first, or rerun prior-init with --library <strategy_library.json>",
+            resolved_path,
+            symbol,
+            state_dir
+        );
+    }
     let manifest = load_strategy_library_manifest(&resolved_path)
         .with_context(|| format!("loading strategy library from '{}'", resolved_path))?;
 
@@ -1044,7 +1140,10 @@ pub fn auto_quant_consume_live_signals_command(
 ) -> Result<()> {
     let mut source = RealRedisSource::connect(input.redis_url).with_context(|| {
         format!(
-            "connecting to redis at '{}' (sanitised: {})",
+            "auto_quant_live_signals_redis_unavailable: flag=--redis-url value={} expected=Redis stream written by the Auto-Quant publisher recovery=start/configure Redis and the Auto-Quant publisher for this stream, then rerun `ict-engine auto-quant-consume-live-signals --symbol {} --state-dir {} --redis-url <redis-url>`; connecting to redis at '{}' (sanitised: {})",
+            sanitise_redis_url(input.redis_url),
+            input.symbol,
+            input.state_dir,
             sanitise_redis_url(input.redis_url),
             sanitise_redis_url(input.redis_url),
         )
@@ -1187,6 +1286,14 @@ pub struct AutoQuantIngestRealTradesInput<'a> {
 pub fn auto_quant_ingest_real_trades_command(
     input: AutoQuantIngestRealTradesInput<'_>,
 ) -> Result<()> {
+    if !Path::new(input.trades_path).exists() {
+        bail!(
+            "auto_quant_real_trades_missing: flag=--trades path={} expected=JSONL from Auto-Quant/auto_quant_export_real_trades.py recovery=export real trades JSONL, then rerun `ict-engine auto-quant-ingest-real-trades --symbol {} --state-dir {} --trades <real_trades.jsonl>`",
+            input.trades_path,
+            input.symbol,
+            input.state_dir
+        );
+    }
     let outcome = ingest_real_trades(IngestRealTradesInput {
         symbol: input.symbol,
         state_dir: input.state_dir,
@@ -1252,7 +1359,8 @@ fn sanitise_redis_url(raw: &str) -> String {
 mod tests {
     use super::*;
     use crate::application::auto_quant::handoff::{
-        build_factor_research_handoff_payload, BuildFactorResearchHandoffPayloadInput,
+        auto_quant_active_strategy_count, build_factor_research_handoff_payload,
+        BuildFactorResearchHandoffPayloadInput,
     };
     use crate::application::auto_quant::results::{
         StrategyLibraryEntry, StrategyLibraryManifest, StrategyLibraryMetadata,
@@ -1306,6 +1414,88 @@ mod tests {
     }
 
     #[test]
+    fn seed_material_evidence_uses_profile_adjusted_strategy_dir() {
+        let temp = tempfile::tempdir().unwrap();
+        let state_dir = temp.path().join("state");
+        let managed_dir = state_dir.join(".deps/auto-quant");
+        std::fs::create_dir_all(managed_dir.join("user_data/strategies")).unwrap();
+        std::fs::create_dir_all(managed_dir.join("user_data/strategies_external")).unwrap();
+        std::fs::create_dir_all(managed_dir.join("user_data/data")).unwrap();
+        std::fs::write(managed_dir.join("program.md"), "program").unwrap();
+        std::fs::write(managed_dir.join("prepare.py"), "print('prepare')").unwrap();
+        std::fs::write(managed_dir.join("run.py"), "print('run')").unwrap();
+
+        let data_path = temp.path().join("m2k_202606_1m.candles.json");
+        std::fs::write(
+            &data_path,
+            r#"[{"timestamp":"2026-05-19T00:00:00Z","open":1.0,"high":2.0,"low":0.5,"close":1.5,"volume":10.0}]"#,
+        )
+        .unwrap();
+        crate::application::auto_quant::workspace_profile::persist_workspace_profile_selection(
+            state_dir.to_str().unwrap(),
+            Some("synthetic_ohlcv"),
+            "IBKR_M2K1M_EXACT_SEED_PROFILE_DIR_TEST",
+            data_path.to_str().unwrap(),
+        )
+        .unwrap();
+
+        let material_root = temp.path().join("materials");
+        std::fs::create_dir_all(&material_root).unwrap();
+        std::fs::write(
+            material_root.join("IbkrFutM2KExactShort1Min.py"),
+            r#"from freqtrade.strategy import IStrategy
+from pandas import DataFrame
+
+
+class IbkrFutM2KExactShort1Min(IStrategy):
+    INTERFACE_VERSION = 3
+    timeframe = "1m"
+    can_short = True
+
+    def populate_indicators(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
+        return dataframe
+
+    def populate_entry_trend(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
+        dataframe.loc[:, "enter_short"] = 1
+        return dataframe
+
+    def populate_exit_trend(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
+        dataframe.loc[:, "exit_short"] = 1
+        return dataframe
+"#,
+        )
+        .unwrap();
+
+        let dependency_status =
+            healthy_dependency_status(managed_dir.to_string_lossy().into_owned());
+        let artifact_id = maybe_persist_seed_material_evidence(
+            "IBKR_M2K1M_EXACT_SEED_PROFILE_DIR_TEST",
+            state_dir.to_str().unwrap(),
+            Some(material_root.to_str().unwrap()),
+            &dependency_status,
+        )
+        .unwrap()
+        .expect("seed evidence artifact id");
+        assert!(artifact_id.contains("auto-quant-seed-material-evidence"));
+
+        let profiled_workspace = auto_quant_workspace_config_for_state(
+            &dependency_status.managed_dir,
+            state_dir.to_str().unwrap(),
+        );
+        let external_seed = managed_dir
+            .join("user_data/strategies_external")
+            .join("TomacIbkrfutm2kexactshort1minSeed.py");
+        assert!(external_seed.exists());
+        assert_eq!(auto_quant_active_strategy_count(&profiled_workspace), 1);
+
+        let body = std::fs::read_to_string(external_seed).unwrap();
+        assert!(body.contains("class TomacIbkrfutm2kexactshort1minSeed(IStrategy):"));
+        assert!(body.contains("can_short = True"));
+        assert!(body.contains("\"enter_short\"] = 1"));
+        assert!(!body.contains("\"enter_long\"] = 1"));
+    }
+
+    #[test]
     fn auto_quant_handoff_human_output_is_short_text_not_json_dump() {
         let temp = tempfile::tempdir().unwrap();
         let payload =
@@ -1340,6 +1530,57 @@ mod tests {
     }
 
     #[test]
+    fn auto_quant_handoff_human_output_includes_missing_data_recovery_notes() {
+        let temp = tempfile::tempdir().unwrap();
+        let managed_dir = temp.path().join(".deps/auto-quant");
+        std::fs::create_dir_all(managed_dir.join("user_data/strategies")).unwrap();
+        std::fs::create_dir_all(managed_dir.join("user_data/data")).unwrap();
+        std::fs::write(managed_dir.join("program.md"), "program").unwrap();
+        std::fs::write(managed_dir.join("prepare.py"), "print('prepare')").unwrap();
+        std::fs::write(managed_dir.join("run.py"), "print('run')").unwrap();
+        for index in 0..15 {
+            std::fs::write(
+                managed_dir
+                    .join("user_data/data")
+                    .join(format!("prepared-{index}.feather")),
+                "ready",
+            )
+            .unwrap();
+        }
+        let missing_data = temp.path().join("missing-primary.csv");
+        let payload =
+            build_factor_research_handoff_payload(BuildFactorResearchHandoffPayloadInput {
+                symbol: "DEMO",
+                data: missing_data.to_str().unwrap(),
+                objective: "expansion_manipulation",
+                provider_profile_selector: None,
+                paired_data: None,
+                auxiliary_evidence_path: None,
+                mutation_spec_path: None,
+                strategy_material_root: None,
+                state_dir: temp.path().to_str().unwrap(),
+                dependency_status: healthy_dependency_status(
+                    managed_dir.to_string_lossy().into_owned(),
+                ),
+            });
+
+        let human = render_auto_quant_handoff_human_output(&payload);
+
+        assert!(human.contains("Notes:"), "{human}");
+        assert!(
+            human.contains("auto_quant_requested_data_missing"),
+            "{human}"
+        );
+        assert!(human.contains("cleaned candle JSON/CSV"), "{human}");
+        assert!(human.contains("timestamp/open/high/low/close"), "{human}");
+        assert!(
+            human.contains("ict-engine auto-quant-prepare --state-dir"),
+            "{human}"
+        );
+        assert!(human.contains("<local-path>"), "{human}");
+    }
+
+    #[test]
     fn auto_quant_handoff_output_keeps_provider_profile_on_workflow_status_followup() {
         let temp = tempfile::tempdir().unwrap();
         let payload =
@@ -1371,6 +1612,35 @@ mod tests {
             ))
             .as_deref()
         );
+    }
+
+    #[test]
+    fn prior_init_missing_library_error_names_flag_schema_and_recovery() {
+        let temp = tempfile::tempdir().unwrap();
+        let missing_library = temp.path().join("missing-strategy-library.json");
+
+        let err = auto_quant_prior_init_command(AutoQuantPriorInitCommandInput {
+            symbol: "NQ",
+            state_dir: temp.path().to_str().unwrap(),
+            library_path: Some(missing_library.to_str().unwrap()),
+            strategy_filter: None,
+            temper: None,
+            prior_strength: None,
+            parent_config: None,
+            dry_run: false,
+            force: false,
+        })
+        .unwrap_err();
+        let message = format!("{err:#}");
+
+        assert!(
+            message.contains("auto_quant_prior_init_library_missing"),
+            "{message}"
+        );
+        assert!(message.contains("flag=--library"), "{message}");
+        assert!(message.contains("strategy_library.json"), "{message}");
+        assert!(message.contains("auto-quant-results-import"), "{message}");
+        assert!(message.contains("recovery="), "{message}");
     }
 
     #[test]
@@ -1418,6 +1688,66 @@ mod tests {
         let resolved = absolute_path(script.to_str().unwrap()).unwrap();
 
         assert_eq!(resolved, script);
+    }
+
+    #[test]
+    fn auto_quant_prepare_uses_profile_adjusted_prepare_script_for_handoff_data() {
+        let temp = tempfile::tempdir().unwrap();
+        let state_dir = temp.path().join("state");
+        let managed_dir = state_dir.join(".deps/auto-quant");
+        std::fs::create_dir_all(managed_dir.join("user_data/strategies")).unwrap();
+        std::fs::create_dir_all(managed_dir.join("user_data/data")).unwrap();
+        std::fs::write(managed_dir.join("program.md"), "program").unwrap();
+        std::fs::write(managed_dir.join("prepare.py"), "print('default')").unwrap();
+        std::fs::write(managed_dir.join("run.py"), "print('run')").unwrap();
+
+        let data_path = temp.path().join("ibkr_m2k_202606_1m_7d.csv");
+        std::fs::write(
+            &data_path,
+            "timestamp,open,high,low,close,volume\n2026-05-19T00:00:00Z,1,2,0.5,1.5,10\n",
+        )
+        .unwrap();
+        let dependency_status = AutoQuantDependencyStatus {
+            repo_url: "repo".to_string(),
+            managed_dir: managed_dir.to_string_lossy().to_string(),
+            tracked_branch: "master".to_string(),
+            pinned_ref: None,
+            current_commit: None,
+            upstream_commit: None,
+            bootstrap_needed: false,
+            config_present: true,
+            managed_repo_present: true,
+            healthy: true,
+            update_available: false,
+            required_files: Vec::new(),
+            notes: Vec::new(),
+            adapter_version: "v1".to_string(),
+            last_sync: None,
+        };
+        let payload =
+            build_factor_research_handoff_payload(BuildFactorResearchHandoffPayloadInput {
+                symbol: "IBKR_M2K1M_TEST",
+                data: data_path.to_str().unwrap(),
+                objective: "expansion_manipulation",
+                provider_profile_selector: None,
+                paired_data: None,
+                auxiliary_evidence_path: None,
+                mutation_spec_path: None,
+                strategy_material_root: None,
+                state_dir: state_dir.to_str().unwrap(),
+                dependency_status,
+            });
+
+        let (workspace, profile) = auto_quant_prepare_execution_workspace(
+            state_dir.to_str().unwrap(),
+            &payload.workspace,
+            Some(&payload),
+        )
+        .unwrap();
+
+        assert!(profile.is_some());
+        assert!(workspace.prepare_script.ends_with("prepare_external.py"));
+        assert_eq!(workspace.profile_name.as_deref(), Some("synthetic_ohlcv"));
     }
 
     #[test]
@@ -1494,6 +1824,165 @@ mod tests {
         })
         .unwrap_err();
         assert!(err.to_string().contains("auto-quant-results-import"));
+    }
+
+    #[test]
+    fn results_import_missing_library_error_names_flag_schema_and_recovery() {
+        let temp = tempfile::tempdir().unwrap();
+        let state_dir = temp.path().to_str().unwrap();
+        let missing_library = temp.path().join("missing_strategy_library.json");
+        let err = auto_quant_results_import_command(
+            "NQ",
+            state_dir,
+            missing_library.to_str().unwrap(),
+            None,
+        )
+        .unwrap_err();
+        let message = err.to_string();
+
+        assert!(message.contains("auto_quant_results_import_library_missing"));
+        assert!(message.contains("flag=--library"));
+        assert!(message.contains(missing_library.to_str().unwrap()));
+        assert!(message.contains("strategy_library.json"));
+        assert!(message.contains("export_strategy_library.py"));
+        assert!(message.contains("recovery="));
+    }
+
+    #[test]
+    fn agent_material_batch_missing_material_error_names_flag_schema_and_recovery() {
+        let temp = tempfile::tempdir().unwrap();
+        let managed_dir = temp.path().join(".deps/auto-quant");
+        std::fs::create_dir_all(managed_dir.join("versions")).unwrap();
+        std::fs::create_dir_all(managed_dir.join(".git")).unwrap();
+        std::fs::write(managed_dir.join("README.md"), "readme").unwrap();
+        std::fs::write(managed_dir.join("program.md"), "program").unwrap();
+        std::fs::write(managed_dir.join("prepare.py"), "print('prepare')").unwrap();
+        std::fs::write(managed_dir.join("run.py"), "print('run')").unwrap();
+        std::fs::write(managed_dir.join("versions/README.md"), "versions").unwrap();
+        Command::new("git")
+            .args(["init"])
+            .current_dir(&managed_dir)
+            .output()
+            .unwrap();
+        let missing_material = temp.path().join("missing-agent-material.json");
+        let materials = vec![missing_material.to_string_lossy().to_string()];
+
+        let err =
+            auto_quant_agent_material_batch_command(AutoQuantAgentMaterialBatchCommandInput {
+                symbol: "NQ",
+                material_paths: &materials,
+                max_parallel: 1,
+                state_dir: temp.path().to_str().unwrap(),
+                repo_url: None,
+                tracked_branch: None,
+            })
+            .unwrap_err();
+        let message = format!("{err:#}");
+
+        assert!(
+            message.contains("auto_quant_agent_material_missing"),
+            "{message}"
+        );
+        assert!(message.contains("flag=--material"), "{message}");
+        assert!(
+            message.contains(missing_material.to_str().unwrap()),
+            "{message}"
+        );
+        assert!(message.contains("AgentMaterialPackage"), "{message}");
+        assert!(message.contains("data_path"), "{message}");
+        assert!(message.contains("strategy_source_path"), "{message}");
+        assert!(message.contains("recovery="), "{message}");
+    }
+
+    #[test]
+    fn ingest_real_trades_missing_trades_error_names_flag_schema_and_recovery() {
+        let temp = tempfile::tempdir().unwrap();
+        let missing_trades = temp.path().join("missing-real-trades.jsonl");
+
+        let err = auto_quant_ingest_real_trades_command(AutoQuantIngestRealTradesInput {
+            symbol: "NQ",
+            state_dir: temp.path().to_str().unwrap(),
+            trades_path: missing_trades.to_str().unwrap(),
+            source: "auto_quant_real_trades",
+            dry_run: true,
+            force: false,
+        })
+        .unwrap_err();
+        let message = format!("{err:#}");
+
+        assert!(
+            message.contains("auto_quant_real_trades_missing"),
+            "{message}"
+        );
+        assert!(message.contains("flag=--trades"), "{message}");
+        assert!(
+            message.contains(missing_trades.to_str().unwrap()),
+            "{message}"
+        );
+        assert!(message.contains("JSONL"), "{message}");
+        assert!(
+            message.contains("auto_quant_export_real_trades.py"),
+            "{message}"
+        );
+        assert!(message.contains("recovery="), "{message}");
+    }
+
+    #[test]
+    fn seed_evidence_missing_strategy_material_root_error_names_flag_schema_and_recovery() {
+        let temp = tempfile::tempdir().unwrap();
+        let missing_root = temp.path().join("missing-seed-material-root");
+
+        let err = auto_quant_seed_evidence_command(
+            "NQ",
+            temp.path().to_str().unwrap(),
+            missing_root.to_str().unwrap(),
+            50,
+        )
+        .unwrap_err();
+        let message = format!("{err:#}");
+
+        assert!(
+            message.contains("auto_quant_seed_evidence_material_root_missing"),
+            "{message}"
+        );
+        assert!(
+            message.contains("flag=--strategy-material-root"),
+            "{message}"
+        );
+        assert!(
+            message.contains(missing_root.to_str().unwrap()),
+            "{message}"
+        );
+        assert!(message.contains("external strategy material"), "{message}");
+        assert!(message.contains("evidence CSV"), "{message}");
+        assert!(message.contains("recovery="), "{message}");
+    }
+
+    #[test]
+    fn live_signals_redis_connect_error_names_flag_source_and_recovery() {
+        let temp = tempfile::tempdir().unwrap();
+        let redis_url = "redis://127.0.0.1:1";
+
+        let err = auto_quant_consume_live_signals_command(AutoQuantConsumeLiveSignalsInput {
+            symbol: "NQ",
+            state_dir: temp.path().to_str().unwrap(),
+            redis_url,
+            max_iterations: Some(1),
+            block_ms: 1,
+            initial_id: "$",
+        })
+        .unwrap_err();
+        let message = format!("{err:#}");
+
+        assert!(
+            message.contains("auto_quant_live_signals_redis_unavailable"),
+            "{message}"
+        );
+        assert!(message.contains("flag=--redis-url"), "{message}");
+        assert!(message.contains("redis://127.0.0.1:1"), "{message}");
+        assert!(message.contains("Auto-Quant publisher"), "{message}");
+        assert!(message.contains("Redis stream"), "{message}");
+        assert!(message.contains("recovery="), "{message}");
     }
 
     #[test]

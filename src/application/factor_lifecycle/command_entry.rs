@@ -17,6 +17,7 @@ use crate::application::factor_lifecycle::{
     next_mutation_spec_template, sync_factor_autoresearch_experiments_tsv,
     sync_factor_autoresearch_retrospective, FactorMutationPerFactorHintSummary,
 };
+use crate::application::output_foundation::print_redacted_json;
 use crate::config::shell_quote;
 use crate::state::{
     append_factor_autoresearch_attempt, load_factor_autoresearch_attempts,
@@ -68,15 +69,27 @@ fn factor_mutation_research_command(symbol: &str, data: &str, state_dir: &str) -
     )
 }
 
-pub fn factor_mutation_status_command(
-    symbol: &str,
-    state_dir: &str,
-    source_command: Option<&str>,
-    latest_only: bool,
-    accepted_only: bool,
-    bucket_by_source: bool,
-    limit: Option<usize>,
-) -> Result<()> {
+#[derive(Debug, Clone, Copy)]
+pub struct FactorMutationStatusCommandInput<'a> {
+    pub symbol: &'a str,
+    pub state_dir: &'a str,
+    pub source_command: Option<&'a str>,
+    pub latest_only: bool,
+    pub accepted_only: bool,
+    pub bucket_by_source: bool,
+    pub limit: Option<usize>,
+    pub output_format: &'a str,
+}
+
+pub fn factor_mutation_status_command(input: FactorMutationStatusCommandInput<'_>) -> Result<()> {
+    let symbol = input.symbol;
+    let state_dir = input.state_dir;
+    let source_command = input.source_command;
+    let latest_only = input.latest_only;
+    let accepted_only = input.accepted_only;
+    let bucket_by_source = input.bucket_by_source;
+    let limit = input.limit;
+    let output_format = input.output_format;
     let mut runs: Vec<FactorMutationRunRecord> =
         load_state_or_default(state_dir, symbol, FACTOR_MUTATION_RUNS_FILE)?;
     if let Some(source_command) = source_command {
@@ -353,9 +366,7 @@ pub fn factor_mutation_status_command(
         } else {
             Vec::new()
         };
-    println!(
-        "{}",
-        serde_json::to_string_pretty(&serde_json::json!({
+    let value = serde_json::json!({
             "symbol": symbol,
             "source_command_filter": source_command,
             "bucket_by_source": bucket_by_source,
@@ -395,9 +406,40 @@ pub fn factor_mutation_status_command(
                     )
                 ),
             ]
-        }))?
-    );
-    Ok(())
+    });
+    match output_format.trim().to_ascii_lowercase().as_str() {
+        "json" | "compact" | "agent" => print_redacted_json(&value),
+        "human" => {
+            let total_runs = value
+                .get("total_runs")
+                .and_then(serde_json::Value::as_u64)
+                .unwrap_or_default();
+            let accepted_runs = value
+                .get("accepted_runs")
+                .and_then(serde_json::Value::as_u64)
+                .unwrap_or_default();
+            let latest_mutation = value
+                .get("latest_run")
+                .and_then(|latest| latest.get("evaluation"))
+                .and_then(|evaluation| evaluation.get("mutation_id"))
+                .and_then(serde_json::Value::as_str)
+                .unwrap_or("unavailable");
+            let focus_count = value
+                .get("recommended_next_mutation_focus")
+                .and_then(serde_json::Value::as_array)
+                .map(|items| items.len())
+                .unwrap_or_default();
+            println!(
+                "Factor mutation status | symbol={} | total_runs={} | accepted_runs={} | latest_mutation={} | recommended_focus_items={}",
+                symbol, total_runs, accepted_runs, latest_mutation, focus_count
+            );
+            Ok(())
+        }
+        other => anyhow::bail!(
+            "unsupported factor-mutation-status output format '{}'",
+            other
+        ),
+    }
 }
 
 pub struct FactorAutoresearchCommandInput<'a> {
@@ -770,23 +812,54 @@ pub fn factor_autoresearch_status_command(
     session_id: Option<&str>,
     latest_only: bool,
     limit: Option<usize>,
+    output_format: &str,
 ) -> Result<()> {
-    let Some(surface) = build_factor_autoresearch_status_surface(
-        state_dir,
-        symbol,
-        session_id,
-        latest_only,
-        limit,
-    )?
-    else {
-        let empty =
-            crate::application::orchestration::workflow_status::factor_autoresearch_status_value_for_empty_state(symbol, state_dir);
-        println!("{}", serde_json::to_string_pretty(&empty)?);
-        return Ok(());
+    let value = if let Some(surface) =
+        build_factor_autoresearch_status_surface(state_dir, symbol, session_id, latest_only, limit)?
+    {
+        serde_json::to_value(&surface)?
+    } else {
+        crate::application::orchestration::workflow_status::factor_autoresearch_status_value_for_empty_state(symbol, state_dir)
     };
-
-    println!("{}", serde_json::to_string_pretty(&surface)?);
-    Ok(())
+    match output_format.trim().to_ascii_lowercase().as_str() {
+        "json" | "compact" | "agent" => print_redacted_json(&value),
+        "human" => {
+            let effective_status = value
+                .get("effective_status")
+                .and_then(serde_json::Value::as_str)
+                .or_else(|| value.get("status").and_then(serde_json::Value::as_str))
+                .unwrap_or("unavailable");
+            let sessions = value
+                .get("sessions")
+                .and_then(serde_json::Value::as_array)
+                .map(|items| items.len())
+                .unwrap_or_default();
+            let attempts = value
+                .get("attempts")
+                .and_then(serde_json::Value::as_array)
+                .map(|items| items.len())
+                .unwrap_or_default();
+            let best_attempt = value
+                .get("best_attempt")
+                .and_then(|attempt| attempt.get("attempt_id"))
+                .and_then(serde_json::Value::as_str)
+                .unwrap_or("unavailable");
+            let warnings = value
+                .get("derived_warnings")
+                .and_then(serde_json::Value::as_array)
+                .map(|items| items.len())
+                .unwrap_or_default();
+            println!(
+                "Factor autoresearch status | symbol={} | status={} | sessions={} | attempts={} | best_attempt={} | warnings={}",
+                symbol, effective_status, sessions, attempts, best_attempt, warnings
+            );
+            Ok(())
+        }
+        other => anyhow::bail!(
+            "unsupported factor-autoresearch-status output format '{}'",
+            other
+        ),
+    }
 }
 
 #[cfg(test)]
