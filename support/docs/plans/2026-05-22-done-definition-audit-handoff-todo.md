@@ -1940,6 +1940,48 @@ Decision:
 - Keep the goal active; no mirror release, tag, push, factor promotion, or
   `update_goal complete` is authorized from this state.
 
+### 2026-05-23 11:24 CST Current HEAD Clean Audit Keeps Source/Origin As Only Release Gate
+
+Fresh mirror-stage readback:
+
+- Existing report root:
+  `/tmp/ict-engine-v015-release-mirror-stage-report-20260523T103948+0800`.
+- `summary.json` records `source_head=29fb5d092868bc2031f8cde280141521e41ccf89`,
+  `parity=pass`, `changed_paths=143`, `diff_check_stdout_lines=0`, and
+  `diff_check_stderr_lines=0`.
+- The broad regex scan still reported `private_secret_hits=930`; sample hits
+  include historical docs, tests/policy strings, and real maintainer-local paths.
+  Treat this as a privacy-classification/release-hygiene axis, not a publishable
+  clean-scan result.
+
+Fresh clean selected-source release audit:
+
+- Clean worktree created from current `HEAD=b75522173d529656192590556d5c815e8f88c302`.
+- Audit artifact:
+  `/tmp/ict-engine-release-readiness-clean-wt-after-mirror-20260523T112429+0800.json`.
+- Audit exited `1` with `summary.status=needs_fix`, `pass_count=4`,
+  `fail_count=1`, `skip_count=0`.
+- Passing gates: `worktree_clean_for_release`, `cargo_release_policy`,
+  `release_docs_fresh_for_selected_tag`, and `release_version_tag_available`.
+- The only unresolved gate is `source_origin_matches_selected_source`.
+- Source/origin readback: `origin/main=79d9579ea38685bd8c798dc80c1f5177e3c220b6`,
+  `release_mirror_main=ab6b1b55d516bcd0f6b88db1931cc40802e683bb`, selected
+  source is `121` commits ahead of `origin/main`, and candidate tag `v0.1.5`
+  is still unused while the audit suggests next patch `v0.1.6` if the version
+  changes again.
+
+Decision:
+
+- Release readiness is still not complete. The selected source is clean-auditable
+  at current `HEAD`, but the source/origin publication authority is unresolved.
+- Mirror staging proved byte parity and diff-check cleanliness for the staged
+  export, but the broad privacy scan needs the scoped classifier/gate before any
+  release-clean claim.
+- Practical-factor diffusion remains incomplete because the latest factor audits
+  still have zero promotion/trade-usable positives.
+- Keep the goal active; no mirror release, tag, push, factor promotion, or
+  `update_goal complete` is authorized from this state.
+
 ### 2026-05-23 09:26 CST Claim Hygiene Clean Again, Done Definition Still Not Completion
 
 Fresh factor-claim audit:
