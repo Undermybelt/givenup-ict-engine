@@ -40,6 +40,14 @@
     "test_command": "python3 -m unittest support.scripts.tests.test_release_readiness_audit -v"
   },
   {
+    "name": "release_privacy_audit",
+    "stability": "audit_helper",
+    "entrypoint": "support/scripts/release_privacy_audit.py",
+    "safe_default": true,
+    "requires_data": false,
+    "test_command": "python3 -m unittest support.scripts.tests.test_release_privacy_audit -v"
+  },
+  {
     "name": "factor_claim_terminalization_audit",
     "stability": "audit_helper",
     "entrypoint": "support/scripts/factor_claim_terminalization_audit.py",

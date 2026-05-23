@@ -1281,3 +1281,43 @@ Decision:
   path/doc hits still need their own scoped audit before any publish claim.
 - Practical factor closure remains false because factor audits still have zero
   promotion/trade-usable positives.
+
+### 2026-05-23 release privacy classifier registration
+
+Low-pollution public-surface slice:
+
+- Added the release export privacy classifier to the script catalog and manifest:
+  `support/scripts/release_privacy_audit.py` with `--compact` and `--output`.
+- The classifier separates `release_blocking` hits from
+  `test_or_policy_reference`, `historical_docs`, and `operator_reference`, so
+  broad old support-doc path noise remains visible without blocking a clean
+  export when no active release surface leaks private paths or secret markers.
+- Manifest registration keeps it zero-config for consumers:
+  `python3 -m unittest support.scripts.tests.test_release_privacy_audit -v`.
+
+Evidence:
+
+- `python3 -m unittest support.scripts.tests.test_release_privacy_audit -v`
+  passed: 7 tests.
+- `python3 -m py_compile support/scripts/release_privacy_audit.py support/scripts/tests/test_release_privacy_audit.py`
+  passed.
+- `python3 support/scripts/check_script_manifest.py` passed with
+  `entries=22`, `required_public_entries=4`, `safe_required_public_entries=4`.
+- Clean archive export plus current classifier:
+  `/tmp/release_privacy_audit_current_export3_20260523.json` had
+  `status=pass`, `release_blocking_hits=0`, and no release-blocking paths.
+  Remaining classified noise was historical/operator/test-policy evidence only:
+  `historical_docs=123535`, `operator_reference=4`,
+  `test_or_policy_reference=219`.
+
+Current TODO / not done:
+
+- Release completion remains false. The latest shared-checkout release audit is
+  blocked by intentional dirty checkout state plus unresolved remote/source
+  readback uncertainty; do not publish, tag, or claim release readiness from this
+  slice.
+- Practical factor closure remains false. The latest factor terminalization audit
+  still has `promotion_allowed_true=0` and `trade_usable_true=0`.
+- Next useful slice: run the release readiness audit from a clean selected export
+  or clean worktree with reliable origin readback, then record whether source
+  alignment is actually resolved.
