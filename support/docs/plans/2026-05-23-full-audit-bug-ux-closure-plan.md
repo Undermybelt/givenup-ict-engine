@@ -41,14 +41,14 @@ complete.
 | R2 | Public surfaces are token-friendly and do not expose private paths/secrets by default | smoke outputs plus privacy/path scan over captured outputs | smoke privacy scan passed over `/private/tmp/ict-engine-done-definition-audit-smoke-20260522T223543265157Z-43488-out`; release blockers remain |
 | R3 | Default provider behavior is zero-config and fallback-oriented | `provider-status --compact` and `workflow-status` evidence, no required private profile | smoke provider output passed; `provider_status.out` reports yfinance live zero-config and public crypto runtimes ready |
 | R4 | Closed-loop surfaces are inspectable end-to-end | provider -> regime posterior -> Pre-Bayes -> BBN -> path-ranker/CatBoost visibility -> execution tree -> feedback/training readbacks | smoke passed through analyze/update/workflow/pre-Bayes/policy-training readbacks; practical factor promotion remains unproven |
-| R5 | Release readiness is clear | `support/scripts/release_readiness_audit.py --compact --check-remotes` exits `0` | fresh fail after docs refresh: worktree dirty and source origin mismatch remain |
+| R5 | Release readiness is clear | `support/scripts/release_readiness_audit.py --compact --check-remotes` exits `0` | selected clean worktree now clears dirty-tree gate; source origin/export parity still fails |
 | R6 | Factor claim/process hygiene is clear | `support/scripts/factor_claim_terminalization_audit.py --compact` exits `0` | fresh pass at 2026-05-23 09:27 CST after parser fix and claim externalization readback: `active_claims=0`, `live_factor_processes=0`, `missing_run_roots=0`; practical positives remain zero |
 | R7 | At least one practical factor is truly promotion/trade usable if the objective claims practical factor closure | downstream evidence has `promotion_allowed=true` and `trade_usable=true` with cost/sample/provider gates | known zero positives in latest handoff |
 | R8 | Docs do not become runtime inputs | `support/scripts/ci/check_docs_runtime_isolation.py` exits `0` | fresh pass |
 | R9 | Script governance surfaces are consistent | `support/scripts/check_script_manifest.py` exits `0`; relevant script tests pass | fresh pass for manifest; focused script tests still per-slice |
 | R10 | Help/CLI UX has no obvious broken output path | `support/scripts/help_audit.py` or Done Definition audit help gate | fresh pass |
 | R11 | Cargo build/lint/test floor is known | `done_definition_audit.py --run-all-heavy` or focused cargo commands | fresh pass for source slice before `3a8e77c9`: `cargo fmt -- --check`, `cargo check --all-targets`, `cargo clippy --all-targets -- -D warnings`, and `cargo test` |
-| R12 | Dirty worktree is either intentionally preserved or sliced into coherent commits | `git status --short`, staged-path readback before each commit | currently broad dirty tree; not release-ready |
+| R12 | Dirty worktree is either intentionally preserved or sliced into coherent commits | `git status --short`, staged-path readback before each commit | broad dev worktree preserved; detached clean worktree from committed `HEAD` passes `worktree_clean_for_release` |
 | R13 | Release notes/signoff match selected tag/export | fresh release docs for unused selected tag | locally fixed for `v0.1.5`; latest audit passes `release_docs_fresh_for_selected_tag` |
 | R14 | Source/mirror/tag state is publishable | source selected commit pushed or clean export selected; unused version/tag; mirror parity readback | tag/version availability is now locally fixed to `0.1.5`/`v0.1.5`; source/mirror parity still fails |
 
@@ -58,8 +58,8 @@ These are not guesses; they come from the latest handoff readbacks and current
 baseline scan.
 
 - Release readiness is not clear:
-  `worktree_clean_for_release` and `source_origin_matches_selected_source`
-  remain unresolved in the latest release-readiness audit.
+  `source_origin_matches_selected_source` remains unresolved in the latest
+  clean-worktree release-readiness audit.
 - Practical factor closure is not proven:
   the latest factor audit has `promotion_allowed_true=0` and
   `trade_usable_true=0`.
@@ -121,6 +121,8 @@ Repeat until all requirements are proven:
   `0.1.5` so `release_version_tag_available` can pass without publishing.
 - [x] Refresh release signoff and release notes for selected `v0.1.5` so
   `release_docs_fresh_for_selected_tag` can pass without publishing.
+- [x] Prove selected committed `HEAD` can be inspected from a clean detached
+  worktree without touching the broad dirty development checkout.
 - [ ] Keep release readiness blocked until a clean selected export, fresh
   release docs/signoff, unused version/tag, remote parity, and explicit
   operator approval exist.
@@ -998,3 +1000,44 @@ Decision:
 - This clears the stale release-docs gate locally.
 - Full objective remains incomplete because release still requires clean export
   and source/export parity, and practical factor proof still has zero positives.
+
+Post-commit and clean-worktree readback:
+
+- Commit: `ddaec70a docs: refresh 0.1.5 release candidate notes`.
+- `python3 support/scripts/release_readiness_audit.py --compact --check-remotes --output /tmp/release_readiness_post_docs_commit_20260523.json`
+  - exit `1` from the broad development checkout.
+  - passing gates: `cargo_release_policy`,
+    `release_docs_fresh_for_selected_tag`,
+    `release_version_tag_available`.
+  - unresolved: `worktree_clean_for_release`,
+    `source_origin_matches_selected_source`.
+- `git worktree add --detach /tmp/ict-engine-v015-release-worktree-20260523 HEAD`
+  - created clean detached worktree at `ddaec70a`.
+- From `/tmp/ict-engine-v015-release-worktree-20260523`:
+  `python3 support/scripts/release_readiness_audit.py --compact --check-remotes --output /tmp/release_readiness_clean_worktree_ddaec70a_20260523.json`
+  - exit `1`.
+  - passing gates: `worktree_clean_for_release`, `cargo_release_policy`,
+    `release_docs_fresh_for_selected_tag`, `release_version_tag_available`.
+  - unresolved: `source_origin_matches_selected_source`.
+  - `HEAD=ddaec70aaf0ae6be2ba77894288fc4ff583e18f7`,
+    `source_ahead_of_origin=112`.
+- From the same clean worktree:
+  `python3 support/scripts/done_definition_audit.py --compact --output /tmp/done_definition_clean_worktree_ddaec70a_20260523.json`
+  - exit `0`; light status `pass`; heavy gates skipped.
+- From the same clean worktree:
+  `python3 support/scripts/factor_claim_terminalization_audit.py --compact --output /tmp/factor_claim_terminalization_clean_worktree_ddaec70a_20260523.json`
+  - exit `1`.
+  - status `needs_attention` because 20 terminalized factor claims reference
+    missing run roots in the committed clean tree.
+  - `active_claims=0`, `live_factor_processes=0`, `missing_run_roots=20`,
+    `promotion_allowed_true=0`, `trade_usable_true=0`.
+
+Decision:
+
+- The broad dirty checkout can be preserved while a selected committed tree is
+  audited cleanly.
+- Release still cannot be claimed ready until source-origin/export parity is
+  resolved and the operator approves publish/tag actions.
+- Factor hygiene is context-sensitive: the current development checkout passed,
+  but the clean committed tree shows missing run-root evidence for 20 terminal
+  claims, so full closure remains false.
