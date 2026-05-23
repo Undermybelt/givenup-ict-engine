@@ -50,6 +50,21 @@ summary=promotion_allowed=true; trade_usable=true
         self.assertEqual(parsed_equals["promotion_allowed"], True)
         self.assertEqual(parsed_equals["trade_usable"], True)
 
+    def test_parse_claim_text_unwraps_markdown_scalar_values(self) -> None:
+        parsed = parse_claim_text(
+            """
+- owner: `codex`
+- status: `active`
+- run_root: `/tmp/example-run`
+- decision: `drop_gate1`
+"""
+        )
+
+        self.assertEqual(parsed["owner"], "codex")
+        self.assertEqual(parsed["status"], "active")
+        self.assertEqual(parsed["run_root"], "/tmp/example-run")
+        self.assertEqual(parsed["decision"], "drop_gate1")
+
     def test_build_report_classifies_active_and_terminal_claims(self) -> None:
         with tempfile.TemporaryDirectory() as repo_tmp, tempfile.TemporaryDirectory() as claims_tmp:
             repo_root = Path(repo_tmp)

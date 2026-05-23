@@ -59,7 +59,7 @@ def parse_claim_text(text: str) -> dict[str, Any]:
             continue
         key, value = line.split(separator, 1)
         key = key.strip().lower().replace("-", "_")
-        value = value.strip()
+        value = _normalize_scalar(value)
         if not key:
             continue
         fields[key] = value
@@ -79,6 +79,15 @@ def _first_separator(line: str) -> str | None:
     if not candidates:
         return None
     return line[min(candidates)]
+
+
+def _normalize_scalar(value: object) -> object:
+    if not isinstance(value, str):
+        return value
+    text = value.strip()
+    if len(text) >= 2 and text[0] == text[-1] and text[0] in {'`', '"', "'"}:
+        return text[1:-1].strip()
+    return text
 
 
 def _extract_bool(name: str, text: str) -> bool | None:
@@ -196,7 +205,7 @@ def _parse_claim_file(path: Path, text: str) -> dict[str, Any]:
         except json.JSONDecodeError:
             parsed = None
         if isinstance(parsed, dict):
-            fields = {str(key): value for key, value in parsed.items() if isinstance(value, (str, int, float, bool))}
+            fields = {str(key): _normalize_scalar(value) for key, value in parsed.items() if isinstance(value, (str, int, float, bool))}
             serialized = json.dumps(parsed, sort_keys=True)
             fields["promotion_allowed"] = _extract_bool("promotion_allowed", serialized)
             fields["trade_usable"] = _extract_bool("trade_usable", serialized)
