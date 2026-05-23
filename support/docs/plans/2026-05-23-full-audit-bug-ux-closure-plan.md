@@ -41,7 +41,7 @@ complete.
 | R2 | Public surfaces are token-friendly and do not expose private paths/secrets by default | smoke outputs plus privacy/path scan over captured outputs | smoke privacy scan passed over `/private/tmp/ict-engine-done-definition-audit-smoke-20260522T223543265157Z-43488-out`; release blockers remain |
 | R3 | Default provider behavior is zero-config and fallback-oriented | `provider-status --compact` and `workflow-status` evidence, no required private profile | smoke provider output passed; `provider_status.out` reports yfinance live zero-config and public crypto runtimes ready |
 | R4 | Closed-loop surfaces are inspectable end-to-end | provider -> regime posterior -> Pre-Bayes -> BBN -> path-ranker/CatBoost visibility -> execution tree -> feedback/training readbacks | smoke passed through analyze/update/workflow/pre-Bayes/policy-training readbacks; practical factor promotion remains unproven |
-| R5 | Release readiness is clear | `support/scripts/release_readiness_audit.py --compact --check-remotes` exits `0` | fresh fail after version slice: worktree dirty, stale release docs, and source origin mismatch remain |
+| R5 | Release readiness is clear | `support/scripts/release_readiness_audit.py --compact --check-remotes` exits `0` | fresh fail after docs refresh: worktree dirty and source origin mismatch remain |
 | R6 | Factor claim/process hygiene is clear | `support/scripts/factor_claim_terminalization_audit.py --compact` exits `0` | fresh pass at 2026-05-23 09:27 CST after parser fix and claim externalization readback: `active_claims=0`, `live_factor_processes=0`, `missing_run_roots=0`; practical positives remain zero |
 | R7 | At least one practical factor is truly promotion/trade usable if the objective claims practical factor closure | downstream evidence has `promotion_allowed=true` and `trade_usable=true` with cost/sample/provider gates | known zero positives in latest handoff |
 | R8 | Docs do not become runtime inputs | `support/scripts/ci/check_docs_runtime_isolation.py` exits `0` | fresh pass |
@@ -49,7 +49,7 @@ complete.
 | R10 | Help/CLI UX has no obvious broken output path | `support/scripts/help_audit.py` or Done Definition audit help gate | fresh pass |
 | R11 | Cargo build/lint/test floor is known | `done_definition_audit.py --run-all-heavy` or focused cargo commands | fresh pass for source slice before `3a8e77c9`: `cargo fmt -- --check`, `cargo check --all-targets`, `cargo clippy --all-targets -- -D warnings`, and `cargo test` |
 | R12 | Dirty worktree is either intentionally preserved or sliced into coherent commits | `git status --short`, staged-path readback before each commit | currently broad dirty tree; not release-ready |
-| R13 | Release notes/signoff match selected tag/export | fresh release docs for unused selected tag | known failing in latest release readiness evidence |
+| R13 | Release notes/signoff match selected tag/export | fresh release docs for unused selected tag | locally fixed for `v0.1.5`; latest audit passes `release_docs_fresh_for_selected_tag` |
 | R14 | Source/mirror/tag state is publishable | source selected commit pushed or clean export selected; unused version/tag; mirror parity readback | tag/version availability is now locally fixed to `0.1.5`/`v0.1.5`; source/mirror parity still fails |
 
 ## Known Current Blockers
@@ -58,9 +58,8 @@ These are not guesses; they come from the latest handoff readbacks and current
 baseline scan.
 
 - Release readiness is not clear:
-  `worktree_clean_for_release`, `release_docs_fresh_for_selected_tag`,
-  and `source_origin_matches_selected_source` remain unresolved in the latest
-  release-readiness audit.
+  `worktree_clean_for_release` and `source_origin_matches_selected_source`
+  remain unresolved in the latest release-readiness audit.
 - Practical factor closure is not proven:
   the latest factor audit has `promotion_allowed_true=0` and
   `trade_usable_true=0`.
@@ -120,6 +119,8 @@ Repeat until all requirements are proven:
   interrupting live provider/AQ processes.
 - [x] Move the local release candidate version from reused `0.1.3` to unused
   `0.1.5` so `release_version_tag_available` can pass without publishing.
+- [x] Refresh release signoff and release notes for selected `v0.1.5` so
+  `release_docs_fresh_for_selected_tag` can pass without publishing.
 - [ ] Keep release readiness blocked until a clean selected export, fresh
   release docs/signoff, unused version/tag, remote parity, and explicit
   operator approval exist.
@@ -719,7 +720,7 @@ Pre-commit verification:
 
 - `git diff --cached --check`
   - exit `0`.
-- `git diff --cached -- Cargo.lock src tests | rg -n "/Users/thrill3r|/Users/[^\"']+|Downloads/Tomac|secret-token-value|secret-token|PRIVATE_KEY|PASSWORD"`
+- `git diff --cached -- Cargo.lock src tests | rg -n "/Users/<redacted>|/Users/[^\"']+|Downloads/Tomac|secret-token-value|secret-token|PRIVATE_KEY|PASSWORD"`
   - exit `1`, no matches.
 - `git diff --cached --name-only | rg -v '^(Cargo\.lock|src/|tests/)'`
   - exit `1`, no non-allowlisted staged paths.
@@ -957,3 +958,43 @@ Post-commit readback:
     `source_origin_matches_selected_source`.
   - `HEAD=2617f214f55029c203639785885c9292899e4d22`,
     `source_ahead_of_origin=110`.
+
+### 2026-05-23 10:00 CST Release Docs Freshness Slice
+
+Trigger:
+
+- Continue clearing deterministic release-readiness blockers without publishing,
+  tagging, pushing, or claiming release readiness.
+
+Patch:
+
+- `support/docs/audits/release-signoff.md`: replaced the old `v0.1.3` release
+  surface with a current `v0.1.5` candidate signoff surface.
+- `support/docs/release-notes-draft.md`: replaced the old `v0.1.3` release
+  notes with current `v0.1.5` candidate notes.
+- Both files still require a clean export, full export gates, source/export
+  parity, and explicit operator approval before release actions.
+
+Verification:
+
+- `python3 support/scripts/release_readiness_audit.py --compact --check-remotes --output /tmp/release_readiness_after_docs_refresh_20260523.json`
+  - exit `1`.
+  - passing gates now include:
+    `cargo_release_policy`,
+    `release_docs_fresh_for_selected_tag`,
+    `release_version_tag_available`.
+  - remaining unresolved gates:
+    `worktree_clean_for_release`,
+    `source_origin_matches_selected_source`.
+  - `HEAD=b52b66dc947291669991d2ffdc6aa8cfd5480e00`,
+    `source_ahead_of_origin=111` at the audit snapshot.
+- `git diff --check -- support/docs/audits/release-signoff.md support/docs/release-notes-draft.md`
+  - exit `0`.
+- `rg -n "群[[:space:]]*[0-9]{4,}|[0-9]{4,}[[:space:]]*群|AKIA[0-9A-Z]{16}|sk-[A-Za-z0-9_-]{20,}|xox[baprs]-|/Users/<redacted>" support/docs/audits/release-signoff.md support/docs/release-notes-draft.md`
+  - exit `1`; no matches.
+
+Decision:
+
+- This clears the stale release-docs gate locally.
+- Full objective remains incomplete because release still requires clean export
+  and source/export parity, and practical factor proof still has zero positives.

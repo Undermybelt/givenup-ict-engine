@@ -1,119 +1,85 @@
 # Release Notes
 
-Version: `v0.1.3`
-Status: sanitized release candidate prepared for mirror publication, drafted
-2026-05-18; package-manager publication remains blocked under the PolyForm
-Noncommercial 1.0.0 release policy.
+Version: `v0.1.5`
+Draft date: 2026-05-23
+Status: candidate notes refreshed for the selected `v0.1.5` export path;
+mirror publication, tag creation, and GitHub release creation still require
+fresh export gates plus explicit operator approval.
 
-## 2026-05-22 status
+## Candidate scope
 
-These notes are historical `v0.1.3` draft notes. They are not valid release
-notes for the current source branch.
+This candidate packages the current committed source tree after the release
+version gate was advanced to `0.1.5`. The release-readiness audit now sees
+`v0.1.5` as the selected unused tag while preserving the private mirror and
+non-package-manager policy in Cargo metadata.
 
-The current audit state is blocked for release publication: the done-definition
-and zero-config smoke gates have fresh passing evidence, but the checkout still
-has broad dirty state and no fresh sanitized export, release tag, mirror sync,
-privacy scan, or operator publish confirmation for a new release. Refresh this
-file from the selected export before any tag or GitHub release action.
+The release remains a consumer-facing source/mirror candidate. It is not a
+crates.io, npm/npx, Homebrew, Docker, binary, or public package-manager release.
 
-## Highlights (v0.1.3 — gate-rigidity audit slice)
+## Highlights
 
-- Two factor-iteration hard gates that were empirically unreachable on real
-  5-class regime/path classification have been relaxed so the rest of the
-  promotion chain can be exercised:
-  - `MECE_RECOVERY_ACCURACY_GATE`: 0.95 -> 0.55 (commit c8a45f12)
-  - `STRUCTURAL_PATH_RANKING_EXECUTION_GATE_MIN_PATH_PROB`: 0.5 -> 0.30
-    (commit c8a45f12)
-- The OU overlay's `regime_influence_enabled` chicken-and-egg gate was aligned
-  with the spectral overlay: activation moved from `EXECUTION_GATE_READY`
-  (0.65) to `EXECUTION_GATE_OBSERVE` (0.45) so OU evidence can lift readiness
-  from the observe band upward (commit a4d98718).
-- A 9-round factor-iteration gate-rigidity audit (87 findings, 9 meta-patterns,
-  next-slice priority order) has been committed as
-  `support/docs/plans/2026-05-18-gate-rigidity-audit-todo.md` (commit 57b39e9d)
-  so future agents do not re-run the same exploration.
-- Downstream BBN / CatBoost / maturity row / execution-tree admission gates
-  continue to enforce live-promotion criteria; these relaxations remove
-  construction-time fail-closed zero points, they do not lower live-readiness
-  standards.
+- Public Cargo metadata now selects `version = "0.1.5"`, avoiding reuse of
+  release mirror tags already present through `v0.1.4`.
+- `publish = false`, `license = "PolyForm-Noncommercial-1.0.0"`, and the
+  release mirror repository URL remain in place.
+- The active audit loop continues to preserve zero-config first-run and
+  token-friendly workflow surfaces as release requirements, not assumptions.
+- Factor claim/process hygiene is currently clear, but practical promotion and
+  trade usability still have zero proven positives in the latest audit.
 
-## Inherited from v0.1.2 baseline
+## Fresh evidence so far
 
-- README and `AGENT.md` were refreshed as public entrypoints: the README leads
-  with a clean first-run path and readable workflow map; `AGENT.md` tells
-  agents how to serve users, verify gates, preserve privacy, and publish only
-  sanitized export slices.
-- `workflow-status` surfaces matching opt-in provider/profile choices for the
-  requested symbol without selecting or loading maintainer-local material.
-- Agent and human workflow surfaces stay token-friendly.
-- Branch-admission routing no longer overrides first-run / Auto-Quant handoff /
-  evidence-review / selected-profile / generic execution-contract guidance
-  unless the latest feedback is for the exact same structural path.
-- Structural path-plan artifacts carry candidate set ids and candidate paths,
-  and path-ranking target rows expose branch segment categorical fields for
-  external ranker training.
-- BBN CPT and logic-family tests use tracked, path-redacted fixtures under
-  `tests/fixtures/policy_training/`.
-- License metadata uses `PolyForm-Noncommercial-1.0.0` in `Cargo.toml`, with
-  `publish = false`; public package-manager redistribution needs a dedicated
-  channel-compliance review.
+- `cargo metadata --no-deps --format-version 1 > /tmp/ict_engine_metadata_version_015_precommit_20260523.json`
+  - exit `0`.
+- `cargo check --all-targets > /tmp/ict_engine_version_015_cargo_check_all_20260523.stdout 2> /tmp/ict_engine_version_015_cargo_check_all_20260523.stderr`
+  - exit `0`.
+- `python3 support/scripts/factor_claim_terminalization_audit.py --compact --output /tmp/factor_claim_terminalization_post_version_commit_20260523.json`
+  - exit `0`; status `pass`.
+- `python3 support/scripts/done_definition_audit.py --compact --output /tmp/done_definition_post_version_commit_20260523.json`
+  - exit `0`; light status `pass`; heavy gates skipped.
+- `python3 support/scripts/release_readiness_audit.py --compact --check-remotes --output /tmp/release_readiness_post_version_commit_20260523.json`
+  - exit `1`; `release_version_tag_available=pass`; unresolved:
+    `worktree_clean_for_release`, `release_docs_fresh_for_selected_tag`,
+    `source_origin_matches_selected_source`.
 
-## Release gates
+## Required release gates
 
-The release-mirror runbook requires these to pass from a fresh
-`git archive HEAD` export before tagging:
+Before these notes can become release payload text, run the full gate set from a
+fresh export of the selected committed `HEAD`:
 
 ```bash
-cargo fmt --manifest-path "$EXPORT_DIR/Cargo.toml" --check
-cargo clippy --manifest-path "$EXPORT_DIR/Cargo.toml" --all-targets -- -D warnings
-cargo test --manifest-path "$EXPORT_DIR/Cargo.toml"
+RELEASE_EXPORT_DIR=$(mktemp -d /tmp/ict-engine-v015-release-export.XXXXXX)
+git archive --format=tar HEAD | tar -x -C "$RELEASE_EXPORT_DIR"
+cargo fmt --manifest-path "$RELEASE_EXPORT_DIR/Cargo.toml" --check
+cargo clippy --manifest-path "$RELEASE_EXPORT_DIR/Cargo.toml" --all-targets -- -D warnings
+cargo test --manifest-path "$RELEASE_EXPORT_DIR/Cargo.toml"
+cargo run --manifest-path "$RELEASE_EXPORT_DIR/Cargo.toml" --quiet -- provider-status --compact
+cargo run --manifest-path "$RELEASE_EXPORT_DIR/Cargo.toml" --quiet -- analyze --symbol DEMO --demo --state-dir /tmp/ict-engine-v015-first-run --human
+cargo run --manifest-path "$RELEASE_EXPORT_DIR/Cargo.toml" --quiet -- workflow-status --symbol DEMO --state-dir /tmp/ict-engine-v015-first-run --refresh --agent
 ```
-
-Current targeted-test evidence from the working tree before tagging:
-- `domain::regime::mece_artifact`: 3/3 pass
-- `belief_core::structural_path_ranking` related: 16/16 pass
-- `tests/mece_recovery` integration: 2/2 pass
-- `tests/hard_gate_execution_first`: 6/6 pass
-- `application::belief::ou_overlay`: 1/1 pass (renamed to reflect new
-  semantics)
-
-Full release-gate evidence will be recorded under "Smoke results" once the
-clean-export gates are run.
-
-## Smoke results
-
-(filled in by the release script after `git archive HEAD` is exported and the
-fmt/clippy/test/zero-config-smoke commands have run from that export)
 
 ## Known limitations
 
-- Agent-first / researcher-preview release, not a fully generalized packaged
-  distribution.
-- PolyForm Noncommercial License 1.0.0; not approved for public package-manager
-  redistribution in this release flow.
-- The two relaxed gate constants (0.55 MECE, 0.30 path_prob) sit in the
-  empirically reachable band but are placeholder values; fresh OOS calibration
-  is still required before they should be treated as final.
-- Python pytest is not rerun during this release-prep pass.
-- Auto-Quant remains optional and should keep dependency workspaces under the
-  selected state directory or explicit Auto-Quant output directory.
-- Local long-history data can be used for maintainer training and hardening,
-  but consumer-facing promotion still requires a portable provider recipe,
-  built-in factor path, or explicit hot-plug material bundle.
-- The source checkout has unrelated dirty Board B in-flight artifacts; this
-  candidate is based on `git archive HEAD`, not a broad worktree sync.
-- `v0.0.1` and `v0.1.0` already exist in the release mirror; this release uses
-  `v0.1.3` after remote tag re-check.
+- The development checkout is dirty with unrelated in-flight research and doc
+  files; release payload selection must use a clean export, not the checkout.
+- The selected source commit is ahead of `origin/main`; the release path must
+  either push the selected source commit or publish from a clean export with
+  explicit provenance.
+- Practical factor promotion is not proven by the current audit snapshot:
+  `promotion_allowed_true=0` and `trade_usable_true=0`.
+- Heavy done-definition gates and clean-export zero-config smoke must still be
+  rerun before release.
+- Optional providers, external history, Auto-Quant material, TimesFM, and
+  maintainer-local data remain hot-pluggable evidence only; none may become a
+  default runtime dependency for consumers.
 
 ## Release label
 
-`ict-engine v0.1.3`
+`ict-engine v0.1.5`
 
 Reason:
-- two unreachable hard gates relaxed so iteration promotion can be reached
-- OU overlay chicken-and-egg gate broken so overlay evidence can lift readiness
-- 9-round gate-rigidity audit committed as durable artifact under
-  `support/docs/plans/`
-- consumer-safe hot-plug profile-choice UX inherited from v0.1.2 baseline
-- clean-export Rust fmt, Clippy, and full-test gates required to be re-run from
-  the fresh archive before publish
+- current unused release tag selected;
+- package-manager publication remains disabled;
+- release docs now describe the selected candidate instead of an older tag;
+- final publication remains gated by clean-export verification and operator
+  approval.

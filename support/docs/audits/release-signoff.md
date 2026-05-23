@@ -1,156 +1,81 @@
 # Release signoff
 
-Date: 2026-05-18
-Status: sanitized `v0.1.3` release candidate prepared for mirror publication;
-publish only the verified export slice, not the broad dirty working tree. Public
-package-manager publication is blocked in this release flow pending a PolyForm
-Noncommercial 1.0.0 channel-compliance review.
+Date: 2026-05-23
+Selected candidate: `v0.1.5`
+Selected source commit: the committed `HEAD` chosen for the clean export at
+release-gate time.
+Status: candidate documentation refreshed; release publication still requires a
+clean sanitized export, source/export parity readback, full export gates, and
+explicit operator approval.
 
-## 2026-05-22 audit update
+## Current gate readback
 
-This signoff is historical `v0.1.3` evidence, not current release permission.
+Fresh release-readiness evidence after the local version slice:
 
-Do not publish from the current checkout. The 2026-05-22 done-definition gate
-passes for the current tree, including the smoke path-ranker fail-closed audit,
-but release completion is still blocked by the broad dirty worktree, source
-branch drift from `origin/main`, release-mirror drift, and the absence of a
-fresh export-specific signoff for a selected tag.
+- `cargo metadata --no-deps --format-version 1 > /tmp/ict_engine_metadata_version_015_precommit_20260523.json`
+  - exit `0`.
+- `cargo check --all-targets > /tmp/ict_engine_version_015_cargo_check_all_20260523.stdout 2> /tmp/ict_engine_version_015_cargo_check_all_20260523.stderr`
+  - exit `0`.
+- `python3 support/scripts/release_readiness_audit.py --compact --check-remotes --output /tmp/release_readiness_post_version_commit_20260523.json`
+  - exit `1`.
+  - passing gates: `cargo_release_policy`, `release_version_tag_available`.
+  - remaining gates: `worktree_clean_for_release`,
+    `release_docs_fresh_for_selected_tag`,
+    `source_origin_matches_selected_source`.
+  - version `0.1.5`; candidate tag `v0.1.5`; release mirror tags observed
+    through `v0.1.4`, so the selected tag is unused in that readback.
 
-Before any new mirror/tag/GitHub release action, create a fresh sanitized export
-from the intended commit, rerun fmt, Clippy, full tests, zero-config smoke, and
-privacy scans from that export, then replace this file and
-`support/docs/release-notes-draft.md` with evidence for the selected tag.
+## Release boundary
 
-## 2026-05-22 root-boundary continuation readback
+The selected candidate must be published only from an explicit sanitized export
+of the selected committed tree. The broad development checkout contains other
+lanes' modified and untracked files and is not itself the release payload.
 
-Current source `HEAD` after the local-agent-material boundary slice:
-`d1641d3ee51d5dced305e36c24f1806fb9b5b0de`.
-
-Fresh read-only release state:
-
-- source `origin/main`: `79d9579ea38685bd8c798dc80c1f5177e3c220b6`;
-- current `HEAD` is `62` commits ahead of that remote main readback;
-- release mirror `main`:
-  `ab6b1b55d516bcd0f6b88db1931cc40802e683bb`;
-- release mirror has tags through `v0.1.4`;
-- `Cargo.toml` still reports `version = "0.1.3"`, `publish = false`,
-  `license = "PolyForm-Noncommercial-1.0.0"`, and repository
-  `https://github.com/Undermybelt/ict-engine-release`;
-- current worktree still has hundreds of modified/untracked entries from other
-  lanes, while root `docs/` and `skills/` are now ignored local agent material.
-
-Verdict: still no release permission. The next release slice must select a new
-tag/version, export from the intended committed source, run the release gates
-from that sanitized export, refresh this signoff and release notes, then wait
-for explicit operator confirmation before any mirror push, tag push, or GitHub
-release creation.
-
-## Final verdict
-
-Do not publish the whole dirty working tree.
-
-The `v0.1.3` candidate is the committed `HEAD` after the gate-rigidity audit
-slice. The source checkout still carries unrelated dirty Board B in-flight
-files; a publisher must use `git archive HEAD` and rerun the full gate, not a
-broad worktree sync.
-
-The 2026-05-18 publish instruction authorizes the release mirror flow for
-`v0.1.3` after refreshing `Cargo.toml`, `release-signoff.md`, and
-`release-notes-draft.md`, and rerunning the gates from a fresh export.
-
-After any later README/AGENT/license refresh the prior `v0.1.3` evidence is no
-longer sufficient for a new publish. Rebuild a fresh sanitized export and rerun
-the release gates before publishing another tag or updating the mirror.
-
-## Important release routing decision
-
-This checkout currently tracks:
+Package-manager publication remains disabled by Cargo metadata:
 
 ```text
-origin git@github.com:Undermybelt/givenup-ict-engine.git
+publish = false
+license = "PolyForm-Noncommercial-1.0.0"
+repository = "https://github.com/Undermybelt/ict-engine-release"
 ```
 
-Release metadata points at:
+## Required export gates
 
-```text
-Undermybelt/ict-engine-release
-```
-
-Use the release mirror flow. Mirror already has `v0.0.1` and `v0.1.0`; `v0.1.1`
-and `v0.1.2` were drafted but never pushed and remain available. The new tag is
-`v0.1.3`; re-check remote tags before pushing.
-
-## Signoff checklist
-
-### Build and test
-- [ ] sanitized export `cargo fmt --check`
-- [ ] sanitized export `cargo clippy --all-targets -- -D warnings`
-- [ ] sanitized export `cargo test`
-- [ ] Python pytest suite: not rerun during this release-prep pass
-- [x] release export starts from committed `HEAD`
-- [x] unrelated source worktree dirt excluded from release export (uses
-  `git archive HEAD`)
-
-### CLI and consumer quality
-- [x] `workflow-status` exposes opt-in profile choices without auto-adoption
-  (inherited from v0.1.2 baseline)
-- [x] agent output keeps selected profile state explicit
-- [x] zero-config tests do not depend on maintainer-local `state/` files
-- [x] BBN fixture files are tracked, small, and path-redacted
-- [x] runtime BBN overlays remain hot-pluggable via user state
-
-### Portability and state hygiene
-- [x] release tag/version selected as `v0.1.3`
-- [x] generated Auto-Quant dependency workspaces are not staged for release
-- [x] Cargo metadata uses `license = "PolyForm-Noncommercial-1.0.0"` and
-  `publish = false`
-- [x] public package-manager publication is blocked unless the license changes
-- [ ] legacy local-data research scripts remain excluded from the verified
-  export; rewrite them before publishing them as public examples
-
-### Gate-rigidity slice additions
-- [x] `MECE_RECOVERY_ACCURACY_GATE` relaxed from 0.95 to 0.55 (commit c8a45f12)
-- [x] `STRUCTURAL_PATH_RANKING_EXECUTION_GATE_MIN_PATH_PROB` relaxed from 0.5
-  to 0.30 (commit c8a45f12)
-- [x] OU overlay activation gate aligned with spectral overlay at
-  `EXECUTION_GATE_OBSERVE` (commit a4d98718)
-- [x] 9-round gate-rigidity audit doc committed at
-  `support/docs/plans/2026-05-18-gate-rigidity-audit-todo.md` (commit 57b39e9d)
-
-## Commands to execute for signoff
+Run these from a fresh `git archive` export of the selected committed `HEAD`
+before any mirror/tag/GitHub release action:
 
 ```bash
-RELEASE_EXPORT_DIR=$(mktemp -d /tmp/ict-engine-v013-release-export.XXXXXX)
+RELEASE_EXPORT_DIR=$(mktemp -d /tmp/ict-engine-v015-release-export.XXXXXX)
 git archive --format=tar HEAD | tar -x -C "$RELEASE_EXPORT_DIR"
 cargo fmt --manifest-path "$RELEASE_EXPORT_DIR/Cargo.toml" --check
 cargo clippy --manifest-path "$RELEASE_EXPORT_DIR/Cargo.toml" --all-targets -- -D warnings
 cargo test --manifest-path "$RELEASE_EXPORT_DIR/Cargo.toml"
+cargo run --manifest-path "$RELEASE_EXPORT_DIR/Cargo.toml" --quiet -- provider-status --compact
+cargo run --manifest-path "$RELEASE_EXPORT_DIR/Cargo.toml" --quiet -- analyze --symbol DEMO --demo --state-dir /tmp/ict-engine-v015-first-run --human
+cargo run --manifest-path "$RELEASE_EXPORT_DIR/Cargo.toml" --quiet -- workflow-status --symbol DEMO --state-dir /tmp/ict-engine-v015-first-run --refresh --agent
 ```
 
-Update the checklist above with [x] markers when each command passes from the
-fresh export.
+After those pass, scan captured smoke output and the export tree for private
+paths, API keys, tokens, maintainer-only datasets, generated dependency
+workspaces, and repo-local experiment state.
 
-## Release caveats
+## Current checklist
 
-1. Branch is still far ahead of the source remote; this release uses the mirror
-   flow to publish clean tree state without rewriting source history.
-2. The current source checkout has unrelated dirty Board B in-flight artifacts
-   that are not staged into this release candidate.
-3. Python pytest is outside the current Rust release gate.
-4. The mirror already has `v0.0.1` and `v0.1.0`; verify remote tags before
-   pushing `v0.1.3`.
-5. Legacy local-data research scripts are not part of the verified public
-   candidate unless rewritten around explicit inputs and re-gated.
-6. Historical support/docs/prompts with maintainer-local absolute paths are
-   pruned from the mirror release tree unless redacted first.
-7. Public crates.io, npm/npx, Homebrew, Docker, or binary distribution is not
-   authorized by the current license.
-8. Two gate constants (`MECE_RECOVERY_ACCURACY_GATE` and the path-prob lower
-   bound) were calibration placeholders in the reachable band — they need
-   fresh OOS calibration before being treated as final values.
+- [x] Candidate version advanced to `0.1.5`.
+- [x] Candidate tag `v0.1.5` was unused in the release mirror readback.
+- [x] Cargo policy still blocks package-manager publication.
+- [x] Working-tree cargo check passed for the version metadata slice.
+- [ ] A clean sanitized export has been created from the selected commit.
+- [ ] Full fmt, Clippy, test, zero-config smoke, and privacy gates passed from
+  that export.
+- [ ] Source origin or selected export provenance is aligned with the release
+  publication path.
+- [ ] Operator has explicitly approved mirror push, tag push, and GitHub release
+  creation for `v0.1.5`.
 
-## Release recommendation
+## Verdict
 
-Publish only through the sanitized private export/mirror flow after the final
-release-export gate passes. Do not use public package-manager channels until a
-dedicated PolyForm Noncommercial channel review passes.
+This document is a current `v0.1.5` candidate signoff surface, not publish
+authorization. It clears the stale-documentation blocker only after the release
+readiness audit confirms the paired release notes are also current. Publication
+remains blocked until the checklist above is completed with fresh evidence.
