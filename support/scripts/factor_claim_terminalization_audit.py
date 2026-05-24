@@ -35,6 +35,7 @@ LIVE_FACTOR_PROCESS_MARKERS = (
     "prepare_external.py",
 )
 RUN_ROOT_SENTINELS = {"none", "pending", "n/a", "na", "null", "-"}
+TMP_RUN_ROOT_SUBDIRS = {"full", "out", "output", "checks", "summaries", "scripts", "state", "command-output", "materials"}
 ACTIVE_CLAIM_REQUIRED_FIELDS = (
     "agent_name",
     "owner",
@@ -269,6 +270,7 @@ def summarize(claims: list[dict[str, Any]], live_processes: list[dict[str, Any]]
         for claim in claims
         if claim.get("status") != "terminalized" and claim.get("missing_identity_fields")
     )
+    valid_active_claims = active_claims - invalid_active_claims
     missing_run_roots = sum(1 for claim in claims if claim.get("run_root") and not claim.get("run_root_exists"))
     trade_usable_true = sum(1 for claim in claims if claim.get("trade_usable") is True)
     promotion_allowed_true = sum(1 for claim in claims if claim.get("promotion_allowed") is True)
@@ -307,6 +309,7 @@ def summarize(claims: list[dict[str, Any]], live_processes: list[dict[str, Any]]
         "total_claims": len(claims),
         "terminalized_claims": sum(1 for claim in claims if claim.get("status") == "terminalized"),
         "active_claims": active_claims,
+        "valid_active_claims": valid_active_claims,
         "invalid_active_claims": invalid_active_claims,
         "live_factor_processes": live_factor_processes,
         "missing_run_roots": missing_run_roots,
@@ -340,7 +343,7 @@ def _is_claim_artifact(path: Path) -> bool:
     name = path.name
     if name.startswith("terminalization_audit_"):
         return False
-    if name.endswith((".summary.json", ".summary.json.check", ".claim.pretty", ".json.pretty")):
+    if name.endswith((".summary.json", ".summary.json.check", ".claim.pretty", ".json.pretty", ".exit")):
         return False
     if path.suffix != ".json":
         return True
@@ -416,14 +419,15 @@ def _looks_like_readback_command(command: str) -> bool:
 def _extract_run_root(command: str) -> Path | None:
     assignment = re.search(r"\bRUN_ROOT=([^\s;]+)", command)
     if assignment:
-        return Path(assignment.group(1).strip("'\""))
+        return _normalize_tmp_run_root(Path(assignment.group(1).strip("'\"")))
 
     out_arg = re.search(r"--(?:out|run-root|run_root)\s+([^\s;]+)", command)
     if out_arg:
-        path = Path(out_arg.group(1).strip("'\""))
-        if path.name in {"full", "out", "output"}:
-            return path.parent
-        return path
+        return _normalize_tmp_run_root(Path(out_arg.group(1).strip("'\"")))
+
+    state_dir_arg = re.search(r"--state-dir\s+([^\s;]+)", command)
+    if state_dir_arg:
+        return _normalize_tmp_run_root(Path(state_dir_arg.group(1).strip("'\"")))
 
     output_arg = re.search(r"--output\s+([^\s;]+)", command)
     if output_arg:
@@ -433,12 +437,29 @@ def _extract_run_root(command: str) -> Path | None:
 
     tmp_match = re.search(r"(/(?:private/)?tmp/ict-engine-[^\s;'\"`]+)", command)
     if tmp_match:
-        path = Path(tmp_match.group(1))
-        if path.suffix:
-            return path.parent
-        if path.name in {"full", "out", "output", "checks", "summaries"}:
-            return path.parent
-        return path
+        return _normalize_tmp_run_root(Path(tmp_match.group(1)))
+    return None
+
+
+def _normalize_tmp_run_root(path: Path) -> Path:
+    current = path
+    if current.suffix:
+        current = current.parent
+    tmp_lane_root = _tmp_ict_engine_lane_root(current)
+    if tmp_lane_root:
+        return tmp_lane_root
+    if current.name in TMP_RUN_ROOT_SUBDIRS:
+        return current.parent
+    return current
+
+
+def _tmp_ict_engine_lane_root(path: Path) -> Path | None:
+    for candidate in [path, *path.parents]:
+        if not candidate.name.startswith("ict-engine-"):
+            continue
+        parent = candidate.parent
+        if str(parent) in {"/tmp", "/private/tmp"}:
+            return candidate
     return None
 
 
@@ -488,6 +509,16 @@ def _attribute_parent_run_roots(processes: list[dict[str, Any]]) -> list[dict[st
     for child in processes:
         run_root = child.get("run_root")
         ppid = child.get("ppid")
+        if not run_root and ppid is not None:
+            try:
+                parent = by_pid.get(int(ppid))
+            except (TypeError, ValueError):
+                parent = None
+            if parent and parent.get("run_root"):
+                child["run_root"] = parent.get("run_root")
+                child["run_root_attribution"] = "parent_process"
+                child["run_root_attribution_pid"] = parent.get("pid")
+            continue
         if not run_root or ppid is None:
             continue
         try:
@@ -568,6 +599,7 @@ def _compact_claim(claim: dict[str, Any], root: str) -> dict[str, Any]:
     return {
         "claim_file": _compact_text(claim.get("claim_file"), root),
         "status": _compact_text(claim.get("status"), root),
+        "agent_name": _compact_text(claim.get("agent_name"), root),
         "owner": _compact_text(claim.get("owner"), root),
         "scope": _compact_text(claim.get("scope"), root),
         "decision": _compact_text(claim.get("decision"), root),
@@ -640,6 +672,8 @@ def main(argv: list[str] | None = None) -> int:
                 "total_claims": 0,
                 "terminalized_claims": 0,
                 "active_claims": 0,
+                "valid_active_claims": 0,
+                "invalid_active_claims": 0,
                 "live_factor_processes": 0,
                 "missing_run_roots": 0,
                 "trade_usable_true": 0,

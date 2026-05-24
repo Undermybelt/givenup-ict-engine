@@ -109,6 +109,8 @@ run_root=/tmp/missing-run-root-for-test
             self.assertEqual(report["summary"]["total_claims"], 2)
             self.assertEqual(report["summary"]["terminalized_claims"], 1)
             self.assertEqual(report["summary"]["active_claims"], 1)
+            self.assertEqual(report["summary"]["valid_active_claims"], 0)
+            self.assertEqual(report["summary"]["invalid_active_claims"], 1)
             self.assertEqual(report["summary"]["missing_run_roots"], 1)
             self.assertEqual(report["summary"]["trade_usable_true"], 0)
             self.assertEqual(report["summary"]["promotion_allowed_true"], 0)
@@ -197,6 +199,10 @@ trade_usable=false
             )
             (claims_dir / "20260524T220713+0800-codex-avgo-terminal-provider-blocked-readback.summary.json.check").write_text(
                 "checked\n",
+                encoding="utf-8",
+            )
+            (claims_dir / "20260524T2220+0800-codex-ote-provider-guard-readonly.exit").write_text(
+                "2\n",
                 encoding="utf-8",
             )
             (claims_dir / "20260524T213435+0800-codex-mgc-microtrend-readonly-extension-auditor.claim.pretty").write_text(
@@ -448,6 +454,7 @@ status=active
             compact = format_report(report, compact=True)
 
             self.assertEqual(report["summary"]["invalid_active_claims"], 1)
+            self.assertEqual(report["summary"]["valid_active_claims"], 1)
             self.assertIn("invalid_active_claims", report["summary"]["blocking_reasons"])
             invalid_claim = next(
                 claim for claim in compact["attention_claims"] if claim["claim_file"] == "unnamed-active.claim"
@@ -561,6 +568,18 @@ status=active
             Path("/tmp/ict-engine-yf-tem-trend-mtf-20260524T2213+0800"),
         )
 
+    def test_extract_run_root_normalizes_tmp_lane_subdirs(self) -> None:
+        lane_root = Path("/tmp/ict-engine-kraken-ltcusd-supertrend-adx-1m-mtf-gate1")
+        commands = [
+            f"/opt/homebrew/bin/python3 {lane_root}/scripts/run_kraken_ltcusd_supertrend_adx_1m_mtf_gate1_v1.py",
+            f"ict-engine auto-quant-agent-material-dispatch --symbol KRAKEN_LTCUSD --state-dir {lane_root}/state",
+            f"/bin/zsh -lc RUN_ROOT={lane_root}/checks python3 helper.py",
+        ]
+
+        for command in commands:
+            with self.subTest(command=command):
+                self.assertEqual(_extract_run_root(command), lane_root)
+
     def test_infer_exit_file_from_provider_output_timeframe_label(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             run_root = Path(tmp) / "runs" / "20260524T213610+0800-codex-ibkr-avgo"
@@ -611,6 +630,35 @@ status=active
         self.assertEqual(attributed[0]["run_root_attribution_pid"], 59345)
         self.assertEqual(attributed[1]["run_root"], run_root)
 
+    def test_attribute_child_run_root_from_parent_autoquant_process(self) -> None:
+        run_root = "/tmp/ict-engine-kraken-ltcusd-supertrend-adx-1m-mtf-gate1"
+        processes = [
+            {
+                "pid": 78480,
+                "ppid": 78045,
+                "elapsed": "00:27",
+                "run_root": run_root,
+                "exit_file": None,
+                "exit_file_exists": False,
+                "command_excerpt": "ict-engine auto-quant-agent-material-dispatch --state-dir /tmp/ict-engine-kraken/state",
+            },
+            {
+                "pid": 79145,
+                "ppid": 78480,
+                "elapsed": "00:01",
+                "run_root": None,
+                "exit_file": None,
+                "exit_file_exists": False,
+                "command_excerpt": "/Users/example/Auto-Quant/.venv/bin/python run_tomac.py",
+            },
+        ]
+
+        attributed = _attribute_parent_run_roots(processes)
+
+        self.assertEqual(attributed[1]["run_root"], run_root)
+        self.assertEqual(attributed[1]["run_root_attribution"], "parent_process")
+        self.assertEqual(attributed[1]["run_root_attribution_pid"], 78480)
+
     def test_format_report_compact_keeps_only_attention_claim_summaries(self) -> None:
         full_report = {
             "schema_version": "factor-claim-terminalization-audit/v1",
@@ -644,6 +692,7 @@ status=active
                     "claim_file": "active.claim",
                     "claim_path": "/tmp/claims/active.claim",
                     "status": "active",
+                    "agent_name": "codex-active-lane",
                     "owner": "codex",
                     "scope": "still running",
                     "decision": None,
@@ -657,6 +706,7 @@ status=active
                     "claim_file": "positive.claim",
                     "claim_path": "/tmp/claims/positive.claim",
                     "status": "terminalized",
+                    "agent_name": "codex-positive-review",
                     "owner": "codex",
                     "scope": "positive flag",
                     "decision": "review",
@@ -684,6 +734,7 @@ status=active
             },
         )
         self.assertEqual([claim["claim_file"] for claim in compact["attention_claims"]], ["active.claim", "positive.claim"])
+        self.assertEqual([claim["agent_name"] for claim in compact["attention_claims"]], ["codex-active-lane", "codex-positive-review"])
         self.assertEqual(compact["attention_claims"][0]["run_root_state"], "missing")
         self.assertNotIn("claim_path", compact["attention_claims"][0])
         self.assertNotIn("run_root", compact["attention_claims"][0])
