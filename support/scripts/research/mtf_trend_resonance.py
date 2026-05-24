@@ -12,6 +12,8 @@ except ImportError:  # pragma: no cover - exercised by direct script execution.
 
 DEFAULT_TIMEFRAMES = ("5m", "15m", "30m", "1h", "4h", "1d")
 DEFAULT_MIN_ALIGNED = 3
+DEFAULT_MIN_SLOPE_BPS = 10.0
+DEFAULT_MIN_RANGE_EXPANSION = 1.05
 
 
 def build_mtf_trend_resonance(
@@ -22,6 +24,8 @@ def build_mtf_trend_resonance(
     required_timeframes: Sequence[str] = DEFAULT_TIMEFRAMES,
     min_aligned: int = DEFAULT_MIN_ALIGNED,
     lookback: int = 5,
+    min_slope_bps: float = DEFAULT_MIN_SLOPE_BPS,
+    min_range_expansion: float = DEFAULT_MIN_RANGE_EXPANSION,
 ) -> dict[str, object]:
     if not context_csvs:
         return _disabled_summary()
@@ -35,7 +39,14 @@ def build_mtf_trend_resonance(
         if path is None:
             missing.append(timeframe)
             continue
-        verdict = _timeframe_verdict(read_bars(Path(path)), event_ts=event_ts, side=side, lookback=lookback)
+        verdict = _timeframe_verdict(
+            read_bars(Path(path)),
+            event_ts=event_ts,
+            side=side,
+            lookback=lookback,
+            min_slope_bps=min_slope_bps,
+            min_range_expansion=min_range_expansion,
+        )
         by_timeframe[timeframe] = verdict
         if verdict["aligned"]:
             aligned.append(timeframe)
@@ -50,6 +61,8 @@ def build_mtf_trend_resonance(
         "side": side,
         "required_timeframes": list(required_timeframes),
         "min_aligned": min_aligned,
+        "min_slope_bps": min_slope_bps,
+        "min_range_expansion": min_range_expansion,
         "aligned": enabled and len(aligned) >= min_aligned,
         "aligned_timeframes": aligned,
         "rejected_timeframes": rejected,
@@ -62,7 +75,15 @@ def build_mtf_trend_resonance(
     }
 
 
-def _timeframe_verdict(bars: Sequence[Bar], *, event_ts: str, side: int, lookback: int) -> dict[str, object]:
+def _timeframe_verdict(
+    bars: Sequence[Bar],
+    *,
+    event_ts: str,
+    side: int,
+    lookback: int,
+    min_slope_bps: float,
+    min_range_expansion: float,
+) -> dict[str, object]:
     cutoff = _parse_event_ts(event_ts)
     eligible = [bar for bar in sorted(bars, key=lambda item: item.ts) if bar.ts <= cutoff]
     if len(eligible) < max(3, lookback):
@@ -71,25 +92,50 @@ def _timeframe_verdict(bars: Sequence[Bar], *, event_ts: str, side: int, lookbac
             "reason": "insufficient_context_bars",
             "bar_count": len(eligible),
             "slope_return": 0.0,
+            "slope_bps": 0.0,
+            "directional_slope_bps": 0.0,
+            "min_slope_bps": min_slope_bps,
             "range_expansion": 0.0,
+            "min_range_expansion": min_range_expansion,
+            "structure_break": False,
         }
 
     window = eligible[-lookback:]
     first_close = window[0].close
     last_close = window[-1].close
     slope_return = (last_close - first_close) / first_close if first_close > 0 else 0.0
+    slope_bps = slope_return * 10_000.0
+    directional_slope_bps = slope_bps * side
     ranges = [max(0.0, bar.high - bar.low) for bar in window]
     range_expansion = ranges[-1] / max(1e-12, median(ranges[:-1]) if len(ranges) > 1 else ranges[-1])
-    direction_ok = slope_return > 0.0 if side >= 1 else slope_return < 0.0
+    if side not in {-1, 1}:
+        return {
+            "aligned": False,
+            "reason": "no_trade_side",
+            "bar_count": len(eligible),
+            "slope_return": slope_return,
+            "slope_bps": slope_bps,
+            "directional_slope_bps": 0.0,
+            "min_slope_bps": min_slope_bps,
+            "range_expansion": range_expansion,
+            "min_range_expansion": min_range_expansion,
+            "structure_break": False,
+        }
+
+    direction_ok = directional_slope_bps >= min_slope_bps
     last = window[-1]
-    structure_ok = last.close >= max(bar.high for bar in window[:-1]) if side >= 1 else last.close <= min(bar.low for bar in window[:-1])
-    aligned = bool(direction_ok and (structure_ok or range_expansion >= 1.05))
+    structure_ok = last.close >= max(bar.high for bar in window[:-1]) if side == 1 else last.close <= min(bar.low for bar in window[:-1])
+    aligned = bool(direction_ok and (structure_ok or range_expansion >= min_range_expansion))
     return {
         "aligned": aligned,
-        "reason": "aligned_trend_context" if aligned else "trend_context_rejected",
+        "reason": "aligned_trend_context" if aligned else _rejection_reason(direction_ok, structure_ok, range_expansion, min_range_expansion),
         "bar_count": len(eligible),
         "slope_return": slope_return,
+        "slope_bps": slope_bps,
+        "directional_slope_bps": directional_slope_bps,
+        "min_slope_bps": min_slope_bps,
         "range_expansion": range_expansion,
+        "min_range_expansion": min_range_expansion,
         "structure_break": structure_ok,
     }
 
@@ -101,6 +147,8 @@ def _disabled_summary() -> dict[str, object]:
         "side": 0,
         "required_timeframes": list(DEFAULT_TIMEFRAMES),
         "min_aligned": DEFAULT_MIN_ALIGNED,
+        "min_slope_bps": DEFAULT_MIN_SLOPE_BPS,
+        "min_range_expansion": DEFAULT_MIN_RANGE_EXPANSION,
         "aligned": False,
         "aligned_timeframes": [],
         "rejected_timeframes": [],
@@ -120,3 +168,16 @@ def _parse_event_ts(value: str):
     if clean.endswith("Z"):
         clean = clean[:-1] + "+00:00"
     return datetime.fromisoformat(clean)
+
+
+def _rejection_reason(
+    direction_ok: bool,
+    structure_ok: bool,
+    range_expansion: float,
+    min_range_expansion: float,
+) -> str:
+    if not direction_ok:
+        return "slope_bps_lt_min"
+    if not structure_ok and range_expansion < min_range_expansion:
+        return "no_structure_or_range_expansion"
+    return "trend_context_rejected"

@@ -55,9 +55,47 @@ class MtfTrendResonanceTests(unittest.TestCase):
 
         self.assertFalse(summary["enabled"])
         self.assertEqual(summary["min_aligned"], 3)
+        self.assertEqual(summary["min_slope_bps"], 10.0)
         self.assertEqual(summary["resonance_score"], 0.0)
         self.assertEqual(summary["aligned_timeframes"], [])
         self.assertEqual(summary["by_timeframe"], {})
+
+    def test_weak_positive_slope_below_cost_floor_is_rejected(self) -> None:
+        with TemporaryDirectory() as tmpdir:
+            tmp = Path(tmpdir)
+            weak = tmp / "weak.csv"
+            self._write_context_csv(weak, start_price=100.0, drift=0.005)
+
+            summary = resonance.build_mtf_trend_resonance(
+                {"5m": weak},
+                event_ts="2026-05-21T12:35:00+00:00",
+                side=1,
+                required_timeframes=("5m",),
+                min_aligned=1,
+            )
+
+        self.assertFalse(summary["aligned"])
+        self.assertEqual(summary["aligned_timeframes"], [])
+        self.assertEqual(summary["by_timeframe"]["5m"]["reason"], "slope_bps_lt_min")
+        self.assertLess(summary["by_timeframe"]["5m"]["directional_slope_bps"], 10.0)
+
+    def test_no_trade_side_never_counts_as_resonance(self) -> None:
+        with TemporaryDirectory() as tmpdir:
+            tmp = Path(tmpdir)
+            strong = tmp / "strong.csv"
+            self._write_context_csv(strong, start_price=100.0, drift=0.40)
+
+            summary = resonance.build_mtf_trend_resonance(
+                {"5m": strong},
+                event_ts="2026-05-21T12:35:00+00:00",
+                side=0,
+                required_timeframes=("5m",),
+                min_aligned=1,
+            )
+
+        self.assertFalse(summary["aligned"])
+        self.assertEqual(summary["rejected_timeframes"], ["5m"])
+        self.assertEqual(summary["by_timeframe"]["5m"]["reason"], "no_trade_side")
 
     def test_default_requires_three_aligned_context_frames(self) -> None:
         with TemporaryDirectory() as tmpdir:
