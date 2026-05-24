@@ -72,7 +72,8 @@ import json
 import os
 import sys
 import time
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
@@ -1389,6 +1390,87 @@ def cmd_polymarket_history(args: argparse.Namespace) -> int:
 # IBKR historical (short-lived connection sharing IbkrRateLimiter with bridge)
 
 
+@dataclass(frozen=True)
+class _IbkrHistoricalChunk:
+    duration: str
+
+
+_IBKR_DURATION_UNIT_DAYS = {
+    "D": 1,
+    "W": 7,
+    "M": 30,
+    "Y": 365,
+}
+
+_IBKR_BAR_SIZE_MAX_CHUNK = {
+    "1 min": ("1 D", 1),
+    "2 mins": ("1 W", 7),
+    "3 mins": ("1 W", 7),
+    "5 mins": ("1 W", 7),
+    "10 mins": ("1 W", 7),
+    "15 mins": ("1 W", 7),
+    "20 mins": ("1 M", 30),
+    "30 mins": ("1 M", 30),
+    "1 hour": ("1 M", 30),
+    "2 hours": ("1 M", 30),
+    "3 hours": ("1 M", 30),
+    "4 hours": ("1 M", 30),
+    "8 hours": ("1 M", 30),
+}
+
+
+def _ibkr_duration_days(duration: str) -> int | None:
+    parts = duration.strip().split()
+    if len(parts) != 2:
+        return None
+    try:
+        qty = int(parts[0])
+    except ValueError:
+        return None
+    unit_days = _IBKR_DURATION_UNIT_DAYS.get(parts[1].upper())
+    if unit_days is None:
+        return None
+    return qty * unit_days
+
+
+def _ibkr_normalize_bar_size(bar_size: str) -> str:
+    return " ".join(bar_size.strip().lower().split())
+
+
+def _ibkr_historical_chunk_plan(bar_size: str, duration: str) -> list[_IbkrHistoricalChunk]:
+    total_days = _ibkr_duration_days(duration)
+    chunk_spec = _IBKR_BAR_SIZE_MAX_CHUNK.get(_ibkr_normalize_bar_size(bar_size))
+    if total_days is None or chunk_spec is None:
+        return [_IbkrHistoricalChunk(duration=duration)]
+
+    chunk_duration, chunk_days = chunk_spec
+    if total_days <= chunk_days:
+        return [_IbkrHistoricalChunk(duration=duration)]
+
+    chunk_count = max(1, (total_days + chunk_days - 1) // chunk_days)
+    return [_IbkrHistoricalChunk(duration=chunk_duration) for _ in range(chunk_count)]
+
+
+def _ibkr_bar_datetime(value: Any) -> datetime | None:
+    if isinstance(value, datetime):
+        return value if value.tzinfo else value.replace(tzinfo=timezone.utc)
+    if hasattr(value, "year") and hasattr(value, "month") and hasattr(value, "day"):
+        return datetime(value.year, value.month, value.day, tzinfo=timezone.utc)
+    try:
+        return datetime.fromtimestamp(float(value), tz=timezone.utc)
+    except (TypeError, ValueError):
+        return None
+
+
+def _ibkr_end_before_bars(bars: list[Any]) -> str:
+    if not bars:
+        return ""
+    dt = _ibkr_bar_datetime(getattr(bars[0], "date", None))
+    if dt is None:
+        return ""
+    return (dt - timedelta(seconds=1)).strftime("%Y%m%d %H:%M:%S UTC")
+
+
 def _import_ibkr_bridge() -> tuple:
     """Lazily resolve the sibling `ibkr_bridge` package and ib_async.
 
@@ -1473,11 +1555,19 @@ async def _ibkr_historical_async(args: argparse.Namespace) -> int:
     # (conId would be more precise but requires qualifying first, which itself
     # costs an outbound msg; the symbol-level lock is good enough for fetch.)
     rl_id = f"{args.symbol}:{args.sec_type}"
-    await limiter.wait_for_historical(rl_id, args.bar_size, args.what_to_show)
-    await limiter.acquire_historical_slot()
+    chunk_plan = _ibkr_historical_chunk_plan(args.bar_size, args.duration)
+    all_bars = []
+    current_end = args.end or ""
+    if len(chunk_plan) > 1:
+        print(
+            f"  ibkr-historical: split {args.bar_size} {args.duration} into "
+            f"{len(chunk_plan)} request chunk(s) of {chunk_plan[0].duration}",
+            file=sys.stderr,
+        )
+
+    ib = ib_async.IB()
     try:
         await limiter.wait_for_outbound_msg()
-        ib = ib_async.IB()
         try:
             selected_client_id, attempted_conflicts = await connect_with_client_id_fallback(
                 ib,
@@ -1499,42 +1589,59 @@ async def _ibkr_historical_async(args: argparse.Namespace) -> int:
                 f"and API enabled? Underlying error: {exc}"
             )
 
-        try:
-            # Allow explicit delayed/frozen fallback for accounts where live
-            # entitlements are tied to another IP/session.
-            if args.market_data_type != 1:
+        # Allow explicit delayed/frozen fallback for accounts where live
+        # entitlements are tied to another IP/session.
+        if args.market_data_type != 1:
+            await limiter.wait_for_outbound_msg()
+            ib.reqMarketDataType(args.market_data_type)
+        await limiter.wait_for_outbound_msg()
+        qualified = await ib.qualifyContractsAsync(contract)
+        if not qualified or qualified[0] is None:
+            raise SystemExit(f"contract not resolved: {args.symbol}")
+        contract = qualified[0]
+
+        for index, chunk in enumerate(chunk_plan, 1):
+            await limiter.wait_for_historical(rl_id, args.bar_size, args.what_to_show)
+            await limiter.acquire_historical_slot()
+            try:
                 await limiter.wait_for_outbound_msg()
-                ib.reqMarketDataType(args.market_data_type)
-            await limiter.wait_for_outbound_msg()
-            qualified = await ib.qualifyContractsAsync(contract)
-            if not qualified or qualified[0] is None:
-                raise SystemExit(f"contract not resolved: {args.symbol}")
-            contract = qualified[0]
-
-            await limiter.wait_for_outbound_msg()
-            bars = await ib.reqHistoricalDataAsync(
-                contract,
-                endDateTime=args.end or "",
-                durationStr=args.duration,
-                barSizeSetting=args.bar_size,
-                whatToShow=args.what_to_show,
-                useRTH=bool(args.rth),
-                formatDate=2,           # epoch seconds, easier downstream
-                keepUpToDate=False,
-            )
-        finally:
-            ib.disconnect()
+                chunk_bars = await ib.reqHistoricalDataAsync(
+                    contract,
+                    endDateTime=current_end,
+                    durationStr=chunk.duration,
+                    barSizeSetting=args.bar_size,
+                    whatToShow=args.what_to_show,
+                    useRTH=bool(args.rth),
+                    formatDate=2,           # epoch seconds, easier downstream
+                    keepUpToDate=False,
+                    timeout=args.request_timeout,
+                )
+            finally:
+                limiter.release_historical_slot()
+            if not chunk_bars:
+                print(
+                    f"WARN: ibkr historical chunk empty for {args.symbol} "
+                    f"({args.bar_size} {chunk.duration} {args.what_to_show}; "
+                    f"chunk {index}/{len(chunk_plan)})",
+                    file=sys.stderr,
+                )
+                break
+            all_bars.extend(chunk_bars)
+            current_end = _ibkr_end_before_bars(chunk_bars)
+            if not current_end:
+                break
     finally:
-        limiter.release_historical_slot()
+        ib.disconnect()
 
-    if not bars:
+    if not all_bars:
         print(f"WARN: ibkr historical empty for {args.symbol} "
               f"({args.bar_size} {args.duration} {args.what_to_show})",
               file=sys.stderr)
         return 3
 
     rows = []
-    for b in bars:
+    seen_ts = set()
+    for b in all_bars:
         ts = getattr(b, "date", None)
         # ib_async timestamp shapes:
         #   * daily / weekly / monthly  -> datetime.date (no tz)
@@ -1550,6 +1657,9 @@ async def _ibkr_historical_async(args: argparse.Namespace) -> int:
                 ts_iso = datetime.fromtimestamp(float(ts), tz=timezone.utc).isoformat()
             except (TypeError, ValueError):
                 ts_iso = str(ts)
+        if ts_iso in seen_ts:
+            continue
+        seen_ts.add(ts_iso)
         rows.append({
             "ts": ts_iso,
             "open": getattr(b, "open", None),
@@ -1560,6 +1670,7 @@ async def _ibkr_historical_async(args: argparse.Namespace) -> int:
             "wap": getattr(b, "average", None),
             "count": getattr(b, "barCount", None),
         })
+    rows.sort(key=lambda row: row["ts"])
 
     out = Path(args.output).resolve()
     out.parent.mkdir(parents=True, exist_ok=True)
@@ -2022,6 +2133,8 @@ def build_parser() -> argparse.ArgumentParser:
                       help="Bridge uses 20; this defaults to 21 to avoid clash")
     ibh.add_argument("--market-data-type", type=int, default=1, choices=[1, 2, 3, 4],
                       help="1=live, 2=frozen, 3=delayed, 4=delayed-frozen; use 3 to test delayed fallback")
+    ibh.add_argument("--request-timeout", type=float, default=180.0,
+                      help="Seconds to wait for one IBKR reqHistoricalData response before treating it as empty")
     ibh.add_argument("--redis-url", default="redis://localhost:6379",
                       help="Cross-process IbkrRateLimiter coordinator")
     ibh.add_argument("--output", required=True)
