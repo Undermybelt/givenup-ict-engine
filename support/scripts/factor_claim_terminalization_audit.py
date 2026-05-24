@@ -276,7 +276,7 @@ def build_report(
     repo_root: Path,
     live_processes: list[dict[str, Any]] | None = None,
 ) -> dict[str, Any]:
-    claim_paths = sorted(path for path in claims_dir.glob("*") if path.is_file())
+    claim_paths = sorted(path for path in claims_dir.glob("*") if path.is_file() and _is_claim_artifact(path))
     claims = [read_claim(path, repo_root) for path in claim_paths]
     live_processes = live_processes or []
     return {
@@ -288,6 +288,15 @@ def build_report(
         "claims": claims,
         "live_factor_processes": live_processes,
     }
+
+
+def _is_claim_artifact(path: Path) -> bool:
+    if path.suffix != ".json":
+        return True
+    name = path.name
+    if name.startswith("terminalization_audit_"):
+        return False
+    return not name.endswith("_audit.json")
 
 
 def detect_live_factor_processes() -> list[dict[str, Any]]:

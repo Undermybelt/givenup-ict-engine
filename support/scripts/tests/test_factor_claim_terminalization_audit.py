@@ -160,6 +160,30 @@ trade_usable=false
             self.assertEqual(report["summary"]["active_claims"], 0)
             self.assertEqual(report["claims"][0]["decision"], "continue_goal_active; no promotion_allowed/trade_usable evidence found")
 
+    def test_build_report_ignores_generated_audit_json_reports(self) -> None:
+        with tempfile.TemporaryDirectory() as repo_tmp, tempfile.TemporaryDirectory() as claims_tmp:
+            repo_root = Path(repo_tmp)
+            claims_dir = Path(claims_tmp)
+            (claims_dir / "terminalization_audit_20260524T_current_codex_resume.json").write_text(
+                '{"summary": {"status": "needs_attention", "active_claims": 10}}',
+                encoding="utf-8",
+            )
+            (claims_dir / "20260524T_after_payx_matrix_audit.json").write_text(
+                '{"summary": {"status": "needs_attention", "active_claims": 10}}',
+                encoding="utf-8",
+            )
+            (claims_dir / "readback.json").write_text(
+                '{"owner": "codex", "decision": "readback_complete", "promotion_allowed": false, "trade_usable": false}',
+                encoding="utf-8",
+            )
+
+            report = build_report(claims_dir=claims_dir, repo_root=repo_root)
+
+            self.assertEqual(report["summary"]["total_claims"], 1)
+            self.assertEqual(report["summary"]["terminalized_claims"], 1)
+            self.assertEqual(report["summary"]["active_claims"], 0)
+            self.assertEqual(report["claims"][0]["claim_file"], "readback.json")
+
     def test_build_report_ignores_none_and_pending_run_root_sentinels(self) -> None:
         with tempfile.TemporaryDirectory() as repo_tmp, tempfile.TemporaryDirectory() as claims_tmp:
             repo_root = Path(repo_tmp)
