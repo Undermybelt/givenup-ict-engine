@@ -25,6 +25,23 @@ No threshold was changed in this review. The only code repair is schema
 recognition for current Gate 1 cost-stress rows so valid `5bps/side` survivors
 are not misclassified as Gate 1 economics failures.
 
+Post-review addendum:
+
+- The five operator thresholds reviewed here remain unchanged: exact-root hard
+  `5bps/side` cost survival, `transition_hazard < 0.60`,
+  `execution_readiness >= 0.65`, `30/30` validation maturity, and provider or
+  current-runtime parity before practical promotion.
+- `pda_hybrid_alignment` is now retained as telemetry instead of a branch-local
+  admission gate. It may explain a repair path, but it must not override the
+  hard cost, transition, readiness, validation, provider-parity, or extension
+  gates.
+- The old all-session density floor of roughly `1/day` is no longer a deletion
+  rule. A row with `trade_count > 0` and positive exact `5bps/side` economics
+  may enter evidence or a repair queue, but sparse evidence still cannot set
+  `promotion_allowed=true` or `trade_usable=true` until a later exact rooted
+  packet proves downstream admission, validation maturity, provider/current
+  parity, and extension completion.
+
 ## External Source Readback
 
 - Backtrader explicitly models slippage because backtests cannot guarantee real
@@ -81,6 +98,19 @@ Fresh claim audit summary:
 - `promotion_allowed_true=0`
 - `trade_usable_true=0`
 - `status=needs_attention`
+
+Latest post-addendum rescreen:
+
+- Claim audit:
+  `/tmp/ict-engine-threshold-tmp-rescreen-audit-20260524.json`
+- Tmp rescreen packet:
+  `/tmp/ict-engine-boardb-threshold-tmp-rescreen-20260524T161630+0800/checks/tmp_threshold_rescreen_evidence.json`
+- Tmp rescreen summary:
+  `/tmp/ict-engine-boardb-threshold-tmp-rescreen-20260524T161630+0800/summaries/tmp_threshold_rescreen_evidence.md`
+- Result: `promotion_allowed_true=0`, `trade_usable_true=0`; current outputs
+  are evidence/repair inventory only. Active claims and live factor processes
+  remain the operational blocker for launching new AQ/downstream practical
+  replays.
 
 Tmp terminal-metrics re-screen summary:
 

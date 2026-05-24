@@ -128,6 +128,46 @@
     "test_command": "python3 -m unittest support.scripts.research.tests.test_factor_candidate_resolver -v"
   },
   {
+    "name": "regime_factor_tree_normalizer",
+    "stability": "read_only_utility",
+    "entrypoint": "support/scripts/research/regime_factor_tree_normalizer.py",
+    "safe_default": true,
+    "requires_data": true,
+    "test_command": "python3 -m unittest support.scripts.research.tests.test_regime_factor_tree_normalizer -v"
+  },
+  {
+    "name": "regime_branch_grammar_check",
+    "stability": "read_only_utility",
+    "entrypoint": "support/scripts/research/regime_branch_grammar_check.py",
+    "safe_default": true,
+    "requires_data": true,
+    "test_command": "python3 -m unittest support.scripts.research.tests.test_regime_branch_grammar_check -v"
+  },
+  {
+    "name": "regime_root_survivor_blocker_report",
+    "stability": "read_only_utility",
+    "entrypoint": "support/scripts/research/regime_root_survivor_blocker_report.py",
+    "safe_default": true,
+    "requires_data": true,
+    "test_command": "python3 -m unittest support.scripts.research.tests.test_regime_root_survivor_blocker_report -v"
+  },
+  {
+    "name": "regime_root_metrics_contract_check",
+    "stability": "read_only_utility",
+    "entrypoint": "support/scripts/research/regime_root_metrics_contract_check.py",
+    "safe_default": true,
+    "requires_data": true,
+    "test_command": "python3 -m unittest support.scripts.research.tests.test_regime_root_metrics_contract_check -v"
+  },
+  {
+    "name": "downstream_practical_admission_source_check",
+    "stability": "read_only_utility",
+    "entrypoint": "support/scripts/research/downstream_practical_admission_source_check.py",
+    "safe_default": true,
+    "requires_data": true,
+    "test_command": "python3 -m unittest support.scripts.research.tests.test_downstream_practical_admission_source_check -v"
+  },
+  {
     "name": "pandas_path_ranker_trainer",
     "stability": "active_bridge",
     "entrypoint": "support/scripts/auto_quant_external/pandas_path_ranker_trainer.py",

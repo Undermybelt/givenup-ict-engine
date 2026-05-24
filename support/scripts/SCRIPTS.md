@@ -30,6 +30,11 @@ governance only; no script was moved or promoted by this document.
 | `support/scripts/research/market_data_resolver.py` | read-only adoption utility | yes, requires explicit output path | Resolves generic zero-config market data lanes and optional profile selectors |
 | `support/scripts/research/external_history_adoption.py` | adoption utility | yes, requires explicit input/output paths | Emits zero-config default commands plus opt-in profile reuse commands |
 | `support/scripts/research/factor_candidate_resolver.py` | adoption utility | yes, requires explicit output path for writes | Lists/builds explicit factor candidate packs without reading board docs |
+| `support/scripts/research/regime_factor_tree_normalizer.py` | read-only utility | yes, requires explicit metrics JSON paths | Normalizes legacy branch paths into `main_regime -> sub_regime -> profit_factor` trees and moves provider/market labels into provenance fields |
+| `support/scripts/research/regime_branch_grammar_check.py` | read-only utility | yes, requires explicit metrics JSON paths | Fails Board B branch paths that do not start at the canonical main regime or that attach a regime segment after profit-factor overlays have started |
+| `support/scripts/research/regime_root_survivor_blocker_report.py` | read-only utility | yes, requires explicit Gate 1/downstream artifact paths | Builds a compact blocker report for a real-cost survivor and classifies whether the next repair is MTF alignment, PDA evidence, execution admission, or a fresh factor rotation |
+| `support/scripts/research/regime_root_metrics_contract_check.py` | read-only utility | yes, requires explicit metrics JSON paths | Fails stored Board B metrics whose `branch_path` is not canonical regime-rooted or whose downstream gates open without exact `5bps/side` density |
+| `support/scripts/research/downstream_practical_admission_source_check.py` | read-only utility | yes, requires explicit Python wrapper paths | Fails downstream wrappers that assign `promotion_allowed`, `trade_usable`, or `update_goal` from local admission variables instead of `practical_admission_flags(..., extension_complete=...)` |
 
 ## Active External Bridge
 

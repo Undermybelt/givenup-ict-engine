@@ -278,7 +278,7 @@ Current checkpoint:
   next command back to `--backend native` even after Auto-Quant guidance exists.
 - Repo rules and current authority were re-read before this claim:
   Hermes routers, repo `CLAUDE.md`, repo `AGENT.md`, current release handoff
-  board, `support/docs/plans/2026-05-12-board-b-profit-factor-current.md`,
+  board, `support/docs/plans/2026-05-23-board-b-current.md`,
   `support/docs/plans/2026-05-12-board-a-regime-state-current.md`, and scoped
   dirty-tree status. No unrelated edits will be reverted.
 

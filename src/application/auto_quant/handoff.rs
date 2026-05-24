@@ -572,15 +572,7 @@ pub fn build_factor_research_handoff_payload(
     } = input;
     let workspace =
         auto_quant_workspace_config_for_state(&dependency_status.managed_dir, state_dir);
-    let data_ready = auto_quant_handoff_data_ready(&workspace, data, paired_data);
-    let active_strategy_count = auto_quant_active_strategy_count(&workspace);
     let external_strategy_materials = discover_strategy_materials(strategy_material_root, 3);
-    let readiness = auto_quant_readiness_from_status_and_data(
-        &dependency_status,
-        state_dir,
-        workspace.clone(),
-        data_ready,
-    );
     let mut payload = AutoQuantResearchHandoffPayload {
         artifact_id: format!(
             "auto-quant-handoff:factor_research:{}:{}",
@@ -602,9 +594,9 @@ pub fn build_factor_research_handoff_payload(
         strategy_material_root: strategy_material_root.map(str::to_string),
         external_strategy_materials,
         dependency_status,
-        readiness: Some(readiness),
+        readiness: None,
         workspace,
-        data_ready,
+        data_ready: false,
         handoff_artifact_path: String::new(),
         iteration_unit: None,
         suggested_commands: Vec::new(),
@@ -612,6 +604,23 @@ pub fn build_factor_research_handoff_payload(
         agent_prompt: String::new(),
         notes: Vec::new(),
     };
+    let profile_source = payload.clone();
+    super::workspace_profile::apply_handoff_workspace_profile(
+        &profile_source,
+        &mut payload.workspace,
+    );
+    payload.data_ready = auto_quant_handoff_data_ready(
+        &payload.workspace,
+        &payload.data_path,
+        payload.paired_data_path.as_deref(),
+    );
+    let active_strategy_count = auto_quant_active_strategy_count(&payload.workspace);
+    payload.readiness = Some(auto_quant_readiness_from_status_and_data(
+        &payload.dependency_status,
+        &payload.state_dir,
+        payload.workspace.clone(),
+        payload.data_ready,
+    ));
     payload.suggested_commands = base_suggested_commands(
         &payload.workspace,
         &payload.state_dir,
@@ -700,15 +709,7 @@ pub fn build_factor_autoresearch_handoff_payload(
     } = input;
     let workspace =
         auto_quant_workspace_config_for_state(&dependency_status.managed_dir, state_dir);
-    let data_ready = auto_quant_handoff_data_ready(&workspace, data, paired_data);
-    let active_strategy_count = auto_quant_active_strategy_count(&workspace);
     let external_strategy_materials = discover_strategy_materials(strategy_material_root, 3);
-    let readiness = auto_quant_readiness_from_status_and_data(
-        &dependency_status,
-        state_dir,
-        workspace.clone(),
-        data_ready,
-    );
     let mut payload = AutoQuantResearchHandoffPayload {
         artifact_id: format!(
             "auto-quant-handoff:factor_autoresearch:{}:{}",
@@ -730,9 +731,9 @@ pub fn build_factor_autoresearch_handoff_payload(
         strategy_material_root: strategy_material_root.map(str::to_string),
         external_strategy_materials,
         dependency_status,
-        readiness: Some(readiness),
+        readiness: None,
         workspace,
-        data_ready,
+        data_ready: false,
         handoff_artifact_path: String::new(),
         iteration_unit: None,
         suggested_commands: Vec::new(),
@@ -740,6 +741,23 @@ pub fn build_factor_autoresearch_handoff_payload(
         agent_prompt: String::new(),
         notes: Vec::new(),
     };
+    let profile_source = payload.clone();
+    super::workspace_profile::apply_handoff_workspace_profile(
+        &profile_source,
+        &mut payload.workspace,
+    );
+    payload.data_ready = auto_quant_handoff_data_ready(
+        &payload.workspace,
+        &payload.data_path,
+        payload.paired_data_path.as_deref(),
+    );
+    let active_strategy_count = auto_quant_active_strategy_count(&payload.workspace);
+    payload.readiness = Some(auto_quant_readiness_from_status_and_data(
+        &payload.dependency_status,
+        &payload.state_dir,
+        payload.workspace.clone(),
+        payload.data_ready,
+    ));
     payload.suggested_commands = base_suggested_commands(
         &payload.workspace,
         &payload.state_dir,
@@ -1162,6 +1180,88 @@ mod tests {
             .suggested_commands
             .iter()
             .any(|command| command.contains("ict-engine auto-quant-prepare --state-dir")));
+    }
+
+    #[test]
+    fn factor_research_handoff_output_uses_synthetic_profile_for_existing_local_data() {
+        let temp = tempfile::tempdir().unwrap();
+        let state_dir = temp.path().join("state");
+        let managed_dir = state_dir.join(".deps/auto-quant");
+        let default_strategies_dir = managed_dir.join("user_data/strategies");
+        let data_dir = managed_dir.join("user_data/data");
+        std::fs::create_dir_all(&default_strategies_dir).unwrap();
+        std::fs::create_dir_all(&data_dir).unwrap();
+        std::fs::write(managed_dir.join("program.md"), "program").unwrap();
+        std::fs::write(managed_dir.join("prepare.py"), "print('default')").unwrap();
+        std::fs::write(managed_dir.join("run.py"), "print('run')").unwrap();
+        std::fs::write(managed_dir.join("prepare_external.py"), "print('external')").unwrap();
+        std::fs::write(managed_dir.join("run_tomac.py"), "print('tomac')").unwrap();
+        std::fs::write(
+            default_strategies_dir.join("_template.py.example"),
+            "class Template: pass",
+        )
+        .unwrap();
+        std::fs::write(
+            default_strategies_dir.join("TomacSeed.py"),
+            "class TomacSeed: pass",
+        )
+        .unwrap();
+        for pair in ["BTC_USDT", "ETH_USDT", "SOL_USDT", "BNB_USDT", "AVAX_USDT"] {
+            for timeframe in ["1h", "4h", "1d"] {
+                std::fs::write(
+                    data_dir.join(format!("{pair}-{timeframe}.feather")),
+                    "generic-ready",
+                )
+                .unwrap();
+            }
+        }
+        let requested_data = temp
+            .path()
+            .join("TOMAC_TOD_CAP65_REDUCED_NQ_ANCHOR.continuous-1m.json");
+        std::fs::write(
+            &requested_data,
+            r#"[{"date":"2025-10-27T14:47:00Z","open":1.0,"high":2.0,"low":0.5,"close":1.5,"volume":10.0}]"#,
+        )
+        .unwrap();
+
+        let payload =
+            build_factor_research_handoff_payload(BuildFactorResearchHandoffPayloadInput {
+                symbol: "TOMAC_TOD_CAP65_REDUCED_WINDOW_DOWNSTREAM_NQ_ANCHOR",
+                data: requested_data.to_str().unwrap(),
+                objective: "expansion_manipulation",
+                provider_profile_selector: None,
+                paired_data: None,
+                auxiliary_evidence_path: None,
+                mutation_spec_path: None,
+                strategy_material_root: None,
+                state_dir: state_dir.to_str().unwrap(),
+                dependency_status: healthy_dependency_status_for(managed_dir.to_str().unwrap()),
+            });
+
+        assert_eq!(
+            payload.workspace.profile_name.as_deref(),
+            Some("synthetic_ohlcv")
+        );
+        assert!(payload
+            .workspace
+            .prepare_script
+            .ends_with("prepare_external.py"));
+        assert!(payload.workspace.run_script.ends_with("run_tomac.py"));
+        assert!(payload.workspace.config_json.ends_with("config.tomac.json"));
+        assert!(payload
+            .workspace
+            .strategies_dir
+            .ends_with("strategies_external"));
+        assert!(payload
+            .readiness
+            .as_ref()
+            .unwrap()
+            .workspace
+            .run_script
+            .ends_with("run_tomac.py"));
+        assert!(payload.agent_prompt.contains("run_tomac.py"));
+        assert!(!payload.agent_prompt.contains("python run.py"));
+        assert!(!payload.data_ready);
     }
 
     #[test]

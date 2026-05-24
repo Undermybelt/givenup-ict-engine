@@ -16,12 +16,14 @@ SCRIPT = Path(__file__).resolve()
 BASE = SCRIPT.parents[1]
 RUN_STAMP = datetime.now(ZoneInfo("Asia/Shanghai")).strftime("%Y%m%dT%H%M%S+0800")
 ROOT = BASE / "runs" / f"{RUN_STAMP}-codex-macd-current-six-provider-aq-v1"
-REPO = BASE.parents[2]
+REPO = BASE.parents[3]
 PY = Path("/Users/thrill3r/.venvs/ict-engine-provider-py313/bin/python")
 if not PY.exists():
     PY = Path("python3")
-FETCH = REPO / "scripts/auto_quant_external/fetch_external.py"
-ICT = REPO / "target/debug/ict-engine"
+FETCH = REPO / "support/scripts/auto_quant_external/fetch_external.py"
+ICT = REPO / ".local-artifacts/cargo-target/debug/ict-engine"
+if not ICT.exists():
+    ICT = REPO / "target/debug/ict-engine"
 
 
 @dataclass(frozen=True)

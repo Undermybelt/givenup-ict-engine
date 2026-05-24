@@ -140,11 +140,7 @@ pub fn build_hybrid_regime_packet(
     let duration_distribution = empirical_duration_distribution(historical_regime_ages)
         .unwrap_or_else(|| baseline_duration_distribution(&decision.selected_label, market));
     let duration_state = estimate_duration_state(elapsed_bars, &duration_distribution);
-    let mut adjusted_confidence = if matches!(pda_alignment, Some(false)) {
-        (decision.confidence - 0.10).clamp(0.0, 1.0)
-    } else {
-        decision.confidence
-    };
+    let mut adjusted_confidence = decision.confidence;
     let pda_confidence_floor = aligned_pda_confidence_floor(
         &decision.selected_label,
         pda_sequence_summary,
@@ -153,15 +149,9 @@ pub fn build_hybrid_regime_packet(
     if let Some(floor) = pda_confidence_floor {
         adjusted_confidence = adjusted_confidence.max(floor);
     }
-    let transition_hazard = if matches!(pda_alignment, Some(false)) {
-        duration_state
-            .hazard_rate
-            .max((1.0 - adjusted_confidence + 0.25).clamp(0.0, 1.0))
-    } else {
-        duration_state
-            .hazard_rate
-            .max((1.0 - adjusted_confidence).clamp(0.0, 1.0))
-    };
+    let transition_hazard = duration_state
+        .hazard_rate
+        .max((1.0 - adjusted_confidence).clamp(0.0, 1.0));
 
     let mut evidence = vec![
         format!("wasserstein_label={}", classification.label),
@@ -233,6 +223,7 @@ pub fn build_hybrid_regime_packet(
             "pda_hybrid_alignment={}",
             pda_alignment.unwrap_or(false)
         ));
+        evidence.push("pda_hybrid_alignment_required=false".to_string());
         evidence.push(format!(
             "pda_sequence_h1_second_expansion_support={h1_second_expansion:.4}"
         ));

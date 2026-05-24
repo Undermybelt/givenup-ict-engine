@@ -681,6 +681,33 @@ fn normalize_branch_trade_direction(direction: &str) -> Option<&'static str> {
     }
 }
 
+fn branch_regime_family_from_path(path: &str) -> Option<&'static str> {
+    let main_regime = path.split(" -> ").map(str::trim).find(|segment| {
+        matches!(
+            *segment,
+            "Range"
+                | "RangeConsolidation"
+                | "RangeReversion"
+                | "WideRange"
+                | "TrendExpansion"
+                | "MomentumContinuation"
+                | "ReversalBrewing"
+                | "ExtremeStress"
+                | "Transition"
+                | "ThinLiquidity"
+                | "Crisis"
+        )
+    })?;
+    match main_regime {
+        "Range" | "RangeConsolidation" | "RangeReversion" | "WideRange" => Some("range"),
+        "TrendExpansion" | "MomentumContinuation" => Some("trend"),
+        "ReversalBrewing" | "ExtremeStress" | "Transition" | "ThinLiquidity" | "Crisis" => {
+            Some("transition")
+        }
+        _ => None,
+    }
+}
+
 pub fn build_pre_bayes_evidence_filter(
     policy: &PreBayesEvidencePolicy,
     regime_label: &str,
@@ -892,11 +919,14 @@ pub fn build_pre_bayes_evidence_filter_with_branch_context(
         let weak_confidence = summary.primary_cluster_confidence.unwrap_or_default() < 0.55;
         let weak_consistency = summary.consistency_ratio < 0.60;
         let sparse_sessions = summary.valid_sessions < 4;
-        let regime_family = match regime_label {
+        let market_regime_family = match regime_label {
             "bull" | "bear" => Some("trend"),
             "range" => Some("range"),
             _ => None,
         };
+        let branch_regime_family = rooted_branch_direction
+            .and_then(|(branch_path, _, _)| branch_regime_family_from_path(branch_path));
+        let regime_family = branch_regime_family.or(market_regime_family);
         let family_disagreement = regime_family
             .zip(summary.primary_cluster_family.as_deref())
             .map(|(left, right)| left != right)
@@ -1010,17 +1040,7 @@ pub fn build_pre_bayes_evidence_filter_with_branch_context(
         evidence_quality_score += favorable_liquidity_bonus;
     }
     if let Some(summary) = pda_sequence_summary {
-        if conflict_flags
-            .iter()
-            .any(|flag| flag == "pda_sequence_cluster_weak")
-        {
-            evidence_quality_score -= 0.08;
-        } else if conflict_flags
-            .iter()
-            .any(|flag| flag == "pda_regime_family_disagreement")
-        {
-            evidence_quality_score -= 0.06;
-        } else if summary.primary_cluster_confidence.unwrap_or_default() >= 0.80
+        if summary.primary_cluster_confidence.unwrap_or_default() >= 0.80
             && summary.consistency_ratio >= 0.70
             && summary.ensemble_mean_confidence >= 0.70
         {
@@ -1029,18 +1049,13 @@ pub fn build_pre_bayes_evidence_filter_with_branch_context(
     }
     evidence_quality_score = evidence_quality_score.clamp(0.0, 1.0);
 
-    let pda_sparse_sessions = conflict_flags
+    let blocking_conflict_flags: Vec<&String> = conflict_flags
         .iter()
-        .any(|flag| flag == "pda_sequence_sparse_sessions");
-    let pda_low_consistency = conflict_flags
-        .iter()
-        .any(|flag| flag == "pda_sequence_low_consistency");
-    let pda_low_confidence = conflict_flags
-        .iter()
-        .any(|flag| flag == "pda_sequence_low_confidence");
+        .filter(|flag| pre_bayes_conflict_blocks_gate(flag))
+        .collect();
 
-    let mut gating_status = if evidence_quality_score >= policy.hard_pass_quality_threshold
-        && conflict_flags.is_empty()
+    let gating_status = if evidence_quality_score >= policy.hard_pass_quality_threshold
+        && blocking_conflict_flags.is_empty()
     {
         "pass_hard".to_string()
     } else if evidence_quality_score >= policy.neutralized_quality_threshold {
@@ -1058,29 +1073,12 @@ pub fn build_pre_bayes_evidence_filter_with_branch_context(
         filtered_multi_timeframe_resonance_label = "mixed".to_string();
         "observe_only".to_string()
     };
-    if pda_sparse_sessions {
-        gating_status = "observe_only".to_string();
-        filtered_market_regime_label = "range".to_string();
-        filtered_liquidity_context_label = "neutral".to_string();
-        filtered_factor_alignment = "mixed".to_string();
-        filtered_factor_uncertainty = "high".to_string();
-        rationale.push(
-            "PDA sequence coverage is too sparse, so gating is forced to observe_only".to_string(),
-        );
-    } else if gating_status == "pass_hard" && (pda_low_consistency || pda_low_confidence) {
-        gating_status = "pass_neutralized".to_string();
-        rationale.push(
-            "PDA sequence weakness prevents a hard pass, so gating is capped at pass_neutralized"
-                .to_string(),
-        );
-    } else if gating_status == "pass_hard"
-        && conflict_flags
-            .iter()
-            .any(|flag| flag == "pda_regime_family_disagreement")
+    if conflict_flags
+        .iter()
+        .any(|flag| !pre_bayes_conflict_blocks_gate(flag))
     {
-        gating_status = "pass_neutralized".to_string();
         rationale.push(
-            "PDA/regime family disagreement prevents a hard pass, so gating is capped at pass_neutralized"
+            "PDA sequence conflicts are retained as telemetry and do not force Pre-Bayes observe_only"
                 .to_string(),
         );
     }
@@ -1198,6 +1196,10 @@ pub fn build_pre_bayes_evidence_filter_with_branch_context(
         soft_factor_uncertainty_distribution,
         soft_multi_timeframe_resonance_distribution,
     }
+}
+
+fn pre_bayes_conflict_blocks_gate(flag: &str) -> bool {
+    !flag.starts_with("pda_")
 }
 
 pub fn env_f64(name: &str, default: f64) -> f64 {
@@ -1407,6 +1409,7 @@ mod frame_feature_tests {
             min_directional_support_gap: 0.05,
             min_multi_timeframe_alignment_score: 0.55,
             min_multi_timeframe_entry_alignment_score: 0.50,
+            high_uncertainty_threshold: 0.45,
             hard_pass_quality_threshold: 0.75,
             neutralized_quality_threshold: 0.40,
             ..PreBayesEvidencePolicy::default()
@@ -1461,5 +1464,85 @@ mod frame_feature_tests {
             .any(|flag| flag == "multi_timeframe_direction_conflict"));
         assert_eq!(filter.filtered_factor_alignment, "bearish");
         assert_eq!(filter.filtered_multi_timeframe_resonance_label, "aligned");
+    }
+
+    #[test]
+    fn pda_sequence_weakness_is_telemetry_not_pre_bayes_hard_gate() {
+        let policy = PreBayesEvidencePolicy {
+            min_directional_support_gap: 0.05,
+            min_multi_timeframe_alignment_score: 0.55,
+            min_multi_timeframe_entry_alignment_score: 0.50,
+            high_uncertainty_threshold: 0.45,
+            hard_pass_quality_threshold: 0.75,
+            neutralized_quality_threshold: 0.40,
+            ..PreBayesEvidencePolicy::default()
+        };
+        let diagnostics = FactorDiagnostics {
+            long_support: 0.82,
+            short_support: 0.10,
+            uncertainty: 0.01,
+            alignment_label: "bullish".to_string(),
+            uncertainty_label: "low".to_string(),
+            ..FactorDiagnostics::default()
+        };
+        let mtf = ParsedMultiTimeframeEvidence {
+            direction_bias: "bullish".to_string(),
+            alignment_score: Some(0.99),
+            entry_alignment_score: Some(0.96),
+            covered_count: 6,
+        };
+        let pda = PdaSequenceArtifactSummary {
+            method: "pda_sequence_analysis_v2".to_string(),
+            primary_cluster: Some(0),
+            primary_cluster_label: Some("range_choppy".to_string()),
+            primary_cluster_family: Some("range".to_string()),
+            primary_cluster_direction: Some("neutral".to_string()),
+            primary_cluster_directional_confirmation_ratio: Some(0.0),
+            primary_cluster_confidence: Some(0.30),
+            consistency_ratio: 0.30,
+            ensemble_mean_confidence: 0.30,
+            valid_sessions: 1,
+            total_sessions: 12,
+            kmer_k: 3,
+        };
+
+        let filter =
+            build_pre_bayes_evidence_filter_with_branch_context(PreBayesEvidenceFilterInput {
+                policy: &policy,
+                regime_label: "bull",
+                liquidity_label: "neutral",
+                factor_diagnostics: &diagnostics,
+                multi_timeframe_evidence: &mtf,
+                market: Some("IBKR"),
+                pda_sequence_summary: Some(&pda),
+                branch_direction_context: Some(PreBayesBranchDirectionContext {
+                    regime_profit_branch_path:
+                        "TrendExpansion -> PullbackContinuation -> profit_seed",
+                    trade_direction: "Bull",
+                }),
+            });
+
+        assert!(filter
+            .conflict_flags
+            .iter()
+            .any(|flag| flag == "pda_sequence_sparse_sessions"));
+        assert!(filter
+            .conflict_flags
+            .iter()
+            .any(|flag| flag == "pda_regime_family_disagreement"));
+        assert!(
+            filter.evidence_quality_score >= policy.hard_pass_quality_threshold,
+            "{filter:?}"
+        );
+        assert!(
+            filter
+                .conflict_flags
+                .iter()
+                .all(|flag| !pre_bayes_conflict_blocks_gate(flag)),
+            "{:?}",
+            filter.conflict_flags
+        );
+        assert_eq!(filter.gating_status, "pass_hard");
+        assert!(filter.pass_to_bbn);
     }
 }

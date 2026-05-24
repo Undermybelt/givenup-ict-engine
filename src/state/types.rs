@@ -1580,6 +1580,12 @@ pub struct ExecutionCandidateArtifact {
     pub factor_alignment: String,
     pub factor_uncertainty: String,
     pub candidate_status: String,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub branch_path: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub regime_profit_branch_path: Option<String>,
+    #[serde(default)]
+    pub branch_fields_preserved: bool,
     #[serde(default)]
     pub top_factor_name: Option<String>,
     #[serde(default)]
@@ -1626,6 +1632,9 @@ impl Default for ExecutionCandidateArtifact {
             factor_alignment: String::new(),
             factor_uncertainty: String::new(),
             candidate_status: String::new(),
+            branch_path: None,
+            regime_profit_branch_path: None,
+            branch_fields_preserved: false,
             top_factor_name: None,
             top_factor_action: None,
             family_scores: BTreeMap::new(),

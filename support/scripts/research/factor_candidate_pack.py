@@ -76,8 +76,8 @@ def _branch_path_contract(
         "main_regime": parts[0],
         "sub_regime": parts[1],
         "sub_sub_regime_or_profit_factor": parts[2],
-        "profit_factor": parts[3],
-        "regime_profit_branch_path": branch_path,
+        "profit_factor": " -> ".join(parts[3:]),
+        "regime_profit_branch_path": " -> ".join(parts),
     }
     for key, value in roles.items():
         if value:

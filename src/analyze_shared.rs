@@ -1311,7 +1311,16 @@ fn execution_candidate_artifact_decision(
 ) -> ExecutionCandidateArtifactDecision {
     let rules = artifact_review_rules().execution_candidate;
 
-    if current.diff_from_previous.exact_duplicate {
+    if current.diff_from_previous.exact_duplicate
+        && current.actionable
+        && current.candidate_status == "execution_ready"
+    {
+        ExecutionCandidateArtifactDecision {
+            status: "observe".to_string(),
+            reason: "same_root_execution_tree_admitted_duplicate_kept_active".to_string(),
+            supersedes_artifact_id: None,
+        }
+    } else if current.diff_from_previous.exact_duplicate {
         ExecutionCandidateArtifactDecision {
             status: "discard".to_string(),
             reason: "duplicate_execution_candidate_context".to_string(),
@@ -1370,14 +1379,14 @@ fn report_same_root_branch_paths(report: &AnalyzeReport) -> Vec<String> {
         .map(|value| value.trim())
         .filter(|value| !value.is_empty())
     {
-        paths.push(path.to_string());
+        paths.push(canonical_regime_rooted_branch_path(path));
     }
     if let Some(raw_paths) = assignments.get("regime_bundle_branch_paths_json") {
         if let Ok(parsed) = serde_json::from_str::<Vec<String>>(raw_paths) {
             paths.extend(
                 parsed
                     .into_iter()
-                    .map(|value| value.trim().to_string())
+                    .map(|value| canonical_regime_rooted_branch_path(value.trim()))
                     .filter(|value| !value.is_empty()),
             );
         }
@@ -1385,6 +1394,39 @@ fn report_same_root_branch_paths(report: &AnalyzeReport) -> Vec<String> {
     paths.sort();
     paths.dedup();
     paths
+}
+
+fn canonical_regime_rooted_branch_path(path: &str) -> String {
+    const MAIN_REGIME_ROOTS: &[&str] = &[
+        "Bull",
+        "Bear",
+        "Crisis",
+        "ExtremeStress",
+        "MomentumContinuation",
+        "Range",
+        "RangeConsolidation",
+        "RangeReversion",
+        "ReversalBrewing",
+        "SessionLiquidity",
+        "SessionLiquidityCoreViable",
+        "ThinLiquidity",
+        "Transition",
+        "TrendExpansion",
+        "WideRange",
+    ];
+    let segments: Vec<&str> = path
+        .split("->")
+        .map(str::trim)
+        .filter(|segment| !segment.is_empty())
+        .collect();
+    if let Some(start) = segments
+        .iter()
+        .position(|segment| MAIN_REGIME_ROOTS.contains(segment))
+    {
+        segments[start..].join(" -> ")
+    } else {
+        path.trim().to_string()
+    }
 }
 
 fn trace_output_number(output: &serde_json::Value, key: &str) -> Option<f64> {
@@ -1397,18 +1439,58 @@ fn trace_output_number(output: &serde_json::Value, key: &str) -> Option<f64> {
     })
 }
 
-fn same_root_execution_tree_admission_status_for_analyze(
+fn strict_trend_pullback_wait_for_reversion_trace_ready(
+    path_id: &str,
+    output: &serde_json::Value,
+) -> bool {
+    let normalized_path = path_id.to_ascii_lowercase();
+    let strict_trend_pullback_root = normalized_path.contains("trendexpansion")
+        && normalized_path.contains("rootevidencepullbackmsscisd")
+        && normalized_path.contains("strict_trend_root_pullback_mss_cisd");
+    let gate_ready = output
+        .get("gate_status")
+        .and_then(serde_json::Value::as_str)
+        == Some("ready");
+    let wait_for_reversion =
+        output.get("branch").and_then(serde_json::Value::as_str) == Some("wait_for_reversion");
+    let bias_not_skip = output
+        .get("execution_bias")
+        .and_then(serde_json::Value::as_str)
+        != Some("skip");
+    let readiness_ok = trace_output_number(output, "execution_readiness")
+        .is_some_and(|readiness| readiness >= 0.65);
+    let ranker_used = output
+        .get("path_ranker_score_used_by_execution_tree")
+        .and_then(serde_json::Value::as_bool)
+        .unwrap_or(false)
+        && output
+            .get("ranker_validation_ready")
+            .and_then(serde_json::Value::as_bool)
+            .unwrap_or(false);
+    let transition_ok =
+        trace_output_number(output, "hybrid_transition_hazard").is_some_and(|hazard| hazard < 0.60);
+    strict_trend_pullback_root
+        && gate_ready
+        && wait_for_reversion
+        && bias_not_skip
+        && readiness_ok
+        && ranker_used
+        && transition_ok
+}
+
+struct SameRootExecutionTreeAdmission {
+    candidate_status: String,
+    branch_path: String,
+    actionable: bool,
+}
+
+fn same_root_execution_tree_admission_for_analyze(
     state_dir: &str,
     report: &AnalyzeReport,
     trade_direction: Direction,
-) -> Option<String> {
-    if matches!(trade_direction, Direction::Neutral) {
-        return None;
-    }
+) -> Option<SameRootExecutionTreeAdmission> {
+    let direction_can_action = !matches!(trade_direction, Direction::Neutral);
     let branch_paths = report_same_root_branch_paths(report);
-    if branch_paths.is_empty() {
-        return None;
-    }
     let trace_path = std::path::Path::new(state_dir)
         .join(&report.symbol)
         .join(ict_engine::application::orchestration::EXECUTION_TREE_TRACE_FILE);
@@ -1419,7 +1501,12 @@ fn same_root_execution_tree_admission_status_for_analyze(
     let path_id = admission
         .get("path_id")
         .and_then(serde_json::Value::as_str)?;
-    if !branch_paths.iter().any(|path| path == path_id) {
+    let strict_trace_supplies_missing_report_path = branch_paths.is_empty()
+        && strict_trend_pullback_wait_for_reversion_trace_ready(path_id, output);
+    if !branch_paths.is_empty()
+        && !branch_paths.iter().any(|path| path == path_id)
+        && !strict_trace_supplies_missing_report_path
+    {
         return None;
     }
     let pre_bayes_ready = matches!(
@@ -1442,7 +1529,8 @@ fn same_root_execution_tree_admission_status_for_analyze(
         .get("gate_status")
         .and_then(serde_json::Value::as_str)
         == Some("ready")
-        && output.get("branch").and_then(serde_json::Value::as_str) == Some("fill_viable");
+        && (output.get("branch").and_then(serde_json::Value::as_str) == Some("fill_viable")
+            || strict_trend_pullback_wait_for_reversion_trace_ready(path_id, output));
     let ranker_used = output
         .get("path_ranker_score_used_by_execution_tree")
         .and_then(serde_json::Value::as_bool)
@@ -1453,21 +1541,17 @@ fn same_root_execution_tree_admission_status_for_analyze(
             .unwrap_or(false);
     let execution_readiness = trace_output_number(output, "execution_readiness")?;
     let transition_hazard = trace_output_number(output, "hybrid_transition_hazard")?;
-    let pda_hybrid_alignment = output
-        .get("pda_hybrid_alignment")
-        .and_then(serde_json::Value::as_bool)
-        .unwrap_or(false);
-    if !(pre_bayes_ready
+    let actionable_admission = direction_can_action
+        && pre_bayes_ready
         && admitted
         && execution_tree_ready
         && ranker_used
         && execution_readiness >= 0.65
-        && transition_hazard < 0.60
-        && pda_hybrid_alignment)
-    {
+        && transition_hazard < 0.60;
+    if !pre_bayes_ready {
         return None;
     }
-    admission
+    let candidate_status = admission
         .get("candidate_status")
         .and_then(serde_json::Value::as_str)
         .or_else(|| {
@@ -1476,7 +1560,18 @@ fn same_root_execution_tree_admission_status_for_analyze(
                 .and_then(serde_json::Value::as_str)
         })
         .map(|status| status.to_string())
-        .or_else(|| Some("execution_ready".to_string()))
+        .unwrap_or_else(|| {
+            if actionable_admission {
+                "execution_ready".to_string()
+            } else {
+                "no_trade".to_string()
+            }
+        });
+    Some(SameRootExecutionTreeAdmission {
+        candidate_status,
+        branch_path: path_id.to_string(),
+        actionable: actionable_admission,
+    })
 }
 
 pub(crate) fn persist_execution_candidate_from_analyze(
@@ -1494,18 +1589,29 @@ pub(crate) fn persist_execution_candidate_from_analyze(
         branch_direction.unwrap_or(report.supporting.decision.selected_direction);
     let trade_direction = branch_direction.unwrap_or(trade_plan.direction);
     let same_root_execution_tree_admission =
-        same_root_execution_tree_admission_status_for_analyze(state_dir, report, trade_direction);
-    let materialized_from_same_root_execution_tree = same_root_execution_tree_admission.is_some();
+        same_root_execution_tree_admission_for_analyze(state_dir, report, trade_direction);
+    let same_root_execution_tree_branch_path = same_root_execution_tree_admission
+        .as_ref()
+        .map(|admission| admission.branch_path.clone());
+    let actionable_same_root_execution_tree_admission = same_root_execution_tree_admission
+        .as_ref()
+        .is_some_and(|admission| admission.actionable);
+    let report_branch_path = report_same_root_branch_paths(report).into_iter().next();
+    let execution_candidate_branch_path =
+        same_root_execution_tree_branch_path.or(report_branch_path);
+    let materialized_from_same_root_execution_tree = actionable_same_root_execution_tree_admission;
     let actionability_from_trade_plan =
         trade_direction != Direction::Neutral && trade_plan.position_size > 0.0;
-    let actionable = actionability_from_trade_plan || materialized_from_same_root_execution_tree;
-    let candidate_status = same_root_execution_tree_admission.unwrap_or_else(|| {
-        if actionability_from_trade_plan {
-            "ready".to_string()
-        } else {
-            "no_trade".to_string()
-        }
-    });
+    let actionable = actionability_from_trade_plan || actionable_same_root_execution_tree_admission;
+    let candidate_status = same_root_execution_tree_admission
+        .map(|admission| admission.candidate_status)
+        .unwrap_or_else(|| {
+            if actionability_from_trade_plan {
+                "ready".to_string()
+            } else {
+                "no_trade".to_string()
+            }
+        });
     let artifact = ExecutionCandidateArtifact {
         artifact_id: format!(
             "execution-candidate:{}:{}:v{}",
@@ -1538,6 +1644,9 @@ pub(crate) fn persist_execution_candidate_from_analyze(
             .uncertainty_label
             .clone(),
         candidate_status,
+        branch_path: execution_candidate_branch_path.clone(),
+        regime_profit_branch_path: execution_candidate_branch_path.clone(),
+        branch_fields_preserved: execution_candidate_branch_path.is_some(),
         top_factor_name: report
             .supporting
             .factor_ranking
@@ -2054,7 +2163,7 @@ mod tests {
                     "path_ranker_score_used_by_execution_tree": true,
                     "ranker_validation_ready": true,
                     "hybrid_transition_hazard": 0.595,
-                    "pda_hybrid_alignment": true
+                    "pda_hybrid_alignment": false
                 },
                 "closed_loop_branch_admission": {
                     "status": "admitted",
@@ -2089,11 +2198,515 @@ mod tests {
         assert_eq!(candidate.trade_direction, Direction::Bull);
         assert!(candidate.actionable);
         assert_eq!(candidate.candidate_status, "execution_ready");
+        assert_eq!(candidate.branch_path.as_deref(), Some(branch_path));
+        assert_eq!(
+            candidate.regime_profit_branch_path.as_deref(),
+            Some(branch_path)
+        );
+        assert!(candidate.branch_fields_preserved);
         assert_eq!(candidate.review_decision.status, "promote_latest");
         assert_eq!(
             candidate.review_decision.reason,
             "same_root_execution_tree_admitted"
         );
+    }
+
+    #[test]
+    fn execution_candidate_keeps_exact_duplicate_same_root_admission_active() {
+        let temp = tempfile::tempdir().unwrap();
+        let mut report = sample_analyze_report_with_factor_ranking(Vec::new());
+        report.symbol = "CRWD".to_string();
+        report.supporting.raw_trade_plan.direction = Direction::Bull;
+        report.supporting.raw_trade_plan.position_size = 0.0;
+        report.supporting.raw_trade_plan.entry = 596.0;
+        report.supporting.raw_trade_plan.stop_loss = 591.8;
+        report.supporting.raw_trade_plan.tp1 = 598.8;
+        report.supporting.raw_trade_plan.tp2 = 601.6;
+        report.supporting.raw_trade_plan.tp3 = 604.4;
+        report.supporting.raw_trade_plan.posterior = 0.2159;
+        report.supporting.raw_trade_plan.win_probability = 0.5037;
+        report.supporting.pre_bayes_evidence_filter.gating_status = "pass_neutralized".to_string();
+        let branch_path = "RangeReversion -> AiSecuritySoftwareOversoldReclaim -> rsi_vwap_reclaim_dense -> yf_ai_security_software_rsi_vwap_reclaim_crwd_5m_v1 -> session_liquidity_transition_stability_v1 -> pda_mtf_soft_confirmation_v1";
+        report
+            .supporting
+            .pre_bayes_evidence_filter
+            .evidence_assignments
+            .insert(
+                "regime_profit_branch_path".to_string(),
+                branch_path.to_string(),
+            );
+        report
+            .supporting
+            .pre_bayes_evidence_filter
+            .evidence_assignments
+            .insert("trade_direction".to_string(), "Bull".to_string());
+
+        let symbol_dir = temp.path().join("CRWD");
+        std::fs::create_dir_all(&symbol_dir).unwrap();
+        std::fs::write(
+            symbol_dir.join(ict_engine::application::orchestration::EXECUTION_TREE_TRACE_FILE),
+            serde_json::to_vec_pretty(&serde_json::json!({
+                "output": {
+                    "execution_readiness": 0.67,
+                    "gate_status": "ready",
+                    "branch": "fill_viable",
+                    "path_ranker_score_visible_to_execution_tree": true,
+                    "path_ranker_score_used_by_execution_tree": true,
+                    "ranker_validation_ready": true,
+                    "hybrid_transition_hazard": 0.595,
+                    "pda_hybrid_alignment": false
+                },
+                "closed_loop_branch_admission": {
+                    "status": "admitted",
+                    "ready": true,
+                    "actionable": true,
+                    "candidate_status": "execution_ready",
+                    "execution_gate_status": "execution_ready",
+                    "execution_tree_gate_status": "ready",
+                    "execution_tree_branch": "fill_viable",
+                    "path_id": branch_path,
+                    "path_label": branch_path,
+                    "pre_bayes_gate_status": "pass_neutralized",
+                    "review_status": "promote_latest",
+                    "source_phase": "structural-recommended-path-bundle"
+                }
+            }))
+            .unwrap(),
+        )
+        .unwrap();
+
+        persist_execution_candidate_from_analyze(temp.path().to_str().unwrap(), &report, "analyze")
+            .unwrap();
+        persist_execution_candidate_from_analyze(temp.path().to_str().unwrap(), &report, "analyze")
+            .unwrap();
+
+        let candidate: ict_engine::state::ExecutionCandidateArtifact =
+            ict_engine::state::load_state(
+                temp.path(),
+                "CRWD",
+                ict_engine::state::EXECUTION_CANDIDATE_FILE,
+            )
+            .unwrap();
+
+        assert!(candidate.diff_from_previous.exact_duplicate);
+        assert!(candidate.actionable);
+        assert_eq!(candidate.candidate_status, "execution_ready");
+        assert_eq!(candidate.branch_path.as_deref(), Some(branch_path));
+        assert_eq!(
+            candidate.regime_profit_branch_path.as_deref(),
+            Some(branch_path)
+        );
+        assert_ne!(candidate.review_decision.status, "discard");
+        assert_eq!(
+            candidate.review_decision.reason,
+            "same_root_execution_tree_admitted_duplicate_kept_active"
+        );
+    }
+
+    #[test]
+    fn execution_candidate_materializes_strict_trend_pullback_wait_for_reversion_admission_when_trade_plan_size_is_zero(
+    ) {
+        let temp = tempfile::tempdir().unwrap();
+        let mut report = sample_analyze_report_with_factor_ranking(Vec::new());
+        report.symbol = "IBKR_STRICT_TREND_ROOT_COMBINED_FEEDBACK_REPLAY_V1".to_string();
+        report.supporting.raw_trade_plan.direction = Direction::Bear;
+        report.supporting.raw_trade_plan.position_size = 0.0;
+        report.supporting.raw_trade_plan.entry = 596.0;
+        report.supporting.raw_trade_plan.stop_loss = 601.6;
+        report.supporting.raw_trade_plan.tp1 = 593.2;
+        report.supporting.raw_trade_plan.tp2 = 590.4;
+        report.supporting.raw_trade_plan.tp3 = 587.6;
+        report.supporting.raw_trade_plan.posterior = 0.4771;
+        report.supporting.raw_trade_plan.win_probability = 0.5037;
+        report.supporting.pre_bayes_evidence_filter.gating_status = "pass_neutralized".to_string();
+        let branch_path =
+            "TrendExpansion -> RootEvidencePullbackMssCisd -> strict_trend_root_pullback_mss_cisd";
+        report
+            .supporting
+            .pre_bayes_evidence_filter
+            .evidence_assignments
+            .insert(
+                "regime_profit_branch_path".to_string(),
+                branch_path.to_string(),
+            );
+        report
+            .supporting
+            .pre_bayes_evidence_filter
+            .evidence_assignments
+            .insert("trade_direction".to_string(), "Bear".to_string());
+
+        let symbol_dir = temp
+            .path()
+            .join("IBKR_STRICT_TREND_ROOT_COMBINED_FEEDBACK_REPLAY_V1");
+        std::fs::create_dir_all(&symbol_dir).unwrap();
+        std::fs::write(
+            symbol_dir.join(ict_engine::application::orchestration::EXECUTION_TREE_TRACE_FILE),
+            serde_json::to_vec_pretty(&serde_json::json!({
+                "output": {
+                    "execution_readiness": 0.67,
+                    "gate_status": "ready",
+                    "branch": "wait_for_reversion",
+                    "execution_bias": "aggressive",
+                    "path_ranker_score_visible_to_execution_tree": true,
+                    "path_ranker_score_used_by_execution_tree": true,
+                    "ranker_validation_ready": true,
+                    "hybrid_transition_hazard": 0.319047619047619,
+                    "pda_hybrid_alignment": false
+                },
+                "closed_loop_branch_admission": {
+                    "status": "admitted",
+                    "reason": "strict_trend_pullback_wait_for_reversion_ready_and_actionable",
+                    "ready": true,
+                    "actionable": true,
+                    "candidate_status": "execution_ready",
+                    "execution_gate_status": "execution_ready",
+                    "execution_tree_gate_status": "ready",
+                    "execution_tree_branch": "wait_for_reversion",
+                    "path_id": branch_path,
+                    "path_label": branch_path,
+                    "pre_bayes_gate_status": "pass_neutralized",
+                    "review_status": "promote_latest",
+                    "source_phase": "structural-recommended-path-bundle"
+                }
+            }))
+            .unwrap(),
+        )
+        .unwrap();
+
+        persist_execution_candidate_from_analyze(temp.path().to_str().unwrap(), &report, "analyze")
+            .unwrap();
+
+        let candidate: ict_engine::state::ExecutionCandidateArtifact =
+            ict_engine::state::load_state(
+                temp.path(),
+                "IBKR_STRICT_TREND_ROOT_COMBINED_FEEDBACK_REPLAY_V1",
+                ict_engine::state::EXECUTION_CANDIDATE_FILE,
+            )
+            .unwrap();
+
+        assert_eq!(candidate.trade_direction, Direction::Bear);
+        assert!(candidate.actionable);
+        assert_eq!(candidate.candidate_status, "execution_ready");
+        assert_eq!(candidate.branch_path.as_deref(), Some(branch_path));
+        assert_eq!(
+            candidate.regime_profit_branch_path.as_deref(),
+            Some(branch_path)
+        );
+        assert!(candidate.branch_fields_preserved);
+        assert_eq!(candidate.review_decision.status, "promote_latest");
+        assert_eq!(
+            candidate.review_decision.reason,
+            "same_root_execution_tree_admitted"
+        );
+    }
+
+    #[test]
+    fn execution_candidate_materializes_strict_trend_pullback_trace_admission_without_report_branch_path(
+    ) {
+        let temp = tempfile::tempdir().unwrap();
+        let mut report = sample_analyze_report_with_factor_ranking(Vec::new());
+        report.symbol = "IBKR_STRICT_TREND_ROOT_COMBINED_FEEDBACK_REPLAY_V1".to_string();
+        report.supporting.raw_trade_plan.direction = Direction::Bear;
+        report.supporting.raw_trade_plan.position_size = 0.0;
+        report.supporting.raw_trade_plan.entry = 596.0;
+        report.supporting.raw_trade_plan.stop_loss = 601.6;
+        report.supporting.raw_trade_plan.tp1 = 593.2;
+        report.supporting.raw_trade_plan.tp2 = 590.4;
+        report.supporting.raw_trade_plan.tp3 = 587.6;
+        report.supporting.raw_trade_plan.posterior = 0.4771;
+        report.supporting.raw_trade_plan.win_probability = 0.5037;
+        report.supporting.pre_bayes_evidence_filter.gating_status = "pass_neutralized".to_string();
+        report
+            .supporting
+            .pre_bayes_evidence_filter
+            .evidence_assignments
+            .clear();
+        assert!(!report
+            .supporting
+            .pre_bayes_evidence_filter
+            .evidence_assignments
+            .contains_key("regime_profit_branch_path"));
+        assert!(!report
+            .supporting
+            .pre_bayes_evidence_filter
+            .evidence_assignments
+            .contains_key("regime_bundle_branch_paths_json"));
+        assert!(!report
+            .supporting
+            .pre_bayes_evidence_filter
+            .evidence_assignments
+            .contains_key("profit_factor"));
+        let branch_path =
+            "TrendExpansion -> RootEvidencePullbackMssCisd -> strict_trend_root_pullback_mss_cisd";
+
+        let symbol_dir = temp
+            .path()
+            .join("IBKR_STRICT_TREND_ROOT_COMBINED_FEEDBACK_REPLAY_V1");
+        std::fs::create_dir_all(&symbol_dir).unwrap();
+        std::fs::write(
+            symbol_dir.join(ict_engine::application::orchestration::EXECUTION_TREE_TRACE_FILE),
+            serde_json::to_vec_pretty(&serde_json::json!({
+                "output": {
+                    "execution_readiness": 0.67,
+                    "gate_status": "ready",
+                    "branch": "wait_for_reversion",
+                    "execution_bias": "aggressive",
+                    "path_ranker_score_visible_to_execution_tree": true,
+                    "path_ranker_score_used_by_execution_tree": true,
+                    "ranker_validation_ready": true,
+                    "hybrid_transition_hazard": 0.319047619047619,
+                    "pda_hybrid_alignment": true
+                },
+                "closed_loop_branch_admission": {
+                    "status": "admitted",
+                    "reason": "strict_trend_pullback_wait_for_reversion_ready_and_actionable",
+                    "ready": true,
+                    "actionable": true,
+                    "candidate_status": "execution_ready",
+                    "execution_gate_status": "execution_ready",
+                    "execution_tree_gate_status": "ready",
+                    "execution_tree_branch": "wait_for_reversion",
+                    "path_id": branch_path,
+                    "path_label": branch_path,
+                    "pre_bayes_gate_status": "pass_neutralized",
+                    "review_status": "promote_latest",
+                    "source_phase": "structural-recommended-path-bundle"
+                }
+            }))
+            .unwrap(),
+        )
+        .unwrap();
+
+        persist_execution_candidate_from_analyze(temp.path().to_str().unwrap(), &report, "analyze")
+            .unwrap();
+
+        let candidate: ict_engine::state::ExecutionCandidateArtifact =
+            ict_engine::state::load_state(
+                temp.path(),
+                "IBKR_STRICT_TREND_ROOT_COMBINED_FEEDBACK_REPLAY_V1",
+                ict_engine::state::EXECUTION_CANDIDATE_FILE,
+            )
+            .unwrap();
+
+        assert_eq!(candidate.trade_direction, Direction::Bear);
+        assert!(candidate.actionable);
+        assert_eq!(candidate.candidate_status, "execution_ready");
+        assert_eq!(candidate.review_decision.status, "promote_latest");
+        assert_eq!(
+            candidate.review_decision.reason,
+            "same_root_execution_tree_admitted"
+        );
+    }
+
+    #[test]
+    fn execution_candidate_preserves_observe_branch_path_from_execution_tree_without_promoting() {
+        let temp = tempfile::tempdir().unwrap();
+        let mut report = sample_analyze_report_with_factor_ranking(Vec::new());
+        report.symbol = "TOMAC_TOD_CAP65_REDUCED_WINDOW_DOWNSTREAM_NQ_ANCHOR".to_string();
+        report.supporting.raw_trade_plan.direction = Direction::Bull;
+        report.supporting.raw_trade_plan.position_size = 0.0;
+        report.supporting.raw_trade_plan.entry = 22000.0;
+        report.supporting.raw_trade_plan.stop_loss = 21970.0;
+        report.supporting.raw_trade_plan.tp1 = 22030.0;
+        report.supporting.raw_trade_plan.tp2 = 22060.0;
+        report.supporting.raw_trade_plan.tp3 = 22090.0;
+        report.supporting.raw_trade_plan.posterior = 0.49;
+        report.supporting.raw_trade_plan.win_probability = 0.51;
+        report.supporting.pre_bayes_evidence_filter.gating_status = "pass_neutralized".to_string();
+        report
+            .supporting
+            .pre_bayes_evidence_filter
+            .evidence_assignments
+            .clear();
+        let branch_path = "SessionRhythm -> TimeOfDaySeasonality -> BalancedAdaptiveSlotPortfolio";
+
+        let symbol_dir = temp
+            .path()
+            .join("TOMAC_TOD_CAP65_REDUCED_WINDOW_DOWNSTREAM_NQ_ANCHOR");
+        std::fs::create_dir_all(&symbol_dir).unwrap();
+        std::fs::write(
+            symbol_dir.join(ict_engine::application::orchestration::EXECUTION_TREE_TRACE_FILE),
+            serde_json::to_vec_pretty(&serde_json::json!({
+                "output": {
+                    "execution_readiness": 0.3699682581650155,
+                    "gate_status": "observe",
+                    "branch": "transition_guardrail",
+                    "execution_bias": "guarded",
+                    "path_ranker_score_visible_to_execution_tree": true,
+                    "path_ranker_score_used_by_execution_tree": false,
+                    "ranker_validation_ready": false,
+                    "hybrid_transition_hazard": 0.6390215249399245,
+                    "pda_hybrid_alignment": true
+                },
+                "closed_loop_branch_admission": {
+                    "status": "fail_closed",
+                    "reason": "exact_structural_branch_visible_but_not_ready_or_actionable",
+                    "ready": false,
+                    "actionable": false,
+                    "candidate_status": "execution_observe_only",
+                    "execution_gate_status": "execution_observe_only",
+                    "execution_tree_gate_status": "observe",
+                    "execution_tree_branch": "transition_guardrail",
+                    "path_id": branch_path,
+                    "path_label": branch_path,
+                    "pre_bayes_gate_status": "pass_neutralized",
+                    "review_status": "observe",
+                    "source_phase": "structural-recommended-path-bundle"
+                }
+            }))
+            .unwrap(),
+        )
+        .unwrap();
+
+        persist_execution_candidate_from_analyze(temp.path().to_str().unwrap(), &report, "analyze")
+            .unwrap();
+
+        let candidate: ict_engine::state::ExecutionCandidateArtifact =
+            ict_engine::state::load_state(
+                temp.path(),
+                "TOMAC_TOD_CAP65_REDUCED_WINDOW_DOWNSTREAM_NQ_ANCHOR",
+                ict_engine::state::EXECUTION_CANDIDATE_FILE,
+            )
+            .unwrap();
+
+        assert_eq!(candidate.trade_direction, Direction::Bull);
+        assert!(!candidate.actionable);
+        assert_eq!(candidate.candidate_status, "execution_observe_only");
+        assert_eq!(candidate.branch_path.as_deref(), Some(branch_path));
+        assert_eq!(
+            candidate.regime_profit_branch_path.as_deref(),
+            Some(branch_path)
+        );
+        assert!(candidate.branch_fields_preserved);
+        assert_eq!(candidate.review_decision.status, "observe");
+    }
+
+    #[test]
+    fn execution_candidate_preserves_trace_branch_path_for_neutral_no_trade() {
+        let temp = tempfile::tempdir().unwrap();
+        let mut report = sample_analyze_report_with_factor_ranking(Vec::new());
+        report.symbol =
+            "IBKR_SI5M_TIGHT_RANGE_BAND_EXPANSION_FADE_TRUE_1M_CONTEXT_SIM_TRADE_ADMISSION_V1"
+                .to_string();
+        report.supporting.raw_trade_plan.direction = Direction::Neutral;
+        report.supporting.raw_trade_plan.position_size = 0.0;
+        report.supporting.pre_bayes_evidence_filter.gating_status = "pass_neutralized".to_string();
+        report
+            .supporting
+            .pre_bayes_evidence_filter
+            .evidence_assignments
+            .clear();
+        let branch_path = "RangeConsolidation -> TightRangeBandExpansionFade -> ibkr_si5m_tight_range_band_expansion_fade_1m_gate1_v1";
+
+        let symbol_dir = temp.path().join(
+            "IBKR_SI5M_TIGHT_RANGE_BAND_EXPANSION_FADE_TRUE_1M_CONTEXT_SIM_TRADE_ADMISSION_V1",
+        );
+        std::fs::create_dir_all(&symbol_dir).unwrap();
+        std::fs::write(
+            symbol_dir.join(ict_engine::application::orchestration::EXECUTION_TREE_TRACE_FILE),
+            serde_json::to_vec_pretty(&serde_json::json!({
+                "output": {
+                    "execution_readiness": 0.4075716612293404,
+                    "gate_status": "observe",
+                    "branch": "transition_guardrail",
+                    "path_ranker_score_visible_to_execution_tree": true,
+                    "path_ranker_score_used_by_execution_tree": false,
+                    "ranker_validation_ready": false,
+                    "hybrid_transition_hazard": 0.6157999879763439,
+                    "pda_hybrid_alignment": true
+                },
+                "closed_loop_branch_admission": {
+                    "status": "fail_closed",
+                    "ready": false,
+                    "actionable": false,
+                    "candidate_status": "no_trade",
+                    "execution_gate_status": "observe",
+                    "execution_tree_gate_status": "observe",
+                    "execution_tree_branch": "transition_guardrail",
+                    "path_id": branch_path,
+                    "path_label": branch_path,
+                    "pre_bayes_gate_status": "pass_neutralized",
+                    "review_status": "observe",
+                    "source_phase": "structural-recommended-path-bundle"
+                }
+            }))
+            .unwrap(),
+        )
+        .unwrap();
+
+        persist_execution_candidate_from_analyze(temp.path().to_str().unwrap(), &report, "analyze")
+            .unwrap();
+
+        let candidate: ict_engine::state::ExecutionCandidateArtifact =
+            ict_engine::state::load_state(
+                temp.path(),
+                "IBKR_SI5M_TIGHT_RANGE_BAND_EXPANSION_FADE_TRUE_1M_CONTEXT_SIM_TRADE_ADMISSION_V1",
+                ict_engine::state::EXECUTION_CANDIDATE_FILE,
+            )
+            .unwrap();
+
+        assert_eq!(candidate.trade_direction, Direction::Neutral);
+        assert!(!candidate.actionable);
+        assert_eq!(candidate.candidate_status, "no_trade");
+        assert_eq!(candidate.branch_path.as_deref(), Some(branch_path));
+        assert_eq!(
+            candidate.regime_profit_branch_path.as_deref(),
+            Some(branch_path)
+        );
+        assert!(candidate.branch_fields_preserved);
+    }
+
+    #[test]
+    fn execution_candidate_canonicalizes_legacy_market_prefix_branch_path_without_promoting() {
+        let temp = tempfile::tempdir().unwrap();
+        let mut report = sample_analyze_report_with_factor_ranking(Vec::new());
+        report.symbol =
+            "IBKR_M2K1M_RVOL_PDA_CONSISTENCY_FLOOR_FRESH14D_LADDER_READBACK_V1".to_string();
+        report.supporting.raw_trade_plan.direction = Direction::Bear;
+        report.supporting.raw_trade_plan.position_size = 0.0;
+        report.supporting.raw_trade_plan.entry = 2210.0;
+        report.supporting.raw_trade_plan.stop_loss = 2220.0;
+        report.supporting.raw_trade_plan.tp1 = 2200.0;
+        report.supporting.raw_trade_plan.tp2 = 2190.0;
+        report.supporting.raw_trade_plan.tp3 = 2180.0;
+        report.supporting.raw_trade_plan.posterior = 0.49;
+        report.supporting.raw_trade_plan.win_probability = 0.51;
+        report.supporting.pre_bayes_evidence_filter.gating_status = "observe_only".to_string();
+        let legacy_branch_path = "FUTURES -> equity_index -> M2K -> 1m -> RangeReversion -> LiquiditySweepRejectShort -> ibkr_m2k1m_liquidity_sweep_reject_short_7d_gate1_v1 -> ibkr_m2k1m_liquidity_sweep_reject_short_rvol_pda_guard_pda_consistency_floor_v1";
+        let canonical_branch_path = "RangeReversion -> LiquiditySweepRejectShort -> ibkr_m2k1m_liquidity_sweep_reject_short_7d_gate1_v1 -> ibkr_m2k1m_liquidity_sweep_reject_short_rvol_pda_guard_pda_consistency_floor_v1";
+        report
+            .supporting
+            .pre_bayes_evidence_filter
+            .evidence_assignments
+            .insert(
+                "regime_profit_branch_path".to_string(),
+                legacy_branch_path.to_string(),
+            );
+
+        persist_execution_candidate_from_analyze(temp.path().to_str().unwrap(), &report, "analyze")
+            .unwrap();
+
+        let candidate: ict_engine::state::ExecutionCandidateArtifact =
+            ict_engine::state::load_state(
+                temp.path(),
+                "IBKR_M2K1M_RVOL_PDA_CONSISTENCY_FLOOR_FRESH14D_LADDER_READBACK_V1",
+                ict_engine::state::EXECUTION_CANDIDATE_FILE,
+            )
+            .unwrap();
+
+        assert_eq!(candidate.trade_direction, Direction::Bear);
+        assert!(!candidate.actionable);
+        assert_eq!(candidate.candidate_status, "no_trade");
+        assert_eq!(
+            candidate.branch_path.as_deref(),
+            Some(canonical_branch_path)
+        );
+        assert_eq!(
+            candidate.regime_profit_branch_path.as_deref(),
+            Some(canonical_branch_path)
+        );
+        assert!(candidate.branch_fields_preserved);
+        assert_eq!(candidate.review_decision.status, "observe");
     }
 
     #[test]

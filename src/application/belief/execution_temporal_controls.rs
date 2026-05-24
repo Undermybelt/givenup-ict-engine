@@ -10,14 +10,6 @@ fn transition_hazard_block_threshold() -> f64 {
         .unwrap_or(0.60)
 }
 
-fn transition_hazard_context_relaxed_threshold() -> f64 {
-    std::env::var("ICT_ENGINE_TRANSITION_HAZARD_CONTEXT_RELAXED_THRESHOLD")
-        .ok()
-        .and_then(|raw| raw.parse::<f64>().ok())
-        .filter(|value| value.is_finite())
-        .unwrap_or(0.75)
-}
-
 pub fn apply_duration_sizing_adjustment(
     mut trade_plan: TradePlan,
     market: &str,
@@ -112,16 +104,11 @@ pub fn apply_regime_execution_guardrail(
                 | "pda_hybrid_alignment_context=trend_pullback_structure_supplement"
         )
     });
-    let effective_pda_disagreement = pda_disagreement && !pda_disagreement_execution_accepted;
-    let transition_hazard_threshold = if pda_disagreement_execution_accepted {
-        transition_hazard_context_relaxed_threshold().max(base_transition_hazard_threshold)
-    } else {
-        base_transition_hazard_threshold
-    };
+    let transition_hazard_threshold = base_transition_hazard_threshold;
     let high_transition_hazard =
         hybrid_regime.transition_hazard.unwrap_or_default() >= transition_hazard_threshold;
     output.hybrid_transition_hazard = hybrid_regime.transition_hazard;
-    output.pda_hybrid_alignment = Some(!effective_pda_disagreement);
+    output.pda_hybrid_alignment = Some(!pda_disagreement);
     let low_remaining_duration = hybrid_regime
         .duration_remaining_expected_bars
         .unwrap_or(f64::INFINITY)
@@ -130,7 +117,7 @@ pub fn apply_regime_execution_guardrail(
         .duration_remaining_expected_bars
         .unwrap_or(f64::INFINITY)
         <= 2.5;
-    if high_transition_hazard || effective_pda_disagreement || low_remaining_duration {
+    if high_transition_hazard || low_remaining_duration {
         output.gate_status = "observe".to_string();
         output.branch = "transition_guardrail".to_string();
         output.execution_bias = "guarded".to_string();
@@ -138,8 +125,6 @@ pub fn apply_regime_execution_guardrail(
         output.posterior_uncertainty = output.posterior_uncertainty.max(0.60);
         output.decision_hint = if low_remaining_duration {
             "execution_guarded_due_to_low_remaining_regime_duration".to_string()
-        } else if effective_pda_disagreement {
-            "execution_guarded_due_to_pda_hybrid_disagreement".to_string()
         } else {
             "execution_guarded_due_to_high_transition_hazard".to_string()
         };
@@ -148,23 +133,6 @@ pub fn apply_regime_execution_guardrail(
             hybrid_regime.transition_hazard.unwrap_or_default(),
             transition_hazard_threshold
         ));
-        if effective_pda_disagreement {
-            output
-                .split_reason_lineage
-                .push("pda_hybrid_alignment=false".to_string());
-            for prefix in [
-                "pda_sequence_h1_second_expansion_support=",
-                "pda_sequence_h0_no_second_expansion_support=",
-            ] {
-                if let Some(line) = hybrid_regime
-                    .evidence
-                    .iter()
-                    .find(|line| line.starts_with(prefix))
-                {
-                    output.split_reason_lineage.push(line.clone());
-                }
-            }
-        }
         if low_remaining_duration || short_remaining_duration {
             output.split_reason_lineage.push(format!(
                 "duration_remaining_expected_bars={:.3}",
@@ -181,6 +149,23 @@ pub fn apply_regime_execution_guardrail(
                 .duration_remaining_expected_bars
                 .unwrap_or_default()
         ));
+    }
+    if pda_disagreement {
+        output
+            .split_reason_lineage
+            .push("pda_hybrid_alignment=false_non_blocking=true".to_string());
+        for prefix in [
+            "pda_sequence_h1_second_expansion_support=",
+            "pda_sequence_h0_no_second_expansion_support=",
+        ] {
+            if let Some(line) = hybrid_regime
+                .evidence
+                .iter()
+                .find(|line| line.starts_with(prefix))
+            {
+                output.split_reason_lineage.push(line.clone());
+            }
+        }
     }
     if pda_disagreement_execution_accepted {
         output
@@ -234,7 +219,7 @@ mod tests {
     }
 
     #[test]
-    fn guardrail_keeps_pda_disagreement_observe_but_preserves_h1_h0_lineage() {
+    fn guardrail_keeps_pda_disagreement_non_blocking_but_preserves_h1_h0_lineage() {
         let output = apply_regime_execution_guardrail(
             ready_execution_output(),
             &regime_packet(vec![
@@ -244,12 +229,12 @@ mod tests {
             ]),
         );
 
-        assert_eq!(output.gate_status, "observe");
-        assert_eq!(output.branch, "transition_guardrail");
-        assert_eq!(
-            output.decision_hint,
-            "execution_guarded_due_to_pda_hybrid_disagreement"
-        );
+        assert_eq!(output.gate_status, "ready");
+        assert_eq!(output.branch, "fill_viable");
+        assert_eq!(output.pda_hybrid_alignment, Some(false));
+        assert!(output
+            .split_reason_lineage
+            .contains(&"pda_hybrid_alignment=false_non_blocking=true".to_string()));
         assert!(output
             .split_reason_lineage
             .contains(&"pda_sequence_h1_second_expansion_support=0.7715".to_string()));
@@ -270,12 +255,12 @@ mod tests {
 
         assert_eq!(output.gate_status, "ready");
         assert_eq!(output.branch, "fill_viable");
-        assert_eq!(output.pda_hybrid_alignment, Some(true));
+        assert_eq!(output.pda_hybrid_alignment, Some(false));
         assert!(output
             .split_reason_lineage
             .contains(&"pda_hybrid_alignment=false_context_accepted=true".to_string()));
         assert!(output.split_reason_lineage.contains(
-            &"transition_hazard_context_threshold=0.750 base_threshold=0.600".to_string()
+            &"transition_hazard_context_threshold=0.600 base_threshold=0.600".to_string()
         ));
 
         let mut moderately_high_hazard = regime_packet(vec![
@@ -285,8 +270,8 @@ mod tests {
         moderately_high_hazard.transition_hazard = Some(0.70);
         let relaxed =
             apply_regime_execution_guardrail(ready_execution_output(), &moderately_high_hazard);
-        assert_eq!(relaxed.gate_status, "ready");
-        assert_eq!(relaxed.branch, "fill_viable");
+        assert_eq!(relaxed.gate_status, "observe");
+        assert_eq!(relaxed.branch, "transition_guardrail");
 
         let mut high_hazard = regime_packet(vec![
             "pda_hybrid_alignment=false".to_string(),

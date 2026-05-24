@@ -321,6 +321,12 @@ pub struct AutoQuantRealTradeTrainingRow {
     pub followed_path: bool,
     pub direction: String,
     pub selected_probability: f64,
+    pub trend_root_evidence_score: f64,
+    pub mss_break: bool,
+    pub cisd_displacement: bool,
+    pub low_trend_probability_boundary: bool,
+    pub terminal_trend_boundary: bool,
+    pub trend_root_feedback_bucket: String,
     pub pnl: f64,
     pub realized_outcome: String,
 }
@@ -3919,9 +3925,45 @@ fn auto_quant_real_trade_feedback_training_row(
             record.model_probabilities_before_trade.selected_direction
         ),
         selected_probability: record.model_probabilities_before_trade.selected_probability,
+        trend_root_evidence_score: feedback_factor_value(record, "trend_root_evidence_score"),
+        mss_break: feedback_factor_bool(record, "trend_root_mss_break"),
+        cisd_displacement: feedback_factor_bool(record, "trend_root_cisd_displacement"),
+        low_trend_probability_boundary: feedback_factor_bool(
+            record,
+            "trend_root_low_probability_boundary",
+        ),
+        terminal_trend_boundary: feedback_factor_bool(record, "trend_root_terminal_boundary"),
+        trend_root_feedback_bucket: auto_quant_real_trade_feedback_bucket(record),
         pnl: record.pnl,
         realized_outcome: record.realized_outcome.clone(),
     })
+}
+
+fn feedback_factor_value(record: &crate::state::FeedbackRecord, category: &str) -> f64 {
+    record
+        .factors_used
+        .iter()
+        .find(|factor| factor.category == category || factor.factor_name == category)
+        .map(|factor| factor.value)
+        .unwrap_or(0.0)
+}
+
+fn feedback_factor_bool(record: &crate::state::FeedbackRecord, category: &str) -> bool {
+    feedback_factor_value(record, category) >= 0.5
+}
+
+fn auto_quant_real_trade_feedback_bucket(record: &crate::state::FeedbackRecord) -> String {
+    let outcome = record.realized_outcome.trim().to_ascii_lowercase();
+    let low_probability = feedback_factor_bool(record, "trend_root_low_probability_boundary");
+    let terminal = feedback_factor_bool(record, "trend_root_terminal_boundary");
+    match (outcome.as_str(), low_probability, terminal) {
+        ("loss", true, _) => "low_trend_probability_loss".to_string(),
+        ("loss", _, true) => "terminal_trend_loss".to_string(),
+        ("loss", _, _) => "valid_trend_pullback_loss".to_string(),
+        ("win", _, _) => "valid_trend_pullback_win".to_string(),
+        ("breakeven", _, _) => "valid_trend_pullback_breakeven".to_string(),
+        _ => "unclassified_trend_root_feedback".to_string(),
+    }
 }
 
 fn auto_quant_real_trade_feedback_is_consumable(record: &crate::state::FeedbackRecord) -> bool {
@@ -4218,11 +4260,11 @@ fn render_breaker_catboost_training_csv(rows: &[BreakerRbCatBoostTrainingRow]) -
 
 fn render_auto_quant_real_trade_feedback_csv(rows: &[AutoQuantRealTradeTrainingRow]) -> String {
     let mut out = String::from(
-        "timestamp,symbol,source,run_id,trade_id,strategy_or_factor,regime_profit_branch_path,main_regime,sub_regime,sub_sub_regime_or_profit_factor,profit_factor,followed_path,direction,selected_probability,pnl,realized_outcome\n",
+        "timestamp,symbol,source,run_id,trade_id,strategy_or_factor,regime_profit_branch_path,main_regime,sub_regime,sub_sub_regime_or_profit_factor,profit_factor,followed_path,direction,selected_probability,trend_root_evidence_score,mss_break,cisd_displacement,low_trend_probability_boundary,terminal_trend_boundary,trend_root_feedback_bucket,pnl,realized_outcome\n",
     );
     for row in rows {
         out.push_str(&format!(
-            "{},{},{},{},{},{},{},{},{},{},{},{},{},{:.6},{:.6},{}\n",
+            "{},{},{},{},{},{},{},{},{},{},{},{},{},{:.6},{:.6},{},{},{},{},{},{:.6},{}\n",
             csv_cell(&row.timestamp),
             csv_cell(&row.symbol),
             csv_cell(&row.source),
@@ -4237,6 +4279,12 @@ fn render_auto_quant_real_trade_feedback_csv(rows: &[AutoQuantRealTradeTrainingR
             row.followed_path,
             csv_cell(&row.direction),
             row.selected_probability,
+            row.trend_root_evidence_score,
+            row.mss_break,
+            row.cisd_displacement,
+            row.low_trend_probability_boundary,
+            row.terminal_trend_boundary,
+            csv_cell(&row.trend_root_feedback_bucket),
             row.pnl,
             csv_cell(&row.realized_outcome)
         ));
@@ -4259,8 +4307,8 @@ mod tests {
         insert_entry_model_packet, EntryModelPacketStore, CISD_RB_SETUP_MODEL_ID,
     };
     use crate::state::{
-        save_learning_state, save_state, AnalyzeRunRecord, FeedbackRecord, LearningState,
-        ModelProbabilitySnapshot, StructuralFeedbackRefs, UpdateRunRecord,
+        save_learning_state, save_state, AnalyzeRunRecord, FeedbackFactorUsage, FeedbackRecord,
+        LearningState, ModelProbabilitySnapshot, StructuralFeedbackRefs, UpdateRunRecord,
     };
     use std::io::{Read, Write};
     use std::net::TcpListener;
@@ -4901,6 +4949,118 @@ detector_context:
             row.profit_factor,
             "VolatilityCompression -> SweepReclaim -> NQRootAdaptiveCostCrisisRepairV3:crisis_carry_h8_sl048_tp12"
         );
+    }
+
+    #[test]
+    fn auto_quant_real_trade_feedback_row_projects_trend_root_entry_evidence() {
+        let branch_path =
+            "TrendExpansion -> RootEvidencePullbackMssCisd -> strict_trend_root_pullback_mss_cisd";
+        let record = FeedbackRecord {
+            timestamp: Utc::now(),
+            symbol: "MES".to_string(),
+            source: "auto_quant_real_trades:strict-trend-root-test".to_string(),
+            run_id: Some("aq:test:trend-root-evidence".to_string()),
+            trade_id: Some("trade:trend-root-evidence:1".to_string()),
+            prompt_version: None,
+            factor_version: None,
+            data_fingerprint: None,
+            factors_used: vec![
+                FeedbackFactorUsage {
+                    factor_name: "trend_root_evidence_score".to_string(),
+                    category: "trend_root_evidence_score".to_string(),
+                    direction: crate::types::Direction::Bull,
+                    value: 0.86,
+                    confidence: 1.0,
+                    weight: 1.0,
+                    long_support: 0.86,
+                    short_support: 0.0,
+                    uncertainty_contribution: 0.14,
+                },
+                FeedbackFactorUsage {
+                    factor_name: "trend_root_mss_break".to_string(),
+                    category: "trend_root_mss_break".to_string(),
+                    direction: crate::types::Direction::Bull,
+                    value: 1.0,
+                    confidence: 1.0,
+                    weight: 1.0,
+                    long_support: 1.0,
+                    short_support: 0.0,
+                    uncertainty_contribution: 0.0,
+                },
+                FeedbackFactorUsage {
+                    factor_name: "trend_root_cisd_displacement".to_string(),
+                    category: "trend_root_cisd_displacement".to_string(),
+                    direction: crate::types::Direction::Neutral,
+                    value: 0.0,
+                    confidence: 1.0,
+                    weight: 1.0,
+                    long_support: 0.0,
+                    short_support: 0.0,
+                    uncertainty_contribution: 0.0,
+                },
+                FeedbackFactorUsage {
+                    factor_name: "trend_root_low_probability_boundary".to_string(),
+                    category: "trend_root_low_probability_boundary".to_string(),
+                    direction: crate::types::Direction::Neutral,
+                    value: 0.0,
+                    confidence: 1.0,
+                    weight: 1.0,
+                    long_support: 0.0,
+                    short_support: 0.0,
+                    uncertainty_contribution: 0.0,
+                },
+                FeedbackFactorUsage {
+                    factor_name: "trend_root_terminal_boundary".to_string(),
+                    category: "trend_root_terminal_boundary".to_string(),
+                    direction: crate::types::Direction::Neutral,
+                    value: 1.0,
+                    confidence: 1.0,
+                    weight: 1.0,
+                    long_support: 0.0,
+                    short_support: 0.0,
+                    uncertainty_contribution: 0.0,
+                },
+            ],
+            model_probabilities_before_trade: crate::state::ModelProbabilitySnapshot {
+                selected_direction: crate::types::Direction::Bull,
+                selected_probability: 0.86,
+                long_score: 0.86,
+                short_score: 0.14,
+                win_prob_long: 0.86,
+                win_prob_short: 0.14,
+                uncertainty: 0.14,
+            },
+            realized_outcome: "loss".to_string(),
+            pnl: -0.004,
+            regime_at_entry: crate::types::Regime::ManipulationExpansion,
+            structural_feedback: Some(StructuralFeedbackRefs {
+                protocol_version: "structural-feedback-v1".to_string(),
+                recommendation_id: "structural-feedback:test:trend-root-evidence".to_string(),
+                recommended_at: "2026-05-24T00:00:00Z".to_string(),
+                node_id: "TrendExpansion".to_string(),
+                branch_id: "TrendExpansion -> RootEvidencePullbackMssCisd".to_string(),
+                scenario_id:
+                    "TrendExpansion -> RootEvidencePullbackMssCisd -> strict_trend_root_pullback_mss_cisd"
+                        .to_string(),
+                path_id: branch_path.to_string(),
+                followed_path: true,
+                exit_reason: Some("exit_signal".to_string()),
+                notes: Some("trend root entry evidence projection test".to_string()),
+            }),
+            reflection_mismatch_tags: Vec::new(),
+        };
+
+        let row = auto_quant_real_trade_feedback_training_row(&record).unwrap();
+        let csv = render_auto_quant_real_trade_feedback_csv(std::slice::from_ref(&row));
+
+        assert_eq!(row.trend_root_evidence_score, 0.86);
+        assert!(row.mss_break);
+        assert!(!row.cisd_displacement);
+        assert!(!row.low_trend_probability_boundary);
+        assert!(row.terminal_trend_boundary);
+        assert_eq!(row.trend_root_feedback_bucket, "terminal_trend_loss");
+        assert!(csv.contains("trend_root_evidence_score,mss_break,cisd_displacement"));
+        assert!(csv.contains("terminal_trend_loss"));
     }
 
     #[test]

@@ -633,6 +633,38 @@ Expected_regime: TrendTransition -> LiquidityReclaim -> family_d_liquidity_sweep
             "TrendTransition -> LiquidityReclaim -> family_d_liquidity_sweep_reclaim_15m_wide_v1 -> liquidity_sweep_reclaim_long",
         )
 
+    def test_branch_path_contract_preserves_recursive_profit_factor_suffix(self) -> None:
+        branch_path = (
+            "TrendExpansion -> RootEvidencePullbackMssCisd -> "
+            "strict_trend_root_pullback_mss_cisd -> "
+            "vwap_reclaim_overlay -> pda_transition_guard"
+        )
+        contract = pack._branch_path_contract(
+            {
+                "expected_regime": branch_path,
+                "base_timeframe": "1m",
+                "context_timeframes": ["5m", "15m", "30m", "1h", "4h", "1d"],
+            },
+            {"timeframe": "1m"},
+        )
+
+        self.assertIsNotNone(contract)
+        assert contract is not None
+        self.assertEqual(contract["main_regime"], "TrendExpansion")
+        self.assertEqual(contract["sub_regime"], "RootEvidencePullbackMssCisd")
+        self.assertEqual(
+            contract["sub_sub_regime_or_profit_factor"],
+            "strict_trend_root_pullback_mss_cisd",
+        )
+        self.assertEqual(
+            contract["profit_factor"],
+            "vwap_reclaim_overlay -> pda_transition_guard",
+        )
+        self.assertEqual(contract["regime_profit_branch_path"], branch_path)
+        self.assertEqual(contract["training_timeframe"], "1m_and_5m")
+        self.assertEqual(contract["neutralization_timeframe"], "15m")
+        self.assertEqual(contract["confirmation_timeframe"], "1d")
+
     def test_main_writes_artifacts(self) -> None:
         manifest = {
             "manifest_version": "1.0",

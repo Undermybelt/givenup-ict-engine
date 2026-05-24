@@ -43,7 +43,7 @@ Default agent behavior:
 ## New Compact Authority Files
 
 - Board A current state: `support/docs/plans/2026-05-12-board-a-regime-state-current.md`
-- Board B current state: `support/docs/plans/2026-05-12-board-b-profit-factor-current.md`
+- Board B current state: `support/docs/plans/2026-05-23-board-b-current.md`
 - Factor candidate ingestion instructions: `support/docs/plans/2026-05-12-factor-candidate-ingestion-instructions.md`
 
 These files are the current read targets. The old append-only logs remain

@@ -5123,7 +5123,7 @@ fn build_workflow_status_phase_value_with_structural_prior_state_and_state_dir(
         "pending-update-history" => serde_json::to_value(
             &build_auxiliary_artifact_surfaces(snapshot).pending_update_history,
         )?,
-        "execution-candidate" => {
+        "execution-candidate" | "execution_candidate" => {
             structural_execution_candidate_value(
                 snapshot,
                 provider_status_agent,
@@ -7783,6 +7783,28 @@ mod tests {
         )
         .unwrap();
         assert_eq!(value.as_array().unwrap()[0]["factor_name"], "fvg_rebalance");
+    }
+
+    #[test]
+    fn build_workflow_status_phase_value_supports_execution_candidate_underscore_alias() {
+        let snapshot = WorkflowSnapshot::default();
+        let expected = build_workflow_status_phase_value(
+            &snapshot,
+            &[],
+            &sample_provider_agent_surface(),
+            &[],
+            "execution-candidate",
+        )
+        .unwrap();
+        let value = build_workflow_status_phase_value(
+            &snapshot,
+            &[],
+            &sample_provider_agent_surface(),
+            &[],
+            "execution_candidate",
+        )
+        .unwrap();
+        assert_eq!(value, expected);
     }
 
     #[test]

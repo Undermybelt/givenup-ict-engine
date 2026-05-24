@@ -13239,7 +13239,7 @@ mod tests {
     }
 
     #[test]
-    fn test_apply_regime_execution_guardrail_blocks_on_pda_hybrid_disagreement() {
+    fn test_apply_regime_execution_guardrail_keeps_pda_hybrid_disagreement_non_blocking() {
         let output = apply_regime_execution_guardrail(
             ict_engine::application::orchestration::ExecutionTreeOutput {
                 gate_status: "ready".to_string(),
@@ -13270,12 +13270,12 @@ mod tests {
                 timeframe_alignment_score: Some(1.0),
             },
         );
-        assert_eq!(output.gate_status, "observe");
-        assert_eq!(output.branch, "transition_guardrail");
-        assert_eq!(
-            output.decision_hint,
-            "execution_guarded_due_to_pda_hybrid_disagreement"
-        );
+        assert_eq!(output.gate_status, "ready");
+        assert_eq!(output.branch, "fill_viable");
+        assert_eq!(output.pda_hybrid_alignment, Some(false));
+        assert!(output
+            .split_reason_lineage
+            .contains(&"pda_hybrid_alignment=false_non_blocking=true".to_string()));
     }
 
     #[test]
@@ -14265,7 +14265,10 @@ mod tests {
         );
 
         assert!(strong_pda.evidence_quality_score > no_pda.evidence_quality_score);
-        assert!(weak_pda.evidence_quality_score < no_pda.evidence_quality_score);
+        assert_eq!(
+            weak_pda.evidence_quality_score,
+            no_pda.evidence_quality_score
+        );
         assert!(weak_pda
             .conflict_flags
             .iter()
@@ -14273,7 +14276,7 @@ mod tests {
     }
 
     #[test]
-    fn test_build_pre_bayes_evidence_filter_sparse_pda_forces_observe_only() {
+    fn test_build_pre_bayes_evidence_filter_sparse_pda_is_telemetry_only() {
         let policy = pre_bayes_evidence_policy();
         let filter = build_pre_bayes_evidence_filter(
             &policy,
@@ -14309,7 +14312,8 @@ mod tests {
                 kmer_k: 2,
             }),
         );
-        assert_eq!(filter.gating_status, "observe_only");
+        assert_eq!(filter.gating_status, "pass_hard");
+        assert!(filter.pass_to_bbn);
         assert!(filter
             .conflict_flags
             .iter()
@@ -14317,7 +14321,7 @@ mod tests {
     }
 
     #[test]
-    fn test_build_pre_bayes_evidence_filter_low_consistency_caps_hard_pass() {
+    fn test_build_pre_bayes_evidence_filter_low_consistency_is_telemetry_only() {
         let policy = pre_bayes_evidence_policy();
         let filter = build_pre_bayes_evidence_filter(
             &policy,
@@ -14353,7 +14357,8 @@ mod tests {
                 kmer_k: 2,
             }),
         );
-        assert_eq!(filter.gating_status, "pass_neutralized");
+        assert_eq!(filter.gating_status, "pass_hard");
+        assert!(filter.pass_to_bbn);
         assert!(filter
             .conflict_flags
             .iter()
@@ -14361,7 +14366,7 @@ mod tests {
     }
 
     #[test]
-    fn test_build_pre_bayes_evidence_filter_pda_regime_family_disagreement_caps_hard_pass() {
+    fn test_build_pre_bayes_evidence_filter_pda_regime_family_disagreement_is_telemetry_only() {
         let policy = pre_bayes_evidence_policy();
         let filter = build_pre_bayes_evidence_filter(
             &policy,
@@ -14397,11 +14402,66 @@ mod tests {
                 kmer_k: 2,
             }),
         );
-        assert_eq!(filter.gating_status, "pass_neutralized");
+        assert_eq!(filter.gating_status, "pass_hard");
+        assert!(filter.pass_to_bbn);
         assert!(filter
             .conflict_flags
             .iter()
             .any(|flag| flag == "pda_regime_family_disagreement"));
+    }
+
+    #[test]
+    fn test_build_pre_bayes_evidence_filter_uses_branch_root_for_pda_family_match() {
+        let policy = pre_bayes_evidence_policy();
+        let filter = build_pre_bayes_evidence_filter_with_branch_context(
+            PreBayesEvidenceFilterInput {
+                policy: &policy,
+                regime_label: "bull",
+                liquidity_label: "neutral",
+                factor_diagnostics: &FactorDiagnostics {
+                    long_support: 0.20,
+                    short_support: 0.76,
+                    uncertainty: 0.12,
+                    alignment_label: "bearish".to_string(),
+                    uncertainty_label: "low".to_string(),
+                    ..FactorDiagnostics::default()
+                },
+                multi_timeframe_evidence: &ParsedMultiTimeframeEvidence {
+                    direction_bias: "bearish".to_string(),
+                    alignment_score: Some(0.91),
+                    entry_alignment_score: Some(0.88),
+                    covered_count: 6,
+                },
+                market: Some("M2K"),
+                pda_sequence_summary: Some(&ict_engine::pda_sequence::PdaSequenceArtifactSummary {
+                    method: "pda_sequence_analysis_v2".to_string(),
+                    primary_cluster: Some(0),
+                    primary_cluster_label: Some("cluster_0".to_string()),
+                    primary_cluster_family: Some("range".to_string()),
+                    primary_cluster_direction: Some("bear".to_string()),
+                    primary_cluster_directional_confirmation_ratio: Some(0.25),
+                    primary_cluster_confidence: Some(0.92),
+                    consistency_ratio: 0.82,
+                    ensemble_mean_confidence: 0.85,
+                    valid_sessions: 8,
+                    total_sessions: 10,
+                    kmer_k: 2,
+                }),
+                branch_direction_context: Some(PreBayesBranchDirectionContext {
+                    regime_profit_branch_path: "RangeReversion -> LiquiditySweepRejectShort -> parent_factor_v1 -> factor_v1",
+                    trade_direction: "Bear",
+                }),
+            },
+        );
+
+        assert!(!filter
+            .conflict_flags
+            .iter()
+            .any(|flag| flag == "pda_regime_family_disagreement"));
+        assert!(filter
+            .rationale
+            .iter()
+            .any(|line| line.contains("regime_profit_branch_path=RangeReversion")));
     }
 
     #[test]

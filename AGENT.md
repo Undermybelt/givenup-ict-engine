@@ -204,7 +204,7 @@ TimesFM is an optional forecast bridge (`src/python_bridge/timesfm.rs` and
 - For Board A/B regime-confidence or profitability-factor work, start from the
   compact current-state docs, not the oversized historical logs:
   `support/docs/plans/2026-05-12-board-a-regime-state-current.md`,
-  `support/docs/plans/2026-05-12-board-b-profit-factor-current.md`, and
+  `support/docs/plans/2026-05-23-board-b-current.md`, and
   `support/docs/plans/2026-05-12-board-ab-cleanup-retention-plan.md`. Open the old
   May 10 append-only logs only for targeted evidence lookup by heading, root id,
   or exact artifact reference.

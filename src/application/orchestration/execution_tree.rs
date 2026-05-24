@@ -846,6 +846,33 @@ fn execution_tree_ranker_lineage_path_token(rest: &str) -> String {
     .to_string()
 }
 
+fn strict_trend_pullback_wait_for_reversion_admissible(
+    path_id: &str,
+    output: &ExecutionTreeOutput,
+) -> bool {
+    let normalized_path = path_id.to_ascii_lowercase();
+    let strict_trend_pullback_root = normalized_path.contains("trendexpansion")
+        && normalized_path.contains("rootevidencepullbackmsscisd")
+        && normalized_path.contains("strict_trend_root_pullback_mss_cisd");
+    if !strict_trend_pullback_root {
+        return false;
+    }
+    let readiness_ok = output
+        .execution_readiness
+        .is_some_and(|readiness| readiness >= EXECUTION_GATE_READY);
+    let transition_ok = output
+        .hybrid_transition_hazard
+        .is_some_and(|hazard| hazard < 0.60);
+    strict_trend_pullback_root
+        && output.gate_status == "ready"
+        && output.branch == "wait_for_reversion"
+        && output.execution_bias != "skip"
+        && readiness_ok
+        && output.path_ranker_score_used_by_execution_tree
+        && output.ranker_validation_ready
+        && transition_ok
+}
+
 fn build_execution_tree_closed_loop_branch_admission_value(
     path_id: &str,
     pre_bayes_gate_status: &str,
@@ -857,8 +884,10 @@ fn build_execution_tree_closed_loop_branch_admission_value(
         execution_gate_status,
         "ready" | "execution_ready" | "pass" | "admissible"
     );
+    let strict_trend_pullback_wait_ready =
+        strict_trend_pullback_wait_for_reversion_admissible(path_id, output);
     let execution_tree_ready = output.gate_status == "ready"
-        && output.branch == "fill_viable"
+        && (output.branch == "fill_viable" || strict_trend_pullback_wait_ready)
         && output.execution_bias != "skip";
     let ready = pre_bayes_ready && execution_ready && execution_tree_ready;
     let actionable = ready;
@@ -882,11 +911,18 @@ fn build_execution_tree_closed_loop_branch_admission_value(
     evidence.push(format!("review_status={review_status}"));
     evidence.push(format!("execution_tree_gate_status={}", output.gate_status));
     evidence.push(format!("execution_tree_branch={}", output.branch));
+    if strict_trend_pullback_wait_ready {
+        evidence.push("strict_trend_pullback_wait_for_reversion_admitted=true".to_string());
+    }
 
     serde_json::json!({
         "status": status,
         "reason": if status == "admitted" {
-            "exact_structural_branch_ready_and_actionable"
+            if strict_trend_pullback_wait_ready {
+                "strict_trend_pullback_wait_for_reversion_ready_and_actionable"
+            } else {
+                "exact_structural_branch_ready_and_actionable"
+            }
         } else {
             "exact_structural_branch_visible_but_not_ready_or_actionable"
         },
@@ -1368,6 +1404,109 @@ mod tests {
         assert_eq!(value["ready"], true);
         assert_eq!(value["actionable"], true);
         assert_eq!(value["pre_bayes_gate_status"], "pass_neutralized");
+    }
+
+    #[test]
+    fn execution_tree_closed_loop_branch_admission_accepts_strict_trend_pullback_wait_for_reversion_only_with_hard_predicates(
+    ) {
+        let strict_trend_path =
+            "TrendExpansion -> RootEvidencePullbackMssCisd -> strict_trend_root_pullback_mss_cisd";
+        let output = ExecutionTreeOutput {
+            gate_status: "ready".to_string(),
+            branch: "wait_for_reversion".to_string(),
+            execution_bias: "aggressive".to_string(),
+            execution_readiness: Some(0.67),
+            path_ranker_score_used_by_execution_tree: true,
+            ranker_validation_ready: true,
+            hybrid_transition_hazard: Some(0.3190),
+            pda_hybrid_alignment: Some(true),
+            ..ExecutionTreeOutput::default()
+        };
+
+        let value = build_execution_tree_closed_loop_branch_admission_value(
+            strict_trend_path,
+            "pass_neutralized",
+            "ready",
+            &output,
+        );
+
+        assert_eq!(value["status"], "admitted");
+        assert_eq!(value["ready"], true);
+        assert_eq!(value["actionable"], true);
+        assert_eq!(value["review_status"], "promote_latest");
+        assert_eq!(value["execution_tree_branch"], "wait_for_reversion");
+
+        let generic_path = "RangeReversion -> GenericOverstretchFade -> wait_for_reversion_probe";
+        let generic_value = build_execution_tree_closed_loop_branch_admission_value(
+            generic_path,
+            "pass_neutralized",
+            "ready",
+            &output,
+        );
+
+        assert_eq!(generic_value["status"], "fail_closed");
+        assert_eq!(generic_value["ready"], false);
+        assert_eq!(generic_value["actionable"], false);
+
+        let mut missing_ranker_use = output.clone();
+        missing_ranker_use.path_ranker_score_used_by_execution_tree = false;
+        let missing_ranker_value = build_execution_tree_closed_loop_branch_admission_value(
+            strict_trend_path,
+            "pass_neutralized",
+            "ready",
+            &missing_ranker_use,
+        );
+        assert_eq!(missing_ranker_value["status"], "fail_closed");
+
+        let mut missing_validation = output.clone();
+        missing_validation.ranker_validation_ready = false;
+        let missing_validation_value = build_execution_tree_closed_loop_branch_admission_value(
+            strict_trend_path,
+            "pass_neutralized",
+            "ready",
+            &missing_validation,
+        );
+        assert_eq!(missing_validation_value["status"], "fail_closed");
+
+        let mut high_transition = output.clone();
+        high_transition.hybrid_transition_hazard = Some(0.60);
+        let high_transition_value = build_execution_tree_closed_loop_branch_admission_value(
+            strict_trend_path,
+            "pass_neutralized",
+            "ready",
+            &high_transition,
+        );
+        assert_eq!(high_transition_value["status"], "fail_closed");
+
+        let mut pda_misaligned = output.clone();
+        pda_misaligned.pda_hybrid_alignment = Some(false);
+        let pda_misaligned_value = build_execution_tree_closed_loop_branch_admission_value(
+            strict_trend_path,
+            "pass_neutralized",
+            "ready",
+            &pda_misaligned,
+        );
+        assert_eq!(pda_misaligned_value["status"], "admitted");
+
+        let mut low_readiness = output.clone();
+        low_readiness.execution_readiness = Some(EXECUTION_GATE_READY - 0.001);
+        let low_readiness_value = build_execution_tree_closed_loop_branch_admission_value(
+            strict_trend_path,
+            "pass_neutralized",
+            "ready",
+            &low_readiness,
+        );
+        assert_eq!(low_readiness_value["status"], "fail_closed");
+
+        let mut skip_bias = output.clone();
+        skip_bias.execution_bias = "skip".to_string();
+        let skip_bias_value = build_execution_tree_closed_loop_branch_admission_value(
+            strict_trend_path,
+            "pass_neutralized",
+            "ready",
+            &skip_bias,
+        );
+        assert_eq!(skip_bias_value["status"], "fail_closed");
     }
 
     #[test]

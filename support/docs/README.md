@@ -80,8 +80,11 @@ compact current-state docs. The old May 10 A/B logs are not live dependencies.
 
 - `support/docs/plans/2026-05-12-board-a-regime-state-current.md`: compact current
   Board A contract for market-state/regime confidence.
-- `support/docs/plans/2026-05-12-board-b-profit-factor-current.md`: compact current
-  Board B contract for regime-rooted profitability-factor training.
+- `support/docs/plans/2026-05-23-board-b-current.md`: thin current Board B
+  entrypoint and boundary contract for regime-rooted profitability-factor
+  training.
+- `support/docs/plans/2026-05-17-board-b-factor-refinement-small-cycle-current.md`:
+  current Board B terminal-decision ledger.
 - `support/docs/plans/2026-05-12-board-ab-cleanup-retention-plan.md`: cleanup,
   retention, and deletion gate for the oversized A/B logs.
 - `support/docs/plans/2026-05-09-factor-iteration-pre-bayes-bbn-catboost-execution-tree-todo.md`:

@@ -15,7 +15,7 @@ Source logs retained for targeted lookup only:
 Current compact authorities:
 
 - `support/docs/plans/2026-05-12-board-a-regime-state-current.md`
-- `support/docs/plans/2026-05-12-board-b-profit-factor-current.md`
+- `support/docs/plans/2026-05-23-board-b-current.md`
 - `support/docs/plans/2026-05-12-board-ab-cleanup-retention-plan.md`
 
 ## Operating Contract
@@ -352,7 +352,7 @@ Current operator emphasis inside that order:
 
 ## Current Repo-State Adjustment
 
-Cross-check `support/docs/plans/2026-05-12-board-b-profit-factor-current.md`
+Cross-check `support/docs/plans/2026-05-23-board-b-current.md`
 before starting a slice. Current evidence already changes the practical meaning
 of some priorities:
 
