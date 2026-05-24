@@ -47,6 +47,23 @@ class FactorFormulaLibraryTests(unittest.TestCase):
         self.assertGreaterEqual(seed["default_params"]["min_mtf_aligned"], 2)
         self.assertTrue(seed["hotplug_ready"])
 
+    def test_cost_aware_triple_barrier_meta_gate_seed_targets_current_5bps_bottleneck(self) -> None:
+        result = library.build_formula_library(families=["cost_aware_event_labeling"])
+        self.assertEqual(result["seed_count"], 1)
+        seed = result["seeds"][0]
+
+        self.assertEqual(seed["seed_id"], "cost_aware_triple_barrier_meta_gate_v1")
+        self.assertEqual(seed["allowed_regimes"], ["TrendExpansion"])
+        self.assertIn("primary_side", seed["required_fields"])
+        self.assertIn("target_volatility", seed["required_fields"])
+        self.assertIn("transaction_cost_bps_per_side", seed["required_fields"])
+        self.assertGreaterEqual(seed["default_params"]["min_ret_bps"], 10.0)
+        self.assertEqual(seed["default_params"]["cost_bps_per_side"], 5.0)
+        self.assertIn("exact_root_positive_5bps_per_side", seed["default_params"]["promotion_requires"])
+        self.assertIn("meta_label_probability_gate", seed["expression"])
+        self.assertIn("FinMLKit", seed["source"])
+        self.assertTrue(seed["hotplug_ready"])
+
     def test_mtf_trend_resonance_seed_preserves_regime_root_and_hard_gates(self) -> None:
         result = library.build_formula_library(families=["mtf_trend_resonance"])
         self.assertEqual(result["seed_count"], 1)

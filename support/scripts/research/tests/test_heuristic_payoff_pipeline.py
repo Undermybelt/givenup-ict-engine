@@ -49,7 +49,7 @@ class HeuristicPayoffPipelineTests(unittest.TestCase):
             else:
                 self.assertTrue((output_dir / "failure_memory.jsonl").is_file())
             self.assertIn("sidecar_closure", result)
-            self.assertEqual(result["sidecar_closure"]["formula_library"]["seed_count"], 7)
+            self.assertGreaterEqual(result["sidecar_closure"]["formula_library"]["seed_count"], 8)
             self.assertEqual(result["sidecar_closure"]["paper2code_adapter_report"]["adapter_count"], 4)
             self.assertIn("purged_cv_guard", result)
 

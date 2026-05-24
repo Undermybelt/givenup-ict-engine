@@ -202,6 +202,76 @@ BASE_SEEDS: list[dict[str, Any]] = [
         "artifact_policy": "provider_rows_required_no_simulated_promotion",
         "hotplug_ready": True,
     },
+    {
+        "seed_id": "cost_aware_triple_barrier_meta_gate_v1",
+        "family": "cost_aware_event_labeling",
+        "source": "FinMLKit_TBMLabel_min_ret_meta_labeling_plus_Lopez_de_Prado_triple_barrier",
+        "source_urls": [
+            "https://github.com/quantscious/finmlkit",
+            "https://mlfinpy.readthedocs.io/en/latest/Labelling.html",
+        ],
+        "expression": (
+            "primary_side * meta_label_probability_gate("
+            "triple_barrier_label, p_hat, p_min) * "
+            "event_return_capacity_bps >= "
+            "round_trip_cost_bps + slippage_buffer_bps + edge_buffer_bps"
+        ),
+        "required_fields": [
+            "open",
+            "high",
+            "low",
+            "close",
+            "volume",
+            "primary_side",
+            "target_volatility",
+            "event_return_capacity_bps",
+            "transaction_cost_bps_per_side",
+            "slippage_buffer_bps",
+            "meta_label_probability",
+            "triple_barrier_label",
+            "vertical_barrier_bars",
+        ],
+        "default_params": {
+            "candidate_policy": "cost_gate_before_downstream",
+            "branch_path_template": (
+                "TrendExpansion -> CostAwareEventLabeling -> "
+                "cost_aware_triple_barrier_meta_gate_v1"
+            ),
+            "base_timeframe": "1m",
+            "context_timeframes": ["5m", "15m", "30m", "1h", "4h", "1d"],
+            "cost_bps_per_side": 5.0,
+            "round_trip_cost_bps": 10.0,
+            "slippage_buffer_bps": 2.0,
+            "edge_buffer_bps": 2.0,
+            "min_ret_bps": 14.0,
+            "horizontal_barriers": [1.5, 1.5],
+            "vertical_barrier_bars": 30,
+            "p_min": 0.58,
+            "max_trades_per_day": 3,
+            "max_trade_gap_days": 3.0,
+            "promotion_requires": [
+                "real_provider_or_retained_real_rows",
+                "exact_root_positive_5bps_per_side",
+                "positive_trade_count",
+                "same_root_downstream",
+                "provider_parity",
+                "walk_forward_or_forward_bucket_validation",
+                "execution_materialization",
+            ],
+        },
+        "allowed_regimes": ["TrendExpansion"],
+        "mutation_hints": {
+            "min_ret_bps": [10.0, 14.0, 18.0, 24.0],
+            "horizontal_barriers": [[1.0, 1.5], [1.5, 1.5], [1.5, 2.0]],
+            "vertical_barrier_bars": [15, 30, 60],
+            "p_min": [0.55, 0.58, 0.62, 0.66],
+            "slippage_buffer_bps": [1.0, 2.0, 4.0],
+        },
+        "helper_module": "support.scripts.research.mim_cost_window_gate_report",
+        "overlay_policy": "use_as_admission_gate_before_pre_bayes_bbn_catboost_execution_tree",
+        "artifact_policy": "provider_rows_required_no_simulated_promotion",
+        "hotplug_ready": True,
+    },
 ]
 
 
