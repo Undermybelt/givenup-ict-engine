@@ -1,0 +1,10 @@
+{
+  "run_root_exists": true,
+  "provider_rows": 7,
+  "material_count": 28,
+  "rank_rows": 28,
+  "rank_total_trade_count": 1075,
+  "commands_all_zero": true,
+  "branch_fields_preserved": true,
+  "decision": "drop_gate1_no_exact_1m_5bps_density_survivor"
+}

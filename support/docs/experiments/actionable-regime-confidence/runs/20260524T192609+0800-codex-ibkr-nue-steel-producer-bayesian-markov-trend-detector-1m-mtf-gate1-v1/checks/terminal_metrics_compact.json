@@ -1,0 +1,85 @@
+{
+  "factor_id": "ibkr_nue_steel_producer_bayesian_markov_trend_detector_1m_mtf_gate1_v1",
+  "branch_path": "TrendExpansion -> SteelProducerBayesianMarkovTrendContinuation -> bayesian_markov_trend_detector -> ibkr_nue_steel_producer_bayesian_markov_trend_detector_1m_mtf_gate1_v1",
+  "decision": "drop_gate1_no_exact_1m_5bps_density_survivor",
+  "provider_data_acquired_count": 7,
+  "material_count": 28,
+  "rank_rows": 28,
+  "rank_total_trade_count": 1075,
+  "positive_raw_rows": 13,
+  "exact_origin_survivors_5bps_per_side": [],
+  "survivors_5bps_per_side": [],
+  "branch_fields_preserved": true,
+  "all_commands_ok": true,
+  "pre_bayes_allowed": false,
+  "bbn_allowed": false,
+  "catboost_allowed": false,
+  "execution_tree_allowed": false,
+  "promotion_allowed": false,
+  "trade_usable": false,
+  "update_goal": false,
+  "interpretation": "NUE produced AQ rank rows, but the exact 1m Bayesian-Markov origin did not survive both hard 5bps/side cost stress and practical trade density. Stop before downstream.",
+  "next_useful_work": "Preserve as observation and rotate to a materially different family or a same-root variant that widens per-trade excursion before cost stress.",
+  "command_results": [
+    {
+      "name": "00_provider_status_ibkr",
+      "exit": 0,
+      "timed_out": false
+    },
+    {
+      "name": "01_ibkr_nue_1m_10d",
+      "exit": 0,
+      "timed_out": false
+    },
+    {
+      "name": "02_ibkr_nue_5m_3m",
+      "exit": 0,
+      "timed_out": false
+    },
+    {
+      "name": "03_ibkr_nue_15m_3m",
+      "exit": 0,
+      "timed_out": false
+    },
+    {
+      "name": "04_ibkr_nue_30m_3m",
+      "exit": 0,
+      "timed_out": false
+    },
+    {
+      "name": "05_ibkr_nue_1h_3m",
+      "exit": 0,
+      "timed_out": false
+    },
+    {
+      "name": "06_ibkr_nue_4h_1y",
+      "exit": 0,
+      "timed_out": false
+    },
+    {
+      "name": "07_ibkr_nue_1d_2y",
+      "exit": 0,
+      "timed_out": false
+    },
+    {
+      "name": "08_strategy_py_compile",
+      "exit": 0,
+      "timed_out": false
+    },
+    {
+      "name": "09_auto_quant_agent_material_batch",
+      "exit": 0,
+      "timed_out": false
+    },
+    {
+      "name": "10_auto_quant_agent_material_dispatch",
+      "exit": 0,
+      "timed_out": false
+    },
+    {
+      "name": "11_auto_quant_agent_material_rank",
+      "exit": 0,
+      "timed_out": false
+    }
+  ]
+}
