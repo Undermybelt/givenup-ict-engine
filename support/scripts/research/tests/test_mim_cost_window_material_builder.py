@@ -71,6 +71,49 @@ class MimCostWindowMaterialBuilderTests(unittest.TestCase):
             self.assertTrue(Path(result["strategy_source_path"]).exists())
             self.assertTrue(Path(result["events_jsonl"]).exists())
 
+    def test_build_material_bundle_propagates_mtf_trend_resonance(self) -> None:
+        with TemporaryDirectory() as tmpdir:
+            tmp = Path(tmpdir)
+            csv_path = tmp / "retained.csv"
+            context_path = tmp / "context_5m.csv"
+            out_dir = tmp / "bundle"
+            self._write_csv(csv_path)
+            context_path.write_text(
+                "\n".join(
+                    [
+                        "ts,open,high,low,close,volume",
+                        "2026-05-21T13:30:00Z,100.0,100.4,99.9,100.3,1000",
+                        "2026-05-21T13:35:00Z,100.3,100.8,100.2,100.7,1000",
+                        "2026-05-21T13:40:00Z,100.7,101.2,100.6,101.1,1000",
+                        "2026-05-21T13:45:00Z,101.1,101.6,101.0,101.5,1000",
+                        "2026-05-21T13:50:00Z,101.5,102.0,101.4,101.9,1000",
+                        "2026-05-21T13:55:00Z,101.9,102.4,101.8,102.3,1000",
+                    ]
+                )
+                + "\n",
+                encoding="utf-8",
+            )
+
+            result = builder.build_material_bundle(
+                csv_path,
+                out_dir,
+                symbol="TEST",
+                provider="retained-real",
+                market="US_EQ",
+                product="single_stock",
+                branch_path="TrendExpansion -> IntradayMomentumCostWindow -> mim_cost_window_regime_filter -> test_mim_cost_window_v1",
+                factor_id="test_mim_cost_window_v1",
+                context_csvs={"5m": context_path},
+            )
+
+            material = json.loads(Path(result["material_path"]).read_text(encoding="utf-8"))
+
+        profile = material["consumer_evidence_profile"]
+        self.assertTrue(profile["mtf_trend_resonance"]["enabled"])
+        self.assertEqual(profile["mtf_trend_resonance"]["aligned_timeframes"], ["5m"])
+        self.assertEqual(result["mtf_trend_resonance"]["aligned_timeframes"], ["5m"])
+        self.assertFalse(profile["promotion_allowed"])
+
     def test_cli_writes_bundle_summary(self) -> None:
         with TemporaryDirectory() as tmpdir:
             tmp = Path(tmpdir)

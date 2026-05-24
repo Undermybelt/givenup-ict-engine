@@ -20,6 +20,9 @@ def build_material_bundle(
     product: str,
     branch_path: str,
     factor_id: str,
+    session_start_minute_utc: int | None = 13 * 60 + 30,
+    session_end_minute_utc: int | None = 20 * 60,
+    context_csvs: dict[str, Path] | None = None,
 ) -> dict[str, object]:
     root = Path(output_dir)
     root.mkdir(parents=True, exist_ok=True)
@@ -36,6 +39,9 @@ def build_material_bundle(
         market=market,
         product=product,
         branch_path=branch_path,
+        session_start_minute_utc=session_start_minute_utc,
+        session_end_minute_utc=session_end_minute_utc,
+        context_csvs=context_csvs,
     )
     write_jsonl(events_path, events)
     event_summary_path.write_text(json.dumps(build_summary(events), indent=2, sort_keys=True) + "\n", encoding="utf-8")
@@ -73,6 +79,7 @@ def build_material_bundle(
             "profit_factor": branch_parts[-1] if branch_parts else factor_id,
             "base_timeframe": "1m",
             "context_timeframes": list(CONTEXT_TIMEFRAMES),
+            "mtf_trend_resonance": _summarize_resonance(events),
             "training_timeframe": "1m",
             "material_timeframe": "1m",
             "provider": provider,
@@ -83,6 +90,8 @@ def build_material_bundle(
             "gate_id": "Gate1MimCostWindowRetainedRealPrep",
             "event_count": len(events),
             "eligible_long_count": sum(1 for row in events if row.get("side") == 1),
+            "session_start_minute_utc": session_start_minute_utc,
+            "session_end_minute_utc": session_end_minute_utc,
             "promotion_allowed": False,
             "trade_usable": False,
             "downstream_allowed": False,
@@ -111,6 +120,9 @@ def build_material_bundle(
         "downstream_allowed": False,
         "provider_fetch_started": False,
         "auto_quant_started": False,
+        "session_start_minute_utc": session_start_minute_utc,
+        "session_end_minute_utc": session_end_minute_utc,
+        "mtf_trend_resonance": _summarize_resonance(events),
     }
     summary_path.write_text(json.dumps(summary, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     return summary
@@ -126,6 +138,9 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--product", required=True)
     parser.add_argument("--branch-path", required=True)
     parser.add_argument("--factor-id", required=True)
+    parser.add_argument("--session-start-minute-utc", type=int, default=13 * 60 + 30)
+    parser.add_argument("--session-end-minute-utc", type=int, default=20 * 60)
+    parser.add_argument("--context-csv", action="append", default=[], help="timeframe:path retained context CSV")
     args = parser.parse_args(argv)
     summary = build_material_bundle(
         args.input_csv,
@@ -136,6 +151,9 @@ def main(argv: list[str] | None = None) -> int:
         product=args.product,
         branch_path=args.branch_path,
         factor_id=args.factor_id,
+        session_start_minute_utc=args.session_start_minute_utc,
+        session_end_minute_utc=args.session_end_minute_utc,
+        context_csvs=_parse_context_csvs(args.context_csv),
     )
     print(json.dumps(summary, indent=2, sort_keys=True))
     return 0
@@ -207,6 +225,43 @@ def _timerange(events: list[dict[str, object]]) -> str:
 
 def _branch_parts(branch_path: str) -> list[str]:
     return [part.strip() for part in branch_path.split("->") if part.strip()]
+
+
+def _summarize_resonance(events: list[dict[str, object]]) -> dict[str, object]:
+    summaries = [row.get("mtf_trend_resonance") for row in events if isinstance(row.get("mtf_trend_resonance"), dict)]
+    if not summaries:
+        return {
+            "schema_version": "mtf-trend-resonance-material-summary/v1",
+            "enabled": False,
+            "aligned_timeframes": [],
+            "rejected_timeframes": [],
+            "avg_resonance_score": 0.0,
+            "promotion_allowed": False,
+            "trade_usable": False,
+            "downstream_allowed": False,
+        }
+    aligned = sorted({tf for summary in summaries for tf in summary.get("aligned_timeframes", [])})
+    rejected = sorted({tf for summary in summaries for tf in summary.get("rejected_timeframes", [])})
+    return {
+        "schema_version": "mtf-trend-resonance-material-summary/v1",
+        "enabled": any(bool(summary.get("enabled")) for summary in summaries),
+        "aligned_timeframes": aligned,
+        "rejected_timeframes": rejected,
+        "avg_resonance_score": sum(float(summary.get("resonance_score") or 0.0) for summary in summaries) / len(summaries),
+        "promotion_allowed": False,
+        "trade_usable": False,
+        "downstream_allowed": False,
+    }
+
+
+def _parse_context_csvs(values: list[str]) -> dict[str, Path]:
+    parsed: dict[str, Path] = {}
+    for value in values:
+        if ":" not in value:
+            raise ValueError("--context-csv must use timeframe:path")
+        timeframe, path = value.split(":", 1)
+        parsed[timeframe.strip()] = Path(path.strip())
+    return parsed
 
 
 def _strategy_class_name(factor_id: str) -> str:

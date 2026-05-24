@@ -85,6 +85,74 @@ BASE_SEEDS: list[dict[str, Any]] = [
         "hotplug_ready": True,
     },
     {
+        "seed_id": "mtf_trend_resonance_breakout_v1",
+        "family": "mtf_trend_resonance",
+        "source": "donchian_turtle_supertrend_adx_keltner_atr_plus_tsmom_vol_state",
+        "expression": (
+            "primary_1m_breakout_or_pullback * "
+            "mtf_trend_resonance(5m,15m,30m,1h,4h,1d) * "
+            "atr_excursion_capacity * cost_guard * volatility_state_guard"
+        ),
+        "required_fields": [
+            "open",
+            "high",
+            "low",
+            "close",
+            "volume",
+            "donchian_high",
+            "donchian_low",
+            "supertrend_direction",
+            "adx",
+            "atr",
+            "keltner_mid",
+            "mtf_trend_resonance",
+            "volatility_state",
+            "cost_bps_per_side",
+        ],
+        "default_params": {
+            "candidate_policy": "trend_following_only",
+            "branch_path_template": (
+                "TrendExpansion -> MTFTrendContinuationOrPullback -> "
+                "mtf_trend_resonance_breakout_v1"
+            ),
+            "base_timeframe": "1m",
+            "context_timeframes": ["5m", "15m", "30m", "1h", "4h", "1d"],
+            "entry_shapes": [
+                "donchian_breakout_retest",
+                "supertrend_adx_continuation",
+                "keltner_atr_breakout_pullback",
+            ],
+            "min_mtf_aligned": 3,
+            "donchian_lookback": 20,
+            "adx_min": 18.0,
+            "atr_excursion_min_bps": 18.0,
+            "keltner_atr_mult": 1.5,
+            "allowed_volatility_states": ["expanding", "controlled_high_vol"],
+            "cost_bps_per_side": [0, 1, 2, 5],
+            "promotion_requires": [
+                "real_provider_or_retained_real_rows",
+                "exact_root_positive_5bps_per_side",
+                "positive_trade_count",
+                "same_root_downstream",
+                "provider_parity",
+                "validation_rows",
+                "execution_materialization",
+            ],
+        },
+        "allowed_regimes": ["TrendExpansion"],
+        "mutation_hints": {
+            "donchian_lookback": [10, 20, 40],
+            "adx_min": [14.0, 18.0, 24.0],
+            "atr_excursion_min_bps": [12.0, 18.0, 30.0],
+            "min_mtf_aligned": [2, 3, 4],
+            "keltner_atr_mult": [1.25, 1.5, 2.0],
+        },
+        "helper_module": "support.scripts.research.mtf_trend_resonance",
+        "overlay_policy": "triple_barrier_meta_label_only_after_primary_event_survives_cost",
+        "artifact_policy": "provider_rows_required_no_simulated_promotion",
+        "hotplug_ready": True,
+    },
+    {
         "seed_id": "mim_cost_window_regime_filter_v1",
         "family": "intraday_momentum_cost_window",
         "source": "paper_intraday_momentum_transaction_costs_plus_hmm_side_info",
@@ -105,10 +173,13 @@ BASE_SEEDS: list[dict[str, Any]] = [
             "rvol",
             "momentum_state_prob",
             "posterior_entropy_proxy",
+            "mtf_trend_resonance",
         ],
         "default_params": {
+            "candidate_policy": "trend_following_only",
             "base_timeframe": "1m",
             "context_timeframes": ["5m", "15m", "30m", "1h", "4h", "1d"],
+            "min_mtf_aligned": 2,
             "open_minutes": 30,
             "late_minutes": 30,
             "first_abs_return_min": 0.0015,

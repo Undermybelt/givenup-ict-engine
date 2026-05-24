@@ -22,6 +22,7 @@ class FactorFormulaLibraryTests(unittest.TestCase):
         self.assertIn("qlib_alpha158_momentum_roc", seed_ids)
         self.assertIn("alpha101_rank_decay_reversion", seed_ids)
         self.assertIn("vrp_compression_regime", seed_ids)
+        self.assertIn("mtf_trend_resonance_breakout_v1", seed_ids)
         self.assertIn("mim_cost_window_regime_filter_v1", seed_ids)
         first = result["seeds"][0]
         self.assertIn("expression", first)
@@ -39,9 +40,28 @@ class FactorFormulaLibraryTests(unittest.TestCase):
         self.assertIn("first_window_return", seed["required_fields"])
         self.assertIn("corwin_schultz_spread", seed["required_fields"])
         self.assertIn("momentum_state_prob", seed["required_fields"])
+        self.assertIn("mtf_trend_resonance", seed["required_fields"])
         self.assertEqual(seed["default_params"]["base_timeframe"], "1m")
         self.assertEqual(seed["default_params"]["context_timeframes"], ["5m", "15m", "30m", "1h", "4h", "1d"])
+        self.assertEqual(seed["default_params"]["candidate_policy"], "trend_following_only")
+        self.assertGreaterEqual(seed["default_params"]["min_mtf_aligned"], 2)
         self.assertTrue(seed["hotplug_ready"])
+
+    def test_mtf_trend_resonance_seed_preserves_regime_root_and_hard_gates(self) -> None:
+        result = library.build_formula_library(families=["mtf_trend_resonance"])
+        self.assertEqual(result["seed_count"], 1)
+        seed = result["seeds"][0]
+
+        self.assertEqual(seed["seed_id"], "mtf_trend_resonance_breakout_v1")
+        self.assertEqual(seed["allowed_regimes"], ["TrendExpansion"])
+        self.assertEqual(seed["default_params"]["candidate_policy"], "trend_following_only")
+        self.assertEqual(seed["default_params"]["base_timeframe"], "1m")
+        self.assertEqual(seed["default_params"]["context_timeframes"], ["5m", "15m", "30m", "1h", "4h", "1d"])
+        self.assertGreaterEqual(seed["default_params"]["min_mtf_aligned"], 3)
+        self.assertIn("TrendExpansion -> MTFTrendContinuationOrPullback", seed["default_params"]["branch_path_template"])
+        self.assertIn("exact_root_positive_5bps_per_side", seed["default_params"]["promotion_requires"])
+        self.assertIn("triple_barrier_meta_label_only_after_primary_event_survives_cost", seed["overlay_policy"])
+        self.assertEqual(seed["artifact_policy"], "provider_rows_required_no_simulated_promotion")
 
     def test_family_filter_returns_only_requested_factor_family(self) -> None:
         result = library.build_formula_library(families=["mean_reversion"])

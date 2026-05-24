@@ -68,6 +68,106 @@ class MimCostWindowEventBuilderTests(unittest.TestCase):
         self.assertFalse(first["downstream_allowed"])
         self.assertEqual(events[1]["side"], 0)
 
+    def test_build_events_attaches_optional_mtf_trend_resonance(self) -> None:
+        with TemporaryDirectory() as tmpdir:
+            tmp = Path(tmpdir)
+            csv_path = tmp / "retained.csv"
+            context_path = tmp / "context_5m.csv"
+            self._write_csv(csv_path)
+            context_path.write_text(
+                "\n".join(
+                    [
+                        "ts,open,high,low,close,volume",
+                        "2026-05-21T13:30:00Z,100.0,100.4,99.9,100.3,1000",
+                        "2026-05-21T13:35:00Z,100.3,100.8,100.2,100.7,1000",
+                        "2026-05-21T13:40:00Z,100.7,101.2,100.6,101.1,1000",
+                        "2026-05-21T13:45:00Z,101.1,101.6,101.0,101.5,1000",
+                        "2026-05-21T13:50:00Z,101.5,102.0,101.4,101.9,1000",
+                        "2026-05-21T13:55:00Z,101.9,102.4,101.8,102.3,1000",
+                    ]
+                )
+                + "\n",
+                encoding="utf-8",
+            )
+
+            events = builder.build_event_rows(
+                csv_path,
+                symbol="TEST",
+                provider="retained-real",
+                market="US_EQ",
+                product="single_stock",
+                branch_path="TrendExpansion -> IntradayMomentumCostWindow -> mim_cost_window_regime_filter -> test_mim_cost_window_v1",
+                context_csvs={"5m": context_path},
+            )
+
+        resonance = events[0]["mtf_trend_resonance"]
+        self.assertTrue(resonance["enabled"])
+        self.assertEqual(resonance["aligned_timeframes"], ["5m"])
+        self.assertGreater(resonance["resonance_score"], 0.0)
+        self.assertFalse(resonance["promotion_allowed"])
+
+    def test_mtf_trend_resonance_uses_each_session_event_timestamp(self) -> None:
+        with TemporaryDirectory() as tmpdir:
+            tmp = Path(tmpdir)
+            csv_path = tmp / "retained.csv"
+            context_path = tmp / "context_5m.csv"
+            self._write_csv(csv_path)
+            context_path.write_text(
+                "\n".join(
+                    [
+                        "ts,open,high,low,close,volume",
+                        "2026-05-21T13:30:00Z,100.0,100.1,99.9,100.0,1000",
+                        "2026-05-21T13:35:00Z,100.0,100.1,99.9,100.0,1000",
+                        "2026-05-21T13:40:00Z,100.0,100.1,99.9,100.0,1000",
+                        "2026-05-22T13:30:00Z,100.0,100.4,99.9,100.3,1000",
+                        "2026-05-22T13:35:00Z,100.3,100.8,100.2,100.7,1000",
+                        "2026-05-22T13:40:00Z,100.7,101.2,100.6,101.1,1000",
+                        "2026-05-22T13:45:00Z,101.1,101.6,101.0,101.5,1000",
+                        "2026-05-22T13:50:00Z,101.5,102.0,101.4,101.9,1000",
+                        "2026-05-22T13:55:00Z,101.9,102.4,101.8,102.3,1000",
+                    ]
+                )
+                + "\n",
+                encoding="utf-8",
+            )
+
+            events = builder.build_event_rows(
+                csv_path,
+                symbol="TEST",
+                provider="retained-real",
+                market="US_EQ",
+                product="single_stock",
+                branch_path="TrendExpansion -> IntradayMomentumCostWindow -> mim_cost_window_regime_filter -> test_mim_cost_window_v1",
+                context_csvs={"5m": context_path},
+            )
+
+        self.assertEqual(events[0]["event_ts"], "2026-05-21T13:59:00+00:00")
+        self.assertEqual(events[0]["mtf_trend_resonance"]["by_timeframe"]["5m"]["bar_count"], 3)
+        self.assertFalse(events[0]["mtf_trend_resonance"]["by_timeframe"]["5m"]["aligned"])
+        self.assertEqual(events[1]["event_ts"], "2026-05-22T13:59:00+00:00")
+        self.assertEqual(events[1]["mtf_trend_resonance"]["by_timeframe"]["5m"]["bar_count"], 9)
+
+    def test_build_events_can_ignore_premarket_rows_for_us_regular_session(self) -> None:
+        with TemporaryDirectory() as tmpdir:
+            csv_path = Path(tmpdir) / "retained.csv"
+            self._write_csv(csv_path)
+            original = csv_path.read_text(encoding="utf-8").splitlines()
+            premarket = ["2026-05-21T08:00:00Z,99.0,99.1,98.9,99.0,10.0"]
+            csv_path.write_text("\n".join([original[0], *premarket, *original[1:]]) + "\n", encoding="utf-8")
+
+            events = builder.build_event_rows(
+                csv_path,
+                symbol="TEST",
+                provider="retained-real",
+                market="US_EQ",
+                product="single_stock",
+                branch_path="TrendExpansion -> IntradayMomentumCostWindow -> mim_cost_window_regime_filter -> test_mim_cost_window_v1",
+                session_start_minute_utc=13 * 60 + 30,
+                session_end_minute_utc=20 * 60,
+            )
+
+        self.assertEqual(events[0]["event_ts"], "2026-05-21T13:59:00+00:00")
+
     def test_cli_writes_jsonl_and_summary(self) -> None:
         with TemporaryDirectory() as tmpdir:
             tmp = Path(tmpdir)
