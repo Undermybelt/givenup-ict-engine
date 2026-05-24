@@ -661,6 +661,68 @@ class RegimeRootSurvivorBlockerReportTests(unittest.TestCase):
         self.assertEqual(built["blockers"], [])
         self.assertEqual(built["decision"], "candidate_meets_current_gate_shape")
 
+    def test_validation_rows_can_be_parsed_from_execution_lineage(self) -> None:
+        metrics = {
+            "branch_fields_preserved": True,
+            "branch_path": (
+                "RangeConsolidation -> VolatilityCompression -> "
+                "DataSecurityTtmSqueezeReclaim -> ttm_squeeze_reclaim"
+            ),
+            "selected_gate1_row": {
+                "label": "RBRK/15m/dense",
+                "trade_count": 33,
+                "survives_5bps_per_side": True,
+            },
+        }
+        candidate = {
+            "candidate_status": "execution_observe_only",
+            "actionable": False,
+            "pre_bayes_evidence_filter": {
+                "gating_status": "pass_neutralized",
+                "conflict_flags": [],
+                "evidence_assignments": {
+                    "regime_profit_branch_path": metrics["branch_path"],
+                },
+            },
+        }
+        tree = {
+            "output": {
+                "execution_readiness": 0.67,
+                "hybrid_transition_hazard": 0.679,
+                "ranker_validation_ready": True,
+                "path_ranker_score_visible_to_execution_tree": True,
+                "path_ranker_score_used_by_execution_tree": True,
+                "split_reason_lineage": [
+                    (
+                        "execution_readiness_validation_floor=0.6700 "
+                        "raw_execution_readiness=0.5265 "
+                        "raw_scored_mature=961/30 "
+                        "production_validation=961/30 "
+                        "observation_validation=30/30"
+                    )
+                ],
+            }
+        }
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            root = Path(tmpdir)
+            gate1_path = root / "gate1.json"
+            candidate_path = root / "candidate.json"
+            tree_path = root / "tree.json"
+            gate1_path.write_text(__import__("json").dumps(metrics), encoding="utf-8")
+            candidate_path.write_text(__import__("json").dumps(candidate), encoding="utf-8")
+            tree_path.write_text(__import__("json").dumps(tree), encoding="utf-8")
+
+            built = report.build_report(gate1_path, candidate_path, tree_path)
+
+        self.assertEqual(built["validation"]["raw_scored_mature_rows"], 961)
+        self.assertEqual(built["validation"]["production_validation_rows"], 961)
+        self.assertEqual(built["validation"]["observation_validation_rows"], 30)
+        self.assertNotIn("raw_scored_mature_below_30", built["blockers"])
+        self.assertNotIn("production_validation_below_30", built["blockers"])
+        self.assertNotIn("observation_validation_below_30", built["blockers"])
+        self.assertEqual(built["decision"], "observe_only_execution_blocked")
+
 
 if __name__ == "__main__":
     unittest.main()

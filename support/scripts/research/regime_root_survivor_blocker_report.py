@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 from pathlib import Path
 from typing import Any
 
@@ -203,6 +204,11 @@ def validation_report(*sources: dict[str, Any]) -> dict[str, Any]:
             value = source.get(key)
             if isinstance(value, dict):
                 nested_sources.append(value)
+        lineage = source.get("split_reason_lineage")
+        if isinstance(lineage, list):
+            parsed = validation_from_lineage(lineage)
+            if parsed:
+                nested_sources.append(parsed)
 
     def first_int(*keys: str) -> int:
         for source in nested_sources:
@@ -229,6 +235,25 @@ def validation_report(*sources: dict[str, Any]) -> dict[str, Any]:
         "observation_validation_min_rows": observation_min,
         "observation_validation_shortfall_rows": max(0, observation_min - observation_rows),
     }
+
+
+def validation_from_lineage(lineage: list[Any]) -> dict[str, int]:
+    parsed: dict[str, int] = {}
+    pairs = {
+        "raw_scored_mature": "raw_scored_mature",
+        "production_validation": "production_validation",
+        "observation_validation": "observation_validation",
+    }
+    for item in lineage:
+        if not isinstance(item, str):
+            continue
+        for key, prefix in pairs.items():
+            match = re.search(rf"\b{re.escape(key)}=(\d+)/(\d+)", item)
+            if not match:
+                continue
+            parsed[f"{prefix}_rows"] = int(match.group(1))
+            parsed[f"{prefix}_min_rows"] = int(match.group(2))
+    return parsed
 
 
 def classify(report: dict[str, Any]) -> tuple[str, list[str], str]:
