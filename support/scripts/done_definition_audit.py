@@ -175,10 +175,13 @@ def evaluate_help_audit_policy(timeout_seconds: int) -> dict:
             {"error": f"missing file: {HELP_AUDIT_PATH.relative_to(ROOT)}"},
         )
 
+    env = dict(os.environ)
+    env["ICT_ENGINE_HELP_AUDIT_BUILD_TIMEOUT_SECONDS"] = str(timeout_seconds)
     status, details = run_command(
         [sys.executable, str(HELP_AUDIT_PATH)],
         cwd=ROOT,
         timeout=timeout_seconds,
+        env=env,
     )
     if status == "fail":
         return _gate("help_audit_none_output_policy", "fail", details)

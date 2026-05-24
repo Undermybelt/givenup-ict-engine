@@ -10,6 +10,7 @@ from path_defaults import resolve_repo_root
 
 ROOT = resolve_repo_root(__file__)
 HELP_TIMEOUT_SECONDS = 15
+DEFAULT_BUILD_TIMEOUT_SECONDS = 120
 BANNED_HELP_PATTERNS = [
     r"e\.g\.\s*NQ",
     r"NQ,\s*ES,\s*GC",
@@ -43,6 +44,17 @@ EXPECTED_NO_OUTPUT_MODE_COMMANDS = {
 }
 
 
+def build_timeout_seconds():
+    raw = os.environ.get('ICT_ENGINE_HELP_AUDIT_BUILD_TIMEOUT_SECONDS', '').strip()
+    if not raw:
+        return DEFAULT_BUILD_TIMEOUT_SECONDS
+    try:
+        value = int(raw)
+    except ValueError:
+        return DEFAULT_BUILD_TIMEOUT_SECONDS
+    return value if value > 0 else DEFAULT_BUILD_TIMEOUT_SECONDS
+
+
 def ict_engine_bin():
     global _ICT_ENGINE_BIN
     if _ICT_ENGINE_BIN is not None:
@@ -67,7 +79,7 @@ def ict_engine_bin():
             text=True,
             capture_output=True,
             check=True,
-            timeout=120,
+            timeout=build_timeout_seconds(),
         )
         metadata = subprocess.run(
             ['cargo', 'metadata', '--format-version', '1', '--no-deps'],

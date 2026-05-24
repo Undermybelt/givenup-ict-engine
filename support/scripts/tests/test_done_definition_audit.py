@@ -18,6 +18,7 @@ from done_definition_audit import (  # noqa: E402
     format_report,
     parse_main_rs_baseline,
     run_command,
+    evaluate_help_audit_policy,
     summarize,
 )
 
@@ -209,6 +210,48 @@ Measured on 2026-05-22:
         self.assertEqual(parsed["gates"][0]["details"]["command"][1], "support/scripts/smoke_acceptance.sh")
         self.assertEqual(parsed["gates"][0]["details"]["stderr"], "failed at state")
         self.assertNotIn("/Users/example", text)
+
+    def test_evaluate_help_audit_policy_passes_timeout_to_child_build(self) -> None:
+        import done_definition_audit
+
+        captured = {}
+
+        def fake_run_command(cmd, *, cwd, timeout, env=None):
+            del cmd, cwd
+            captured["timeout"] = timeout
+            captured["env_timeout"] = env.get("ICT_ENGINE_HELP_AUDIT_BUILD_TIMEOUT_SECONDS")
+            return (
+                "pass",
+                {
+                    "command": ["python", "support/scripts/help_audit.py"],
+                    "stdout": json.dumps(
+                        {
+                            "summary": {
+                                "command_count": 1,
+                                "commands_with_no_output_modes": 0,
+                                "none_output_mode_policy_matches_expected": True,
+                                "status": "pass",
+                            },
+                            "none_output_mode_policy": {
+                                "unclassified_none_commands": [],
+                                "missing_expected_commands": [],
+                            },
+                        }
+                    ),
+                    "stderr": "",
+                },
+            )
+
+        old_run_command = done_definition_audit.run_command
+        try:
+            done_definition_audit.run_command = fake_run_command
+            gate = evaluate_help_audit_policy(600)
+        finally:
+            done_definition_audit.run_command = old_run_command
+
+        self.assertEqual(gate["status"], "pass")
+        self.assertEqual(captured["timeout"], 600)
+        self.assertEqual(captured["env_timeout"], "600")
 
 
 if __name__ == "__main__":

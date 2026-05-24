@@ -8,7 +8,9 @@ if str(SCRIPTS_ROOT) not in sys.path:
     sys.path.insert(0, str(SCRIPTS_ROOT))
 
 from help_audit import (  # noqa: E402
+    DEFAULT_BUILD_TIMEOUT_SECONDS,
     EXPECTED_NO_OUTPUT_MODE_COMMANDS,
+    build_timeout_seconds,
     none_output_mode_policy,
     output_mode_support,
     parse_options,
@@ -89,6 +91,34 @@ Options:
         self.assertEqual(policy["unclassified_none_commands"], [])
         self.assertEqual(policy["missing_expected_commands"], [])
         self.assertTrue(policy["matches_expected"])
+
+    def test_build_timeout_seconds_reads_positive_env(self):
+        import os
+
+        old = os.environ.get("ICT_ENGINE_HELP_AUDIT_BUILD_TIMEOUT_SECONDS")
+        try:
+            os.environ["ICT_ENGINE_HELP_AUDIT_BUILD_TIMEOUT_SECONDS"] = "600"
+            self.assertEqual(build_timeout_seconds(), 600)
+        finally:
+            if old is None:
+                os.environ.pop("ICT_ENGINE_HELP_AUDIT_BUILD_TIMEOUT_SECONDS", None)
+            else:
+                os.environ["ICT_ENGINE_HELP_AUDIT_BUILD_TIMEOUT_SECONDS"] = old
+
+    def test_build_timeout_seconds_falls_back_for_invalid_env(self):
+        import os
+
+        old = os.environ.get("ICT_ENGINE_HELP_AUDIT_BUILD_TIMEOUT_SECONDS")
+        try:
+            os.environ["ICT_ENGINE_HELP_AUDIT_BUILD_TIMEOUT_SECONDS"] = "not-int"
+            self.assertEqual(build_timeout_seconds(), DEFAULT_BUILD_TIMEOUT_SECONDS)
+            os.environ["ICT_ENGINE_HELP_AUDIT_BUILD_TIMEOUT_SECONDS"] = "0"
+            self.assertEqual(build_timeout_seconds(), DEFAULT_BUILD_TIMEOUT_SECONDS)
+        finally:
+            if old is None:
+                os.environ.pop("ICT_ENGINE_HELP_AUDIT_BUILD_TIMEOUT_SECONDS", None)
+            else:
+                os.environ["ICT_ENGINE_HELP_AUDIT_BUILD_TIMEOUT_SECONDS"] = old
 
 
 if __name__ == "__main__":
