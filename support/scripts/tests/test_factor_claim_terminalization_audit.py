@@ -574,6 +574,7 @@ status=active
             f"/opt/homebrew/bin/python3 {lane_root}/scripts/run_kraken_ltcusd_supertrend_adx_1m_mtf_gate1_v1.py",
             f"ict-engine auto-quant-agent-material-dispatch --symbol KRAKEN_LTCUSD --state-dir {lane_root}/state",
             f"/bin/zsh -lc RUN_ROOT={lane_root}/checks python3 helper.py",
+            f"fetch_external.py kraken-kline --output {lane_root}/data/provider/raw/kraken_linkusd_4h.csv",
         ]
 
         for command in commands:
