@@ -70,6 +70,28 @@ class RegimeBranchGrammarCheckTests(unittest.TestCase):
         self.assertFalse(report["ok"])
         self.assertEqual(report["file"], str(path))
 
+    def test_rejects_mismatched_regime_profit_branch_path_field(self) -> None:
+        metrics = {
+            "branch_path": (
+                "TrendExpansion -> PullbackContinuation -> trend_pullback_reclaim_v1"
+            ),
+            "regime_profit_branch_path": (
+                "FUTURES -> equity_index -> MNQ -> 1m -> TrendExpansion -> "
+                "PullbackContinuation -> trend_pullback_reclaim_v1"
+            ),
+        }
+        with tempfile.TemporaryDirectory() as tmpdir:
+            path = Path(tmpdir) / "terminal_metrics.json"
+            path.write_text(json.dumps(metrics), encoding="utf-8")
+
+            report = checker.check_metrics_file(path)
+
+        self.assertFalse(report["ok"])
+        self.assertIn(
+            "branch_path_field_not_canonical:regime_profit_branch_path",
+            report["violations"],
+        )
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -123,12 +123,59 @@ def check_branch_path(
     }
 
 
+def branch_path_field_violations(
+    payload: dict[str, Any],
+    labels: dict[str, str],
+    canonical_branch_path: str,
+) -> list[str]:
+    violations: list[str] = []
+    for key in (
+        "branch_path",
+        "regime_profit_branch_path",
+        "rooted_branch_path",
+        "branch_path_template",
+    ):
+        value = payload.get(key)
+        if not isinstance(value, str) or not value:
+            continue
+        normalized = tree_normalizer.normalize_branch_path(value, labels)
+        if value != normalized["canonical_branch_path"]:
+            violations.append(f"branch_path_field_not_canonical:{key}")
+        if normalized["canonical_branch_path"] != canonical_branch_path:
+            violations.append(f"branch_path_field_mismatch:{key}")
+
+    branch_paths = payload.get("branch_paths")
+    if isinstance(branch_paths, list):
+        for index, value in enumerate(branch_paths):
+            if not isinstance(value, str) or not value:
+                continue
+            normalized = tree_normalizer.normalize_branch_path(value, labels)
+            if value != normalized["canonical_branch_path"]:
+                violations.append(f"branch_paths_field_not_canonical:{index}")
+            if normalized["canonical_branch_path"] != canonical_branch_path:
+                violations.append(f"branch_paths_field_mismatch:{index}")
+    return violations
+
+
 def check_metrics_file(path: Path) -> dict[str, Any]:
     payload = load_json(path)
     labels = tree_normalizer.extract_portability_labels(payload)
     report = check_branch_path(tree_normalizer.metrics_branch_path(payload), labels)
+    report["violations"] = sorted(
+        set(
+            report["violations"]
+            + branch_path_field_violations(
+                payload,
+                labels,
+                report["canonical_branch_path"],
+            )
+        )
+    )
+    report["ok"] = not report["violations"]
     report["file"] = str(path)
     report["decision"] = payload.get("decision") or report["decision"]
+    if report["violations"] and report["decision"] == "branch_grammar_ok":
+        report["decision"] = "branch_grammar_violation"
     return report
 
 
