@@ -84,6 +84,53 @@ BASE_SEEDS: list[dict[str, Any]] = [
         "mutation_hints": {"lookback": [7, 14, 28], "extreme_threshold": [0.8, 0.9, 0.95]},
         "hotplug_ready": True,
     },
+    {
+        "seed_id": "mim_cost_window_regime_filter_v1",
+        "family": "intraday_momentum_cost_window",
+        "source": "paper_intraday_momentum_transaction_costs_plus_hmm_side_info",
+        "expression": (
+            "sign(first_window_return) * "
+            "low_cost_window(corwin_schultz_spread, basic_high_low_spread) * "
+            "rvol * momentum_state_prob * entropy_guard"
+        ),
+        "required_fields": [
+            "open",
+            "high",
+            "low",
+            "close",
+            "volume",
+            "first_window_return",
+            "corwin_schultz_spread",
+            "basic_high_low_spread",
+            "rvol",
+            "momentum_state_prob",
+            "posterior_entropy_proxy",
+        ],
+        "default_params": {
+            "base_timeframe": "1m",
+            "context_timeframes": ["5m", "15m", "30m", "1h", "4h", "1d"],
+            "open_minutes": 30,
+            "late_minutes": 30,
+            "first_abs_return_min": 0.0015,
+            "spread_max": 0.0065,
+            "rvol_min": 0.60,
+            "momentum_prob_min": 0.58,
+            "entropy_max": 0.92,
+            "cost_bps_per_side": [0, 1, 2, 5],
+        },
+        "allowed_regimes": ["TrendExpansion"],
+        "mutation_hints": {
+            "open_minutes": [15, 30, 45],
+            "late_minutes": [15, 30, 60],
+            "first_abs_return_min": [0.0010, 0.0015, 0.0025],
+            "spread_max": [0.0045, 0.0065, 0.0080],
+            "momentum_prob_min": [0.56, 0.60, 0.64],
+            "entropy_max": [0.86, 0.92, 0.98],
+        },
+        "helper_module": "support.scripts.research.mim_cost_window_features",
+        "artifact_policy": "provider_rows_required_no_simulated_promotion",
+        "hotplug_ready": True,
+    },
 ]
 
 

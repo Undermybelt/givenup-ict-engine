@@ -22,11 +22,26 @@ class FactorFormulaLibraryTests(unittest.TestCase):
         self.assertIn("qlib_alpha158_momentum_roc", seed_ids)
         self.assertIn("alpha101_rank_decay_reversion", seed_ids)
         self.assertIn("vrp_compression_regime", seed_ids)
+        self.assertIn("mim_cost_window_regime_filter_v1", seed_ids)
         first = result["seeds"][0]
         self.assertIn("expression", first)
         self.assertIn("required_fields", first)
         self.assertIn("mutation_hints", first)
         self.assertTrue(first["hotplug_ready"])
+
+    def test_mim_cost_window_seed_is_regime_rooted_and_aq_ready(self) -> None:
+        result = library.build_formula_library(families=["intraday_momentum_cost_window"])
+        self.assertEqual(result["seed_count"], 1)
+        seed = result["seeds"][0]
+
+        self.assertEqual(seed["seed_id"], "mim_cost_window_regime_filter_v1")
+        self.assertEqual(seed["allowed_regimes"][0], "TrendExpansion")
+        self.assertIn("first_window_return", seed["required_fields"])
+        self.assertIn("corwin_schultz_spread", seed["required_fields"])
+        self.assertIn("momentum_state_prob", seed["required_fields"])
+        self.assertEqual(seed["default_params"]["base_timeframe"], "1m")
+        self.assertEqual(seed["default_params"]["context_timeframes"], ["5m", "15m", "30m", "1h", "4h", "1d"])
+        self.assertTrue(seed["hotplug_ready"])
 
     def test_family_filter_returns_only_requested_factor_family(self) -> None:
         result = library.build_formula_library(families=["mean_reversion"])
