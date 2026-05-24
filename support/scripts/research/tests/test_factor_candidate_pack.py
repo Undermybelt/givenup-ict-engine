@@ -391,6 +391,88 @@ Uses MTF: yes
         )
         self.assertEqual(bundle["transfer_score"]["status"], "single_market_only")
 
+    def test_candidate_pack_emits_factor_profitability_lifecycle_for_regime_conditioned_edge(self) -> None:
+        manifest = {
+            "manifest_version": "1.0",
+            "timeframe": "1m",
+            "strategies": [
+                {
+                    "name": "SparseRegimeEdge",
+                    "status": "ok",
+                    "metadata": {
+                        "strategy": "SparseRegimeEdge",
+                        "mutation_id": "sparse-regime-edge",
+                        "base_factor": "vwap_reclaim",
+                        "hypothesis": "sparse but positive after declared friction",
+                        "paradigm": "regime_conditioned",
+                        "expected_regime": "TrendExpansion -> IntradayMomentum -> declared_friction_edge -> sparse_regime_edge_v1",
+                        "factors_used": ["vwap", "rvol"],
+                    },
+                    "validation_metrics": {
+                        "sharpe": 0.41,
+                        "trade_count": 8,
+                        "win_rate_pct": 62.5,
+                        "profit_factor": 1.44,
+                        "net_after_declared_friction_pct": 1.2,
+                    },
+                    "per_pair_metrics": {
+                        "NQ/USD": {
+                            "sharpe": 0.41,
+                            "trade_count": 8,
+                            "win_rate_pct": 62.5,
+                            "profit_factor": 1.44,
+                            "net_after_declared_friction_pct": 1.2,
+                        }
+                    },
+                }
+            ],
+        }
+        candidate_spec = {
+            "candidate_id": "sparse_regime_edge_v1",
+            "expected_regime": "TrendExpansion -> IntradayMomentum -> declared_friction_edge -> sparse_regime_edge_v1",
+            "regime_confidence": 0.96,
+            "regime_confidence_floor": 0.95,
+            "provider_state": "ready",
+            "leakage_check": "pass",
+            "execution_readiness": 0.41,
+            "transition_hazard": 0.72,
+            "pda_hybrid_alignment": False,
+            "execution_gate_status": "blocked",
+            "timeframe_ladder_transfer": {
+                "promotion_allowed": False,
+                "trade_usable": False,
+            },
+        }
+
+        bundle = pack.build_factor_candidate_pack(
+            manifest=manifest,
+            strategy_name="SparseRegimeEdge",
+            candidate_spec=candidate_spec,
+        )
+
+        lifecycle = bundle["factor_eval_grid_summary"]["factor_profitability_lifecycle"]
+        self.assertEqual(
+            lifecycle["schema_version"],
+            "factor-profitability-lifecycle/v1",
+        )
+        self.assertEqual(lifecycle["learning_admission"]["status"], "admitted")
+        self.assertEqual(
+            lifecycle["learning_admission"][
+                "long_run_expectancy_after_declared_friction"
+            ],
+            1.2,
+        )
+        self.assertEqual(lifecycle["paper_admission"]["status"], "observe")
+        self.assertEqual(lifecycle["live_trade"]["status"], "blocked")
+        self.assertFalse(lifecycle["live_trade"]["promotion_allowed"])
+        self.assertFalse(lifecycle["live_trade"]["trade_usable"])
+        self.assertFalse(
+            bundle["transfer_score"]["timeframe_ladder_transfer"]["promotion_allowed"]
+        )
+        self.assertFalse(
+            bundle["transfer_score"]["timeframe_ladder_transfer"]["trade_usable"]
+        )
+
     def test_build_strategy_library_manifest_from_freqtrade_backtest_zip(self) -> None:
         backtest_payload = {
             "strategy": {
@@ -632,6 +714,17 @@ Expected_regime: TrendTransition -> LiquidityReclaim -> family_d_liquidity_sweep
             metadata["regime_profit_branch_path"],
             "TrendTransition -> LiquidityReclaim -> family_d_liquidity_sweep_reclaim_15m_wide_v1 -> liquidity_sweep_reclaim_long",
         )
+        self.assertEqual(
+            metadata["branch_path_segments"],
+            [
+                "TrendTransition",
+                "LiquidityReclaim",
+                "family_d_liquidity_sweep_reclaim_15m_wide_v1",
+                "liquidity_sweep_reclaim_long",
+            ],
+        )
+        self.assertEqual(metadata["branch_path_depth"], 4)
+        self.assertEqual(metadata["branch_path_leaf"], "liquidity_sweep_reclaim_long")
 
     def test_branch_path_contract_preserves_recursive_profit_factor_suffix(self) -> None:
         branch_path = (
@@ -660,6 +753,18 @@ Expected_regime: TrendTransition -> LiquidityReclaim -> family_d_liquidity_sweep
             contract["profit_factor"],
             "vwap_reclaim_overlay -> pda_transition_guard",
         )
+        self.assertEqual(
+            contract["branch_path_segments"],
+            [
+                "TrendExpansion",
+                "RootEvidencePullbackMssCisd",
+                "strict_trend_root_pullback_mss_cisd",
+                "vwap_reclaim_overlay",
+                "pda_transition_guard",
+            ],
+        )
+        self.assertEqual(contract["branch_path_depth"], 5)
+        self.assertEqual(contract["branch_path_leaf"], "pda_transition_guard")
         self.assertEqual(contract["regime_profit_branch_path"], branch_path)
         self.assertEqual(contract["training_timeframe"], "1m_and_5m")
         self.assertEqual(contract["neutralization_timeframe"], "15m")
@@ -1004,8 +1109,11 @@ Expected_regime: TrendTransition -> LiquidityReclaim -> family_d_liquidity_sweep
             "candidate-pack-signal-diagnostics-evidence/v1",
         )
         self.assertTrue(evidence["diagnostic_only"])
-        self.assertTrue(evidence["promotion_allowed"])
-        self.assertFalse(evidence["trade_usable"])
+        self.assertNotIn("promotion_allowed", evidence)
+        self.assertNotIn("trade_usable", evidence)
+        self.assertNotIn("update_goal", evidence)
+        self.assertTrue(evidence["diagnostic_candidate_passed_gate"])
+        self.assertTrue(evidence["requires_downstream_live_gates"])
         self.assertEqual(evidence["best_bucket"]["horizon"], "1m")
         self.assertEqual(
             evidence["timeframe_ladder_summary"]["missing_timeframes"],
@@ -1068,7 +1176,10 @@ Expected_regime: TrendTransition -> LiquidityReclaim -> family_d_liquidity_sweep
             "candidate-pack-signal-diagnostics-evidence/v1",
         )
         self.assertTrue(evidence["diagnostic_only"])
-        self.assertFalse(evidence["trade_usable"])
+        self.assertNotIn("promotion_allowed", evidence)
+        self.assertNotIn("trade_usable", evidence)
+        self.assertNotIn("update_goal", evidence)
+        self.assertTrue(evidence["requires_downstream_live_gates"])
         self.assertEqual(evidence["best_bucket"]["regime"], "Transition")
 
     def test_main_demo_compact_prints_one_line(self) -> None:

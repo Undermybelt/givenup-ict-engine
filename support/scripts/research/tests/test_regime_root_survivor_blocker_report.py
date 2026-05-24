@@ -553,8 +553,10 @@ class RegimeRootSurvivorBlockerReportTests(unittest.TestCase):
             "selected_gate1_row": {
                 "label": "MES/dense/15m",
                 "trade_count": 12,
+                "net_after_declared_friction_pct": 0.41,
                 "survives_5bps_per_side": True,
             },
+            "regime_confidence": 0.96,
             "raw_scored_mature_rows": 12,
             "production_validation_rows": 12,
             "observation_validation_rows": 12,
@@ -600,7 +602,7 @@ class RegimeRootSurvivorBlockerReportTests(unittest.TestCase):
         self.assertIn("raw_scored_mature_below_30", built["blockers"])
         self.assertIn("production_validation_below_30", built["blockers"])
         self.assertIn("observation_validation_below_30", built["blockers"])
-        self.assertEqual(built["decision"], "repair_same_root_validation_rows")
+        self.assertEqual(built["decision"], "learning_admitted_paper_observe")
         self.assertIn("same-root feedback", built["next_action"])
 
     def test_pda_false_is_telemetry_not_basic_gate_blocker(self) -> None:
@@ -613,8 +615,10 @@ class RegimeRootSurvivorBlockerReportTests(unittest.TestCase):
             "selected_gate1_row": {
                 "label": "SI/dense_fade/5m",
                 "trade_count": 36,
+                "net_after_declared_friction_pct": 0.73,
                 "survives_5bps_per_side": True,
             },
+            "regime_confidence": 0.96,
             "raw_scored_mature_rows": 30,
             "production_validation_rows": 30,
             "observation_validation_rows": 30,
@@ -660,6 +664,76 @@ class RegimeRootSurvivorBlockerReportTests(unittest.TestCase):
         )
         self.assertEqual(built["blockers"], [])
         self.assertEqual(built["decision"], "candidate_meets_current_gate_shape")
+        lifecycle = built["factor_profitability_lifecycle"]
+        self.assertEqual(lifecycle["live_trade"]["status"], "ready")
+        self.assertFalse(lifecycle["live_trade"]["extension_complete"])
+        self.assertFalse(lifecycle["live_trade"]["promotion_allowed"])
+        self.assertFalse(built["promotion_allowed"])
+        self.assertFalse(built["trade_usable"])
+
+    def test_regime_positive_sparse_candidate_is_learning_admitted_not_dropped(self) -> None:
+        metrics = {
+            "branch_fields_preserved": True,
+            "branch_path": (
+                "TrendExpansion -> IntradayMomentum -> declared_friction_edge -> "
+                "sparse_positive_v1"
+            ),
+            "rank_total_trade_count": 8,
+            "long_run_expectancy_after_declared_friction": 0.012,
+            "provider_state": "ready",
+            "leakage_check": "pass",
+            "cost_stress": [],
+            "raw_scored_mature_rows": 8,
+            "production_validation_rows": 8,
+            "observation_validation_rows": 8,
+        }
+        candidate = {
+            "candidate_status": "no_trade",
+            "actionable": False,
+            "pre_bayes_evidence_filter": {
+                "gating_status": "pass_neutralized",
+                "conflict_flags": [],
+                "evidence_quality_score": 0.96,
+                "evidence_assignments": {
+                    "regime_profit_branch_path": metrics["branch_path"],
+                    "regime_confidence": 0.96,
+                },
+            },
+        }
+        tree = {
+            "output": {
+                "execution_readiness": 0.41,
+                "hybrid_transition_hazard": 0.72,
+                "pda_hybrid_alignment": False,
+                "ranker_validation_ready": False,
+                "path_ranker_score_visible_to_execution_tree": True,
+                "path_ranker_score_used_by_execution_tree": False,
+            }
+        }
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            root = Path(tmpdir)
+            gate1_path = root / "gate1.json"
+            candidate_path = root / "candidate.json"
+            tree_path = root / "tree.json"
+            gate1_path.write_text(__import__("json").dumps(metrics), encoding="utf-8")
+            candidate_path.write_text(__import__("json").dumps(candidate), encoding="utf-8")
+            tree_path.write_text(__import__("json").dumps(tree), encoding="utf-8")
+
+            built = report.build_report(gate1_path, candidate_path, tree_path)
+
+        lifecycle = built["factor_profitability_lifecycle"]
+        self.assertEqual(built["decision"], "learning_admitted_paper_observe")
+        self.assertEqual(lifecycle["learning_admission"]["status"], "admitted")
+        self.assertEqual(lifecycle["paper_admission"]["status"], "observe")
+        self.assertEqual(lifecycle["live_trade"]["status"], "blocked")
+        self.assertFalse(built["promotion_allowed"])
+        self.assertFalse(built["trade_usable"])
+        self.assertFalse(lifecycle["live_trade"]["promotion_allowed"])
+        self.assertIn(
+            "no_real_cost_5bps_survivor",
+            lifecycle["paper_admission"]["blockers"],
+        )
 
     def test_validation_rows_can_be_parsed_from_execution_lineage(self) -> None:
         metrics = {
@@ -671,8 +745,10 @@ class RegimeRootSurvivorBlockerReportTests(unittest.TestCase):
             "selected_gate1_row": {
                 "label": "RBRK/15m/dense",
                 "trade_count": 33,
+                "net_after_declared_friction_pct": 0.58,
                 "survives_5bps_per_side": True,
             },
+            "regime_confidence": 0.96,
         }
         candidate = {
             "candidate_status": "execution_observe_only",
@@ -721,7 +797,7 @@ class RegimeRootSurvivorBlockerReportTests(unittest.TestCase):
         self.assertNotIn("raw_scored_mature_below_30", built["blockers"])
         self.assertNotIn("production_validation_below_30", built["blockers"])
         self.assertNotIn("observation_validation_below_30", built["blockers"])
-        self.assertEqual(built["decision"], "observe_only_execution_blocked")
+        self.assertEqual(built["decision"], "learning_admitted_live_blocked")
 
 
 if __name__ == "__main__":

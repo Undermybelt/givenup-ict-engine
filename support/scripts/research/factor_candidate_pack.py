@@ -78,6 +78,9 @@ def _branch_path_contract(
         "sub_sub_regime_or_profit_factor": parts[2],
         "profit_factor": " -> ".join(parts[3:]),
         "regime_profit_branch_path": " -> ".join(parts),
+        "branch_path_segments": parts,
+        "branch_path_depth": len(parts),
+        "branch_path_leaf": parts[-1],
     }
     for key, value in roles.items():
         if value:
@@ -161,9 +164,16 @@ def _signal_diagnostics_metadata(candidate_spec: dict[str, Any]) -> dict[str, An
         "schema_version": "candidate-pack-signal-diagnostics-evidence/v1",
         "source_schema_version": evidence.get("schema_version"),
         "diagnostic_only": True,
-        "promotion_allowed": bool(evidence.get("promotion_allowed")),
-        "trade_usable": bool(evidence.get("trade_usable")),
-        "trade_usable_reason": evidence.get("trade_usable_reason"),
+        "diagnostic_candidate_passed_gate": bool(
+            evidence.get(
+                "diagnostic_candidate_passed_gate",
+                evidence.get("promotion_allowed"),
+            )
+        ),
+        "requires_downstream_live_gates": True,
+        "diagnostic_reason": (
+            evidence.get("diagnostic_reason") or evidence.get("trade_usable_reason")
+        ),
         "best_bucket": {
             "horizon": best_bucket.get("horizon"),
             "regime": best_bucket.get("regime"),
@@ -176,6 +186,74 @@ def _signal_diagnostics_metadata(candidate_spec: dict[str, Any]) -> dict[str, An
             "candidate_passed_gate": bool(best_bucket.get("candidate_passed_gate")),
         },
         "timeframe_ladder_summary": ladder if ladder else None,
+    }
+
+
+def _declared_friction_expectancy(metrics: dict[str, Any]) -> tuple[float | None, list[str]]:
+    blockers: list[str] = []
+    for key in (
+        "net_after_declared_friction_pct",
+        "instrument_cost_total_profit_pct",
+        "net_after_5bps_side_pct",
+        "net_after_5bps_per_side_pct",
+        "5bps_per_side_total_profit_pct",
+    ):
+        value = metrics.get(key)
+        if value is not None:
+            return float(value), blockers
+    raw_profit = metrics.get("total_profit_pct")
+    if raw_profit is not None:
+        blockers.append("declared_friction_missing_raw_profit_only")
+        return float(raw_profit), blockers
+    blockers.append("declared_friction_expectancy_missing")
+    return None, blockers
+
+
+def _factor_profitability_lifecycle(
+    candidate_spec: dict[str, Any],
+    metrics: dict[str, Any],
+) -> dict[str, Any]:
+    blockers: list[str] = []
+    regime_confidence = candidate_spec.get("regime_confidence")
+    expectancy, expectancy_blockers = _declared_friction_expectancy(metrics)
+    leakage_passed = candidate_spec.get("leakage_check", "pass") == "pass"
+    provider_state = candidate_spec.get("provider_state", "ready")
+
+    if regime_confidence is None:
+        blockers.append("regime_confidence_missing")
+    elif float(regime_confidence) < float(candidate_spec.get("regime_confidence_floor", 0.95)):
+        blockers.append("regime_confidence_below_floor")
+    if not leakage_passed:
+        blockers.append("leakage_check_failed")
+    if provider_state == "blocked":
+        blockers.append("provider_state_blocked")
+    blockers.extend(expectancy_blockers)
+    if expectancy is not None and float(expectancy) <= 0.0:
+        blockers.append("declared_friction_expectancy_non_positive")
+
+    learning_ok = not blockers
+    evidence_count = int(metrics.get("trade_count") or 0)
+    return {
+        "schema_version": "factor-profitability-lifecycle/v1",
+        "learning_admission": {
+            "status": "admitted" if learning_ok else "blocked",
+            "long_run_expectancy_after_declared_friction": expectancy,
+            "evidence_count": evidence_count,
+            "leakage_check": "pass" if leakage_passed else "fail",
+            "provider_state": provider_state,
+            "blockers": [] if learning_ok else blockers,
+        },
+        "paper_admission": {
+            "status": "observe",
+            "blockers": ["forward_validation_required", *expectancy_blockers],
+        },
+        "live_trade": {
+            "status": "blocked",
+            "promotion_allowed": False,
+            "trade_usable": False,
+            "update_goal": False,
+            "blockers": ["live_execution_gate_not_evaluated"],
+        },
     }
 
 
@@ -253,6 +331,9 @@ def _branch_path_fields(expected_regime: Any) -> dict[str, str]:
             "sub_sub_regime_or_profit_factor": "",
             "profit_factor": "",
             "regime_profit_branch_path": "",
+            "branch_path_segments": [],
+            "branch_path_depth": 0,
+            "branch_path_leaf": "",
         }
     parts = [part.strip() for part in branch_path.split("->") if part.strip()]
     return {
@@ -261,6 +342,9 @@ def _branch_path_fields(expected_regime: Any) -> dict[str, str]:
         "sub_sub_regime_or_profit_factor": parts[2] if len(parts) > 2 else "",
         "profit_factor": " -> ".join(parts[3:]) if len(parts) > 3 else "",
         "regime_profit_branch_path": " -> ".join(parts),
+        "branch_path_segments": parts,
+        "branch_path_depth": len(parts),
+        "branch_path_leaf": parts[-1] if parts else "",
     }
 
 
@@ -434,6 +518,9 @@ def build_strategy_library_manifest_from_freqtrade_backtest_zip(
                     "regime_profit_branch_path": branch_fields[
                         "regime_profit_branch_path"
                     ],
+                    "branch_path_segments": branch_fields["branch_path_segments"],
+                    "branch_path_depth": branch_fields["branch_path_depth"],
+                    "branch_path_leaf": branch_fields["branch_path_leaf"],
                     "factors_used": metadata.get("factors_used", []),
                     "parent": metadata.get("parent_strategy", ""),
                     "asset_class": metadata.get("asset_class", ""),
@@ -572,12 +659,14 @@ def _eval_grid_summary(
     aggregate_trade_count = int(aggregate.get("trade_count", 0) or 0)
     timeframe_ladder_evidence = _timeframe_ladder_evidence(candidate_spec, manifest)
     signal_diagnostics = _signal_diagnostics_metadata(candidate_spec)
+    lifecycle = _factor_profitability_lifecycle(candidate_spec, aggregate)
     return {
         "schema_version": "factor-eval-grid-summary/v1",
         "selected_strategy": strategy.get("name"),
         "timeframe": manifest.get("timeframe"),
         "candidate_status": candidate_spec.get("status"),
         "promotion_state": candidate_spec.get("promotion_state"),
+        "factor_profitability_lifecycle": lifecycle,
         "timeframe_ladder_evidence": timeframe_ladder_evidence,
         "signal_diagnostics_evidence": signal_diagnostics,
         "breadth_matrix": breadth_matrix,

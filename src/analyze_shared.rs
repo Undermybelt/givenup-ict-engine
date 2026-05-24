@@ -1569,7 +1569,7 @@ fn same_root_execution_tree_admission_for_analyze(
             .unwrap_or_default(),
         "pass_hard" | "pass_neutralized"
     );
-    let admitted = admission.get("status").and_then(serde_json::Value::as_str) == Some("admitted")
+    let admitted = same_root_admission_live_trade_ready(admission)
         && admission
             .get("ready")
             .and_then(serde_json::Value::as_bool)
@@ -1625,6 +1625,26 @@ fn same_root_execution_tree_admission_for_analyze(
         branch_path: path_id.to_string(),
         actionable: actionable_admission,
     })
+}
+
+fn same_root_admission_live_trade_ready(admission: &serde_json::Value) -> bool {
+    admission.get("status").and_then(serde_json::Value::as_str) == Some("admitted")
+        && admission
+            .get("live_trade_status")
+            .and_then(serde_json::Value::as_str)
+            == Some("ready")
+        && admission
+            .get("promotion_allowed")
+            .and_then(serde_json::Value::as_bool)
+            .unwrap_or(false)
+        && admission
+            .get("trade_usable")
+            .and_then(serde_json::Value::as_bool)
+            .unwrap_or(false)
+        && admission
+            .get("update_goal")
+            .and_then(serde_json::Value::as_bool)
+            .unwrap_or(false)
 }
 
 pub(crate) fn persist_execution_candidate_from_analyze(
@@ -2230,7 +2250,13 @@ mod tests {
                     "path_label": branch_path,
                     "pre_bayes_gate_status": "pass_neutralized",
                     "review_status": "promote_latest",
-                    "source_phase": "structural-recommended-path-bundle"
+                    "source_phase": "structural-recommended-path-bundle",
+                    "learning_admission_status": "not_evaluated",
+                    "paper_admission_status": "not_evaluated",
+                    "live_trade_status": "ready",
+                    "promotion_allowed": true,
+                    "trade_usable": true,
+                    "update_goal": true
                 }
             }))
             .unwrap(),
@@ -2259,6 +2285,89 @@ mod tests {
         assert!(candidate.branch_fields_preserved);
         assert_eq!(candidate.review_decision.status, "promote_latest");
         assert_eq!(
+            candidate.review_decision.reason,
+            "same_root_execution_tree_admitted"
+        );
+    }
+
+    #[test]
+    fn execution_candidate_does_not_materialize_legacy_same_root_admission_without_live_plane() {
+        let temp = tempfile::tempdir().unwrap();
+        let mut report = sample_analyze_report_with_factor_ranking(Vec::new());
+        report.symbol = "CRWD".to_string();
+        report.supporting.raw_trade_plan.direction = Direction::Bull;
+        report.supporting.raw_trade_plan.position_size = 0.0;
+        report.supporting.raw_trade_plan.entry = 596.0;
+        report.supporting.raw_trade_plan.stop_loss = 591.8;
+        report.supporting.raw_trade_plan.tp1 = 598.8;
+        report.supporting.raw_trade_plan.tp2 = 601.6;
+        report.supporting.raw_trade_plan.tp3 = 604.4;
+        report.supporting.raw_trade_plan.posterior = 0.2159;
+        report.supporting.raw_trade_plan.win_probability = 0.5037;
+        report.supporting.pre_bayes_evidence_filter.gating_status = "pass_neutralized".to_string();
+        let branch_path = "RangeReversion -> AiSecuritySoftwareOversoldReclaim -> rsi_vwap_reclaim_dense -> yf_ai_security_software_rsi_vwap_reclaim_crwd_5m_v1 -> session_liquidity_transition_stability_v1 -> pda_mtf_soft_confirmation_v1";
+        report
+            .supporting
+            .pre_bayes_evidence_filter
+            .evidence_assignments
+            .insert(
+                "regime_profit_branch_path".to_string(),
+                branch_path.to_string(),
+            );
+        report
+            .supporting
+            .pre_bayes_evidence_filter
+            .evidence_assignments
+            .insert("trade_direction".to_string(), "Bull".to_string());
+
+        let symbol_dir = temp.path().join("CRWD");
+        std::fs::create_dir_all(&symbol_dir).unwrap();
+        std::fs::write(
+            symbol_dir.join(ict_engine::application::orchestration::EXECUTION_TREE_TRACE_FILE),
+            serde_json::to_vec_pretty(&serde_json::json!({
+                "output": {
+                    "execution_readiness": 0.67,
+                    "gate_status": "ready",
+                    "branch": "fill_viable",
+                    "path_ranker_score_visible_to_execution_tree": true,
+                    "path_ranker_score_used_by_execution_tree": true,
+                    "ranker_validation_ready": true,
+                    "hybrid_transition_hazard": 0.595,
+                    "pda_hybrid_alignment": false
+                },
+                "closed_loop_branch_admission": {
+                    "status": "admitted",
+                    "ready": true,
+                    "actionable": true,
+                    "candidate_status": "execution_ready",
+                    "execution_gate_status": "execution_ready",
+                    "execution_tree_gate_status": "ready",
+                    "execution_tree_branch": "fill_viable",
+                    "path_id": branch_path,
+                    "path_label": branch_path,
+                    "pre_bayes_gate_status": "pass_neutralized",
+                    "review_status": "promote_latest",
+                    "source_phase": "structural-recommended-path-bundle"
+                }
+            }))
+            .unwrap(),
+        )
+        .unwrap();
+
+        persist_execution_candidate_from_analyze(temp.path().to_str().unwrap(), &report, "analyze")
+            .unwrap();
+
+        let candidate: ict_engine::state::ExecutionCandidateArtifact =
+            ict_engine::state::load_state(
+                temp.path(),
+                "CRWD",
+                ict_engine::state::EXECUTION_CANDIDATE_FILE,
+            )
+            .unwrap();
+
+        assert_eq!(candidate.trade_direction, Direction::Bull);
+        assert!(!candidate.actionable);
+        assert_ne!(
             candidate.review_decision.reason,
             "same_root_execution_tree_admitted"
         );
@@ -2383,7 +2492,13 @@ mod tests {
                     "path_label": branch_path,
                     "pre_bayes_gate_status": "pass_neutralized",
                     "review_status": "promote_latest",
-                    "source_phase": "structural-recommended-path-bundle"
+                    "source_phase": "structural-recommended-path-bundle",
+                    "learning_admission_status": "not_evaluated",
+                    "paper_admission_status": "not_evaluated",
+                    "live_trade_status": "ready",
+                    "promotion_allowed": true,
+                    "trade_usable": true,
+                    "update_goal": true
                 }
             }))
             .unwrap(),
@@ -2481,7 +2596,13 @@ mod tests {
                     "path_label": branch_path,
                     "pre_bayes_gate_status": "pass_neutralized",
                     "review_status": "promote_latest",
-                    "source_phase": "structural-recommended-path-bundle"
+                    "source_phase": "structural-recommended-path-bundle",
+                    "learning_admission_status": "not_evaluated",
+                    "paper_admission_status": "not_evaluated",
+                    "live_trade_status": "ready",
+                    "promotion_allowed": true,
+                    "trade_usable": true,
+                    "update_goal": true
                 }
             }))
             .unwrap(),
@@ -2585,7 +2706,13 @@ mod tests {
                     "path_label": branch_path,
                     "pre_bayes_gate_status": "pass_neutralized",
                     "review_status": "promote_latest",
-                    "source_phase": "structural-recommended-path-bundle"
+                    "source_phase": "structural-recommended-path-bundle",
+                    "learning_admission_status": "not_evaluated",
+                    "paper_admission_status": "not_evaluated",
+                    "live_trade_status": "ready",
+                    "promotion_allowed": true,
+                    "trade_usable": true,
+                    "update_goal": true
                 }
             }))
             .unwrap(),

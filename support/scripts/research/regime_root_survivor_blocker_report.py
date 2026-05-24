@@ -14,6 +14,19 @@ import regime_factor_tree_normalizer as tree_normalizer
 
 PRE_BAYES_ACCEPTED_GATE_STATUSES = {"pass", "pass_hard", "pass_neutralized"}
 VALIDATION_MIN_ROWS = 30
+REGIME_CONFIDENCE_FLOOR = 0.95
+LIVE_EXECUTION_READINESS_FLOOR = 0.65
+LIVE_TRANSITION_HAZARD_CAP = 0.60
+
+
+def practical_admission_flags(branch_local_admitted: bool, extension_complete: bool = False) -> dict[str, bool]:
+    practical_allowed = bool(branch_local_admitted and extension_complete)
+    return {
+        "extension_complete": bool(extension_complete),
+        "promotion_allowed": practical_allowed,
+        "trade_usable": practical_allowed,
+        "update_goal": practical_allowed,
+    }
 
 
 def load_json(path: Path) -> dict[str, Any]:
@@ -70,6 +83,22 @@ def intish(value: Any) -> int | None:
             stripped = stripped.split("/", 1)[0].strip()
         try:
             return int(float(stripped))
+        except ValueError:
+            return None
+    return None
+
+
+def floatish(value: Any) -> float | None:
+    if isinstance(value, bool) or value is None:
+        return None
+    if isinstance(value, (int, float)):
+        return float(value)
+    if isinstance(value, str):
+        stripped = value.strip()
+        if not stripped:
+            return None
+        try:
+            return float(stripped)
         except ValueError:
             return None
     return None
@@ -256,64 +285,167 @@ def validation_from_lineage(lineage: list[Any]) -> dict[str, int]:
     return parsed
 
 
-def classify(report: dict[str, Any]) -> tuple[str, list[str], str]:
+def declared_friction_expectancy(*sources: dict[str, Any]) -> tuple[float | None, list[str]]:
     blockers: list[str] = []
+    keys = (
+        "long_run_expectancy_after_declared_friction",
+        "net_after_declared_friction_pct",
+        "instrument_cost_total_profit_pct",
+        "net_after_5bps_side_pct",
+        "net_after_5bps_per_side_pct",
+        "5bps_per_side_total_profit_pct",
+    )
+    for source in sources:
+        if not isinstance(source, dict):
+            continue
+        for key in keys:
+            parsed = floatish(source.get(key))
+            if parsed is not None:
+                return parsed, blockers
+        for nested_key in ("selected_gate1_row", "cost_row", "provider_row"):
+            nested = source.get(nested_key)
+            if isinstance(nested, dict):
+                nested_value, nested_blockers = declared_friction_expectancy(nested)
+                if nested_value is not None:
+                    return nested_value, blockers
+                blockers.extend(nested_blockers)
+    for source in sources:
+        if isinstance(source, dict):
+            parsed = floatish(source.get("total_profit_pct"))
+            if parsed is not None:
+                return parsed, ["declared_friction_missing_raw_profit_only"]
+    return None, ["declared_friction_expectancy_missing"]
+
+
+def lifecycle_decision(report: dict[str, Any]) -> tuple[dict[str, Any], str]:
+    learning_blockers: list[str] = []
+    paper_blockers: list[str] = []
+    live_blockers: list[str] = []
     gate1 = report["gate1"]
-    downstream = report["downstream"]
     pre_bayes = report["pre_bayes"]
-    execution = report["execution_tree"]
+    downstream = report["downstream"]
     validation = report.get("validation", {})
-    branch_path_violations = listify(report.get("branch_path_violations"))
+    execution = report["execution_tree"]
 
     if not gate1["branch_fields_preserved"]:
-        blockers.append("rooted_branch_metadata_not_preserved")
-    for violation in branch_path_violations:
-        blockers.append(f"branch_path_violation:{violation}")
-    if not gate1["has_5bps_survivor"]:
-        blockers.append("no_real_cost_5bps_survivor")
+        learning_blockers.append("rooted_branch_metadata_not_preserved")
+    for violation in listify(report.get("branch_path_violations")):
+        learning_blockers.append(f"branch_path_violation:{violation}")
+    regime_confidence = floatish(pre_bayes.get("regime_confidence"))
+    if regime_confidence is None:
+        learning_blockers.append("regime_confidence_missing")
+    elif regime_confidence < REGIME_CONFIDENCE_FLOOR:
+        learning_blockers.append("regime_confidence_below_floor")
+    expectancy = pre_bayes.get("long_run_expectancy_after_declared_friction")
+    if expectancy is None:
+        learning_blockers.append("declared_friction_expectancy_missing")
+    elif float(expectancy) <= 0.0:
+        learning_blockers.append("declared_friction_expectancy_non_positive")
+    if pre_bayes.get("leakage_check") == "fail":
+        learning_blockers.append("leakage_check_failed")
+    if pre_bayes.get("provider_state") == "blocked":
+        learning_blockers.append("provider_evidence_blocked")
     if pre_bayes["gating_status"] not in PRE_BAYES_ACCEPTED_GATE_STATUSES:
-        blockers.append(f"pre_bayes_{pre_bayes['gating_status'] or 'missing'}")
+        learning_blockers.append(f"pre_bayes_{pre_bayes['gating_status'] or 'missing'}")
     for flag in pre_bayes["conflict_flags"]:
         if flag.startswith("pda_sequence"):
             continue
-        blockers.append(f"pre_bayes_conflict:{flag}")
-    if downstream["execution_candidate_status"] != "trade_candidate":
-        blockers.append(f"execution_candidate_{downstream['execution_candidate_status'] or 'missing'}")
-    if downstream["execution_readiness"] is None or downstream["execution_readiness"] < 0.65:
-        blockers.append("execution_readiness_below_0_65")
-    if downstream["transition_hazard"] is None or downstream["transition_hazard"] >= 0.60:
-        blockers.append("transition_hazard_ge_0_60")
-    if downstream["ranker_validation_ready"] is not True:
-        blockers.append("ranker_validation_not_ready")
-    if execution["path_ranker_score_visible_to_execution_tree"] and not execution["path_ranker_score_used_by_execution_tree"]:
-        blockers.append("path_ranker_visible_but_not_used")
-    if validation.get("raw_scored_mature_shortfall_rows", 0) > 0:
-        blockers.append("raw_scored_mature_below_30")
-    if validation.get("production_validation_shortfall_rows", 0) > 0:
-        blockers.append("production_validation_below_30")
-    if validation.get("observation_validation_shortfall_rows", 0) > 0:
-        blockers.append("observation_validation_below_30")
+        learning_blockers.append(f"pre_bayes_conflict:{flag}")
 
     if not gate1["has_5bps_survivor"]:
-        decision = "drop_gate1_economics"
-        next_action = "rotate to a different public family or market cell before downstream."
-    elif branch_path_violations:
+        paper_blockers.append("no_real_cost_5bps_survivor")
+    if validation.get("raw_scored_mature_shortfall_rows", 0) > 0:
+        paper_blockers.append("raw_scored_mature_below_30")
+    if validation.get("production_validation_shortfall_rows", 0) > 0:
+        paper_blockers.append("production_validation_below_30")
+    if validation.get("observation_validation_shortfall_rows", 0) > 0:
+        paper_blockers.append("observation_validation_below_30")
+
+    if downstream["execution_candidate_status"] != "trade_candidate":
+        live_blockers.append(f"execution_candidate_{downstream['execution_candidate_status'] or 'missing'}")
+    if downstream["execution_readiness"] is None or downstream["execution_readiness"] < LIVE_EXECUTION_READINESS_FLOOR:
+        live_blockers.append("execution_readiness_below_0_65")
+    if downstream["transition_hazard"] is None or downstream["transition_hazard"] >= LIVE_TRANSITION_HAZARD_CAP:
+        live_blockers.append("transition_hazard_ge_0_60")
+    if downstream["ranker_validation_ready"] is not True:
+        live_blockers.append("ranker_validation_not_ready")
+    if execution["path_ranker_score_visible_to_execution_tree"] and not execution["path_ranker_score_used_by_execution_tree"]:
+        live_blockers.append("path_ranker_visible_but_not_used")
+
+    learning_admitted = not learning_blockers
+    paper_ready = learning_admitted and not paper_blockers
+    live_ready = learning_admitted and paper_ready and not live_blockers
+    if learning_blockers:
+        decision = "learning_blocked"
+    elif live_ready:
+        decision = "live_trade_ready"
+    elif paper_blockers:
+        decision = "learning_admitted_paper_observe"
+    elif live_blockers:
+        decision = "learning_admitted_live_blocked"
+    else:
+        decision = "learning_admitted_paper_observe"
+
+    practical = practical_admission_flags(live_ready)
+    lifecycle = {
+        "schema_version": "factor-profitability-lifecycle/v1",
+        "learning_admission": {
+            "status": "admitted" if learning_admitted else "blocked",
+            "reason": (
+                "regime_conditioned_positive_expectancy"
+                if learning_admitted
+                else "learning_blockers_present"
+            ),
+            "long_run_expectancy_after_declared_friction": expectancy,
+            "evidence_count": gate1.get("rank_total_trade_count") or validation.get("raw_scored_mature_rows", 0),
+            "leakage_check": pre_bayes.get("leakage_check"),
+            "provider_state": pre_bayes.get("provider_state"),
+            "blockers": sorted(set(learning_blockers)),
+        },
+        "paper_admission": {
+            "status": "ready" if paper_ready else "observe",
+            "blockers": sorted(set(paper_blockers)),
+        },
+        "live_trade": {
+            "status": "ready" if live_ready else "blocked",
+            "extension_complete": practical["extension_complete"],
+            "promotion_allowed": practical["promotion_allowed"],
+            "trade_usable": practical["trade_usable"],
+            "update_goal": practical["update_goal"],
+            "blockers": sorted(set(live_blockers)),
+        },
+    }
+    return lifecycle, decision
+
+
+def classify(report: dict[str, Any]) -> tuple[str, list[str], str]:
+    lifecycle, decision = lifecycle_decision(report)
+    blockers = sorted(
+        set(
+            lifecycle["learning_admission"]["blockers"]
+            + lifecycle["paper_admission"]["blockers"]
+            + lifecycle["live_trade"]["blockers"]
+        )
+    )
+    branch_path_violations = listify(report.get("branch_path_violations"))
+
+    if branch_path_violations:
         decision = "repair_branch_path_to_canonical_regime_root"
         next_action = "rewrite the branch path so it starts at the canonical main regime and move market/provider/symbol/timeframe into portability labels before rerunning downstream."
     elif any(item.startswith("pre_bayes_conflict:multi_timeframe_direction_conflict") for item in blockers):
-        decision = "repair_same_root_mtf_and_regime_alignment"
         next_action = "rebuild exact-root inputs with complete real/derived MTF ladder and verify factor direction agrees with current regime before rerunning Pre-Bayes/BBN/CatBoost/execution tree."
     elif any(item.endswith("_below_30") for item in blockers):
-        decision = "repair_same_root_validation_rows"
         next_action = "add same-root feedback rows with root evidence fields until raw-scored mature, production validation, and observation validation all reach 30/30 before promotion."
     elif "path_ranker_visible_but_not_used" in blockers:
-        decision = "repair_execution_gate_status_before_ranker_consumption"
         next_action = "keep CatBoost score visible-only until execution_gate_status is pass; fix exact execution candidate materialization and validation rows first."
-    elif not blockers:
+    elif decision == "live_trade_ready":
         decision = "candidate_meets_current_gate_shape"
         next_action = "run full promotion verification, including fresh provider parity and repeated readiness stability."
+    elif decision == "learning_admitted_paper_observe":
+        next_action = "preserve as learning-admitted paper/sim observation and accumulate same-root validation, 5bps survivor, and forward density evidence before live promotion."
+    elif decision == "learning_admitted_live_blocked":
+        next_action = "preserve as regime-conditioned learning evidence while repairing live execution readiness, transition hazard, validation, and ranker-consumption blockers."
     else:
-        decision = "observe_only_execution_blocked"
         next_action = "preserve as observation and work the listed blockers without lowering gates."
     return decision, sorted(set(blockers)), next_action
 
@@ -357,6 +489,26 @@ def build_report(gate1_path: Path, execution_candidate_path: Path, execution_tre
         "pre_bayes": {
             "gating_status": filter_payload.get("gating_status"),
             "evidence_quality_score": filter_payload.get("evidence_quality_score"),
+            "regime_confidence": first_present(
+                get_path(filter_payload, "evidence_assignments.regime_confidence"),
+                filter_payload.get("regime_confidence"),
+                gate1.get("regime_confidence"),
+            ),
+            "long_run_expectancy_after_declared_friction": declared_friction_expectancy(
+                gate1,
+                candidate,
+                tree_output,
+            )[0],
+            "leakage_check": first_present(
+                gate1.get("leakage_check"),
+                filter_payload.get("leakage_check"),
+                "pass",
+            ),
+            "provider_state": first_present(
+                gate1.get("provider_state"),
+                filter_payload.get("provider_state"),
+                "ready",
+            ),
             "conflict_flags": listify(filter_payload.get("conflict_flags")),
             "raw_market_regime_label": filter_payload.get("raw_market_regime_label"),
             "raw_factor_alignment": filter_payload.get("raw_factor_alignment"),
@@ -384,11 +536,13 @@ def build_report(gate1_path: Path, execution_candidate_path: Path, execution_tre
         },
     }
     decision, blockers, next_action = classify(report)
+    lifecycle, _ = lifecycle_decision(report)
+    report["factor_profitability_lifecycle"] = lifecycle
     report["decision"] = decision
     report["blockers"] = blockers
     report["next_action"] = next_action
-    report["promotion_allowed"] = decision == "candidate_meets_current_gate_shape"
-    report["trade_usable"] = False
+    report["promotion_allowed"] = lifecycle["live_trade"]["promotion_allowed"]
+    report["trade_usable"] = lifecycle["live_trade"]["trade_usable"]
     return report
 
 

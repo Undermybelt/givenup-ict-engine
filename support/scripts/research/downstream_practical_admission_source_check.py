@@ -11,18 +11,23 @@ from typing import Any
 
 
 PRACTICAL_KEYS = frozenset(("promotion_allowed", "trade_usable", "update_goal"))
+LEARNING_KEYS = frozenset((
+    "learning_admission",
+    "learning_admission_status",
+    "learning_allowed",
+))
 HELPER_NAME = "practical_admission_flags"
 HELPER_RESULT_NAMES = frozenset(("practical", "practical_flags", "admission_flags"))
 BRANCH_ADMISSION_NAMES = frozenset(("admitted", "branch_local_admitted", "pass_exec", "pass_execution"))
 DOWNSTREAM_ADMISSION_NAMES = frozenset(("downstream", "downstream_allowed"))
-PDA_HARD_GATE_TOKENS = (
+PDA_HARD_GATE_PATTERNS = (
     " and pda",
     "pda and ",
     "pda is True",
     "pda_hybrid_alignment is True",
     "pda_hybrid_alignment_true",
 )
-TWO_BPS_DOWNSTREAM_TOKENS = (
+TWO_BPS_DOWNSTREAM_PATTERNS = (
     "survivors_2",
     "survivors_2bps",
     "exact_1m_survivors_2bps",
@@ -33,7 +38,7 @@ TWO_BPS_DOWNSTREAM_TOKENS = (
     "exact_4h_survivors_2bps",
     "exact_1d_survivors_2bps",
 )
-FIVE_BPS_DENSITY_FLOOR_TOKENS = (
+FIVE_BPS_DENSITY_FLOOR_PATTERNS = (
     "trades >=",
     "trade_count >=",
     "trades_per_day >=",
@@ -73,17 +78,27 @@ def is_practical_helper_value(node: ast.AST, key: str) -> bool:
 
 def contains_pda_hard_gate(source: str, node: ast.AST) -> bool:
     text = expression_text(source, node)
-    return any(token in text for token in PDA_HARD_GATE_TOKENS)
+    return any(pattern in text for pattern in PDA_HARD_GATE_PATTERNS)
 
 
 def contains_two_bps_downstream_gate(source: str, node: ast.AST) -> bool:
     text = expression_text(source, node)
-    return any(token in text for token in TWO_BPS_DOWNSTREAM_TOKENS)
+    return any(pattern in text for pattern in TWO_BPS_DOWNSTREAM_PATTERNS)
 
 
 def contains_5bps_density_floor(source: str, node: ast.AST) -> bool:
     text = expression_text(source, node)
-    return any(token in text for token in FIVE_BPS_DENSITY_FLOOR_TOKENS)
+    return any(pattern in text for pattern in FIVE_BPS_DENSITY_FLOOR_PATTERNS)
+
+
+def contains_learning_source(node: ast.AST) -> bool:
+    for child in ast.walk(node):
+        if isinstance(child, ast.Subscript) and string_key(child.slice) in LEARNING_KEYS:
+            return True
+        if isinstance(child, ast.Constant) and isinstance(child.value, str):
+            if child.value in LEARNING_KEYS:
+                return True
+    return False
 
 
 def helper_names(tree: ast.AST) -> set[str]:
@@ -103,6 +118,7 @@ class PracticalAssignmentVisitor(ast.NodeVisitor):
         self.function_stack: list[str] = []
         self.helper_result_names: set[str] = set()
         self.pda_tainted_admission_names: dict[str, dict[str, Any]] = {}
+        self.learning_tainted_names: set[str] = set()
         self.violations: list[dict[str, Any]] = []
 
     def visit_FunctionDef(self, node: ast.FunctionDef) -> Any:
@@ -111,6 +127,10 @@ class PracticalAssignmentVisitor(ast.NodeVisitor):
         self.function_stack.pop()
 
     def visit_Assign(self, node: ast.Assign) -> Any:
+        learning_tainted = self.is_learning_tainted_value(node.value)
+        for target in node.targets:
+            if isinstance(target, ast.Name) and learning_tainted:
+                self.learning_tainted_names.add(target.id)
         if self.calls_practical_helper(node.value):
             self.record_pda_helper_argument_violation(node.value)
             for target in node.targets:
@@ -150,6 +170,9 @@ class PracticalAssignmentVisitor(ast.NodeVisitor):
         self.generic_visit(node)
 
     def visit_AnnAssign(self, node: ast.AnnAssign) -> Any:
+        if node.value is not None and isinstance(node.target, ast.Name):
+            if self.is_learning_tainted_value(node.value):
+                self.learning_tainted_names.add(node.target.id)
         if node.value is not None and self.calls_practical_helper(node.value):
             self.record_pda_helper_argument_violation(node.value)
             if isinstance(node.target, ast.Name):
@@ -211,6 +234,17 @@ class PracticalAssignmentVisitor(ast.NodeVisitor):
                         }
                     )
                 continue
+            if self.is_learning_tainted_value(value_node):
+                self.violations.append(
+                    {
+                        "line": getattr(value_node, "lineno", getattr(node, "lineno", 0)),
+                        "column": getattr(value_node, "col_offset", getattr(node, "col_offset", 0)),
+                        "key": key,
+                        "value": expression_text(self.source, value_node),
+                        "violation": "learning_admission_reused_as_practical_flag",
+                    }
+                )
+                continue
             if in_helper or self.is_safe_practical_value(value_node, key):
                 continue
             self.violations.append(
@@ -229,6 +263,14 @@ class PracticalAssignmentVisitor(ast.NodeVisitor):
             isinstance(node, ast.Call)
             and isinstance(node.func, ast.Name)
             and node.func.id in self.helpers
+        )
+
+    def is_learning_tainted_value(self, node: ast.AST) -> bool:
+        if contains_learning_source(node):
+            return True
+        return any(
+            isinstance(child, ast.Name) and child.id in self.learning_tainted_names
+            for child in ast.walk(node)
         )
 
     def record_pda_helper_argument_violation(self, node: ast.AST) -> None:

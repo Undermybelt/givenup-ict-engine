@@ -404,9 +404,9 @@ def build_diagnostics(
         "buckets": buckets,
         "timeframe_ladder_summary": ladder_summary,
         "best_bucket": best,
-        "promotion_allowed": bool(best and best["candidate_passed_gate"]),
-        "trade_usable": False,
-        "trade_usable_reason": "diagnostic_only_hotplug; downstream Pre-Bayes/BBN/CatBoost/execution-tree gates still required",
+        "diagnostic_candidate_passed_gate": bool(best and best["candidate_passed_gate"]),
+        "requires_downstream_live_gates": True,
+        "diagnostic_reason": "diagnostic_only_hotplug; downstream Pre-Bayes/BBN/CatBoost/execution-tree gates still required",
     }
 
 
@@ -417,7 +417,8 @@ def _compact_line(report: dict[str, Any]) -> str:
         f"best={best.get('regime','none')}/{best.get('horizon','none')} "
         f"n={best.get('n',0)} t={best.get('t_stat')} ic_s={best.get('ic_spearman')} "
         f"cost_bps={best.get('mean_signed_return_bps_after_cost')} "
-        f"promotion_allowed={str(report['promotion_allowed']).lower()} trade_usable=false"
+        f"diagnostic_candidate_passed_gate={str(report['diagnostic_candidate_passed_gate']).lower()} "
+        "requires_downstream_live_gates=true"
     )
 
 

@@ -1,6 +1,6 @@
 # Factor Candidate Ingestion Instructions
 
-Updated: `2026-05-16`
+Updated: `2026-05-25`
 
 Purpose: replace the old May 10 append-only factor notes as the default agent
 instruction surface. Agents must move useful factor results into repo-local
@@ -15,7 +15,7 @@ Source logs retained for targeted lookup only:
 Current compact authorities:
 
 - `support/docs/plans/2026-05-12-board-a-regime-state-current.md`
-- `support/docs/plans/2026-05-23-board-b-current.md`
+- `support/docs/plans/2026-05-24-board-b-current.md`
 - `support/docs/plans/2026-05-12-board-ab-cleanup-retention-plan.md`
 
 ## Operating Contract
@@ -82,11 +82,11 @@ The minimum admission path for a factor candidate is:
 
 ```text
 candidate evidence
--> candidate pack three-file contract
+-> candidate pack three-file contract with factor_profitability_lifecycle
 -> factor-candidate-packs inventory
 -> factor-candidate-admission-targets export
 -> policy-training-status readback
--> promotion gates
+-> learning/paper/live lifecycle gates
 ```
 
 ## Deletion And Cleanup Rule
@@ -124,14 +124,24 @@ not_sole_evidence_for_live_gate=true
 
 ## Promotion Boundary
 
-Candidate-pack visibility is not promotion.
+Candidate-pack visibility is not promotion, and
+`learning_admission.status=admitted` is not a trading claim.
 
-An admitted factor remains observation-only until it passes the Board B gate
-chain:
+A learning-admitted factor may continue training when regime fit, leakage,
+provider/retained-real evidence, and positive expectancy after declared
+friction are present. It remains observation-only until the later lifecycle
+planes pass.
+
+Paper/sim admission is a forward validation surface. IBKR historical data and
+paper/sim fills should be used when available for replay, latency, slippage,
+and execution-readiness evidence, but simulated fills do not imply live trade
+usability.
+
+Live trade usability remains fail-closed until the Board B chain passes:
 
 ```text
-provider portability
--> sufficient branch/trade density
+provider parity or retained-real provider truth
+-> sufficient branch/trade density and instrument-aware friction
 -> Pre-Bayes/filter
 -> BBN learning/calibration
 -> CatBoost/path-ranker
@@ -139,8 +149,10 @@ provider portability
 -> feedback/update learning
 ```
 
-If any gate fails, record the failure as useful negative evidence and keep
-runtime selection disabled.
+If a learning blocker fails, record the candidate as invalid or blocked for
+training. If a paper/live blocker fails, preserve it as useful negative or
+repair evidence, keep runtime selection disabled, and keep
+`promotion_allowed=false`, `trade_usable=false`, and `update_goal=false`.
 
 ## Priority Runtime-Evidence Backlog
 

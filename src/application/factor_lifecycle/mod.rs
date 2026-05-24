@@ -10,6 +10,7 @@ pub mod mutation_routing;
 pub mod mutation_spec;
 pub mod mutation_summary;
 pub mod mutation_templates;
+pub mod profitability_admission;
 
 pub use autoresearch_surface::{
     build_factor_autoresearch_retrospective, build_factor_autoresearch_status_surface,
@@ -37,6 +38,12 @@ pub use expansion_regressions::expansion_regression_reasons_by_market;
 pub use expansion_scoring::{expansion_factor_scores_for_market, ExpansionFactorScore};
 
 pub use lifecycle_surface::{build_factor_lifecycle_view, FactorLifecycleView};
+
+pub use profitability_admission::{
+    decide_profitability_lifecycle, AdmissionPlaneDecision, AdmissionStatus, LiveTradeDecision,
+    ProfitabilityAdmissionInput, ProfitabilityLifecycleDecision, ProviderEvidenceState,
+    ValidationRows,
+};
 
 pub use mutation_preferences::{
     build_hint_effectiveness_summary, compare_hint_effectiveness, factor_specific_hint_preferences,

@@ -889,7 +889,21 @@ fn build_execution_tree_closed_loop_branch_admission_value(
     let execution_tree_ready = output.gate_status == "ready"
         && (output.branch == "fill_viable" || strict_trend_pullback_wait_ready)
         && output.execution_bias != "skip";
-    let ready = pre_bayes_ready && execution_ready && execution_tree_ready;
+    let execution_readiness_ready = output
+        .execution_readiness
+        .is_some_and(|readiness| readiness >= EXECUTION_GATE_READY);
+    let transition_hazard_ready = output
+        .hybrid_transition_hazard
+        .is_some_and(|hazard| hazard < 0.60);
+    let ranker_live_ready =
+        output.path_ranker_score_used_by_execution_tree && output.ranker_validation_ready;
+    let live_plane_ready = pre_bayes_ready
+        && execution_ready
+        && execution_tree_ready
+        && execution_readiness_ready
+        && transition_hazard_ready
+        && ranker_live_ready;
+    let ready = live_plane_ready;
     let actionable = ready;
     let review_status = if actionable {
         "promote_latest"
@@ -901,6 +915,9 @@ fn build_execution_tree_closed_loop_branch_admission_value(
     } else {
         "fail_closed"
     };
+    let learning_admission_status = "not_evaluated";
+    let paper_admission_status = "not_evaluated";
+    let live_trade_status = if live_plane_ready { "ready" } else { "blocked" };
     let mut evidence = Vec::new();
     if !pre_bayes_gate_status.trim().is_empty() {
         evidence.push(format!("pre_bayes_gate_status={pre_bayes_gate_status}"));
@@ -911,6 +928,10 @@ fn build_execution_tree_closed_loop_branch_admission_value(
     evidence.push(format!("review_status={review_status}"));
     evidence.push(format!("execution_tree_gate_status={}", output.gate_status));
     evidence.push(format!("execution_tree_branch={}", output.branch));
+    evidence.push(format!(
+        "live_plane_predicates=execution_readiness_ready={} transition_hazard_ready={} ranker_live_ready={}",
+        execution_readiness_ready, transition_hazard_ready, ranker_live_ready
+    ));
     if strict_trend_pullback_wait_ready {
         evidence.push("strict_trend_pullback_wait_for_reversion_admitted=true".to_string());
     }
@@ -933,6 +954,12 @@ fn build_execution_tree_closed_loop_branch_admission_value(
         "pre_bayes_gate_status": pre_bayes_gate_status,
         "execution_gate_status": execution_gate_status,
         "review_status": review_status,
+        "learning_admission_status": learning_admission_status,
+        "paper_admission_status": paper_admission_status,
+        "live_trade_status": live_trade_status,
+        "promotion_allowed": live_trade_status == "ready",
+        "trade_usable": live_trade_status == "ready",
+        "update_goal": live_trade_status == "ready",
         "ready": ready,
         "actionable": actionable,
         "execution_tree_gate_status": output.gate_status,
@@ -1384,8 +1411,37 @@ mod tests {
     }
 
     #[test]
-    fn execution_tree_closed_loop_branch_admission_accepts_neutralized_pre_bayes_when_execution_ready(
-    ) {
+    fn closed_loop_admission_keeps_learning_not_evaluated_without_lifecycle_artifact() {
+        let output = ExecutionTreeOutput {
+            gate_status: "blocked".to_string(),
+            branch: "block_crowded".to_string(),
+            execution_bias: "skip".to_string(),
+            execution_readiness: Some(0.42),
+            hybrid_transition_hazard: Some(0.71),
+            pda_hybrid_alignment: Some(false),
+            path_ranker_score_visible_to_execution_tree: true,
+            path_ranker_score_used_by_execution_tree: false,
+            ranker_validation_ready: false,
+            ..ExecutionTreeOutput::default()
+        };
+
+        let value = build_execution_tree_closed_loop_branch_admission_value(
+            "TrendExpansion -> PublicSourceMomentum -> long_run_edge -> ibkr_public_momentum_v1",
+            "pass_neutralized",
+            "execution_blocked",
+            &output,
+        );
+
+        assert_eq!(value["status"], "fail_closed");
+        assert_eq!(value["learning_admission_status"], "not_evaluated");
+        assert_eq!(value["paper_admission_status"], "not_evaluated");
+        assert_eq!(value["live_trade_status"], "blocked");
+        assert_eq!(value["promotion_allowed"], false);
+        assert_eq!(value["trade_usable"], false);
+    }
+
+    #[test]
+    fn execution_tree_closed_loop_branch_admission_blocks_fill_viable_without_live_predicates() {
         let output = ExecutionTreeOutput {
             gate_status: "ready".to_string(),
             branch: "fill_viable".to_string(),
@@ -1400,10 +1456,43 @@ mod tests {
             &output,
         );
 
+        assert_eq!(value["status"], "fail_closed");
+        assert_eq!(value["ready"], false);
+        assert_eq!(value["actionable"], false);
+        assert_eq!(value["live_trade_status"], "blocked");
+        assert_eq!(value["promotion_allowed"], false);
+        assert_eq!(value["trade_usable"], false);
+        assert_eq!(value["pre_bayes_gate_status"], "pass_neutralized");
+    }
+
+    #[test]
+    fn execution_tree_closed_loop_branch_admission_accepts_fill_viable_only_with_live_predicates() {
+        let output = ExecutionTreeOutput {
+            gate_status: "ready".to_string(),
+            branch: "fill_viable".to_string(),
+            execution_bias: "aggressive".to_string(),
+            execution_readiness: Some(0.67),
+            hybrid_transition_hazard: Some(0.41),
+            path_ranker_score_used_by_execution_tree: true,
+            ranker_validation_ready: true,
+            pda_hybrid_alignment: Some(false),
+            ..ExecutionTreeOutput::default()
+        };
+
+        let value = build_execution_tree_closed_loop_branch_admission_value(
+            "Sideways -> RangeCarry -> StopManagedRangeCarry -> SourceRootStopCarryLongHorizonV1:sideways_carry_h8_sl040_tp12",
+            "pass_neutralized",
+            "execution_ready",
+            &output,
+        );
+
         assert_eq!(value["status"], "admitted");
         assert_eq!(value["ready"], true);
         assert_eq!(value["actionable"], true);
-        assert_eq!(value["pre_bayes_gate_status"], "pass_neutralized");
+        assert_eq!(value["live_trade_status"], "ready");
+        assert_eq!(value["promotion_allowed"], true);
+        assert_eq!(value["trade_usable"], true);
+        assert_eq!(value["update_goal"], true);
     }
 
     #[test]

@@ -43,12 +43,12 @@ pub fn resolve_factor_candidate_branch_fields(
             .map(str::trim)
             .filter(|value| !value.is_empty())
             .collect::<Vec<_>>();
-        (parts.len() == 4).then(|| {
+        (parts.len() >= 4).then(|| {
             (
                 parts[0].to_string(),
                 parts[1].to_string(),
                 parts[2].to_string(),
-                parts[3].to_string(),
+                parts[3..].join(" -> "),
             )
         })
     });
@@ -199,6 +199,20 @@ pub fn build_factor_candidate_admission_target_artifact(
             let aggregate_profit_factor = metric("profit_factor");
             let total_profit_pct = metric("total_profit_pct");
             let sharpe = metric("sharpe");
+            let lifecycle = eval_summary.get("factor_profitability_lifecycle");
+            let learning_admission_status = lifecycle
+                .and_then(|value| value.pointer("/learning_admission/status"))
+                .and_then(Value::as_str);
+            let learning_expectancy = lifecycle
+                .and_then(|value| {
+                    value.pointer("/learning_admission/long_run_expectancy_after_declared_friction")
+                })
+                .and_then(Value::as_f64);
+            let live_trade_status = lifecycle
+                .and_then(|value| value.pointer("/live_trade/status"))
+                .and_then(Value::as_str);
+            let learning_only_positive = learning_admission_status == Some("admitted")
+                && learning_expectancy.unwrap_or(0.0) > 0.0;
             let density_label = market_eval
                 .and_then(|value| value.get("trade_density_label"))
                 .and_then(Value::as_str)
@@ -213,7 +227,9 @@ pub fn build_factor_candidate_admission_target_artifact(
                 && aggregate_profit_factor.is_some()
                 && total_profit_pct.is_some();
             let external_score_observation = !full_profit_observation && sharpe.is_some();
-            let pending_reward_state = if full_profit_observation
+            let pending_reward_state = if learning_only_positive && !full_profit_observation {
+                "regime_conditioned_learning_success"
+            } else if full_profit_observation
                 && aggregate_profit_factor.is_some_and(|value| value > 1.0)
                 && total_profit_pct.is_some_and(|value| value > 0.0)
             {
@@ -227,9 +243,16 @@ pub fn build_factor_candidate_admission_target_artifact(
             } else {
                 "candidate_pack_admission_pending"
             };
-            let calibrated_label = structural_path_ranking_reward_label(pending_reward_state);
+            let learning_only = pending_reward_state == "regime_conditioned_learning_success";
+            let calibrated_label = if learning_only {
+                None
+            } else {
+                structural_path_ranking_reward_label(pending_reward_state)
+            };
             let maturity_mask = calibrated_label.is_some();
-            let maturity_weight = if full_profit_observation {
+            let maturity_weight = if learning_only {
+                0.0
+            } else if full_profit_observation {
                 1.0
             } else if external_score_observation {
                 0.5
@@ -257,6 +280,18 @@ pub fn build_factor_candidate_admission_target_artifact(
                 .map(|value| value.clamp(0.0, 1.0));
             let calibrated_path_prob = maturity_mask.then_some(raw_path_score.unwrap_or(0.5));
             let baseline = raw_path_score.unwrap_or(0.0);
+            let normalized_expectancy_prior = learning_only.then(|| {
+                let expectancy = learning_expectancy.unwrap_or(0.0);
+                (0.5 + expectancy.tanh() / 2.0).clamp(0.0, 1.0)
+            });
+            let learning_live_blocked = learning_only && live_trade_status != Some("ready");
+            let learning_execution_gate_status =
+                learning_live_blocked.then_some("learning_admitted_live_blocked".to_string());
+            let learning_execution_gate_reason = learning_live_blocked
+                .then_some("learning admission is not live trade usability".to_string());
+            let target_policy_reward_lower_bound =
+                normalized_expectancy_prior.map(|value| (value - 0.10).max(0.0));
+            let current_posterior = normalized_expectancy_prior.unwrap_or(baseline);
             let market_key = market.replace(['/', ' '], "_").to_lowercase();
             let fallback_sub_regime = market_key;
             let fallback_sub_sub_regime_or_profit_factor =
@@ -292,9 +327,9 @@ pub fn build_factor_candidate_admission_target_artifact(
                 raw_path_score,
                 calibrated_path_prob,
                 path_prob_lower_bound: None,
-                execution_gate_status: None,
+                execution_gate_status: learning_execution_gate_status,
                 execution_gate_min_path_prob: None,
-                execution_gate_reason: None,
+                execution_gate_reason: learning_execution_gate_reason,
                 pending_reward_state: pending_reward_state.to_string(),
                 maturity_mask,
                 maturity_weight,
@@ -307,10 +342,10 @@ pub fn build_factor_candidate_admission_target_artifact(
                 execution_propensity: None,
                 target_policy_probability_confidence: None,
                 target_policy_probability_lower_bound: None,
-                target_policy_reward_prior: None,
-                target_policy_reward_lower_bound: None,
+                target_policy_reward_prior: normalized_expectancy_prior,
+                target_policy_reward_lower_bound,
                 experience_prior: (trade_count / 2500.0).clamp(0.0, 1.0),
-                current_posterior: baseline,
+                current_posterior,
                 structural_baseline_score: baseline,
                 regime_aux_qqq_hv_level: None,
                 regime_aux_nq_vs_200d_pct: None,
@@ -637,4 +672,242 @@ pub fn read_candidate_pack_json(pack_dir: &std::path::Path, file_name: &str) -> 
 
 fn value_str<'a>(value: &'a Value, key: &str) -> Option<&'a str> {
     value.get(key).and_then(Value::as_str)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use serde_json::json;
+    use tempfile::TempDir;
+
+    fn write_json(path: &std::path::Path, value: &Value) {
+        std::fs::write(path, serde_json::to_string_pretty(value).unwrap()).unwrap();
+    }
+
+    #[test]
+    fn factor_candidate_sparse_regime_conditioned_positive_admits_learning() {
+        let root = TempDir::new().unwrap();
+        let pack_dir = root.path().join("sparse-positive");
+        std::fs::create_dir(&pack_dir).unwrap();
+        write_json(
+            &pack_dir.join("factor_expression.json"),
+            &json!({
+                "candidate_id": "sparse_positive_v1",
+                "display_name": "Sparse Positive",
+                "family": "Regime Momentum",
+                "paradigm": "regime_conditioned",
+                "base_timeframe": "1m",
+                "expected_regime": "TrendExpansion",
+                "branch_path_contract": {
+                    "main_regime": "TrendExpansion",
+                    "sub_regime": "IntradayMomentum",
+                    "sub_sub_regime_or_profit_factor": "declared_friction_edge",
+                    "profit_factor": "sparse_positive_v1",
+                    "regime_profit_branch_path": "TrendExpansion -> IntradayMomentum -> declared_friction_edge -> sparse_positive_v1"
+                }
+            }),
+        );
+        write_json(
+            &pack_dir.join("factor_eval_grid_summary.json"),
+            &json!({
+                "aggregate_metrics": {
+                    "trade_count": 8,
+                    "profit_factor": 1.45,
+                    "long_run_expectancy_after_declared_friction": 0.012
+                },
+                "trade_density_summary": {
+                    "aggregate_label": "probe_only"
+                },
+                "factor_profitability_lifecycle": {
+                    "schema_version": "factor-profitability-lifecycle/v1",
+                    "learning_admission": {
+                        "status": "admitted",
+                        "long_run_expectancy_after_declared_friction": 0.012,
+                        "evidence_count": 8
+                    },
+                    "paper_admission": {"status": "observe"},
+                    "live_trade": {
+                        "status": "blocked",
+                        "promotion_allowed": false,
+                        "trade_usable": false,
+                        "update_goal": false,
+                        "blockers": ["execution_readiness_below_live_floor"]
+                    }
+                }
+            }),
+        );
+        write_json(
+            &pack_dir.join("transfer_score.json"),
+            &json!({
+                "status": "single_market_only",
+                "overall_transfer_score": 0.62,
+                "market_evidence": {
+                    "AGGREGATE": {
+                        "trade_count": 8,
+                        "profit_factor": 1.45
+                    }
+                }
+            }),
+        );
+
+        let artifact =
+            build_factor_candidate_admission_target_artifact(root.path().to_str().unwrap(), "NQ")
+                .unwrap();
+        let row = artifact
+            .rows
+            .iter()
+            .find(|row| row.scenario_id == "factor_candidate:sparse_positive_v1:AGGREGATE")
+            .unwrap();
+
+        assert_eq!(
+            row.pending_reward_state,
+            "regime_conditioned_learning_success"
+        );
+        assert!(!row.maturity_mask);
+        assert_eq!(row.calibrated_label, None);
+        assert_eq!(row.training_weight, None);
+        assert_eq!(row.direction, "Observe");
+        assert_eq!(
+            row.execution_gate_status.as_deref(),
+            Some("learning_admitted_live_blocked")
+        );
+        assert_eq!(
+            row.execution_gate_reason.as_deref(),
+            Some("learning admission is not live trade usability")
+        );
+        let expected_prior = 0.5_f64 + 0.012_f64.tanh() / 2.0;
+        assert!(
+            (row.target_policy_reward_prior.unwrap() - expected_prior).abs() < 1e-12,
+            "target_policy_reward_prior={:?} expected={expected_prior}",
+            row.target_policy_reward_prior
+        );
+        assert!(
+            (row.target_policy_reward_lower_bound.unwrap() - (expected_prior - 0.10)).abs() < 1e-12,
+            "target_policy_reward_lower_bound={:?} expected={}",
+            row.target_policy_reward_lower_bound,
+            expected_prior - 0.10
+        );
+        assert!(
+            (row.current_posterior - expected_prior).abs() < 1e-12,
+            "current_posterior={} expected={expected_prior}",
+            row.current_posterior
+        );
+    }
+
+    #[test]
+    fn factor_candidate_lifecycle_does_not_demote_full_profit_observation() {
+        let root = TempDir::new().unwrap();
+        let pack_dir = root.path().join("mature-positive");
+        std::fs::create_dir(&pack_dir).unwrap();
+        write_json(
+            &pack_dir.join("factor_expression.json"),
+            &json!({
+                "candidate_id": "mature_positive_v1",
+                "display_name": "Mature Positive",
+                "family": "Regime Momentum",
+                "paradigm": "regime_conditioned",
+                "base_timeframe": "1m",
+                "expected_regime": "TrendExpansion",
+                "branch_path_contract": {
+                    "main_regime": "TrendExpansion",
+                    "sub_regime": "IntradayMomentum",
+                    "sub_sub_regime_or_profit_factor": "declared_friction_edge",
+                    "profit_factor": "mature_positive_v1",
+                    "regime_profit_branch_path": "TrendExpansion -> IntradayMomentum -> declared_friction_edge -> mature_positive_v1"
+                }
+            }),
+        );
+        write_json(
+            &pack_dir.join("factor_eval_grid_summary.json"),
+            &json!({
+                "aggregate_metrics": {
+                    "trade_count": 30,
+                    "profit_factor": 1.30,
+                    "total_profit_pct": 2.25,
+                    "long_run_expectancy_after_declared_friction": 0.018
+                },
+                "trade_density_summary": {
+                    "aggregate_label": "preferred_density"
+                },
+                "factor_profitability_lifecycle": {
+                    "schema_version": "factor-profitability-lifecycle/v1",
+                    "learning_admission": {
+                        "status": "admitted",
+                        "long_run_expectancy_after_declared_friction": 0.018,
+                        "evidence_count": 30
+                    },
+                    "paper_admission": {"status": "observe"},
+                    "live_trade": {
+                        "status": "blocked",
+                        "promotion_allowed": false,
+                        "trade_usable": false,
+                        "update_goal": false
+                    }
+                }
+            }),
+        );
+        write_json(
+            &pack_dir.join("transfer_score.json"),
+            &json!({
+                "status": "single_market_only",
+                "overall_transfer_score": 0.64,
+                "market_evidence": {
+                    "AGGREGATE": {
+                        "trade_count": 30,
+                        "profit_factor": 1.30,
+                        "total_profit_pct": 2.25
+                    }
+                }
+            }),
+        );
+
+        let artifact =
+            build_factor_candidate_admission_target_artifact(root.path().to_str().unwrap(), "NQ")
+                .unwrap();
+        let row = artifact
+            .rows
+            .iter()
+            .find(|row| row.scenario_id == "factor_candidate:mature_positive_v1:AGGREGATE")
+            .unwrap();
+
+        assert_eq!(row.pending_reward_state, "matured_success");
+        assert!(row.maturity_mask);
+        assert_eq!(row.calibrated_label, Some(1.0));
+        assert!(row.training_weight.is_some());
+        assert_eq!(row.execution_gate_status, None);
+        assert_eq!(row.execution_gate_reason, None);
+        assert_eq!(row.target_policy_reward_prior, None);
+    }
+
+    #[test]
+    fn factor_candidate_preserves_arbitrary_depth_branch_contract_metadata() {
+        let expression = json!({
+            "branch_path_contract": {
+                "regime_profit_branch_path": "TrendExpansion -> IntradayMomentum -> PullbackContinuation -> LiquiditySweep -> pda_transition_guard"
+            }
+        });
+
+        let fields = resolve_factor_candidate_branch_fields(
+            &expression,
+            "fallback_main",
+            "fallback_sub".to_string(),
+            "fallback_middle".to_string(),
+            "fallback_profit".to_string(),
+        );
+
+        assert_eq!(fields.main_regime, "TrendExpansion");
+        assert_eq!(fields.sub_regime, "IntradayMomentum");
+        assert_eq!(
+            fields.sub_sub_regime_or_profit_factor,
+            "PullbackContinuation"
+        );
+        assert_eq!(
+            fields.profit_factor,
+            "LiquiditySweep -> pda_transition_guard"
+        );
+        assert_eq!(
+            fields.regime_profit_branch_path,
+            "TrendExpansion -> IntradayMomentum -> PullbackContinuation -> LiquiditySweep -> pda_transition_guard"
+        );
+    }
 }

@@ -20,9 +20,11 @@ class FactorSignalDiagnosticsTests(unittest.TestCase):
 
         self.assertEqual(report["schema_version"], "ict-engine-factor-signal-diagnostics/v1")
         self.assertEqual(report["rows"], 40)
-        self.assertTrue(report["promotion_allowed"])
-        self.assertFalse(report["trade_usable"])
-        self.assertIn("downstream", report["trade_usable_reason"])
+        self.assertNotIn("promotion_allowed", report)
+        self.assertNotIn("trade_usable", report)
+        self.assertNotIn("update_goal", report)
+        self.assertTrue(report["diagnostic_candidate_passed_gate"])
+        self.assertIn("downstream", report["diagnostic_reason"])
 
     def test_hotplug_profile_requires_root_delta(self) -> None:
         rows = []
@@ -59,7 +61,8 @@ class FactorSignalDiagnosticsTests(unittest.TestCase):
         self.assertEqual(best["regime"], "Transition")
         self.assertGreater(best["root_delta_bps"], 3.0)
         self.assertTrue(report["hotplug_profile_used"])
-        self.assertTrue(report["promotion_allowed"])
+        self.assertNotIn("promotion_allowed", report)
+        self.assertTrue(report["diagnostic_candidate_passed_gate"])
 
     def test_cli_writes_optional_json_without_state_pollution(self) -> None:
         with TemporaryDirectory() as tmpdir:

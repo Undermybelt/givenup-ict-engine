@@ -151,6 +151,46 @@ def build_metrics():
         self.assertTrue(report["ok"])
         self.assertEqual(report["violations"], [])
 
+    def test_allows_learning_admission_without_practical_flags(self) -> None:
+        path = self.write_source(
+            """
+def build_metrics(branch_ok):
+    return {
+        "learning_admission_status": "admitted" if branch_ok else "blocked",
+        "promotion_allowed": False,
+        "trade_usable": False,
+        "update_goal": False,
+    }
+"""
+        )
+
+        report = checker.check_source_file(path)
+
+        self.assertTrue(report["ok"])
+        self.assertEqual(report["violations"], [])
+
+    def test_flags_learning_admission_reused_as_trade_usable(self) -> None:
+        path = self.write_source(
+            """
+def build_metrics(branch_ok):
+    lifecycle = {"learning_allowed": branch_ok}
+    learning_allowed = lifecycle["learning_allowed"]
+    return {
+        "learning_allowed": learning_allowed,
+        "trade_usable": learning_allowed,
+    }
+"""
+        )
+
+        report = checker.check_source_file(path)
+
+        self.assertFalse(report["ok"])
+        self.assertEqual(
+            report["violations"][0]["violation"],
+            "learning_admission_reused_as_practical_flag",
+        )
+        self.assertEqual(report["violations"][0]["key"], "trade_usable")
+
     def test_does_not_trust_practical_dict_without_helper_call(self) -> None:
         path = self.write_source(
             """
