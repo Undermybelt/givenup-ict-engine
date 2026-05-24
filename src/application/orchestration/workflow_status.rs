@@ -879,7 +879,7 @@ fn regime_rooted_path_ids_match(left: &str, right: &str) -> bool {
             let trimmed = segment.trim();
             let leading_ws = segment.len() - segment.trim_start().len();
             let segment_start = byte_offset + leading_ws;
-            if roots.iter().any(|root| *root == trimmed) {
+            if roots.contains(&trimmed) {
                 return path.get(segment_start..).map(str::trim);
             }
             byte_offset += segment.len() + " -> ".len();

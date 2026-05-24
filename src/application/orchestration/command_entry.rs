@@ -253,17 +253,30 @@ mod tests {
     use std::cell::RefCell;
     use std::path::Path;
 
-    fn write_structural_path_ranking_summary(
-        summary_dir: &Path,
-        symbol: &str,
-        candidate_set_id: &str,
+    struct StructuralPathRankingSummaryFixture<'a> {
+        summary_dir: &'a Path,
+        symbol: &'a str,
+        candidate_set_id: &'a str,
         rows: usize,
         mature_rows: usize,
         history_rows: usize,
         history_mature_rows: usize,
         rows_with_raw_path_score: usize,
         rows_with_propensity_estimate: usize,
-    ) {
+    }
+
+    fn write_structural_path_ranking_summary(fixture: StructuralPathRankingSummaryFixture<'_>) {
+        let StructuralPathRankingSummaryFixture {
+            summary_dir,
+            symbol,
+            candidate_set_id,
+            rows,
+            mature_rows,
+            history_rows,
+            history_mature_rows,
+            rows_with_raw_path_score,
+            rows_with_propensity_estimate,
+        } = fixture;
         let summary = StructuralPathRankingTargetExportSummary {
             symbol: symbol.to_string(),
             rows,
@@ -362,28 +375,28 @@ mod tests {
         let feedback_state_dir = temp.path().join("ict-engine-feedback");
         let feedback_summary_dir = feedback_state_dir.join(symbol).join(POLICY_TRAINING_DIR);
 
-        write_structural_path_ranking_summary(
-            &primary_summary_dir,
+        write_structural_path_ranking_summary(StructuralPathRankingSummaryFixture {
+            summary_dir: &primary_summary_dir,
             symbol,
-            &format!("structural-candidates:{symbol}:primary"),
-            1,
-            0,
-            1,
-            0,
-            0,
-            0,
-        );
-        write_structural_path_ranking_summary(
-            &feedback_summary_dir,
+            candidate_set_id: &format!("structural-candidates:{symbol}:primary"),
+            rows: 1,
+            mature_rows: 0,
+            history_rows: 1,
+            history_mature_rows: 0,
+            rows_with_raw_path_score: 0,
+            rows_with_propensity_estimate: 0,
+        });
+        write_structural_path_ranking_summary(StructuralPathRankingSummaryFixture {
+            summary_dir: &feedback_summary_dir,
             symbol,
-            &format!("structural-candidates:{symbol}:feedback"),
-            50,
-            50,
-            188,
-            185,
-            47,
-            120,
-        );
+            candidate_set_id: &format!("structural-candidates:{symbol}:feedback"),
+            rows: 50,
+            mature_rows: 50,
+            history_rows: 188,
+            history_mature_rows: 185,
+            rows_with_raw_path_score: 47,
+            rows_with_propensity_estimate: 120,
+        });
 
         let observed_state_dir = RefCell::new(None::<String>);
         let refresh_snapshot =
