@@ -1484,6 +1484,57 @@ struct SameRootExecutionTreeAdmission {
     actionable: bool,
 }
 
+fn execution_tree_output_ranker_path_id(output: &serde_json::Value) -> Option<String> {
+    output
+        .get("split_reason_lineage")
+        .and_then(serde_json::Value::as_array)?
+        .iter()
+        .filter_map(serde_json::Value::as_str)
+        .find_map(|line| {
+            let (_, rest) = line.split_once("path_id=")?;
+            let end_markers = [
+                " runtime_source=",
+                " raw_path_score=",
+                " calibrated_path_prob=",
+                " path_prob_lower_bound=",
+                " execution_gate_status=",
+            ];
+            let end = end_markers
+                .iter()
+                .filter_map(|marker| rest.find(marker))
+                .min()
+                .unwrap_or(rest.len());
+            let path_id = rest[..end].trim();
+            (!path_id.is_empty()).then(|| canonical_regime_rooted_branch_path(path_id))
+        })
+}
+
+fn same_root_execution_tree_observation_for_analyze(
+    output: &serde_json::Value,
+    branch_paths: &[String],
+) -> Option<SameRootExecutionTreeAdmission> {
+    let path_id = execution_tree_output_ranker_path_id(output)?;
+    if !branch_paths.is_empty() && !branch_paths.iter().any(|path| path == &path_id) {
+        return None;
+    }
+    let gate_status = output
+        .get("gate_status")
+        .and_then(serde_json::Value::as_str)
+        .unwrap_or("observe");
+    let candidate_status = match gate_status {
+        "ready" => "execution_ready",
+        "blocked" => "execution_blocked",
+        "observe" => "execution_observe_only",
+        other if !other.trim().is_empty() => other,
+        _ => "execution_observe_only",
+    };
+    Some(SameRootExecutionTreeAdmission {
+        candidate_status: candidate_status.to_string(),
+        branch_path: path_id,
+        actionable: false,
+    })
+}
+
 fn same_root_execution_tree_admission_for_analyze(
     state_dir: &str,
     report: &AnalyzeReport,
@@ -1497,7 +1548,9 @@ fn same_root_execution_tree_admission_for_analyze(
     let trace = std::fs::read(trace_path).ok()?;
     let trace: serde_json::Value = serde_json::from_slice(&trace).ok()?;
     let output = trace.get("output")?;
-    let admission = trace.get("closed_loop_branch_admission")?;
+    let Some(admission) = trace.get("closed_loop_branch_admission") else {
+        return same_root_execution_tree_observation_for_analyze(output, &branch_paths);
+    };
     let path_id = admission
         .get("path_id")
         .and_then(serde_json::Value::as_str)?;
@@ -2206,6 +2259,68 @@ mod tests {
         assert!(candidate.branch_fields_preserved);
         assert_eq!(candidate.review_decision.status, "promote_latest");
         assert_eq!(
+            candidate.review_decision.reason,
+            "same_root_execution_tree_admitted"
+        );
+    }
+
+    #[test]
+    fn execution_candidate_preserves_observe_only_ranker_lineage_path_without_closed_loop_admission(
+    ) {
+        let temp = tempfile::tempdir().unwrap();
+        let mut report = sample_analyze_report_with_factor_ranking(Vec::new());
+        report.symbol = "IBKR_MGC_1M_MICRO_TREND_PULLBACK_RECLAIM_EXACT_DOWNSTREAM".to_string();
+        report.supporting.raw_trade_plan.direction = Direction::Bull;
+        report.supporting.raw_trade_plan.position_size = 0.0;
+        report.supporting.pre_bayes_evidence_filter.gating_status = "pass_neutralized".to_string();
+        let branch_path = "TrendExpansion -> MicroTrendPullbackReclaim -> ibkr_futures_micro_trend_pullback_reclaim_gate1_v1";
+
+        let symbol_dir = temp
+            .path()
+            .join("IBKR_MGC_1M_MICRO_TREND_PULLBACK_RECLAIM_EXACT_DOWNSTREAM");
+        std::fs::create_dir_all(&symbol_dir).unwrap();
+        std::fs::write(
+            symbol_dir.join(ict_engine::application::orchestration::EXECUTION_TREE_TRACE_FILE),
+            serde_json::to_vec_pretty(&serde_json::json!({
+                "output": {
+                    "execution_readiness": 0.45912378375452334,
+                    "gate_status": "observe",
+                    "branch": "fill_viable",
+                    "execution_bias": "passive",
+                    "path_ranker_score_visible_to_execution_tree": true,
+                    "path_ranker_score_used_by_execution_tree": false,
+                    "ranker_validation_ready": false,
+                    "hybrid_transition_hazard": 0.39589843749999987,
+                    "split_reason_lineage": [
+                        "path_ranker=ranker_score=path_id=FUTURES -> precious_metals -> MGC -> 1m -> TrendExpansion -> MicroTrendPullbackReclaim -> ibkr_futures_micro_trend_pullback_reclaim_gate1_v1 runtime_source=registered_artifact raw_path_score=0.829838 calibrated_path_prob=none path_prob_lower_bound=none execution_gate_status=none"
+                    ]
+                }
+            }))
+            .unwrap(),
+        )
+        .unwrap();
+
+        persist_execution_candidate_from_analyze(temp.path().to_str().unwrap(), &report, "analyze")
+            .unwrap();
+
+        let candidate: ict_engine::state::ExecutionCandidateArtifact =
+            ict_engine::state::load_state(
+                temp.path(),
+                "IBKR_MGC_1M_MICRO_TREND_PULLBACK_RECLAIM_EXACT_DOWNSTREAM",
+                ict_engine::state::EXECUTION_CANDIDATE_FILE,
+            )
+            .unwrap();
+
+        assert!(!candidate.actionable);
+        assert_eq!(candidate.candidate_status, "execution_observe_only");
+        assert_eq!(candidate.branch_path.as_deref(), Some(branch_path));
+        assert_eq!(
+            candidate.regime_profit_branch_path.as_deref(),
+            Some(branch_path)
+        );
+        assert!(candidate.branch_fields_preserved);
+        assert_eq!(candidate.review_decision.status, "observe");
+        assert_ne!(
             candidate.review_decision.reason,
             "same_root_execution_tree_admitted"
         );
