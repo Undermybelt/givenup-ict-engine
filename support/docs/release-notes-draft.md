@@ -1,47 +1,54 @@
 # Release Notes
 
 Version: `v0.1.7`
-Draft date: 2026-05-23
-Status: correction candidate for the private `ict-engine-release` mirror.
+Draft date: 2026-05-24
+Status: selected clean candidate for the private `ict-engine-release` mirror.
 
 ## Scope
 
-`v0.1.7` carries the correction after the prepared `v0.1.6` tag was found
-already present in the release mirror. The fix remains intentionally narrow: the
-release privacy audit test fixture no longer embeds a `support/docs/plans/*.md`
-literal that violates the mirror CI docs-runtime-isolation rule.
+`v0.1.7` carries the release-mirror continuation after `v0.1.5` exposed a
+mirror CI docs-runtime-isolation failure and `v0.1.6` delivered the immediate
+correction without rewriting the failed tag.
 
-The release remains a private source mirror release. It is not a crates.io,
-npm/npx, Homebrew, Docker, binary, or public package-manager release.
+This tag is the next selected source snapshot after follow-up Board A/B
+gate/source repairs and release-audit timeout hardening were committed and
+verified from a clean worktree. It remains a private source mirror release, not
+a crates.io, npm/npx, Homebrew, Docker, binary, or public package-manager
+release.
 
-## Changes since `v0.1.5`
+## Changes since `v0.1.6`
 
-- Moved the secret-like archived-doc fixture in
-  `support/scripts/tests/test_release_privacy_audit.py` from
-  `support/docs/plans/old.md` to `support/docs/audits/old.md`.
-- Preserved the release privacy audit behavior: secret-like tokens still block
-  release even when found in archived docs.
-- Advanced Cargo metadata to `version = "0.1.7"` so the correction release uses
-  an unused mirror tag instead of rewriting `v0.1.6`.
+- Preserves the `v0.1.6` privacy/docs-runtime isolation correction.
+- Includes Board A/B source-side readback and gate repairs through
+  `0ae337610e4d3e37078915bcee484f693ebb81f7`.
+- Hardens release/done-definition helper timeout propagation in
+  `518b05579cb3d851accae1da43f8a9cf6d637389`.
+- Keeps the public zero-config consumer path and mirror-only release policy.
 
-## Verification already run for the fix slice
+## Final clean verification
 
-- `python3 support/scripts/ci/check_docs_runtime_isolation.py`
-  - exit `0`.
-- `python3 -m unittest support.scripts.tests.test_release_privacy_audit -v`
-  - exit `0`; `8` tests passed.
-- Clean export `/tmp/ict-engine-v015-ci-fix-export-20260523T120926+0800`:
-  - docs runtime isolation: exit `0`.
-  - privacy audit unit tests: exit `0`; `8` tests passed.
-  - release privacy audit: exit `0`; `release_blocking_hits=0`.
-  - cargo fmt: exit `0`.
-  - cargo clippy: exit `0`.
-  - cargo test: exit `0`.
+Clean worktree:
+`/tmp/ict-engine-release-clean-current-20260524T185534+0800`
+at `518b05579cb3d851accae1da43f8a9cf6d637389`.
+
+Gate log:
+`/tmp/ict-engine-v017-current-gates-20260524T185534+0800/gates.log`.
+
+Passed gates:
+
+- release readiness after source push: pass.
+- docs runtime isolation: exit `0`.
+- release privacy audit: exit `0`, `release_blocking_hits=0`.
+- release/done-definition helper tests: exit `0`.
+- cargo fmt: exit `0`.
+- cargo clippy `--locked --all-targets -- -D warnings`: exit `0`.
+- cargo test `--locked`: exit `0`.
+- zero-config smoke: `provider-status --compact`, demo `analyze --human`, and
+  `workflow-status --agent`: all exit `0`.
 
 ## Release requirements
 
-Publish `v0.1.7` only after a fresh clean export from the selected committed
-`HEAD` passes the final gate set and readback confirms:
+Publish `v0.1.7` from the selected committed `HEAD` only after readback confirms:
 
 - mirror `main` advances on `Undermybelt/ict-engine-release`;
 - tag `v0.1.7` exists and resolves to the published mirror commit;
