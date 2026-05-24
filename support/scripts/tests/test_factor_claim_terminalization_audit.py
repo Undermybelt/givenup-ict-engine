@@ -12,6 +12,9 @@ if str(SCRIPTS_ROOT) not in sys.path:
     sys.path.insert(0, str(SCRIPTS_ROOT))
 
 from factor_claim_terminalization_audit import (  # noqa: E402
+    _attribute_parent_run_roots,
+    _extract_run_root,
+    _infer_exit_file,
     _is_live_factor_command,
     build_report,
     format_report,
@@ -183,6 +186,47 @@ trade_usable=false
             self.assertEqual(report["summary"]["terminalized_claims"], 1)
             self.assertEqual(report["summary"]["active_claims"], 0)
             self.assertEqual(report["claims"][0]["claim_file"], "readback.json")
+
+    def test_build_report_ignores_generated_claim_sidecars(self) -> None:
+        with tempfile.TemporaryDirectory() as repo_tmp, tempfile.TemporaryDirectory() as claims_tmp:
+            repo_root = Path(repo_tmp)
+            claims_dir = Path(claims_tmp)
+            (claims_dir / "20260524T220713+0800-codex-avgo-terminal-provider-blocked-readback.summary.json").write_text(
+                '{"agent_name": "codex-avgo-readback", "status": "provider_blocked"}',
+                encoding="utf-8",
+            )
+            (claims_dir / "20260524T220713+0800-codex-avgo-terminal-provider-blocked-readback.summary.json.check").write_text(
+                "checked\n",
+                encoding="utf-8",
+            )
+            (claims_dir / "20260524T213435+0800-codex-mgc-microtrend-readonly-extension-auditor.claim.pretty").write_text(
+                '{"claim_file": "source.pretty", "status": "active"}',
+                encoding="utf-8",
+            )
+            (claims_dir / "terminalization_audit_20260524T213435+0800_codex-mgc.json.pretty").write_text(
+                '{"summary": {"active_claims": 99}}',
+                encoding="utf-8",
+            )
+            (claims_dir / "real.claim").write_text(
+                """
+agent_name=codex-test
+owner=codex
+scope=real claim
+active_task=unit test
+non_goals=none
+write_surface=tmp
+tmp_root=/tmp/ict-engine-claim-audit-test
+status=active
+promotion_allowed=false
+trade_usable=false
+""",
+                encoding="utf-8",
+            )
+
+            report = build_report(claims_dir=claims_dir, repo_root=repo_root)
+
+            self.assertEqual(report["summary"]["total_claims"], 1)
+            self.assertEqual(report["claims"][0]["claim_file"], "real.claim")
 
     def test_build_report_ignores_none_and_pending_run_root_sentinels(self) -> None:
         with tempfile.TemporaryDirectory() as repo_tmp, tempfile.TemporaryDirectory() as claims_tmp:
@@ -374,6 +418,45 @@ trade_usable=false
             self.assertEqual(compact["attention_live_process_count"], 1)
             self.assertEqual(compact["attention_live_processes"][0]["pid"], 12345)
 
+    def test_build_report_flags_active_claims_missing_board_local_identity_fields(self) -> None:
+        with tempfile.TemporaryDirectory() as repo_tmp, tempfile.TemporaryDirectory() as claims_tmp:
+            repo_root = Path(repo_tmp)
+            claims_dir = Path(claims_tmp)
+            (claims_dir / "unnamed-active.claim").write_text(
+                """
+owner=codex
+scope=still active but vague
+run_root=/tmp/example-active-run
+""",
+                encoding="utf-8",
+            )
+            (claims_dir / "named-active.claim").write_text(
+                """
+agent_name=codex-named-guard
+owner=codex
+scope=Board B named active lane
+active_task=verify a specific gate
+non_goals=no provider launch
+write_surface=/tmp only
+tmp_root=/tmp/named-active
+status=active
+""",
+                encoding="utf-8",
+            )
+
+            report = build_report(claims_dir=claims_dir, repo_root=repo_root)
+            compact = format_report(report, compact=True)
+
+            self.assertEqual(report["summary"]["invalid_active_claims"], 1)
+            self.assertIn("invalid_active_claims", report["summary"]["blocking_reasons"])
+            invalid_claim = next(
+                claim for claim in compact["attention_claims"] if claim["claim_file"] == "unnamed-active.claim"
+            )
+            self.assertEqual(
+                invalid_claim["missing_identity_fields"],
+                ["agent_name", "active_task", "non_goals", "write_surface", "status"],
+            )
+
     def test_live_process_classifier_ignores_ps_rg_readback_commands(self) -> None:
         command = (
             "/bin/zsh -lc sleep 75; ps -axo pid,ppid,etime,%cpu,%mem,command | "
@@ -448,6 +531,85 @@ trade_usable=false
         )
 
         self.assertTrue(_is_live_factor_command(command))
+
+    def test_extract_run_root_from_provider_output_inside_run_root(self) -> None:
+        command = (
+            "/opt/homebrew/bin/python3 support/scripts/auto_quant_external/fetch_external.py "
+            "ibkr-historical --symbol AVGO --bar-size 15 mins --duration 1 M "
+            "--output /Users/example/ict-engine/support/docs/experiments/"
+            "actionable-regime-confidence/runs/20260524T213610+0800-codex-ibkr-avgo/"
+            "data/provider/raw/ibkr_avgo_15m_1m.csv"
+        )
+
+        self.assertEqual(
+            _extract_run_root(command),
+            Path(
+                "/Users/example/ict-engine/support/docs/experiments/"
+                "actionable-regime-confidence/runs/20260524T213610+0800-codex-ibkr-avgo"
+            ),
+        )
+
+    def test_extract_run_root_from_tmp_provider_output_csv_parent(self) -> None:
+        command = (
+            "/opt/homebrew/bin/python3 support/scripts/auto_quant_external/fetch_external.py "
+            "yahoo --symbol TEM --interval 15m --start 2026-03-26 --end 2026-05-24 "
+            "--output /tmp/ict-engine-yf-tem-trend-mtf-20260524T2213+0800/tem_15m.csv"
+        )
+
+        self.assertEqual(
+            _extract_run_root(command),
+            Path("/tmp/ict-engine-yf-tem-trend-mtf-20260524T2213+0800"),
+        )
+
+    def test_infer_exit_file_from_provider_output_timeframe_label(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            run_root = Path(tmp) / "runs" / "20260524T213610+0800-codex-ibkr-avgo"
+            checks_dir = run_root / "checks"
+            checks_dir.mkdir(parents=True)
+            (checks_dir / "00_provider_status_ibkr.exit").write_text("0\n", encoding="utf-8")
+            command = (
+                "/opt/homebrew/bin/python3 support/scripts/auto_quant_external/fetch_external.py "
+                "ibkr-historical --symbol AVGO --bar-size 30 mins --duration 1 M "
+                f"--output {run_root}/data/provider/raw/ibkr_avgo_30m_1m.csv"
+            )
+
+            self.assertEqual(
+                _infer_exit_file(run_root, command),
+                checks_dir / "fetch_30m_1m.exit",
+            )
+
+    def test_attribute_parent_run_roots_from_child_provider_process(self) -> None:
+        run_root = (
+            "/Users/example/ict-engine/support/docs/experiments/"
+            "actionable-regime-confidence/runs/20260524T221141+0800-codex-ibkr-mes"
+        )
+        processes = [
+            {
+                "pid": 52673,
+                "ppid": 61304,
+                "elapsed": "08:47",
+                "run_root": None,
+                "exit_file": None,
+                "exit_file_exists": False,
+                "command_excerpt": "python support/docs/experiments/scripts/run_ibkr_futures_strict_trend_root_ote_overlay_1m_mtf_gate1_v1.py",
+            },
+            {
+                "pid": 59345,
+                "ppid": 52673,
+                "elapsed": "02:43",
+                "run_root": run_root,
+                "exit_file": f"{run_root}/checks/fetch_15m_1m.exit",
+                "exit_file_exists": False,
+                "command_excerpt": "python support/scripts/auto_quant_external/fetch_external.py ibkr-historical --symbol MES",
+            },
+        ]
+
+        attributed = _attribute_parent_run_roots(processes)
+
+        self.assertEqual(attributed[0]["run_root"], run_root)
+        self.assertEqual(attributed[0]["run_root_attribution"], "child_process")
+        self.assertEqual(attributed[0]["run_root_attribution_pid"], 59345)
+        self.assertEqual(attributed[1]["run_root"], run_root)
 
     def test_format_report_compact_keeps_only_attention_claim_summaries(self) -> None:
         full_report = {
