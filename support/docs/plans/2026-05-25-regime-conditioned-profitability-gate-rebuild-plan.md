@@ -1,6 +1,6 @@
 # Regime-Conditioned Profitability Gate Rebuild Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use aegis:subagent-driven-development (recommended) or aegis:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED SUB-SKILL: Use aegis:subagent-driven-development (recommended) or aegis:executing-plans to implement this plan task-by-task. Steps use checkbox syntax for tracking; this revision marks implemented and verified steps as `- [x]`.
 
 **Goal:** Replace the current over-strict Board B promotion gates with a typed, regime-conditioned profitability lifecycle that can learn from factors when the market-state regime is correct, while keeping live-trade execution gates fail-closed.
 
@@ -13,6 +13,61 @@
 **Compatibility Boundary:** Public/default CLI remains zero-config and non-trading. Existing `promotion_allowed`, `trade_usable`, and `update_goal` fields must stay false unless the live-trade plane passes. Docs remain non-runtime. Regime-rooted branch grammar stays `main_regime -> sub_regime -> ... -> profit_factor`; market/product/provider/symbol/timeframe remain provenance labels only. Board A regime-confidence ownership is unchanged.
 
 **Verification:** TDD for each changed Rust/Python owner, targeted Rust/Python tests, `cargo fmt --check`, `cargo check`, and a zero-config smoke using `/tmp`. Task 10 lists the exact commands one per line so cargo filters remain unambiguous.
+
+---
+
+## 2026-05-25 Post-Implementation Audit Closure
+
+Implementation commit `00405a62` landed the core lifecycle split. A subsequent
+completion audit found additional live-plane bypass risks that must be treated as
+part of this plan before the work is closed:
+
+- `execution-tree` must not promote `wait_for_reversion` branches. Even the
+  strict-trend pullback exception is observe-only unless a future contract
+  defines a separate live branch. Only `fill_viable` may produce same-root
+  closed-loop `live_trade_status=ready` in the current lifecycle.
+- Persisted old `execution_tree_trace.json` artifacts must be revalidated by the
+  current consumer. A stale trace that claims `wait_for_reversion` plus
+  `promotion_allowed=true`, `trade_usable=true`, and `update_goal=true` must be
+  downgraded to `execution_observe_only` and must not materialize an actionable
+  analyze execution candidate.
+- `policy-training-status` must not count `paper_ready`,
+  `paper_admitted`, `live_trade_ready`, or `live_trade_usable` strings by
+  themselves. A row only contributes to paper/live lifecycle readiness when it
+  also has mature training evidence: `maturity_mask=true`, a calibrated label,
+  and positive `training_weight`.
+- `workflow-status` must sanitize malformed practical flags. A
+  `fail_closed` admission that still carries `live_trade_status=ready` or
+  practical booleans must be displayed as `live_trade_status=blocked` with
+  `promotion_allowed=false`, `trade_usable=false`, and `update_goal=false`.
+
+These are not optional cleanup notes; they close the exact loopholes that could
+otherwise make the refactor appear complete while preserving old promotion
+paths.
+
+Final verification/readback for this audit slice:
+
+- `cargo fmt --check`: pass.
+- `cargo check`: pass.
+- `cargo test --lib profitability_admission -- --nocapture`: `6/6` pass.
+- `cargo test --lib execution_tree_closed_loop_branch_admission -- --nocapture`: `4/4` pass.
+- `cargo test --lib policy_training_status -- --nocapture`: `9/9` pass.
+- `cargo test --lib workflow_status -- --nocapture`: `140/140` pass.
+- `cargo test --bin ict-engine strict_trend_pullback -- --nocapture`: `2/2` pass.
+- `cargo test --bin ict-engine execution_candidate_does_not_materialize_legacy_same_root_admission_without_live_plane -- --nocapture`: `1/1` pass.
+- `cargo test --test hard_gate_execution_first`: `6/6` pass.
+- `cargo test --test provider_neutral_cli`: `22/22` pass.
+- Python lifecycle/guard bundle: `54/54` pass.
+- `downstream_practical_admission_source_check.py` over lifecycle support
+  scripts: pass with no violations.
+- Zero-config smoke under `/tmp/ict-engine-profitability-lifecycle-smoke`:
+  provider status, demo analyze, workflow status, and policy-training status all
+  exit `0`; lifecycle readback remains `promotion_allowed=false`,
+  `trade_usable=false`, and `live_trade_status=blocked`; privacy scan finds no
+  home-directory path, private temp path, or credential-like output.
+- `git diff --check`: pass.
+- Hermes skill-index parity after runtime skill updates:
+  `live_skills=1141`, `indexed_live_skills=1141`, `missing=0`, `stale=0`.
 
 ---
 
@@ -154,7 +209,7 @@ Create this canonical schema in Rust and mirror it in Python artifact builders:
 **Verification:**
 - Commands below exit `0` when expected matches are present.
 
-- [ ] **Step 1: Map practical flag consumers**
+- [x] **Step 1: Map practical flag consumers**
 
 Run:
 
@@ -168,7 +223,7 @@ rg -n "promotion_allowed|trade_usable|update_goal" \
 
 Expected: output includes `factor_candidate.rs`, `execution_tree.rs`, `workflow_status.rs`, candidate-pack/report scripts, and practical-source guard tests where present. Any writer of these fields must be classified as either live-only owner or read-only status/report adapter before implementation starts.
 
-- [ ] **Step 2: Map ranker training consumers**
+- [x] **Step 2: Map ranker training consumers**
 
 Run:
 
@@ -181,7 +236,7 @@ rg -n "pending_reward_state|maturity_mask|calibrated_label|training_weight|struc
 
 Expected: output shows global reward-label and training-weight logic in `ranking_label.rs`, candidate row creation in `factor_candidate.rs`, and status/training export consumers in `training_export.rs`.
 
-- [ ] **Step 3: Freeze compatibility decisions before edits**
+- [x] **Step 3: Freeze compatibility decisions before edits**
 
 Record these decisions in the implementation notes:
 
@@ -192,7 +247,7 @@ learning-only candidate rows: maturity_mask=false, calibrated_label=None, traini
 paper/live-ready feedback rows: existing matured_success/matured_failure states keep current semantics.
 ```
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 No commit for this task. Continue to Task 1 with the consumer map open.
 
@@ -214,7 +269,7 @@ No commit for this task. Continue to Task 1 with the consumer map open.
 **Verification:**
 - `cargo test --lib profitability_admission -- --nocapture`
 
-- [ ] **Step 1: Write failing tests**
+- [x] **Step 1: Write failing tests**
 
 Add tests for these cases:
 
@@ -286,7 +341,7 @@ fn learning_blocks_when_regime_confidence_is_missing_or_wrong() {
 }
 ```
 
-- [ ] **Step 2: Run the tests to confirm failure**
+- [x] **Step 2: Run the tests to confirm failure**
 
 Run:
 
@@ -296,7 +351,7 @@ cargo test --lib profitability_admission -- --nocapture
 
 Expected: FAIL because the module and types do not exist.
 
-- [ ] **Step 3: Implement the minimal module**
+- [x] **Step 3: Implement the minimal module**
 
 Implement the public structs/enums and `decide_profitability_lifecycle`. Keep thresholds named and local to this module first:
 
@@ -403,7 +458,7 @@ pub enum AdmissionStatus {
 }
 ```
 
-- [ ] **Step 4: Export the module**
+- [x] **Step 4: Export the module**
 
 Add this to `src/application/factor_lifecycle/mod.rs`:
 
@@ -411,7 +466,7 @@ Add this to `src/application/factor_lifecycle/mod.rs`:
 pub mod profitability_admission;
 ```
 
-- [ ] **Step 5: Run tests**
+- [x] **Step 5: Run tests**
 
 Run:
 
@@ -421,7 +476,7 @@ cargo test --lib profitability_admission -- --nocapture
 
 Expected: PASS.
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add src/application/factor_lifecycle/profitability_admission.rs src/application/factor_lifecycle/mod.rs
@@ -445,7 +500,7 @@ git commit -m "feat: add profitability lifecycle admission policy"
 - `cargo test --test hard_gate_execution_first`
 - `cargo test --lib execution_tree_closed_loop_branch_admission`
 
-- [ ] **Step 1: Add failing unit test**
+- [x] **Step 1: Add failing unit test**
 
 Add a unit test near existing closed-loop admission tests. The important assertion is that execution-tree code does not fabricate learning admission from Pre-Bayes readiness:
 
@@ -481,7 +536,7 @@ fn closed_loop_admission_keeps_learning_not_evaluated_without_lifecycle_artifact
 }
 ```
 
-- [ ] **Step 2: Run test to verify failure**
+- [x] **Step 2: Run test to verify failure**
 
 Run:
 
@@ -491,7 +546,7 @@ cargo test --lib closed_loop_admission_keeps_learning_not_evaluated_without_life
 
 Expected: FAIL because the fields are missing.
 
-- [ ] **Step 3: Add fields without weakening existing status**
+- [x] **Step 3: Add fields without weakening existing status**
 
 Inside `build_execution_tree_closed_loop_branch_admission_value`, keep closed-loop admission fail-closed and add live-only lifecycle projection. `ready && actionable` is not enough by itself; the live plane must also satisfy readiness, transition, and validated-ranker consumption predicates:
 
@@ -530,7 +585,7 @@ Do not make `learning_admission_status` depend on `pre_bayes_ready`. If a future
 
 `workflow-status` must consume these explicit fields, not reconstruct live readiness from legacy structural candidate fields. A structural candidate with `ready=true` and `actionable=true` but no live-plane/practical flags must remain `fail_closed` and must not unblock `pass_neutralized` workflow state.
 
-- [ ] **Step 4: Run live-gate regression**
+- [x] **Step 4: Run live-gate regression**
 
 Run:
 
@@ -540,7 +595,7 @@ cargo test --test hard_gate_execution_first
 
 Expected: PASS; strong prediction with weak execution still blocks.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add src/application/orchestration/execution_tree.rs tests/hard_gate_execution_first.rs
@@ -564,7 +619,7 @@ git commit -m "feat: expose factor lifecycle states in execution admission"
 - `cargo test --lib factor_candidate -- --nocapture`
 - `cargo run --quiet -- factor-candidate-packs --symbol FACTOR_CANDIDATES --state-dir /tmp/ict-engine-lifecycle-plan-check --agent`
 
-- [ ] **Step 1: Add failing test for sparse positive regime-conditioned candidate**
+- [x] **Step 1: Add failing test for sparse positive regime-conditioned candidate**
 
 Create a candidate pack fixture in the unit test where:
 
@@ -584,7 +639,7 @@ assert_eq!(row.direction, "Observe");
 assert_eq!(row.execution_gate_status.as_deref(), Some("learning_admitted_live_blocked"));
 ```
 
-- [ ] **Step 2: Run test to verify failure**
+- [x] **Step 2: Run test to verify failure**
 
 Run:
 
@@ -594,7 +649,7 @@ cargo test --lib factor_candidate_sparse_regime_conditioned_positive_admits_lear
 
 Expected: FAIL because the old code returns `candidate_pack_admission_pending`.
 
-- [ ] **Step 3: Add lifecycle read helper**
+- [x] **Step 3: Add lifecycle read helper**
 
 In `build_factor_candidate_admission_target_artifact`, read:
 
@@ -672,7 +727,7 @@ if learning_only {
 
 This is an exploration/readback signal. Production supervised ranker loss still waits for normal mature feedback rows.
 
-- [ ] **Step 4: Keep old practical fields false**
+- [x] **Step 4: Keep old practical fields false**
 
 For lifecycle-admitted learning rows, set:
 
@@ -682,7 +737,7 @@ execution_gate_status: Some("learning_admitted_live_blocked".to_string()),
 execution_gate_reason: Some("learning admission is not live trade usability".to_string()),
 ```
 
-- [ ] **Step 5: Run targeted tests**
+- [x] **Step 5: Run targeted tests**
 
 Run:
 
@@ -692,7 +747,7 @@ cargo test --lib factor_candidate -- --nocapture
 
 Expected: PASS.
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add src/application/orchestration/factor_candidate.rs
@@ -715,7 +770,7 @@ git commit -m "feat: admit regime-conditioned learning candidates to ranker"
 **Verification:**
 - `python3 -m unittest support.scripts.research.tests.test_factor_candidate_pack`
 
-- [ ] **Step 1: Add failing test**
+- [x] **Step 1: Add failing test**
 
 Add a test named `test_candidate_pack_emits_factor_profitability_lifecycle_for_regime_conditioned_edge`:
 
@@ -736,7 +791,7 @@ self.assertFalse(
 )
 ```
 
-- [ ] **Step 2: Run test to verify failure**
+- [x] **Step 2: Run test to verify failure**
 
 Run:
 
@@ -746,7 +801,7 @@ python3 -m unittest support.scripts.research.tests.test_factor_candidate_pack.Fa
 
 Expected: FAIL because lifecycle evidence is missing.
 
-- [ ] **Step 3: Implement lifecycle builder**
+- [x] **Step 3: Implement lifecycle builder**
 
 Add helper:
 
@@ -810,7 +865,7 @@ def _factor_profitability_lifecycle(candidate_spec: dict[str, Any], metrics: dic
 
 Call it from `build_factor_candidate_pack` and store under `factor_eval_grid_summary`.
 
-- [ ] **Step 4: Run tests**
+- [x] **Step 4: Run tests**
 
 Run:
 
@@ -820,7 +875,7 @@ python3 -m unittest support.scripts.research.tests.test_factor_candidate_pack
 
 Expected: PASS.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add support/scripts/research/factor_candidate_pack.py support/scripts/research/tests/test_factor_candidate_pack.py
@@ -843,7 +898,7 @@ git commit -m "feat: emit factor profitability lifecycle in candidate packs"
 **Verification:**
 - `python3 -m unittest support.scripts.research.tests.test_regime_root_survivor_blocker_report`
 
-- [ ] **Step 1: Add failing test**
+- [x] **Step 1: Add failing test**
 
 Add test:
 
@@ -907,7 +962,7 @@ def test_regime_positive_sparse_candidate_is_learning_admitted_not_dropped(self)
     self.assertFalse(built["trade_usable"])
 ```
 
-- [ ] **Step 2: Run test to verify failure**
+- [x] **Step 2: Run test to verify failure**
 
 Run:
 
@@ -917,7 +972,7 @@ python3 -m unittest support.scripts.research.tests.test_regime_root_survivor_blo
 
 Expected: FAIL because no 5bps survivor currently drops the branch.
 
-- [ ] **Step 3: Refactor classifier**
+- [x] **Step 3: Refactor classifier**
 
 Replace early `no_real_cost_5bps_survivor` drop logic with:
 
@@ -956,7 +1011,7 @@ else:
 
 This order is intentional. Paper blockers come before live blockers because a candidate that has not reached paper/sim readiness cannot honestly be described as only live-blocked.
 
-- [ ] **Step 4: Preserve old flags**
+- [x] **Step 4: Preserve old flags**
 
 Set:
 
@@ -965,7 +1020,7 @@ report["promotion_allowed"] = decision == "live_trade_ready"
 report["trade_usable"] = decision == "live_trade_ready"
 ```
 
-- [ ] **Step 5: Run tests**
+- [x] **Step 5: Run tests**
 
 Run:
 
@@ -975,7 +1030,7 @@ python3 -m unittest support.scripts.research.tests.test_regime_root_survivor_blo
 
 Expected: PASS after updating old expected decisions intentionally.
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add support/scripts/research/regime_root_survivor_blocker_report.py support/scripts/research/tests/test_regime_root_survivor_blocker_report.py
@@ -1000,7 +1055,7 @@ git commit -m "feat: split survivor report into learning paper and live gates"
 **Verification:**
 - `python3 -m unittest support.scripts.research.tests.test_downstream_practical_admission_source_check`
 
-- [ ] **Step 1: Add tests**
+- [x] **Step 1: Add tests**
 
 Add:
 
@@ -1036,7 +1091,7 @@ def build_metrics(branch_ok):
     self.assertFalse(report["ok"])
 ```
 
-- [ ] **Step 2: Run guard tests to verify failure/pass split**
+- [x] **Step 2: Run guard tests to verify failure/pass split**
 
 Run:
 
@@ -1046,7 +1101,7 @@ python3 -m unittest support.scripts.research.tests.test_downstream_practical_adm
 
 Expected: new first test may pass already; second must fail until explicit taint detection is added.
 
-- [ ] **Step 3: Add learning-to-practical taint detection**
+- [x] **Step 3: Add learning-to-practical taint detection**
 
 Add precise taint tracking to `PracticalAssignmentVisitor`:
 
@@ -1097,7 +1152,7 @@ For `Assign` and `AnnAssign`, add target names to `learning_tainted_names` when 
 
 Do not flag harmless variable names that merely contain the substring `learning` unless their value comes from one of the explicit learning keys or an already-tainted variable.
 
-- [ ] **Step 4: Run tests**
+- [x] **Step 4: Run tests**
 
 Run:
 
@@ -1107,7 +1162,7 @@ python3 -m unittest support.scripts.research.tests.test_downstream_practical_adm
 
 Expected: PASS.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add support/scripts/research/downstream_practical_admission_source_check.py support/scripts/research/tests/test_downstream_practical_admission_source_check.py
@@ -1133,7 +1188,7 @@ git commit -m "test: guard learning admission from practical flag reuse"
 - `cargo test --lib workflow_status`
 - `cargo test --test provider_neutral_cli`
 
-- [ ] **Step 1: Add failing status tests**
+- [x] **Step 1: Add failing status tests**
 
 Policy training expected line:
 
@@ -1154,7 +1209,7 @@ Workflow expected JSON:
 }
 ```
 
-- [ ] **Step 2: Run tests to verify failure**
+- [x] **Step 2: Run tests to verify failure**
 
 Run:
 
@@ -1165,7 +1220,7 @@ cargo test --lib workflow_status -- --nocapture
 
 Expected: FAIL because fields do not exist.
 
-- [ ] **Step 3: Add read/summary fields**
+- [x] **Step 3: Add read/summary fields**
 
 In status builders, parse lifecycle data from target rows or execution admission artifacts and count:
 
@@ -1182,7 +1237,7 @@ trade usability; those values are ranker/execution-gate states unless a
 lifecycle live-plane value explicitly says `live_trade_ready` or
 `live_trade_usable`.
 
-- [ ] **Step 4: Run tests**
+- [x] **Step 4: Run tests**
 
 Run:
 
@@ -1194,7 +1249,7 @@ cargo test --test provider_neutral_cli
 
 Expected: PASS.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add src/application/entry_models/training_export.rs src/application/orchestration/workflow_status.rs tests/provider_neutral_cli.rs
@@ -1218,7 +1273,7 @@ git commit -m "feat: surface profitability lifecycle in status commands"
 **Verification:**
 - `rg -n "5bps|density|promotion_allowed|trade_usable|learning_admission|live_trade" support/docs/plans/2026-05-24-board-b-current.md support/docs/plans/2026-05-12-factor-candidate-ingestion-instructions.md support/docs/plans/2026-05-25-regime-conditioned-profitability-gate-rebuild-plan.md`
 
-- [ ] **Step 1: Edit Gate Model in Board B current**
+- [x] **Step 1: Edit Gate Model in Board B current**
 
 Replace current one-lane gate wording with:
 
@@ -1232,7 +1287,7 @@ Gate 3, portability: reproduces learning/paper evidence across chosen markets or
 Gate 4, live trade usability: requires Pre-Bayes/BBN/CatBoost/execution tree and keeps `promotion_allowed`, `trade_usable`, and `update_goal` false unless live-ready.
 ```
 
-- [ ] **Step 2: Update candidate ingestion**
+- [x] **Step 2: Update candidate ingestion**
 
 Change the minimum path to:
 
@@ -1245,7 +1300,7 @@ candidate evidence
 -> learning/paper/live lifecycle gates
 ```
 
-- [ ] **Step 3: Record diversity matrix supersession boundary**
+- [x] **Step 3: Record diversity matrix supersession boundary**
 
 Do not stage the large shared May 20 matrix in this slice. Instead, keep this
 plan and the May 24 active board explicit that older rows using the old hard
@@ -1255,7 +1310,7 @@ promotion model are superseded:
 Rows before 2026-05-25 used the old hard 5bps/density/downstream promotion model. Treat their negative economics as paper/live blockers unless the packet also invalidates learning by regime mismatch, leakage, non-positive declared-friction expectancy, or provider truth failure.
 ```
 
-- [ ] **Step 4: Verify docs**
+- [x] **Step 4: Verify docs**
 
 Run:
 
@@ -1265,7 +1320,7 @@ rg -n "learning_admission|live_trade|5bps|execution_readiness >= 0.65|transition
 
 Expected: new lifecycle language present; any remaining hard thresholds, including fixed 5bps, validation density, transition hazard, PDA alignment, and execution readiness, are explicitly scoped to paper/live and are not learning-admission blockers.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add support/docs/plans/2026-05-24-board-b-current.md support/docs/plans/2026-05-12-factor-candidate-ingestion-instructions.md support/docs/plans/2026-05-25-regime-conditioned-profitability-gate-rebuild-plan.md
@@ -1288,7 +1343,7 @@ git commit -m "docs: redefine Board B gates around profitability lifecycle"
 **Verification:**
 - `python3 -m unittest support.scripts.research.tests.test_factor_lifecycle_migration_readback`
 
-- [ ] **Step 1: Write failing tests**
+- [x] **Step 1: Write failing tests**
 
 Use a temp run root containing:
 
@@ -1306,7 +1361,7 @@ self.assertFalse(result["promotion_allowed"])
 self.assertFalse(result["trade_usable"])
 ```
 
-- [ ] **Step 2: Implement parser**
+- [x] **Step 2: Implement parser**
 
 Read only these files when present:
 
@@ -1334,7 +1389,7 @@ DECLARED_FRICTION_KEYS = (
 
 Only fall back to `total_profit_pct` when no declared-friction key exists, and include blocker `declared_friction_missing_raw_profit_only`.
 
-- [ ] **Step 3: Emit JSONL and compact markdown**
+- [x] **Step 3: Emit JSONL and compact markdown**
 
 Fields:
 
@@ -1348,7 +1403,7 @@ Fields:
 - `trade_usable=false`
 - `evidence_paths`
 
-- [ ] **Step 4: Run tests**
+- [x] **Step 4: Run tests**
 
 Run:
 
@@ -1358,7 +1413,7 @@ python3 -m unittest support.scripts.research.tests.test_factor_lifecycle_migrati
 
 Expected: PASS.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add support/scripts/research/factor_lifecycle_migration_readback.py support/scripts/research/tests/test_factor_lifecycle_migration_readback.py
@@ -1379,7 +1434,7 @@ git commit -m "feat: add read-only factor lifecycle migration readback"
 **Verification:**
 - Commands below.
 
-- [ ] **Step 1: Format**
+- [x] **Step 1: Format**
 
 Run:
 
@@ -1389,7 +1444,7 @@ cargo fmt --check
 
 Expected: PASS.
 
-- [ ] **Step 2: Rust checks**
+- [x] **Step 2: Rust checks**
 
 Run:
 
@@ -1408,7 +1463,7 @@ cargo test --lib workflow_status -- --nocapture
 
 Expected: PASS.
 
-- [ ] **Step 3: Python tests**
+- [x] **Step 3: Python tests**
 
 Run:
 
@@ -1428,7 +1483,7 @@ python3 support/scripts/research/downstream_practical_admission_source_check.py 
 
 Expected: PASS.
 
-- [ ] **Step 4: Zero-config smoke**
+- [x] **Step 4: Zero-config smoke**
 
 Run:
 
@@ -1448,7 +1503,7 @@ Expected:
 - `promotion_allowed` and `trade_usable` remain false unless a real live-ready packet exists.
 - Lifecycle fields are visible where relevant.
 
-- [ ] **Step 5: Commit final verified slice**
+- [x] **Step 5: Commit final verified slice**
 
 ```bash
 git status --short

@@ -846,7 +846,7 @@ fn execution_tree_ranker_lineage_path_token(rest: &str) -> String {
     .to_string()
 }
 
-fn strict_trend_pullback_wait_for_reversion_admissible(
+fn strict_trend_pullback_wait_for_reversion_observe_only(
     path_id: &str,
     output: &ExecutionTreeOutput,
 ) -> bool {
@@ -884,10 +884,8 @@ fn build_execution_tree_closed_loop_branch_admission_value(
         execution_gate_status,
         "ready" | "execution_ready" | "pass" | "admissible"
     );
-    let strict_trend_pullback_wait_ready =
-        strict_trend_pullback_wait_for_reversion_admissible(path_id, output);
     let execution_tree_ready = output.gate_status == "ready"
-        && (output.branch == "fill_viable" || strict_trend_pullback_wait_ready)
+        && output.branch == "fill_viable"
         && output.execution_bias != "skip";
     let execution_readiness_ready = output
         .execution_readiness
@@ -932,18 +930,14 @@ fn build_execution_tree_closed_loop_branch_admission_value(
         "live_plane_predicates=execution_readiness_ready={} transition_hazard_ready={} ranker_live_ready={}",
         execution_readiness_ready, transition_hazard_ready, ranker_live_ready
     ));
-    if strict_trend_pullback_wait_ready {
-        evidence.push("strict_trend_pullback_wait_for_reversion_admitted=true".to_string());
+    if strict_trend_pullback_wait_for_reversion_observe_only(path_id, output) {
+        evidence.push("strict_trend_pullback_wait_for_reversion_observe_only=true".to_string());
     }
 
     serde_json::json!({
         "status": status,
         "reason": if status == "admitted" {
-            if strict_trend_pullback_wait_ready {
-                "strict_trend_pullback_wait_for_reversion_ready_and_actionable"
-            } else {
-                "exact_structural_branch_ready_and_actionable"
-            }
+            "exact_structural_branch_ready_and_actionable"
         } else {
             "exact_structural_branch_visible_but_not_ready_or_actionable"
         },
@@ -1496,7 +1490,7 @@ mod tests {
     }
 
     #[test]
-    fn execution_tree_closed_loop_branch_admission_accepts_strict_trend_pullback_wait_for_reversion_only_with_hard_predicates(
+    fn execution_tree_closed_loop_branch_admission_keeps_strict_trend_pullback_wait_for_reversion_observe_only(
     ) {
         let strict_trend_path =
             "TrendExpansion -> RootEvidencePullbackMssCisd -> strict_trend_root_pullback_mss_cisd";
@@ -1519,11 +1513,19 @@ mod tests {
             &output,
         );
 
-        assert_eq!(value["status"], "admitted");
-        assert_eq!(value["ready"], true);
-        assert_eq!(value["actionable"], true);
-        assert_eq!(value["review_status"], "promote_latest");
+        assert_eq!(value["status"], "fail_closed");
+        assert_eq!(value["ready"], false);
+        assert_eq!(value["actionable"], false);
+        assert_eq!(value["review_status"], "observe");
         assert_eq!(value["execution_tree_branch"], "wait_for_reversion");
+        assert_eq!(value["live_trade_status"], "blocked");
+        assert_eq!(value["promotion_allowed"], false);
+        assert_eq!(value["trade_usable"], false);
+        assert_eq!(value["update_goal"], false);
+        let evidence = value["evidence"].as_array().unwrap();
+        assert!(evidence.iter().any(|item| {
+            item.as_str() == Some("strict_trend_pullback_wait_for_reversion_observe_only=true")
+        }));
 
         let generic_path = "RangeReversion -> GenericOverstretchFade -> wait_for_reversion_probe";
         let generic_value = build_execution_tree_closed_loop_branch_admission_value(
@@ -1575,7 +1577,7 @@ mod tests {
             "ready",
             &pda_misaligned,
         );
-        assert_eq!(pda_misaligned_value["status"], "admitted");
+        assert_eq!(pda_misaligned_value["status"], "fail_closed");
 
         let mut low_readiness = output.clone();
         low_readiness.execution_readiness = Some(EXECUTION_GATE_READY - 0.001);

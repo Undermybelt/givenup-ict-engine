@@ -1070,6 +1070,12 @@ fn structural_closed_loop_branch_admission_value(candidate: &Value) -> Option<Va
     } else {
         "fail_closed"
     };
+    let normalized_live_trade_status = if admission_status == "admitted" {
+        "ready"
+    } else {
+        "blocked"
+    };
+    let normalized_practical_flags = admission_status == "admitted";
     let mut evidence = Vec::new();
     if !pre_bayes_gate_status.is_empty() {
         evidence.push(format!("pre_bayes_gate_status={pre_bayes_gate_status}"));
@@ -1098,10 +1104,10 @@ fn structural_closed_loop_branch_admission_value(candidate: &Value) -> Option<Va
         "review_status": review_status,
         "learning_admission_status": "not_evaluated",
         "paper_admission_status": "not_evaluated",
-        "live_trade_status": live_trade_status,
-        "promotion_allowed": explicit_promotion_allowed,
-        "trade_usable": explicit_trade_usable,
-        "update_goal": explicit_update_goal,
+        "live_trade_status": normalized_live_trade_status,
+        "promotion_allowed": normalized_practical_flags,
+        "trade_usable": normalized_practical_flags,
+        "update_goal": normalized_practical_flags,
         "ready": ready,
         "actionable": actionable,
         "evidence": evidence,
@@ -1134,22 +1140,13 @@ fn workflow_factor_profitability_lifecycle_value(admission: Option<&Value>) -> V
         .and_then(|value| value.get("paper_admission_status"))
         .and_then(Value::as_str)
         .unwrap_or("not_evaluated");
-    let live_trade_status = admission
-        .and_then(|value| value.get("live_trade_status"))
-        .and_then(Value::as_str)
-        .unwrap_or("blocked");
-    let promotion_allowed = admission
-        .and_then(|value| value.get("promotion_allowed"))
-        .and_then(Value::as_bool)
+    let live_ready = admission
+        .map(closed_loop_admission_live_trade_ready)
         .unwrap_or(false);
-    let trade_usable = admission
-        .and_then(|value| value.get("trade_usable"))
-        .and_then(Value::as_bool)
-        .unwrap_or(false);
-    let update_goal = admission
-        .and_then(|value| value.get("update_goal"))
-        .and_then(Value::as_bool)
-        .unwrap_or(false);
+    let live_trade_status = if live_ready { "ready" } else { "blocked" };
+    let promotion_allowed = live_ready;
+    let trade_usable = live_ready;
+    let update_goal = live_ready;
     json!({
         "learning_admission_status": learning_admission_status,
         "paper_admission_status": paper_admission_status,
@@ -7504,7 +7501,7 @@ mod tests {
     }
 
     #[test]
-    fn workflow_factor_profitability_lifecycle_requires_explicit_practical_flags() {
+    fn workflow_factor_profitability_lifecycle_requires_complete_live_ready_tuple() {
         let admission = serde_json::json!({
             "status": "admitted",
             "learning_admission_status": "not_evaluated",
@@ -7514,7 +7511,27 @@ mod tests {
 
         let lifecycle = workflow_factor_profitability_lifecycle_value(Some(&admission));
 
-        assert_eq!(lifecycle["live_trade_status"], "ready");
+        assert_eq!(lifecycle["live_trade_status"], "blocked");
+        assert_eq!(lifecycle["promotion_allowed"], false);
+        assert_eq!(lifecycle["trade_usable"], false);
+        assert_eq!(lifecycle["update_goal"], false);
+    }
+
+    #[test]
+    fn workflow_factor_profitability_lifecycle_sanitizes_fail_closed_practical_flags() {
+        let admission = serde_json::json!({
+            "status": "fail_closed",
+            "learning_admission_status": "not_evaluated",
+            "paper_admission_status": "not_evaluated",
+            "live_trade_status": "ready",
+            "promotion_allowed": true,
+            "trade_usable": true,
+            "update_goal": true
+        });
+
+        let lifecycle = workflow_factor_profitability_lifecycle_value(Some(&admission));
+
+        assert_eq!(lifecycle["live_trade_status"], "blocked");
         assert_eq!(lifecycle["promotion_allowed"], false);
         assert_eq!(lifecycle["trade_usable"], false);
         assert_eq!(lifecycle["update_goal"], false);

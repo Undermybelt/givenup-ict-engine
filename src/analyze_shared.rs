@@ -1478,6 +1478,10 @@ fn strict_trend_pullback_wait_for_reversion_trace_ready(
         && transition_ok
 }
 
+fn execution_tree_output_branch_is_fill_viable(output: &serde_json::Value) -> bool {
+    output.get("branch").and_then(serde_json::Value::as_str) == Some("fill_viable")
+}
+
 struct SameRootExecutionTreeAdmission {
     candidate_status: String,
     branch_path: String,
@@ -1522,7 +1526,7 @@ fn same_root_execution_tree_observation_for_analyze(
         .and_then(serde_json::Value::as_str)
         .unwrap_or("observe");
     let candidate_status = match gate_status {
-        "ready" => "execution_ready",
+        "ready" => "execution_observe_only",
         "blocked" => "execution_blocked",
         "observe" => "execution_observe_only",
         other if !other.trim().is_empty() => other,
@@ -1582,8 +1586,7 @@ fn same_root_execution_tree_admission_for_analyze(
         .get("gate_status")
         .and_then(serde_json::Value::as_str)
         == Some("ready")
-        && (output.get("branch").and_then(serde_json::Value::as_str) == Some("fill_viable")
-            || strict_trend_pullback_wait_for_reversion_trace_ready(path_id, output));
+        && execution_tree_output_branch_is_fill_viable(output);
     let ranker_used = output
         .get("path_ranker_score_used_by_execution_tree")
         .and_then(serde_json::Value::as_bool)
@@ -1604,22 +1607,26 @@ fn same_root_execution_tree_admission_for_analyze(
     if !pre_bayes_ready {
         return None;
     }
-    let candidate_status = admission
-        .get("candidate_status")
+    let candidate_status = if actionable_admission {
+        admission
+            .get("candidate_status")
+            .and_then(serde_json::Value::as_str)
+            .or_else(|| {
+                admission
+                    .get("execution_gate_status")
+                    .and_then(serde_json::Value::as_str)
+            })
+            .map(|status| status.to_string())
+            .unwrap_or_else(|| "execution_ready".to_string())
+    } else if output
+        .get("gate_status")
         .and_then(serde_json::Value::as_str)
-        .or_else(|| {
-            admission
-                .get("execution_gate_status")
-                .and_then(serde_json::Value::as_str)
-        })
-        .map(|status| status.to_string())
-        .unwrap_or_else(|| {
-            if actionable_admission {
-                "execution_ready".to_string()
-            } else {
-                "no_trade".to_string()
-            }
-        });
+        == Some("blocked")
+    {
+        "execution_blocked".to_string()
+    } else {
+        "execution_observe_only".to_string()
+    };
     Some(SameRootExecutionTreeAdmission {
         candidate_status,
         branch_path: path_id.to_string(),
@@ -2534,8 +2541,7 @@ mod tests {
     }
 
     #[test]
-    fn execution_candidate_materializes_strict_trend_pullback_wait_for_reversion_admission_when_trade_plan_size_is_zero(
-    ) {
+    fn execution_candidate_keeps_strict_trend_pullback_wait_for_reversion_trace_observe_only() {
         let temp = tempfile::tempdir().unwrap();
         let mut report = sample_analyze_report_with_factor_ranking(Vec::new());
         report.symbol = "IBKR_STRICT_TREND_ROOT_COMBINED_FEEDBACK_REPLAY_V1".to_string();
@@ -2621,23 +2627,23 @@ mod tests {
             .unwrap();
 
         assert_eq!(candidate.trade_direction, Direction::Bear);
-        assert!(candidate.actionable);
-        assert_eq!(candidate.candidate_status, "execution_ready");
+        assert!(!candidate.actionable);
+        assert_eq!(candidate.candidate_status, "execution_observe_only");
         assert_eq!(candidate.branch_path.as_deref(), Some(branch_path));
         assert_eq!(
             candidate.regime_profit_branch_path.as_deref(),
             Some(branch_path)
         );
         assert!(candidate.branch_fields_preserved);
-        assert_eq!(candidate.review_decision.status, "promote_latest");
+        assert_eq!(candidate.review_decision.status, "observe");
         assert_eq!(
             candidate.review_decision.reason,
-            "same_root_execution_tree_admitted"
+            "first_execution_candidate_artifact"
         );
     }
 
     #[test]
-    fn execution_candidate_materializes_strict_trend_pullback_trace_admission_without_report_branch_path(
+    fn execution_candidate_preserves_strict_trend_pullback_trace_path_without_report_branch_path_but_does_not_promote(
     ) {
         let temp = tempfile::tempdir().unwrap();
         let mut report = sample_analyze_report_with_factor_ranking(Vec::new());
@@ -2731,12 +2737,18 @@ mod tests {
             .unwrap();
 
         assert_eq!(candidate.trade_direction, Direction::Bear);
-        assert!(candidate.actionable);
-        assert_eq!(candidate.candidate_status, "execution_ready");
-        assert_eq!(candidate.review_decision.status, "promote_latest");
+        assert!(!candidate.actionable);
+        assert_eq!(candidate.candidate_status, "execution_observe_only");
+        assert_eq!(candidate.branch_path.as_deref(), Some(branch_path));
+        assert_eq!(
+            candidate.regime_profit_branch_path.as_deref(),
+            Some(branch_path)
+        );
+        assert!(candidate.branch_fields_preserved);
+        assert_eq!(candidate.review_decision.status, "observe");
         assert_eq!(
             candidate.review_decision.reason,
-            "same_root_execution_tree_admitted"
+            "first_execution_candidate_artifact"
         );
     }
 
