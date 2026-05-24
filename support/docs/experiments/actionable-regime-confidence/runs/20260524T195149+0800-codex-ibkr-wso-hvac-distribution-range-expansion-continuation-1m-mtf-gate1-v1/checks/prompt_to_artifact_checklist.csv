@@ -1,0 +1,8 @@
+item,status,evidence
+ibkr_provider_invoked,yes,support/docs/experiments/actionable-regime-confidence/runs/20260524T195149+0800-codex-ibkr-wso-hvac-distribution-range-expansion-continuation-1m-mtf-gate1-v1/command-output/00_provider_status_ibkr.cmd
+wso_nyse_stock_contract,yes,WSO STK NYSE
+requested_full_ladder,yes,1m/5m/15m/30m/1h/4h/1d
+branch_fields_preserved,yes,TrendExpansion -> HvacDistributionRangeExpansionContinuation -> prior_day_range_breakout_pullback -> ibkr_wso_hvac_distribution_range_expansion_continuation_1m_mtf_gate1_v1
+hard_cost_stress_written,yes,support/docs/experiments/actionable-regime-confidence/runs/20260524T195149+0800-codex-ibkr-wso-hvac-distribution-range-expansion-continuation-1m-mtf-gate1-v1/checks/cost_stress_table.json
+downstream_blocked_or_allowed_by_gate1,yes,drop_gate1_cost_or_density_failed
+commands_all_zero,yes,support/docs/experiments/actionable-regime-confidence/runs/20260524T195149+0800-codex-ibkr-wso-hvac-distribution-range-expansion-continuation-1m-mtf-gate1-v1/checks

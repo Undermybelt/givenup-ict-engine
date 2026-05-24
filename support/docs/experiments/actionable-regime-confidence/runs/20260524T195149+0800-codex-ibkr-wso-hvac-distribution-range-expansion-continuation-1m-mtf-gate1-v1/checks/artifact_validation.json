@@ -1,0 +1,10 @@
+{
+  "run_root_exists": true,
+  "provider_rows": 7,
+  "material_count": 7,
+  "rank_rows": 7,
+  "rank_total_trade_count": 59,
+  "commands_all_zero": true,
+  "branch_fields_preserved": true,
+  "decision": "drop_gate1_cost_or_density_failed"
+}
