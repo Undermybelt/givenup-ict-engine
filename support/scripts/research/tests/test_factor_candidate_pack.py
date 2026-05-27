@@ -224,7 +224,11 @@ Uses MTF: yes
             bundle["transfer_score"]["status"],
             "cross_market_candidate",
         )
-        self.assertGreater(bundle["transfer_score"]["overall_transfer_score"], 0.5)
+        self.assertGreater(bundle["transfer_score"]["overall_transfer_score"], 0.45)
+        self.assertEqual(
+            bundle["transfer_score"]["profitability_status"],
+            "declared_friction_missing",
+        )
         self.assertIn("GLD/USD", bundle["transfer_score"]["covered_markets"])
         self.assertEqual(bundle["transfer_score"]["markets_without_trade_counts"], [])
 
@@ -466,11 +470,70 @@ Uses MTF: yes
         self.assertEqual(lifecycle["live_trade"]["status"], "blocked")
         self.assertFalse(lifecycle["live_trade"]["promotion_allowed"])
         self.assertFalse(lifecycle["live_trade"]["trade_usable"])
+        self.assertEqual(
+            bundle["transfer_score"]["profitability_status"],
+            "declared_friction_positive",
+        )
+        self.assertEqual(
+            bundle["transfer_score"]["long_run_expectancy_after_declared_friction"],
+            1.2,
+        )
         self.assertFalse(
             bundle["transfer_score"]["timeframe_ladder_transfer"]["promotion_allowed"]
         )
         self.assertFalse(
             bundle["transfer_score"]["timeframe_ladder_transfer"]["trade_usable"]
+        )
+
+    def test_transfer_score_penalizes_raw_only_profit_without_declared_friction(self) -> None:
+        manifest = {
+            "manifest_version": "1.0",
+            "timeframe": "15m",
+            "strategies": [
+                {
+                    "name": "RawOnlyPrettyButCostUnproven",
+                    "status": "ok",
+                    "validation_metrics": {
+                        "sharpe": 1.8,
+                        "trade_count": 180,
+                        "win_rate_pct": 61.0,
+                        "profit_factor": 1.6,
+                        "total_profit_pct": 4.8,
+                    },
+                    "per_pair_metrics": {
+                        "SPY/USD": {"sharpe": 1.7, "trade_count": 160},
+                        "QQQ/USD": {"sharpe": 1.9, "trade_count": 190},
+                    },
+                }
+            ],
+        }
+        candidate_spec = {
+            "candidate_id": "raw_only_pretty_but_cost_unproven_v1",
+            "expected_regime": "TrendExpansion -> MomentumPersistence -> raw_only_pretty -> raw_only_pretty_but_cost_unproven_v1",
+            "regime_confidence": 0.97,
+            "provider_state": "ready",
+            "leakage_check": "pass",
+        }
+
+        bundle = pack.build_factor_candidate_pack(
+            manifest=manifest,
+            strategy_name="RawOnlyPrettyButCostUnproven",
+            candidate_spec=candidate_spec,
+        )
+
+        self.assertEqual(
+            bundle["transfer_score"]["profitability_status"],
+            "declared_friction_missing",
+        )
+        self.assertIn(
+            "declared_friction_missing_raw_profit_only",
+            bundle["transfer_score"]["profitability_blockers"],
+        )
+        self.assertEqual(
+            bundle["factor_eval_grid_summary"]["factor_profitability_lifecycle"][
+                "learning_admission"
+            ]["status"],
+            "blocked",
         )
 
     def test_build_strategy_library_manifest_from_freqtrade_backtest_zip(self) -> None:

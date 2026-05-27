@@ -717,6 +717,7 @@ def _transfer_score(
     candidate_spec: dict[str, Any],
 ) -> dict[str, Any]:
     per_pair = strategy.get("per_pair_metrics") or {}
+    aggregate = strategy.get("validation_metrics") or {}
     market_evidence: dict[str, Any] = {
         market: {**metrics, "evidence_source": "manifest"}
         for market, metrics in per_pair.items()
@@ -744,6 +745,21 @@ def _transfer_score(
             else:
                 markets_without_trade_counts.append(market)
     covered_count = len(covered)
+    profitability_expectancy, profitability_blockers = _declared_friction_expectancy(aggregate)
+    profitability_positive = (
+        profitability_expectancy is not None
+        and profitability_expectancy > 0.0
+        and not profitability_blockers
+    )
+    if profitability_positive:
+        profitability_status = "declared_friction_positive"
+        profitability_score = min(float(profitability_expectancy) / 5.0, 1.0)
+    elif profitability_expectancy is not None and profitability_expectancy <= 0.0:
+        profitability_status = "declared_friction_non_positive"
+        profitability_score = 0.0
+    else:
+        profitability_status = "declared_friction_missing"
+        profitability_score = 0.0
     if covered_count <= 1:
         status = "single_market_only"
         overall_transfer_score = 0.0
@@ -754,7 +770,10 @@ def _transfer_score(
         sharpe_score = max(min(avg_sharpe / 2.0, 1.0), 0.0)
         breadth_score = min(covered_count / 3.0, 1.0)
         overall_transfer_score = round(
-            density_score * 0.35 + sharpe_score * 0.35 + breadth_score * 0.30,
+            density_score * 0.25
+            + sharpe_score * 0.20
+            + breadth_score * 0.20
+            + profitability_score * 0.35,
             6,
         )
         status = "cross_market_candidate"
@@ -766,6 +785,9 @@ def _transfer_score(
         "markets_without_trade_counts": markets_without_trade_counts,
         "status": status,
         "overall_transfer_score": overall_transfer_score,
+        "profitability_status": profitability_status,
+        "profitability_blockers": profitability_blockers,
+        "long_run_expectancy_after_declared_friction": profitability_expectancy,
         "average_sharpe": round(mean(sharpe_values), 6) if sharpe_values else 0.0,
         "average_trade_count": round(mean(trade_counts), 6) if trade_counts else 0.0,
         "timeframe": manifest.get("timeframe"),

@@ -390,6 +390,12 @@ def _candidate_list_entry(candidate: dict[str, Any], repo_root: Path) -> dict[st
         pack_dir = artifact_plan["candidate_pack_dir_path"]
         eval_summary = _load_json(pack_dir / "factor_eval_grid_summary.json")
         transfer_score = _load_json(pack_dir / "transfer_score.json")
+        learning = (
+            (eval_summary.get("factor_profitability_lifecycle") or {}).get(
+                "learning_admission"
+            )
+            or {}
+        )
         entry.update(
             {
                 "aggregate_trade_count": eval_summary["trade_density_summary"][
@@ -398,7 +404,12 @@ def _candidate_list_entry(candidate: dict[str, Any], repo_root: Path) -> dict[st
                 "aggregate_label": eval_summary["trade_density_summary"][
                     "aggregate_label"
                 ],
+                "learning_admission_status": learning.get("status", "unknown"),
+                "long_run_expectancy_after_declared_friction": learning.get(
+                    "long_run_expectancy_after_declared_friction"
+                ),
                 "transfer_status": transfer_score["status"],
+                "profitability_status": transfer_score.get("profitability_status"),
             }
         )
     return entry
@@ -432,10 +443,14 @@ def _print_human_buildable_list(payload: dict[str, Any]) -> None:
     )
     for candidate in payload["buildable_candidates"]:
         print(
-            "{candidate_id}\t{aggregate_trade_count}\t{aggregate_label}\t{transfer_status}\t{reusable_ref}".format(
+            "{candidate_id}\t{aggregate_trade_count}\t{aggregate_label}\t{learning_status}\t{expectancy}\t{transfer_status}\t{reusable_ref}".format(
                 candidate_id=candidate["candidate_id"],
                 aggregate_trade_count=candidate.get("aggregate_trade_count", "n/a"),
                 aggregate_label=candidate.get("aggregate_label", "n/a"),
+                learning_status=candidate.get("learning_admission_status", "n/a"),
+                expectancy=candidate.get(
+                    "long_run_expectancy_after_declared_friction", "n/a"
+                ),
                 transfer_status=candidate.get("transfer_status", "n/a"),
                 reusable_ref=(candidate.get("reusable_input_refs") or [""])[0],
             )
@@ -543,7 +558,18 @@ def build_candidate_packs(
                     "aggregate_label": bundle["factor_eval_grid_summary"][
                         "trade_density_summary"
                     ]["aggregate_label"],
+                    "learning_admission_status": bundle["factor_eval_grid_summary"][
+                        "factor_profitability_lifecycle"
+                    ]["learning_admission"]["status"],
+                    "long_run_expectancy_after_declared_friction": bundle[
+                        "factor_eval_grid_summary"
+                    ]["factor_profitability_lifecycle"]["learning_admission"][
+                        "long_run_expectancy_after_declared_friction"
+                    ],
                     "transfer_status": bundle["transfer_score"]["status"],
+                    "profitability_status": bundle["transfer_score"].get(
+                        "profitability_status"
+                    ),
                 }
             )
             continue
@@ -580,7 +606,18 @@ def build_candidate_packs(
                     "aggregate_label": bundle["factor_eval_grid_summary"][
                         "trade_density_summary"
                     ]["aggregate_label"],
+                    "learning_admission_status": bundle["factor_eval_grid_summary"][
+                        "factor_profitability_lifecycle"
+                    ]["learning_admission"]["status"],
+                    "long_run_expectancy_after_declared_friction": bundle[
+                        "factor_eval_grid_summary"
+                    ]["factor_profitability_lifecycle"]["learning_admission"][
+                        "long_run_expectancy_after_declared_friction"
+                    ],
                     "transfer_status": bundle["transfer_score"]["status"],
+                    "profitability_status": bundle["transfer_score"].get(
+                        "profitability_status"
+                    ),
                 }
             )
             continue

@@ -202,6 +202,35 @@ The objective is only complete if current evidence proves all of the following:
   - if a stronger factor-completion claim is ever attempted, require same-turn
     rerun evidence rather than cached `/tmp` artifacts from earlier in the day.
 
+### V-008: candidate-pack selection surfaces were still optimizing statistical attractiveness ahead of post-friction learnability
+
+- Severity: medium
+- Evidence:
+  - `support/scripts/research/factor_candidate_pack.py` transfer scoring used
+    `density + sharpe + breadth` but did not weight
+    `long_run_expectancy_after_declared_friction`.
+  - `support/scripts/research/factor_candidate_resolver.py` buildable candidate
+    surfaces exposed `aggregate_trade_count`, `aggregate_label`, and
+    `transfer_status`, but not `learning_admission_status` or
+    declared-friction expectancy.
+- Risk:
+  - agents and humans choosing the next training lane can systematically prefer
+    high-density/high-sharpe candidates that are still cost-unproven, which
+    reinforces the exact failure mode where factor training looks productive but
+    repeatedly fails practical closure.
+- Next:
+  - keep declared-friction profitability on the default buildable-candidate
+    surface;
+  - continue auditing other training-direction helpers for raw-profit or
+    sharpe-only ranking keys.
+- Current readback:
+  - transfer scoring now adds a declared-friction profitability component and
+    explicit profitability blockers/status.
+  - buildable candidate surfaces now expose
+    `learning_admission_status` and
+    `long_run_expectancy_after_declared_friction`, with fallback compatibility
+    for older curated packs that lack lifecycle fields.
+
 ## Immediate Verification Queue
 
 1. Build a requirement-by-requirement current-tree evidence matrix for the full
@@ -238,6 +267,10 @@ Python/support-script focused tests:
   -> pass (`2/2`)
 - `python3 -m unittest support.scripts.auto_quant_external.tests.test_fetch_external_ibkr_chunking support.scripts.auto_quant_external.tests.test_freqtrade_backtest_trade_export support.scripts.auto_quant_external.tests.test_next_slice_helpers -v`
   -> pass (`27/27`)
+- `python3 -m unittest support.scripts.research.tests.test_factor_candidate_pack -v`
+  -> pass (`17/17`)
+- `python3 -m unittest support.scripts.research.tests.test_factor_candidate_resolver -v`
+  -> pass (`9/9`)
 
 Current-turn compact audits:
 
@@ -291,3 +324,7 @@ Current-tree runtime smoke:
   Strategy-library manifests can no longer self-assert `accepted` practical
   status or elevate BBN gate quality through imported `trade_usable=true`
   metadata; the new regression and focused adapter suite both pass.
+- 2026-05-27: reproduced and fixed a training-direction surface bug.
+  Candidate-pack transfer scoring and buildable candidate summaries now surface
+  declared-friction profitability and learning-admission state instead of
+  primarily steering selection through density/sharpe/breadth alone.

@@ -440,6 +440,8 @@ class FactorCandidateResolverTests(unittest.TestCase):
         self.assertEqual(vrp["aggregate_trade_count"], 334)
         self.assertEqual(vrp["aggregate_label"], "preferred_density")
         self.assertEqual(vrp["transfer_status"], "cross_market_candidate")
+        self.assertIn("learning_admission_status", vrp)
+        self.assertIn("long_run_expectancy_after_declared_friction", vrp)
         self.assertTrue(
             vrp["reusable_input_refs"][0].startswith("support/examples/factor_candidate_packs/")
         )
@@ -451,6 +453,8 @@ class FactorCandidateResolverTests(unittest.TestCase):
         self.assertEqual(order_block["aggregate_trade_count"], 342)
         self.assertEqual(order_block["aggregate_label"], "preferred_density")
         self.assertEqual(order_block["transfer_status"], "cross_market_candidate")
+        self.assertIn("learning_admission_status", order_block)
+        self.assertIn("long_run_expectancy_after_declared_friction", order_block)
 
     def test_build_candidate_packs_supports_regime_benchmark_bundle(self) -> None:
         nq = {
