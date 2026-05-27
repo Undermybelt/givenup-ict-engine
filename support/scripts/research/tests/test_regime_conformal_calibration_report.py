@@ -110,7 +110,7 @@ class RegimeConformalCalibrationReportTests(unittest.TestCase):
             self.assertFalse(result["confidence_99"])
             self.assertIn("truth_labels_missing", result["warnings"])
 
-    def test_unknown_labels_remain_non_trade_usable(self) -> None:
+    def test_unknown_labels_remain_non_conformal_eligible(self) -> None:
         with TemporaryDirectory() as tmpdir:
             tmp = Path(tmpdir)
             scores = tmp / "regime_expert_scores.jsonl"
@@ -126,8 +126,45 @@ class RegimeConformalCalibrationReportTests(unittest.TestCase):
             )
 
             unknown = result["label_contracts"]["primary::Unknown"]
-            self.assertEqual(unknown["trade_usable"], False)
+            self.assertEqual(unknown["conformal_eligible"], False)
+            self.assertNotIn("trade_usable", unknown)
             self.assertEqual(unknown["abstain_policy"], "always_abstain")
+
+    def test_conformal_set_fails_closed_when_conformal_eligible_flag_missing(self) -> None:
+        rows = [
+            {
+                "timestamp": "t0",
+                "label_id": "primary::TrendExpansion",
+                "score": 0.94,
+                "threshold": 0.8,
+            }
+        ]
+        contracts = {
+            "primary::TrendExpansion": {
+                "abstain_policy": "abstain_unless_singleton_conformal_set",
+                "threshold": 0.8,
+            }
+        }
+
+        labels = conformal._conformal_set(rows, contracts, 0.99)
+
+        self.assertEqual(labels, [])
+
+    def test_label_contracts_use_conformal_eligibility_name_not_practical_admission_name(self) -> None:
+        training_report = {
+            "experts": [
+                {
+                    "label_id": "primary::TrendExpansion",
+                    "threshold": 0.8,
+                    "abstain_policy": "abstain_unless_singleton_conformal_set",
+                }
+            ]
+        }
+
+        contracts = conformal._label_contracts(training_report)
+
+        self.assertTrue(contracts["primary::TrendExpansion"]["conformal_eligible"])
+        self.assertNotIn("trade_usable", contracts["primary::TrendExpansion"])
 
     def test_confidence_requires_every_truth_class_to_meet_target_coverage(self) -> None:
         with TemporaryDirectory() as tmpdir:

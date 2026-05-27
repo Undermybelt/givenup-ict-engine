@@ -47,7 +47,7 @@ def _label_contracts(training_report: dict[str, Any], label_prefix: str = "") ->
         contracts[label_id] = {
             "abstain_policy": policy,
             "threshold": expert.get("threshold", 1.0 if always_abstain else 0.8),
-            "trade_usable": not always_abstain,
+            "conformal_eligible": not always_abstain,
         }
     return contracts
 
@@ -68,14 +68,19 @@ def _conformal_set(rows: list[dict[str, Any]], contracts: dict[str, dict[str, An
         if label_id not in contracts:
             continue
         contract = contracts[label_id]
-        if not contract.get("trade_usable", True):
+        if not contract.get("conformal_eligible", False):
             continue
         threshold = float(contract.get("threshold", row.get("threshold", 0.8))) - relax
         if float(row.get("score", 0.0)) >= threshold:
             labels.append(label_id)
     if labels:
         return sorted(labels)
-    best = [row for row in rows if str(row.get("label_id", "")) in contracts and contracts[str(row.get("label_id", ""))].get("trade_usable", True)]
+    best = [
+        row
+        for row in rows
+        if str(row.get("label_id", "")) in contracts
+        and contracts[str(row.get("label_id", ""))].get("conformal_eligible", False)
+    ]
     if not best:
         return []
     return [str(max(best, key=lambda item: float(item.get("score", 0.0))).get("label_id", ""))]

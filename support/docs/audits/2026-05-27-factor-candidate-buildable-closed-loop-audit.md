@@ -161,6 +161,56 @@ Observed regression proof:
 - `test_pipeline_runs_r2_to_r10_with_ohlcv` now proves the token-friendly
   pipeline result also stays inspection-only.
 
+## Additional Verified Loophole - Conformal Label Contracts Reused A Practical Field Name
+
+Even after the sidecar admission fix, one adjacent regime-only surface still
+reused a practical-admission field name:
+`support/scripts/research/regime_conformal_calibration_report.py`.
+
+The issue was not that the conformal set was passing live-trade readiness. The
+issue was semantic leakage:
+
+- `_label_contracts(...)` emitted `trade_usable` to mean "this regime label is
+  eligible to appear in a conformal label set";
+- `_conformal_set(...)` consumed the same key;
+- any downstream reader inspecting `label_contracts` could plausibly mistake
+  that field for practical/live admission instead of regime-sidecar label
+  eligibility.
+
+That naming collided with the repo-wide meaning of `trade_usable`, which is
+reserved for explicit practical/live-trade admission after downstream gates.
+
+### Fix
+
+The conformal report now uses regime-specific terminology:
+
+- `label_contracts` emits `conformal_eligible` instead of `trade_usable`;
+- `_conformal_set(...)` fails closed on missing `conformal_eligible`;
+- the old misleading field name is no longer emitted by this report.
+
+### Verification
+
+Commands run in this slice:
+
+```bash
+python3 -m unittest support.scripts.research.tests.test_regime_conformal_calibration_report -v
+python3 -m unittest support.scripts.research.tests.test_regime_sidecar_pipeline -v
+python3 -m unittest support.scripts.research.tests.test_regime_high_confidence_decision -v
+```
+
+Observed regression proof:
+
+- `test_unknown_labels_remain_non_conformal_eligible` now asserts the report
+  emits `conformal_eligible=false` for unknown labels and no longer emits
+  `trade_usable`;
+- `test_label_contracts_use_conformal_eligibility_name_not_practical_admission_name`
+  proves the renamed field is present and the misleading field is absent;
+- `test_conformal_set_fails_closed_when_conformal_eligible_flag_missing`
+  proves the selection path still fails closed;
+- adjacent sidecar pipeline and high-confidence decision tests still pass,
+  proving the terminology repair did not break the current fail-closed
+  inspection-only pipeline.
+
 ## Still Unproven
 
 This slice does not prove any of the following:
@@ -170,15 +220,10 @@ This slice does not prove any of the following:
 - that the Pre-Bayes, BBN, path-ranker, execution-tree, and feedback/update
   links are all green for a real factor lane;
 - that Board B current active claims are terminalized enough for a fresh
-  end-to-end training lane;
-- that regime-sidecar terminology is fully disentangled from practical-admission
-  terminology in every adjacent report. One still-unreviewed naming risk is
-  `support/scripts/research/regime_conformal_calibration_report.py`, whose
-  label contract uses a `trade_usable` key for regime-label eligibility rather
-  than live-trade admission.
+  end-to-end training lane.
 
 As of the same-turn `factor_claim_terminalization_audit.py --compact` readback
-on `2026-05-27 13:42 +0800`, Board B still reports `active_claims=1`,
+on `2026-05-27 13:51 +0800`, Board B still reports `active_claims=1`,
 `promotion_allowed_true=0`, and `trade_usable_true=0`. The remaining active
-claim is the prep-only same-root TOMAC child:
+claim is still the prep-only same-root TOMAC child:
 `codex-tomac-tod-balanced-early2021-hour13-gapfill-prep-20260527T133948+0800`.
