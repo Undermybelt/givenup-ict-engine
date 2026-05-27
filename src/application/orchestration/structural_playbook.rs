@@ -30,8 +30,8 @@ pub use crate::belief_core::ranking_label::{
     structural_path_ranker_supports_direct_model_family,
     structural_path_ranker_supports_explicit_family,
     structural_path_ranker_supports_service_family, structural_path_ranking_beta_lower_bound,
-    structural_path_ranking_beta_mean, structural_path_ranking_ips_weight,
-    structural_path_ranking_propensity_estimate,
+    structural_path_ranking_beta_mean, structural_path_ranking_candidate_path_score_key,
+    structural_path_ranking_ips_weight, structural_path_ranking_propensity_estimate,
     structural_path_ranking_propensity_evaluation_weight, structural_path_ranking_reward_label,
     structural_path_ranking_runtime_selection_path, structural_path_ranking_target_export_summary,
     structural_path_ranking_target_row_history_key, structural_path_ranking_target_row_score_key,
@@ -2933,7 +2933,15 @@ pub fn apply_structural_path_ranking_external_scores(
     let mut history_rows = load_structural_path_ranking_target_rows(&history_jsonl_path)?;
     let score_map = scores
         .iter()
-        .map(|item| (format!("{}|{}", item.candidate_set_id, item.path_id), item))
+        .map(|item| {
+            (
+                structural_path_ranking_candidate_path_score_key(
+                    &item.candidate_set_id,
+                    &item.path_id,
+                ),
+                item,
+            )
+        })
         .collect::<BTreeMap<_, _>>();
     let mut matched = 0usize;
     for row in &mut current_rows {
@@ -9812,6 +9820,84 @@ mod tests {
             persisted.score_generator.as_deref(),
             Some("preexisting-current-scorer")
         );
+    }
+
+    #[test]
+    fn apply_external_scores_matches_provenance_prefixed_rows_from_canonical_branch_input() {
+        let temp = tempfile::tempdir().unwrap();
+        let symbol = "M2K";
+        let legacy_path = "FUTURES -> equity_index -> M2K -> 1m -> RangeReversion -> LiquiditySweepRejectShort -> ibkr_m2k1m_liquidity_sweep_reject_short_7d_gate1_v1 -> ibkr_m2k1m_liquidity_sweep_reject_short_rvol_pda_guard_pda_consistency_floor_v1";
+        let canonical_path = "RangeReversion -> LiquiditySweepRejectShort -> ibkr_m2k1m_liquidity_sweep_reject_short_7d_gate1_v1 -> ibkr_m2k1m_liquidity_sweep_reject_short_rvol_pda_guard_pda_consistency_floor_v1";
+        let snapshot =
+            crate::application::orchestration::workflow_status::sample_human_workflow_snapshot();
+        let rank_artifact = crate::application::auto_quant::AgentMaterialRankArtifact {
+            artifact_id: "auto-quant-agent-material-rank:strategy-library:M2K:test".to_string(),
+            generated_at: Utc::now(),
+            symbol: symbol.to_string(),
+            source_dispatch_artifact_id: "dispatch-m2k".to_string(),
+            ranking: vec![crate::application::auto_quant::AgentMaterialRankRow {
+                unit_label: "M2K legacy provenance branch".to_string(),
+                status: "completed".to_string(),
+                regime_profit_branch_path: Some(legacy_path.to_string()),
+                main_regime: Some("FUTURES".to_string()),
+                sub_regime: Some("equity_index".to_string()),
+                sub_sub_regime_or_profit_factor: Some("M2K".to_string()),
+                profit_factor: Some(format!("1m -> {canonical_path}")),
+                win_rate_pct: Some(61.5),
+                sharpe: Some(1.11),
+                total_profit_pct: Some(0.88),
+                trade_count: Some(17),
+                ..crate::application::auto_quant::AgentMaterialRankRow::default()
+            }],
+        };
+
+        let summary = export_structural_path_ranking_target_with_agent_material_rank(
+            temp.path().to_str().unwrap(),
+            symbol,
+            &snapshot,
+            &ProviderCatalogAgentSurface::default(),
+            &[],
+            &StructuralPriorLearningState::default(),
+            Some(&rank_artifact),
+        )
+        .unwrap();
+
+        apply_structural_path_ranking_external_scores(
+            temp.path().to_str().unwrap(),
+            symbol,
+            &[StructuralPathRankingExternalScoreInput {
+                candidate_set_id: rank_artifact.artifact_id.clone(),
+                path_id: canonical_path.to_string(),
+                raw_path_score: 0.812288,
+                score_model_family: Some("catboost".to_string()),
+                score_source_kind: Some("external_model".to_string()),
+                score_model_artifact_uri: Some("path_ranker_model/catboost_model.cbm".to_string()),
+                score_generator: Some("test-canonical-branch-scorer".to_string()),
+            }],
+        )
+        .unwrap();
+
+        for path in [&summary.jsonl_path, &summary.history_jsonl_path] {
+            let rows = load_structural_path_ranking_target_rows(Path::new(path)).unwrap();
+            let matched = rows
+                .iter()
+                .find(|row| {
+                    row.candidate_set_id == rank_artifact.artifact_id && row.path_id == legacy_path
+                })
+                .expect("legacy provenance row should still exist");
+            assert_eq!(matched.raw_path_score, Some(0.812288));
+            assert_eq!(matched.score_model_family.as_deref(), Some("catboost"));
+            assert_eq!(matched.score_source_kind.as_deref(), Some("external_model"));
+            assert_eq!(
+                matched.score_model_artifact_uri.as_deref(),
+                Some("path_ranker_model/catboost_model.cbm")
+            );
+            assert_eq!(
+                matched.score_generator.as_deref(),
+                Some("test-canonical-branch-scorer")
+            );
+            assert_eq!(matched.regime_profit_branch_path.as_deref(), Some(legacy_path));
+        }
     }
 
     #[test]

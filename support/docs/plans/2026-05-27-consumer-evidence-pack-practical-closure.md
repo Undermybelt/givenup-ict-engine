@@ -14,10 +14,10 @@ Current-turn evidence still disproves full closure:
   reports `completion_ready=false` because all heavy gates are skipped by
   default.
 - `python3 support/scripts/factor_claim_terminalization_audit.py --compact --output /tmp/ict-engine-goal-20260527-factor.json`
-  exited `1` with `active_claims=10`, `promotion_allowed_true=0`, and
+  initially exited `1` with `active_claims=10`, `promotion_allowed_true=0`, and
   `trade_usable_true=0`.
 - `python3 support/scripts/release_readiness_audit.py --compact --check-remotes --output /tmp/ict-engine-goal-20260527-release.json`
-  reports unresolved `worktree_clean_for_release`,
+  initially reported unresolved `worktree_clean_for_release`,
   `source_origin_matches_selected_source`, and
   `release_version_tag_available`.
 
@@ -68,10 +68,12 @@ Current proof:
 
 - Done-definition heavy is now green for the current tree, but factor and
   release closure are still red.
-- Factor claim audit still reports
-  `status=needs_attention`, `active_claims=10`, `trade_usable_true=0`.
-- Release readiness still reports `status=needs_fix` with three unresolved
-  gates.
+- Fresh factor rerun is worse than the earlier packet:
+  `status=needs_attention`, `active_claims=12`, `live_factor_processes=1`,
+  `trade_usable_true=0`.
+- Fresh release rerun now reports `status=needs_fix` with unresolved
+  `worktree_clean_for_release` and `remote_readback`; tag availability is
+  currently skipped behind the remote gate.
 
 Implication:
 
@@ -130,8 +132,11 @@ Executed in this turn:
 - `cargo test target_export_uses_exact_branch_trade_direction_over_snapshot_fallback -- --nocapture`
 - `cargo test execution_candidate_preserves_trace_branch_path_for_neutral_no_trade -- --nocapture`
 - `cargo test execution_candidate_preserves_strict_trend_pullback_trace_path_without_report_branch_path_but_does_not_promote -- --nocapture`
+- `cargo test apply_external_scores_matches_provenance_prefixed_rows_from_canonical_branch_input -- --nocapture`
 - `cargo clippy --all-targets -- -D warnings`
 - `python3 support/scripts/done_definition_audit.py --run-all-heavy --compact --output /tmp/ict-engine-goal-20260527-done-heavy-rerun2.json`
+- `python3 support/scripts/factor_claim_terminalization_audit.py --compact --output /tmp/ict-engine-goal-20260527-factor-recheck.json`
+- `python3 support/scripts/release_readiness_audit.py --compact --check-remotes --output /tmp/ict-engine-goal-20260527-release-recheck.json`
 
 Readback summary:
 
@@ -151,13 +156,19 @@ Readback summary:
   - neutral non-actionable same-root execution-tree admissions now preserve
     trace branch paths but resolve to `candidate_status=no_trade` instead of
     incorrectly surfacing `execution_observe_only` in `src/analyze_shared.rs`.
+- score-apply provenance gap:
+  a targeted regression test is now added for canonical external score input
+  against exact provenance-prefixed persisted rows; current-tree execution now
+  passes.
 - factor audit:
-  `status=needs_attention`, `active_claims=10`, `live_factor_processes=0`,
+  fresh rerun at `/tmp/ict-engine-goal-20260527-factor-recheck.json` reports
+  `status=needs_attention`, `active_claims=12`, `live_factor_processes=1`,
   `trade_usable_true=0`.
 - release readiness:
-  `status=needs_fix`, `fail_count=3`, unresolved
-  `worktree_clean_for_release`, `source_origin_matches_selected_source`,
-  `release_version_tag_available`.
+  fresh rerun at `/tmp/ict-engine-goal-20260527-release-recheck.json` reports
+  `status=needs_fix`, `fail_count=2`, unresolved
+  `worktree_clean_for_release`, `remote_readback`; `release_version_tag_available`
+  is skipped behind the remote-readback gate.
 
 ## Commit Boundary
 
