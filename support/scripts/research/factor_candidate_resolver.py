@@ -12,6 +12,7 @@ import regime_artifact_bundle as regime_bundle
 
 PRESET_PATH = Path("config/factor_candidate_harness_presets.json")
 PROFILE_DIR = Path("support/examples/factor_candidate_profiles")
+EXAMPLE_PACKS_DIR = Path("support/examples/factor_candidate_packs")
 NAMING_CONTRACT_VERSION = "factor-artifact-naming/v1"
 REQUIRED_CANDIDATE_PACK_FILES = (
     "factor_expression.json",
@@ -113,12 +114,23 @@ def _candidate_pack_validation_reason(path: Path) -> str | None:
         return f"missing_artifact:{path}"
     if not path.is_dir():
         return f"invalid_artifact:{path}:not_directory"
-    missing = [name for name in REQUIRED_CANDIDATE_PACK_FILES if not (path / name).exists()]
+    missing = [
+        name
+        for name in (*REQUIRED_CANDIDATE_PACK_FILES, PACK_MANIFEST_FILE)
+        if not (path / name).exists()
+    ]
     if missing:
         return f"invalid_artifact:{path}:missing_files:{','.join(missing)}"
     try:
         for name in REQUIRED_CANDIDATE_PACK_FILES:
             _load_json(path / name)
+        manifest = _load_json(path / PACK_MANIFEST_FILE)
+        if manifest.get("schema_version") != "factor-candidate-pack-manifest/v1":
+            raise ValueError("pack manifest schema_version mismatch")
+        if manifest.get("artifact_family") != "factor_candidate_pack":
+            raise ValueError("pack manifest artifact_family mismatch")
+        if manifest.get("artifact_files") != list(REQUIRED_CANDIDATE_PACK_FILES):
+            raise ValueError("pack manifest artifact_files mismatch")
     except Exception as exc:
         return f"invalid_artifact:{path}:{exc}"
     return None
@@ -393,8 +405,74 @@ def _write_pack_manifest(
     return manifest_path
 
 
+def backfill_example_pack_manifests(repo_root: Path) -> dict[str, Any]:
+    packs_root = repo_root / EXAMPLE_PACKS_DIR
+    written: list[str] = []
+    skipped: list[dict[str, Any]] = []
+    if not packs_root.exists():
+        return {
+            "schema_version": "factor-candidate-pack-manifest-backfill/v1",
+            "summary": {"written_count": 0, "skipped_count": 0},
+            "written": written,
+            "skipped": skipped,
+        }
+
+    for pack_dir in sorted(path for path in packs_root.glob("*/*") if path.is_dir()):
+        missing = [name for name in REQUIRED_CANDIDATE_PACK_FILES if not (pack_dir / name).exists()]
+        if missing:
+            skipped.append(
+                {
+                    "pack_dir": str(pack_dir.relative_to(repo_root)),
+                    "reason": f"missing_required_files:{','.join(missing)}",
+                }
+            )
+            continue
+        manifest_path = _write_pack_manifest(
+            pack_dir,
+            candidate_id=pack_dir.name,
+            artifact_family="factor_candidate_pack",
+            artifact_files=list(REQUIRED_CANDIDATE_PACK_FILES),
+            source_refs={
+                "source_candidate_pack_dir": str(pack_dir.relative_to(repo_root)),
+            },
+        )
+        written.append(str(manifest_path.relative_to(repo_root)))
+
+    return {
+        "schema_version": "factor-candidate-pack-manifest-backfill/v1",
+        "summary": {
+            "written_count": len(written),
+            "skipped_count": len(skipped),
+        },
+        "written": written,
+        "skipped": skipped,
+    }
+
+
 def _output_ref(path: Path, output_dir: Path) -> str:
     return str(path.relative_to(output_dir))
+
+
+def _closed_loop_consumption_view(
+    lifecycle: dict[str, Any] | None,
+) -> dict[str, Any]:
+    learning = (lifecycle or {}).get("learning_admission") or {}
+    live_trade = (lifecycle or {}).get("live_trade") or {}
+    learning_status = learning.get("status", "unknown")
+    promotion_allowed = bool(live_trade.get("promotion_allowed", False))
+    trade_usable = bool(live_trade.get("trade_usable", False))
+    if promotion_allowed and trade_usable:
+        status = "promotion_ready"
+    elif learning_status == "admitted":
+        status = "observation_only_learning_admitted"
+    else:
+        status = "inspection_only_learning_blocked"
+    return {
+        "closed_loop_consumption_status": status,
+        "learning_blockers": learning.get("blockers") or [],
+        "promotion_allowed": promotion_allowed,
+        "trade_usable": trade_usable,
+    }
 
 
 def _candidate_list_entry(candidate: dict[str, Any], repo_root: Path) -> dict[str, Any]:
@@ -411,19 +489,54 @@ def _candidate_list_entry(candidate: dict[str, Any], repo_root: Path) -> dict[st
     }
     if artifact_plan["build_mode"] == "candidate_pack_dir":
         pack_dir = artifact_plan["candidate_pack_dir_path"]
+        expression = _load_json(pack_dir / "factor_expression.json")
         eval_summary = _load_json(pack_dir / "factor_eval_grid_summary.json")
         transfer_score = _load_json(pack_dir / "transfer_score.json")
-        learning = (
-            (eval_summary.get("factor_profitability_lifecycle") or {}).get(
-                "learning_admission"
+        lifecycle = eval_summary.get("factor_profitability_lifecycle") or {}
+        learning = lifecycle.get("learning_admission") or {}
+        legacy_missing_lifecycle = not bool(learning)
+        profitability_status = transfer_score.get("profitability_status")
+        expectancy = learning.get("long_run_expectancy_after_declared_friction")
+        learning_status = learning.get("status", "unknown")
+        freshness = "lifecycle_current"
+        if legacy_missing_lifecycle:
+            legacy_candidate = {
+                **candidate,
+                "expected_regime": candidate.get("expected_regime")
+                or expression.get("expected_regime"),
+                "regime_role": candidate.get("regime_role") or expression.get("regime_role"),
+                "promotion_state": candidate.get("promotion_state")
+                or expression.get("promotion_state"),
+                "leakage_check": candidate.get("leakage_check", "unknown"),
+                "provider_state": candidate.get("provider_state", "ready"),
+            }
+            synthesized = pack._factor_profitability_lifecycle(
+                legacy_candidate,
+                eval_summary.get("aggregate_metrics") or {},
             )
-            or {}
-        )
-        legacy_missing_lifecycle = not bool(
-            (eval_summary.get("factor_profitability_lifecycle") or {}).get(
-                "learning_admission"
+            lifecycle = synthesized
+            synthesized_learning = synthesized["learning_admission"]
+            learning_status = synthesized_learning.get("status", "unknown")
+            expectancy = synthesized_learning.get(
+                "long_run_expectancy_after_declared_friction"
             )
-        )
+            profitability_expectancy, profitability_blockers = (
+                pack._declared_friction_expectancy(
+                    eval_summary.get("aggregate_metrics") or {}
+                )
+            )
+            if profitability_expectancy is not None and not profitability_blockers:
+                profitability_status = (
+                    "declared_friction_positive"
+                    if profitability_expectancy > 0.0
+                    else "declared_friction_non_positive"
+                )
+            elif profitability_expectancy is not None:
+                profitability_status = "declared_friction_missing"
+            else:
+                profitability_status = "declared_friction_missing"
+            freshness = "legacy_candidate_pack_synthesized_lifecycle"
+        consumption_view = _closed_loop_consumption_view(lifecycle)
         entry.update(
             {
                 "aggregate_trade_count": eval_summary["trade_density_summary"][
@@ -432,25 +545,12 @@ def _candidate_list_entry(candidate: dict[str, Any], repo_root: Path) -> dict[st
                 "aggregate_label": eval_summary["trade_density_summary"][
                     "aggregate_label"
                 ],
-                "learning_admission_status": (
-                    "unknown_legacy_pack"
-                    if legacy_missing_lifecycle
-                    else learning.get("status", "unknown")
-                ),
-                "long_run_expectancy_after_declared_friction": learning.get(
-                    "long_run_expectancy_after_declared_friction"
-                ),
+                "learning_admission_status": learning_status,
+                "long_run_expectancy_after_declared_friction": expectancy,
                 "transfer_status": transfer_score["status"],
-                "profitability_status": (
-                    "legacy_candidate_pack_missing_lifecycle"
-                    if legacy_missing_lifecycle
-                    else transfer_score.get("profitability_status")
-                ),
-                "surface_freshness": (
-                    "legacy_candidate_pack"
-                    if legacy_missing_lifecycle
-                    else "lifecycle_current"
-                ),
+                "profitability_status": profitability_status,
+                "surface_freshness": freshness,
+                **consumption_view,
             }
         )
     return entry
@@ -466,11 +566,25 @@ def list_buildable_candidates(
         for candidate in candidates
         if candidate["artifact_ready"]
     ]
+    promotion_ready_count = sum(
+        1
+        for candidate in buildable
+        if candidate.get("closed_loop_consumption_status") == "promotion_ready"
+    )
+    trade_usable_count = sum(1 for candidate in buildable if candidate.get("trade_usable"))
+    inspection_only_count = sum(
+        1
+        for candidate in buildable
+        if str(candidate.get("closed_loop_consumption_status", "")).startswith("inspection_only")
+    )
     return {
         "schema_version": "factor-candidate-buildable-list/v1",
         "summary": {
             "buildable_count": len(buildable),
             "candidate_count": len(candidates),
+            "promotion_ready_count": promotion_ready_count,
+            "trade_usable_count": trade_usable_count,
+            "inspection_only_count": inspection_only_count,
         },
         "buildable_candidates": buildable,
     }
@@ -478,17 +592,22 @@ def list_buildable_candidates(
 
 def _print_human_buildable_list(payload: dict[str, Any]) -> None:
     print(
-        "buildable_count={buildable_count} candidate_count={candidate_count}".format(
+        (
+            "buildable_count={buildable_count} candidate_count={candidate_count} "
+            "promotion_ready_count={promotion_ready_count} trade_usable_count={trade_usable_count} "
+            "inspection_only_count={inspection_only_count}"
+        ).format(
             **payload["summary"]
         )
     )
     for candidate in payload["buildable_candidates"]:
         print(
-            "{candidate_id}\t{aggregate_trade_count}\t{aggregate_label}\t{learning_status}\t{expectancy}\t{transfer_status}\t{reusable_ref}".format(
+            "{candidate_id}\t{aggregate_trade_count}\t{aggregate_label}\t{learning_status}\t{consumption_status}\t{expectancy}\t{transfer_status}\t{reusable_ref}".format(
                 candidate_id=candidate["candidate_id"],
                 aggregate_trade_count=candidate.get("aggregate_trade_count", "n/a"),
                 aggregate_label=candidate.get("aggregate_label", "n/a"),
                 learning_status=candidate.get("learning_admission_status", "n/a"),
+                consumption_status=candidate.get("closed_loop_consumption_status", "n/a"),
                 expectancy=candidate.get(
                     "long_run_expectancy_after_declared_friction", "n/a"
                 ),
@@ -777,6 +896,11 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         help="Print the repo-local buildable candidate packs without reading historical board docs.",
     )
     parser.add_argument(
+        "--backfill-pack-manifests",
+        action="store_true",
+        help="Write pack_manifest.json into repo-native example candidate-pack directories.",
+    )
+    parser.add_argument(
         "--output-format",
         choices=["json", "human"],
         default="json",
@@ -788,6 +912,19 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
 def main(argv: list[str] | None = None) -> int:
     args = parse_args(argv)
     repo_root = Path(args.repo_root).resolve()
+    if args.backfill_pack_manifests:
+        payload = backfill_example_pack_manifests(repo_root)
+        if args.output_format == "human":
+            print(
+                "written_count={written_count} skipped_count={skipped_count}".format(
+                    **payload["summary"]
+                )
+            )
+            for item in payload["written"]:
+                print(item)
+        else:
+            print(json.dumps(payload, indent=2))
+        return 0
     registry = build_candidate_registry(repo_root=repo_root, profile_selector=args.profile)
     if args.list_buildable and not args.output_dir:
         buildable_payload = list_buildable_candidates(

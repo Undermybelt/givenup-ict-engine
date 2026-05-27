@@ -1,0 +1,13 @@
+{
+  "schema_version": "factor-candidate-pack-manifest/v1",
+  "candidate_id": "sweep_quality_provider_observation_v1",
+  "artifact_family": "factor_candidate_pack",
+  "artifact_files": [
+    "factor_expression.json",
+    "factor_eval_grid_summary.json",
+    "transfer_score.json"
+  ],
+  "source_refs": {
+    "source_candidate_pack_dir": "support/examples/factor_candidate_packs/board-b-sweep-quality-v1/sweep_quality_provider_observation_v1"
+  }
+}

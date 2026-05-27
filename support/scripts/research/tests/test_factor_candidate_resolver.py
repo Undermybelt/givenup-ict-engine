@@ -14,6 +14,44 @@ import factor_candidate_resolver as resolver  # noqa: E402
 
 
 class FactorCandidateResolverTests(unittest.TestCase):
+    def test_backfill_example_pack_manifests_writes_pack_manifest_for_legacy_pack(self) -> None:
+        with TemporaryDirectory() as tmpdir:
+            repo_root = Path(tmpdir)
+            pack_dir = (
+                repo_root
+                / "support"
+                / "examples"
+                / "factor_candidate_packs"
+                / "sample-family-v1"
+                / "sample_candidate_v1"
+            )
+            pack_dir.mkdir(parents=True, exist_ok=True)
+            for name in (
+                "factor_expression.json",
+                "factor_eval_grid_summary.json",
+                "transfer_score.json",
+            ):
+                (pack_dir / name).write_text("{}", encoding="utf-8")
+
+            payload = resolver.backfill_example_pack_manifests(repo_root)
+
+            self.assertEqual(payload["summary"]["written_count"], 1)
+            manifest = json.loads((pack_dir / "pack_manifest.json").read_text(encoding="utf-8"))
+            self.assertEqual(
+                manifest["schema_version"],
+                "factor-candidate-pack-manifest/v1",
+            )
+            self.assertEqual(manifest["candidate_id"], "sample_candidate_v1")
+            self.assertEqual(manifest["artifact_family"], "factor_candidate_pack")
+            self.assertEqual(
+                manifest["artifact_files"],
+                [
+                    "factor_expression.json",
+                    "factor_eval_grid_summary.json",
+                    "transfer_score.json",
+                ],
+            )
+
     def test_build_candidate_registry_marks_invalid_freqtrade_zip_unbuildable(self) -> None:
         with TemporaryDirectory() as tmpdir:
             repo_root = Path(tmpdir)
@@ -249,6 +287,9 @@ class FactorCandidateResolverTests(unittest.TestCase):
             self.assertTrue(
                 all(not item["pack_dir"].startswith("/") for item in pack_index["built_candidates"])
             )
+            self.assertTrue(
+                all("pack_manifest_path" in item for item in pack_index["built_candidates"])
+            )
             skipped = {
                 item["candidate_id"]: item["reason"]
                 for item in pack_index["skipped_candidates"]
@@ -258,6 +299,34 @@ class FactorCandidateResolverTests(unittest.TestCase):
                 for item in pack_index["built_candidates"]
             }
             if "family_f_vrp_compression_15m_v1" in built:
+                vrp_manifest = json.loads(
+                    (
+                        output_dir
+                        / "packs"
+                        / "family_f_vrp_compression_15m_v1"
+                        / "pack_manifest.json"
+                    ).read_text(encoding="utf-8")
+                )
+                self.assertEqual(
+                    vrp_manifest["schema_version"],
+                    "factor-candidate-pack-manifest/v1",
+                )
+                self.assertEqual(
+                    vrp_manifest["candidate_id"],
+                    "family_f_vrp_compression_15m_v1",
+                )
+                self.assertEqual(
+                    vrp_manifest["artifact_family"],
+                    "factor_candidate_pack",
+                )
+                self.assertEqual(
+                    vrp_manifest["artifact_files"],
+                    [
+                        "factor_expression.json",
+                        "factor_eval_grid_summary.json",
+                        "transfer_score.json",
+                    ],
+                )
                 vrp_expression = json.loads(
                     (
                         output_dir
@@ -432,6 +501,9 @@ class FactorCandidateResolverTests(unittest.TestCase):
         )
 
         self.assertEqual(payload["summary"]["buildable_count"], 8)
+        self.assertEqual(payload["summary"]["promotion_ready_count"], 0)
+        self.assertEqual(payload["summary"]["trade_usable_count"], 0)
+        self.assertEqual(payload["summary"]["inspection_only_count"], 8)
         vrp = next(
             item
             for item in payload["buildable_candidates"]
@@ -440,8 +512,16 @@ class FactorCandidateResolverTests(unittest.TestCase):
         self.assertEqual(vrp["aggregate_trade_count"], 334)
         self.assertEqual(vrp["aggregate_label"], "preferred_density")
         self.assertEqual(vrp["transfer_status"], "cross_market_candidate")
-        self.assertIn("learning_admission_status", vrp)
+        self.assertEqual(vrp["learning_admission_status"], "blocked")
         self.assertIn("long_run_expectancy_after_declared_friction", vrp)
+        self.assertEqual(
+            vrp["profitability_status"],
+            "declared_friction_missing",
+        )
+        self.assertEqual(vrp["closed_loop_consumption_status"], "inspection_only_learning_blocked")
+        self.assertFalse(vrp["promotion_allowed"])
+        self.assertFalse(vrp["trade_usable"])
+        self.assertIn("declared_friction_missing_raw_profit_only", vrp["learning_blockers"])
         self.assertTrue(
             vrp["reusable_input_refs"][0].startswith("support/examples/factor_candidate_packs/")
         )
@@ -453,8 +533,18 @@ class FactorCandidateResolverTests(unittest.TestCase):
         self.assertEqual(order_block["aggregate_trade_count"], 342)
         self.assertEqual(order_block["aggregate_label"], "preferred_density")
         self.assertEqual(order_block["transfer_status"], "cross_market_candidate")
-        self.assertIn("learning_admission_status", order_block)
+        self.assertEqual(order_block["learning_admission_status"], "blocked")
         self.assertIn("long_run_expectancy_after_declared_friction", order_block)
+        self.assertEqual(
+            order_block["profitability_status"],
+            "declared_friction_missing",
+        )
+        self.assertEqual(
+            order_block["closed_loop_consumption_status"],
+            "inspection_only_learning_blocked",
+        )
+        self.assertFalse(order_block["promotion_allowed"])
+        self.assertFalse(order_block["trade_usable"])
 
     def test_build_candidate_packs_supports_regime_benchmark_bundle(self) -> None:
         nq = {
@@ -526,6 +616,19 @@ class FactorCandidateResolverTests(unittest.TestCase):
                 pack_index["built_candidates"][0]["artifact_family"],
                 "regime_artifact_bundle",
             )
+            manifest = json.loads(
+                (
+                    output_dir
+                    / "packs"
+                    / "regime_primary_gate_pending_v1"
+                    / "pack_manifest.json"
+                ).read_text(encoding="utf-8")
+            )
+            self.assertEqual(
+                manifest["artifact_family"],
+                "regime_artifact_bundle",
+            )
+            self.assertIn("regime_classifier_summary.json", manifest["artifact_files"])
             classifier_summary = json.loads(
                 (
                     output_dir
@@ -628,6 +731,43 @@ class FactorCandidateResolverTests(unittest.TestCase):
                 candidate["pack_build_reason"],
                 "buildable_from_reusable_artifact",
             )
+
+    def test_build_candidate_registry_marks_candidate_pack_dir_without_manifest_unbuildable(self) -> None:
+        with TemporaryDirectory() as tmpdir:
+            repo_root = Path(tmpdir)
+            (repo_root / "config").mkdir(parents=True, exist_ok=True)
+            pack_dir = repo_root / "packs" / "legacy_candidate"
+            pack_dir.mkdir(parents=True, exist_ok=True)
+            for name in (
+                "factor_expression.json",
+                "factor_eval_grid_summary.json",
+                "transfer_score.json",
+            ):
+                (pack_dir / name).write_text("{}", encoding="utf-8")
+            (repo_root / "config" / "factor_candidate_harness_presets.json").write_text(
+                json.dumps(
+                    {
+                        "schema_version": "factor-candidate-harness-presets/v1",
+                        "candidates": [
+                            {
+                                "candidate_id": "legacy_candidate",
+                                "display_name": "Legacy Candidate",
+                                "artifact_source": {
+                                    "candidate_pack_dir": str(pack_dir)
+                                },
+                            }
+                        ],
+                    }
+                ),
+                encoding="utf-8",
+            )
+
+            bundle = resolver.build_candidate_registry(repo_root=repo_root)
+
+            candidate = bundle["candidates"][0]
+            self.assertFalse(candidate["artifact_ready"])
+            self.assertEqual(candidate["artifact_kind"], "candidate_pack_dir")
+            self.assertIn("missing_files:pack_manifest.json", candidate["pack_build_reason"])
 
     def test_build_candidate_packs_supports_strategy_library_json(self) -> None:
         with TemporaryDirectory() as tmpdir:
