@@ -186,7 +186,7 @@ cargo run -- policy-training-status --symbol DEMO --state-dir /tmp/ict-engine-fi
 
 ```bash
 cargo run -- provider-status --compact
-cargo run -- workflow-status --symbol DEMO --state-dir /tmp/ict-engine-first-run --human
+cargo run -- analyze --symbol DEMO --demo --state-dir /tmp/ict-engine-first-run --human
 cargo run -- workflow-status --symbol DEMO --state-dir /tmp/ict-engine-first-run --refresh --agent
 ```
 

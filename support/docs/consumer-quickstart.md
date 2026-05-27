@@ -10,7 +10,6 @@ Use this when you want a fast first run with bundled candles.
 
 ```bash
 cargo run --quiet -- provider-status --compact
-cargo run --quiet -- workflow-status --symbol DEMO --state-dir /tmp/ict-engine-first-run --human
 cargo run --quiet -- analyze --symbol DEMO --demo --state-dir /tmp/ict-engine-first-run --human
 cargo run --quiet -- workflow-status --symbol DEMO --state-dir /tmp/ict-engine-first-run --refresh --agent
 cargo run --quiet -- pre-bayes-status --symbol DEMO --state-dir /tmp/ict-engine-first-run --refresh --output-format json
