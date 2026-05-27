@@ -1270,6 +1270,7 @@ fn main() -> Result<()> {
             symbol,
             state_dir,
             artifact_id,
+            sidecar_handoff,
             output_format,
             compact,
             agent,
@@ -1278,6 +1279,7 @@ fn main() -> Result<()> {
             &symbol,
             &state_dir,
             artifact_id.as_deref(),
+            sidecar_handoff.as_deref(),
             output_format_label(resolve_output_format(
                 &output_format,
                 compact,

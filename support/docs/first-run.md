@@ -28,6 +28,16 @@ cargo run -- factor-research --symbol DEMO --data support/examples/demo/demo-15m
 cargo run -- auto-quant-adoption-review --symbol DEMO --state-dir /tmp/ict-engine-auto-quant
 ```
 
+Optional sidecar-aware review loop:
+
+```bash
+cargo run -- auto-quant-adoption-review --symbol DEMO --state-dir /tmp/ict-engine-auto-quant --sidecar-handoff /tmp/event_fundamentals_adoption_bundle.json --human
+```
+
+Use `--sidecar-handoff` only when you already created an explicit opt-in
+event/fundamentals adoption bundle. Omitting it keeps the zero-config review
+path unchanged.
+
 ## 2. Learn the safe command surface
 
 Rust CLI:

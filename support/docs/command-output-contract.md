@@ -45,7 +45,7 @@ commands with no output-mode flags.
 | `auto-quant-bootstrap` | no | no | no | no | No output-mode flags |
 | `auto-quant-update` | no | no | no | no | No output-mode flags |
 | `auto-quant-prepare` | no | no | no | no | No output-mode flags |
-| `auto-quant-adoption-review` | yes | yes | yes | yes | Meets contract; compact/agent preserve redacted JSON and human prints a short adoption review summary |
+| `auto-quant-adoption-review` | yes | yes | yes | yes | Meets contract; compact/agent preserve redacted JSON and human prints a short adoption review summary, including optional `sidecar_status` when `--sidecar-handoff` is supplied |
 | `auto-quant-adoption-decision` | no | no | no | no | No output-mode flags |
 | `factor-autoresearch-status` | yes | yes | yes | yes | Meets contract; compact/agent preserve redacted JSON and human prints a short autoresearch status summary |
 | `research-verdict` | yes | yes | yes | yes | Meets contract; compact/agent preserve redacted JSON and human prints a short verdict summary |

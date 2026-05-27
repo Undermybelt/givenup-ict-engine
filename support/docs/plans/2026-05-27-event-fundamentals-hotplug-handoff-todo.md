@@ -79,7 +79,8 @@ Status legend: `done`, `active`, `next`, `blocked`, `not_yet`.
 | done | Run focused verification and narrow commit | Commit `b66c3b5d` staged only the helper/profile/tests/governance/handoff slice. |
 | done | Extend the sidecar lane beyond the minimal smoke pack | Helper now emits compact profile-contract readiness for covered vs missing sidecar contracts, and full four-artifact smoke is verified. |
 | done | Push the sidecar lane one step closer to downstream practicality | Helper now emits compact lag-safety warnings and a downstream handoff summary. |
-| next | Decide the first true consumer of the sidecar handoff | Candidate next step: teach one downstream review/adoption surface to consume this handoff package without changing zero-config defaults. |
+| done | Decide the first true consumer of the sidecar handoff | First consumer is now `ict-engine auto-quant-adoption-review --sidecar-handoff <event_fundamentals_adoption_bundle.json>`; it remains explicit, optional, and readback-only. |
+| next | Decide the first non-review runtime consumer of the sidecar handoff | Candidate next step: one downstream runtime surface may opt into this bundle after proving fail-closed semantics and keeping zero-config unchanged. |
 
 ## Verification Checklist
 
@@ -194,3 +195,18 @@ Status legend: `done`, `active`, `next`, `blocked`, `not_yet`.
       - `readiness=profile_contract_ready`
       - `missing_artifact_kinds=[]`
       - `allowed_use_modes=[research_context, factor_research_opt_in, auto_quant_handoff_context]`
+- 2026-05-27 current continuation
+  - Added the first explicit downstream review bridge on the Rust side:
+    - `ict-engine auto-quant-adoption-review --sidecar-handoff <bundle>`
+  - Current review behavior:
+    - sidecar bundle is optional; omitting it preserves the old zero-config AQ
+      review path
+    - JSON review now exposes:
+      - `sidecar_handoff_status`
+      - `sidecar_missing_artifact_kinds`
+      - merged sidecar `usage_warnings` in `notes`
+    - `--human` now emits a compact `sidecar_status=<...>` field
+  - Verification planned for this bridge:
+    - `cargo test review_surfaces_sidecar_handoff_readiness_when_explicitly_provided -- --nocapture`
+    - `cargo test test_cli_auto_quant_setup_commands_use_extracted_args -- --nocapture`
+    - `cargo fmt --check`

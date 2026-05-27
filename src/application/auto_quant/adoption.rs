@@ -34,7 +34,53 @@ pub struct AutoQuantAdoptionReview {
     pub next_step: Value,
     pub review_status: String,
     pub review_summary: String,
+    pub sidecar_handoff_status: Option<String>,
+    pub sidecar_missing_artifact_kinds: Vec<String>,
     pub notes: Vec<String>,
+}
+
+#[derive(Debug, Clone)]
+struct SidecarHandoffReview {
+    readiness: Option<String>,
+    missing_artifact_kinds: Vec<String>,
+    usage_warnings: Vec<String>,
+}
+
+fn load_sidecar_handoff_review(path: &str) -> Result<SidecarHandoffReview> {
+    let payload: Value = serde_json::from_str(&std::fs::read_to_string(path)?)?;
+    let readiness = payload
+        .get("downstream_handoff")
+        .and_then(|value| value.get("readiness"))
+        .and_then(Value::as_str)
+        .map(ToString::to_string);
+    let missing_artifact_kinds = payload
+        .get("downstream_handoff")
+        .and_then(|value| value.get("missing_artifact_kinds"))
+        .and_then(Value::as_array)
+        .map(|items| {
+            items
+                .iter()
+                .filter_map(Value::as_str)
+                .map(ToString::to_string)
+                .collect::<Vec<_>>()
+        })
+        .unwrap_or_default();
+    let usage_warnings = payload
+        .get("usage_warnings")
+        .and_then(Value::as_array)
+        .map(|items| {
+            items
+                .iter()
+                .filter_map(Value::as_str)
+                .map(ToString::to_string)
+                .collect::<Vec<_>>()
+        })
+        .unwrap_or_default();
+    Ok(SidecarHandoffReview {
+        readiness,
+        missing_artifact_kinds,
+        usage_warnings,
+    })
 }
 
 pub const AUTO_QUANT_ADOPTION_DECISION_REVIEW_RULE_VERSION: &str =
@@ -163,6 +209,7 @@ pub fn build_auto_quant_adoption_review(
     symbol: &str,
     state_dir: &str,
     artifact_id: Option<&str>,
+    sidecar_handoff: Option<&str>,
 ) -> Result<AutoQuantAdoptionReview> {
     let entry = find_handoff_entry(state_dir, symbol, artifact_id)?;
     let payload = load_handoff_payload(state_dir, symbol, &entry)?;
@@ -218,6 +265,13 @@ pub fn build_auto_quant_adoption_review(
         active_strategy_count,
         !payload.external_strategy_materials.is_empty(),
     );
+    let sidecar_review = sidecar_handoff
+        .map(load_sidecar_handoff_review)
+        .transpose()?;
+    let mut notes = payload.notes;
+    if let Some(sidecar_review) = &sidecar_review {
+        notes.extend(sidecar_review.usage_warnings.clone());
+    }
     Ok(AutoQuantAdoptionReview {
         symbol: symbol.to_string(),
         state_dir: state_dir.to_string(),
@@ -234,7 +288,13 @@ pub fn build_auto_quant_adoption_review(
         recommended_next_command: readiness.recommended_next_command,
         review_status,
         review_summary,
-        notes: payload.notes,
+        sidecar_handoff_status: sidecar_review
+            .as_ref()
+            .and_then(|value| value.readiness.clone()),
+        sidecar_missing_artifact_kinds: sidecar_review
+            .map(|value| value.missing_artifact_kinds)
+            .unwrap_or_default(),
+        notes,
     })
 }
 
@@ -246,7 +306,7 @@ pub fn persist_auto_quant_adoption_decision(
     rationale: &str,
     requested_by: &str,
 ) -> Result<AutoQuantAdoptionDecisionArtifact> {
-    let review = build_auto_quant_adoption_review(symbol, state_dir, artifact_id)?;
+    let review = build_auto_quant_adoption_review(symbol, state_dir, artifact_id, None)?;
     let artifact = AutoQuantAdoptionDecisionArtifact {
         artifact_id: format!(
             "auto-quant-adoption-decision:{}:{}",
@@ -329,7 +389,8 @@ mod tests {
             });
         persist_handoff_payload(temp.path().to_str().unwrap(), &payload).unwrap();
         let review =
-            build_auto_quant_adoption_review("NQ", temp.path().to_str().unwrap(), None).unwrap();
+            build_auto_quant_adoption_review("NQ", temp.path().to_str().unwrap(), None, None)
+                .unwrap();
         assert_eq!(review.review_status, "prepare_required");
         assert!(review.review_summary.contains("data is not ready"));
     }
@@ -374,7 +435,8 @@ mod tests {
         .unwrap();
 
         let review =
-            build_auto_quant_adoption_review("NQ", temp.path().to_str().unwrap(), None).unwrap();
+            build_auto_quant_adoption_review("NQ", temp.path().to_str().unwrap(), None, None)
+                .unwrap();
         assert_eq!(review.review_status, "ready_for_external_execution");
         assert!(review.data_ready);
         assert!(!review
@@ -382,6 +444,92 @@ mod tests {
             .iter()
             .any(|command| command.contains("prepare.py")));
         assert_eq!(review.next_step["blocked_reason"], serde_json::Value::Null);
+    }
+
+    #[test]
+    fn review_surfaces_sidecar_handoff_readiness_when_explicitly_provided() {
+        let temp = tempfile::tempdir().unwrap();
+        let managed = temp.path().join("auto-quant");
+        let data_path = temp.path().join("demo.json");
+        let payload =
+            build_factor_research_handoff_payload(BuildFactorResearchHandoffPayloadInput {
+                symbol: "NQ",
+                data: data_path.to_str().unwrap(),
+                objective: "expansion_manipulation",
+                provider_profile_selector: None,
+                paired_data: None,
+                auxiliary_evidence_path: None,
+                mutation_spec_path: None,
+                strategy_material_root: None,
+                state_dir: temp.path().to_str().unwrap(),
+                dependency_status: healthy_dependency_status_for(managed.to_str().unwrap()),
+            });
+        persist_handoff_payload(temp.path().to_str().unwrap(), &payload).unwrap();
+        std::fs::write(&data_path, "[]").unwrap();
+        std::fs::create_dir_all(&payload.workspace.data_dir).unwrap();
+        for index in 0..15 {
+            std::fs::write(
+                std::path::Path::new(&payload.workspace.data_dir)
+                    .join(format!("demo-{index}.feather")),
+                "prepared",
+            )
+            .unwrap();
+        }
+        std::fs::create_dir_all(&payload.workspace.strategies_dir).unwrap();
+        std::fs::write(
+            std::path::Path::new(&payload.workspace.strategies_dir).join("SeedAlpha.py"),
+            "class SeedAlpha: pass",
+        )
+        .unwrap();
+
+        let sidecar_path = temp.path().join("event_fundamentals_adoption_bundle.json");
+        std::fs::write(
+            &sidecar_path,
+            serde_json::json!({
+                "artifact_readiness": {
+                    "profile_contract_ready": true,
+                    "covered_contract_count": 4,
+                    "covered_contract_ids": [
+                        "dividend_event_series",
+                        "earnings_event_series",
+                        "lagged_fundamentals_sidecar",
+                        "macro_event_series"
+                    ],
+                    "missing_contract_ids": []
+                },
+                "usage_warnings": [
+                    "Lag fundamentals by effective date before backtest or live reuse."
+                ],
+                "downstream_handoff": {
+                    "readiness": "profile_contract_ready",
+                    "missing_artifact_kinds": [],
+                    "allowed_use_modes": [
+                        "research_context",
+                        "factor_research_opt_in",
+                        "auto_quant_handoff_context"
+                    ]
+                }
+            })
+            .to_string(),
+        )
+        .unwrap();
+
+        let review = build_auto_quant_adoption_review(
+            "NQ",
+            temp.path().to_str().unwrap(),
+            None,
+            Some(sidecar_path.to_str().unwrap()),
+        )
+        .unwrap();
+        assert_eq!(
+            review.sidecar_handoff_status.as_deref(),
+            Some("profile_contract_ready")
+        );
+        assert_eq!(review.sidecar_missing_artifact_kinds, Vec::<String>::new());
+        assert!(review
+            .notes
+            .iter()
+            .any(|note| note.contains("Lag fundamentals by effective date")));
     }
 
     #[test]
@@ -406,7 +554,8 @@ mod tests {
         std::fs::write(&path, serde_json::to_string_pretty(&value).unwrap()).unwrap();
 
         let review =
-            build_auto_quant_adoption_review("NQ", temp.path().to_str().unwrap(), None).unwrap();
+            build_auto_quant_adoption_review("NQ", temp.path().to_str().unwrap(), None, None)
+                .unwrap();
         assert_eq!(review.review_status, "prepare_required");
     }
 
@@ -435,6 +584,7 @@ mod tests {
             "M2K",
             temp.path().to_str().unwrap(),
             Some(&artifact_id),
+            None,
         )
         .unwrap();
 
@@ -561,7 +711,8 @@ mod tests {
         persist_handoff_payload(temp.path().to_str().unwrap(), &payload).unwrap();
 
         let review =
-            build_auto_quant_adoption_review("NQ", temp.path().to_str().unwrap(), None).unwrap();
+            build_auto_quant_adoption_review("NQ", temp.path().to_str().unwrap(), None, None)
+                .unwrap();
         assert_eq!(review.review_status, "prepare_required");
         assert!(!review.data_ready);
     }

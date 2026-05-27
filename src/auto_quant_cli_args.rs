@@ -125,6 +125,11 @@ pub(crate) struct AutoQuantAdoptionReviewArgs {
     pub(crate) artifact_id: Option<String>,
     #[arg(
         long,
+        help = "Optional event/fundamentals sidecar handoff bundle to review alongside the Auto-Quant handoff"
+    )]
+    pub(crate) sidecar_handoff: Option<String>,
+    #[arg(
+        long,
         default_value = "json",
         help = "Output format: json (default), compact, agent, or human. `--compact`, `--agent`, and `--human` are aliases; do not combine them with `--output-format`."
     )]

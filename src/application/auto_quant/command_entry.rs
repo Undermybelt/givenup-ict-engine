@@ -494,20 +494,25 @@ pub fn auto_quant_adoption_review_command(
     symbol: &str,
     state_dir: &str,
     artifact_id: Option<&str>,
+    sidecar_handoff: Option<&str>,
     output_format: &str,
 ) -> Result<()> {
-    let review = build_auto_quant_adoption_review(symbol, state_dir, artifact_id)?;
+    let review = build_auto_quant_adoption_review(symbol, state_dir, artifact_id, sidecar_handoff)?;
     match output_format.trim().to_ascii_lowercase().as_str() {
         "json" | "compact" | "agent" => print_redacted_json(&review),
         "human" => {
             println!(
-                "Auto-Quant adoption review | symbol={} | status={} | handoff_kind={} | backend={} | data_ready={} | dependency_healthy={} | next={}",
+                "Auto-Quant adoption review | symbol={} | status={} | handoff_kind={} | backend={} | data_ready={} | dependency_healthy={} | sidecar_status={} | next={}",
                 review.symbol,
                 review.review_status,
                 review.handoff_kind,
                 review.backend,
                 review.data_ready,
                 review.dependency_healthy,
+                review
+                    .sidecar_handoff_status
+                    .as_deref()
+                    .unwrap_or("not_provided"),
                 review.recommended_next_command
             );
             Ok(())

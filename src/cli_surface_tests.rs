@@ -1186,6 +1186,8 @@ fn test_cli_auto_quant_setup_commands_use_extracted_args() {
         "/tmp/ict-engine-aq-review",
         "--artifact-id",
         "artifact-1",
+        "--sidecar-handoff",
+        "/tmp/event-fundamentals.json",
         "--agent",
     ])
     .unwrap();
@@ -1194,6 +1196,10 @@ fn test_cli_auto_quant_setup_commands_use_extracted_args() {
             assert_eq!(args.symbol, "NQ");
             assert_eq!(args.state_dir, "/tmp/ict-engine-aq-review");
             assert_eq!(args.artifact_id.as_deref(), Some("artifact-1"));
+            assert_eq!(
+                args.sidecar_handoff.as_deref(),
+                Some("/tmp/event-fundamentals.json")
+            );
             assert!(args.agent);
         }
         other => panic!("unexpected command: {:?}", std::mem::discriminant(&other)),

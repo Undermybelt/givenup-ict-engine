@@ -91,6 +91,7 @@ Status legend: `done`, `active`, `next`, `blocked`, `not_yet`.
 | active | CRWD `5m` promotion/trade-usable bridge readback | Owner: Codex current turn, current-binary isolated readback `/tmp/ict-engine-crwd5m-current-readback-20260522T212430+0800` ran all commands with exit `0`. CRWD now has execution candidate `execution_ready/actionable=true`, structural execution candidate `ready=true`, closed-loop branch admission `admitted`, ranker runtime using candidate-set scores, and ranker validation `46/30` raw/production plus `43/30` observation. It still cannot be counted as completed diffusion or release proof: `promotion_allowed=false`, `read_only_regime_bbn_trade_usable=false`, Pre-Bayes is `pass_neutralized`, latest analyze stays `promotion_status=observe` / `execution_gate_status=execution_blocked`, and trade plan `actionable=false`. Next work is exact-root BBN/promotion bridge audit; do not publish or promote by copying the structural candidate upward. |
 | blocked | Current-tree release completion | Full `cargo test` now passes after the provider Python probe repair. Still blocked until the current dirty tree is split/committed or clean-exported from the intended HEAD; do not publish from this dirty worktree. |
 | blocked | Publish release mirror | Blocked on the new closed-loop/entrypoint/privacy gate and then explicit operator confirmation for `v0.1.2` tag/push/`gh release create`. GitHub auth was previously available and remote had no `v0.1.2` tag, but re-check before any publish. |
+| active | Event/fundamentals sidecar handoff readback into Auto-Quant adoption review | Current dirty-tree slice adds `auto-quant-adoption-review --sidecar-handoff <event_fundamentals_adoption_bundle.json>` so optional personal sidecar evidence can be inspected alongside the AQ handoff without changing zero-config defaults. Remaining proof for this slice: focused Rust tests plus docs/handoff parity only; no claim that the sidecar is auto-consumed by default runtime paths. |
 
 ### 2026-05-14 Hubble opt-in provider/API intake continuation claim
 
@@ -258,6 +259,44 @@ Residual risk:
   tier is confirmed.
 
 ## Resume State Hint
+
+### 2026-05-27 Event/fundamentals sidecar review bridge
+
+Status:
+- active, owner Codex current turn, resumed 2026-05-27 after re-reading the
+  event/fundamentals hot-plug board and current dirty-tree AQ readback files.
+
+Current checkpoint:
+- the helper-side bundle lane already exists in
+  `support/scripts/research/event_fundamentals_adoption.py` and the dedicated
+  continuation board
+  `support/docs/plans/2026-05-27-event-fundamentals-hotplug-handoff-todo.md`;
+- the current Rust slice threads an optional
+  `--sidecar-handoff <event_fundamentals_adoption_bundle.json>` argument into
+  `auto-quant-adoption-review`;
+- review JSON now exposes:
+  - `sidecar_handoff_status`
+  - `sidecar_missing_artifact_kinds`
+  - merged sidecar `usage_warnings` in `notes`;
+- `--human` now prints `sidecar_status=<value|not_provided>` while preserving
+  the existing short review summary contract.
+
+Explicit boundary:
+- zero-config/default AQ review remains unchanged when `--sidecar-handoff` is
+  omitted;
+- this slice is readback only, not automatic sidecar ingestion into all runtime
+  commands;
+- sidecar readiness remains advisory/inspectable context, not promotion proof.
+
+Planned verification:
+- `cargo test review_surfaces_sidecar_handoff_readiness_when_explicitly_provided -- --nocapture`
+- `cargo test test_cli_auto_quant_setup_commands_use_extracted_args -- --nocapture`
+- `cargo fmt --check`
+
+If clean:
+- stage only the AQ adoption review/readback/docs files for this slice;
+- commit only if the docs + tests + code form one coherent hot-plug readback
+  unit.
 
 Current release-audit state: consumer zero-config/privacy audit, agent
 entrypoint docs, fresh sanitized `/tmp` export/smoke, and manifest/runbook

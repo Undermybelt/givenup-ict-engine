@@ -194,16 +194,29 @@ pub(crate) fn auto_quant_adoption_review_shell(
     symbol: &str,
     state_dir: &str,
     artifact_id: Option<&str>,
+    sidecar_handoff: Option<&str>,
     output_format: &str,
 ) -> Result<()> {
     let aq_dir = aq_state_dir(state_dir);
-    match auto_quant_adoption_review_command(symbol, &aq_dir, artifact_id, output_format) {
+    match auto_quant_adoption_review_command(
+        symbol,
+        &aq_dir,
+        artifact_id,
+        sidecar_handoff,
+        output_format,
+    ) {
         Ok(()) => Ok(()),
         Err(error)
             if aq_dir != state_dir
                 && error.to_string().contains("no auto-quant handoff artifact") =>
         {
-            auto_quant_adoption_review_command(symbol, state_dir, artifact_id, output_format)
+            auto_quant_adoption_review_command(
+                symbol,
+                state_dir,
+                artifact_id,
+                sidecar_handoff,
+                output_format,
+            )
         }
         Err(error) => Err(error),
     }
