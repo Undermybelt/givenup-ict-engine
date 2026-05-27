@@ -23,13 +23,15 @@ Reason:
 
 1. Board B ownership is still crowded. The authoritative current readback is
    the coordinated snapshot at
-   `/private/tmp/ict-engine-goal-20260527-closure-snapshot/objective_closure_snapshot.json`.
+   `/tmp/ict-engine-goal-20260527-closure-snapshot-current6/objective_closure_snapshot.json`.
    Its factor child is time-variant within the day, but it still remains
    blocked on unresolved active-claim debt and therefore prevents truthful
-   closure. The latest focused factor audit now proves the debt is mostly not
-   runtime occupancy: `active_claims=12`, `live_factor_processes=2`,
-   `active_claims_without_live_process=11`,
-   `wait_only_active_claims_without_live_process=3`.
+   closure. The latest coordinated snapshot now reports
+   `active_claims=5`, `live_factor_processes=1`,
+   `active_claims_without_live_process=4`,
+   `wait_only_active_claims_without_live_process=0`, with
+   `attention_by_actionability={active_claim_debt:3, live_runtime_owner:1,
+   stale_safe_takeover_candidate:1}`.
 2. The authoritative release/closed-loop handoff
    `support/docs/plans/2026-05-12-hotplug-personal-data-release-handoff-todo.md`
    still records multiple `blocked` rows stating release/objective completion is
@@ -189,7 +191,7 @@ The objective is only complete if current evidence proves all of the following:
   - older tracker text named one release blocker set, while later same-day
     reruns named a different blocker set;
   - the authoritative source is now the coordinated snapshot at
-    `/private/tmp/ict-engine-goal-20260527-closure-snapshot/objective_closure_snapshot.json`,
+    `/tmp/ict-engine-goal-20260527-closure-snapshot-portable4/objective_closure_snapshot.json`,
     whose release child records both `report_timestamp` and the exact current
     `unresolved` gate list;
   - depending on live network/source state, the unresolved set can move between
@@ -231,12 +233,207 @@ The objective is only complete if current evidence proves all of the following:
   - closure is still blocked because the coordinated snapshot's factor child
     remains non-pass and still belongs to live `codex` attention claims, so the
     repo still lacks a clean same-turn factor-closure surface;
-  - the latest focused audit now proves only two active claims own live
-    runtime, while eleven active claims do not and three of those are already
-    classified as wait-only debt;
-  - this surface is concurrently mutating: two wait-only debt claims were
-    externalized in this turn, but new active claims appeared before the next
-    rerun, so blocker counts can worsen even while old debt is being reduced.
+  - the latest coordinated snapshot now shows one live factor process, four
+    active claims outside live runtime ownership, no remaining
+    `wait_only_without_live_process` rows, and one stale-safe takeover head on
+    the canonical XLC claim;
+  - this surface is concurrently mutating: even after coordinated packet
+    portability fixes, new claims appeared before the next rerun, so blocker
+    counts can worsen while old debt is still being reduced.
+
+### V-013: coordinated closure packet portability had a hidden factor-child gap
+
+- Severity: medium
+- Evidence:
+  - the parent `objective_closure_snapshot.json` had already become
+    packet-portable, but the factor child compact payload still used local
+    runtime paths such as `claims_dir=/tmp/...`, `run_root=/private/tmp/...`,
+    and `exit_file=/private/tmp/...`;
+  - the current packet contract now passes `--portable-paths` into
+    `factor_claim_terminalization_audit.py`, and the fresh `portable4` packet
+    rewrites those fields to packet-safe labels such as
+    `claims_dir="ict-engine-agent-claims/board-b-factor-refinement"` and
+    `run_root="ict-engine-..."`.
+- Risk:
+  - without this fix, the coordinated bundle looked reusable at the parent
+    level while still embedding workstation-local tmp roots one layer below.
+- Next:
+  - keep the new factor child packet-safe regressions in the focused suite;
+  - keep checking other child payloads for similar clone-portability drift.
+
+### V-014: coordinated closure snapshot originally omitted the factor debt split, weakening packet-to-packet coordination
+
+- Severity: medium
+- Evidence:
+  - the factor compact child already exposed
+    `active_claims_without_live_process`,
+    `wait_only_active_claims_without_live_process`,
+    `stale_safe_takeover_candidates`, and
+    `attention_groups.by_actionability`;
+  - the parent `objective_closure_snapshot.json` originally dropped those
+    fields and kept only the coarser
+    `active_claims/live_factor_processes/blocking_reasons/attention_by_owner`
+    surface;
+  - the fresh same-turn coordinated snapshot at
+    `/tmp/ict-engine-goal-20260528-closure-snapshot-debtsplit/objective_closure_snapshot.json`
+    now proves the lifted fields are present in the factor child surface:
+    `active_claims_without_live_process=10`,
+    `wait_only_active_claims_without_live_process=2`,
+    `stale_safe_takeover_candidates=8`, and
+    `attention_by_actionability={active_claim_debt=1, live_runtime_owner=5, stale_safe_takeover_candidate=8, wait_only_without_live_process=1}`.
+- Risk:
+  - without this lift, the supposedly coordinated closure packet still required
+    a second manual factor-child inspection to distinguish runtime occupancy
+    from pure claim debt, making reuse across turns and agents weaker.
+- Next:
+  - keep the new `objective_closure_snapshot.py` regression in the focused
+    suite;
+  - continue treating the latest same-turn snapshot as authoritative because
+    the factor surface is still drifting even though the packet contract is now
+    stronger.
+
+### V-015: coordinated closure snapshot still required a second factor-child read to get the first cleanup queue
+
+- Severity: medium
+- Evidence:
+  - after the debt-split lift, the coordinated snapshot still exposed only the
+    factor blocker shape, not the first exact cleanup targets;
+  - the fresh same-turn coordinated snapshot at
+    `/tmp/ict-engine-goal-20260528-closure-snapshot-queue/objective_closure_snapshot.json`
+    now proves the factor child surface includes `attention_action_queue` with
+    explicit:
+    - `externalize_wait_only_claims`
+    - `stale_safe_takeover_claims`
+    - `live_runtime_run_roots`
+  - the current snapshot-owned queue head is the wait-only claim
+    `20260527T220432+0800-codex-tomac-tod-balanced-validation-maturity-materialization.claim`,
+    while the same packet also names the current live run roots and stale
+    takeover queue.
+- Risk:
+  - without this lift, every next-turn cleanup still required a second manual
+    factor-child read, weakening the promised coordination/reuse value of the
+    parent evidence packet.
+- Next:
+  - keep the new snapshot queue regression in the focused suite;
+  - use the coordinated packet as the default first read for factor-closure
+    cleanup, but still rerun it same-turn before any stronger closure claim
+    because the queue and counts continue to drift.
+
+### V-016: coordinated closure snapshot originally dropped child-level repair instructions for done and release
+
+- Severity: medium
+- Evidence:
+  - the earlier parent packet preserved release unresolved gate ids and
+    done-definition skipped gates, but still dropped the child `next_action`
+    instructions that make those blockers actionable;
+  - the fresh same-turn coordinated snapshot at
+    `/tmp/ict-engine-goal-20260528-closure-snapshot-actions/objective_closure_snapshot.json`
+    now proves the lifted fields exist:
+    - `audits.done_definition.surface.next_action`
+    - `audits.release_readiness.surface.unresolved_next_actions`
+    - `summary.child_next_actions`
+- Risk:
+  - without these lifts, one packet could tell the next turn that completion is
+    blocked, yet still force another child-audit read to know whether the next
+    step is heavy verification, worktree slicing, or remote readback repair.
+- Next:
+  - keep the new snapshot actionability regression in the focused suite;
+  - continue using the coordinated packet as the first read, but keep it
+    same-turn fresh because both factor and release state still drift.
+
+### V-017: parent summary previously remained generic even after child actions were preserved
+
+- Severity: medium
+- Evidence:
+  - the earlier coordinated snapshot already preserved nested
+    `child_next_actions`, but summary-level `next_action` still remained the
+    generic `rerun the blocked child audits after fixing the named blocker surfaces`;
+  - the fresh same-turn coordinated snapshot at
+    `/tmp/ict-engine-goal-20260528-closure-snapshot-priority/objective_closure_snapshot.json`
+    now proves the parent summary includes ordered
+    `prioritized_next_actions` for done-definition, factor closure, and the two
+    release blockers.
+- Risk:
+  - without a top-level ordered action list, the evidence bundle still forced
+    the next turn to manually inspect nested child fields before deciding what
+    to do first, which weakened its value as a reusable closure packet.
+- Next:
+  - keep the new priority-list regression in the focused suite;
+  - continue treating the coordinated snapshot as the default first read, but
+    keep rerunning it same-turn because the factor and release surfaces still
+    drift.
+
+### V-018: parent summary previously still required a nested factor-queue read to identify the first concrete factor target
+
+- Severity: medium
+- Evidence:
+  - the earlier parent summary preserved a generic factor action, but still hid
+    the exact wait-only queue head, stale-safe takeover head, and live runtime
+    head inside nested `attention_action_queue`;
+  - the fresh same-turn coordinated snapshot at
+    `/tmp/ict-engine-goal-20260528-closure-snapshot-factorheads/objective_closure_snapshot.json`
+    now proves the summary-level `prioritized_next_actions` contains all three
+    concrete factor targets directly.
+- Risk:
+  - without this lift, the packet still forced nested factor-surface parsing
+    before real blocker cleanup could start, weakening its consumer/maintainer
+    value in time-variant Board B conditions.
+- Next:
+  - keep the new factor-head priority regression in the focused suite;
+  - continue rerunning the coordinated snapshot same-turn because the queue head
+    and live roots still move as claims and runtimes change.
+
+### V-019: coordinated packet freshness previously had to be inferred from nested child timestamps
+
+- Severity: medium
+- Evidence:
+  - earlier packets exposed child `report_timestamp` only inside each child
+    surface, so the user still had to infer whether blocker counts were stale;
+  - the fresh same-turn coordinated snapshot at
+    `/tmp/ict-engine-goal-20260528-closure-snapshot-freshness/objective_closure_snapshot.json`
+    now proves the parent summary includes both `child_report_timestamps` and
+    `child_report_age_seconds`;
+  - that same packet also demonstrates why this matters: factor closure changed
+    from runtime-occupied to pure claim debt within the same session
+    (`live_factor_processes=0`, `active_claims=6`).
+- Risk:
+  - without explicit freshness data, operators can over-trust an older packet
+    and chase blockers that have already moved.
+- Next:
+  - keep the new freshness regression in the focused suite;
+  - treat any packet with materially older child ages as advisory only and
+    rerun before making stronger completion claims.
+
+### V-020: parent priority list previously hid secondary live factor roots
+
+- Severity: medium
+- Evidence:
+  - the 2026-05-28 live factor child surface listed two live runtime roots:
+    `pid 35142` for
+    `ict-engine-tomac-liquidity-sweep-adx-liquidity-pool-context-reopen-await-launch-20260527T231247+0800`
+    and `pid 35854` for
+    `ict-engine-tomac-wpr-adx-reference-hurst-profile-range-compression-release-liveprep-20260527T230800`;
+  - before the fix, `summary.prioritized_next_actions` lifted only the first
+    `live_runtime_run_roots[0]`, so a parent-packet consumer could wait on the
+    liquidity-pool root while missing the WPR/reference-Hurst live owner;
+  - the regenerated snapshot at
+    `/tmp/ict-engine-goal-20260528-continuation-snapshot-after-multilive/objective_closure_snapshot.json`
+    now lists both live runtime heads at the parent summary level.
+- Risk:
+  - without this, the coordinated evidence packet was not fully self-contained
+    for multi-runtime factor closure; consumers still needed nested child JSON
+    parsing to discover all current live owners.
+- Current readback:
+  - `summarize_snapshot()` now lifts up to three live runtime heads into
+    `summary.prioritized_next_actions` to preserve compactness while avoiding
+    single-head blindness;
+  - `python3 -m unittest support.scripts.tests.test_objective_closure_snapshot -v`
+    passed `9/9` after the regression was added.
+- Next:
+  - continue treating the packet as non-completion evidence until both live
+    roots terminalize and the factor child reports no active/live blockers;
+  - rerun the coordinated snapshot before any stronger claim because the live
+    runtime set is still moving.
 
 ### V-011: reusable strategy-library provenance was still leaking caller-local path assumptions
 
@@ -484,15 +681,15 @@ Earlier same-day runtime smoke (not rerun in this continuation):
   `worktree_clean_for_release` and `remote_readback`, with tag availability
   still blocked behind the remote gate.
 - 2026-05-27: the latest compact factor rerun in this continuation drifted
-  again to `active_claims=10`, `invalid_active_claims=0`,
-  `live_factor_processes=2`, and `attention_groups.by_owner={"codex":10}`.
-  This removed the earlier duplicate-family cluster but still leaves the repo
-  far from a clean same-turn practical-closure surface.
+  again to `active_claims=14`, `invalid_active_claims=0`,
+  `live_factor_processes=1`, and `attention_groups.by_owner={"codex":14}`.
+  This still leaves the repo far from a clean same-turn practical-closure
+  surface even though the live runtime count is smaller than earlier in the day.
 - 2026-05-27: added `support/scripts/objective_closure_snapshot.py`, a compact
   read-only aggregator that now writes one coordinated `/tmp` bundle for the
   canonical quickstart chain plus the live done/factor/release audit outputs.
   The safe default snapshot is now available at
-  `/private/tmp/ict-engine-goal-20260527-closure-snapshot/objective_closure_snapshot.json`;
+  `/tmp/ict-engine-goal-20260527-closure-snapshot-portable4/objective_closure_snapshot.json`;
   a heavier `--run-all-heavy` attempt currently fails closed with a structured
   timeout snapshot instead of crashing.
 - 2026-05-27: the current-turn compact reruns still show no promotion surface:
@@ -512,3 +709,39 @@ Earlier same-day runtime smoke (not rerun in this continuation):
   `legacy_excluded_count` and print the explicit
   `--include-legacy-buildable` hint; the matching resolver regression now
   passes in the same focused suite.
+- 2026-05-27: coordinated packet portability now holds at both the parent and
+  factor-child compact layers. The parent snapshot stores `python3`, relative
+  child evidence filenames, and no workstation-local repo/output paths; the
+  factor child compact packet now stores packet-safe `claims_dir`, `run_root`,
+  and `exit_file` labels instead of local tmp roots.
+- 2026-05-28: refreshed the authoritative coordinated snapshot at
+  `/tmp/ict-engine-goal-20260528-closure-snapshot-current1/objective_closure_snapshot.json`.
+  The objective is still `not_complete`: `done_definition` is green only at the
+  light level with `completion_ready=false`, `factor_closure` is still blocked
+  by `active_claims=2` with `live_factor_processes=0`, and release readiness
+  still fails `worktree_clean_for_release` plus `remote_readback`. The latest
+  factor surface still has `promotion_allowed_true=0` and
+  `trade_usable_true=0`, so no current evidence supports a practical completion
+  or `update_goal=true` claim.
+- 2026-05-28: immediate follow-up claim audit showed the Board B surface had
+  mutated again after stale-safe takeovers launched: `active_claims=5`,
+  `live_factor_processes=3`, `active_claims_without_live_process=2`,
+  `blocking_reasons=[active_claims, live_factor_processes]`, while
+  `promotion_allowed_true=0` and `trade_usable_true=0` remained unchanged. This
+  supersedes the snapshot only for current live occupancy and confirms no safe
+  new launch/terminalization should happen until those live roots exit or write
+  terminal evidence.
+- 2026-05-28: refreshed the coordinated snapshot at
+  `/tmp/ict-engine-goal-20260528-closure-recheck1/objective_closure_snapshot.json`.
+  The current blocker surface narrowed to `active_claims=2` and
+  `live_factor_processes=2`, both `live_runtime_owner`; still no
+  `promotion_allowed_true` or `trade_usable_true`. A WPR/reference-Hurst live
+  process was paired with a stale earlier `tomac_aq.exit=1`/stderr file, so
+  `support/scripts/factor_claim_terminalization_audit.py` now marks compact live
+  process `exit_file_state=stale_for_process` when the inferred exit file
+  predates the current process. Regression:
+  `python3 -m unittest support.scripts.tests.test_factor_claim_terminalization_audit -v`
+  passed `60/60`; live compact readback at
+  `/tmp/ict-engine-goal-20260528-factor-staleexit-check.json` showed the WPR
+  root as `stale_for_process`, preventing stale failed artifacts from being
+  mistaken for current terminal truth.

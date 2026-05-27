@@ -7,6 +7,7 @@ import os
 import re
 import subprocess
 import sys
+import time
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
@@ -303,6 +304,8 @@ def read_claim(path: Path, root: Path) -> dict[str, Any]:
         "claimed_at": fields.get("claimed_at"),
         "last_progress_at": fields.get("last_progress_at"),
         "terminalized_at": fields.get("terminalized_at") or fields.get("terminal_at"),
+        "factor_id": fields.get("factor_id"),
+        "branch_path": fields.get("branch_path"),
         "run_root": str(run_root) if run_root else None,
         "run_root_exists": bool(run_root and run_root.exists()),
         "tmp_root": str(tmp_root) if tmp_root else None,
@@ -402,19 +405,19 @@ def summarize(
 ) -> dict[str, Any]:
     live_processes = live_processes or []
     now = now or datetime.now(timezone.utc)
-    live_run_roots = {str(process.get("run_root")) for process in live_processes if process.get("run_root")}
     stale_active_claims = 0
     stale_safe_takeover_candidates = 0
     active_claims_without_live_process = 0
     wait_only_active_claims_without_live_process = 0
     for claim in claims:
+        claim["status"] = _status(claim)
         if claim.get("status") == "terminalized":
             claim["age_minutes"] = None
             claim["stale_safe_takeover_candidate"] = False
             claim["live_runtime_owner"] = False
             claim["wait_only_without_live_process"] = False
             continue
-        claim["live_runtime_owner"] = _claim_owns_live_runtime(claim, live_run_roots)
+        claim["live_runtime_owner"] = _claim_owns_live_runtime(claim, live_processes)
         claim["wait_only_without_live_process"] = bool(
             not claim["live_runtime_owner"] and _looks_like_wait_only_active_claim(claim)
         )
@@ -427,7 +430,7 @@ def summarize(
         claim["stale_safe_takeover_candidate"] = bool(
             is_stale
             and not claim.get("missing_identity_fields")
-            and str(claim.get("run_root") or "") not in live_run_roots
+            and not claim["live_runtime_owner"]
         )
         if is_stale:
             stale_active_claims += 1
@@ -435,7 +438,7 @@ def summarize(
             stale_safe_takeover_candidates += 1
         active_claims_without_live_process += int(not claim["live_runtime_owner"])
         wait_only_active_claims_without_live_process += int(claim["wait_only_without_live_process"])
-    active_claims = sum(1 for claim in claims if claim.get("status") != "terminalized")
+    active_claims = sum(1 for claim in claims if claim.get("status") == "active")
     invalid_active_claims = sum(
         1
         for claim in claims
@@ -512,12 +515,41 @@ def _looks_like_wait_only_active_claim(claim: dict[str, Any]) -> bool:
     return any(marker in normalized for marker in WAIT_ONLY_MARKERS)
 
 
-def _claim_owns_live_runtime(claim: dict[str, Any], live_run_roots: set[str]) -> bool:
+def _claim_owns_live_runtime(claim: dict[str, Any], live_processes: list[dict[str, Any]]) -> bool:
+    live_run_roots = {str(process.get("run_root")) for process in live_processes if process.get("run_root")}
     for key in ("run_root", "tmp_root"):
         value = claim.get(key)
-        if isinstance(value, str) and value and value in live_run_roots:
+        if not isinstance(value, str) or not value:
+            continue
+        claim_path = Path(value)
+        for live_root in live_run_roots:
+            if not isinstance(live_root, str) or not live_root:
+                continue
+            live_path = Path(live_root)
+            if claim_path == live_path:
+                return True
+            if _is_relative_to(live_path, claim_path) or _is_relative_to(claim_path, live_path):
+                return True
+    claim_factor_id = str(claim.get("factor_id") or "").strip()
+    claim_branch_path = _normalize_branch_path_text(claim.get("branch_path"))
+    if not claim_factor_id and not claim_branch_path:
+        return False
+    for process in live_processes:
+        process_factor_id = str(process.get("factor_id") or "").strip()
+        if claim_factor_id and process_factor_id and claim_factor_id == process_factor_id:
+            return True
+        process_branch_path = _normalize_branch_path_text(process.get("branch_path"))
+        if claim_branch_path and process_branch_path and claim_branch_path == process_branch_path:
             return True
     return False
+
+
+def _is_relative_to(path: Path, other: Path) -> bool:
+    try:
+        path.relative_to(other)
+        return True
+    except ValueError:
+        return False
 
 
 def build_report(
@@ -628,7 +660,7 @@ def _is_await_launch_wrapper(command: str) -> bool:
 def _is_tomac_diagnostic_script(command: str) -> bool:
     return bool(
         re.search(
-            r"(?:^|\s)\S*tomac_[^\s/]*_(?:probe|audit|diag|diagnosis)\.py\b",
+            r"(?:^|\s)\S*tomac_[^\s/]*_(?:probe|audit|diag|diagnosis|matrix|inventory)\.py\b",
             command,
         )
     )
@@ -818,6 +850,11 @@ def _attribute_run_roots_from_cwd(
             continue
         run_root = _normalize_tmp_run_root(Path(cwd))
         if not _is_board_b_run_root(run_root):
+            identity = _workspace_strategy_identity(Path(cwd))
+            if identity:
+                process.update(identity)
+                process["run_root_attribution"] = "cwd_workspace_identity"
+                process["run_root_attribution_pid"] = pid
             continue
         process["run_root"] = str(run_root)
         process["run_root_attribution"] = "cwd"
@@ -827,6 +864,36 @@ def _attribute_run_roots_from_cwd(
             process["exit_file"] = str(exit_file) if exit_file else None
             process["exit_file_exists"] = bool(exit_file and exit_file.exists())
     return processes
+
+
+def _workspace_strategy_identity(cwd: Path) -> dict[str, str] | None:
+    strategies_dir = cwd / "user_data" / "strategies_external"
+    if not strategies_dir.exists():
+        return None
+    for path in sorted(strategies_dir.glob("*.py")):
+        try:
+            text = path.read_text(encoding="utf-8", errors="replace")
+        except OSError:
+            continue
+        factor_match = re.search(r"^\s*factor_id:\s*(.+?)\s*$", text, re.MULTILINE)
+        branch_match = re.search(r"^\s*branch_path:\s*(.+?)\s*$", text, re.MULTILINE)
+        factor_id = factor_match.group(1).strip() if factor_match else ""
+        branch_path = branch_match.group(1).strip() if branch_match else ""
+        if factor_id or branch_path:
+            identity: dict[str, str] = {}
+            if factor_id:
+                identity["factor_id"] = factor_id
+            if branch_path:
+                identity["branch_path"] = branch_path
+            identity["workspace_strategy_path"] = str(path)
+            return identity
+    return None
+
+
+def _normalize_branch_path_text(value: object) -> str:
+    if not isinstance(value, str):
+        return ""
+    return " -> ".join(part.strip() for part in value.split("->") if part.strip())
 
 
 def _pid_cwds(pids: list[int]) -> dict[int, str]:
@@ -874,6 +941,13 @@ def _drop_stale_failed_tomac_prep_wrappers(processes: list[dict[str, Any]]) -> l
         pid = process.get("pid")
         run_root_text = process.get("run_root")
         if (
+            isinstance(pid, int)
+            and pid not in child_ppids
+            and isinstance(run_root_text, str)
+            and _run_root_has_terminalized_loop_artifacts(Path(run_root_text))
+        ):
+            continue
+        if (
             _is_tomac_prep_wrapper_launch(command)
             and isinstance(pid, int)
             and pid not in child_ppids
@@ -892,6 +966,15 @@ def _drop_stale_failed_tomac_prep_wrappers(processes: list[dict[str, Any]]) -> l
     return filtered
 
 
+def _run_root_has_terminalized_loop_artifacts(run_root: Path) -> bool:
+    checks_dir = run_root / "checks"
+    terminal_metrics = checks_dir / "terminal_metrics.json"
+    terminal_decision = run_root / "summaries" / "terminal_decision_summary.md"
+    if not terminal_metrics.exists() or not terminal_decision.exists():
+        return False
+    return any(checks_dir.glob("round_*_run_tomac.exit"))
+
+
 def _process_rank(process: dict[str, Any]) -> int:
     command = str(process.get("command_excerpt") or "")
     if "/bin/zsh -lc" in command or "/bin/bash -lc" in command:
@@ -901,23 +984,35 @@ def _process_rank(process: dict[str, Any]) -> int:
     return 1
 
 
-def format_report(report: dict[str, Any], compact: bool = False) -> dict[str, Any]:
+def format_report(
+    report: dict[str, Any],
+    compact: bool = False,
+    portable_paths: bool = False,
+) -> dict[str, Any]:
     if not compact:
         return report
 
     claims = report.get("claims", [])
     root = str(report.get("repo_root") or "")
-    attention_claims = [_compact_claim(claim, root) for claim in claims if _claim_needs_attention(claim)]
-    live_processes = [_compact_live_process(process, root) for process in report.get("live_factor_processes", [])]
+    attention_claims = [
+        _compact_claim(claim, root, portable_paths=portable_paths)
+        for claim in claims
+        if _claim_needs_attention(claim)
+    ]
+    live_processes = [
+        _compact_live_process(process, root, portable_paths=portable_paths)
+        for process in report.get("live_factor_processes", [])
+    ]
     return {
         "schema_version": report.get("schema_version"),
         "generated_at": report.get("generated_at"),
-        "claims_dir": report.get("claims_dir"),
+        "claims_dir": _compact_text(report.get("claims_dir"), root, portable_paths=portable_paths),
         "summary": report.get("summary"),
         "attention_claim_count": len(attention_claims),
         "attention_live_process_count": len(live_processes),
         "attention_groups": _attention_groups(attention_claims),
         "attention_clusters": _attention_clusters(attention_claims),
+        "attention_action_queue": _attention_action_queue(attention_claims, live_processes),
         "attention_claims": attention_claims,
         "attention_live_processes": live_processes,
     }
@@ -932,28 +1027,33 @@ def _claim_needs_attention(claim: dict[str, Any]) -> bool:
     )
 
 
-def _compact_text(value: object, root: str) -> object:
+def _compact_text(value: object, root: str, portable_paths: bool = False) -> object:
     if not isinstance(value, str):
         return value
     result = value
     if root:
         result = result.replace(root + "/", "")
         result = result.replace(root, ".")
-    return re.sub(r"/Users/[^\s,;:)]+", "[local-path]", result)
+    result = re.sub(r"/Users/[^\s,;:)]+", "[local-path]", result)
+    if portable_paths:
+        result = _portable_runtime_text(result)
+    return result
 
 
-def _compact_claim(claim: dict[str, Any], root: str) -> dict[str, Any]:
+def _compact_claim(claim: dict[str, Any], root: str, portable_paths: bool = False) -> dict[str, Any]:
     run_root_state = "none"
     if claim.get("run_root"):
         run_root_state = "present" if claim.get("run_root_exists") else "missing"
+    actionability_class = _actionability_class(claim)
     return {
-        "claim_file": _compact_text(claim.get("claim_file"), root),
-        "status": _compact_text(claim.get("status"), root),
-        "agent_name": _compact_text(claim.get("agent_name"), root),
-        "owner": _compact_text(claim.get("owner"), root),
-        "scope": _compact_text(claim.get("scope"), root),
-        "decision": _compact_text(claim.get("decision"), root),
+        "claim_file": _compact_text(claim.get("claim_file"), root, portable_paths=portable_paths),
+        "status": _compact_text(claim.get("status"), root, portable_paths=portable_paths),
+        "agent_name": _compact_text(claim.get("agent_name"), root, portable_paths=portable_paths),
+        "owner": _compact_text(claim.get("owner"), root, portable_paths=portable_paths),
+        "scope": _compact_text(claim.get("scope"), root, portable_paths=portable_paths),
+        "decision": _compact_text(claim.get("decision"), root, portable_paths=portable_paths),
         "run_root_state": run_root_state,
+        "actionability_class": actionability_class,
         "missing_identity_fields": claim.get("missing_identity_fields", []),
         "promotion_allowed": claim.get("promotion_allowed"),
         "trade_usable": claim.get("trade_usable"),
@@ -965,27 +1065,157 @@ def _compact_claim(claim: dict[str, Any], root: str) -> dict[str, Any]:
     }
 
 
-def _compact_live_process(process: dict[str, Any], root: str) -> dict[str, Any]:
+def _attention_action_queue(
+    attention_claims: list[dict[str, Any]],
+    live_processes: list[dict[str, Any]],
+) -> dict[str, Any]:
+    def claim_sort_key(item: dict[str, Any]) -> tuple[int, int, str]:
+        return (
+            0 if item.get("stale_safe_takeover_candidate") else 1,
+            -(int(item.get("age_minutes")) if isinstance(item.get("age_minutes"), int) else -1),
+            str(item.get("claim_file") or ""),
+        )
+
+    wait_only_claims = sorted(
+        [claim for claim in attention_claims if claim.get("wait_only_without_live_process")],
+        key=claim_sort_key,
+    )
+    stale_takeover_claims = sorted(
+        [claim for claim in attention_claims if claim.get("stale_safe_takeover_candidate")],
+        key=claim_sort_key,
+    )
+    return {
+        "externalize_wait_only_claims": [
+            {
+                "claim_file": claim.get("claim_file"),
+                "age_minutes": claim.get("age_minutes"),
+                "stale_safe_takeover_candidate": claim.get("stale_safe_takeover_candidate", False),
+            }
+            for claim in wait_only_claims
+        ],
+        "stale_safe_takeover_claims": [
+            {
+                "claim_file": claim.get("claim_file"),
+                "age_minutes": claim.get("age_minutes"),
+                "wait_only_without_live_process": claim.get("wait_only_without_live_process", False),
+            }
+            for claim in stale_takeover_claims
+        ],
+        "live_runtime_run_roots": [
+            {
+                "pid": process.get("pid"),
+                "run_root": process.get("run_root"),
+                "exit_file_state": process.get("exit_file_state"),
+            }
+            for process in live_processes
+        ],
+    }
+
+
+def _compact_live_process(process: dict[str, Any], root: str, portable_paths: bool = False) -> dict[str, Any]:
     run_root_state = "none"
     if process.get("run_root"):
         run_root_state = "present"
     exit_file_state = "none"
     if process.get("exit_file"):
         exit_file_state = "present" if process.get("exit_file_exists") else "missing"
+        if exit_file_state == "present" and _exit_file_predates_live_process(process):
+            exit_file_state = "stale_for_process"
     return {
         "pid": process.get("pid"),
         "ppid": process.get("ppid"),
         "elapsed": process.get("elapsed"),
         "run_root_state": run_root_state,
         "exit_file_state": exit_file_state,
-        "run_root": _compact_text(process.get("run_root"), root),
-        "exit_file": _compact_text(process.get("exit_file"), root),
-        "command_excerpt": _compact_text(process.get("command_excerpt"), root),
-    }
+        "run_root": _compact_text(process.get("run_root"), root, portable_paths=portable_paths),
+        "exit_file": _compact_text(process.get("exit_file"), root, portable_paths=portable_paths),
+        "command_excerpt": _compact_text(process.get("command_excerpt"), root, portable_paths=portable_paths),
+}
+
+
+def _exit_file_predates_live_process(process: dict[str, Any]) -> bool:
+    exit_file = process.get("exit_file")
+    if not isinstance(exit_file, str) or not exit_file:
+        return False
+    elapsed_seconds = _elapsed_to_seconds(process.get("elapsed"))
+    if elapsed_seconds is None:
+        return False
+    try:
+        exit_mtime = Path(exit_file).stat().st_mtime
+    except OSError:
+        return False
+    process_start = time.time() - elapsed_seconds
+    return exit_mtime + 1 < process_start
+
+
+def _elapsed_to_seconds(value: object) -> int | None:
+    if not isinstance(value, str):
+        return None
+    text = value.strip()
+    if not text:
+        return None
+    days = 0
+    if "-" in text:
+        day_text, text = text.split("-", 1)
+        try:
+            days = int(day_text)
+        except ValueError:
+            return None
+    parts = text.split(":")
+    try:
+        numbers = [int(part) for part in parts]
+    except ValueError:
+        return None
+    if len(numbers) == 2:
+        hours = 0
+        minutes, seconds = numbers
+    elif len(numbers) == 3:
+        hours, minutes, seconds = numbers
+    else:
+        return None
+    return days * 86400 + hours * 3600 + minutes * 60 + seconds
+
+
+def _actionability_class(claim: dict[str, Any]) -> str:
+    if claim.get("live_runtime_owner"):
+        return "live_runtime_owner"
+    if claim.get("stale_safe_takeover_candidate"):
+        return "stale_safe_takeover_candidate"
+    if claim.get("wait_only_without_live_process"):
+        return "wait_only_without_live_process"
+    return "active_claim_debt"
+
+
+def _portable_runtime_text(value: str) -> str:
+    pattern = re.compile(r"/(?:private/)?tmp/[^\s,;:)]+")
+
+    def _replace(match: re.Match[str]) -> str:
+        return _portable_tmp_path(Path(match.group(0)))
+
+    return pattern.sub(_replace, value)
+
+
+def _portable_tmp_path(path: Path) -> str:
+    parts = path.parts
+    if parts[:3] == ("/", "private", "tmp"):
+        tail = parts[3:]
+    elif parts[:2] == ("/", "tmp"):
+        tail = parts[2:]
+    else:
+        return str(path)
+    if not tail:
+        return "[tmp]"
+    first = tail[0]
+    if first == "ict-engine-agent-claims":
+        return "/".join(tail[:2]) if len(tail) >= 2 else first
+    if first.startswith("ict-engine-"):
+        return "/".join(tail)
+    return "/".join(tail[-2:]) if len(tail) >= 2 else first
 
 
 def _attention_groups(claims: list[dict[str, Any]]) -> dict[str, dict[str, int]]:
     return {
+        "by_actionability": _count_by(claims, "actionability_class"),
         "by_owner": _count_by(claims, "owner"),
         "by_run_root_state": _count_by(claims, "run_root_state"),
         "by_status": _count_by(claims, "status"),
@@ -1080,6 +1310,11 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
     parser.add_argument("--repo-root", type=Path, default=None)
     parser.add_argument("--output", type=Path, default=None)
     parser.add_argument("--compact", action="store_true", help="write token-friendly attention summary JSON")
+    parser.add_argument(
+        "--portable-paths",
+        action="store_true",
+        help="when used with --compact, collapse /tmp and /private/tmp runtime paths into packet-safe relative labels",
+    )
     parser.add_argument("--skip-live-processes", action="store_true", help="skip ps-based live factor process readback")
     return parser.parse_args(argv)
 
@@ -1114,7 +1349,7 @@ def main(argv: list[str] | None = None) -> int:
         live_processes = [] if args.skip_live_processes else detect_live_factor_processes()
         report = build_report(claims_dir=claims_dir, repo_root=root, live_processes=live_processes)
 
-    output_report = format_report(report, compact=args.compact)
+    output_report = format_report(report, compact=args.compact, portable_paths=args.portable_paths)
     indent = None if args.compact else 2
     output_text = json.dumps(output_report, indent=indent, sort_keys=True) + "\n"
     if args.output:

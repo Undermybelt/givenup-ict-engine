@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import json
+import os
 import sys
 import tempfile
 import unittest
@@ -16,6 +17,7 @@ from factor_claim_terminalization_audit import (  # noqa: E402
     _drop_stale_failed_tomac_prep_wrappers,
     _attribute_parent_run_roots,
     _attribute_run_roots_from_cwd,
+    _compact_text,
     _extract_run_root,
     _infer_exit_file,
     _is_live_factor_command,
@@ -27,6 +29,44 @@ from factor_claim_terminalization_audit import (  # noqa: E402
 
 
 class FactorClaimTerminalizationAuditTest(unittest.TestCase):
+    def test_compact_live_process_marks_exit_file_stale_for_current_process(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            run_root = Path(tmp) / "ict-engine-live-root"
+            checks = run_root / "checks"
+            checks.mkdir(parents=True)
+            exit_file = checks / "tomac_aq.exit"
+            exit_file.write_text("1\n", encoding="utf-8")
+
+            # The exit file predates a currently running process and must not be
+            # presented as a current terminal result for the live process.
+            stale_mtime = datetime.now(timezone.utc).timestamp() - 600
+            exit_file.touch()
+            os.utime(exit_file, (stale_mtime, stale_mtime))
+
+            report = {
+                "schema_version": "factor-claim-terminalization-audit/v1",
+                "generated_at": "2026-05-28T01:10:00+00:00",
+                "claims_dir": str(Path(tmp) / "claims"),
+                "repo_root": "/Users/example/ict-engine",
+                "summary": {"status": "needs_attention"},
+                "claims": [],
+                "live_factor_processes": [
+                    {
+                        "pid": 123,
+                        "ppid": 1,
+                        "elapsed": "00:30",
+                        "run_root": str(run_root),
+                        "exit_file": str(exit_file),
+                        "exit_file_exists": True,
+                        "command_excerpt": "python run_tomac_index_futures_clean_aq_v1.py",
+                    }
+                ],
+            }
+
+            compact = format_report(report, compact=True)
+
+        self.assertEqual(compact["attention_live_processes"][0]["exit_file_state"], "stale_for_process")
+
     def test_parse_claim_text_accepts_colon_and_equals_claims(self) -> None:
         parsed = parse_claim_text(
             """
@@ -118,6 +158,90 @@ status=active
         self.assertIsNone(parsed["promotion_allowed"])
         self.assertIsNone(parsed["trade_usable"])
 
+    def test_summarize_treats_nested_live_run_root_under_tmp_root_as_live_runtime_owner(self) -> None:
+        claims = [
+            {
+                "claim_file": "nested-live.claim",
+                "status": "active",
+                "owner": "codex",
+                "agent_name": "codex-nested-live",
+                "scope": "same-root child loop",
+                "active_task": "wait for current aq child",
+                "run_root": "/tmp/ict-engine-parent",
+                "tmp_root": "/tmp/ict-engine-parent",
+                "run_root_exists": True,
+                "missing_identity_fields": [],
+                "promotion_allowed": False,
+                "trade_usable": False,
+                "last_progress_at": "2026-05-27T20:53:20+0800",
+            }
+        ]
+        live_processes = [
+            {
+                "pid": 1,
+                "ppid": 2,
+                "elapsed": "00:10",
+                "run_root": "/tmp/ict-engine-parent/aq",
+                "exit_file": None,
+                "exit_file_exists": False,
+                "command_excerpt": "python run_tomac.py",
+            }
+        ]
+
+        summary = summarize(
+            claims,
+            live_processes=live_processes,
+            now=datetime(2026, 5, 27, 14, 0, tzinfo=timezone.utc),
+        )
+
+        self.assertEqual(summary["active_claims_without_live_process"], 0)
+        self.assertEqual(summary["wait_only_active_claims_without_live_process"], 0)
+        self.assertFalse(claims[0]["wait_only_without_live_process"])
+        self.assertTrue(claims[0]["live_runtime_owner"])
+
+    def test_summarize_treats_matching_factor_id_without_run_root_as_live_runtime_owner(self) -> None:
+        claims = [
+            {
+                "claim_file": "wpr-live.claim",
+                "status": "active",
+                "owner": "codex",
+                "agent_name": "codex-wpr-live",
+                "scope": "reference hurst launch",
+                "active_task": "wait for generic aq workspace runner",
+                "run_root": "/tmp/ict-engine-wpr-launch",
+                "tmp_root": "/tmp/ict-engine-wpr-launch",
+                "run_root_exists": True,
+                "missing_identity_fields": [],
+                "promotion_allowed": False,
+                "trade_usable": False,
+                "last_progress_at": "2026-05-27T23:38:46+0800",
+                "factor_id": "tomac_idxfut_clean_wpr_adx_reference_hurst_profile_range_compression_release_1m_v1",
+                "branch_path": "RangeReversion -> PdhPdlFractalLiquiditySweep -> WprAdxTrendAlignedReclaim -> HurstProfileMssReclaim -> ReferenceHurstProfileRangeCompressionRelease -> tomac_idxfut_clean_wpr_adx_reference_hurst_profile_range_compression_release_1m_v1",
+            }
+        ]
+        live_processes = [
+            {
+                "pid": 1374,
+                "ppid": 94167,
+                "elapsed": "01:42",
+                "run_root": None,
+                "exit_file": None,
+                "exit_file_exists": False,
+                "command_excerpt": "/Users/example/Auto-Quant/.venv/bin/python run_tomac.py",
+                "factor_id": "tomac_idxfut_clean_wpr_adx_reference_hurst_profile_range_compression_release_1m_v1",
+                "branch_path": "RangeReversion -> PdhPdlFractalLiquiditySweep -> WprAdxTrendAlignedReclaim -> HurstProfileMssReclaim -> ReferenceHurstProfileRangeCompressionRelease -> tomac_idxfut_clean_wpr_adx_reference_hurst_profile_range_compression_release_1m_v1",
+            }
+        ]
+
+        summary = summarize(
+            claims,
+            live_processes=live_processes,
+            now=datetime(2026, 5, 27, 15, 45, tzinfo=timezone.utc),
+        )
+
+        self.assertEqual(summary["active_claims_without_live_process"], 0)
+        self.assertTrue(claims[0]["live_runtime_owner"])
+
     def test_build_report_classifies_active_and_terminal_claims(self) -> None:
         with tempfile.TemporaryDirectory() as repo_tmp, tempfile.TemporaryDirectory() as claims_tmp:
             repo_root = Path(repo_tmp)
@@ -204,6 +328,34 @@ trade_usable=false
             self.assertEqual(report["summary"]["active_claims"], 0)
             self.assertEqual(report["claims"][0]["decision"], "continue_goal_active; no promotion_allowed/trade_usable evidence found")
 
+    def test_build_report_excludes_terminalized_status_variants_from_active_claims(self) -> None:
+        with tempfile.TemporaryDirectory() as repo_tmp, tempfile.TemporaryDirectory() as claims_tmp:
+            repo_root = Path(repo_tmp)
+            claims_dir = Path(claims_tmp)
+            run_root = repo_root / "support" / "docs" / "experiments" / "run-a"
+            run_root.mkdir(parents=True)
+
+            (claims_dir / "terminal-variant.claim").write_text(
+                f"""
+owner=codex
+run_root={run_root}
+status=terminalized_superseded_by_runtime_repair_takeover
+terminalized_at=2026-05-27T22:27:40+0800
+decision=terminalized_superseded_by_runtime_repair_takeover
+promotion_allowed=false
+trade_usable=false
+""",
+                encoding="utf-8",
+            )
+
+            report = build_report(claims_dir=claims_dir, repo_root=repo_root)
+
+            self.assertEqual(report["summary"]["total_claims"], 1)
+            self.assertEqual(report["summary"]["terminalized_claims"], 1)
+            self.assertEqual(report["summary"]["active_claims"], 0)
+            self.assertEqual(report["summary"]["valid_active_claims"], 0)
+            self.assertEqual(report["summary"]["invalid_active_claims"], 0)
+
     def test_build_report_keeps_explicit_active_status_even_when_decision_field_exists(self) -> None:
         with tempfile.TemporaryDirectory() as repo_tmp, tempfile.TemporaryDirectory() as claims_tmp:
             repo_root = Path(repo_tmp)
@@ -266,7 +418,6 @@ trade_usable=false
                 ),
                 encoding="utf-8",
             )
-
             json_run_root = repo_root / "support" / "docs" / "experiments" / "run-json"
             json_run_root.mkdir(parents=True)
             (json_run_root / "summaries").mkdir(parents=True, exist_ok=True)
@@ -328,6 +479,63 @@ trade_usable=false
                 [claim["status"] for claim in report["claims"]],
                 ["terminalized", "terminalized"],
             )
+
+    def test_compact_portable_paths_collapses_tmp_runtime_paths(self) -> None:
+        report = {
+            "schema_version": "factor-claim-terminalization-audit/v1",
+            "generated_at": "2026-05-27T12:00:00+00:00",
+            "claims_dir": "/tmp/ict-engine-agent-claims/board-b-factor-refinement",
+            "repo_root": "/Users/example/projects/ict-engine",
+            "summary": {"status": "needs_attention"},
+            "claims": [
+                {
+                    "claim_file": "demo.claim",
+                    "status": "active",
+                    "agent_name": "codex",
+                    "owner": "codex",
+                    "scope": "demo",
+                    "decision": None,
+                    "run_root": "/private/tmp/ict-engine-demo-run",
+                    "run_root_exists": True,
+                    "missing_identity_fields": [],
+                    "promotion_allowed": False,
+                    "trade_usable": False,
+                    "age_minutes": 1,
+                    "live_runtime_owner": False,
+                    "wait_only_without_live_process": False,
+                    "stale_safe_takeover_candidate": False,
+                    "summary_files": [],
+                }
+            ],
+            "live_factor_processes": [
+                {
+                    "pid": 1,
+                    "ppid": 2,
+                    "elapsed": "00:01",
+                    "run_root": "/private/tmp/ict-engine-demo-run",
+                    "exit_file": "/private/tmp/ict-engine-demo-run/checks/round_00.exit",
+                    "exit_file_exists": True,
+                    "command_excerpt": "python /private/tmp/ict-engine-demo-run/run_tomac.py",
+                }
+            ],
+        }
+
+        compact = format_report(report, compact=True, portable_paths=True)
+
+        self.assertEqual(compact["claims_dir"], "ict-engine-agent-claims/board-b-factor-refinement")
+        self.assertEqual(compact["attention_live_processes"][0]["run_root"], "ict-engine-demo-run")
+        self.assertEqual(
+            compact["attention_live_processes"][0]["exit_file"],
+            "ict-engine-demo-run/checks/round_00.exit",
+        )
+        self.assertEqual(
+            compact["attention_live_processes"][0]["command_excerpt"],
+            "python ict-engine-demo-run/run_tomac.py",
+        )
+
+    def test_compact_text_portable_paths_preserves_non_tmp_strings(self) -> None:
+        value = _compact_text("factor_closure_blocked", root="/Users/example/projects/ict-engine", portable_paths=True)
+        self.assertEqual(value, "factor_closure_blocked")
 
     def test_build_report_reads_json_payload_in_claim_suffix_as_json(self) -> None:
         with tempfile.TemporaryDirectory() as repo_tmp, tempfile.TemporaryDirectory() as claims_tmp:
@@ -925,6 +1133,16 @@ trade_usable=false
 
         self.assertFalse(_is_live_factor_command(command))
 
+    def test_live_process_classifier_ignores_tomac_matrix_diagnostics(self) -> None:
+        command = (
+            "/opt/homebrew/Cellar/python@3.13/3.13.12_1/Frameworks/Python.framework/Versions/3.13/"
+            "Resources/Python.app/Contents/MacOS/Python "
+            "support/scripts/research/tomac_factor_coverage_matrix.py "
+            "--tomac-root support/docs/experiments/actionable-regime-confidence/runs"
+        )
+
+        self.assertFalse(_is_live_factor_command(command))
+
     def test_drop_stale_failed_tomac_prep_wrapper_without_live_child(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             run_root = Path(tmp) / "ict-engine-tomac-liquidity-sweep-adx-trend-strength-reclaim-prep-20260526T135002+0800"
@@ -979,6 +1197,55 @@ trade_usable=false
             }
 
             self.assertEqual(_drop_stale_failed_tomac_prep_wrappers([wrapper, child]), [wrapper, child])
+
+    def test_drop_stale_failed_tomac_prep_wrappers_drops_terminalized_parent_without_child(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            run_root = Path(tmp) / "ict-engine-tomac-balanced-structure-ict-transition-hazard-trim-prep"
+            checks = run_root / "checks"
+            summaries = run_root / "summaries"
+            checks.mkdir(parents=True)
+            summaries.mkdir(parents=True)
+            (checks / "terminal_metrics.json").write_text('{"decision":"observation"}\n', encoding="utf-8")
+            (checks / "round_03_run_tomac.exit").write_text("0\n", encoding="utf-8")
+            (summaries / "terminal_decision_summary.md").write_text("Decision: observation\n", encoding="utf-8")
+
+            wrapper = {
+                "pid": 50109,
+                "ppid": 46666,
+                "elapsed": "43:02",
+                "run_root": str(run_root),
+                "exit_file": str(checks / "round_03_run_tomac.exit"),
+                "exit_file_exists": True,
+                "command_excerpt": (
+                    "python support/docs/experiments/actionable-regime-confidence/scripts/"
+                    f"run_tomac_tod_balanced_structure_ict_transition_hazard_trim_prep_v1.py --root {run_root} --launch"
+                ),
+            }
+
+            self.assertEqual(_drop_stale_failed_tomac_prep_wrappers([wrapper]), [])
+
+    def test_drop_stale_failed_tomac_prep_wrappers_drops_terminalized_run_tomac_child_without_descendants(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            run_root = Path(tmp) / "ict-engine-opening-drive-structure-ict-transition-hazard-trim-prep" / "aq"
+            checks = run_root / "checks"
+            summaries = run_root / "summaries"
+            checks.mkdir(parents=True)
+            summaries.mkdir(parents=True)
+            (checks / "terminal_metrics.json").write_text('{"decision":"observation"}\n', encoding="utf-8")
+            (checks / "round_03_run_tomac.exit").write_text("0\n", encoding="utf-8")
+            (summaries / "terminal_decision_summary.md").write_text("Decision: observation\n", encoding="utf-8")
+
+            child = {
+                "pid": 68979,
+                "ppid": 49561,
+                "elapsed": "07:52",
+                "run_root": str(run_root),
+                "exit_file": str(checks / "round_03_run_tomac.exit"),
+                "exit_file_exists": True,
+                "command_excerpt": "[local-path] run_tomac.py",
+            }
+
+            self.assertEqual(_drop_stale_failed_tomac_prep_wrappers([child]), [])
 
     def test_live_process_classifier_detects_custom_tomac_scanner_and_lane_root(self) -> None:
         command = (
@@ -1169,6 +1436,49 @@ trade_usable=false
         self.assertEqual(attributed[0]["run_root_attribution"], "cwd")
         self.assertEqual(attributed[0]["run_root_attribution_pid"], 34279)
 
+    def test_attribute_workspace_identity_from_generic_aq_workspace_cwd(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            workspace = Path(tmp) / "aq-debug" / "aq_workspaces" / "1m"
+            strategies = workspace / "user_data" / "strategies_external"
+            strategies.mkdir(parents=True)
+            (strategies / "TomacNQWpr.py").write_text(
+                """
+class Dummy:
+    \"""
+    factor_id: tomac_idxfut_clean_wpr_adx_reference_hurst_profile_range_compression_release_1m_v1
+    branch_path: RangeReversion -> PdhPdlFractalLiquiditySweep -> WprAdxTrendAlignedReclaim -> HurstProfileMssReclaim -> ReferenceHurstProfileRangeCompressionRelease -> tomac_idxfut_clean_wpr_adx_reference_hurst_profile_range_compression_release_1m_v1
+    \"""
+""",
+                encoding="utf-8",
+            )
+            processes = [
+                {
+                    "pid": 1374,
+                    "ppid": 94167,
+                    "elapsed": "01:42",
+                    "run_root": None,
+                    "exit_file": None,
+                    "exit_file_exists": False,
+                    "command_excerpt": "/Users/example/Auto-Quant/.venv/bin/python run_tomac.py",
+                }
+            ]
+
+            attributed = _attribute_run_roots_from_cwd(
+                processes,
+                {1374: str(workspace)},
+            )
+
+        self.assertIsNone(attributed[0]["run_root"])
+        self.assertEqual(
+            attributed[0]["factor_id"],
+            "tomac_idxfut_clean_wpr_adx_reference_hurst_profile_range_compression_release_1m_v1",
+        )
+        self.assertEqual(
+            attributed[0]["branch_path"],
+            "RangeReversion -> PdhPdlFractalLiquiditySweep -> WprAdxTrendAlignedReclaim -> HurstProfileMssReclaim -> ReferenceHurstProfileRangeCompressionRelease -> tomac_idxfut_clean_wpr_adx_reference_hurst_profile_range_compression_release_1m_v1",
+        )
+        self.assertEqual(attributed[0]["run_root_attribution"], "cwd_workspace_identity")
+
     def test_format_report_compact_keeps_only_attention_claim_summaries(self) -> None:
         full_report = {
             "schema_version": "factor-claim-terminalization-audit/v1",
@@ -1210,6 +1520,10 @@ trade_usable=false
                     "run_root_exists": False,
                     "promotion_allowed": None,
                     "trade_usable": None,
+                    "age_minutes": 91,
+                    "live_runtime_owner": False,
+                    "wait_only_without_live_process": True,
+                    "stale_safe_takeover_candidate": True,
                     "summary_files": [],
                 },
                 {
@@ -1227,6 +1541,14 @@ trade_usable=false
                     "summary_files": ["checks/terminal_metrics.json"],
                 },
             ],
+            "live_factor_processes": [
+                {
+                    "pid": 4321,
+                    "run_root": "/tmp/live-run-a",
+                    "exit_file_state": "present",
+                    "command_excerpt": "python run_tomac.py",
+                }
+            ],
         }
 
         compact = format_report(full_report, compact=True)
@@ -1238,6 +1560,10 @@ trade_usable=false
         self.assertEqual(
             compact["attention_groups"],
             {
+                "by_actionability": {
+                    "active_claim_debt": 1,
+                    "stale_safe_takeover_candidate": 1,
+                },
                 "by_owner": {"codex": 2},
                 "by_run_root_state": {"missing": 1, "present": 1},
                 "by_status": {"active": 1, "terminalized": 1},
@@ -1265,6 +1591,32 @@ trade_usable=false
         self.assertEqual([claim["claim_file"] for claim in compact["attention_claims"]], ["active.claim", "positive.claim"])
         self.assertEqual([claim["agent_name"] for claim in compact["attention_claims"]], ["codex-active-lane", "codex-positive-review"])
         self.assertEqual(compact["attention_claims"][0]["run_root_state"], "missing")
+        self.assertEqual(
+            compact["attention_action_queue"],
+            {
+                "externalize_wait_only_claims": [
+                    {
+                        "claim_file": "active.claim",
+                        "age_minutes": 91,
+                        "stale_safe_takeover_candidate": True,
+                    }
+                ],
+                "stale_safe_takeover_claims": [
+                    {
+                        "claim_file": "active.claim",
+                        "age_minutes": 91,
+                        "wait_only_without_live_process": True,
+                    }
+                ],
+                "live_runtime_run_roots": [
+                    {
+                        "pid": 4321,
+                        "run_root": "/tmp/live-run-a",
+                        "exit_file_state": "none",
+                    }
+                ],
+            },
+        )
         self.assertNotIn("claim_path", compact["attention_claims"][0])
         self.assertNotIn("run_root", compact["attention_claims"][0])
 
