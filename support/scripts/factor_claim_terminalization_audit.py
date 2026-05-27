@@ -15,6 +15,7 @@ from typing import Any
 DEFAULT_CLAIMS_DIR = Path("/tmp/ict-engine-agent-claims/board-b-factor-refinement")
 SUMMARY_CANDIDATES = (
     "summaries/terminal_decision_summary.md",
+    "summaries/terminal_summary.json",
     "checks/terminal_metrics.json",
 )
 LIVE_FACTOR_PROCESS_MARKERS = (
@@ -39,6 +40,8 @@ TMP_RUN_ROOT_SUBDIRS = {"full", "out", "output", "checks", "summaries", "scripts
 ACTIVE_CLAIM_REQUIRED_FIELDS = (
     "agent_name",
     "owner",
+    "claimed_at",
+    "last_progress_at",
     "scope",
     "active_task",
     "non_goals",
@@ -79,8 +82,9 @@ def parse_claim_text(text: str) -> dict[str, Any]:
             summary_parts.append(value)
 
     search_text = "\n".join([text, *summary_parts])
-    fields["promotion_allowed"] = _extract_bool("promotion_allowed", search_text)
-    fields["trade_usable"] = _extract_bool("trade_usable", search_text)
+    for key in ("promotion_allowed", "trade_usable"):
+        explicit_value = _coerce_bool(fields.get(key))
+        fields[key] = explicit_value if explicit_value is not None else _extract_bool(key, search_text)
     return fields
 
 
@@ -100,6 +104,18 @@ def _normalize_scalar(value: object) -> object:
     if len(text) >= 2 and text[0] == text[-1] and text[0] in {'`', '"', "'"}:
         return text[1:-1].strip()
     return text
+
+
+def _coerce_bool(value: object) -> bool | None:
+    if isinstance(value, bool):
+        return value
+    if isinstance(value, str):
+        normalized = value.strip().lower()
+        if normalized == "true":
+            return True
+        if normalized == "false":
+            return False
+    return None
 
 
 def _is_absolute_path_text(value: object) -> bool:
@@ -125,7 +141,27 @@ def _resolved_run_root(value: str | None, root: Path) -> Path | None:
     return path
 
 
-def _status(fields: dict[str, Any]) -> str:
+def _summary_indicates_terminalized(summary_flags: dict[str, Any]) -> bool:
+    if (
+        summary_flags.get("terminalized_at")
+        or summary_flags.get("terminal_at")
+        or summary_flags.get("terminal_status")
+        or summary_flags.get("terminal_decision")
+        or summary_flags.get("decision")
+    ):
+        return True
+    status = str(summary_flags.get("status", "")).strip().lower()
+    return status.startswith("terminal") or status in {
+        "launch_finished",
+        "readback_complete",
+        "complete",
+        "completed",
+        "finished",
+    }
+
+
+def _status(fields: dict[str, Any], summary_flags: dict[str, Any] | None = None) -> str:
+    summary_flags = summary_flags or {}
     status = str(fields.get("status", "")).lower()
     if (
         fields.get("terminalized_at")
@@ -136,6 +172,8 @@ def _status(fields: dict[str, Any]) -> str:
     ):
         return "terminalized"
     if fields.get("decision") or fields.get("terminal_decision"):
+        return "terminalized"
+    if _summary_indicates_terminalized(summary_flags):
         return "terminalized"
     return "active"
 
@@ -153,16 +191,32 @@ def _load_summary_flags(run_root: Path | None) -> dict[str, Any]:
         except OSError:
             continue
         evidence.setdefault("summary_files", []).append(rel_path)
+        parsed_text_fields = parse_claim_text(text)
+        for key in ("decision", "terminal_decision", "terminal_status", "terminalized_at", "terminal_at", "status"):
+            value = parsed_text_fields.get(key)
+            if value not in (None, ""):
+                evidence[key] = value
         if path.suffix == ".json":
             try:
                 parsed = json.loads(text)
             except json.JSONDecodeError:
                 parsed = None
             if isinstance(parsed, dict):
-                for key in ("promotion_allowed", "trade_usable"):
+                for key in (
+                    "promotion_allowed",
+                    "trade_usable",
+                    "decision",
+                    "terminal_decision",
+                    "terminal_status",
+                    "terminalized_at",
+                    "terminal_at",
+                    "status",
+                ):
                     value = _find_key(parsed, key)
                     if isinstance(value, bool):
                         evidence[key] = value
+                    elif value not in (None, ""):
+                        evidence[key] = _normalize_scalar(value)
         for key in ("promotion_allowed", "trade_usable"):
             value = _extract_bool(key, text)
             if value is not None:
@@ -199,7 +253,7 @@ def read_claim(path: Path, root: Path) -> dict[str, Any]:
         promotion_allowed = summary_flags.get("promotion_allowed")
     if trade_usable is None:
         trade_usable = summary_flags.get("trade_usable")
-    status = _status(fields)
+    status = _status(fields, summary_flags=summary_flags)
     missing_identity_fields = _missing_active_claim_identity_fields(fields) if status != "terminalized" else []
 
     return {
@@ -233,6 +287,8 @@ def _missing_active_claim_identity_fields(fields: dict[str, Any]) -> list[str]:
     ]
     if not str(fields.get("run_root") or "").strip() and not str(fields.get("tmp_root") or "").strip():
         missing.append("run_root_or_tmp_root")
+    if not str(fields.get("progress_report") or "").strip() and not str(fields.get("latest_report") or "").strip():
+        missing.append("progress_report_or_latest_report")
     return missing
 
 
@@ -248,18 +304,43 @@ def _claim_repo_root(fields: dict[str, Any], fallback: Path) -> Path:
 
 
 def _parse_claim_file(path: Path, text: str) -> dict[str, Any]:
+    parsed_json = _parse_json_claim_object(text)
+    if parsed_json is not None:
+        return parsed_json
     if path.suffix == ".json":
         try:
             parsed = json.loads(text)
         except json.JSONDecodeError:
             parsed = None
         if isinstance(parsed, dict):
-            fields = {str(key): _normalize_scalar(value) for key, value in parsed.items() if isinstance(value, (str, int, float, bool))}
+            fields = _claim_fields_from_json(parsed)
             serialized = json.dumps(parsed, sort_keys=True)
-            fields["promotion_allowed"] = _extract_bool("promotion_allowed", serialized)
-            fields["trade_usable"] = _extract_bool("trade_usable", serialized)
+            if not isinstance(fields.get("promotion_allowed"), bool):
+                fields["promotion_allowed"] = _extract_bool("promotion_allowed", serialized)
+            if not isinstance(fields.get("trade_usable"), bool):
+                fields["trade_usable"] = _extract_bool("trade_usable", serialized)
             return fields
     return parse_claim_text(text)
+
+
+def _parse_json_claim_object(text: str) -> dict[str, Any] | None:
+    stripped = text.strip()
+    if not stripped.startswith("{"):
+        return None
+    try:
+        parsed = json.loads(stripped)
+    except json.JSONDecodeError:
+        return None
+    if not isinstance(parsed, dict):
+        return None
+    return _claim_fields_from_json(parsed)
+
+
+def _claim_fields_from_json(parsed: dict[str, Any]) -> dict[str, Any]:
+    fields: dict[str, Any] = {}
+    for key, value in parsed.items():
+        fields[str(key).lower().replace("-", "_")] = _normalize_scalar(value)
+    return fields
 
 
 def summarize(claims: list[dict[str, Any]], live_processes: list[dict[str, Any]] | None = None) -> dict[str, Any]:
@@ -392,13 +473,66 @@ def detect_live_factor_processes() -> list[dict[str, Any]]:
                 "command_excerpt": _command_excerpt(command),
             }
         )
-    return _dedupe_live_processes(_attribute_parent_run_roots(processes))
+    attributed = _attribute_parent_run_roots(processes)
+    filtered = _drop_stale_failed_tomac_prep_wrappers(attributed)
+    return _dedupe_live_processes(filtered)
 
 
 def _is_live_factor_command(command: str) -> bool:
     if _looks_like_readback_command(command):
         return False
+    if _is_await_launch_wrapper(command):
+        return False
+    if _is_ibkr_provider_status_probe(command):
+        return True
+    if _is_direct_ict_engine_board_b_cli_command(command):
+        return True
+    if re.search(r"(?:^|\s)\S*tomac_[^\s/]*_(?:scan|postscan)\.py\b", command):
+        return True
+    if re.search(r"(?:^|\s)\S*tomac_[^\s/]*\.py\b", command):
+        run_root = _extract_run_root(command)
+        return bool(run_root and _is_board_b_run_root(run_root))
     return any(marker in command for marker in LIVE_FACTOR_PROCESS_MARKERS)
+
+
+def _is_await_launch_wrapper(command: str) -> bool:
+    return bool(re.search(r"(?:^|\s)\S*await_launch_v\d+\.py\b", command))
+
+
+def _is_tomac_prep_wrapper_launch(command: str) -> bool:
+    normalized = " ".join(command.split())
+    return bool(
+        re.search(r"(?:^|\s)\S*run_tomac_[^\s/]*_prep_v\d+\.py\b", normalized)
+        and re.search(r"(?:^|\s)--launch(?:\s|$)", normalized)
+    )
+
+
+def _is_direct_ict_engine_board_b_cli_command(command: str) -> bool:
+    normalized = " ".join(command.split())
+    if not re.search(r"(?:^|\s)(?:\S*/)?ict-engine\s+(?:analyze|workflow-status|pre-bayes-status|policy-training-status|update)\b", normalized):
+        return False
+    run_root = _extract_run_root(command)
+    if run_root is None:
+        return False
+    run_root_text = str(run_root)
+    return _is_board_b_run_root(run_root)
+
+
+def _is_board_b_run_root(run_root: Path) -> bool:
+    run_root_text = str(run_root)
+    return (
+        "/tmp/ict-engine-" in run_root_text
+        or "/private/tmp/ict-engine-" in run_root_text
+        or "/support/docs/experiments/actionable-regime-confidence/runs/" in run_root_text
+    )
+
+
+def _is_ibkr_provider_status_probe(command: str) -> bool:
+    normalized = " ".join(command.lower().split())
+    return bool(
+        re.search(r"(?:^|\s)provider-status(?:\s|$)", normalized)
+        and re.search(r"(?:^|\s)--provider(?:=|\s+)ibkr(?:\s|$)", normalized)
+    )
 
 
 def _looks_like_readback_command(command: str) -> bool:
@@ -421,7 +555,7 @@ def _extract_run_root(command: str) -> Path | None:
     if assignment:
         return _normalize_tmp_run_root(Path(assignment.group(1).strip("'\"")))
 
-    out_arg = re.search(r"--(?:out|run-root|run_root)\s+([^\s;]+)", command)
+    out_arg = re.search(r"--(?:out|root|run-root|run_root)\s+([^\s;]+)", command)
     if out_arg:
         return _normalize_tmp_run_root(Path(out_arg.group(1).strip("'\"")))
 
@@ -541,6 +675,36 @@ def _dedupe_live_processes(processes: list[dict[str, Any]]) -> list[dict[str, An
         if current is None or _process_rank(process) > _process_rank(current):
             by_key[key] = process
     return sorted(by_key.values(), key=lambda item: int(item.get("pid") or 0))
+
+
+def _drop_stale_failed_tomac_prep_wrappers(processes: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    child_ppids = {
+        int(process["ppid"])
+        for process in processes
+        if process.get("ppid") is not None
+    }
+    filtered: list[dict[str, Any]] = []
+    for process in processes:
+        command = str(process.get("command_excerpt") or "")
+        pid = process.get("pid")
+        run_root_text = process.get("run_root")
+        if (
+            _is_tomac_prep_wrapper_launch(command)
+            and isinstance(pid, int)
+            and pid not in child_ppids
+            and isinstance(run_root_text, str)
+        ):
+            run_root = Path(run_root_text)
+            source_exit = run_root / "checks" / "source_launch.exit"
+            if source_exit.exists():
+                try:
+                    exit_text = source_exit.read_text(encoding="utf-8", errors="replace").strip()
+                except OSError:
+                    exit_text = ""
+                if exit_text and exit_text != "0":
+                    continue
+        filtered.append(process)
+    return filtered
 
 
 def _process_rank(process: dict[str, Any]) -> int:

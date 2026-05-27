@@ -12,6 +12,7 @@ if str(SCRIPTS_ROOT) not in sys.path:
     sys.path.insert(0, str(SCRIPTS_ROOT))
 
 from factor_claim_terminalization_audit import (  # noqa: E402
+    _drop_stale_failed_tomac_prep_wrappers,
     _attribute_parent_run_roots,
     _extract_run_root,
     _infer_exit_file,
@@ -78,6 +79,25 @@ run_root=support/docs/experiments/run-a
         )
 
         self.assertEqual(parsed["run_root"], "/tmp/real-run-root")
+
+    def test_parse_claim_text_prefers_explicit_bool_fields_over_negated_non_goals(self) -> None:
+        parsed = parse_claim_text(
+            """
+agent_name=codex-etn-readback
+owner=Codex CLI
+scope=read existing ETN branch evidence
+active_task=verify current ETN terminal artifacts
+non_goals=no provider fetch; no promotion_allowed=true; no trade_usable=true
+write_surface=/tmp/ict-engine-etn-readback
+tmp_root=/tmp/ict-engine-etn-readback
+status=active
+promotion_allowed=false
+trade_usable=false
+"""
+        )
+
+        self.assertEqual(parsed["promotion_allowed"], False)
+        self.assertEqual(parsed["trade_usable"], False)
 
     def test_build_report_classifies_active_and_terminal_claims(self) -> None:
         with tempfile.TemporaryDirectory() as repo_tmp, tempfile.TemporaryDirectory() as claims_tmp:
@@ -164,6 +184,130 @@ trade_usable=false
             self.assertEqual(report["summary"]["terminalized_claims"], 1)
             self.assertEqual(report["summary"]["active_claims"], 0)
             self.assertEqual(report["claims"][0]["decision"], "continue_goal_active; no promotion_allowed/trade_usable evidence found")
+
+    def test_build_report_treats_run_root_terminal_artifacts_as_terminalized_even_if_claim_status_is_active(self) -> None:
+        with tempfile.TemporaryDirectory() as repo_tmp, tempfile.TemporaryDirectory() as claims_tmp:
+            repo_root = Path(repo_tmp)
+            claims_dir = Path(claims_tmp)
+
+            decision_run_root = repo_root / "support" / "docs" / "experiments" / "run-decision"
+            decision_run_root.mkdir(parents=True)
+            (decision_run_root / "summaries").mkdir(parents=True, exist_ok=True)
+            (decision_run_root / "checks").mkdir(parents=True, exist_ok=True)
+            (decision_run_root / "summaries" / "terminal_decision_summary.md").write_text(
+                """
+# Exact lane
+
+Decision: observation_no_survivor
+promotion_allowed=false
+trade_usable=false
+""",
+                encoding="utf-8",
+            )
+            (decision_run_root / "checks" / "terminal_metrics.json").write_text(
+                json.dumps(
+                    {
+                        "decision": "observation_no_survivor",
+                        "promotion_allowed": False,
+                        "trade_usable": False,
+                    }
+                ),
+                encoding="utf-8",
+            )
+
+            json_run_root = repo_root / "support" / "docs" / "experiments" / "run-json"
+            json_run_root.mkdir(parents=True)
+            (json_run_root / "summaries").mkdir(parents=True, exist_ok=True)
+            (json_run_root / "summaries" / "terminal_summary.json").write_text(
+                json.dumps(
+                    {
+                        "status": "launch_finished",
+                        "scan_exit": 0,
+                        "target_row_count": 0,
+                        "promotion_allowed": False,
+                        "trade_usable": False,
+                    }
+                ),
+                encoding="utf-8",
+            )
+
+            (claims_dir / "decision-active.claim").write_text(
+                f"""
+agent_name=codex-derived-terminal-decision
+owner=codex
+claimed_at=2026-05-27T13:39:48+0800
+last_progress_at=2026-05-27T13:45:00+0800
+scope=Board B same-root decision packet
+active_task=read same-root terminal packet
+non_goals=no relaunch
+write_surface=/tmp/example-workdoc.md
+run_root={decision_run_root.relative_to(repo_root)}
+status=active
+progress_report=/tmp/example-progress.md
+promotion_allowed=false
+trade_usable=false
+""",
+                encoding="utf-8",
+            )
+            (claims_dir / "json-active.claim").write_text(
+                f"""
+agent_name=codex-derived-terminal-json
+owner=codex
+claimed_at=2026-05-27T13:50:04+0800
+last_progress_at=2026-05-27T13:55:00+0800
+scope=Board B same-root launch packet
+active_task=read launch-finished packet
+non_goals=no relaunch
+write_surface=/tmp/example-json-workdoc.md
+run_root={json_run_root.relative_to(repo_root)}
+status=active
+progress_report=/tmp/example-json-progress.md
+promotion_allowed=false
+trade_usable=false
+""",
+                encoding="utf-8",
+            )
+
+            report = build_report(claims_dir=claims_dir, repo_root=repo_root)
+
+            self.assertEqual(report["summary"]["terminalized_claims"], 2)
+            self.assertEqual(report["summary"]["active_claims"], 0)
+            self.assertEqual(
+                [claim["status"] for claim in report["claims"]],
+                ["terminalized", "terminalized"],
+            )
+
+    def test_build_report_reads_json_payload_in_claim_suffix_as_json(self) -> None:
+        with tempfile.TemporaryDirectory() as repo_tmp, tempfile.TemporaryDirectory() as claims_tmp:
+            repo_root = Path(repo_tmp)
+            claims_dir = Path(claims_tmp)
+            (claims_dir / "readonly-terminal.claim").write_text(
+                json.dumps(
+                    {
+                        "active_task": "classify non-duplicate Board B progress",
+                        "agent_name": "codex-readonly-auditor",
+                        "non_goals": ["no provider", "no promotion"],
+                        "owner": "Codex CLI",
+                        "scope": "read-only extension breadth audit",
+                        "status": "terminal_readonly_audit_written",
+                        "tmp_root": "/tmp/ict-engine-agent-claims/board-b-factor-refinement",
+                        "write_surface": "/tmp/terminalization_audit.json",
+                        "promotion_allowed": False,
+                        "trade_usable": False,
+                    },
+                    indent=2,
+                ),
+                encoding="utf-8",
+            )
+
+            report = build_report(claims_dir=claims_dir, repo_root=repo_root)
+
+            self.assertEqual(report["summary"]["total_claims"], 1)
+            self.assertEqual(report["summary"]["terminalized_claims"], 1)
+            self.assertEqual(report["summary"]["active_claims"], 0)
+            self.assertEqual(report["summary"]["invalid_active_claims"], 0)
+            self.assertEqual(report["summary"]["status"], "pass")
+            self.assertEqual(report["claims"][0]["agent_name"], "codex-readonly-auditor")
 
     def test_build_report_ignores_generated_audit_json_reports(self) -> None:
         with tempfile.TemporaryDirectory() as repo_tmp, tempfile.TemporaryDirectory() as claims_tmp:
@@ -431,8 +575,11 @@ trade_usable=false
             (claims_dir / "unnamed-active.claim").write_text(
                 """
 owner=codex
+claimed_at=2026-05-25T10:00:00+0800
+last_progress_at=2026-05-25T10:05:00+0800
 scope=still active but vague
 run_root=/tmp/example-active-run
+progress_report=/tmp/example-active-run/progress.md
 """,
                 encoding="utf-8",
             )
@@ -440,12 +587,15 @@ run_root=/tmp/example-active-run
                 """
 agent_name=codex-named-guard
 owner=codex
+claimed_at=2026-05-25T10:00:00+0800
+last_progress_at=2026-05-25T10:05:00+0800
 scope=Board B named active lane
 active_task=verify a specific gate
 non_goals=no provider launch
 write_surface=/tmp only
 tmp_root=/tmp/named-active
 status=active
+progress_report=/tmp/named-active/progress.md
 """,
                 encoding="utf-8",
             )
@@ -462,6 +612,36 @@ status=active
             self.assertEqual(
                 invalid_claim["missing_identity_fields"],
                 ["agent_name", "active_task", "non_goals", "write_surface", "status"],
+            )
+
+    def test_build_report_flags_active_claims_missing_timestamp_and_report_fields(self) -> None:
+        with tempfile.TemporaryDirectory() as repo_tmp, tempfile.TemporaryDirectory() as claims_tmp:
+            repo_root = Path(repo_tmp)
+            claims_dir = Path(claims_tmp)
+            (claims_dir / "missing-timestamps.claim").write_text(
+                """
+agent_name=codex-stale-claim
+owner=Codex CLI
+scope=Board B exact lane
+active_task=run exact gate
+non_goals=no promotion
+write_surface=/tmp/ict-engine-stale
+tmp_root=/tmp/ict-engine-stale
+status=active
+promotion_allowed=false
+trade_usable=false
+""",
+                encoding="utf-8",
+            )
+
+            report = build_report(claims_dir=claims_dir, repo_root=repo_root)
+            compact = format_report(report, compact=True)
+
+            self.assertEqual(report["summary"]["invalid_active_claims"], 1)
+            invalid_claim = compact["attention_claims"][0]
+            self.assertEqual(
+                invalid_claim["missing_identity_fields"],
+                ["claimed_at", "last_progress_at", "progress_report_or_latest_report"],
             )
 
     def test_live_process_classifier_ignores_ps_rg_readback_commands(self) -> None:
@@ -528,6 +708,28 @@ status=active
             with self.subTest(command=command):
                 self.assertTrue(_is_live_factor_command(command))
 
+    def test_live_process_classifier_detects_ibkr_provider_status_probe(self) -> None:
+        command = (
+            "cargo run --quiet -- provider-status --provider ibkr --agent"
+        )
+
+        self.assertTrue(_is_live_factor_command(command))
+
+    def test_live_process_classifier_detects_direct_ict_engine_board_b_cli_child(self) -> None:
+        command = (
+            ".local-artifacts/cargo-target/debug/ict-engine analyze "
+            "--symbol TOMAC_NQ_BIDIR_OPENING_DRIVE_TWOLEG_PROFILE "
+            "--data-root /tmp/ict-engine-nq-twoleg-openingdrive-obs30-mtf-readback-followup/data-mtf "
+            "--state-dir /tmp/ict-engine-nq-twoleg-openingdrive-obs30-mtf-readback-followup/state "
+            "--agent"
+        )
+
+        self.assertTrue(_is_live_factor_command(command))
+        self.assertEqual(
+            _extract_run_root(command),
+            Path("/tmp/ict-engine-nq-twoleg-openingdrive-obs30-mtf-readback-followup"),
+        )
+
     def test_live_process_classifier_detects_tomac_helper_scans(self) -> None:
         command = (
             "/opt/homebrew/bin/python3 "
@@ -538,6 +740,115 @@ status=active
         )
 
         self.assertTrue(_is_live_factor_command(command))
+
+    def test_live_process_classifier_ignores_tomac_await_launch_watchers(self) -> None:
+        command = (
+            "/opt/homebrew/bin/python3 "
+            "/Users/example/ict-engine/support/docs/experiments/actionable-regime-confidence/scripts/"
+            "run_tomac_prior_day_extreme_continuation_await_launch_v1.py "
+            "--root /tmp/ict-engine-tomac-prior-day-extreme-continuation-prep-20260526T092700+0800 "
+            "--status-out /tmp/ict-engine-tomac-prior-day-extreme-continuation-prep-20260526T092700+0800/summaries/await_launch_status.json"
+        )
+
+        self.assertFalse(_is_live_factor_command(command))
+
+    def test_drop_stale_failed_tomac_prep_wrapper_without_live_child(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            run_root = Path(tmp) / "ict-engine-tomac-liquidity-sweep-adx-trend-strength-reclaim-prep-20260526T135002+0800"
+            checks = run_root / "checks"
+            checks.mkdir(parents=True)
+            (checks / "source_launch.exit").write_text("1\n", encoding="utf-8")
+
+            wrapper = {
+                "pid": 67655,
+                "ppid": 8761,
+                "elapsed": "14:03",
+                "run_root": str(run_root),
+                "exit_file": None,
+                "exit_file_exists": False,
+                "command_excerpt": (
+                    "python support/docs/experiments/actionable-regime-confidence/scripts/"
+                    "run_tomac_liquidity_sweep_adx_trend_strength_reclaim_prep_v1.py "
+                    f"--root {run_root} --launch"
+                ),
+            }
+
+            self.assertEqual(_drop_stale_failed_tomac_prep_wrappers([wrapper]), [])
+
+    def test_drop_stale_failed_tomac_prep_wrapper_keeps_parent_with_live_child(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            run_root = Path(tmp) / "ict-engine-tomac-liquidity-sweep-adx-trend-strength-reclaim-prep-20260526T135002+0800"
+            checks = run_root / "checks"
+            checks.mkdir(parents=True)
+            (checks / "source_launch.exit").write_text("1\n", encoding="utf-8")
+
+            wrapper = {
+                "pid": 67655,
+                "ppid": 8761,
+                "elapsed": "14:03",
+                "run_root": str(run_root),
+                "exit_file": None,
+                "exit_file_exists": False,
+                "command_excerpt": (
+                    "python support/docs/experiments/actionable-regime-confidence/scripts/"
+                    "run_tomac_liquidity_sweep_adx_trend_strength_reclaim_prep_v1.py "
+                    f"--root {run_root} --launch"
+                ),
+            }
+            child = {
+                "pid": 67679,
+                "ppid": 67655,
+                "elapsed": "14:02",
+                "run_root": None,
+                "exit_file": None,
+                "exit_file_exists": False,
+                "command_excerpt": "uv run --with pandas --with numpy --with tqdm python /Users/example/Downloads/Tomac/90wr1.5rrr_strategy.py",
+            }
+
+            self.assertEqual(_drop_stale_failed_tomac_prep_wrappers([wrapper, child]), [wrapper, child])
+
+    def test_live_process_classifier_detects_custom_tomac_scanner_and_lane_root(self) -> None:
+        command = (
+            "/opt/homebrew/bin/python3 /tmp/tomac_strict_trend_ote_reaction_scan.py "
+            "--start 2021-01-01 --end 2025-12-31T23:59:59 "
+            "--out /tmp/ict-engine-tomac-nq-strict-trend-root-ote-reaction-gate1-"
+            "20260525T005122+0800/full-2021-2025"
+        )
+
+        self.assertTrue(_is_live_factor_command(command))
+        self.assertEqual(
+            _extract_run_root(command),
+            Path("/tmp/ict-engine-tomac-nq-strict-trend-root-ote-reaction-gate1-20260525T005122+0800"),
+        )
+
+    def test_live_process_classifier_detects_custom_tomac_postscan_and_lane_root(self) -> None:
+        command = (
+            "/opt/homebrew/bin/python3 /tmp/tomac_nq_body_momentum_cost_aware_overlay_postscan.py "
+            "--trades-dir /tmp/source/trades "
+            "--summary /tmp/source/summary.json "
+            "--out /tmp/ict-engine-tomac-nq-body-momentum-cost-aware-overlay-postscan-"
+            "20260525T0230+0800/full-2021-2025 --max-rows 120"
+        )
+
+        self.assertTrue(_is_live_factor_command(command))
+        self.assertEqual(
+            _extract_run_root(command),
+            Path("/tmp/ict-engine-tomac-nq-body-momentum-cost-aware-overlay-postscan-20260525T0230+0800"),
+        )
+
+    def test_live_process_classifier_detects_custom_tomac_smoke_with_root_arg(self) -> None:
+        command = (
+            "/opt/homebrew/Cellar/python@3.13/3.13.12_1/Frameworks/Python.framework/Versions/3.13/"
+            "Resources/Python.app/Contents/MacOS/Python /tmp/tomac_nq_strict_ote_density_repair_smoke.py "
+            "--root /tmp/ict-engine-tomac-nq-strict-ote-density-repair-fullwindow-20260525T130328+0800 "
+            "--start 2021-01-01 --end 2025-12-31 23:59:59 --max-rows 2000000"
+        )
+
+        self.assertTrue(_is_live_factor_command(command))
+        self.assertEqual(
+            _extract_run_root(command),
+            Path("/tmp/ict-engine-tomac-nq-strict-ote-density-repair-fullwindow-20260525T130328+0800"),
+        )
 
     def test_extract_run_root_from_provider_output_inside_run_root(self) -> None:
         command = (
