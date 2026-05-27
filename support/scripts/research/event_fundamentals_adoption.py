@@ -13,6 +13,12 @@ DEFAULT_STATE_DIR = "/tmp/ict-engine-event-fundamentals-adoption"
 BUNDLE_FILENAME = "event_fundamentals_adoption_bundle.json"
 SHELL_FILENAME = "suggested_commands.sh"
 ALLOWED_ARTIFACT_KINDS = ("earnings", "dividends", "macro", "fundamentals")
+ARTIFACT_KIND_TO_CONTRACT_ID = {
+    "earnings": "earnings_event_series",
+    "dividends": "dividend_event_series",
+    "macro": "macro_event_series",
+    "fundamentals": "lagged_fundamentals_sidecar",
+}
 
 
 def shell_quote(value: str) -> str:
@@ -49,6 +55,35 @@ def _artifact_entries(mapping: dict[str, str]) -> list[dict[str, Any]]:
             }
         )
     return entries
+
+
+def build_artifact_readiness(
+    artifact_entries: list[dict[str, Any]],
+    dataset_contracts: list[dict[str, Any]],
+) -> dict[str, Any]:
+    relevant_contract_ids = [
+        contract["dataset_id"]
+        for contract in dataset_contracts
+        if contract["dataset_id"] in ARTIFACT_KIND_TO_CONTRACT_ID.values()
+    ]
+    covered_contract_ids = sorted(
+        {
+            ARTIFACT_KIND_TO_CONTRACT_ID[entry["artifact_kind"]]
+            for entry in artifact_entries
+            if entry["artifact_kind"] in ARTIFACT_KIND_TO_CONTRACT_ID
+        }
+    )
+    missing_contract_ids = [
+        contract_id
+        for contract_id in relevant_contract_ids
+        if contract_id not in covered_contract_ids
+    ]
+    return {
+        "profile_contract_ready": not missing_contract_ids,
+        "covered_contract_count": len(covered_contract_ids),
+        "covered_contract_ids": covered_contract_ids,
+        "missing_contract_ids": missing_contract_ids,
+    }
 
 
 def build_workflow_status_command(
@@ -168,6 +203,8 @@ def build_adoption_bundle(
     selected_profile = resolution["symbol_resolution"]["selected_profile"] or {}
     command_profile_selector = selected_profile.get("selector") or profile_selector
     artifact_entries = _artifact_entries(artifact_inputs)
+    dataset_contracts = resolution["data_catalog"]["datasets"]
+    artifact_readiness = build_artifact_readiness(artifact_entries, dataset_contracts)
     keep_zero_config_commands = build_command_set(
         workflow_symbol,
         objective,
@@ -213,9 +250,10 @@ def build_adoption_bundle(
             "provided_artifact_count": len(artifact_entries),
             "provided_artifact_kinds": [entry["artifact_kind"] for entry in artifact_entries],
         },
+        "artifact_readiness": artifact_readiness,
         "artifacts": artifact_entries,
         "data_catalog_summary": resolution["data_catalog"]["summary"],
-        "dataset_contracts": resolution["data_catalog"]["datasets"],
+        "dataset_contracts": dataset_contracts,
         "command_choices": command_choices,
         "suggested_commands": keep_zero_config_commands,
         "opt_in_suggested_commands": opt_in_commands,

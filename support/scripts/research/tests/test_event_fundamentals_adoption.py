@@ -40,6 +40,15 @@ class EventFundamentalsAdoptionTests(unittest.TestCase):
             ["earnings", "fundamentals"],
         )
         self.assertEqual(bundle["artifact_summary"]["provided_artifact_count"], 2)
+        self.assertEqual(bundle["artifact_readiness"]["covered_contract_count"], 2)
+        self.assertEqual(
+            bundle["artifact_readiness"]["covered_contract_ids"],
+            ["earnings_event_series", "lagged_fundamentals_sidecar"],
+        )
+        self.assertEqual(
+            bundle["artifact_readiness"]["missing_contract_ids"],
+            ["dividend_event_series", "macro_event_series"],
+        )
         self.assertNotIn("--profile", bundle["suggested_commands"]["workflow_status"])
         self.assertIn(
             "--profile thrill3r-nq-event-fundamentals-v1",
@@ -93,3 +102,27 @@ class EventFundamentalsAdoptionTests(unittest.TestCase):
             self.assertIn("workflow-status", shell)
             self.assertIn("review_sidecars", shell)
             self.assertIn("--profile thrill3r-nq-event-fundamentals-v1", shell)
+
+    def test_full_artifact_pack_marks_profile_contract_ready(self) -> None:
+        bundle = adoption.build_adoption_bundle(
+            repo_root=REPO_ROOT,
+            market_selector="NQ",
+            profile_selector="thrill3r_nq_event_fundamentals_v1",
+            workflow_symbol="NQ_EVENT_CONTEXT",
+            objective="regime_conditioned_profitability",
+            state_dir="/tmp/event-fund-state",
+            artifact_inputs={
+                "earnings": "/tmp/earnings.json",
+                "dividends": "/tmp/dividends.json",
+                "macro": "/tmp/macro.json",
+                "fundamentals": "/tmp/fundamentals.json",
+            },
+        )
+
+        self.assertEqual(bundle["artifact_summary"]["provided_artifact_count"], 4)
+        self.assertEqual(
+            bundle["artifact_summary"]["provided_artifact_kinds"],
+            ["dividends", "earnings", "fundamentals", "macro"],
+        )
+        self.assertTrue(bundle["artifact_readiness"]["profile_contract_ready"])
+        self.assertEqual(bundle["artifact_readiness"]["missing_contract_ids"], [])

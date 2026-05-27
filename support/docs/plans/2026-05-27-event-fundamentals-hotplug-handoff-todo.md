@@ -77,7 +77,8 @@ Status legend: `done`, `active`, `next`, `blocked`, `not_yet`.
 | done | Implement compact dual-lane adoption helper | Added `support/scripts/research/event_fundamentals_adoption.py`; helper emits bundle + shell suggestions with zero-config and opt-in lanes. |
 | done | Register the helper in script governance | Added `event_fundamentals_adoption` to `support/scripts/SCRIPTS.md` and `support/scripts/script_manifest.json`. |
 | done | Run focused verification and narrow commit | Commit `b66c3b5d` staged only the helper/profile/tests/governance/handoff slice. |
-| next | Extend the sidecar lane beyond the minimal smoke pack | Candidate next step: add broader macro/dividend smoke coverage or downstream handoff packaging without changing zero-config defaults. |
+| done | Extend the sidecar lane beyond the minimal smoke pack | Helper now emits compact profile-contract readiness for covered vs missing sidecar contracts, and full four-artifact smoke is verified. |
+| next | Push the sidecar lane one step closer to downstream practicality | Candidate next step: add downstream handoff packaging or compact lag-safety/readiness warnings without changing zero-config defaults. |
 
 ## Verification Checklist
 
@@ -146,3 +147,30 @@ Status legend: `done`, `active`, `next`, `blocked`, `not_yet`.
     - `support/scripts/SCRIPTS.md`
     - `support/scripts/script_manifest.json`
     - this handoff board
+- 2026-05-27 16:12 +0800
+  - Continued the helper beyond minimal artifact counting:
+    - `event_fundamentals_adoption.py` now emits `artifact_readiness`
+    - readiness reports:
+      - `profile_contract_ready`
+      - `covered_contract_count`
+      - `covered_contract_ids`
+      - `missing_contract_ids`
+  - GREEN verification passed:
+    - `python3 -m unittest support/scripts/research/tests/test_event_fundamentals_adoption.py -v`
+      - passed `3` tests
+    - `python3 -m py_compile support/scripts/research/event_fundamentals_adoption.py support/scripts/research/tests/test_event_fundamentals_adoption.py`
+      - passed
+    - `git diff --check -- support/scripts/research/event_fundamentals_adoption.py support/scripts/research/tests/test_event_fundamentals_adoption.py support/docs/plans/2026-05-27-event-fundamentals-hotplug-handoff-todo.md`
+      - passed
+  - Full four-artifact smoke:
+    - run root: `/private/tmp/ict-engine-event-fundamentals-full.BJ4Kw2/out`
+    - command used all four artifacts:
+      - `earnings`
+      - `dividends`
+      - `macro`
+      - `fundamentals`
+    - observed readiness facts:
+      - `profile_contract_ready=true`
+      - `covered_contract_count=4`
+      - `covered_contract_ids=[dividend_event_series, earnings_event_series, lagged_fundamentals_sidecar, macro_event_series]`
+      - `missing_contract_ids=[]`
