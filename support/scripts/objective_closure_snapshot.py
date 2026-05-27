@@ -347,11 +347,22 @@ def summarize_snapshot(
                         continue
                     claim_file = item.get("claim_file")
                     if isinstance(claim_file, str) and claim_file:
+                        stale_safe = bool(item.get("stale_safe_takeover_candidate"))
+                        reason = (
+                            "wait_only_stale_safe_takeover_candidate"
+                            if stale_safe
+                            else "wait_only_fresh_claim_without_live_runtime"
+                        )
+                        action = (
+                            f"externalize or terminalize stale-safe {claim_file}"
+                            if stale_safe
+                            else f"wait for owner progress or stale-safe timeout on {claim_file}"
+                        )
                         prioritized_next_actions.append(
                             {
                                 "surface": "factor_closure",
-                                "reason": "wait_only_claim_without_live_runtime",
-                                "action": f"externalize or terminalize {claim_file}",
+                                "reason": reason,
+                                "action": action,
                             }
                         )
             stale_claims = factor_queue.get("stale_safe_takeover_claims", [])

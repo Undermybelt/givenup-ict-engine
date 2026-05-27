@@ -149,8 +149,14 @@ class ObjectiveClosureSnapshotTest(unittest.TestCase):
                 "next_action": "clear factor claims",
                 "attention_action_queue": {
                     "externalize_wait_only_claims": [
-                        {"claim_file": "wait-a.claim"},
-                        {"claim_file": "wait-b.claim"},
+                        {
+                            "claim_file": "wait-a.claim",
+                            "stale_safe_takeover_candidate": False,
+                        },
+                        {
+                            "claim_file": "wait-b.claim",
+                            "stale_safe_takeover_candidate": True,
+                        },
                     ],
                     "stale_safe_takeover_claims": [
                         {"claim_file": "stale-a.claim"},
@@ -174,16 +180,16 @@ class ObjectiveClosureSnapshotTest(unittest.TestCase):
         self.assertIn(
             {
                 "surface": "factor_closure",
-                "reason": "wait_only_claim_without_live_runtime",
-                "action": "externalize or terminalize wait-a.claim",
+                "reason": "wait_only_fresh_claim_without_live_runtime",
+                "action": "wait for owner progress or stale-safe timeout on wait-a.claim",
             },
             factor_actions,
         )
         self.assertIn(
             {
                 "surface": "factor_closure",
-                "reason": "wait_only_claim_without_live_runtime",
-                "action": "externalize or terminalize wait-b.claim",
+                "reason": "wait_only_stale_safe_takeover_candidate",
+                "action": "externalize or terminalize stale-safe wait-b.claim",
             },
             factor_actions,
         )
@@ -488,13 +494,13 @@ class ObjectiveClosureSnapshotTest(unittest.TestCase):
                 },
                 {
                     "surface": "factor_closure",
-                    "reason": "wait_only_claim_without_live_runtime",
-                    "action": "externalize or terminalize wait-only.claim",
+                    "reason": "wait_only_stale_safe_takeover_candidate",
+                    "action": "externalize or terminalize stale-safe wait-only.claim",
                 },
                 {
                     "surface": "factor_closure",
-                    "reason": "wait_only_claim_without_live_runtime",
-                    "action": "externalize or terminalize second-wait-only.claim",
+                    "reason": "wait_only_fresh_claim_without_live_runtime",
+                    "action": "wait for owner progress or stale-safe timeout on second-wait-only.claim",
                 },
                 {
                     "surface": "factor_closure",
