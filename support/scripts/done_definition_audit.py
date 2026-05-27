@@ -16,6 +16,7 @@ from path_defaults import resolve_repo_root
 ROOT = resolve_repo_root(__file__)
 MAIN_RS_GUARDRAILS_PATH = ROOT / "support" / "docs" / "main-rs-guardrails.md"
 MAIN_RS_PATH = ROOT / "src" / "main.rs"
+AGENT_ENTRY_PATH = ROOT / "AGENT.md"
 README_PATH = ROOT / "README.md"
 CONSUMER_QUICKSTART_PATH = ROOT / "support" / "docs" / "consumer-quickstart.md"
 CONTRIBUTOR_QUICKSTART_PATH = ROOT / "support" / "docs" / "contributor-quickstart.md"
@@ -86,16 +87,47 @@ def evaluate_quickstart_surface() -> dict:
     missing_links = [link for link in required_links if link not in readme_text]
     missing_files = [
         str(path.relative_to(ROOT))
-        for path in [CONSUMER_QUICKSTART_PATH, CONTRIBUTOR_QUICKSTART_PATH]
+        for path in [AGENT_ENTRY_PATH, CONSUMER_QUICKSTART_PATH, CONTRIBUTOR_QUICKSTART_PATH]
         if not path.exists()
     ]
-    status = "pass" if not missing_links and not missing_files else "fail"
+    command_blocks = {
+        str(AGENT_ENTRY_PATH.relative_to(ROOT)): (
+            "cargo run --quiet -- provider-status --compact\n"
+            "cargo run --quiet -- analyze --symbol DEMO --demo --state-dir /tmp/ict-engine-first-run --human\n"
+            "cargo run --quiet -- workflow-status --symbol DEMO --state-dir /tmp/ict-engine-first-run --refresh --agent"
+        ),
+        str(CONSUMER_QUICKSTART_PATH.relative_to(ROOT)): (
+            "cargo run --quiet -- provider-status --compact\n"
+            "cargo run --quiet -- analyze --symbol DEMO --demo --state-dir /tmp/ict-engine-first-run --human\n"
+            "cargo run --quiet -- workflow-status --symbol DEMO --state-dir /tmp/ict-engine-first-run --refresh --agent\n"
+            "cargo run --quiet -- pre-bayes-status --symbol DEMO --state-dir /tmp/ict-engine-first-run --refresh --output-format json\n"
+            "cargo run --quiet -- policy-training-status --symbol DEMO --state-dir /tmp/ict-engine-first-run --output-format agent"
+        ),
+        str(README_PATH.relative_to(ROOT)): (
+            "cargo run -- provider-status --compact\n"
+            "cargo run -- analyze --symbol DEMO --demo --state-dir /tmp/ict-engine-first-run --human\n"
+            "cargo run -- workflow-status --symbol DEMO --state-dir /tmp/ict-engine-first-run --refresh --agent"
+        ),
+    }
+    command_order_drift: list[str] = []
+    if not missing_files:
+        for rel_path, expected_block in command_blocks.items():
+            text = (ROOT / rel_path).read_text(encoding="utf-8")
+            if expected_block not in text:
+                command_order_drift.append(rel_path)
+
+    status = (
+        "pass"
+        if not missing_links and not missing_files and not command_order_drift
+        else "fail"
+    )
     return _gate(
         "quickstart_surface",
         status,
         {
             "missing_readme_links": missing_links,
             "missing_quickstart_files": missing_files,
+            "command_order_drift": command_order_drift,
         },
     )
 

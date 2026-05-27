@@ -14,6 +14,7 @@ if str(SCRIPTS_ROOT) not in sys.path:
 
 from done_definition_audit import (  # noqa: E402
     build_smoke_environment,
+    evaluate_quickstart_surface,
     evaluate_main_rs_guardrail,
     format_report,
     parse_main_rs_baseline,
@@ -24,6 +25,143 @@ from done_definition_audit import (  # noqa: E402
 
 
 class DoneDefinitionAuditTest(unittest.TestCase):
+    def test_evaluate_quickstart_surface_fails_when_command_order_drifts(self) -> None:
+        import done_definition_audit
+
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            agent = root / "AGENT.md"
+            readme = root / "README.md"
+            consumer = root / "support" / "docs" / "consumer-quickstart.md"
+            contributor = root / "support" / "docs" / "contributor-quickstart.md"
+            consumer.parent.mkdir(parents=True, exist_ok=True)
+            contributor.parent.mkdir(parents=True, exist_ok=True)
+
+            agent.write_text(
+                "```bash\n"
+                "cargo run --quiet -- provider-status --compact\n"
+                "cargo run --quiet -- analyze --symbol DEMO --demo --state-dir /tmp/ict-engine-first-run --human\n"
+                "cargo run --quiet -- workflow-status --symbol DEMO --state-dir /tmp/ict-engine-first-run --refresh --agent\n"
+                "```\n",
+                encoding="utf-8",
+            )
+            readme.write_text(
+                "support/docs/consumer-quickstart.md\n"
+                "support/docs/contributor-quickstart.md\n"
+                "```bash\n"
+                "cargo run -- provider-status --compact\n"
+                "cargo run -- analyze --symbol DEMO --demo --state-dir /tmp/ict-engine-first-run --human\n"
+                "cargo run -- workflow-status --symbol DEMO --state-dir /tmp/ict-engine-first-run --refresh --agent\n"
+                "```\n",
+                encoding="utf-8",
+            )
+            consumer.write_text(
+                "```bash\n"
+                "cargo run --quiet -- provider-status --compact\n"
+                "cargo run --quiet -- workflow-status --symbol DEMO --state-dir /tmp/ict-engine-first-run --human\n"
+                "cargo run --quiet -- analyze --symbol DEMO --demo --state-dir /tmp/ict-engine-first-run --human\n"
+                "cargo run --quiet -- workflow-status --symbol DEMO --state-dir /tmp/ict-engine-first-run --refresh --agent\n"
+                "cargo run --quiet -- pre-bayes-status --symbol DEMO --state-dir /tmp/ict-engine-first-run --refresh --output-format json\n"
+                "cargo run --quiet -- policy-training-status --symbol DEMO --state-dir /tmp/ict-engine-first-run --output-format agent\n"
+                "```\n",
+                encoding="utf-8",
+            )
+            contributor.write_text("# ok\n", encoding="utf-8")
+
+            originals = (
+                done_definition_audit.ROOT,
+                done_definition_audit.AGENT_ENTRY_PATH,
+                done_definition_audit.README_PATH,
+                done_definition_audit.CONSUMER_QUICKSTART_PATH,
+                done_definition_audit.CONTRIBUTOR_QUICKSTART_PATH,
+            )
+            try:
+                done_definition_audit.ROOT = root
+                done_definition_audit.AGENT_ENTRY_PATH = agent
+                done_definition_audit.README_PATH = readme
+                done_definition_audit.CONSUMER_QUICKSTART_PATH = consumer
+                done_definition_audit.CONTRIBUTOR_QUICKSTART_PATH = contributor
+                gate = evaluate_quickstart_surface()
+            finally:
+                (
+                    done_definition_audit.ROOT,
+                    done_definition_audit.AGENT_ENTRY_PATH,
+                    done_definition_audit.README_PATH,
+                    done_definition_audit.CONSUMER_QUICKSTART_PATH,
+                    done_definition_audit.CONTRIBUTOR_QUICKSTART_PATH,
+                ) = originals
+
+        self.assertEqual(gate["status"], "fail")
+        self.assertIn("support/docs/consumer-quickstart.md", gate["details"]["command_order_drift"])
+
+    def test_evaluate_quickstart_surface_passes_when_canonical_blocks_exist(self) -> None:
+        import done_definition_audit
+
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            agent = root / "AGENT.md"
+            readme = root / "README.md"
+            consumer = root / "support" / "docs" / "consumer-quickstart.md"
+            contributor = root / "support" / "docs" / "contributor-quickstart.md"
+            consumer.parent.mkdir(parents=True, exist_ok=True)
+            contributor.parent.mkdir(parents=True, exist_ok=True)
+
+            agent.write_text(
+                "```bash\n"
+                "cargo run --quiet -- provider-status --compact\n"
+                "cargo run --quiet -- analyze --symbol DEMO --demo --state-dir /tmp/ict-engine-first-run --human\n"
+                "cargo run --quiet -- workflow-status --symbol DEMO --state-dir /tmp/ict-engine-first-run --refresh --agent\n"
+                "```\n",
+                encoding="utf-8",
+            )
+            readme.write_text(
+                "support/docs/consumer-quickstart.md\n"
+                "support/docs/contributor-quickstart.md\n"
+                "```bash\n"
+                "cargo run -- provider-status --compact\n"
+                "cargo run -- analyze --symbol DEMO --demo --state-dir /tmp/ict-engine-first-run --human\n"
+                "cargo run -- workflow-status --symbol DEMO --state-dir /tmp/ict-engine-first-run --refresh --agent\n"
+                "```\n",
+                encoding="utf-8",
+            )
+            consumer.write_text(
+                "```bash\n"
+                "cargo run --quiet -- provider-status --compact\n"
+                "cargo run --quiet -- analyze --symbol DEMO --demo --state-dir /tmp/ict-engine-first-run --human\n"
+                "cargo run --quiet -- workflow-status --symbol DEMO --state-dir /tmp/ict-engine-first-run --refresh --agent\n"
+                "cargo run --quiet -- pre-bayes-status --symbol DEMO --state-dir /tmp/ict-engine-first-run --refresh --output-format json\n"
+                "cargo run --quiet -- policy-training-status --symbol DEMO --state-dir /tmp/ict-engine-first-run --output-format agent\n"
+                "```\n",
+                encoding="utf-8",
+            )
+            contributor.write_text("# ok\n", encoding="utf-8")
+
+            originals = (
+                done_definition_audit.ROOT,
+                done_definition_audit.AGENT_ENTRY_PATH,
+                done_definition_audit.README_PATH,
+                done_definition_audit.CONSUMER_QUICKSTART_PATH,
+                done_definition_audit.CONTRIBUTOR_QUICKSTART_PATH,
+            )
+            try:
+                done_definition_audit.ROOT = root
+                done_definition_audit.AGENT_ENTRY_PATH = agent
+                done_definition_audit.README_PATH = readme
+                done_definition_audit.CONSUMER_QUICKSTART_PATH = consumer
+                done_definition_audit.CONTRIBUTOR_QUICKSTART_PATH = contributor
+                gate = evaluate_quickstart_surface()
+            finally:
+                (
+                    done_definition_audit.ROOT,
+                    done_definition_audit.AGENT_ENTRY_PATH,
+                    done_definition_audit.README_PATH,
+                    done_definition_audit.CONSUMER_QUICKSTART_PATH,
+                    done_definition_audit.CONTRIBUTOR_QUICKSTART_PATH,
+                ) = originals
+
+        self.assertEqual(gate["status"], "pass")
+        self.assertEqual(gate["details"]["command_order_drift"], [])
+
     def test_parse_main_rs_baseline_extracts_numeric_value(self) -> None:
         text = """
 Measured on 2026-05-22:

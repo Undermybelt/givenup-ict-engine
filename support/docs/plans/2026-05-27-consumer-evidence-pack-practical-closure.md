@@ -53,11 +53,14 @@ This slice:
 - Align all public first-run docs to the same canonical order:
   `provider-status -> analyze --demo -> workflow-status --refresh --agent ->
   pre-bayes-status -> policy-training-status`.
+- Add automated parity coverage in `support/scripts/done_definition_audit.py`
+  so future drift fails the `quickstart_surface` gate instead of surviving as a
+  docs-only inconsistency.
 
 Next hardening:
 
-- Add an automated parity check to `support/scripts/done_definition_audit.py`
-  so future docs drift is caught by a gate instead of by manual review.
+- Fold the compact parity details into a richer current-turn completion audit
+  once heavy gates are rerun for this exact tree.
 
 ### F2. Full completion is still unproven in current-turn evidence
 
@@ -105,7 +108,7 @@ Reasonable next solution:
 - [x] Identify at least one concrete user-facing inconsistency from current
       docs/state.
 - [x] Patch the public first-run documentation to a single canonical order.
-- [ ] Add automated quickstart-order parity checks so drift fails fast.
+- [x] Add automated quickstart-order parity checks so drift fails fast.
 - [ ] Run fresh heavy done-definition gates for this tree after choosing a safe
       compute window.
 - [ ] Resolve or explicitly isolate active factor claims before making stronger
@@ -120,11 +123,18 @@ Executed in this turn:
 - `python3 support/scripts/done_definition_audit.py --compact --output /tmp/ict-engine-goal-20260527-done.json`
 - `python3 support/scripts/factor_claim_terminalization_audit.py --compact --output /tmp/ict-engine-goal-20260527-factor.json`
 - `python3 support/scripts/release_readiness_audit.py --compact --check-remotes --output /tmp/ict-engine-goal-20260527-release.json`
+- `python3 -m unittest support.scripts.tests.test_done_definition_audit.DoneDefinitionAuditTest.test_evaluate_quickstart_surface_fails_when_command_order_drifts support.scripts.tests.test_done_definition_audit.DoneDefinitionAuditTest.test_evaluate_quickstart_surface_passes_when_canonical_blocks_exist -v`
+- `python3 -m unittest support.scripts.tests.test_done_definition_audit -v`
+- `python3 support/scripts/done_definition_audit.py --compact --output /tmp/ict-engine-goal-20260527-done-parity.json`
 
 Readback summary:
 
 - done-definition:
   `status=pass`, `completion_ready=false`, `skip_count=4`.
+- done-definition parity slice:
+  targeted RED->GREEN quickstart-order tests now pass, full
+  `support.scripts.tests.test_done_definition_audit` passes `16` tests, and the
+  refreshed compact audit still reports `quickstart_surface=status=pass`.
 - factor audit:
   `status=needs_attention`, `active_claims=10`, `live_factor_processes=0`,
   `trade_usable_true=0`.
