@@ -107,6 +107,45 @@ class MarketDataResolverTests(unittest.TestCase):
             ["15m", "1h"],
         )
 
+    def test_event_fundamentals_profile_surfaces_opt_in_sidecar_contracts(self) -> None:
+        bundle = resolver.build_resolution_bundle(
+            repo_root=REPO_ROOT,
+            market_selector="NQ",
+            profile_selector="thrill3r_nq_event_fundamentals_v1",
+        )
+
+        self.assertEqual(
+            bundle["symbol_resolution"]["selected_profile"]["profile_id"],
+            "thrill3r_nq_event_fundamentals_v1",
+        )
+        self.assertEqual(
+            bundle["symbol_resolution"]["selected_profile"]["selector"],
+            "thrill3r-nq-event-fundamentals-v1",
+        )
+        self.assertEqual(
+            bundle["normalized_dataset_summary"]["selection_mode"],
+            "profile_opt_in",
+        )
+        event_entries = [
+            entry
+            for entry in bundle["data_catalog"]["datasets"]
+            if entry["category"] == "event_series"
+        ]
+        self.assertEqual(len(event_entries), 3)
+        fundamentals_entry = next(
+            entry
+            for entry in bundle["data_catalog"]["datasets"]
+            if entry["dataset_id"] == "lagged_fundamentals_sidecar"
+        )
+        self.assertEqual(
+            fundamentals_entry["source_kind"],
+            "lagged_fundamentals_sidecar",
+        )
+        self.assertEqual(
+            fundamentals_entry["adoption_mode"],
+            "opt_in_reuse_only",
+        )
+
     def test_main_writes_expected_artifacts(self) -> None:
         with TemporaryDirectory() as tmpdir:
             output_dir = Path(tmpdir)

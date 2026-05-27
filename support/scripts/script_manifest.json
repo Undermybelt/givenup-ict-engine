@@ -120,6 +120,14 @@
     "test_command": "python3 -m unittest support.scripts.research.tests.test_external_history_adoption -v"
   },
   {
+    "name": "event_fundamentals_adoption",
+    "stability": "read_only_utility",
+    "entrypoint": "support/scripts/research/event_fundamentals_adoption.py",
+    "safe_default": true,
+    "requires_data": true,
+    "test_command": "python3 -m unittest support.scripts.research.tests.test_event_fundamentals_adoption -v"
+  },
+  {
     "name": "factor_candidate_resolver",
     "stability": "read_only_utility",
     "entrypoint": "support/scripts/research/factor_candidate_resolver.py",
