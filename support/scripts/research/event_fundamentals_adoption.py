@@ -86,6 +86,44 @@ def build_artifact_readiness(
     }
 
 
+def build_usage_warnings(artifact_kinds: list[str]) -> list[str]:
+    warnings: list[str] = []
+    if "fundamentals" in artifact_kinds:
+        warnings.append("Lag fundamentals by effective date before backtest or live reuse.")
+    if "earnings" in artifact_kinds:
+        warnings.append("Treat earnings timestamps as scheduled-event context until confirmed effective in your replay or live clock.")
+    if "dividends" in artifact_kinds:
+        warnings.append("Use ex-dividend timestamps rather than announcement time when deriving trading context.")
+    if "macro" in artifact_kinds:
+        warnings.append("Keep macro events aligned to scheduled release timestamps and explicit importance tiers.")
+    return warnings
+
+
+def build_downstream_handoff(
+    artifact_kinds: list[str],
+    artifact_readiness: dict[str, Any],
+) -> dict[str, Any]:
+    missing_artifact_kinds = [
+        kind
+        for kind in ALLOWED_ARTIFACT_KINDS
+        if ARTIFACT_KIND_TO_CONTRACT_ID[kind] in artifact_readiness["missing_contract_ids"]
+    ]
+    readiness = (
+        "profile_contract_ready"
+        if artifact_readiness["profile_contract_ready"]
+        else "partial_sidecar_pack"
+    )
+    return {
+        "readiness": readiness,
+        "missing_artifact_kinds": missing_artifact_kinds,
+        "allowed_use_modes": [
+            "research_context",
+            "factor_research_opt_in",
+            "auto_quant_handoff_context",
+        ],
+    }
+
+
 def build_workflow_status_command(
     symbol: str,
     state_dir: str,
@@ -203,8 +241,11 @@ def build_adoption_bundle(
     selected_profile = resolution["symbol_resolution"]["selected_profile"] or {}
     command_profile_selector = selected_profile.get("selector") or profile_selector
     artifact_entries = _artifact_entries(artifact_inputs)
+    artifact_kinds = [entry["artifact_kind"] for entry in artifact_entries]
     dataset_contracts = resolution["data_catalog"]["datasets"]
     artifact_readiness = build_artifact_readiness(artifact_entries, dataset_contracts)
+    usage_warnings = build_usage_warnings(artifact_kinds)
+    downstream_handoff = build_downstream_handoff(artifact_kinds, artifact_readiness)
     keep_zero_config_commands = build_command_set(
         workflow_symbol,
         objective,
@@ -251,6 +292,8 @@ def build_adoption_bundle(
             "provided_artifact_kinds": [entry["artifact_kind"] for entry in artifact_entries],
         },
         "artifact_readiness": artifact_readiness,
+        "usage_warnings": usage_warnings,
+        "downstream_handoff": downstream_handoff,
         "artifacts": artifact_entries,
         "data_catalog_summary": resolution["data_catalog"]["summary"],
         "dataset_contracts": dataset_contracts,

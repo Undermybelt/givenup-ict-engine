@@ -49,6 +49,18 @@ class EventFundamentalsAdoptionTests(unittest.TestCase):
             bundle["artifact_readiness"]["missing_contract_ids"],
             ["dividend_event_series", "macro_event_series"],
         )
+        self.assertIn(
+            "Lag fundamentals by effective date before backtest or live reuse.",
+            bundle["usage_warnings"],
+        )
+        self.assertEqual(
+            bundle["downstream_handoff"]["readiness"],
+            "partial_sidecar_pack",
+        )
+        self.assertEqual(
+            bundle["downstream_handoff"]["missing_artifact_kinds"],
+            ["dividends", "macro"],
+        )
         self.assertNotIn("--profile", bundle["suggested_commands"]["workflow_status"])
         self.assertIn(
             "--profile thrill3r-nq-event-fundamentals-v1",
@@ -126,3 +138,12 @@ class EventFundamentalsAdoptionTests(unittest.TestCase):
         )
         self.assertTrue(bundle["artifact_readiness"]["profile_contract_ready"])
         self.assertEqual(bundle["artifact_readiness"]["missing_contract_ids"], [])
+        self.assertEqual(
+            bundle["downstream_handoff"]["readiness"],
+            "profile_contract_ready",
+        )
+        self.assertEqual(bundle["downstream_handoff"]["missing_artifact_kinds"], [])
+        self.assertIn(
+            "auto_quant_handoff_context",
+            bundle["downstream_handoff"]["allowed_use_modes"],
+        )
