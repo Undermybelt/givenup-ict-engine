@@ -14,6 +14,7 @@ if str(SCRIPTS_ROOT) not in sys.path:
 from factor_claim_terminalization_audit import (  # noqa: E402
     _drop_stale_failed_tomac_prep_wrappers,
     _attribute_parent_run_roots,
+    _attribute_run_roots_from_cwd,
     _extract_run_root,
     _infer_exit_file,
     _is_live_factor_command,
@@ -970,6 +971,31 @@ trade_usable=false
         self.assertEqual(attributed[1]["run_root"], run_root)
         self.assertEqual(attributed[1]["run_root_attribution"], "parent_process")
         self.assertEqual(attributed[1]["run_root_attribution_pid"], 78480)
+
+    def test_attribute_run_root_from_cwd_for_local_run_tomac_child_without_parent_context(self) -> None:
+        run_root = "/private/tmp/ict-engine-tomac-prior-day-extreme-mtf-resonance-guard-participation-quality-guard-prep-20260527T135004+0800"
+        processes = [
+            {
+                "pid": 34279,
+                "ppid": 19372,
+                "elapsed": "03:38",
+                "run_root": None,
+                "exit_file": None,
+                "exit_file_exists": False,
+                "command_excerpt": "/Users/example/Auto-Quant/.venv/bin/python run_tomac.py",
+            },
+        ]
+
+        attributed = _attribute_run_roots_from_cwd(
+            processes,
+            {
+                34279: f"{run_root}/aq/aq_workspaces/1m",
+            },
+        )
+
+        self.assertEqual(attributed[0]["run_root"], run_root)
+        self.assertEqual(attributed[0]["run_root_attribution"], "cwd")
+        self.assertEqual(attributed[0]["run_root_attribution_pid"], 34279)
 
     def test_format_report_compact_keeps_only_attention_claim_summaries(self) -> None:
         full_report = {

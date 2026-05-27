@@ -177,6 +177,44 @@ Verification:
   after the fix no longer resurfaced the two stale claims cleaned in the prior
   slice; attention moved to newer genuinely active claims/live processes
 
+## 2026-05-27 Live Process Attribution Fix
+
+Another real audit loophole was confirmed and repaired in the same script:
+
+- some live `run_tomac.py` children were showing up as
+  `command_excerpt=[local-path] run_tomac.py` with `run_root=null`
+- that made Board B occupancy noisier because compact audit could see a live
+  process but could not always bind it back to the exact `/tmp` lane
+
+Implemented in:
+
+- `support/scripts/factor_claim_terminalization_audit.py`
+- `support/scripts/tests/test_factor_claim_terminalization_audit.py`
+
+Behavior change:
+
+- when a live factor process still lacks `run_root` after parent/child
+  attribution, the audit now probes the process `cwd`
+- if the `cwd` resolves into an `ict-engine-*` temp lane, the audit backfills
+  `run_root`, `run_root_attribution=cwd`, and the inferred exit file
+
+Verification:
+
+- `python3 -m unittest support.scripts.tests.test_factor_claim_terminalization_audit.FactorClaimTerminalizationAuditTest.test_attribute_run_root_from_cwd_for_local_run_tomac_child_without_parent_context -v`
+  -> `OK`
+- `python3 -m unittest support.scripts.tests.test_factor_claim_terminalization_audit -v`
+  -> `Ran 44 tests`, `OK`
+- real-state readback:
+  `python3 support/scripts/factor_claim_terminalization_audit.py --compact`
+  now shows the previously anonymous `[local-path] run_tomac.py` rows with
+  concrete `/private/tmp/...` `run_root` and `checks/*.exit` paths
+
+Observed impact:
+
+- compact attention set narrowed from `active_claims=5`, `live_factor_processes=6`
+  in the prior readback to `active_claims=2`, `live_factor_processes=2`
+  once stale debt and anonymous child-process attribution were both repaired
+
 ## Completion Standard For This Objective
 
 Do not answer “completed” until current evidence proves all of the following in

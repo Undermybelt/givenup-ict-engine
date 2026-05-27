@@ -474,7 +474,11 @@ def detect_live_factor_processes() -> list[dict[str, Any]]:
             }
         )
     attributed = _attribute_parent_run_roots(processes)
-    filtered = _drop_stale_failed_tomac_prep_wrappers(attributed)
+    pid_to_cwd = _pid_cwds(
+        [int(process["pid"]) for process in attributed if process.get("pid") is not None and not process.get("run_root")]
+    )
+    cwd_attributed = _attribute_run_roots_from_cwd(attributed, pid_to_cwd)
+    filtered = _drop_stale_failed_tomac_prep_wrappers(cwd_attributed)
     return _dedupe_live_processes(filtered)
 
 
@@ -665,6 +669,56 @@ def _attribute_parent_run_roots(processes: list[dict[str, Any]]) -> list[dict[st
         parent["run_root_attribution"] = "child_process"
         parent["run_root_attribution_pid"] = child.get("pid")
     return processes
+
+
+def _attribute_run_roots_from_cwd(
+    processes: list[dict[str, Any]],
+    pid_to_cwd: dict[int, str],
+) -> list[dict[str, Any]]:
+    for process in processes:
+        if process.get("run_root") or process.get("pid") is None:
+            continue
+        try:
+            pid = int(process["pid"])
+        except (TypeError, ValueError):
+            continue
+        cwd = pid_to_cwd.get(pid)
+        if not cwd:
+            continue
+        run_root = _normalize_tmp_run_root(Path(cwd))
+        if not _is_board_b_run_root(run_root):
+            continue
+        process["run_root"] = str(run_root)
+        process["run_root_attribution"] = "cwd"
+        process["run_root_attribution_pid"] = pid
+        if not process.get("exit_file"):
+            exit_file = _infer_exit_file(run_root, str(process.get("command_excerpt") or ""))
+            process["exit_file"] = str(exit_file) if exit_file else None
+            process["exit_file_exists"] = bool(exit_file and exit_file.exists())
+    return processes
+
+
+def _pid_cwds(pids: list[int]) -> dict[int, str]:
+    cwd_map: dict[int, str] = {}
+    for pid in sorted(set(pids)):
+        try:
+            completed = subprocess.run(
+                ["lsof", "-a", "-p", str(pid), "-d", "cwd", "-Fn"],
+                check=False,
+                capture_output=True,
+                text=True,
+            )
+        except OSError:
+            continue
+        if completed.returncode != 0:
+            continue
+        for line in completed.stdout.splitlines():
+            if line.startswith("n"):
+                cwd = line[1:].strip()
+                if cwd:
+                    cwd_map[pid] = cwd
+                break
+    return cwd_map
 
 
 def _dedupe_live_processes(processes: list[dict[str, Any]]) -> list[dict[str, Any]]:
