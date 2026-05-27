@@ -160,9 +160,17 @@ def _summary_indicates_terminalized(summary_flags: dict[str, Any]) -> bool:
     }
 
 
+def _decision_indicates_active(decision: object) -> bool:
+    if not isinstance(decision, str):
+        return False
+    normalized = decision.strip().lower()
+    return normalized.startswith("active_") or normalized.startswith("staged_") or normalized.startswith("verified_")
+
+
 def _status(fields: dict[str, Any], summary_flags: dict[str, Any] | None = None) -> str:
     summary_flags = summary_flags or {}
-    status = str(fields.get("status", "")).lower()
+    status = str(fields.get("status", "")).strip().lower()
+    decision = fields.get("decision") or fields.get("terminal_decision")
     if (
         fields.get("terminalized_at")
         or fields.get("terminal_at")
@@ -171,9 +179,13 @@ def _status(fields: dict[str, Any], summary_flags: dict[str, Any] | None = None)
         or "terminalized" in status
     ):
         return "terminalized"
-    if fields.get("decision") or fields.get("terminal_decision"):
-        return "terminalized"
+    if status.startswith("active") and _decision_indicates_active(decision):
+        return "active"
     if _summary_indicates_terminalized(summary_flags):
+        return "terminalized"
+    if status.startswith("active"):
+        return "active"
+    if decision:
         return "terminalized"
     return "active"
 

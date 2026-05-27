@@ -186,6 +186,39 @@ trade_usable=false
             self.assertEqual(report["summary"]["active_claims"], 0)
             self.assertEqual(report["claims"][0]["decision"], "continue_goal_active; no promotion_allowed/trade_usable evidence found")
 
+    def test_build_report_keeps_explicit_active_status_even_when_decision_field_exists(self) -> None:
+        with tempfile.TemporaryDirectory() as repo_tmp, tempfile.TemporaryDirectory() as claims_tmp:
+            repo_root = Path(repo_tmp)
+            claims_dir = Path(claims_tmp)
+            run_root = repo_root / "support" / "docs" / "experiments" / "run-active"
+            run_root.mkdir(parents=True)
+
+            (claims_dir / "active-with-decision.claim").write_text(
+                f"""
+agent_name=codex-runtime-replay
+owner=codex
+claimed_at=2026-05-27T13:50:04+0800
+last_progress_at=2026-05-27T15:52:23+0800
+scope=Board B same-root runtime replay
+active_task=continue direct replay after runtime fix
+non_goals=no promotion
+write_surface=/tmp/example-workdoc.md
+run_root={run_root.relative_to(repo_root)}
+status=active_debug_replay_after_runtime_fix
+progress_report=/tmp/example-progress.md
+decision=active_replay_after_runtime_fix
+promotion_allowed=false
+trade_usable=false
+""",
+                encoding="utf-8",
+            )
+
+            report = build_report(claims_dir=claims_dir, repo_root=repo_root)
+
+            self.assertEqual(report["summary"]["terminalized_claims"], 0)
+            self.assertEqual(report["summary"]["active_claims"], 1)
+            self.assertEqual(report["claims"][0]["status"], "active")
+
     def test_build_report_treats_run_root_terminal_artifacts_as_terminalized_even_if_claim_status_is_active(self) -> None:
         with tempfile.TemporaryDirectory() as repo_tmp, tempfile.TemporaryDirectory() as claims_tmp:
             repo_root = Path(repo_tmp)

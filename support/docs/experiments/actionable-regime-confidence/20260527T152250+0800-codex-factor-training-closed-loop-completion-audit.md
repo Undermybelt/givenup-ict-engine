@@ -215,6 +215,52 @@ Observed impact:
   in the prior readback to `active_claims=2`, `live_factor_processes=2`
   once stale debt and anonymous child-process attribution were both repaired
 
+## 2026-05-27 Active Decision Misclassification Fix
+
+Another core audit bug surfaced immediately after the previous cleanup work:
+
+- some claims were explicitly still active, for example
+  `status=active_debug_replay_after_runtime_fix`
+- but the audit still hid them as terminalized because `_status()` treated any
+  non-empty `decision` field as terminal
+
+That behavior was wrong for live replays and prep packets that use `decision`
+as a progress/state label instead of a terminal verdict.
+
+Implemented in:
+
+- `support/scripts/factor_claim_terminalization_audit.py`
+- `support/scripts/tests/test_factor_claim_terminalization_audit.py`
+
+Behavior change:
+
+- explicit terminal fields still win immediately
+- explicit `status=active...` plus an active-ish decision such as
+  `active_*`, `staged_*`, or `verified_*` now remains active
+- stale claims with active status can still be terminalized by current run-root
+  terminal artifacts when the run root itself proves the lane ended
+
+Verification:
+
+- `python3 -m unittest support.scripts.tests.test_factor_claim_terminalization_audit.FactorClaimTerminalizationAuditTest.test_build_report_keeps_explicit_active_status_even_when_decision_field_exists -v`
+  -> `OK`
+- `python3 -m unittest support.scripts.tests.test_factor_claim_terminalization_audit.FactorClaimTerminalizationAuditTest.test_build_report_treats_run_root_terminal_artifacts_as_terminalized_even_if_claim_status_is_active -v`
+  -> `OK`
+- `python3 -m unittest support.scripts.tests.test_factor_claim_terminalization_audit -v`
+  -> `Ran 45 tests`, `OK`
+
+Latest authoritative readback after this fix:
+
+- `python3 support/scripts/factor_claim_terminalization_audit.py --compact`
+  now reveals the larger true backlog instead of hiding it:
+  `active_claims=9`, `invalid_active_claims=1`, `live_factor_processes=1`
+
+Interpretation:
+
+- this is not a regression in factor quality
+- it is a visibility correction: active debt that was previously hidden behind
+  ambiguous `decision` strings is now surfaced as real Board B occupancy
+
 ## Completion Standard For This Objective
 
 Do not answer “completed” until current evidence proves all of the following in
