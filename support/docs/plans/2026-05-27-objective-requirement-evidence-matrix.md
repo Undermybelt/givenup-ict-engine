@@ -52,8 +52,8 @@ Current-turn command truth at the time this matrix was written:
   `status=needs_attention` with unresolved active-claim debt, while precise
   counts and `blocking_reasons` must be read from the snapshot child. The
   latest focused factor audit now makes the debt shape explicit:
-  `active_claims=11`, `live_factor_processes=1`,
-  `active_claims_without_live_process=10`,
+  `active_claims=12`, `live_factor_processes=2`,
+  `active_claims_without_live_process=11`,
   `wait_only_active_claims_without_live_process=3`
 - release readiness:
   latest truth is snapshot-owned and time-variant; the stable current fact is
@@ -128,8 +128,8 @@ Current-turn command truth at the time this matrix was written:
 - Evidence:
   the coordinated closure snapshot still shows factor closure blocked; the
   latest focused factor audit makes the blocker shape explicit:
-  `active_claims=11`, `live_factor_processes=1`,
-  `active_claims_without_live_process=10`,
+  `active_claims=12`, `live_factor_processes=2`,
+  `active_claims_without_live_process=11`,
   `wait_only_active_claims_without_live_process=3`
 - Consequence:
   there is no honest basis to say the repo has already closed the objective for
@@ -163,6 +163,10 @@ Current-turn command truth at the time this matrix was written:
 7. Use the new factor-claim debt split to externalize or terminalize claims
    that are active but do not own live runtime before treating Board B closure
    as a runtime problem.
+8. Treat Board B closure as concurrently mutating state: externalizing old debt
+   can still lose ground if new active claims or live runtimes appear in the
+   same turn, so every closure claim needs a fresh rerun immediately before the
+   assertion.
 
 ## Current Answer
 

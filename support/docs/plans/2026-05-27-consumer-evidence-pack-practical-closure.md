@@ -27,12 +27,14 @@ Current-turn evidence still disproves full closure:
   The latest coordinated snapshot in this continuation now shows
   factor closure still blocked on active-claim debt with no trade-usable lanes.
   The latest focused audit now exposes the debt structure directly:
-  `active_claims=11`, `live_factor_processes=1`,
-  `active_claims_without_live_process=10`,
+  `active_claims=12`, `live_factor_processes=2`,
+  `active_claims_without_live_process=11`,
   `wait_only_active_claims_without_live_process=3`.
   The earlier classifier fix still stands: one old “live factor process” was a
   diagnostic false positive
   (`tomac_tod_balanced_provider_parity_probe.py`) rather than a real live lane.
+  Two wait-only debt claims were externalized in this turn, but same-turn new
+  claims and runtimes still outpaced the cleanup.
 - `python3 support/scripts/release_readiness_audit.py --compact --check-remotes --output /tmp/ict-engine-goal-20260527-release-resume3.json`
   previously named one unresolved-gate set, but the exact current release
   blocker names now live under the coordinated snapshot because they can change

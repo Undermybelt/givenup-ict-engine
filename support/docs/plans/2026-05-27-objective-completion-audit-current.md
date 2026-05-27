@@ -27,8 +27,8 @@ Reason:
    Its factor child is time-variant within the day, but it still remains
    blocked on unresolved active-claim debt and therefore prevents truthful
    closure. The latest focused factor audit now proves the debt is mostly not
-   runtime occupancy: `active_claims=11`, `live_factor_processes=1`,
-   `active_claims_without_live_process=10`,
+   runtime occupancy: `active_claims=12`, `live_factor_processes=2`,
+   `active_claims_without_live_process=11`,
    `wait_only_active_claims_without_live_process=3`.
 2. The authoritative release/closed-loop handoff
    `support/docs/plans/2026-05-12-hotplug-personal-data-release-handoff-todo.md`
@@ -231,9 +231,12 @@ The objective is only complete if current evidence proves all of the following:
   - closure is still blocked because the coordinated snapshot's factor child
     remains non-pass and still belongs to live `codex` attention claims, so the
     repo still lacks a clean same-turn factor-closure surface;
-  - the latest focused audit now proves only one active claim owns live
-    runtime, while ten active claims do not and three of those are already
-    classified as wait-only debt.
+  - the latest focused audit now proves only two active claims own live
+    runtime, while eleven active claims do not and three of those are already
+    classified as wait-only debt;
+  - this surface is concurrently mutating: two wait-only debt claims were
+    externalized in this turn, but new active claims appeared before the next
+    rerun, so blocker counts can worsen even while old debt is being reduced.
 
 ### V-011: reusable strategy-library provenance was still leaking caller-local path assumptions
 
