@@ -21,13 +21,15 @@ class RegimeConsumerBundleTests(unittest.TestCase):
             "schema_version": "regime-high-confidence-decision/v1",
             "timestamp": "t3",
             "decision_state": "single_label_99",
-            "trade_usable": True,
+            "trade_usable": False,
+            "promotion_allowed": False,
+            "closed_loop_consumption_status": "inspection_only_regime_sidecar_requires_downstream_live_admission",
             "final_label": "primary::TrendExpansion",
             "label_set": ["primary::TrendExpansion"],
-            "abstain_reasons": [],
+            "abstain_reasons": ["regime_sidecar_requires_downstream_live_admission"],
             "execution_tree_hint": "accept_regime",
-            "bbn_evidence_hint": {"regime_decision_state": "single_label_99", "regime_trade_usable": True},
-            "path_ranker_context": {"regime_label": "primary::TrendExpansion", "regime_trade_usable": True},
+            "bbn_evidence_hint": {"regime_decision_state": "single_label_99", "regime_trade_usable": False},
+            "path_ranker_context": {"regime_label": "primary::TrendExpansion", "regime_trade_usable": False},
             "user_vrp_nq_context": {"qqq_hv_level": 0.22, "nq_vs_200d_pct": 0.08, "vix3m_level": 18.5, "qqq_hv_pct_rank_252": 0.61, "vvix_over_vix": 5.2},
         }
 
@@ -49,7 +51,12 @@ class RegimeConsumerBundleTests(unittest.TestCase):
 
             self.assertEqual(result["schema_version"], "regime-consumer-bundle/v1")
             self.assertEqual(result["latest_decision"]["decision_state"], "single_label_99")
-            self.assertTrue(result["latest_decision"]["trade_usable"])
+            self.assertFalse(result["latest_decision"]["trade_usable"])
+            self.assertFalse(result["latest_decision"]["promotion_allowed"])
+            self.assertEqual(
+                result["latest_decision"]["closed_loop_consumption_status"],
+                "inspection_only_regime_sidecar_requires_downstream_live_admission",
+            )
             self.assertEqual(result["consumer_hints"]["execution_tree_hint"], "accept_regime")
             self.assertIn("decision", result["artifacts"])
             self.assertEqual(result["artifacts"]["ontology"]["schema_version"], "regime-ontology-manifest/v1")

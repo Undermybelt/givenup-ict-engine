@@ -764,8 +764,10 @@ git commit -m "feat: admit regime-conditioned learning candidates to ranker"
 - Python candidate pack generation is the ingress for many public repo/paper factors. It must emit regime-conditioned lifecycle evidence without claiming live trade use.
 
 **Impact / Compatibility:**
-- Three-file candidate pack contract remains unchanged.
-- New fields are additive.
+- Candidate pack contract is now four-file:
+  `pack_manifest.json`, `factor_expression.json`,
+  `factor_eval_grid_summary.json`, `transfer_score.json`.
+- New lifecycle fields are additive within the existing JSON members.
 
 **Verification:**
 - `python3 -m unittest support.scripts.research.tests.test_factor_candidate_pack`

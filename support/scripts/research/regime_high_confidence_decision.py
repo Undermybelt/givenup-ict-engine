@@ -77,6 +77,10 @@ def _compact_reasons(*groups: list[str]) -> list[str]:
     return result
 
 
+INSPECTION_ONLY_STATUS = "inspection_only_regime_sidecar_requires_downstream_live_admission"
+DOWNSTREAM_LIVE_ADMISSION_REASON = "regime_sidecar_requires_downstream_live_admission"
+
+
 def _user_vrp_nq_context(distribution: dict[str, Any]) -> dict[str, Any]:
     raw = distribution.get("feature_group_summaries", {}).get("user_vrp_nq", {})
     return {key: value.get("latest", value) if isinstance(value, dict) else value for key, value in raw.items()}
@@ -119,32 +123,38 @@ def build_high_confidence_decision(
     single95 = len(set95) == 1
     single99 = len(set99) == 1
 
+    confidence_candidate = False
     if "unknown_label" in reasons:
         decision_state = "unknown_abstain"
-        trade_usable = False
     elif "transitional_or_guardrailed" in reasons:
         decision_state = "transitional"
-        trade_usable = False
     elif confidence99 and single99 and set99[0] == current_label:
         decision_state = "single_label_99"
-        trade_usable = True
+        confidence_candidate = True
     elif confidence95 and single95 and set95[0] == current_label:
         decision_state = "single_label_95"
-        trade_usable = True
+        confidence_candidate = True
     elif len(primary_set) > 1:
         decision_state = "label_set"
-        trade_usable = False
         reasons.append("wide_or_uncertain_label_set")
     else:
         decision_state = "unknown_abstain"
-        trade_usable = False
         reasons.append("confidence_gate_failed")
 
+    trade_usable = False
+    promotion_allowed = False
+    closed_loop_consumption_status = INSPECTION_ONLY_STATUS if confidence_candidate else "not_trade_usable"
     final_label = current_label if decision_state in ("single_label_95", "single_label_99") else ""
-    abstain_reasons = [] if trade_usable else _compact_reasons(reasons, governor_reasons, distribution_reasons)
+    if confidence_candidate:
+        reasons.append(DOWNSTREAM_LIVE_ADMISSION_REASON)
+    abstain_reasons = _compact_reasons(reasons, governor_reasons, distribution_reasons)
     transition_hazard = _to_float(governor.get("transition_hazard"), 0.0)
 
-    execution_tree_hint = "accept_regime" if trade_usable else ("unknown_abstain" if decision_state == "unknown_abstain" else "transition_guardrail")
+    execution_tree_hint = (
+        "accept_regime"
+        if confidence_candidate
+        else ("unknown_abstain" if decision_state == "unknown_abstain" else "transition_guardrail")
+    )
     bbn_evidence_hint = {
         "regime_decision_state": decision_state,
         "regime_trade_usable": trade_usable,
@@ -166,6 +176,8 @@ def build_high_confidence_decision(
         "timestamp": timestamp,
         "label_prefix": label_prefix,
         "decision_state": decision_state,
+        "closed_loop_consumption_status": closed_loop_consumption_status,
+        "promotion_allowed": promotion_allowed,
         "trade_usable": trade_usable,
         "final_label": final_label,
         "label_set": primary_set,

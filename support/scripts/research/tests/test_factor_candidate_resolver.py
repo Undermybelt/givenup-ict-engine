@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import contextlib
+import io
 import json
 import sys
 import unittest
@@ -545,6 +547,98 @@ class FactorCandidateResolverTests(unittest.TestCase):
         )
         self.assertFalse(order_block["promotion_allowed"])
         self.assertFalse(order_block["trade_usable"])
+
+    def test_verify_repo_native_pack_contracts_surfaces_registered_and_unregistered_packs(self) -> None:
+        registry = resolver.build_candidate_registry(repo_root=REPO_ROOT)
+
+        payload = resolver.verify_repo_native_pack_contracts(
+            repo_root=REPO_ROOT,
+            candidates=registry["candidates"],
+        )
+
+        self.assertEqual(
+            payload["schema_version"],
+            "factor-candidate-pack-contract-audit/v1",
+        )
+        self.assertEqual(payload["summary"]["pack_dir_count"], 25)
+        self.assertEqual(payload["summary"]["registered_count"], 8)
+        self.assertEqual(payload["summary"]["unregistered_count"], 17)
+        self.assertEqual(payload["summary"]["invalid_count"], 0)
+        registered = next(
+            item
+            for item in payload["packs"]
+            if item["candidate_id"] == "family_f_vrp_compression_15m_v1"
+        )
+        self.assertEqual(registered["registration_status"], "registered")
+        self.assertEqual(registered["contract_status"], "valid")
+        self.assertTrue(registered["registered_candidate_ids"])
+        unregistered = next(
+            item
+            for item in payload["packs"]
+            if item["candidate_id"] == "brooks_second_entry_reversal_balanced_threshold_v1"
+        )
+        self.assertEqual(unregistered["registration_status"], "unregistered")
+        self.assertEqual(unregistered["contract_status"], "valid")
+        self.assertEqual(unregistered["registered_candidate_ids"], [])
+
+    def test_verify_repo_native_pack_contracts_marks_invalid_pack_fail_closed(self) -> None:
+        with TemporaryDirectory() as tmpdir:
+            repo_root = Path(tmpdir)
+            pack_dir = (
+                repo_root
+                / "support"
+                / "examples"
+                / "factor_candidate_packs"
+                / "sample-family-v1"
+                / "broken_candidate_v1"
+            )
+            pack_dir.mkdir(parents=True, exist_ok=True)
+            for name in (
+                "factor_expression.json",
+                "factor_eval_grid_summary.json",
+                "transfer_score.json",
+            ):
+                (pack_dir / name).write_text("{}", encoding="utf-8")
+            (repo_root / "config").mkdir(parents=True, exist_ok=True)
+            (repo_root / "config" / "factor_candidate_harness_presets.json").write_text(
+                json.dumps(
+                    {
+                        "schema_version": "factor-candidate-harness-presets/v1",
+                        "candidates": [],
+                    }
+                ),
+                encoding="utf-8",
+            )
+
+            payload = resolver.verify_repo_native_pack_contracts(
+                repo_root=repo_root,
+                candidates=[],
+            )
+
+            self.assertEqual(payload["summary"]["pack_dir_count"], 1)
+            self.assertEqual(payload["summary"]["invalid_count"], 1)
+            self.assertEqual(payload["summary"]["unregistered_count"], 1)
+            self.assertIn("missing_files:pack_manifest.json", payload["packs"][0]["reason"])
+
+    def test_main_verify_pack_contracts_human_surface_reports_summary(self) -> None:
+        stdout = io.StringIO()
+        with contextlib.redirect_stdout(stdout):
+            exit_code = resolver.main(
+                [
+                    "--repo-root",
+                    str(REPO_ROOT),
+                    "--verify-pack-contracts",
+                    "--output-format",
+                    "human",
+                ]
+            )
+
+        self.assertEqual(exit_code, 0)
+        lines = [line for line in stdout.getvalue().splitlines() if line.strip()]
+        self.assertIn("pack_dir_count=25", lines[0])
+        self.assertIn("registered_count=8", lines[0])
+        self.assertIn("unregistered_count=17", lines[0])
+        self.assertIn("invalid_count=0", lines[0])
 
     def test_build_candidate_packs_supports_regime_benchmark_bundle(self) -> None:
         nq = {

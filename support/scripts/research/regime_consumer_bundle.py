@@ -89,6 +89,11 @@ def _latest_decision(artifacts: dict[str, dict[str, Any]], loaded: dict[str, dic
     return {
         "timestamp": decision.get("timestamp", ""),
         "decision_state": decision.get("decision_state", ""),
+        "closed_loop_consumption_status": decision.get(
+            "closed_loop_consumption_status",
+            "not_trade_usable",
+        ),
+        "promotion_allowed": bool(decision.get("promotion_allowed", False)),
         "trade_usable": bool(decision.get("trade_usable", False)),
         "final_label": decision.get("final_label", ""),
         "label_set": decision.get("label_set", []),
@@ -144,6 +149,7 @@ def build_consumer_bundle(
             "main_runtime_mutation": "none",
             "optional_for_consumers": True,
             "token_friendly": True,
+            "promotion_allowed": latest.get("promotion_allowed", False),
         },
     }
     _write_json(output_json, bundle)

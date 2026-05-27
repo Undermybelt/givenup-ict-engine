@@ -64,7 +64,7 @@ class RegimeHighConfidenceDecisionTests(unittest.TestCase):
         }
         path.write_text(json.dumps(payload), encoding="utf-8")
 
-    def test_single_label_99_trade_usable_when_all_gates_agree(self) -> None:
+    def test_single_label_99_remains_inspection_only_without_downstream_live_admission(self) -> None:
         with TemporaryDirectory() as tmpdir:
             tmp = Path(tmpdir)
             scores = tmp / "scores.jsonl"
@@ -88,7 +88,16 @@ class RegimeHighConfidenceDecisionTests(unittest.TestCase):
 
             self.assertEqual(result["schema_version"], "regime-high-confidence-decision/v1")
             self.assertEqual(result["decision_state"], "single_label_99")
-            self.assertTrue(result["trade_usable"])
+            self.assertFalse(result["trade_usable"])
+            self.assertFalse(result["promotion_allowed"])
+            self.assertEqual(
+                result["closed_loop_consumption_status"],
+                "inspection_only_regime_sidecar_requires_downstream_live_admission",
+            )
+            self.assertIn(
+                "regime_sidecar_requires_downstream_live_admission",
+                result["abstain_reasons"],
+            )
             self.assertEqual(result["final_label"], "primary::TrendExpansion")
             self.assertEqual(result["execution_tree_hint"], "accept_regime")
             self.assertEqual(result["path_ranker_context"]["regime_label"], "primary::TrendExpansion")
@@ -117,7 +126,12 @@ class RegimeHighConfidenceDecisionTests(unittest.TestCase):
             )
 
             self.assertEqual(result["decision_state"], "single_label_95")
-            self.assertTrue(result["trade_usable"])
+            self.assertFalse(result["trade_usable"])
+            self.assertFalse(result["promotion_allowed"])
+            self.assertEqual(
+                result["closed_loop_consumption_status"],
+                "inspection_only_regime_sidecar_requires_downstream_live_admission",
+            )
 
     def test_label_set_is_not_trade_usable_but_preserves_candidates(self) -> None:
         with TemporaryDirectory() as tmpdir:

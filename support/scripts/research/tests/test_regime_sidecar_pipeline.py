@@ -67,11 +67,15 @@ class RegimeSidecarPipelineTests(unittest.TestCase):
             self.assertEqual(result["schema_version"], "regime-sidecar-pipeline/v1")
             self.assertEqual(result["status"], "ok")
             self.assertEqual(result["final_decision"]["decision_state"], "single_label_99")
-            self.assertTrue(result["final_decision"]["trade_usable"])
+            self.assertFalse(result["final_decision"]["trade_usable"])
             self.assertTrue((out / "regime_consumer_bundle.json").exists())
             self.assertTrue((out / "regime_high_confidence_decision.json").exists())
             self.assertEqual(result["bundle_path"], str(out / "regime_consumer_bundle.json"))
             self.assertEqual(result["truth_joined_rows"], 4)
+            self.assertEqual(
+                result["final_decision"]["closed_loop_consumption_status"],
+                "inspection_only_regime_sidecar_requires_downstream_live_admission",
+            )
             training_report = json.loads((out / "regime_expert_training_report.json").read_text(encoding="utf-8"))
             trend_summary = next(item for item in training_report["experts"] if item["label_id"] == "primary::TrendExpansion")
             self.assertEqual(trend_summary["support"], 4)

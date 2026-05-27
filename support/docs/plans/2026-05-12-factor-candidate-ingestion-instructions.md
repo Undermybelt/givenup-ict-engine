@@ -82,7 +82,9 @@ The minimum admission path for a factor candidate is:
 
 ```text
 candidate evidence
--> candidate pack three-file contract with factor_profitability_lifecycle
+-> candidate pack four-file contract
+   (`pack_manifest.json` + factor_expression/factor_eval_grid_summary/transfer_score)
+   with factor_profitability_lifecycle
 -> factor-candidate-packs inventory
 -> factor-candidate-admission-targets export
 -> policy-training-status readback

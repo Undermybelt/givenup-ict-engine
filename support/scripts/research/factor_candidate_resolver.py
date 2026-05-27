@@ -590,6 +590,62 @@ def list_buildable_candidates(
     }
 
 
+def verify_repo_native_pack_contracts(
+    *,
+    repo_root: Path,
+    candidates: list[dict[str, Any]],
+) -> dict[str, Any]:
+    registered_pack_dirs: dict[str, list[str]] = {}
+    for candidate in candidates:
+        artifact_source = candidate.get("artifact_source", {})
+        candidate_pack_dir = artifact_source.get("candidate_pack_dir")
+        if not candidate_pack_dir:
+            continue
+        pack_ref = _artifact_ref(candidate_pack_dir)
+        registered_pack_dirs.setdefault(pack_ref, []).append(candidate["candidate_id"])
+
+    packs: list[dict[str, Any]] = []
+    registered_count = 0
+    invalid_count = 0
+    example_root = repo_root / EXAMPLE_PACKS_DIR
+    for pack_dir in sorted(example_root.glob("*/*")):
+        if not pack_dir.is_dir():
+            continue
+        pack_ref = _artifact_ref(pack_dir.relative_to(repo_root))
+        registered_candidate_ids = sorted(registered_pack_dirs.get(pack_ref, []))
+        reason = _candidate_pack_validation_reason(pack_dir)
+        contract_status = "valid" if reason is None else "invalid"
+        registration_status = (
+            "registered" if registered_candidate_ids else "unregistered"
+        )
+        if registered_candidate_ids:
+            registered_count += 1
+        if reason is not None:
+            invalid_count += 1
+        packs.append(
+            {
+                "family_dir": str(pack_dir.parent.relative_to(example_root)),
+                "candidate_id": pack_dir.name,
+                "pack_dir": pack_ref,
+                "registration_status": registration_status,
+                "registered_candidate_ids": registered_candidate_ids,
+                "contract_status": contract_status,
+                "reason": reason or "ok",
+            }
+        )
+
+    return {
+        "schema_version": "factor-candidate-pack-contract-audit/v1",
+        "summary": {
+            "pack_dir_count": len(packs),
+            "registered_count": registered_count,
+            "unregistered_count": len(packs) - registered_count,
+            "invalid_count": invalid_count,
+        },
+        "packs": packs,
+    }
+
+
 def _print_human_buildable_list(payload: dict[str, Any]) -> None:
     print(
         (
@@ -613,6 +669,25 @@ def _print_human_buildable_list(payload: dict[str, Any]) -> None:
                 ),
                 transfer_status=candidate.get("transfer_status", "n/a"),
                 reusable_ref=(candidate.get("reusable_input_refs") or [""])[0],
+            )
+        )
+
+
+def _print_human_pack_contract_audit(payload: dict[str, Any]) -> None:
+    print(
+        (
+            "pack_dir_count={pack_dir_count} registered_count={registered_count} "
+            "unregistered_count={unregistered_count} invalid_count={invalid_count}"
+        ).format(**payload["summary"])
+    )
+    for pack in payload["packs"]:
+        print(
+            "{candidate_id}\t{registration_status}\t{contract_status}\t{reason}\t{pack_dir}".format(
+                candidate_id=pack["candidate_id"],
+                registration_status=pack["registration_status"],
+                contract_status=pack["contract_status"],
+                reason=pack["reason"],
+                pack_dir=pack["pack_dir"],
             )
         )
 
@@ -901,10 +976,15 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         help="Write pack_manifest.json into repo-native example candidate-pack directories.",
     )
     parser.add_argument(
+        "--verify-pack-contracts",
+        action="store_true",
+        help="Audit repo-native example candidate-pack directories for manifest/member drift and registration status.",
+    )
+    parser.add_argument(
         "--output-format",
         choices=["json", "human"],
         default="json",
-        help="Output format for --list-buildable.",
+        help="Output format for read-only audit/listing modes.",
     )
     return parser.parse_args(argv)
 
@@ -926,6 +1006,16 @@ def main(argv: list[str] | None = None) -> int:
             print(json.dumps(payload, indent=2))
         return 0
     registry = build_candidate_registry(repo_root=repo_root, profile_selector=args.profile)
+    if args.verify_pack_contracts and not args.output_dir:
+        payload = verify_repo_native_pack_contracts(
+            repo_root=repo_root,
+            candidates=registry["candidates"],
+        )
+        if args.output_format == "human":
+            _print_human_pack_contract_audit(payload)
+        else:
+            print(json.dumps(payload, indent=2))
+        return 0
     if args.list_buildable and not args.output_dir:
         buildable_payload = list_buildable_candidates(
             repo_root=repo_root,

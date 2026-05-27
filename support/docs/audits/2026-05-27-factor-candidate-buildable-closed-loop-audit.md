@@ -68,6 +68,99 @@ order_block_mitigation_block_1h_v1 ... blocked inspection_only_learning_blocked 
 This proves the resolver no longer presents current repo-native buildable packs
 as implicitly promotable.
 
+## Additional Verified Loophole
+
+The resolver fix did not cover every downstream consumer. In the same repo
+state, `support/scripts/research/regime_conformal_calibration_report.py`
+still treated missing `trade_usable` contract fields as `True` inside
+`_conformal_set(...)`.
+
+That was a fail-open conformal consumer contract:
+
+- a legacy or malformed label contract missing `trade_usable` could still enter
+  the conformal set;
+- if no explicit labels passed threshold, the fallback `best` path could still
+  return the highest-score label from the same malformed contract;
+- this weakened the closed-loop rule that downstream practical/trade admission
+  must be explicit, not inferred from missing fields.
+
+Current fix changes both conformal selection paths to default
+`trade_usable=False` when the field is absent.
+
+Verification for this slice:
+
+```bash
+python3 -m unittest support/scripts/research/tests/test_regime_conformal_calibration_report.py
+python3 -m unittest support/scripts/research/tests/test_downstream_practical_admission_source_check.py
+```
+
+Observed regression proof:
+
+- new test `test_conformal_set_fails_closed_when_trade_usable_flag_missing`
+  failed before the patch by returning `['primary::TrendExpansion']`;
+- the same test passes after the patch and now returns `[]`.
+
+## Additional Verified Loophole - Regime Sidecar Was Advertising Practical Admission
+
+The resolver and conformal fixes still left one fail-open consumer path:
+`support/scripts/research/regime_high_confidence_decision.py`.
+
+Before this fix, a sidecar-only regime decision could emit `trade_usable=true`
+as soon as the regime stack reached `single_label_99` or `single_label_95`.
+That violated the repo contract in `AGENT.md`, which requires downstream
+Pre-Bayes, BBN, path-ranker, execution-tree, and live-admission proof before
+practical/promotion fields can turn true.
+
+Unsafe pre-fix behavior:
+
+- `decision_state=single_label_99` implied `trade_usable=true` with no explicit
+  downstream live-admission artifact.
+- `regime_consumer_bundle.py` propagated that value into `latest_decision`,
+  making the token-friendly consumer surface easy to misread as runtime-ready.
+- `regime_sidecar_pipeline.py` therefore returned a final decision that looked
+  practically consumable even though the entire pipeline was still a regime-only
+  sidecar.
+
+### Fix
+
+The sidecar decision now stays fail-closed on practical admission:
+
+- `decision_state` still reports confidence shape such as `single_label_99` or
+  `single_label_95`.
+- `promotion_allowed=false` and `trade_usable=false` remain hardcoded unless a
+  separate downstream live-admission contract exists.
+- a new explicit
+  `closed_loop_consumption_status=inspection_only_regime_sidecar_requires_downstream_live_admission`
+  is emitted.
+- abstain reasons now include
+  `regime_sidecar_requires_downstream_live_admission`.
+- `regime_consumer_bundle.py` now preserves `promotion_allowed` and
+  `closed_loop_consumption_status` in `latest_decision` so bundle consumers do
+  not silently drop the fail-closed state.
+
+### Verification
+
+Commands run in this slice:
+
+```bash
+python3 -m unittest support.scripts.research.tests.test_regime_high_confidence_decision -v
+python3 -m unittest support.scripts.research.tests.test_regime_consumer_bundle -v
+python3 -m unittest support.scripts.research.tests.test_regime_sidecar_pipeline -v
+```
+
+Observed regression proof:
+
+- `test_single_label_99_remains_inspection_only_without_downstream_live_admission`
+  failed before the patch because `trade_usable` was `True`;
+- `test_single_label_95_when_99_gate_fails_but_95_accepts` failed before the
+  patch for the same reason;
+- both tests now pass and assert:
+  `promotion_allowed=false`,
+  `trade_usable=false`,
+  `closed_loop_consumption_status=inspection_only_regime_sidecar_requires_downstream_live_admission`;
+- `test_pipeline_runs_r2_to_r10_with_ohlcv` now proves the token-friendly
+  pipeline result also stays inspection-only.
+
 ## Still Unproven
 
 This slice does not prove any of the following:
@@ -77,8 +170,15 @@ This slice does not prove any of the following:
 - that the Pre-Bayes, BBN, path-ranker, execution-tree, and feedback/update
   links are all green for a real factor lane;
 - that Board B current active claims are terminalized enough for a fresh
-  end-to-end training lane.
+  end-to-end training lane;
+- that regime-sidecar terminology is fully disentangled from practical-admission
+  terminology in every adjacent report. One still-unreviewed naming risk is
+  `support/scripts/research/regime_conformal_calibration_report.py`, whose
+  label contract uses a `trade_usable` key for regime-label eligibility rather
+  than live-trade admission.
 
-As of the same-turn `factor_claim_terminalization_audit.py --compact` readback,
-Board B still reports `active_claims=14`, `promotion_allowed_true=0`, and
-`trade_usable_true=0`.
+As of the same-turn `factor_claim_terminalization_audit.py --compact` readback
+on `2026-05-27 13:42 +0800`, Board B still reports `active_claims=1`,
+`promotion_allowed_true=0`, and `trade_usable_true=0`. The remaining active
+claim is the prep-only same-root TOMAC child:
+`codex-tomac-tod-balanced-early2021-hour13-gapfill-prep-20260527T133948+0800`.
