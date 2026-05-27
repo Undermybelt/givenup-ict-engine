@@ -10,16 +10,30 @@ No. I do not have 100% confidence that the objective is complete.
 
 Current-turn evidence still disproves full closure:
 
+- `python3 support/scripts/objective_closure_snapshot.py --compact --check-remotes --output-dir /tmp/ict-engine-goal-20260527-closure-snapshot`
+  now emits `/private/tmp/ict-engine-goal-20260527-closure-snapshot/objective_closure_snapshot.json`
+  with child report timestamps and the exact current blocker surfaces:
+  factor `active_claims=10`, `blocking_reasons=["active_claims"]`,
+  `attention_by_owner={"codex":10}`; release unresolved
+  `["worktree_clean_for_release","remote_readback"]`.
 - `python3 support/scripts/done_definition_audit.py --compact --output /tmp/ict-engine-goal-20260527-done.json`
   reports `completion_ready=false` because all heavy gates are skipped by
   default.
-- `python3 support/scripts/factor_claim_terminalization_audit.py --compact --output /tmp/ict-engine-goal-20260527-factor.json`
-  initially exited `1` with `active_claims=10`, `promotion_allowed_true=0`, and
-  `trade_usable_true=0`.
-- `python3 support/scripts/release_readiness_audit.py --compact --check-remotes --output /tmp/ict-engine-goal-20260527-release.json`
-  initially reported unresolved `worktree_clean_for_release`,
-  `source_origin_matches_selected_source`, and
-  `release_version_tag_available`.
+- `python3 support/scripts/factor_claim_terminalization_audit.py --compact --output /tmp/ict-engine-goal-20260527-factor-postfix.json`
+  was an earlier same-turn checkpoint with `active_claims=6`,
+  `live_factor_processes=3`, `promotion_allowed_true=0`,
+  `trade_usable_true=0`, and `attention_groups.by_owner={"codex":6}`.
+  The latest coordinated snapshot in this continuation now shows
+  `active_claims=10`, `live_factor_processes=0`,
+  `blocking_reasons=["active_claims"]`, `promotion_allowed_true=0`,
+  `trade_usable_true=0`, and `attention_by_owner={"codex":10}`.
+  The earlier classifier fix still stands: one old “live factor process” was a
+  diagnostic false positive
+  (`tomac_tod_balanced_provider_parity_probe.py`) rather than a real live lane.
+- `python3 support/scripts/release_readiness_audit.py --compact --check-remotes --output /tmp/ict-engine-goal-20260527-release-resume3.json`
+  currently reports unresolved `worktree_clean_for_release` and
+  `remote_readback`; `release_version_tag_available` remains skipped behind the
+  remote gate.
 
 This file tracks the current closure loop for the user-facing objective:
 
@@ -68,12 +82,20 @@ Current proof:
 
 - Done-definition heavy is now green for the current tree, but factor and
   release closure are still red.
-- Fresh factor rerun is worse than the earlier packet:
-  `status=needs_attention`, `active_claims=12`, `live_factor_processes=1`,
-  `trade_usable_true=0`.
+- The latest factor rerun still blocks closure:
+  `status=needs_attention`, `active_claims=10`, `invalid_active_claims=0`,
+  `live_factor_processes=2`, `trade_usable_true=0`,
+  `attention_groups.by_owner={"codex":10}`.
+- Same-turn evidence is still time-variant:
+  - two stale/duplicate claims were terminalized from current evidence;
+  - one probe-only TOMAC script was removed from live-process counts by fixing
+    the classifier;
+  - the mid-turn checkpoint improved to `6/3`, but later claim activity pushed
+    the current closure surface back to `10/0`.
 - Fresh release rerun now reports `status=needs_fix` with unresolved
   `worktree_clean_for_release` and `remote_readback`; tag availability is
-  currently skipped behind the remote gate.
+  still skipped because the audit cannot currently trust the origin tag
+  surface.
 
 Implication:
 
@@ -91,16 +113,59 @@ Current proof:
   maintenance skill, but this turn still found first-run drift by manual audit.
 - Current packet/readiness truth is fragmented across:
   `/tmp/ict-engine-goal-20260527-done.json`,
-  `/tmp/ict-engine-goal-20260527-factor.json`,
-  `/tmp/ict-engine-goal-20260527-release.json`,
+  `/tmp/ict-engine-goal-20260527-factor-clusters.json`,
+  `/tmp/ict-engine-goal-20260527-release-resume3.json`,
   plus older handoff plans.
+- This slice adds a coordinated compact parity surface:
+  `python3 support/scripts/objective_closure_snapshot.py --compact --check-remotes --output-dir /tmp/ict-engine-goal-20260527-closure-snapshot`
+  now emits `/private/tmp/ict-engine-goal-20260527-closure-snapshot/objective_closure_snapshot.json`
+  plus the three child audit JSON files under the same root.
+- The current compact factor audit now proves both same-owner crowding and one
+  explicit family collision:
+  `attention_groups.by_owner={"codex":12}` and
+  `attention_clusters[0]={owner=codex, scope_family=TrendExpansion -> PriorDayExtremeContinuation -> PriorDayExtremeContinuationMtfResonanceGuard -> ParticipationQualityGuard -> NQCadenceLift, claim_count=2}`.
+- A later same-turn checkpoint improved that surface:
+  `attention_groups.by_owner={"codex":6}` and no duplicate cluster remains.
+  The removed live-process false positive was
+  `support/scripts/research/tomac_tod_balanced_provider_parity_probe.py`,
+  which the compact audit now ignores.
+- The latest rerun drifted again to
+  `attention_groups.by_owner={"codex":10}` with
+  `live_factor_processes=2`, which reinforces the same conclusion: the surface
+  is still too active and time-variant to claim practical closure.
 
 Reasonable next solution:
 
-- Introduce one compact parity surface that names:
-  - the canonical first-run command chain;
-  - the current evidence roots for done-definition, factor hygiene, and release;
-  - whether practical/trade-usable proof exists for the current tree.
+- Keep the new reporting-only cluster surface in the compact factor audit so the
+  next turn can externalize or terminalize duplicate families by cluster instead
+  of by manual row scanning.
+- Still missing:
+  - a green same-tree practical closure packet.
+
+### F4. Reusable strategy-library provenance previously leaked caller-local paths
+
+Current proof:
+
+- `support/scripts/research/factor_candidate_pack.py` previously wrote
+  `metadata.source_artifact=str(zip_path)` when building strategy-library
+  manifests from `freqtrade` backtest zips.
+- For absolute zip inputs, this embedded maintainer-local temp/workstation paths
+  into exported evidence assets.
+- The strategy-library projection then dropped `source_artifact`, weakening the
+  provenance trail one layer downstream.
+
+This slice:
+
+- normalize `source_artifact` to a portable reference (`backtest.zip` for
+  absolute local inputs);
+- preserve the same portable field in the emitted strategy-library manifest;
+- add regression coverage so clone-safe provenance stays enforced.
+
+Implication:
+
+- evidence packs become more reusable across clones and machines;
+- provenance remains inspectable without pretending a caller-local absolute path
+  is a public contract.
 
 ## Current Slice Verification Plan
 
@@ -127,6 +192,7 @@ Executed in this turn:
 - `python3 support/scripts/release_readiness_audit.py --compact --check-remotes --output /tmp/ict-engine-goal-20260527-release.json`
 - `python3 -m unittest support.scripts.tests.test_done_definition_audit.DoneDefinitionAuditTest.test_evaluate_quickstart_surface_fails_when_command_order_drifts support.scripts.tests.test_done_definition_audit.DoneDefinitionAuditTest.test_evaluate_quickstart_surface_passes_when_canonical_blocks_exist -v`
 - `python3 -m unittest support.scripts.tests.test_done_definition_audit -v`
+- `python3 -m unittest support.scripts.research.tests.test_factor_candidate_pack support.scripts.research.tests.test_factor_candidate_resolver -v`
 - `python3 support/scripts/done_definition_audit.py --compact --output /tmp/ict-engine-goal-20260527-done-parity.json`
 - `cargo test ranker_target_export_preserves_exact_provenance_prefixed_branch_paths -- --nocapture`
 - `cargo test target_export_uses_exact_branch_trade_direction_over_snapshot_fallback -- --nocapture`
@@ -137,6 +203,11 @@ Executed in this turn:
 - `python3 support/scripts/done_definition_audit.py --run-all-heavy --compact --output /tmp/ict-engine-goal-20260527-done-heavy-rerun2.json`
 - `python3 support/scripts/factor_claim_terminalization_audit.py --compact --output /tmp/ict-engine-goal-20260527-factor-recheck.json`
 - `python3 support/scripts/release_readiness_audit.py --compact --check-remotes --output /tmp/ict-engine-goal-20260527-release-recheck.json`
+- `python3 -m unittest support.scripts.tests.test_factor_claim_terminalization_audit -v`
+- `python3 support/scripts/factor_claim_terminalization_audit.py --compact --output /tmp/ict-engine-goal-20260527-factor-clusters.json`
+- `python3 -m unittest support.scripts.tests.test_factor_claim_terminalization_audit.FactorClaimTerminalizationAuditTest.test_live_process_classifier_ignores_tomac_provider_parity_probe_diagnostics -v`
+- `python3 support/scripts/factor_claim_terminalization_audit.py --compact --output /tmp/ict-engine-goal-20260527-factor-after-claim-cleanup.json`
+- `python3 support/scripts/factor_claim_terminalization_audit.py --compact --output /tmp/ict-engine-goal-20260527-factor-postfix.json`
 
 Readback summary:
 
@@ -149,6 +220,11 @@ Readback summary:
 - done-definition heavy rerun:
   `/tmp/ict-engine-goal-20260527-done-heavy-rerun2.json` now reports
   `status=pass`, `completion_ready=true`, `pass_count=8`, `fail_count=0`.
+  The fresh current-turn heavy rerun
+  `/tmp/ict-engine-goal-20260527-done-heavy-live.json` also now reports
+  `status=pass`, `completion_ready=true`,
+  `evidence_level=full_enabled_gate_coverage`, `pass_count=8`,
+  `fail_count=0`.
 - current bug slices landed before this heavy pass:
   - exact rooted target rows now preserve visible provenance-prefixed branch
     paths while keeping canonical score-key matching in
@@ -160,15 +236,55 @@ Readback summary:
   a targeted regression test is now added for canonical external score input
   against exact provenance-prefixed persisted rows; current-tree execution now
   passes.
+- portable evidence-pack provenance gap:
+  strategy-library manifests built from absolute `freqtrade` zip inputs now
+  emit `metadata.source_artifact="backtest.zip"` instead of leaking an
+  absolute local path, and the focused `factor_candidate_pack` /
+  `factor_candidate_resolver` suite now passes `31` tests.
 - factor audit:
-  fresh rerun at `/tmp/ict-engine-goal-20260527-factor-recheck.json` reports
-  `status=needs_attention`, `active_claims=12`, `live_factor_processes=1`,
-  `trade_usable_true=0`.
+  the current rerun at `/tmp/ict-engine-goal-20260527-factor-clusters.json`
+  reports `status=needs_attention`, `active_claims=12`,
+  `invalid_active_claims=0`, `live_factor_processes=4`,
+  `stale_safe_takeover_candidates=6`, `trade_usable_true=0`, and
+  `attention_groups.by_owner={"codex":12}`.
+  The new compact `attention_clusters` surface also shows the largest duplicate
+  family directly:
+  `TrendExpansion -> PriorDayExtremeContinuation -> PriorDayExtremeContinuationMtfResonanceGuard -> ParticipationQualityGuard -> NQCadenceLift`
+  with `claim_count=2`.
+  This improves evidence-pack coordination, but it still does not prove
+  practical closure because no current-turn rooted lane has become
+  `trade_usable=true`.
+- later same-turn factor checkpoint:
+  `/tmp/ict-engine-goal-20260527-factor-postfix.json` now reports
+  `status=needs_attention`, `active_claims=6`, `invalid_active_claims=0`,
+  `live_factor_processes=3`, `stale_safe_takeover_candidates=0`,
+  `trade_usable_true=0`, and `attention_groups.by_owner={"codex":6}`.
+  The code fix also proved one prior live-process blocker was false:
+  `tomac_tod_balanced_provider_parity_probe.py` is a read-only diagnostic
+  probe and is now excluded from live-process classification.
+- latest factor rerun in this continuation:
+  the compact audit now reports `status=needs_attention`,
+  `active_claims=10`, `invalid_active_claims=0`,
+  `live_factor_processes=2`, `stale_safe_takeover_candidates=0`,
+  `trade_usable_true=0`, and `attention_groups.by_owner={"codex":10}`.
+  The earlier classifier fix still holds, but fresh live launch/replay activity
+  has expanded the current blocker surface again.
+- compact closure snapshot:
+  `/private/tmp/ict-engine-goal-20260527-closure-snapshot/objective_closure_snapshot.json`
+  now records the canonical quickstart chain and the coordinated child audit
+  evidence roots in one place. Its current blockers are
+  `done_definition_not_completion_ready`,
+  `factor_closure_blocked`,
+  `release_readiness_blocked`.
 - release readiness:
-  fresh rerun at `/tmp/ict-engine-goal-20260527-release-recheck.json` reports
-  `status=needs_fix`, `fail_count=2`, unresolved
-  `worktree_clean_for_release`, `remote_readback`; `release_version_tag_available`
-  is skipped behind the remote-readback gate.
+  the current rerun at `/tmp/ict-engine-goal-20260527-release-resume3.json`
+  reports `status=needs_fix`, `fail_count=2`, unresolved
+  `worktree_clean_for_release`, `remote_readback`;
+  `release_version_tag_available` is still skipped because the
+  remote-readback gate is red.
+  The latest fallback probe is stronger because the public HTTPS readback for
+  `givenup-ict-engine` now succeeds while the local SSH `origin` transport and
+  the release mirror readback still fail.
 
 ## Commit Boundary
 
