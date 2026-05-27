@@ -18,6 +18,7 @@ REQUIRED_CANDIDATE_PACK_FILES = (
     "factor_eval_grid_summary.json",
     "transfer_score.json",
 )
+PACK_MANIFEST_FILE = "pack_manifest.json"
 
 
 def _load_json(path: Path) -> dict[str, Any]:
@@ -370,6 +371,28 @@ def _write_json(path: Path, payload: dict[str, Any]) -> None:
     path.write_text(json.dumps(payload, indent=2, sort_keys=False) + "\n", encoding="utf-8")
 
 
+def _write_pack_manifest(
+    candidate_dir: Path,
+    *,
+    candidate_id: str,
+    artifact_family: str,
+    artifact_files: list[str],
+    source_refs: dict[str, Any] | None = None,
+) -> Path:
+    manifest_path = candidate_dir / PACK_MANIFEST_FILE
+    _write_json(
+        manifest_path,
+        {
+            "schema_version": "factor-candidate-pack-manifest/v1",
+            "candidate_id": candidate_id,
+            "artifact_family": artifact_family,
+            "artifact_files": artifact_files,
+            "source_refs": source_refs or {},
+        },
+    )
+    return manifest_path
+
+
 def _output_ref(path: Path, output_dir: Path) -> str:
     return str(path.relative_to(output_dir))
 
@@ -396,6 +419,11 @@ def _candidate_list_entry(candidate: dict[str, Any], repo_root: Path) -> dict[st
             )
             or {}
         )
+        legacy_missing_lifecycle = not bool(
+            (eval_summary.get("factor_profitability_lifecycle") or {}).get(
+                "learning_admission"
+            )
+        )
         entry.update(
             {
                 "aggregate_trade_count": eval_summary["trade_density_summary"][
@@ -404,12 +432,25 @@ def _candidate_list_entry(candidate: dict[str, Any], repo_root: Path) -> dict[st
                 "aggregate_label": eval_summary["trade_density_summary"][
                     "aggregate_label"
                 ],
-                "learning_admission_status": learning.get("status", "unknown"),
+                "learning_admission_status": (
+                    "unknown_legacy_pack"
+                    if legacy_missing_lifecycle
+                    else learning.get("status", "unknown")
+                ),
                 "long_run_expectancy_after_declared_friction": learning.get(
                     "long_run_expectancy_after_declared_friction"
                 ),
                 "transfer_status": transfer_score["status"],
-                "profitability_status": transfer_score.get("profitability_status"),
+                "profitability_status": (
+                    "legacy_candidate_pack_missing_lifecycle"
+                    if legacy_missing_lifecycle
+                    else transfer_score.get("profitability_status")
+                ),
+                "surface_freshness": (
+                    "legacy_candidate_pack"
+                    if legacy_missing_lifecycle
+                    else "lifecycle_current"
+                ),
             }
         )
     return entry
@@ -506,6 +547,15 @@ def build_candidate_packs(
             pack_dir = artifact_plan["candidate_pack_dir_path"]
             for name in REQUIRED_CANDIDATE_PACK_FILES:
                 shutil.copy2(pack_dir / name, candidate_dir / name)
+            manifest_path = _write_pack_manifest(
+                candidate_dir,
+                candidate_id=candidate["candidate_id"],
+                artifact_family="factor_candidate_pack",
+                artifact_files=list(REQUIRED_CANDIDATE_PACK_FILES),
+                source_refs={
+                    "source_candidate_pack_dir": artifact_plan["candidate_pack_dir_ref"],
+                },
+            )
             eval_summary = _load_json(candidate_dir / "factor_eval_grid_summary.json")
             transfer_score = _load_json(candidate_dir / "transfer_score.json")
             built.append(
@@ -514,6 +564,7 @@ def build_candidate_packs(
                     "strategy_name": candidate.get("strategy_name"),
                     "artifact_family": "factor_candidate_pack",
                     "pack_dir": _output_ref(candidate_dir, output_dir),
+                    "pack_manifest_path": _output_ref(manifest_path, output_dir),
                     "source_candidate_pack_dir": artifact_plan["candidate_pack_dir_ref"],
                     "aggregate_trade_count": eval_summary["trade_density_summary"][
                         "aggregate_trade_count"
@@ -545,12 +596,20 @@ def build_candidate_packs(
             )
             for name, payload in bundle.items():
                 _write_json(candidate_dir / f"{name}.json", payload)
+            manifest_path = _write_pack_manifest(
+                candidate_dir,
+                candidate_id=candidate["candidate_id"],
+                artifact_family="factor_candidate_pack",
+                artifact_files=[f"{name}.json" for name in bundle],
+                source_refs={"source_backtest_zip": str(zip_path)},
+            )
             built.append(
                 {
                     "candidate_id": candidate["candidate_id"],
                     "strategy_name": candidate.get("strategy_name"),
                     "artifact_family": "factor_candidate_pack",
                     "pack_dir": _output_ref(candidate_dir, output_dir),
+                    "pack_manifest_path": _output_ref(manifest_path, output_dir),
                     "source_backtest_zip": str(zip_path),
                     "aggregate_trade_count": bundle["factor_eval_grid_summary"][
                         "trade_density_summary"
@@ -593,12 +652,20 @@ def build_candidate_packs(
             )
             for name, payload in bundle.items():
                 _write_json(candidate_dir / f"{name}.json", payload)
+            manifest_path = _write_pack_manifest(
+                candidate_dir,
+                candidate_id=candidate["candidate_id"],
+                artifact_family="factor_candidate_pack",
+                artifact_files=[f"{name}.json" for name in bundle],
+                source_refs={"source_strategy_library_json": str(manifest_path)},
+            )
             built.append(
                 {
                     "candidate_id": candidate["candidate_id"],
                     "strategy_name": candidate.get("strategy_name"),
                     "artifact_family": "factor_candidate_pack",
                     "pack_dir": _output_ref(candidate_dir, output_dir),
+                    "pack_manifest_path": _output_ref(manifest_path, output_dir),
                     "source_strategy_library_json": str(manifest_path),
                     "aggregate_trade_count": bundle["factor_eval_grid_summary"][
                         "trade_density_summary"
@@ -633,6 +700,17 @@ def build_candidate_packs(
             )
             for name, payload in bundle.items():
                 _write_json(candidate_dir / f"{name}.json", payload)
+            manifest_path = _write_pack_manifest(
+                candidate_dir,
+                candidate_id=candidate["candidate_id"],
+                artifact_family="regime_artifact_bundle",
+                artifact_files=[f"{name}.json" for name in bundle],
+                source_refs={
+                    "source_benchmark_paths": [
+                        str(path) for path in artifact_plan["regime_benchmark_paths"]
+                    ]
+                },
+            )
             classifier_summary = bundle["regime_classifier_summary"]
             transition_summary = bundle["transition_summary"]
             cross_market_summary = bundle["cross_market_summary"]
@@ -642,6 +720,7 @@ def build_candidate_packs(
                     "strategy_name": candidate.get("strategy_name"),
                     "artifact_family": "regime_artifact_bundle",
                     "pack_dir": _output_ref(candidate_dir, output_dir),
+                    "pack_manifest_path": _output_ref(manifest_path, output_dir),
                     "source_benchmark_count": len(
                         artifact_plan["regime_benchmark_paths"]
                     ),

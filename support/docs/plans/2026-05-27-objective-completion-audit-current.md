@@ -230,6 +230,12 @@ The objective is only complete if current evidence proves all of the following:
     `learning_admission_status` and
     `long_run_expectancy_after_declared_friction`, with fallback compatibility
     for older curated packs that lack lifecycle fields.
+  - latest readback also shows the curated pack pool is still stale: the
+    current `--list-buildable` surface reports every reusable
+    `candidate_pack_dir` entry as `learning_admission_status=unknown_legacy_pack`
+    with `profitability_status=legacy_candidate_pack_missing_lifecycle`, which
+    means the default buildable pool still lacks current lifecycle evidence even
+    after the surface fix.
 
 ## Immediate Verification Queue
 
