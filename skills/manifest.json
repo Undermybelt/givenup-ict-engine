@@ -1,0 +1,101 @@
+{
+  "schema_version": 1,
+  "catalog": "ict-engine-agent-skills",
+  "review_date": "2026-05-27",
+  "runtime_consumed_by_ict_engine": false,
+  "description": "Optional repo-local agent skills for provider choice and structured evidence preparation. These files are not runtime inputs.",
+  "provider_policy": {
+    "ask_user_before_live_or_low_timeframe_fetch": true,
+    "zero_config_behavior": "Use public/yfinance-compatible data only when the user accepts zero-config public data or a demo command explicitly requests fixtures.",
+    "low_timeframe_preferred_provider": "IBKR when explicitly selected and runtime health is ready.",
+    "crypto_policy": "Ask the user to choose exchange/provider. Do not silently default generic consumer workflows to Binance.",
+    "fail_closed_when": [
+      "provider health is not ready",
+      "session coverage does not overlap",
+      "timeframe does not match the requested factor",
+      "data is stale or incomplete",
+      "chosen provider is unavailable"
+    ]
+  },
+  "skills": [
+    {
+      "id": "provider-selection",
+      "path": "skills/provider-selection/SKILL.md",
+      "purpose": "Provider choice and fail-closed guard before live, low-timeframe, Auto-Quant, or factor-training work.",
+      "runtime_mapping": [
+        "provider/status surface",
+        "Auto-Quant material metadata",
+        "feedback/update provider provenance"
+      ],
+      "source_review": [
+        "HubbleVision/hubble-data-service-skill",
+        "ict-engine provider contract"
+      ]
+    },
+    {
+      "id": "macro-regime-context",
+      "path": "skills/macro-regime-context/SKILL.md",
+      "purpose": "Macro liquidity and cross-asset stress context as structured regime evidence.",
+      "runtime_mapping": [
+        "Regime posterior evidence",
+        "Execution tree features",
+        "Feedback/update learning fields"
+      ],
+      "source_review": [
+        "star23/Day1Global-Skills",
+        "anthropics/financial-services"
+      ]
+    },
+    {
+      "id": "options-dealer-context",
+      "path": "skills/options-dealer-context/SKILL.md",
+      "purpose": "Options chain, implied vol, skew, gamma wall, and 0DTE pressure context as structured evidence.",
+      "runtime_mapping": [
+        "Technicals",
+        "Regime posterior evidence",
+        "Execution tree features",
+        "Feedback/update learning fields"
+      ],
+      "source_review": [
+        "anthropics/financial-services"
+      ]
+    },
+    {
+      "id": "market-structure-context",
+      "path": "skills/market-structure-context/SKILL.md",
+      "purpose": "ICT/SMC market-structure evidence such as BOS, CHoCH, order blocks, fair value gaps, premium/discount, and liquidity sweep context as structured evidence.",
+      "runtime_mapping": [
+        "Structure",
+        "Technicals",
+        "Regime posterior evidence",
+        "Execution tree features",
+        "Feedback/update learning fields"
+      ],
+      "source_review": [
+        "MobiusQuant/OpenMobius-skill"
+      ]
+    }
+  ],
+  "excluded_raw_sources": [
+    {
+      "source": "HubbleVision/hubble-data-service-skill",
+      "reason": "Hard-coded provider endpoint/API key and exclusive provider mandate conflict with consumer choice."
+    },
+    {
+      "source": "wbh604/UZI-Skill",
+      "reason": "Installer, hooks, scripts, local cache gates, A-share stock-analysis assumptions, and optional tunnel behavior are too broad for ict-engine runtime intake."
+    },
+    {
+      "source": "anthropics/financial-services managed agents and connectors",
+      "reason": "Managed-agent deployment, vendor MCP connectors, Microsoft 365 tooling, and document authoring are outside this repo's runtime boundary."
+    },
+    {
+      "source": "star23/Day1Global-Skills raw prompts",
+      "reason": "Promotional footers, broad web-search instructions, and recommendation language were removed in favor of structured fail-closed evidence."
+    },
+    {
+      "source": "MobiusQuant/OpenMobius-skill raw runtime",
+      "reason": "Useful ICT/SMC structural taxonomy and freshness discipline, but the raw install flow depends on Mobius API calls, local embeddings/index build, Playwright downloads, and chart/image workflows outside ict-engine runtime boundaries."
+    }
+  ]
+}
