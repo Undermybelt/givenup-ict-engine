@@ -354,6 +354,126 @@ pub struct StructuralPathRankingTargetRow {
     pub score_generator: Option<String>,
 }
 
+const STRUCTURAL_PATH_RANKING_REGIME_ROOT_LABELS: &[&str] = &[
+    "Bull",
+    "Bear",
+    "Sideways",
+    "Crisis",
+    "Transition",
+    "SessionRhythm",
+    "TrendExpansion",
+    "RangeExpansion",
+    "RangeConsolidation",
+    "RangeReversion",
+    "Accumulation",
+    "Distribution",
+    "Manipulation",
+];
+
+fn structural_path_ranking_normalized_branch_path(raw: &str) -> Option<String> {
+    let path = raw
+        .trim()
+        .replace("_->_", " -> ")
+        .replace("->", " -> ")
+        .split_whitespace()
+        .collect::<Vec<_>>()
+        .join(" ");
+    path.contains(" -> ").then_some(path)
+}
+
+fn structural_path_ranking_is_regime_root_label(label: &str) -> bool {
+    STRUCTURAL_PATH_RANKING_REGIME_ROOT_LABELS.contains(&label)
+}
+
+pub fn structural_path_ranking_canonical_branch_path(raw: &str) -> Option<String> {
+    let path = structural_path_ranking_normalized_branch_path(raw)?;
+    let segments = path
+        .split(" -> ")
+        .map(str::trim)
+        .filter(|segment| !segment.is_empty())
+        .collect::<Vec<_>>();
+    if segments.len() < 4 {
+        return Some(path);
+    }
+    let Some(root_start) = segments
+        .iter()
+        .position(|segment| structural_path_ranking_is_regime_root_label(segment))
+    else {
+        return Some(path);
+    };
+    if root_start == 0 || segments.len().saturating_sub(root_start) < 4 {
+        Some(path)
+    } else {
+        Some(segments[root_start..].join(" -> "))
+    }
+}
+
+fn structural_path_ranking_canonical_branch_segments(raw: &str) -> Option<Vec<String>> {
+    let canonical = structural_path_ranking_canonical_branch_path(raw)?;
+    let segments = canonical
+        .split(" -> ")
+        .map(str::trim)
+        .filter(|segment| !segment.is_empty())
+        .map(str::to_string)
+        .collect::<Vec<_>>();
+    (segments.len() >= 4).then_some(segments)
+}
+
+fn structural_path_ranking_canonical_regime_calibration_bucket(raw: &str) -> String {
+    let trimmed = raw.trim();
+    if !trimmed.contains(" -> ") {
+        return trimmed.to_string();
+    }
+    let branch_start = trimmed
+        .split(" -> ")
+        .next()
+        .and_then(|head| head.rfind(':').map(|index| index + 1))
+        .unwrap_or(0);
+    let (prefix, branch) = trimmed.split_at(branch_start);
+    structural_path_ranking_canonical_branch_path(branch)
+        .map(|canonical| format!("{prefix}{canonical}"))
+        .unwrap_or_else(|| trimmed.to_string())
+}
+
+pub fn canonicalize_structural_path_ranking_target_row(row: &mut StructuralPathRankingTargetRow) {
+    let branch_source = if row.path_id.contains(" -> ") {
+        row.path_id.as_str()
+    } else {
+        row.regime_profit_branch_path.as_deref().unwrap_or_default()
+    };
+    let Some(exact_path) = structural_path_ranking_normalized_branch_path(branch_source) else {
+        return;
+    };
+    let Some(segments) = structural_path_ranking_canonical_branch_segments(branch_source) else {
+        return;
+    };
+    if row.path_id.contains(" -> ") {
+        row.path_id = exact_path.clone();
+    }
+    if row.path_label.contains(" -> ") {
+        row.path_label =
+            structural_path_ranking_normalized_branch_path(&row.path_label).unwrap_or_else(|| {
+                row.path_label.clone()
+            });
+    }
+    row.regime_profit_branch_path = Some(exact_path);
+    row.parent_regime_root = Some(segments[0].clone());
+    row.main_regime = Some(segments[0].clone());
+    row.sub_regime = Some(segments[1].clone());
+    row.sub_sub_regime_or_profit_factor = Some(segments[2].clone());
+    row.profit_factor = Some(segments[3..].join(" -> "));
+    row.regime_calibration_bucket =
+        structural_path_ranking_canonical_regime_calibration_bucket(&row.regime_calibration_bucket);
+}
+
+pub fn canonical_structural_path_ranking_target_row(
+    row: &StructuralPathRankingTargetRow,
+) -> StructuralPathRankingTargetRow {
+    let mut row = row.clone();
+    canonicalize_structural_path_ranking_target_row(&mut row);
+    row
+}
+
 #[derive(Debug, Clone, Serialize, Deserialize, Default, PartialEq)]
 pub struct StructuralPathRankingExternalScoreInput {
     pub candidate_set_id: String,
@@ -1203,6 +1323,7 @@ pub fn score_structural_path_ranker_runtime_rows_with_explicit_family(
 pub fn structural_path_ranking_target_row_history_key(
     row: &StructuralPathRankingTargetRow,
 ) -> String {
+    let row = canonical_structural_path_ranking_target_row(row);
     let label = row
         .calibrated_label
         .map(|value| format!("{value:.6}"))
@@ -1220,10 +1341,19 @@ pub fn structural_path_ranking_target_row_history_key(
     )
 }
 
+pub fn structural_path_ranking_candidate_path_score_key(
+    candidate_set_id: &str,
+    path_id: &str,
+) -> String {
+    let path_id = structural_path_ranking_canonical_branch_path(path_id)
+        .unwrap_or_else(|| path_id.trim().to_string());
+    format!("{candidate_set_id}|{path_id}")
+}
+
 pub fn structural_path_ranking_target_row_score_key(
     row: &StructuralPathRankingTargetRow,
 ) -> String {
-    format!("{}|{}", row.candidate_set_id, row.path_id)
+    structural_path_ranking_candidate_path_score_key(&row.candidate_set_id, &row.path_id)
 }
 
 pub fn load_structural_path_ranking_target_rows(
@@ -1235,7 +1365,11 @@ pub fn load_structural_path_ranking_target_rows(
     let raw = fs::read_to_string(jsonl_path)?;
     raw.lines()
         .filter(|line| !line.trim().is_empty())
-        .map(serde_json::from_str::<StructuralPathRankingTargetRow>)
+        .map(|line| {
+            let mut row = serde_json::from_str::<StructuralPathRankingTargetRow>(line)?;
+            canonicalize_structural_path_ranking_target_row(&mut row);
+            Ok::<StructuralPathRankingTargetRow, serde_json::Error>(row)
+        })
         .collect::<std::result::Result<Vec<_>, _>>()
         .map_err(Into::into)
 }
@@ -1245,7 +1379,8 @@ pub fn render_structural_path_ranking_target_rows_jsonl(
 ) -> Result<String> {
     let mut out = String::new();
     for row in rows {
-        out.push_str(&serde_json::to_string(row)?);
+        let row = canonical_structural_path_ranking_target_row(row);
+        out.push_str(&serde_json::to_string(&row)?);
         out.push('\n');
     }
     Ok(out)
@@ -1267,6 +1402,7 @@ pub fn render_structural_path_ranking_target_rows_csv(
         "protocol_version,symbol,generated_at,candidate_set_id,candidate_set_size,rank,path_id,scenario_id,path_label,regime_profit_branch_path,parent_regime_root,main_regime,sub_regime,sub_sub_regime_or_profit_factor,profit_factor,direction,raw_path_score,calibrated_path_prob,path_prob_lower_bound,execution_gate_status,execution_gate_min_path_prob,execution_gate_reason,pending_reward_state,maturity_mask,maturity_weight,calibrated_label,propensity_estimate,ips_weight,training_weight,regime_calibration_bucket,behavior_policy_probability,execution_propensity,target_policy_probability_confidence,target_policy_probability_lower_bound,target_policy_reward_prior,target_policy_reward_lower_bound,experience_prior,current_posterior,structural_baseline_score,regime_aux_qqq_hv_level,regime_aux_nq_vs_200d_pct,regime_aux_vix3m_level,regime_aux_qqq_hv_pct_rank_252,regime_aux_vvix_over_vix,ref_previous_day_high,ref_previous_day_low,ref_previous_day_close,ref_current_day_open,ref_previous_week_high,ref_previous_week_low,ref_previous_week_close,ref_current_week_open,ref_previous_month_high,ref_previous_month_low,ref_current_day_gap_upper,ref_current_day_gap_lower,ref_current_week_gap_upper,ref_current_week_gap_lower,ref_recent_week_gap_levels,ob_variant,ob_direction,ob_validation_state,ob_high,ob_low,ob_midpoint,ob_mitigation_count,ob_breaker_confirmed,ob_rejection_confirmed,ob_confidence,ob_fail_closed_reason,score_model_family,score_source_kind,score_model_artifact_uri,score_generator\n",
     );
     for row in rows {
+        let row = canonical_structural_path_ranking_target_row(row);
         let fields = [
             csv_escape(protocol_version),
             csv_escape(symbol),
@@ -2349,6 +2485,80 @@ mod tests {
         let probability = structural_path_ranker_direct_model_probability(&model, &row);
 
         assert!((probability - 0.628).abs() < 1e-9);
+    }
+
+    #[test]
+    fn ranker_target_export_preserves_exact_provenance_prefixed_branch_paths() {
+        let legacy_path = "FUTURES -> equity_index -> M2K -> 1m -> RangeReversion -> LiquiditySweepRejectShort -> ibkr_m2k1m_liquidity_sweep_reject_short_7d_gate1_v1 -> ibkr_m2k1m_liquidity_sweep_reject_short_rvol_pda_guard_pda_consistency_floor_v1";
+        let canonical_path = "RangeReversion -> LiquiditySweepRejectShort -> ibkr_m2k1m_liquidity_sweep_reject_short_7d_gate1_v1 -> ibkr_m2k1m_liquidity_sweep_reject_short_rvol_pda_guard_pda_consistency_floor_v1";
+        let mut row = test_target_row(
+            "auto-quant-agent-material-rank:strategy-library:M2K:test",
+            legacy_path,
+            "unobserved",
+            0.5,
+            Some(0.924043),
+        );
+        row.regime_profit_branch_path = Some(legacy_path.to_string());
+        row.parent_regime_root = Some("FUTURES".to_string());
+        row.main_regime = Some("FUTURES".to_string());
+        row.sub_regime = Some("equity_index".to_string());
+        row.sub_sub_regime_or_profit_factor = Some("M2K".to_string());
+        row.profit_factor = Some(format!("1m -> {canonical_path}"));
+        row.regime_calibration_bucket = format!("M2K:range:{legacy_path}");
+
+        assert_eq!(
+            structural_path_ranking_target_row_score_key(&row),
+            format!("auto-quant-agent-material-rank:strategy-library:M2K:test|{canonical_path}")
+        );
+
+        let csv = render_structural_path_ranking_target_rows_csv(
+            "structural-path-ranking-target-v1",
+            "M2K",
+            "2026-05-25T00:00:00Z",
+            std::slice::from_ref(&row),
+        );
+        let mut reader = csv::Reader::from_reader(csv.as_bytes());
+        let headers = reader.headers().unwrap().clone();
+        let record = reader.records().next().unwrap().unwrap();
+        let field = |name: &str| {
+            let index = headers
+                .iter()
+                .position(|header| header == name)
+                .unwrap_or_else(|| panic!("missing csv header {name}"));
+            record.get(index).unwrap()
+        };
+
+        assert_eq!(field("path_id"), legacy_path);
+        assert_eq!(field("path_label"), legacy_path);
+        assert_eq!(field("regime_profit_branch_path"), legacy_path);
+        assert_eq!(field("parent_regime_root"), "RangeReversion");
+        assert_eq!(field("main_regime"), "RangeReversion");
+        assert_eq!(field("sub_regime"), "LiquiditySweepRejectShort");
+        assert_eq!(
+            field("sub_sub_regime_or_profit_factor"),
+            "ibkr_m2k1m_liquidity_sweep_reject_short_7d_gate1_v1"
+        );
+        assert_eq!(
+            field("profit_factor"),
+            "ibkr_m2k1m_liquidity_sweep_reject_short_rvol_pda_guard_pda_consistency_floor_v1"
+        );
+        assert_eq!(
+            field("regime_calibration_bucket"),
+            format!("M2K:range:{canonical_path}")
+        );
+
+        let jsonl =
+            render_structural_path_ranking_target_rows_jsonl(std::slice::from_ref(&row)).unwrap();
+        let json: Value = serde_json::from_str(jsonl.lines().next().unwrap()).unwrap();
+        assert_eq!(json["path_id"], legacy_path);
+        assert_eq!(json["path_label"], legacy_path);
+        assert_eq!(json["regime_profit_branch_path"], legacy_path);
+        assert_eq!(json["parent_regime_root"], "RangeReversion");
+        assert_eq!(json["main_regime"], "RangeReversion");
+        assert_eq!(
+            json["regime_calibration_bucket"],
+            format!("M2K:range:{canonical_path}")
+        );
     }
 
     #[test]

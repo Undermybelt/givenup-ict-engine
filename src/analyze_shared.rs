@@ -1684,7 +1684,13 @@ pub(crate) fn persist_execution_candidate_from_analyze(
         trade_direction != Direction::Neutral && trade_plan.position_size > 0.0;
     let actionable = actionability_from_trade_plan || actionable_same_root_execution_tree_admission;
     let candidate_status = same_root_execution_tree_admission
-        .map(|admission| admission.candidate_status)
+        .map(|admission| {
+            if !admission.actionable && trade_direction == Direction::Neutral {
+                "no_trade".to_string()
+            } else {
+                admission.candidate_status
+            }
+        })
         .unwrap_or_else(|| {
             if actionability_from_trade_plan {
                 "ready".to_string()

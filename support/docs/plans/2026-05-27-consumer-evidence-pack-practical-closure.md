@@ -66,8 +66,8 @@ Next hardening:
 
 Current proof:
 
-- Done-definition compact still reports
-  `completion_ready=false`, `evidence_level=partial_skipped_gates`.
+- Done-definition heavy is now green for the current tree, but factor and
+  release closure are still red.
 - Factor claim audit still reports
   `status=needs_attention`, `active_claims=10`, `trade_usable_true=0`.
 - Release readiness still reports `status=needs_fix` with three unresolved
@@ -109,7 +109,7 @@ Reasonable next solution:
       docs/state.
 - [x] Patch the public first-run documentation to a single canonical order.
 - [x] Add automated quickstart-order parity checks so drift fails fast.
-- [ ] Run fresh heavy done-definition gates for this tree after choosing a safe
+- [x] Run fresh heavy done-definition gates for this tree after choosing a safe
       compute window.
 - [ ] Resolve or explicitly isolate active factor claims before making stronger
       factor-completion statements.
@@ -126,6 +126,12 @@ Executed in this turn:
 - `python3 -m unittest support.scripts.tests.test_done_definition_audit.DoneDefinitionAuditTest.test_evaluate_quickstart_surface_fails_when_command_order_drifts support.scripts.tests.test_done_definition_audit.DoneDefinitionAuditTest.test_evaluate_quickstart_surface_passes_when_canonical_blocks_exist -v`
 - `python3 -m unittest support.scripts.tests.test_done_definition_audit -v`
 - `python3 support/scripts/done_definition_audit.py --compact --output /tmp/ict-engine-goal-20260527-done-parity.json`
+- `cargo test ranker_target_export_preserves_exact_provenance_prefixed_branch_paths -- --nocapture`
+- `cargo test target_export_uses_exact_branch_trade_direction_over_snapshot_fallback -- --nocapture`
+- `cargo test execution_candidate_preserves_trace_branch_path_for_neutral_no_trade -- --nocapture`
+- `cargo test execution_candidate_preserves_strict_trend_pullback_trace_path_without_report_branch_path_but_does_not_promote -- --nocapture`
+- `cargo clippy --all-targets -- -D warnings`
+- `python3 support/scripts/done_definition_audit.py --run-all-heavy --compact --output /tmp/ict-engine-goal-20260527-done-heavy-rerun2.json`
 
 Readback summary:
 
@@ -135,6 +141,16 @@ Readback summary:
   targeted RED->GREEN quickstart-order tests now pass, full
   `support.scripts.tests.test_done_definition_audit` passes `16` tests, and the
   refreshed compact audit still reports `quickstart_surface=status=pass`.
+- done-definition heavy rerun:
+  `/tmp/ict-engine-goal-20260527-done-heavy-rerun2.json` now reports
+  `status=pass`, `completion_ready=true`, `pass_count=8`, `fail_count=0`.
+- current bug slices landed before this heavy pass:
+  - exact rooted target rows now preserve visible provenance-prefixed branch
+    paths while keeping canonical score-key matching in
+    `src/belief_core/ranking_label.rs`;
+  - neutral non-actionable same-root execution-tree admissions now preserve
+    trace branch paths but resolve to `candidate_status=no_trade` instead of
+    incorrectly surfacing `execution_observe_only` in `src/analyze_shared.rs`.
 - factor audit:
   `status=needs_attention`, `active_claims=10`, `live_factor_processes=0`,
   `trade_usable_true=0`.
@@ -145,10 +161,9 @@ Readback summary:
 
 ## Commit Boundary
 
-This slice is docs-only and safe to stage independently if verification stays
-clean. It does not claim:
+This current slice is a narrow source+test+tracking-doc repair and is safe to
+stage independently if verification stays clean. It does not claim:
 
 - release readiness;
 - factor promotion or `trade_usable=true`;
-- heavy done-definition closure for this exact turn;
 - completion of the full user objective.
