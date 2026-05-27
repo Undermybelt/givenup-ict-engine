@@ -50,7 +50,11 @@ Current-turn command truth at the time this matrix was written:
 - factor closure:
   latest truth is snapshot-owned and time-variant; the stable current fact is
   `status=needs_attention` with unresolved active-claim debt, while precise
-  counts and `blocking_reasons` must be read from the snapshot child
+  counts and `blocking_reasons` must be read from the snapshot child. The
+  latest focused factor audit now makes the debt shape explicit:
+  `active_claims=11`, `live_factor_processes=1`,
+  `active_claims_without_live_process=10`,
+  `wait_only_active_claims_without_live_process=3`
 - release readiness:
   latest truth is snapshot-owned and time-variant; the stable current fact is
   `status=needs_fix`, while the exact unresolved gate set must be read from the
@@ -110,7 +114,7 @@ Current-turn command truth at the time this matrix was written:
 | Consumer first-run path is coherent and token-friendly | repo docs + quickstart parity gate + first-run command order agreement | `AGENT.md` canonical order is aligned with current public docs; `done_definition_audit.py` light and heavy reports both keep `quickstart_surface=pass` under a fully green done-definition bundle | `proven_for_current_tree` |
 | Consumer UX no longer overstates trade readiness | workflow/lifecycle tests plus live-plane semantics in source/readback | focused lifecycle test passed; current trackers still explicitly keep `promotion_allowed=false` and `trade_usable=false` unless live plane proves otherwise | `proven_for_fail_closed_semantics` |
 | Evidence packs are lightweight and reusable | compact audit/doc surfaces plus minimal blocker set in trackers | current trackers are compact and current-turn blocker wording was refreshed; quickstart/doc parity is machine-checked; focused provenance/reusability suites for release readback and candidate-pack exports all passed in this continuation | `partially_proven_but_stronger` |
-| Evidence packs coordinate correctly across surfaces | same-tree agreement between done/factor/release trackers and lifecycle semantics | `objective_closure_snapshot.py` now emits one coordinated `/tmp` bundle naming the canonical quickstart chain, child evidence paths, child report timestamps, and exact blocker surfaces. Because factor claims and release gates can change within minutes, the durable invariant is not any single copied count but the existence of one authoritative snapshot root that names the latest factor and release child truth. Practical closure is still fragmented across packet roots and no single green end-to-end closure packet exists on this tree | `partially_proven_but_not_complete` |
+| Evidence packs coordinate correctly across surfaces | same-tree agreement between done/factor/release trackers and lifecycle semantics | `objective_closure_snapshot.py` now emits one coordinated `/tmp` bundle naming the canonical quickstart chain, child evidence paths, child report timestamps, and exact blocker surfaces. `factor_claim_terminalization_audit.py` now also exposes whether active-claim debt actually owns live runtime (`active_claims_without_live_process`) and how much of that debt is merely wait-only. Because factor claims and release gates can change within minutes, the durable invariant is not any single copied count but the existence of one authoritative snapshot root that names the latest factor and release child truth. Practical closure is still fragmented across packet roots and no single green end-to-end closure packet exists on this tree | `partially_proven_but_not_complete` |
 | Training-only positives are not misreported as live-ready | lifecycle/readiness tests plus factor audit practical flags | focused lifecycle test passed; fresh factor audit still shows `promotion_allowed_true=0`, `trade_usable_true=0` | `proven_for_current_fail_closed_state` |
 | Execution-tree closed loop cannot bypass the live plane | focused execution-tree test + current practical flags | observe-only strict-trend-pullback test passed; current factor audit still has zero trade-usable lanes | `proven_for_tested_path`, `not_proven_end_to_end` |
 | At least one rooted profitability-factor chain is currently proved end-to-end on this exact tree | fresh same-tree provider -> analyze -> pre-bayes -> BBN -> ranker -> execution -> feedback evidence packet with practical readiness verdict | no such current-turn green packet exists; the coordinated closure snapshot remains red on factor closure, and the strongest TOMAC rerun still fails on purged-CV plus downstream validation/readiness gates | `contradicted_by_current_state` |
@@ -122,9 +126,11 @@ Current-turn command truth at the time this matrix was written:
 ### C-001: practical closure is still blocked by unresolved active claims
 
 - Evidence:
-  the coordinated closure snapshot still shows factor closure blocked; exact
-  counts are time-variant and should be read from the snapshot child rather
-  than copied into this table
+  the coordinated closure snapshot still shows factor closure blocked; the
+  latest focused factor audit makes the blocker shape explicit:
+  `active_claims=11`, `live_factor_processes=1`,
+  `active_claims_without_live_process=10`,
+  `wait_only_active_claims_without_live_process=3`
 - Consequence:
   there is no honest basis to say the repo has already closed the objective for
   real/practical use
@@ -154,6 +160,9 @@ Current-turn command truth at the time this matrix was written:
    factor/release blockers; only the latter remain active contradictions.
 6. Cite the coordinated closure snapshot for blocker names and timestamps before
    copying any factor/release numbers into follow-up prose.
+7. Use the new factor-claim debt split to externalize or terminalize claims
+   that are active but do not own live runtime before treating Board B closure
+   as a runtime problem.
 
 ## Current Answer
 

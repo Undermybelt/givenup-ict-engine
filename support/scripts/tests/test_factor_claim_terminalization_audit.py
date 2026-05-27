@@ -101,6 +101,23 @@ trade_usable=false
         self.assertEqual(parsed["promotion_allowed"], False)
         self.assertEqual(parsed["trade_usable"], False)
 
+    def test_parse_claim_text_does_not_infer_true_from_negated_non_goals_without_explicit_fields(self) -> None:
+        parsed = parse_claim_text(
+            """
+agent_name=codex-xlc-child
+owner=codex
+scope=child takeover
+active_task=materialize exact child helper
+non_goals=no same-turn fetch; no promotion_allowed=true; no trade_usable=true
+write_surface=/tmp/example-workdoc.md
+run_root=/tmp/example-run
+status=active
+"""
+        )
+
+        self.assertIsNone(parsed["promotion_allowed"])
+        self.assertIsNone(parsed["trade_usable"])
+
     def test_build_report_classifies_active_and_terminal_claims(self) -> None:
         with tempfile.TemporaryDirectory() as repo_tmp, tempfile.TemporaryDirectory() as claims_tmp:
             repo_root = Path(repo_tmp)
@@ -665,6 +682,55 @@ trade_usable=false
             self.assertGreaterEqual(stale_claim["age_minutes"], 60)
             self.assertFalse(fresh_claim["stale_safe_takeover_candidate"])
 
+    def test_summarize_surfaces_non_live_wait_only_active_claim_debt(self) -> None:
+        summary = summarize(
+            [
+                {
+                    "status": "active_prep_surface_ready_wait_board_clear",
+                    "run_root": "/tmp/ict-engine-wait-only",
+                    "tmp_root": "/tmp/ict-engine-wait-only",
+                    "run_root_exists": True,
+                    "decision": "launch_ready_prep_only_wait_live_factor_processes_to_clear",
+                    "active_task": "wait for shared writers to clear before launch",
+                    "scope": "Board B exact child prep",
+                    "promotion_allowed": False,
+                    "trade_usable": False,
+                    "missing_identity_fields": [],
+                },
+                {
+                    "status": "active_exact_gate1_launch_in_flight",
+                    "run_root": "/Users/example/repo/support/docs/experiments/run-live-owner",
+                    "tmp_root": "/tmp/ict-engine-live-owner",
+                    "run_root_exists": True,
+                    "decision": "exact_iwm_rerelaunch_with_repaired_timeout_handler_and_longer_1m_budget_in_flight",
+                    "active_task": "wait for terminal metrics after exact rerelaunch",
+                    "scope": "Board B exact live runner",
+                    "promotion_allowed": False,
+                    "trade_usable": False,
+                    "missing_identity_fields": [],
+                },
+            ],
+            live_processes=[
+                {
+                    "pid": 12345,
+                    "ppid": 123,
+                    "elapsed": "00:12",
+                    "command_excerpt": "python /tmp/run_ibkr_iwm_exact.py --root /tmp/ict-engine-live-owner",
+                    "run_root": "/tmp/ict-engine-live-owner",
+                    "exit_file": None,
+                    "exit_file_exists": False,
+                }
+            ],
+        )
+
+        self.assertEqual(summary["active_claims"], 2)
+        self.assertEqual(summary["active_claims_without_live_process"], 1)
+        self.assertEqual(summary["wait_only_active_claims_without_live_process"], 1)
+        self.assertIn(
+            "externalize or terminalize wait-only active claims that do not own a live runtime",
+            summary["next_action"],
+        )
+
     def test_build_report_flags_active_claims_missing_board_local_identity_fields(self) -> None:
         with tempfile.TemporaryDirectory() as repo_tmp, tempfile.TemporaryDirectory() as claims_tmp:
             repo_root = Path(repo_tmp)
@@ -845,6 +911,16 @@ trade_usable=false
             "run_tomac_prior_day_extreme_continuation_await_launch_v1.py "
             "--root /tmp/ict-engine-tomac-prior-day-extreme-continuation-prep-20260526T092700+0800 "
             "--status-out /tmp/ict-engine-tomac-prior-day-extreme-continuation-prep-20260526T092700+0800/summaries/await_launch_status.json"
+        )
+
+        self.assertFalse(_is_live_factor_command(command))
+
+    def test_live_process_classifier_ignores_tomac_provider_parity_probe_diagnostics(self) -> None:
+        command = (
+            "/opt/homebrew/Cellar/python@3.13/3.13.12_1/Frameworks/Python.framework/Versions/3.13/"
+            "Resources/Python.app/Contents/MacOS/Python "
+            "support/scripts/research/tomac_tod_balanced_provider_parity_probe.py "
+            "--root /tmp/ict-engine-tomac-tod-balanced-practical-repair-20260526T214903+0800"
         )
 
         self.assertFalse(_is_live_factor_command(command))
@@ -1167,11 +1243,105 @@ trade_usable=false
                 "by_status": {"active": 1, "terminalized": 1},
             },
         )
+        self.assertEqual(
+            compact["attention_clusters"],
+            [
+                {
+                    "owner": "codex",
+                    "scope_family": "positive flag",
+                    "claim_count": 1,
+                    "status_counts": {"terminalized": 1},
+                    "claim_files": ["positive.claim"],
+                },
+                {
+                    "owner": "codex",
+                    "scope_family": "still running",
+                    "claim_count": 1,
+                    "status_counts": {"active": 1},
+                    "claim_files": ["active.claim"],
+                },
+            ],
+        )
         self.assertEqual([claim["claim_file"] for claim in compact["attention_claims"]], ["active.claim", "positive.claim"])
         self.assertEqual([claim["agent_name"] for claim in compact["attention_claims"]], ["codex-active-lane", "codex-positive-review"])
         self.assertEqual(compact["attention_claims"][0]["run_root_state"], "missing")
         self.assertNotIn("claim_path", compact["attention_claims"][0])
         self.assertNotIn("run_root", compact["attention_claims"][0])
+
+    def test_format_report_compact_clusters_similar_board_b_claim_families(self) -> None:
+        full_report = {
+            "schema_version": "factor-claim-terminalization-audit/v1",
+            "generated_at": "2026-05-27T10:00:00+00:00",
+            "claims_dir": "/tmp/claims",
+            "repo_root": "/Users/example/ict-engine",
+            "summary": {"status": "needs_attention", "active_claims": 3},
+            "claims": [
+                {
+                    "claim_file": "cluster-a.claim",
+                    "claim_path": "/tmp/claims/cluster-a.claim",
+                    "status": "active",
+                    "agent_name": "codex-a",
+                    "owner": "codex",
+                    "scope": "Board B TOMAC same-root continuation on TrendExpansion -> OpeningDrive -> BidirectionalIntradayTrendContinuation using repaired replay evidence.",
+                    "decision": None,
+                    "run_root": "/tmp/ict-engine-cluster-a",
+                    "run_root_exists": True,
+                    "promotion_allowed": False,
+                    "trade_usable": False,
+                    "summary_files": [],
+                },
+                {
+                    "claim_file": "cluster-b.claim",
+                    "claim_path": "/tmp/claims/cluster-b.claim",
+                    "status": "active",
+                    "agent_name": "codex-b",
+                    "owner": "codex",
+                    "scope": "Board B fresh reopen of the stale XME IBKR exact 1m trend-continuation lane under TrendExpansion -> OpeningDrive -> BidirectionalIntradayTrendContinuation using IBKR historical truth first.",
+                    "decision": None,
+                    "run_root": "/tmp/ict-engine-cluster-b",
+                    "run_root_exists": True,
+                    "promotion_allowed": False,
+                    "trade_usable": False,
+                    "summary_files": [],
+                },
+                {
+                    "claim_file": "cluster-c.claim",
+                    "claim_path": "/tmp/claims/cluster-c.claim",
+                    "status": "active",
+                    "agent_name": "codex-c",
+                    "owner": "codex",
+                    "scope": "Board B TOMAC stale takeover on RangeReversion -> PdhPdlFractalLiquiditySweep -> WprAdxTrendAlignedReclaim using existing prep evidence.",
+                    "decision": None,
+                    "run_root": "/tmp/ict-engine-cluster-c",
+                    "run_root_exists": True,
+                    "promotion_allowed": False,
+                    "trade_usable": False,
+                    "summary_files": [],
+                },
+            ],
+        }
+
+        compact = format_report(full_report, compact=True)
+
+        self.assertEqual(
+            compact["attention_clusters"],
+            [
+                {
+                    "owner": "codex",
+                    "scope_family": "TrendExpansion -> OpeningDrive -> BidirectionalIntradayTrendContinuation",
+                    "claim_count": 2,
+                    "status_counts": {"active": 2},
+                    "claim_files": ["cluster-a.claim", "cluster-b.claim"],
+                },
+                {
+                    "owner": "codex",
+                    "scope_family": "RangeReversion -> PdhPdlFractalLiquiditySweep -> WprAdxTrendAlignedReclaim",
+                    "claim_count": 1,
+                    "status_counts": {"active": 1},
+                    "claim_files": ["cluster-c.claim"],
+                },
+            ],
+        )
 
     def test_format_report_compact_sanitizes_free_text_paths(self) -> None:
         full_report = {

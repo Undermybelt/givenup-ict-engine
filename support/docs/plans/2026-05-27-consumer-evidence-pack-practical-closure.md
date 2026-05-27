@@ -26,6 +26,10 @@ Current-turn evidence still disproves full closure:
   `trade_usable_true=0`, and `attention_groups.by_owner={"codex":6}`.
   The latest coordinated snapshot in this continuation now shows
   factor closure still blocked on active-claim debt with no trade-usable lanes.
+  The latest focused audit now exposes the debt structure directly:
+  `active_claims=11`, `live_factor_processes=1`,
+  `active_claims_without_live_process=10`,
+  `wait_only_active_claims_without_live_process=3`.
   The earlier classifier fix still stands: one old “live factor process” was a
   diagnostic false positive
   (`tomac_tod_balanced_provider_parity_probe.py`) rather than a real live lane.
@@ -136,6 +140,9 @@ Reasonable next solution:
 - Keep the new reporting-only cluster surface in the compact factor audit so the
   next turn can externalize or terminalize duplicate families by cluster instead
   of by manual row scanning.
+- Use the new `active_claims_without_live_process` and
+  `wait_only_active_claims_without_live_process` fields to separate runtime
+  occupancy from pure claim debt before attempting stronger closure claims.
 - Still missing:
   - a green same-tree practical closure packet.
 

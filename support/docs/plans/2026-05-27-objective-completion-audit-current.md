@@ -26,7 +26,10 @@ Reason:
    `/private/tmp/ict-engine-goal-20260527-closure-snapshot/objective_closure_snapshot.json`.
    Its factor child is time-variant within the day, but it still remains
    blocked on unresolved active-claim debt and therefore prevents truthful
-   closure.
+   closure. The latest focused factor audit now proves the debt is mostly not
+   runtime occupancy: `active_claims=11`, `live_factor_processes=1`,
+   `active_claims_without_live_process=10`,
+   `wait_only_active_claims_without_live_process=3`.
 2. The authoritative release/closed-loop handoff
    `support/docs/plans/2026-05-12-hotplug-personal-data-release-handoff-todo.md`
    still records multiple `blocked` rows stating release/objective completion is
@@ -227,7 +230,10 @@ The objective is only complete if current evidence proves all of the following:
   - the latest factor audit still shows no invalid active claim surface;
   - closure is still blocked because the coordinated snapshot's factor child
     remains non-pass and still belongs to live `codex` attention claims, so the
-    repo still lacks a clean same-turn factor-closure surface.
+    repo still lacks a clean same-turn factor-closure surface;
+  - the latest focused audit now proves only one active claim owns live
+    runtime, while ten active claims do not and three of those are already
+    classified as wait-only debt.
 
 ### V-011: reusable strategy-library provenance was still leaking caller-local path assumptions
 

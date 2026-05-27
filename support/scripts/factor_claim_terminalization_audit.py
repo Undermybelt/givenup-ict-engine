@@ -49,6 +49,26 @@ ACTIVE_CLAIM_REQUIRED_FIELDS = (
     "write_surface",
     "status",
 )
+WAIT_ONLY_MARKERS = (
+    " wait ",
+    " waiting",
+    "waiting ",
+    "blocked by",
+    "blocked_on",
+    "blocked_",
+    "prep-only",
+    "prep_only",
+    "launch-ready",
+    "launch_ready",
+    "deferred",
+)
+LIVE_PROGRESS_MARKERS = (
+    "in_flight",
+    "still running",
+    "fetch_in_flight",
+    "launch_in_flight",
+    "live on the widened",
+)
 
 
 def repo_root(anchor: Path) -> Path:
@@ -82,7 +102,7 @@ def parse_claim_text(text: str) -> dict[str, Any]:
         if key in {"summary", "terminal_summary"}:
             summary_parts.append(value)
 
-    search_text = "\n".join([text, *summary_parts])
+    search_text = "\n".join(summary_parts)
     for key in ("promotion_allowed", "trade_usable"):
         explicit_value = _coerce_bool(fields.get(key))
         fields[key] = explicit_value if explicit_value is not None else _extract_bool(key, search_text)
@@ -385,11 +405,19 @@ def summarize(
     live_run_roots = {str(process.get("run_root")) for process in live_processes if process.get("run_root")}
     stale_active_claims = 0
     stale_safe_takeover_candidates = 0
+    active_claims_without_live_process = 0
+    wait_only_active_claims_without_live_process = 0
     for claim in claims:
         if claim.get("status") == "terminalized":
             claim["age_minutes"] = None
             claim["stale_safe_takeover_candidate"] = False
+            claim["live_runtime_owner"] = False
+            claim["wait_only_without_live_process"] = False
             continue
+        claim["live_runtime_owner"] = _claim_owns_live_runtime(claim, live_run_roots)
+        claim["wait_only_without_live_process"] = bool(
+            not claim["live_runtime_owner"] and _looks_like_wait_only_active_claim(claim)
+        )
         last_progress_at = _parse_claim_datetime(claim.get("last_progress_at"))
         age_minutes = None
         if last_progress_at is not None:
@@ -405,6 +433,8 @@ def summarize(
             stale_active_claims += 1
         if claim["stale_safe_takeover_candidate"]:
             stale_safe_takeover_candidates += 1
+        active_claims_without_live_process += int(not claim["live_runtime_owner"])
+        wait_only_active_claims_without_live_process += int(claim["wait_only_without_live_process"])
     active_claims = sum(1 for claim in claims if claim.get("status") != "terminalized")
     invalid_active_claims = sum(
         1
@@ -429,6 +459,8 @@ def summarize(
     if active_claims:
         blocking_reasons.append("active_claims")
         next_actions.append("terminalize or externalize active claims")
+    if wait_only_active_claims_without_live_process:
+        next_actions.append("externalize or terminalize wait-only active claims that do not own a live runtime")
     if invalid_active_claims:
         blocking_reasons.append("invalid_active_claims")
         next_actions.append("repair active claims with agent_name, exact task, non_goals, write_surface, and run/tmp root")
@@ -454,6 +486,8 @@ def summarize(
         "invalid_active_claims": invalid_active_claims,
         "stale_active_claims": stale_active_claims,
         "stale_safe_takeover_candidates": stale_safe_takeover_candidates,
+        "active_claims_without_live_process": active_claims_without_live_process,
+        "wait_only_active_claims_without_live_process": wait_only_active_claims_without_live_process,
         "live_factor_processes": live_factor_processes,
         "missing_run_roots": missing_run_roots,
         "trade_usable_true": trade_usable_true,
@@ -461,6 +495,29 @@ def summarize(
         "blocking_reasons": blocking_reasons,
         "next_action": "; ".join(next_actions) if next_actions else "no claim terminalization blockers found",
     }
+
+
+def _looks_like_wait_only_active_claim(claim: dict[str, Any]) -> bool:
+    text_parts = [
+        str(claim.get("status") or ""),
+        str(claim.get("decision") or ""),
+        str(claim.get("active_task") or ""),
+        str(claim.get("scope") or ""),
+    ]
+    normalized = " ".join(" ".join(text_parts).lower().split())
+    if not normalized:
+        return False
+    if any(marker in normalized for marker in LIVE_PROGRESS_MARKERS):
+        return False
+    return any(marker in normalized for marker in WAIT_ONLY_MARKERS)
+
+
+def _claim_owns_live_runtime(claim: dict[str, Any], live_run_roots: set[str]) -> bool:
+    for key in ("run_root", "tmp_root"):
+        value = claim.get(key)
+        if isinstance(value, str) and value and value in live_run_roots:
+            return True
+    return False
 
 
 def build_report(
@@ -550,6 +607,8 @@ def _is_live_factor_command(command: str) -> bool:
         return False
     if _is_await_launch_wrapper(command):
         return False
+    if _is_tomac_diagnostic_script(command):
+        return False
     if _is_ibkr_provider_status_probe(command):
         return True
     if _is_direct_ict_engine_board_b_cli_command(command):
@@ -564,6 +623,15 @@ def _is_live_factor_command(command: str) -> bool:
 
 def _is_await_launch_wrapper(command: str) -> bool:
     return bool(re.search(r"(?:^|\s)\S*await_launch_v\d+\.py\b", command))
+
+
+def _is_tomac_diagnostic_script(command: str) -> bool:
+    return bool(
+        re.search(
+            r"(?:^|\s)\S*tomac_[^\s/]*_(?:probe|audit|diag|diagnosis)\.py\b",
+            command,
+        )
+    )
 
 
 def _is_tomac_prep_wrapper_launch(command: str) -> bool:
@@ -849,6 +917,7 @@ def format_report(report: dict[str, Any], compact: bool = False) -> dict[str, An
         "attention_claim_count": len(attention_claims),
         "attention_live_process_count": len(live_processes),
         "attention_groups": _attention_groups(attention_claims),
+        "attention_clusters": _attention_clusters(attention_claims),
         "attention_claims": attention_claims,
         "attention_live_processes": live_processes,
     }
@@ -889,6 +958,8 @@ def _compact_claim(claim: dict[str, Any], root: str) -> dict[str, Any]:
         "promotion_allowed": claim.get("promotion_allowed"),
         "trade_usable": claim.get("trade_usable"),
         "age_minutes": claim.get("age_minutes"),
+        "live_runtime_owner": claim.get("live_runtime_owner", False),
+        "wait_only_without_live_process": claim.get("wait_only_without_live_process", False),
         "stale_safe_takeover_candidate": claim.get("stale_safe_takeover_candidate", False),
         "summary_files": claim.get("summary_files", []),
     }
@@ -919,6 +990,79 @@ def _attention_groups(claims: list[dict[str, Any]]) -> dict[str, dict[str, int]]
         "by_run_root_state": _count_by(claims, "run_root_state"),
         "by_status": _count_by(claims, "status"),
     }
+
+
+def _attention_clusters(claims: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    grouped: dict[tuple[str, str], dict[str, Any]] = {}
+    for claim in claims:
+        owner = str(claim.get("owner") or "unknown")
+        scope_family = _scope_family_label(claim.get("scope"))
+        key = (owner, scope_family)
+        entry = grouped.setdefault(
+            key,
+            {
+                "owner": owner,
+                "scope_family": scope_family,
+                "claim_count": 0,
+                "status_counts": {},
+                "claim_files": [],
+            },
+        )
+        entry["claim_count"] += 1
+        status = str(claim.get("status") or "unknown")
+        status_counts = entry["status_counts"]
+        status_counts[status] = status_counts.get(status, 0) + 1
+        claim_file = claim.get("claim_file")
+        if isinstance(claim_file, str) and claim_file:
+            entry["claim_files"].append(claim_file)
+
+    clusters = list(grouped.values())
+    for cluster in clusters:
+        cluster["status_counts"] = dict(sorted(cluster["status_counts"].items()))
+        cluster["claim_files"] = sorted(cluster["claim_files"])
+    return sorted(
+        clusters,
+        key=lambda item: (
+            -int(item["claim_count"]),
+            str(item["owner"]),
+            str(item["scope_family"]),
+        ),
+    )
+
+
+def _scope_family_label(scope: object) -> str:
+    if not isinstance(scope, str):
+        return "unknown_scope"
+    text = " ".join(scope.split()).strip(" .;:")
+    if not text:
+        return "unknown_scope"
+
+    extracted = _extract_scope_chain_after_anchor(text, " under ")
+    if extracted is None:
+        extracted = _extract_scope_chain_after_anchor(text, " on ")
+    if extracted is None and "->" in text:
+        extracted = text
+
+    family = extracted if extracted is not None else text
+    family = re.split(
+        r"\s+(?:using|with|after|before|while|targeting|via|from)\b",
+        family,
+        maxsplit=1,
+        flags=re.IGNORECASE,
+    )[0]
+    family = family.strip(" .;:")
+    return family or "unknown_scope"
+
+
+def _extract_scope_chain_after_anchor(text: str, anchor: str) -> str | None:
+    lower_text = text.lower()
+    index = lower_text.find(anchor)
+    if index < 0:
+        return None
+    tail = text[index + len(anchor) :]
+    if "->" not in tail:
+        return None
+    return tail.strip()
 
 
 def _count_by(claims: list[dict[str, Any]], key: str) -> dict[str, int]:
