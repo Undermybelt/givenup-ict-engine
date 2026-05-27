@@ -5,6 +5,7 @@ import json
 import sys
 import tempfile
 import unittest
+from datetime import datetime, timezone
 from pathlib import Path
 
 SCRIPTS_ROOT = Path(__file__).resolve().parents[1]
@@ -601,6 +602,68 @@ trade_usable=false
             self.assertIn("live_factor_processes", report["summary"]["blocking_reasons"])
             self.assertEqual(compact["attention_live_process_count"], 1)
             self.assertEqual(compact["attention_live_processes"][0]["pid"], 12345)
+
+    def test_build_report_marks_stale_safe_takeover_candidates(self) -> None:
+        with tempfile.TemporaryDirectory() as repo_tmp, tempfile.TemporaryDirectory() as claims_tmp:
+            repo_root = Path(repo_tmp)
+            claims_dir = Path(claims_tmp)
+            stale_run_root = repo_root / "support" / "docs" / "experiments" / "stale-run"
+            stale_run_root.mkdir(parents=True)
+            fresh_run_root = repo_root / "support" / "docs" / "experiments" / "fresh-run"
+            fresh_run_root.mkdir(parents=True)
+
+            (claims_dir / "stale-active.claim").write_text(
+                f"""
+agent_name=codex-stale-lane
+owner=codex
+claimed_at=2026-05-27T13:00:00+0800
+last_progress_at=2026-05-27T13:05:00+0800
+scope=Board B stale active lane
+active_task=wait for next action
+non_goals=no duplicate launch
+write_surface=/tmp/stale-workdoc.md
+run_root={stale_run_root.relative_to(repo_root)}
+status=active_prep_only_contract_ready
+progress_report=/tmp/stale-progress.md
+promotion_allowed=false
+trade_usable=false
+""",
+                encoding="utf-8",
+            )
+            (claims_dir / "fresh-active.claim").write_text(
+                f"""
+agent_name=codex-fresh-lane
+owner=codex
+claimed_at=2026-05-27T15:50:00+0800
+last_progress_at=2026-05-27T15:55:00+0800
+scope=Board B fresh active lane
+active_task=still running
+non_goals=no duplicate launch
+write_surface=/tmp/fresh-workdoc.md
+run_root={fresh_run_root.relative_to(repo_root)}
+status=active_launch_ready
+progress_report=/tmp/fresh-progress.md
+promotion_allowed=false
+trade_usable=false
+""",
+                encoding="utf-8",
+            )
+
+            report = build_report(
+                claims_dir=claims_dir,
+                repo_root=repo_root,
+                live_processes=[],
+                now=datetime(2026, 5, 27, 8, 10, 0, tzinfo=timezone.utc),
+            )
+            compact = format_report(report, compact=True)
+
+            self.assertEqual(report["summary"]["stale_active_claims"], 1)
+            self.assertEqual(report["summary"]["stale_safe_takeover_candidates"], 1)
+            stale_claim = next(claim for claim in compact["attention_claims"] if claim["claim_file"] == "stale-active.claim")
+            fresh_claim = next(claim for claim in compact["attention_claims"] if claim["claim_file"] == "fresh-active.claim")
+            self.assertTrue(stale_claim["stale_safe_takeover_candidate"])
+            self.assertGreaterEqual(stale_claim["age_minutes"], 60)
+            self.assertFalse(fresh_claim["stale_safe_takeover_candidate"])
 
     def test_build_report_flags_active_claims_missing_board_local_identity_fields(self) -> None:
         with tempfile.TemporaryDirectory() as repo_tmp, tempfile.TemporaryDirectory() as claims_tmp:

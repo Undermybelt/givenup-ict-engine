@@ -261,6 +261,54 @@ Interpretation:
 - it is a visibility correction: active debt that was previously hidden behind
   ambiguous `decision` strings is now surfaced as real Board B occupancy
 
+## 2026-05-27 Stale-Safe Debt Classification Fix
+
+After the visibility fixes above, another operational gap remained:
+
+- the compact audit could say `active_claims=N`
+- but it still could not distinguish
+  `fresh do-not-touch prep debt` from
+  `older than one hour, safe-to-takeover-or-terminalize debt`
+
+Implemented in:
+
+- `support/scripts/factor_claim_terminalization_audit.py`
+- `support/scripts/tests/test_factor_claim_terminalization_audit.py`
+
+Behavior change:
+
+- each active claim now gets `age_minutes`
+- the summary now exposes:
+  `stale_active_claims`
+  `stale_safe_takeover_candidates`
+- a claim counts as stale-safe only when:
+  - it is still active
+  - `last_progress_at` is at least `60` minutes old
+  - identity fields are complete
+  - no same-root live factor process is present
+
+Verification:
+
+- `python3 -m unittest support.scripts.tests.test_factor_claim_terminalization_audit.FactorClaimTerminalizationAuditTest.test_build_report_marks_stale_safe_takeover_candidates -v`
+  -> `OK`
+- `python3 -m unittest support.scripts.tests.test_factor_claim_terminalization_audit -v`
+  -> `Ran 46 tests`, `OK`
+
+Latest authoritative readback after this fix:
+
+- `python3 support/scripts/factor_claim_terminalization_audit.py --compact`
+  -> `active_claims=6`
+  -> `live_factor_processes=0`
+  -> `stale_active_claims=0`
+  -> `stale_safe_takeover_candidates=0`
+
+Interpretation:
+
+- the current remaining Board B debt is fresh prep debt, not stale-safe debt
+- the next correct action is not blind takeover/terminalization
+- the next correct action is to keep shrinking fresh prep debt or let those
+  lanes write terminal evidence
+
 ## Completion Standard For This Objective
 
 Do not answer “completed” until current evidence proves all of the following in

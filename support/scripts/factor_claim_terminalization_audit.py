@@ -13,6 +13,7 @@ from typing import Any
 
 
 DEFAULT_CLAIMS_DIR = Path("/tmp/ict-engine-agent-claims/board-b-factor-refinement")
+STALE_CLAIM_MINUTES = 60
 SUMMARY_CANDIDATES = (
     "summaries/terminal_decision_summary.md",
     "summaries/terminal_summary.json",
@@ -279,6 +280,8 @@ def read_claim(path: Path, root: Path) -> dict[str, Any]:
         "non_goals": fields.get("non_goals"),
         "write_surface": fields.get("write_surface"),
         "decision": fields.get("decision") or fields.get("terminal_decision") or fields.get("terminal_status"),
+        "claimed_at": fields.get("claimed_at"),
+        "last_progress_at": fields.get("last_progress_at"),
         "terminalized_at": fields.get("terminalized_at") or fields.get("terminal_at"),
         "run_root": str(run_root) if run_root else None,
         "run_root_exists": bool(run_root and run_root.exists()),
@@ -289,6 +292,23 @@ def read_claim(path: Path, root: Path) -> dict[str, Any]:
         "trade_usable": trade_usable,
         "summary_files": summary_flags.get("summary_files", []),
     }
+
+
+def _parse_claim_datetime(value: object) -> datetime | None:
+    if not isinstance(value, str):
+        return None
+    text = value.strip()
+    if not text:
+        return None
+    if text.endswith("Z"):
+        text = text[:-1] + "+00:00"
+    try:
+        parsed = datetime.fromisoformat(text)
+    except ValueError:
+        return None
+    if parsed.tzinfo is None:
+        return parsed.replace(tzinfo=timezone.utc)
+    return parsed
 
 
 def _missing_active_claim_identity_fields(fields: dict[str, Any]) -> list[str]:
@@ -355,8 +375,36 @@ def _claim_fields_from_json(parsed: dict[str, Any]) -> dict[str, Any]:
     return fields
 
 
-def summarize(claims: list[dict[str, Any]], live_processes: list[dict[str, Any]] | None = None) -> dict[str, Any]:
+def summarize(
+    claims: list[dict[str, Any]],
+    live_processes: list[dict[str, Any]] | None = None,
+    now: datetime | None = None,
+) -> dict[str, Any]:
     live_processes = live_processes or []
+    now = now or datetime.now(timezone.utc)
+    live_run_roots = {str(process.get("run_root")) for process in live_processes if process.get("run_root")}
+    stale_active_claims = 0
+    stale_safe_takeover_candidates = 0
+    for claim in claims:
+        if claim.get("status") == "terminalized":
+            claim["age_minutes"] = None
+            claim["stale_safe_takeover_candidate"] = False
+            continue
+        last_progress_at = _parse_claim_datetime(claim.get("last_progress_at"))
+        age_minutes = None
+        if last_progress_at is not None:
+            age_minutes = max(0, int((now - last_progress_at).total_seconds() // 60))
+        claim["age_minutes"] = age_minutes
+        is_stale = age_minutes is not None and age_minutes >= STALE_CLAIM_MINUTES
+        claim["stale_safe_takeover_candidate"] = bool(
+            is_stale
+            and not claim.get("missing_identity_fields")
+            and str(claim.get("run_root") or "") not in live_run_roots
+        )
+        if is_stale:
+            stale_active_claims += 1
+        if claim["stale_safe_takeover_candidate"]:
+            stale_safe_takeover_candidates += 1
     active_claims = sum(1 for claim in claims if claim.get("status") != "terminalized")
     invalid_active_claims = sum(
         1
@@ -404,6 +452,8 @@ def summarize(claims: list[dict[str, Any]], live_processes: list[dict[str, Any]]
         "active_claims": active_claims,
         "valid_active_claims": valid_active_claims,
         "invalid_active_claims": invalid_active_claims,
+        "stale_active_claims": stale_active_claims,
+        "stale_safe_takeover_candidates": stale_safe_takeover_candidates,
         "live_factor_processes": live_factor_processes,
         "missing_run_roots": missing_run_roots,
         "trade_usable_true": trade_usable_true,
@@ -417,6 +467,7 @@ def build_report(
     claims_dir: Path,
     repo_root: Path,
     live_processes: list[dict[str, Any]] | None = None,
+    now: datetime | None = None,
 ) -> dict[str, Any]:
     claim_paths = sorted(path for path in claims_dir.glob("*") if path.is_file() and _is_claim_artifact(path))
     claims = [read_claim(path, repo_root) for path in claim_paths]
@@ -426,7 +477,7 @@ def build_report(
         "generated_at": datetime.now(timezone.utc).isoformat(),
         "claims_dir": str(claims_dir),
         "repo_root": str(repo_root),
-        "summary": summarize(claims, live_processes=live_processes),
+        "summary": summarize(claims, live_processes=live_processes, now=now),
         "claims": claims,
         "live_factor_processes": live_processes,
     }
@@ -837,6 +888,8 @@ def _compact_claim(claim: dict[str, Any], root: str) -> dict[str, Any]:
         "missing_identity_fields": claim.get("missing_identity_fields", []),
         "promotion_allowed": claim.get("promotion_allowed"),
         "trade_usable": claim.get("trade_usable"),
+        "age_minutes": claim.get("age_minutes"),
+        "stale_safe_takeover_candidate": claim.get("stale_safe_takeover_candidate", False),
         "summary_files": claim.get("summary_files", []),
     }
 
