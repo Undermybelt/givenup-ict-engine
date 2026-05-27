@@ -48,14 +48,13 @@ Current-turn command truth at the time this matrix was written:
   `status=pass`, `completion_ready=false`, `quickstart_surface=pass`,
   `evidence_level=partial_skipped_gates`, heavy gates skipped by default
 - factor closure:
-  latest coordinated snapshot reports `status=needs_attention`,
-  `active_claims=10`, `invalid_active_claims=0`, `live_factor_processes=0`,
-  `blocking_reasons=["active_claims"]`, `promotion_allowed_true=0`,
-  `trade_usable_true=0`, `attention_by_owner={"codex":10}`
+  latest truth is snapshot-owned and time-variant; the stable current fact is
+  `status=needs_attention` with unresolved active-claim debt, while precise
+  counts and `blocking_reasons` must be read from the snapshot child
 - release readiness:
-  latest coordinated snapshot reports `status=needs_fix`, unresolved
-  `worktree_clean_for_release`, `remote_readback`;
-  `release_version_tag_available` remains skipped behind the remote gate
+  latest truth is snapshot-owned and time-variant; the stable current fact is
+  `status=needs_fix`, while the exact unresolved gate set must be read from the
+  snapshot child
 - same-root TOMAC practical rerun:
   `label_count=1633`, `terminal_trade_count=1633`,
   `trade_count_parity=true`, `purged_cv_gate=reject`,
@@ -111,10 +110,10 @@ Current-turn command truth at the time this matrix was written:
 | Consumer first-run path is coherent and token-friendly | repo docs + quickstart parity gate + first-run command order agreement | `AGENT.md` canonical order is aligned with current public docs; `done_definition_audit.py` light and heavy reports both keep `quickstart_surface=pass` under a fully green done-definition bundle | `proven_for_current_tree` |
 | Consumer UX no longer overstates trade readiness | workflow/lifecycle tests plus live-plane semantics in source/readback | focused lifecycle test passed; current trackers still explicitly keep `promotion_allowed=false` and `trade_usable=false` unless live plane proves otherwise | `proven_for_fail_closed_semantics` |
 | Evidence packs are lightweight and reusable | compact audit/doc surfaces plus minimal blocker set in trackers | current trackers are compact and current-turn blocker wording was refreshed; quickstart/doc parity is machine-checked; focused provenance/reusability suites for release readback and candidate-pack exports all passed in this continuation | `partially_proven_but_stronger` |
-| Evidence packs coordinate correctly across surfaces | same-tree agreement between done/factor/release trackers and lifecycle semantics | `objective_closure_snapshot.py` now emits one coordinated `/tmp` bundle naming the canonical quickstart chain, child evidence paths, child report timestamps, and exact blocker surfaces. The latest bundle records `done_definition.report_timestamp=2026-05-27T11:25:22.622012Z`, `factor_closure.report_timestamp=2026-05-27T11:25:25.280194+00:00`, `release_readiness.report_timestamp=2026-05-27T11:25:36.990517+00:00`, with current blockers still `active_claims=10`, `blocking_reasons=["active_claims"]`, `attention_by_owner={"codex":10}`, and release unresolved `["worktree_clean_for_release","remote_readback"]`. Practical closure is still fragmented across packet roots and no single green end-to-end closure packet exists on this tree | `partially_proven_but_not_complete` |
+| Evidence packs coordinate correctly across surfaces | same-tree agreement between done/factor/release trackers and lifecycle semantics | `objective_closure_snapshot.py` now emits one coordinated `/tmp` bundle naming the canonical quickstart chain, child evidence paths, child report timestamps, and exact blocker surfaces. Because factor claims and release gates can change within minutes, the durable invariant is not any single copied count but the existence of one authoritative snapshot root that names the latest factor and release child truth. Practical closure is still fragmented across packet roots and no single green end-to-end closure packet exists on this tree | `partially_proven_but_not_complete` |
 | Training-only positives are not misreported as live-ready | lifecycle/readiness tests plus factor audit practical flags | focused lifecycle test passed; fresh factor audit still shows `promotion_allowed_true=0`, `trade_usable_true=0` | `proven_for_current_fail_closed_state` |
 | Execution-tree closed loop cannot bypass the live plane | focused execution-tree test + current practical flags | observe-only strict-trend-pullback test passed; current factor audit still has zero trade-usable lanes | `proven_for_tested_path`, `not_proven_end_to_end` |
-| At least one rooted profitability-factor chain is currently proved end-to-end on this exact tree | fresh same-tree provider -> analyze -> pre-bayes -> BBN -> ranker -> execution -> feedback evidence packet with practical readiness verdict | no such current-turn green packet exists; the coordinated closure snapshot is still red with `active_claims=10`, `live_factor_processes=0`, `blocking_reasons=["active_claims"]`, `attention_by_owner={"codex":10}`, and the strongest TOMAC rerun still fails on purged-CV plus downstream validation/readiness gates | `contradicted_by_current_state` |
+| At least one rooted profitability-factor chain is currently proved end-to-end on this exact tree | fresh same-tree provider -> analyze -> pre-bayes -> BBN -> ranker -> execution -> feedback evidence packet with practical readiness verdict | no such current-turn green packet exists; the coordinated closure snapshot remains red on factor closure, and the strongest TOMAC rerun still fails on purged-CV plus downstream validation/readiness gates | `contradicted_by_current_state` |
 | Release/commit readiness for a truthful completion commit | clean selected source slice + release audit + exact version/tag availability | release audit currently fails `worktree_clean_for_release` and `remote_readback`; the shared tree remains broad and dirty, and tag availability cannot be trusted until the release mirror readback works again | `contradicted_by_current_state` |
 | Durable tracking doc exists and stays current | repo-local dated doc updated from fresh command truth | this matrix plus the two 2026-05-27 tracker docs exist and were refreshed in this continuation | `proven` |
 
@@ -123,10 +122,9 @@ Current-turn command truth at the time this matrix was written:
 ### C-001: practical closure is still blocked by unresolved active claims
 
 - Evidence:
-  the coordinated closure snapshot currently reports
-  `active_claims=10`, `invalid_active_claims=0`, `live_factor_processes=0`,
-  `blocking_reasons=["active_claims"]`,
-  `attention_by_owner={"codex":10}`
+  the coordinated closure snapshot still shows factor closure blocked; exact
+  counts are time-variant and should be read from the snapshot child rather
+  than copied into this table
 - Consequence:
   there is no honest basis to say the repo has already closed the objective for
   real/practical use
@@ -134,9 +132,9 @@ Current-turn command truth at the time this matrix was written:
 ### C-002: a completion commit would still be false
 
 - Evidence:
-  `release_readiness_audit.py --compact --check-remotes` currently fails
-  `worktree_clean_for_release`,
-  `remote_readback`
+  the coordinated closure snapshot still shows release readiness blocked; exact
+  unresolved gate names are time-variant and should be read from the snapshot
+  child rather than copied into this table
 - Consequence:
   even if a narrow docs slice could be committed, it would not be the
   user-requested “finished and then commit” state

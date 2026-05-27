@@ -13,9 +13,10 @@ Current-turn evidence still disproves full closure:
 - `python3 support/scripts/objective_closure_snapshot.py --compact --check-remotes --output-dir /tmp/ict-engine-goal-20260527-closure-snapshot`
   now emits `/private/tmp/ict-engine-goal-20260527-closure-snapshot/objective_closure_snapshot.json`
   with child report timestamps and the exact current blocker surfaces:
-  factor `active_claims=10`, `blocking_reasons=["active_claims"]`,
-  `attention_by_owner={"codex":10}`; release unresolved
-  `["worktree_clean_for_release","remote_readback"]`.
+  factor closure remains blocked by active-claim debt, and release readiness
+  remains blocked by unresolved release gates. The exact current counts and
+  gate names are intentionally snapshot-owned because they drift within the
+  same audit day.
 - `python3 support/scripts/done_definition_audit.py --compact --output /tmp/ict-engine-goal-20260527-done.json`
   reports `completion_ready=false` because all heavy gates are skipped by
   default.
@@ -24,16 +25,14 @@ Current-turn evidence still disproves full closure:
   `live_factor_processes=3`, `promotion_allowed_true=0`,
   `trade_usable_true=0`, and `attention_groups.by_owner={"codex":6}`.
   The latest coordinated snapshot in this continuation now shows
-  `active_claims=10`, `live_factor_processes=0`,
-  `blocking_reasons=["active_claims"]`, `promotion_allowed_true=0`,
-  `trade_usable_true=0`, and `attention_by_owner={"codex":10}`.
+  factor closure still blocked on active-claim debt with no trade-usable lanes.
   The earlier classifier fix still stands: one old “live factor process” was a
   diagnostic false positive
   (`tomac_tod_balanced_provider_parity_probe.py`) rather than a real live lane.
 - `python3 support/scripts/release_readiness_audit.py --compact --check-remotes --output /tmp/ict-engine-goal-20260527-release-resume3.json`
-  currently reports unresolved `worktree_clean_for_release` and
-  `remote_readback`; `release_version_tag_available` remains skipped behind the
-  remote gate.
+  previously named one unresolved-gate set, but the exact current release
+  blocker names now live under the coordinated snapshot because they can change
+  with network/source parity state inside the same day.
 
 This file tracks the current closure loop for the user-facing objective:
 
@@ -83,9 +82,8 @@ Current proof:
 - Done-definition heavy is now green for the current tree, but factor and
   release closure are still red.
 - The latest factor rerun still blocks closure:
-  `status=needs_attention`, `active_claims=10`, `invalid_active_claims=0`,
-  `live_factor_processes=2`, `trade_usable_true=0`,
-  `attention_groups.by_owner={"codex":10}`.
+  `status=needs_attention`; the stable current fact is unresolved active-claim
+  debt and `trade_usable_true=0`, while exact counts remain snapshot-owned.
 - Same-turn evidence is still time-variant:
   - two stale/duplicate claims were terminalized from current evidence;
   - one probe-only TOMAC script was removed from live-process counts by fixing
@@ -93,9 +91,9 @@ Current proof:
   - the mid-turn checkpoint improved to `6/3`, but later claim activity pushed
     the current closure surface back to `10/0`.
 - Fresh release rerun now reports `status=needs_fix` with unresolved
-  `worktree_clean_for_release` and `remote_readback`; tag availability is
-  still skipped because the audit cannot currently trust the origin tag
-  surface.
+  release gates; the exact unresolved set is snapshot-owned because it can move
+  between source-parity/tag-reuse and remote-readback failures as external
+  state changes.
 
 Implication:
 
@@ -130,9 +128,8 @@ Current proof:
   `support/scripts/research/tomac_tod_balanced_provider_parity_probe.py`,
   which the compact audit now ignores.
 - The latest rerun drifted again to
-  `attention_groups.by_owner={"codex":10}` with
-  `live_factor_processes=2`, which reinforces the same conclusion: the surface
-  is still too active and time-variant to claim practical closure.
+  a different factor-claim surface, which reinforces the same conclusion: the
+  surface is still too active and time-variant to claim practical closure.
 
 Reasonable next solution:
 

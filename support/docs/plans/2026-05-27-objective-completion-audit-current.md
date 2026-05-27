@@ -21,11 +21,12 @@ Status: `not proven / not complete`
 
 Reason:
 
-1. Board B ownership is still crowded. `python3 support/scripts/factor_claim_terminalization_audit.py --compact`
-   now reports `active_claims=10`, `invalid_active_claims=0`,
-   `live_factor_processes=4`, `status=needs_attention`,
-   `attention_groups.by_owner={"codex":10}`, and
-   `next_action=terminalize or externalize active claims; wait for live factor processes to exit or claim them before closure`.
+1. Board B ownership is still crowded. The authoritative current readback is
+   the coordinated snapshot at
+   `/private/tmp/ict-engine-goal-20260527-closure-snapshot/objective_closure_snapshot.json`.
+   Its factor child is time-variant within the day, but it still remains
+   blocked on unresolved active-claim debt and therefore prevents truthful
+   closure.
 2. The authoritative release/closed-loop handoff
    `support/docs/plans/2026-05-12-hotplug-personal-data-release-handoff-todo.md`
    still records multiple `blocked` rows stating release/objective completion is
@@ -182,23 +183,20 @@ The objective is only complete if current evidence proves all of the following:
 
 - Severity: medium
 - Evidence:
-  - older tracker text named unresolved
-    `source_origin_matches_selected_source` and
-    `release_version_tag_available`;
-  - fresh
-    `python3 support/scripts/release_readiness_audit.py --compact --check-remotes`
-    now reports unresolved `worktree_clean_for_release` and
-    `remote_readback`, with `release_version_tag_available` skipped behind the
-    remote gate;
-  - the current network readback preserves the transport nuance: both the
-    declared `origin` remote and the release mirror fail with connection-closed
-    errors, while the fallback public probe is still recorded under
-    `origin.fallback_public_probe`.
+  - older tracker text named one release blocker set, while later same-day
+    reruns named a different blocker set;
+  - the authoritative source is now the coordinated snapshot at
+    `/private/tmp/ict-engine-goal-20260527-closure-snapshot/objective_closure_snapshot.json`,
+    whose release child records both `report_timestamp` and the exact current
+    `unresolved` gate list;
+  - depending on live network/source state, the unresolved set can move between
+    source-parity/tag-reuse blockers and remote-readback blockers.
 - Risk:
   - repeating stale blocker names can send the next turn to the wrong fix lane
     and overstate what is actually knowable from the current network state.
 - Next:
-  - update all active closure trackers to quote the latest release audit output;
+  - update all active closure trackers to cite the latest coordinated snapshot
+    instead of copying mutable release gate names into prose;
   - treat release claims as blocked by dirty worktree, unpushed source drift,
     and version/tag reuse until the exact gate output changes again.
 
@@ -206,18 +204,12 @@ The objective is only complete if current evidence proves all of the following:
 
 - Severity: medium
 - Evidence:
-  - the earlier 2026-05-27 factor packet reported `active_claims=10`,
-    `live_factor_processes=0`;
-  - an intermediate same-turn checkpoint improved the surface to
-    `active_claims=6`, `invalid_active_claims=0`,
-    `live_factor_processes=3`,
-    `blocking_reasons=["active_claims","live_factor_processes"]`,
-    `attention_groups.by_owner={"codex":6}`;
-  - the latest rerun in this continuation has drifted again and now reports
-    `active_claims=10`, `invalid_active_claims=0`,
-    `live_factor_processes=4`,
-    `blocking_reasons=["active_claims","live_factor_processes"]`, and
-    `attention_groups.by_owner={"codex":10}`;
+  - same-day reruns have already produced multiple different factor surfaces;
+  - the coordinated snapshot now records the factor child's
+    `report_timestamp`, `blocking_reasons`, and `attention_by_owner` so the
+    latest truth can be read from one place;
+  - despite numeric drift, the stable fact is unchanged: factor closure is
+    still blocked by unresolved active claims and remains non-complete.
   - the same-turn classifier fix still matters: one prior live-process blocker
     was a diagnostic false positive
     (`tomac_tod_balanced_provider_parity_probe.py`), and that probe no longer
@@ -227,15 +219,15 @@ The objective is only complete if current evidence proves all of the following:
     within one audit session; factor closure can regress while docs still look
     unchanged.
 - Next:
-  - quote fresh factor audit output in the active tracker;
+  - cite the coordinated snapshot in the active tracker instead of copying raw
+    factor counts into prose;
   - if a stronger factor-completion claim is ever attempted, require same-turn
     rerun evidence rather than cached `/tmp` artifacts from earlier in the day.
 - Current concurrency readback:
   - the latest factor audit still shows no invalid active claim surface;
-  - closure is still blocked because `attention_claim_count=10` remains
-    nonzero, `attention_live_process_count=4`, and all current attention claims
-    still belong to `codex`, so the repo still lacks a clean same-turn
-    factor-closure surface.
+  - closure is still blocked because the coordinated snapshot's factor child
+    remains non-pass and still belongs to live `codex` attention claims, so the
+    repo still lacks a clean same-turn factor-closure surface.
 
 ### V-011: reusable strategy-library provenance was still leaking caller-local path assumptions
 
@@ -484,9 +476,16 @@ Earlier same-day runtime smoke (not rerun in this continuation):
   still blocked behind the remote gate.
 - 2026-05-27: the latest compact factor rerun in this continuation drifted
   again to `active_claims=10`, `invalid_active_claims=0`,
-  `live_factor_processes=4`, and `attention_groups.by_owner={"codex":10}`.
+  `live_factor_processes=2`, and `attention_groups.by_owner={"codex":10}`.
   This removed the earlier duplicate-family cluster but still leaves the repo
   far from a clean same-turn practical-closure surface.
+- 2026-05-27: added `support/scripts/objective_closure_snapshot.py`, a compact
+  read-only aggregator that now writes one coordinated `/tmp` bundle for the
+  canonical quickstart chain plus the live done/factor/release audit outputs.
+  The safe default snapshot is now available at
+  `/private/tmp/ict-engine-goal-20260527-closure-snapshot/objective_closure_snapshot.json`;
+  a heavier `--run-all-heavy` attempt currently fails closed with a structured
+  timeout snapshot instead of crashing.
 - 2026-05-27: the current-turn compact reruns still show no promotion surface:
   `done_definition_audit` remains partial without heavy gates,
   `factor_claim_terminalization_audit` still has `promotion_allowed_true=0` and
