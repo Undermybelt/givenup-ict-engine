@@ -78,7 +78,8 @@ Key fields:
 Clean narrowed-scope smoke should produce:
 
 - `decision_state=single_label_99`
-- `trade_usable=true`
+- `trade_usable=false`
+- `closed_loop_consumption_status=inspection_only_regime_sidecar_requires_downstream_live_admission`
 - `final_label=primary::TrendExpansion`
 - `execution_tree_hint=accept_regime`
 

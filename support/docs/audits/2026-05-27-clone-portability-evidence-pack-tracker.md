@@ -120,6 +120,31 @@ Result:
 - “directory exists” is no longer conflated with “product-visible candidate”
 - malformed packs fail closed without requiring a write action first
 
+### 1d. Regime sidecar consumer docs no longer overstate `trade_usable`
+
+Problem before this slice:
+
+- `support/docs/regime-classifier-sidecar-chain.md` described the clean
+  narrowed-scope smoke as producing `trade_usable=true`
+- the actual consumer bundle contract and tests already fail closed:
+  - `trade_usable=false`
+  - `promotion_allowed=false`
+  - `closed_loop_consumption_status=inspection_only_regime_sidecar_requires_downstream_live_admission`
+- this was a consumer-facing wording bug: strong regime sidecar confidence could
+  be misread as downstream trade readiness
+
+Change made:
+
+- updated the sidecar-chain doc so the smoke example matches the current
+  consumer bundle/test contract
+
+Result:
+
+- regime sidecar confidence stays clearly separated from downstream live-trade
+  admission
+- clone users are less likely to mistake an `accept_regime` hint for
+  `trade_usable=true`
+
 ### 2. Release audit now preserves GitHub public fallback diagnostics
 
 Problem before this slice:
@@ -218,3 +243,6 @@ Example emitted manifest:
    registration, or keep that flow manual-but-explicit.
 3. If more Board B/example packs should become product-visible, promote them
    through explicit preset entries instead of relying on directory presence.
+4. Continue scanning active consumer-facing docs for stale practical-admission
+   wording, especially any surface that could let `accept_regime` read like
+   live-trade readiness.
