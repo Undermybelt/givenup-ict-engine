@@ -76,7 +76,8 @@ Status legend: `done`, `active`, `next`, `blocked`, `not_yet`.
 | done | Add opt-in provider profile for event/fundamentals sidecars | Added `support/examples/provider_profiles/thrill3r-nq-event-fundamentals-v1.json`. |
 | done | Implement compact dual-lane adoption helper | Added `support/scripts/research/event_fundamentals_adoption.py`; helper emits bundle + shell suggestions with zero-config and opt-in lanes. |
 | done | Register the helper in script governance | Added `event_fundamentals_adoption` to `support/scripts/SCRIPTS.md` and `support/scripts/script_manifest.json`. |
-| active | Run focused verification and narrow commit | Stage only new helper/profile/tests/governance/handoff files. |
+| done | Run focused verification and narrow commit | Commit `b66c3b5d` staged only the helper/profile/tests/governance/handoff slice. |
+| next | Extend the sidecar lane beyond the minimal smoke pack | Candidate next step: add broader macro/dividend smoke coverage or downstream handoff packaging without changing zero-config defaults. |
 
 ## Verification Checklist
 
@@ -134,3 +135,14 @@ Status legend: `done`, `active`, `next`, `blocked`, `not_yet`.
       - section `# reuse_saved_profile`
       - label `# review_sidecars`
       - opt-in commands use `--profile thrill3r-nq-event-fundamentals-v1`
+- 2026-05-27 16:05 +0800
+  - Narrow checkpoint committed:
+    - `b66c3b5d` `feat: add event fundamentals hotplug adoption`
+  - Commit scope:
+    - `support/scripts/research/event_fundamentals_adoption.py`
+    - `support/scripts/research/tests/test_event_fundamentals_adoption.py`
+    - `support/scripts/research/tests/test_market_data_resolver.py`
+    - `support/examples/provider_profiles/thrill3r-nq-event-fundamentals-v1.json`
+    - `support/scripts/SCRIPTS.md`
+    - `support/scripts/script_manifest.json`
+    - this handoff board
