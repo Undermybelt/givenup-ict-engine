@@ -668,11 +668,16 @@ def _print_human_buildable_list(payload: dict[str, Any]) -> None:
         (
             "buildable_count={buildable_count} candidate_count={candidate_count} "
             "promotion_ready_count={promotion_ready_count} trade_usable_count={trade_usable_count} "
-            "inspection_only_count={inspection_only_count}"
+            "inspection_only_count={inspection_only_count} "
+            "legacy_excluded_count={legacy_excluded_count}"
         ).format(
             **payload["summary"]
         )
     )
+    if payload["summary"].get("legacy_excluded_count", 0):
+        print(
+            "hint=use --include-legacy-buildable to inspect legacy synthesized lifecycle packs"
+        )
     for candidate in payload["buildable_candidates"]:
         print(
             "{candidate_id}\t{aggregate_trade_count}\t{aggregate_label}\t{learning_status}\t{consumption_status}\t{expectancy}\t{transfer_status}\t{reusable_ref}".format(

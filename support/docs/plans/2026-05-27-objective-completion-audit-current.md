@@ -22,8 +22,9 @@ Status: `not proven / not complete`
 Reason:
 
 1. Board B ownership is still crowded. `python3 support/scripts/factor_claim_terminalization_audit.py --compact`
-   now reports `active_claims=4`, `invalid_active_claims=0`,
-   `live_factor_processes=0`, `status=needs_attention`, and
+   now reports `active_claims=9`, `invalid_active_claims=0`,
+   `live_factor_processes=0`, `status=needs_attention`,
+   `attention_groups.by_owner={"codex":9}`, and
    `next_action=terminalize or externalize active claims`.
 2. The authoritative release/closed-loop handoff
    `support/docs/plans/2026-05-12-hotplug-personal-data-release-handoff-todo.md`
@@ -177,15 +178,15 @@ The objective is only complete if current evidence proves all of the following:
     now reports unresolved `worktree_clean_for_release`,
     `source_origin_matches_selected_source`, and
     `release_version_tag_available`;
-  - the latest readback also reports `source_ahead_of_origin=42` and
-    `Cargo.toml version=0.1.7` colliding with existing release tag `v0.1.7`.
+  - `HEAD` is `45` commits ahead of `origin/main`, and `Cargo.toml` version
+    `0.1.7` is already tagged on the release mirror.
 - Risk:
   - repeating stale blocker names can send the next turn to the wrong fix lane
     and overstate what is actually knowable from the current network state.
 - Next:
   - update all active closure trackers to quote the latest release audit output;
-  - treat release claims as blocked by dirty worktree plus remote readback until
-    the exact gate output changes again.
+  - treat release claims as blocked by dirty worktree, unpushed source drift,
+    and version/tag reuse until the exact gate output changes again.
 
 ### V-007: factor-closure evidence is time-variant within the same audit day
 
@@ -193,9 +194,10 @@ The objective is only complete if current evidence proves all of the following:
 - Evidence:
   - the earlier 2026-05-27 factor packet reported `active_claims=10`,
     `live_factor_processes=0`;
-  - the latest rerun now reports `active_claims=4`,
+  - the latest rerun now reports `active_claims=9`,
     `invalid_active_claims=0`, `live_factor_processes=0`,
-    `blocking_reasons=["active_claims"]`.
+    `blocking_reasons=["active_claims"]`, and
+    `attention_groups.by_owner={"codex":9}`.
 - Risk:
   - completion language based on stale same-day packets is not reliable even
     within one audit session; factor closure can regress while docs still look
@@ -207,8 +209,9 @@ The objective is only complete if current evidence proves all of the following:
 - Current concurrency readback:
   - the latest factor audit no longer shows a live factor process or invalid
     active claim surface;
-  - closure is still blocked because `attention_claim_count=4` remains nonzero,
-    so the repo still lacks a clean same-turn factor-closure surface.
+  - closure is still blocked because `attention_claim_count=9` remains nonzero,
+    and all current attention claims still belong to `codex`, so the repo still
+    lacks a clean same-turn factor-closure surface.
 
 ### V-011: reusable strategy-library provenance was still leaking caller-local path assumptions
 
@@ -238,7 +241,7 @@ The objective is only complete if current evidence proves all of the following:
   - focused suites
     `support.scripts.research.tests.test_factor_candidate_pack` and
     `support.scripts.research.tests.test_factor_candidate_resolver` now pass
-    `34` tests.
+    `36` tests.
 
 ### V-010: current-turn heavy done-definition proof can lag behind blocker drift
 
@@ -360,24 +363,23 @@ Python/support-script focused tests:
 - `python3 -m unittest support.scripts.research.tests.test_factor_candidate_pack -v`
   -> pass (`17/17`)
 - `python3 -m unittest support.scripts.research.tests.test_factor_candidate_resolver -v`
-  -> pass (`17/17`)
+  -> pass (`19/19`)
 
 Current-turn compact audits:
 
 - `python3 support/scripts/done_definition_audit.py --compact --output /tmp/ict-engine-goal-20260527-done-now.json`
   -> pass, but `completion_ready=false` because heavy gates remain skipped by
   default.
-- `python3 support/scripts/factor_claim_terminalization_audit.py --compact --output /tmp/ict-engine-goal-20260527-factor-now2.json`
-  -> `status=needs_attention`, `active_claims=4`,
+- `python3 support/scripts/factor_claim_terminalization_audit.py --compact --output /tmp/ict-engine-goal-20260527-factor-resume2.json`
+  -> `status=needs_attention`, `active_claims=9`,
   `invalid_active_claims=0`, `live_factor_processes=0`,
-  `promotion_allowed_true=0`, `trade_usable_true=0`.
-- `python3 support/scripts/release_readiness_audit.py --compact --check-remotes --output /tmp/ict-engine-goal-20260527-release-now2.json`
+  `promotion_allowed_true=0`, `trade_usable_true=0`,
+  `attention_groups.by_owner={"codex":9}`.
+- `python3 support/scripts/release_readiness_audit.py --compact --check-remotes --output /tmp/ict-engine-goal-20260527-release-resume2.json`
   -> `status=needs_fix`, unresolved
   `worktree_clean_for_release`,
   `source_origin_matches_selected_source`,
-  `release_version_tag_available`; current readback reports
-  `source_ahead_of_origin=42` and local `Cargo.toml version=0.1.7` colliding
-  with existing release tag `v0.1.7`.
+  `release_version_tag_available`.
 
 Earlier same-day runtime smoke (not rerun in this continuation):
 
@@ -406,9 +408,10 @@ Earlier same-day runtime smoke (not rerun in this continuation):
   remains `not proven` because end-to-end current-tree completion evidence is
   incomplete.
 - 2026-05-27: fresh factor/release reruns changed the blocker surface again.
-  Factor closure is currently down to `active_claims=4`,
-  `invalid_active_claims=0`, `live_factor_processes=0`; release closure now
-  fails on `worktree_clean_for_release`,
+  Factor closure is currently back at `active_claims=9`,
+  `invalid_active_claims=0`, `live_factor_processes=0`, with
+  `attention_groups.by_owner={"codex":9}`; release closure now fails on
+  `worktree_clean_for_release`,
   `source_origin_matches_selected_source`, and
   `release_version_tag_available`.
 - 2026-05-27: the current-turn compact reruns still show no promotion surface:
@@ -424,3 +427,7 @@ Earlier same-day runtime smoke (not rerun in this continuation):
   Candidate-pack transfer scoring and buildable candidate summaries now surface
   declared-friction profitability and learning-admission state instead of
   primarily steering selection through density/sharpe/breadth alone.
+- 2026-05-27: patched the human `--list-buildable` summary to surface
+  `legacy_excluded_count` and print the explicit
+  `--include-legacy-buildable` hint; the matching resolver regression now
+  passes in the same focused suite.

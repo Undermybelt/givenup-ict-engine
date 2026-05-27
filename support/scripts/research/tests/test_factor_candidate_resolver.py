@@ -657,6 +657,29 @@ class FactorCandidateResolverTests(unittest.TestCase):
         self.assertIn("unregistered_count=17", lines[0])
         self.assertIn("invalid_count=0", lines[0])
 
+    def test_main_list_buildable_human_surface_reports_legacy_exclusions_and_hint(self) -> None:
+        stdout = io.StringIO()
+        with contextlib.redirect_stdout(stdout):
+            exit_code = resolver.main(
+                [
+                    "--repo-root",
+                    str(REPO_ROOT),
+                    "--list-buildable",
+                    "--output-format",
+                    "human",
+                ]
+            )
+
+        self.assertEqual(exit_code, 0)
+        lines = [line for line in stdout.getvalue().splitlines() if line.strip()]
+        self.assertIn("buildable_count=0", lines[0])
+        self.assertIn("legacy_excluded_count=8", lines[0])
+        self.assertIn("inspection_only_count=0", lines[0])
+        self.assertEqual(
+            lines[1],
+            "hint=use --include-legacy-buildable to inspect legacy synthesized lifecycle packs",
+        )
+
     def test_build_candidate_packs_supports_regime_benchmark_bundle(self) -> None:
         nq = {
             "symbol": "NQ",
