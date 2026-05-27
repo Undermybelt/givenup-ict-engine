@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 import subprocess
 import sys
 from datetime import datetime, timezone
@@ -26,6 +27,23 @@ QUICKSTART_CHAIN = [
 
 def _utc_now() -> str:
     return datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
+
+
+def _parse_iso_datetime(value: object) -> datetime | None:
+    if not isinstance(value, str):
+        return None
+    text = value.strip()
+    if not text:
+        return None
+    if text.endswith("Z"):
+        text = text[:-1] + "+00:00"
+    try:
+        parsed = datetime.fromisoformat(text)
+    except ValueError:
+        return None
+    if parsed.tzinfo is None:
+        return parsed.replace(tzinfo=timezone.utc)
+    return parsed.astimezone(timezone.utc)
 
 
 def effective_timeout_seconds(requested: int | None, *, run_all_heavy: bool) -> int:
@@ -69,6 +87,55 @@ def _text(value: object) -> str:
     return str(value)
 
 
+def _portable_repo_root(output_dir: Path | None) -> str:
+    if output_dir:
+        return ROOT.name
+    return str(ROOT)
+
+
+def _portable_output_dir(output_dir: Path | None) -> str | None:
+    if not output_dir:
+        return None
+    return "."
+
+
+def _portable_path(path: Path | None, *, output_dir: Path | None) -> str | None:
+    if path is None:
+        return None
+    if output_dir is not None:
+        try:
+            return str(path.resolve().relative_to(output_dir.resolve()))
+        except ValueError:
+            pass
+    try:
+        return str(path.resolve().relative_to(ROOT))
+    except ValueError:
+        return str(path)
+
+
+def _portable_argv(argv: list[str], *, output_dir: Path | None) -> list[str]:
+    portable: list[str] = []
+    for item in argv:
+        try:
+            path = Path(item)
+        except TypeError:
+            portable.append(str(item))
+            continue
+        if not path.is_absolute():
+            portable.append(str(item))
+            continue
+        relative = _portable_path(path, output_dir=output_dir)
+        if relative and relative != str(path):
+            portable.append(relative)
+            continue
+        basename = path.name or str(item)
+        if re.fullmatch(r"python(?:3(?:\.\d+)*)?", basename):
+            portable.append("python3")
+            continue
+        portable.append(basename)
+    return portable
+
+
 def build_audit_specs(
     *,
     output_dir: Path | None,
@@ -87,6 +154,8 @@ def build_audit_specs(
 
     factor_output = output_dir / "factor_claim_terminalization_audit.compact.json" if output_dir else None
     factor_cmd = [sys.executable, str(FACTOR_AUDIT), "--compact"]
+    if output_dir:
+        factor_cmd.append("--portable-paths")
     if factor_output:
         factor_cmd.extend(["--output", str(factor_output)])
     specs["factor_closure"] = {"argv": factor_cmd, "output_path": factor_output}
@@ -133,23 +202,34 @@ def _done_surface(report: dict[str, Any]) -> dict[str, Any]:
         "quickstart_surface": quickstart_status,
         "unresolved": summary.get("unresolved", []),
         "skipped_gates": summary.get("skipped_gates", []),
+        "next_action": summary.get("next_action"),
     }
 
 
 def _factor_surface(report: dict[str, Any]) -> dict[str, Any]:
     summary = report.get("summary", {})
     attention_groups = report.get("attention_groups", {})
+    attention_action_queue = report.get("attention_action_queue", {})
     by_owner = {}
+    by_actionability = {}
     if isinstance(attention_groups, dict):
         maybe_by_owner = attention_groups.get("by_owner", {})
         if isinstance(maybe_by_owner, dict):
             by_owner = maybe_by_owner
+        maybe_by_actionability = attention_groups.get("by_actionability", {})
+        if isinstance(maybe_by_actionability, dict):
+            by_actionability = maybe_by_actionability
     return {
         "report_timestamp": report.get("generated_at"),
         "status": summary.get("status"),
         "active_claims": summary.get("active_claims"),
         "invalid_active_claims": summary.get("invalid_active_claims"),
         "live_factor_processes": summary.get("live_factor_processes"),
+        "active_claims_without_live_process": summary.get("active_claims_without_live_process"),
+        "wait_only_active_claims_without_live_process": summary.get(
+            "wait_only_active_claims_without_live_process"
+        ),
+        "stale_safe_takeover_candidates": summary.get("stale_safe_takeover_candidates"),
         "blocking_reasons": summary.get("blocking_reasons", []),
         "promotion_allowed_true": summary.get("promotion_allowed_true"),
         "trade_usable_true": summary.get("trade_usable_true"),
@@ -157,11 +237,28 @@ def _factor_surface(report: dict[str, Any]) -> dict[str, Any]:
         "attention_claim_count": report.get("attention_claim_count"),
         "attention_live_process_count": report.get("attention_live_process_count"),
         "attention_by_owner": by_owner,
+        "attention_by_actionability": by_actionability,
+        "attention_action_queue": attention_action_queue if isinstance(attention_action_queue, dict) else {},
     }
 
 
 def _release_surface(report: dict[str, Any]) -> dict[str, Any]:
     summary = report.get("summary", {})
+    gates = report.get("gates", [])
+    unresolved_next_actions: dict[str, str] = {}
+    if isinstance(gates, list):
+        for gate in gates:
+            if not isinstance(gate, dict):
+                continue
+            gate_id = gate.get("id")
+            if not isinstance(gate_id, str):
+                continue
+            details = gate.get("details", {})
+            if not isinstance(details, dict):
+                continue
+            next_action = details.get("next_action")
+            if isinstance(next_action, str) and next_action:
+                unresolved_next_actions[gate_id] = next_action
     return {
         "report_timestamp": report.get("timestamp_utc"),
         "status": summary.get("status"),
@@ -169,6 +266,11 @@ def _release_surface(report: dict[str, Any]) -> dict[str, Any]:
         "pass_count": summary.get("pass_count"),
         "fail_count": summary.get("fail_count"),
         "skip_count": summary.get("skip_count"),
+        "unresolved_next_actions": {
+            gate_id: unresolved_next_actions[gate_id]
+            for gate_id in summary.get("unresolved", [])
+            if gate_id in unresolved_next_actions
+        },
     }
 
 
@@ -176,6 +278,8 @@ def summarize_snapshot(
     done_surface: dict[str, Any],
     factor_surface: dict[str, Any],
     release_surface: dict[str, Any],
+    *,
+    snapshot_timestamp: str | None = None,
 ) -> dict[str, Any]:
     blockers: list[str] = []
     if not done_surface.get("completion_ready"):
@@ -202,6 +306,102 @@ def summarize_snapshot(
         if surface_green
         else "rerun the blocked child audits after fixing the named blocker surfaces"
     )
+    child_next_actions = {
+        "done_definition": done_surface.get("next_action"),
+        "factor_closure": factor_surface.get("next_action"),
+        "release_readiness": release_surface.get("unresolved_next_actions", {}),
+    }
+    child_report_timestamps = {
+        "done_definition": done_surface.get("report_timestamp"),
+        "factor_closure": factor_surface.get("report_timestamp"),
+        "release_readiness": release_surface.get("report_timestamp"),
+    }
+    child_report_age_seconds: dict[str, int] = {}
+    snapshot_dt = _parse_iso_datetime(snapshot_timestamp)
+    if snapshot_dt is not None:
+        for name, timestamp in child_report_timestamps.items():
+            child_dt = _parse_iso_datetime(timestamp)
+            if child_dt is None:
+                continue
+            child_report_age_seconds[name] = max(
+                0, int((snapshot_dt - child_dt).total_seconds())
+            )
+    prioritized_next_actions: list[dict[str, str]] = []
+    done_next = done_surface.get("next_action")
+    if isinstance(done_next, str) and done_next:
+        prioritized_next_actions.append(
+            {
+                "surface": "done_definition",
+                "reason": "completion_proof_gap",
+                "action": done_next,
+            }
+        )
+    factor_next = factor_surface.get("next_action")
+    if isinstance(factor_next, str) and factor_next:
+        factor_queue = factor_surface.get("attention_action_queue", {})
+        if isinstance(factor_queue, dict):
+            wait_only_claims = factor_queue.get("externalize_wait_only_claims", [])
+            if isinstance(wait_only_claims, list) and wait_only_claims:
+                for item in wait_only_claims:
+                    if not isinstance(item, dict):
+                        continue
+                    claim_file = item.get("claim_file")
+                    if isinstance(claim_file, str) and claim_file:
+                        prioritized_next_actions.append(
+                            {
+                                "surface": "factor_closure",
+                                "reason": "wait_only_claim_without_live_runtime",
+                                "action": f"externalize or terminalize {claim_file}",
+                            }
+                        )
+            stale_claims = factor_queue.get("stale_safe_takeover_claims", [])
+            if isinstance(stale_claims, list) and stale_claims:
+                for item in stale_claims:
+                    if not isinstance(item, dict):
+                        continue
+                    claim_file = item.get("claim_file")
+                    if isinstance(claim_file, str) and claim_file:
+                        prioritized_next_actions.append(
+                            {
+                                "surface": "factor_closure",
+                                "reason": "stale_safe_takeover_queue_head",
+                                "action": f"review takeover ownership of {claim_file}",
+                            }
+                        )
+            live_roots = factor_queue.get("live_runtime_run_roots", [])
+            if isinstance(live_roots, list) and live_roots:
+                for item in live_roots:
+                    if not isinstance(item, dict):
+                        continue
+                    pid = item.get("pid")
+                    run_root = item.get("run_root")
+                    if run_root:
+                        pid_prefix = f"pid {pid} " if pid is not None else ""
+                        prioritized_next_actions.append(
+                            {
+                                "surface": "factor_closure",
+                                "reason": "live_runtime_queue_head",
+                                "action": f"wait for {pid_prefix}run_root {run_root} to exit or claim it explicitly",
+                            }
+                        )
+        prioritized_next_actions.append(
+            {
+                "surface": "factor_closure",
+                "reason": "practical_closure_blocked",
+                "action": factor_next,
+            }
+        )
+    release_next_actions = release_surface.get("unresolved_next_actions", {})
+    if isinstance(release_next_actions, dict):
+        for gate_id, action in release_next_actions.items():
+            if isinstance(action, str) and action:
+                prioritized_next_actions.append(
+                    {
+                        "surface": "release_readiness",
+                        "reason": gate_id,
+                        "action": action,
+                    }
+                )
     return {
         "status": status,
         "completion_proven": False,
@@ -210,6 +410,10 @@ def summarize_snapshot(
         "blockers": blockers,
         "manual_requirements_remaining": manual_requirements_remaining,
         "next_action": next_action,
+        "child_next_actions": child_next_actions,
+        "child_report_timestamps": child_report_timestamps,
+        "child_report_age_seconds": child_report_age_seconds,
+        "prioritized_next_actions": prioritized_next_actions,
     }
 
 
@@ -224,28 +428,35 @@ def build_snapshot(
     factor_report = audit_results["factor_closure"]["report"]
     release_report = audit_results["release_readiness"]["report"]
 
+    snapshot_timestamp = _utc_now()
     done_surface = _done_surface(done_report)
     factor_surface = _factor_surface(factor_report)
     release_surface = _release_surface(release_report)
-    summary = summarize_snapshot(done_surface, factor_surface, release_surface)
+    summary = summarize_snapshot(
+        done_surface,
+        factor_surface,
+        release_surface,
+        snapshot_timestamp=snapshot_timestamp,
+    )
 
     evidence_files = {
-        name: (str(spec["output_path"]) if spec.get("output_path") else None)
+        name: _portable_path(spec.get("output_path"), output_dir=output_dir)
         for name, spec in audit_results.items()
     }
 
     return {
         "schema_version": "objective-closure-snapshot/v1",
-        "timestamp_utc": _utc_now(),
-        "repo_root": str(ROOT),
+        "timestamp_utc": snapshot_timestamp,
+        "repo_root": _portable_repo_root(output_dir),
         "quickstart_chain": QUICKSTART_CHAIN,
         "options": {
             "run_all_heavy": run_all_heavy,
             "check_remotes": check_remotes,
-            "output_dir": str(output_dir) if output_dir else None,
+            "output_dir": _portable_output_dir(output_dir),
         },
         "audit_commands": {
-            name: spec["command"]["argv"] for name, spec in audit_results.items()
+            name: _portable_argv(spec["command"]["argv"], output_dir=output_dir)
+            for name, spec in audit_results.items()
         },
         "evidence_files": evidence_files,
         "audits": {
@@ -278,19 +489,22 @@ def build_failure_report(
     return {
         "schema_version": "objective-closure-snapshot/v1",
         "timestamp_utc": _utc_now(),
-        "repo_root": str(ROOT),
+        "repo_root": _portable_repo_root(output_dir),
         "quickstart_chain": QUICKSTART_CHAIN,
         "options": {
             "run_all_heavy": run_all_heavy,
             "check_remotes": check_remotes,
-            "output_dir": str(output_dir) if output_dir else None,
+            "output_dir": _portable_output_dir(output_dir),
         },
         "summary": {
             "status": "snapshot_failed",
             "failed_audit": failed_audit,
             "error": error,
         },
-        "command": command_result,
+        "command": {
+            **command_result,
+            "argv": _portable_argv(command_result.get("argv", []), output_dir=output_dir),
+        },
     }
 
 

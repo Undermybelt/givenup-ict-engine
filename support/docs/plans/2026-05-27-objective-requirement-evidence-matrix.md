@@ -89,6 +89,31 @@ Current-turn command truth at the time this matrix was written:
   `release_readiness=0s`), and `summary.prioritized_next_actions` named the
   stale-safe factor queue head plus the two release gates.
 
+- 2026-05-28 current refresh after stale-exit fix commit:
+  `/tmp/ict-engine-goal-20260528-current-refresh/objective_closure_snapshot.json`
+  remains `summary.status=not_complete` with blockers
+  `done_definition_not_completion_ready`, `factor_closure_blocked`, and
+  `release_readiness_blocked`. A standalone compact audit briefly reported
+  `active_claims=0` and `live_factor_processes=0`, but the coordinated snapshot
+  immediately saw a fresh live owner for
+  `ict-engine-tomac-opening-drive-rvol-vwap-continuation-practical-20260528T011341+0800`
+  (`pid=47989`). The factor child therefore stayed red with
+  `active_claims=1`, `live_factor_processes=1`, `promotion_allowed_true=0`,
+  and `trade_usable_true=0`. Release readiness still fails
+  `worktree_clean_for_release` and `remote_readback`; done-definition remains
+  partial until heavy gates are rerun.
+
+- 2026-05-28 live-owner poll:
+  `/tmp/ict-engine-goal-20260528-after-poll.json` supersedes the brief
+  zero-claim standalone readback for collision decisions. It reports
+  `status=needs_attention`, `active_claims=4`, `live_factor_processes=5`,
+  `active_claims_without_live_process=0`,
+  `wait_only_active_claims_without_live_process=0`,
+  `promotion_allowed_true=0`, and `trade_usable_true=0`. Current live roots are
+  active runtime owners, not stale-safe takeover candidates, so the correct
+  action is to wait for owning processes to terminalize or claim their evidence
+  explicitly before reattempting factor closure.
+
 - 2026-05-28 factor child refresh:
   `/tmp/ict-engine-goal-20260528-factor-before-claim-close.json` reported
   `status=needs_attention`, `active_claims=2`, `live_factor_processes=0`,
@@ -237,8 +262,9 @@ Current-turn command truth at the time this matrix was written:
 
 ## Reasonable Next Actions
 
-1. Re-run this matrix after the 5 active claims and 3 live factor processes are reduced to a truthful
-   closure surface or explicitly externalized into their own evidence packets.
+1. Re-run this matrix after the latest live owners in
+   `/tmp/ict-engine-goal-20260528-after-poll.json` reduce to a truthful closure
+   surface or explicitly externalize into their own evidence packets.
 2. Only attempt a completion commit after a clean selected slice or clean export
    exists and the release audit turns green for the intended version/tag.
 3. Keep treating current consumer/readback improvements as real but partial:
@@ -269,3 +295,261 @@ Current-turn command truth at the time this matrix was written:
 No. I do not have 100% confidence that the objective is complete on the current
 tree. Current evidence proves some fail-closed UX/readback properties, but it
 also directly disproves practical closure and release/commit closure.
+
+## 2026-05-28 Current Refresh - Codex Continuation
+
+Latest authoritative packet for this continuation:
+
+- `/tmp/ict-engine-goal-20260528-codex-refresh-current2/objective_closure_snapshot.json`
+
+Command:
+
+```bash
+python3 support/scripts/objective_closure_snapshot.py --compact --check-remotes --output-dir /tmp/ict-engine-goal-20260528-codex-refresh-current2
+```
+
+Current command truth:
+
+- parent summary: `status=not_complete`, `completion_proven=false`, blockers
+  `done_definition_not_completion_ready`, `factor_closure_blocked`,
+  `release_readiness_blocked`;
+- done-definition child: `status=pass`, `completion_ready=false`,
+  `evidence_level=partial_skipped_gates`, with heavy gates still skipped;
+- factor child: `status=needs_attention`, `active_claims=1`,
+  `live_factor_processes=0`, `active_claims_without_live_process=1`,
+  `wait_only_active_claims_without_live_process=1`,
+  `promotion_allowed_true=0`, `trade_usable_true=0`;
+- release child: `status=needs_fix`, unresolved
+  `worktree_clean_for_release` and `remote_readback`.
+
+Fresh factor interpretation:
+
+- The one active claim is
+  `/tmp/ict-engine-agent-claims/board-b-factor-refinement/20260528T011147+0800-codex-tomac-donchian-continuation-prep.claim`.
+- It is a fresh prep-only claim created at `2026-05-28T01:11:47+0800`, not a
+  stale-safe takeover target. It explicitly keeps `promotion_allowed=false`,
+  `trade_usable=false`, and says not to launch TOMAC scan/AQ while runtime is
+  occupied.
+- Therefore this matrix must continue to treat factor closure as blocked, but
+  it must not recommend unilateral terminalization of this fresh lane.
+
+Fresh release interpretation:
+
+- `/tmp/ict-engine-goal-20260528-release-refresh-current2.json` confirms
+  `worktree_clean_for_release` is red with `43` modified tracked entries and
+  `1698` untracked entries.
+- Remote readback is still red for both `origin` and
+  `https://github.com/Undermybelt/ict-engine-release.git`, each failing with
+  `Connection closed by 198.18.0.190 port 22`.
+- `release_version_tag_available` remains skipped behind `remote_readback`.
+
+Verification just rerun:
+
+- `python3 -m unittest support.scripts.tests.test_objective_closure_snapshot -v`
+  passed `9/9`.
+- `python3 -m unittest support.scripts.tests.test_factor_claim_terminalization_audit -v`
+  passed `60/60`.
+
+Requirement verdict updates:
+
+- Evidence-pack coordination: still `partially_proven_but_not_complete`; the
+  parent packet names the next factor/release actions directly, but it is a red
+  packet.
+- At least one rooted profitability-factor chain proved practical end-to-end:
+  still `contradicted_by_current_state`; `trade_usable_true=0` and no green
+  same-tree practical closure packet exists.
+- Release/commit readiness: still `contradicted_by_current_state`; dirty tree
+  and remote readback remain red.
+
+Next correct action:
+
+1. Do not commit as completion.
+2. Wait for or inspect the fresh Donchian prep-only lane only after its owner
+   writes terminal/externalized evidence, then rerun the coordinated snapshot.
+3. Separately resolve release readback/network and isolate a clean source slice
+   before any release/commit-readiness claim.
+
+## 2026-05-28 Current Refresh 2 - Live Runtime Drift
+
+Latest authoritative packet for this continuation:
+
+- `/tmp/ict-engine-goal-20260528-codex-refresh-current4/objective_closure_snapshot.json`
+
+Command:
+
+```bash
+python3 support/scripts/objective_closure_snapshot.py --compact --check-remotes --output-dir /tmp/ict-engine-goal-20260528-codex-refresh-current4
+```
+
+Current command truth:
+
+- parent summary: `status=not_complete`, `completion_proven=false`, blockers
+  `done_definition_not_completion_ready`, `factor_closure_blocked`, and
+  `release_readiness_blocked`;
+- done-definition child: `status=pass`, `completion_ready=false`,
+  `evidence_level=partial_skipped_gates`;
+- factor child: `status=needs_attention`, `active_claims=4`,
+  `live_factor_processes=4`, `active_claims_without_live_process=0`,
+  `wait_only_active_claims_without_live_process=0`,
+  `stale_safe_takeover_candidates=0`, `promotion_allowed_true=0`, and
+  `trade_usable_true=0`;
+- release child: `status=needs_fix`, unresolved
+  `worktree_clean_for_release` and `remote_readback`.
+
+Drift interpretation:
+
+- The previous `current3` packet showed one `active_claim_debt` row for the
+  Crabel NR7 lane. A live AQ child appeared immediately afterward under
+  `/tmp/ict-engine-tomac-crabel-nr7-intraday-expansion-continuation-live-20260528T011531+0800/aq`,
+  so the `current4` packet correctly reclassifies that row as
+  `live_runtime_owner`.
+- This is not a safe cleanup target. It is live work with
+  `promotion_allowed=false`, `trade_usable=false`, and terminal metrics still
+  pending.
+- The current blocker is therefore runtime occupancy and lack of practical
+  promotion, not stale claim debt.
+
+Requirement verdict updates:
+
+- Evidence-pack coordination: `partially_proven_but_not_complete`; the packet
+  correctly tracks drift from wait-only/debt to live-runtime ownership.
+- Practical end-to-end profitability factor: still
+  `contradicted_by_current_state`; all current live lanes are unpromoted and
+  `trade_usable_true=0`.
+- Completion commit: still `contradicted_by_current_state`; release readiness
+  and factor closure are red.
+
+Next correct action:
+
+1. Wait for the four live factor roots to exit or write terminal evidence.
+2. Rerun the coordinated snapshot immediately after runtime exits.
+3. Only if a live root terminalizes green with `promotion_allowed=true` and
+   `trade_usable=true`, continue the closed-loop proof through workflow,
+   Pre-Bayes, BBN, execution tree, feedback/update, and release-clean-slice
+   gates before considering a completion commit.
+
+## 2026-05-28 Current Refresh 3 - Parent Action Queue Cap Removed
+
+Latest authoritative packet for this continuation:
+
+- `/tmp/ict-engine-goal-20260528-codex-refresh-current6/objective_closure_snapshot.json`
+
+Commands:
+
+```bash
+python3 support/scripts/objective_closure_snapshot.py --compact --check-remotes --output-dir /tmp/ict-engine-goal-20260528-codex-refresh-current6
+python3 -m unittest support.scripts.tests.test_objective_closure_snapshot -v
+python3 -m unittest support.scripts.tests.test_factor_claim_terminalization_audit -v
+```
+
+Current command truth:
+
+- parent summary: `status=not_complete`, `completion_proven=false`, blockers
+  `done_definition_not_completion_ready`, `factor_closure_blocked`, and
+  `release_readiness_blocked`;
+- factor child: `active_claims=5`, `live_factor_processes=4`,
+  `active_claims_without_live_process=1`,
+  `wait_only_active_claims_without_live_process=1`,
+  `stale_safe_takeover_candidates=0`, `promotion_allowed_true=0`, and
+  `trade_usable_true=0`;
+- release child: `status=needs_fix`, unresolved
+  `worktree_clean_for_release` and `remote_readback`;
+- verification: `test_objective_closure_snapshot` passed `10/10`, and
+  `test_factor_claim_terminalization_audit` passed `60/60`.
+
+Loophole found and fixed:
+
+- The prior parent packet lifted only three live runtime roots into
+  `summary.prioritized_next_actions` even when the factor child had four roots,
+  because `objective_closure_snapshot.py` iterated `live_roots[:3]`.
+- This slice removed the cap and expanded regression coverage so all live roots
+  are listed in the parent action queue. The `current6` packet now lists all
+  four live-runtime queue heads.
+
+Fresh wait-only claim classification:
+
+- The one non-live claim is
+  `20260528T012234+0800-codex-tomac-session-window-sweep-reclaim-prep.claim`.
+- It is fresh prep-only staging, not stale debt. Its claim explicitly says not
+  to launch TOMAC/provider/AQ while compact audit reports live runtime, and
+  keeps `promotion_allowed=false`, `trade_usable=false`, `update_goal=false`.
+- Therefore it should be preserved as a current waiting lane, not terminalized
+  by this audit slice.
+
+Requirement verdict updates:
+
+- Evidence-pack coordination: improved but still `partially_proven_but_not_complete`;
+  parent packets now avoid hiding the fourth live root.
+- Practical end-to-end profitability factor: still
+  `contradicted_by_current_state`; no current lane is trade-usable.
+- Completion commit: still `contradicted_by_current_state`; factor closure,
+  done-definition heavy proof, and release readiness are red.
+
+Next correct action:
+
+1. Wait for live roots to terminalize and rerun the coordinated snapshot.
+2. Do not launch or take over the fresh SessionWindowSweepReclaim prep claim.
+3. If a live root terminalizes negative, record terminal evidence and rotate;
+   if one terminalizes positive, prove the full runtime closed loop and release
+   clean-slice gates before commit.
+
+## 2026-05-28 Continuation Now - Action Completeness Check
+
+Latest authoritative packet for this continuation:
+
+- `/tmp/ict-engine-goal-20260528-continuation-now/objective_closure_snapshot.json`
+
+Command:
+
+```bash
+python3 support/scripts/objective_closure_snapshot.py --compact --check-remotes --output-dir /tmp/ict-engine-goal-20260528-continuation-now
+```
+
+Current command truth:
+
+- parent summary: `status=not_complete`, `completion_proven=false`, blockers
+  `done_definition_not_completion_ready`, `factor_closure_blocked`, and
+  `release_readiness_blocked`;
+- done-definition child: `status=pass`, `completion_ready=false`,
+  `evidence_level=partial_skipped_gates`;
+- factor child: `status=needs_attention`, `active_claims=4`,
+  `live_factor_processes=4`, `active_claims_without_live_process=0`,
+  `wait_only_active_claims_without_live_process=0`,
+  `stale_safe_takeover_candidates=0`, `promotion_allowed_true=0`, and
+  `trade_usable_true=0`;
+- release child: `status=needs_fix`, unresolved
+  `worktree_clean_for_release` and `remote_readback`.
+
+Action-completeness finding:
+
+- The current factor child lists four live runtime owners: opening-drive
+  RVOL/VWAP, Donchian continuation, Crabel NR7 intraday expansion, and
+  opening-drive two-leg participation-quality persistence lift.
+- Direct `ps` and terminal-summary inspection show these are live or pending
+  runtime roots, not stale-safe takeover targets. Existing terminal summaries
+  are still `launch_in_progress` or absent.
+- The parent snapshot now lists all four live runtime roots in
+  `summary.prioritized_next_actions`, so future agents can act from the parent
+  packet without missing the fourth live owner.
+- A later pre-commit snapshot at
+  `/tmp/ict-engine-goal-20260528-precommit-snapshot-contract/objective_closure_snapshot.json`
+  showed two fresh wait-only claims in addition to the four live roots. Parent
+  action queues now enumerate all wait-only, stale-safe, and live-runtime
+  factor actions instead of truncating to a single queue head.
+
+Verification just rerun:
+
+- `python3 -m unittest support.scripts.tests.test_objective_closure_snapshot -v`
+  passed `11/11`, including
+  `test_summarize_snapshot_lists_every_live_factor_runtime_action` and
+  `test_summarize_snapshot_lists_every_wait_only_and_stale_factor_action`.
+
+Requirement verdict updates:
+
+- Evidence-pack coordination: stronger but still incomplete; parent action
+  completeness is now regression-covered, but the packet remains red.
+- Practical end-to-end profitability factor: still
+  `contradicted_by_current_state`; `trade_usable_true=0` and no terminal green
+  live root exists.
+- Completion commit: still `contradicted_by_current_state`; release readiness
+  and factor closure are red.

@@ -36,6 +36,7 @@ class ObjectiveClosureSnapshotTest(unittest.TestCase):
         self.assertIn("--run-all-heavy", specs["done_definition"]["argv"])
         self.assertIn("--check-remotes", specs["release_readiness"]["argv"])
         self.assertIn("--output", specs["done_definition"]["argv"])
+        self.assertIn("--portable-paths", specs["factor_closure"]["argv"])
         self.assertTrue(str(specs["factor_closure"]["output_path"]).endswith("factor_claim_terminalization_audit.compact.json"))
 
     def test_summarize_snapshot_marks_blocked_surface_when_child_audits_are_red(self) -> None:
@@ -50,6 +51,7 @@ class ObjectiveClosureSnapshotTest(unittest.TestCase):
             {
                 "status": "needs_fix",
             },
+            snapshot_timestamp="2026-05-27T11:00:10Z",
         )
 
         self.assertEqual(summary["status"], "not_complete")
@@ -58,6 +60,16 @@ class ObjectiveClosureSnapshotTest(unittest.TestCase):
         self.assertIn("done_definition_not_completion_ready", summary["blockers"])
         self.assertIn("factor_closure_blocked", summary["blockers"])
         self.assertIn("release_readiness_blocked", summary["blockers"])
+        self.assertEqual(
+            summary["child_report_timestamps"],
+            {
+                "done_definition": None,
+                "factor_closure": None,
+                "release_readiness": None,
+            },
+        )
+        self.assertEqual(summary["child_report_age_seconds"], {})
+        self.assertEqual(summary["prioritized_next_actions"], [])
 
     def test_summarize_snapshot_keeps_manual_requirement_even_when_child_surfaces_are_green(self) -> None:
         summary = summarize_snapshot(
@@ -71,6 +83,7 @@ class ObjectiveClosureSnapshotTest(unittest.TestCase):
             {
                 "status": "pass",
             },
+            snapshot_timestamp="2026-05-27T11:00:10Z",
         )
 
         self.assertEqual(summary["status"], "surface_green_manual_end_to_end_proof_required")
@@ -78,20 +91,134 @@ class ObjectiveClosureSnapshotTest(unittest.TestCase):
         self.assertFalse(summary["completion_proven"])
         self.assertIn("same_tree_practical_closure_packet", summary["manual_requirements_remaining"])
 
+    def test_summarize_snapshot_lists_every_live_factor_runtime_action(self) -> None:
+        live_roots = [
+            {"pid": 1001, "run_root": "root-a"},
+            {"pid": 1002, "run_root": "root-b"},
+            {"pid": 1003, "run_root": "root-c"},
+            {"pid": 1004, "run_root": "root-d"},
+        ]
+
+        summary = summarize_snapshot(
+            {
+                "completion_ready": False,
+                "quickstart_surface": "pass",
+                "next_action": "rerun heavy gates",
+            },
+            {
+                "status": "needs_attention",
+                "next_action": "wait for live roots",
+                "attention_action_queue": {
+                    "live_runtime_run_roots": live_roots,
+                },
+            },
+            {
+                "status": "pass",
+                "unresolved_next_actions": {},
+            },
+            snapshot_timestamp="2026-05-27T11:00:10Z",
+        )
+
+        live_actions = [
+            action
+            for action in summary["prioritized_next_actions"]
+            if action["surface"] == "factor_closure"
+            and action["reason"] == "live_runtime_queue_head"
+        ]
+
+        self.assertEqual(len(live_actions), 4)
+        self.assertEqual(
+            [action["action"] for action in live_actions],
+            [
+                "wait for pid 1001 run_root root-a to exit or claim it explicitly",
+                "wait for pid 1002 run_root root-b to exit or claim it explicitly",
+                "wait for pid 1003 run_root root-c to exit or claim it explicitly",
+                "wait for pid 1004 run_root root-d to exit or claim it explicitly",
+            ],
+        )
+
+    def test_summarize_snapshot_lists_every_wait_only_and_stale_factor_action(self) -> None:
+        summary = summarize_snapshot(
+            {
+                "completion_ready": False,
+                "quickstart_surface": "pass",
+                "next_action": "rerun heavy gates",
+            },
+            {
+                "status": "needs_attention",
+                "next_action": "clear factor claims",
+                "attention_action_queue": {
+                    "externalize_wait_only_claims": [
+                        {"claim_file": "wait-a.claim"},
+                        {"claim_file": "wait-b.claim"},
+                    ],
+                    "stale_safe_takeover_claims": [
+                        {"claim_file": "stale-a.claim"},
+                        {"claim_file": "stale-b.claim"},
+                    ],
+                },
+            },
+            {
+                "status": "pass",
+                "unresolved_next_actions": {},
+            },
+            snapshot_timestamp="2026-05-27T11:00:10Z",
+        )
+
+        factor_actions = [
+            action
+            for action in summary["prioritized_next_actions"]
+            if action["surface"] == "factor_closure"
+        ]
+
+        self.assertIn(
+            {
+                "surface": "factor_closure",
+                "reason": "wait_only_claim_without_live_runtime",
+                "action": "externalize or terminalize wait-a.claim",
+            },
+            factor_actions,
+        )
+        self.assertIn(
+            {
+                "surface": "factor_closure",
+                "reason": "wait_only_claim_without_live_runtime",
+                "action": "externalize or terminalize wait-b.claim",
+            },
+            factor_actions,
+        )
+        self.assertIn(
+            {
+                "surface": "factor_closure",
+                "reason": "stale_safe_takeover_queue_head",
+                "action": "review takeover ownership of stale-a.claim",
+            },
+            factor_actions,
+        )
+        self.assertIn(
+            {
+                "surface": "factor_closure",
+                "reason": "stale_safe_takeover_queue_head",
+                "action": "review takeover ownership of stale-b.claim",
+            },
+            factor_actions,
+        )
+
     def test_build_snapshot_emits_quickstart_chain_and_evidence_files(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             output_dir = Path(tmp)
             audit_results = {
                 "done_definition": {
-                "command": {"argv": ["done"], "returncode": 0},
-                "report": {
-                    "timestamp_utc": "2026-05-27T11:00:00Z",
-                    "summary": {
-                        "status": "pass",
-                        "completion_ready": False,
-                        "evidence_level": "partial_skipped_gates",
+                    "command": {"argv": ["done"], "returncode": 0},
+                    "report": {
+                        "timestamp_utc": "2026-05-27T11:00:00Z",
+                        "summary": {
+                            "status": "pass",
+                            "completion_ready": False,
+                            "evidence_level": "partial_skipped_gates",
                             "unresolved": [],
                             "skipped_gates": ["cargo_test"],
+                            "next_action": "rerun with --run-all-heavy before treating done-definition as completion proof",
                         },
                         "gates": [{"id": "quickstart_surface", "status": "pass"}],
                     },
@@ -106,6 +233,9 @@ class ObjectiveClosureSnapshotTest(unittest.TestCase):
                         "active_claims": 10,
                         "invalid_active_claims": 0,
                         "live_factor_processes": 2,
+                        "active_claims_without_live_process": 8,
+                        "wait_only_active_claims_without_live_process": 3,
+                        "stale_safe_takeover_candidates": 7,
                         "blocking_reasons": ["active_claims", "live_factor_processes"],
                         "promotion_allowed_true": 0,
                         "trade_usable_true": 0,
@@ -113,7 +243,62 @@ class ObjectiveClosureSnapshotTest(unittest.TestCase):
                     },
                     "attention_claim_count": 10,
                     "attention_live_process_count": 2,
-                    "attention_groups": {"by_owner": {"codex": 10}},
+                    "attention_groups": {
+                        "by_owner": {"codex": 10},
+                        "by_actionability": {
+                            "active_claim_debt": 1,
+                            "live_runtime_owner": 2,
+                            "stale_safe_takeover_candidate": 7,
+                        },
+                    },
+                    "attention_action_queue": {
+                        "externalize_wait_only_claims": [
+                            {
+                                "claim_file": "wait-only.claim",
+                                "age_minutes": 88,
+                                "stale_safe_takeover_candidate": True,
+                            },
+                            {
+                                "claim_file": "second-wait-only.claim",
+                                "age_minutes": 34,
+                                "stale_safe_takeover_candidate": False,
+                            }
+                        ],
+                        "stale_safe_takeover_claims": [
+                            {
+                                "claim_file": "stale.claim",
+                                "age_minutes": 120,
+                                "wait_only_without_live_process": False,
+                            },
+                            {
+                                "claim_file": "second-stale.claim",
+                                "age_minutes": 95,
+                                "wait_only_without_live_process": False,
+                            }
+                        ],
+                        "live_runtime_run_roots": [
+                            {
+                                "pid": 4321,
+                                "run_root": "ict-engine-live-root",
+                                "exit_file_state": "none",
+                            },
+                            {
+                                "pid": 9876,
+                                "run_root": "ict-engine-second-live-root",
+                                "exit_file_state": "present",
+                            },
+                            {
+                                "pid": 2468,
+                                "run_root": "ict-engine-third-live-root",
+                                "exit_file_state": "stale_for_process",
+                            },
+                            {
+                                "pid": 1357,
+                                "run_root": "ict-engine-fourth-live-root",
+                                "exit_file_state": "present",
+                            }
+                        ],
+                    },
                 },
                 "output_path": output_dir / "factor_claim_terminalization_audit.compact.json",
             },
@@ -127,7 +312,23 @@ class ObjectiveClosureSnapshotTest(unittest.TestCase):
                             "pass_count": 2,
                             "fail_count": 2,
                             "skip_count": 1,
-                        }
+                        },
+                        "gates": [
+                            {
+                                "id": "worktree_clean_for_release",
+                                "status": "fail",
+                                "details": {
+                                    "next_action": "commit or exclude a narrow source slice, then build release evidence from a clean sanitized export",
+                                },
+                            },
+                            {
+                                "id": "remote_readback",
+                                "status": "fail",
+                                "details": {
+                                    "next_action": "restore release mirror git/network/auth readback, or rerun from a network that can reach the release mirror, then rerun release readiness audit with --check-remotes",
+                                },
+                            },
+                        ],
                     },
                     "output_path": output_dir / "release_readiness_audit.compact.json",
                 },
@@ -142,15 +343,33 @@ class ObjectiveClosureSnapshotTest(unittest.TestCase):
 
         self.assertEqual(snapshot["schema_version"], "objective-closure-snapshot/v1")
         self.assertEqual(snapshot["quickstart_chain"], QUICKSTART_CHAIN)
+        self.assertEqual(snapshot["repo_root"], "ict-engine")
+        self.assertEqual(snapshot["options"]["output_dir"], ".")
         self.assertEqual(
             snapshot["evidence_files"]["done_definition"],
-            str(output_dir / "done_definition_audit.compact.json"),
+            "done_definition_audit.compact.json",
         )
         self.assertEqual(
             snapshot["audits"]["done_definition"]["surface"]["report_timestamp"],
             "2026-05-27T11:00:00Z",
         )
+        self.assertEqual(
+            snapshot["audits"]["done_definition"]["surface"]["next_action"],
+            "rerun with --run-all-heavy before treating done-definition as completion proof",
+        )
         self.assertEqual(snapshot["audits"]["factor_closure"]["surface"]["live_factor_processes"], 2)
+        self.assertEqual(
+            snapshot["audits"]["factor_closure"]["surface"]["active_claims_without_live_process"],
+            8,
+        )
+        self.assertEqual(
+            snapshot["audits"]["factor_closure"]["surface"]["wait_only_active_claims_without_live_process"],
+            3,
+        )
+        self.assertEqual(
+            snapshot["audits"]["factor_closure"]["surface"]["stale_safe_takeover_candidates"],
+            7,
+        )
         self.assertEqual(
             snapshot["audits"]["factor_closure"]["surface"]["blocking_reasons"],
             ["active_claims", "live_factor_processes"],
@@ -160,10 +379,170 @@ class ObjectiveClosureSnapshotTest(unittest.TestCase):
             {"codex": 10},
         )
         self.assertEqual(
+            snapshot["audits"]["factor_closure"]["surface"]["attention_by_actionability"],
+            {
+                "active_claim_debt": 1,
+                "live_runtime_owner": 2,
+                "stale_safe_takeover_candidate": 7,
+            },
+        )
+        self.assertEqual(
+            snapshot["audits"]["factor_closure"]["surface"]["attention_action_queue"],
+            {
+                "externalize_wait_only_claims": [
+                    {
+                        "claim_file": "wait-only.claim",
+                        "age_minutes": 88,
+                        "stale_safe_takeover_candidate": True,
+                    },
+                    {
+                        "claim_file": "second-wait-only.claim",
+                        "age_minutes": 34,
+                        "stale_safe_takeover_candidate": False,
+                    }
+                ],
+                "stale_safe_takeover_claims": [
+                    {
+                        "claim_file": "stale.claim",
+                        "age_minutes": 120,
+                        "wait_only_without_live_process": False,
+                    },
+                    {
+                        "claim_file": "second-stale.claim",
+                        "age_minutes": 95,
+                        "wait_only_without_live_process": False,
+                    }
+                ],
+                "live_runtime_run_roots": [
+                    {
+                        "pid": 4321,
+                        "run_root": "ict-engine-live-root",
+                        "exit_file_state": "none",
+                    },
+                    {
+                        "pid": 9876,
+                        "run_root": "ict-engine-second-live-root",
+                        "exit_file_state": "present",
+                    },
+                    {
+                        "pid": 2468,
+                        "run_root": "ict-engine-third-live-root",
+                        "exit_file_state": "stale_for_process",
+                    },
+                    {
+                        "pid": 1357,
+                        "run_root": "ict-engine-fourth-live-root",
+                        "exit_file_state": "present",
+                    }
+                ],
+            },
+        )
+        self.assertEqual(
             snapshot["audits"]["release_readiness"]["surface"]["report_timestamp"],
             "2026-05-27T11:00:02Z",
         )
+        self.assertEqual(
+            snapshot["audits"]["release_readiness"]["surface"]["unresolved_next_actions"],
+            {
+                "worktree_clean_for_release": "commit or exclude a narrow source slice, then build release evidence from a clean sanitized export",
+                "remote_readback": "restore release mirror git/network/auth readback, or rerun from a network that can reach the release mirror, then rerun release readiness audit with --check-remotes",
+            },
+        )
         self.assertEqual(snapshot["summary"]["status"], "not_complete")
+        self.assertEqual(
+            snapshot["summary"]["child_next_actions"],
+            {
+                "done_definition": "rerun with --run-all-heavy before treating done-definition as completion proof",
+                "factor_closure": "wait",
+                "release_readiness": {
+                    "worktree_clean_for_release": "commit or exclude a narrow source slice, then build release evidence from a clean sanitized export",
+                    "remote_readback": "restore release mirror git/network/auth readback, or rerun from a network that can reach the release mirror, then rerun release readiness audit with --check-remotes",
+                },
+            },
+        )
+        self.assertEqual(
+            snapshot["summary"]["child_report_timestamps"],
+            {
+                "done_definition": "2026-05-27T11:00:00Z",
+                "factor_closure": "2026-05-27T11:00:01+00:00",
+                "release_readiness": "2026-05-27T11:00:02Z",
+            },
+        )
+        self.assertEqual(
+            sorted(snapshot["summary"]["child_report_age_seconds"].keys()),
+            ["done_definition", "factor_closure", "release_readiness"],
+        )
+        self.assertTrue(
+            all(
+                isinstance(value, int) and value >= 0
+                for value in snapshot["summary"]["child_report_age_seconds"].values()
+            )
+        )
+        self.assertEqual(
+            snapshot["summary"]["prioritized_next_actions"],
+            [
+                {
+                    "surface": "done_definition",
+                    "reason": "completion_proof_gap",
+                    "action": "rerun with --run-all-heavy before treating done-definition as completion proof",
+                },
+                {
+                    "surface": "factor_closure",
+                    "reason": "wait_only_claim_without_live_runtime",
+                    "action": "externalize or terminalize wait-only.claim",
+                },
+                {
+                    "surface": "factor_closure",
+                    "reason": "wait_only_claim_without_live_runtime",
+                    "action": "externalize or terminalize second-wait-only.claim",
+                },
+                {
+                    "surface": "factor_closure",
+                    "reason": "stale_safe_takeover_queue_head",
+                    "action": "review takeover ownership of stale.claim",
+                },
+                {
+                    "surface": "factor_closure",
+                    "reason": "stale_safe_takeover_queue_head",
+                    "action": "review takeover ownership of second-stale.claim",
+                },
+                {
+                    "surface": "factor_closure",
+                    "reason": "live_runtime_queue_head",
+                    "action": "wait for pid 4321 run_root ict-engine-live-root to exit or claim it explicitly",
+                },
+                {
+                    "surface": "factor_closure",
+                    "reason": "live_runtime_queue_head",
+                    "action": "wait for pid 9876 run_root ict-engine-second-live-root to exit or claim it explicitly",
+                },
+                {
+                    "surface": "factor_closure",
+                    "reason": "live_runtime_queue_head",
+                    "action": "wait for pid 2468 run_root ict-engine-third-live-root to exit or claim it explicitly",
+                },
+                {
+                    "surface": "factor_closure",
+                    "reason": "live_runtime_queue_head",
+                    "action": "wait for pid 1357 run_root ict-engine-fourth-live-root to exit or claim it explicitly",
+                },
+                {
+                    "surface": "factor_closure",
+                    "reason": "practical_closure_blocked",
+                    "action": "wait",
+                },
+                {
+                    "surface": "release_readiness",
+                    "reason": "worktree_clean_for_release",
+                    "action": "commit or exclude a narrow source slice, then build release evidence from a clean sanitized export",
+                },
+                {
+                    "surface": "release_readiness",
+                    "reason": "remote_readback",
+                    "action": "restore release mirror git/network/auth readback, or rerun from a network that can reach the release mirror, then rerun release readiness audit with --check-remotes",
+                },
+            ],
+        )
 
     def test_format_report_compact_emits_single_line_json(self) -> None:
         text = format_report({"summary": {"status": "not_complete"}}, compact=True)
@@ -199,7 +578,7 @@ class ObjectiveClosureSnapshotTest(unittest.TestCase):
             report = build_failure_report(
                 failed_audit="done_definition",
                 error="missing_json_output",
-                command_result={"argv": ["done"], "error": "timeout"},
+                command_result={"argv": [str(output_dir / "done.py")], "error": "timeout"},
                 run_all_heavy=True,
                 check_remotes=True,
                 output_dir=output_dir,
@@ -210,3 +589,83 @@ class ObjectiveClosureSnapshotTest(unittest.TestCase):
         self.assertEqual(saved["summary"]["status"], "snapshot_failed")
         self.assertEqual(saved["summary"]["failed_audit"], "done_definition")
         self.assertEqual(saved["options"]["run_all_heavy"], True)
+        self.assertEqual(saved["repo_root"], "ict-engine")
+        self.assertEqual(saved["options"]["output_dir"], ".")
+        self.assertEqual(saved["command"]["argv"], ["done.py"])
+
+    def test_build_snapshot_rewrites_absolute_script_and_child_paths_for_packet_portability(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp)
+            audit_results = {
+                "done_definition": {
+                    "command": {
+                        "argv": [sys.executable, str(SCRIPTS_ROOT / "done_definition_audit.py"), "--compact"],
+                        "returncode": 0,
+                    },
+                    "report": {
+                        "timestamp_utc": "2026-05-27T11:00:00Z",
+                        "summary": {
+                            "status": "pass",
+                            "completion_ready": True,
+                            "evidence_level": "full_enabled_gate_coverage",
+                            "unresolved": [],
+                            "skipped_gates": [],
+                        },
+                        "gates": [{"id": "quickstart_surface", "status": "pass"}],
+                    },
+                    "output_path": output_dir / "done_definition_audit.compact.json",
+                },
+                "factor_closure": {
+                    "command": {
+                        "argv": [sys.executable, str(SCRIPTS_ROOT / "factor_claim_terminalization_audit.py"), "--compact"],
+                        "returncode": 0,
+                    },
+                    "report": {
+                        "generated_at": "2026-05-27T11:00:01+00:00",
+                        "summary": {
+                            "status": "pass",
+                            "active_claims": 0,
+                            "invalid_active_claims": 0,
+                            "live_factor_processes": 0,
+                            "blocking_reasons": [],
+                            "promotion_allowed_true": 0,
+                            "trade_usable_true": 0,
+                            "next_action": "none",
+                        },
+                        "attention_claim_count": 0,
+                        "attention_live_process_count": 0,
+                        "attention_groups": {"by_owner": {}},
+                    },
+                    "output_path": output_dir / "factor_claim_terminalization_audit.compact.json",
+                },
+                "release_readiness": {
+                    "command": {
+                        "argv": [sys.executable, str(SCRIPTS_ROOT / "release_readiness_audit.py"), "--compact"],
+                        "returncode": 0,
+                    },
+                    "report": {
+                        "timestamp_utc": "2026-05-27T11:00:02Z",
+                        "summary": {
+                            "status": "pass",
+                            "unresolved": [],
+                            "pass_count": 3,
+                            "fail_count": 0,
+                            "skip_count": 0,
+                        }
+                    },
+                    "output_path": output_dir / "release_readiness_audit.compact.json",
+                },
+            }
+
+            snapshot = build_snapshot(
+                audit_results,
+                run_all_heavy=False,
+                check_remotes=False,
+                output_dir=output_dir,
+            )
+
+        self.assertEqual(snapshot["audit_commands"]["done_definition"][1], "support/scripts/done_definition_audit.py")
+        self.assertEqual(snapshot["audit_commands"]["factor_closure"][1], "support/scripts/factor_claim_terminalization_audit.py")
+        self.assertEqual(snapshot["audit_commands"]["release_readiness"][1], "support/scripts/release_readiness_audit.py")
+        self.assertEqual(snapshot["audit_commands"]["done_definition"][0], "python3")
+        self.assertEqual(snapshot["evidence_files"]["release_readiness"], "release_readiness_audit.compact.json")

@@ -745,3 +745,91 @@ Earlier same-day runtime smoke (not rerun in this continuation):
   `/tmp/ict-engine-goal-20260528-factor-staleexit-check.json` showed the WPR
   root as `stale_for_process`, preventing stale failed artifacts from being
   mistaken for current terminal truth.
+- 2026-05-28: refreshed the coordinated snapshot at
+  `/tmp/ict-engine-goal-20260528-codex-refresh-current2/objective_closure_snapshot.json`.
+  The objective remains `not_complete`: done-definition is only light-green
+  with `completion_ready=false`, factor closure is blocked by one fresh
+  wait-only prep claim, and release readiness still fails
+  `worktree_clean_for_release` plus `remote_readback`. The factor child now
+  reports `active_claims=1`, `live_factor_processes=0`,
+  `active_claims_without_live_process=1`,
+  `wait_only_active_claims_without_live_process=1`,
+  `promotion_allowed_true=0`, and `trade_usable_true=0`. The remaining claim is
+  `/tmp/ict-engine-agent-claims/board-b-factor-refinement/20260528T011147+0800-codex-tomac-donchian-continuation-prep.claim`,
+  created at `2026-05-28T01:11:47+0800` as prep-only staging; it is too fresh
+  to take over or terminalize from this audit slice. Release readback remains
+  blocked by `Connection closed by 198.18.0.190 port 22` for both origin and the
+  release mirror. Focused regressions still pass:
+  `test_objective_closure_snapshot` passed `9/9` and
+  `test_factor_claim_terminalization_audit` passed `60/60`.
+- 2026-05-28: refreshed again at
+  `/tmp/ict-engine-goal-20260528-codex-refresh-current4/objective_closure_snapshot.json`
+  after process drift. The objective is still `not_complete`, but the factor
+  blocker shape changed from one wait-only prep claim to live runtime
+  ownership: `active_claims=4`, `live_factor_processes=4`,
+  `active_claims_without_live_process=0`,
+  `wait_only_active_claims_without_live_process=0`,
+  `stale_safe_takeover_candidates=0`, `promotion_allowed_true=0`, and
+  `trade_usable_true=0`. The transient Crabel NR7 `active_claim_debt` row from
+  the prior packet gained a live AQ child under the same root and is now
+  correctly classified as `live_runtime_owner`; no cleanup/takeover is safe.
+  Release readiness remains red on `worktree_clean_for_release` and
+  `remote_readback`, so a completion commit is still explicitly contradicted by
+  current evidence.
+- 2026-05-28: found and fixed an evidence-pack coordination loophole in
+  `support/scripts/objective_closure_snapshot.py`: parent
+  `summary.prioritized_next_actions` lifted only `live_roots[:3]`, so a packet
+  with four live runtime roots could still require nested factor-child reading
+  to see the fourth wait surface. The cap is now removed and
+  `support/scripts/tests/test_objective_closure_snapshot.py` covers four live
+  roots. Verification passed:
+  `python3 -m unittest support.scripts.tests.test_objective_closure_snapshot -v`
+  (`10/10`) and
+  `python3 -m unittest support.scripts.tests.test_factor_claim_terminalization_audit -v`
+  (`60/60`). Fresh packet
+  `/tmp/ict-engine-goal-20260528-codex-refresh-current6/objective_closure_snapshot.json`
+  remains `not_complete`, but now lists all four live runtime queue heads in
+  the parent summary. Factor closure is still red with `active_claims=5`,
+  `live_factor_processes=4`, `promotion_allowed_true=0`, and
+  `trade_usable_true=0`; the new wait-only claim is fresh prep-only
+  `20260528T012234+0800-codex-tomac-session-window-sweep-reclaim-prep.claim`,
+  not stale cleanup debt.
+- 2026-05-28: after the stale-exit fix commit, a standalone compact audit
+  briefly reported `active_claims=0` and `live_factor_processes=0`, but that
+  zero-claim readback was not durable enough for a completion claim. The fresh
+  coordinated snapshot at
+  `/tmp/ict-engine-goal-20260528-current-refresh/objective_closure_snapshot.json`
+  still reports `summary.status=not_complete` with
+  `done_definition_not_completion_ready`, `factor_closure_blocked`, and
+  `release_readiness_blocked`; its factor child saw a new live owner for
+  `ict-engine-tomac-opening-drive-rvol-vwap-continuation-practical-20260528T011341+0800`
+  (`pid=47989`) and kept `promotion_allowed_true=0` /
+  `trade_usable_true=0`.
+- 2026-05-28: one-minute live-owner poll at
+  `/tmp/ict-engine-goal-20260528-after-poll.json` showed the Board B surface
+  mutating further to `active_claims=4`, `live_factor_processes=5`,
+  `active_claims_without_live_process=0`, and
+  `wait_only_active_claims_without_live_process=0`. All active attention claims
+  are current live runtime owners, not stale-safe takeover candidates, and the
+  practical flags remain `promotion_allowed_true=0` / `trade_usable_true=0`.
+  Therefore the current correct conclusion is still wait/recheck, not takeover,
+  terminalization, or completion.
+- 2026-05-28: current continuation snapshot at
+  `/tmp/ict-engine-goal-20260528-continuation-now/objective_closure_snapshot.json`
+  still reports `not_complete`. Factor closure is blocked by four active live
+  runtime owners: opening-drive RVOL/VWAP (`pid=47989`), Donchian continuation
+  (`pid=48896`), Crabel NR7 intraday expansion (`pid=50505`), and opening-drive
+  two-leg participation-quality persistence lift (`pid=51930`). All remain
+  `promotion_allowed_true=0` / `trade_usable_true=0`; their terminal summaries
+  are still `launch_in_progress` or absent, so none can be terminalized from
+  this audit slice. The parent snapshot now carries every live runtime root as
+  a `prioritized_next_actions` entry. A later pre-commit snapshot at
+  `/tmp/ict-engine-goal-20260528-precommit-snapshot-contract/objective_closure_snapshot.json`
+  showed two fresh wait-only claims in addition to the four live roots; parent
+  action queues now enumerate all wait-only, stale-safe, and live-runtime
+  factor actions instead of truncating to a queue head. Regressions
+  `test_summarize_snapshot_lists_every_live_factor_runtime_action` and
+  `test_summarize_snapshot_lists_every_wait_only_and_stale_factor_action` lock
+  this evidence-coordination contract. Verification:
+  `python3 -m unittest support.scripts.tests.test_objective_closure_snapshot -v`
+  passed `11/11`.
