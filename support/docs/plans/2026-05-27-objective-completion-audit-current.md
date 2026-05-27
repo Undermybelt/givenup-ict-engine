@@ -22,10 +22,9 @@ Status: `not proven / not complete`
 Reason:
 
 1. Board B ownership is still crowded. `python3 support/scripts/factor_claim_terminalization_audit.py --compact`
-   now reports `active_claims=13`, `live_factor_processes=2`,
-   `status=needs_attention`, and `next_action=terminalize or externalize active
-   claims; wait for live factor processes to exit or claim them before
-   closure`.
+   now reports `active_claims=4`, `invalid_active_claims=0`,
+   `live_factor_processes=0`, `status=needs_attention`, and
+   `next_action=terminalize or externalize active claims`.
 2. The authoritative release/closed-loop handoff
    `support/docs/plans/2026-05-12-hotplug-personal-data-release-handoff-todo.md`
    still records multiple `blocked` rows stating release/objective completion is
@@ -90,7 +89,7 @@ The objective is only complete if current evidence proves all of the following:
   - identify which links are proven only by historical packets and which are
     missing on the current tree.
 
-### V-002: current tree still has broad unverified changes in objective-related owners
+### V-002: current tree still has broad partially verified changes in objective-related owners
 
 - Severity: high
 - Evidence:
@@ -98,13 +97,16 @@ The objective is only complete if current evidence proves all of the following:
   - `src/application/orchestration/structural_playbook.rs`
   - multiple `support/scripts/auto_quant_external/*`
   - multiple `support/scripts/research/*`
+  - focused suites now pass for `release_readiness_audit.py`,
+    `factor_candidate_pack.py`, and `factor_candidate_resolver.py`, but the
+    broader dirty-tree surface is still much larger than the rerun set.
 - Risk:
-  - new branch-path canonicalization or helper changes could fix one mismatch
-    while creating another, and there is no fresh verification bundle yet.
+  - verified hotspots are narrower now, but unrerun dirty owners can still hide
+    branch-path, provider, or training-surface regressions.
 - Next:
-  - inspect these diffs against the lifecycle contract;
-  - run focused tests on each touched owner before treating the dirty tree as a
-    valid baseline.
+  - keep shrinking the unverified owner set;
+  - do not treat the broad dirty tree as a valid completion baseline until the
+    exact end-to-end chain is re-proved from a selected source slice.
 
 ### V-003: closed-loop proof is fragmented across older packets rather than re-proved on the current tree
 
@@ -169,13 +171,14 @@ The objective is only complete if current evidence proves all of the following:
 
 - Severity: medium
 - Evidence:
-  - older tracker text still named unresolved
-    `source_origin_matches_selected_source` and
-    `release_version_tag_available`;
+  - older tracker text named unresolved `remote_readback`;
   - fresh
     `python3 support/scripts/release_readiness_audit.py --compact --check-remotes`
-    now reports unresolved `worktree_clean_for_release` and `remote_readback`,
-    with `release_version_tag_available` skipped behind that remote gate.
+    now reports unresolved `worktree_clean_for_release`,
+    `source_origin_matches_selected_source`, and
+    `release_version_tag_available`;
+  - the latest readback also reports `source_ahead_of_origin=42` and
+    `Cargo.toml version=0.1.7` colliding with existing release tag `v0.1.7`.
 - Risk:
   - repeating stale blocker names can send the next turn to the wrong fix lane
     and overstate what is actually knowable from the current network state.
@@ -184,15 +187,15 @@ The objective is only complete if current evidence proves all of the following:
   - treat release claims as blocked by dirty worktree plus remote readback until
     the exact gate output changes again.
 
-### V-007: factor-closure evidence is time-variant and already worsened during this audit
+### V-007: factor-closure evidence is time-variant within the same audit day
 
 - Severity: medium
 - Evidence:
   - the earlier 2026-05-27 factor packet reported `active_claims=10`,
     `live_factor_processes=0`;
-  - the fresh rerun now reports `active_claims=13`,
-    `live_factor_processes=2`, `blocking_reasons=["active_claims",
-    "live_factor_processes"]`.
+  - the latest rerun now reports `active_claims=4`,
+    `invalid_active_claims=0`, `live_factor_processes=0`,
+    `blocking_reasons=["active_claims"]`.
 - Risk:
   - completion language based on stale same-day packets is not reliable even
     within one audit session; factor closure can regress while docs still look
@@ -201,6 +204,80 @@ The objective is only complete if current evidence proves all of the following:
   - quote fresh factor audit output in the active tracker;
   - if a stronger factor-completion claim is ever attempted, require same-turn
     rerun evidence rather than cached `/tmp` artifacts from earlier in the day.
+- Current concurrency readback:
+  - the latest factor audit no longer shows a live factor process or invalid
+    active claim surface;
+  - closure is still blocked because `attention_claim_count=4` remains nonzero,
+    so the repo still lacks a clean same-turn factor-closure surface.
+
+### V-011: reusable strategy-library provenance was still leaking caller-local path assumptions
+
+- Severity: medium
+- Evidence:
+  - `support/scripts/research/factor_candidate_pack.py` previously recorded
+    `metadata.source_artifact=str(zip_path)` when converting a `freqtrade`
+    backtest zip into strategy-library evidence;
+  - absolute caller-local zip inputs therefore embedded workstation-specific
+    paths into exported evidence assets;
+  - the strategy-library projection dropped `source_artifact`, weakening
+    provenance while still leaving the lower-layer leak unaddressed.
+- Risk:
+  - clone users can receive supposedly reusable evidence that still encodes a
+    maintainer-local path contract;
+  - provenance becomes less trustworthy because the unsafe lower-layer field is
+    present but not consistently projected.
+- Next:
+  - keep the new portable-provenance regressions in the focused verification
+    set;
+  - continue checking other evidence/export surfaces for absolute-path leakage
+    before any clone-portability completion claim.
+- Current readback:
+  - the builder now normalizes absolute zip inputs to portable
+    `metadata.source_artifact="backtest.zip"` and preserves the same field in
+    emitted strategy-library manifests;
+  - focused suites
+    `support.scripts.research.tests.test_factor_candidate_pack` and
+    `support.scripts.research.tests.test_factor_candidate_resolver` now pass
+    `34` tests.
+
+### V-010: current-turn heavy done-definition proof can lag behind blocker drift
+
+- Severity: low
+- Evidence:
+  - `done_definition_audit.py --compact` finished immediately in this
+    continuation;
+  - `done_definition_audit.py --run-all-heavy --compact` lagged behind the
+    latest factor/release blocker polls before eventually landing green at
+    `/tmp/ict-engine-goal-20260527-done-heavy-live.json` with
+    `completion_ready=true`, `evidence_level=full_enabled_gate_coverage`,
+    `pass_count=8`, `fail_count=0`.
+- Risk:
+  - a mixed proof bundle can accidentally combine stale heavy green evidence
+    with newer factor/release blocker truth and overstate how much of the
+    closure chain was proved in the same instant.
+- Next:
+  - keep light and heavy proof timestamps explicit;
+  - keep distinguishing the green done-definition bundle from the still-red
+    factor/release blockers rather than collapsing them into one completion
+    verdict.
+
+### V-009: one tracker test selector had already drifted away from the current tree
+
+- Severity: low
+- Evidence:
+  - the tracker previously named
+    `cargo test --quiet ranker_target_export_canonicalizes_provenance_prefixed_branch_paths -- --nocapture`;
+  - on the current tree that selector matches zero tests;
+  - the exact current test is
+    `cargo test --quiet ranker_target_export_preserves_exact_provenance_prefixed_branch_paths -- --nocapture`,
+    which passes.
+- Risk:
+  - a stale selector can create a false impression that current branch-path
+    protection was re-proved when the command actually exercised nothing.
+- Next:
+  - keep the exact current test names in the tracker;
+  - treat zero-test filtered runs as weak evidence that must be corrected before
+    any completion claim.
 
 ### V-008: candidate-pack selection surfaces were still optimizing statistical attractiveness ahead of post-friction learnability
 
@@ -230,12 +307,13 @@ The objective is only complete if current evidence proves all of the following:
     `learning_admission_status` and
     `long_run_expectancy_after_declared_friction`, with fallback compatibility
     for older curated packs that lack lifecycle fields.
-  - latest readback also shows the curated pack pool is still stale: the
-    current `--list-buildable` surface reports every reusable
-    `candidate_pack_dir` entry as `learning_admission_status=unknown_legacy_pack`
-    with `profitability_status=legacy_candidate_pack_missing_lifecycle`, which
-    means the default buildable pool still lacks current lifecycle evidence even
-    after the surface fix.
+  - the default `--list-buildable` surface is now fail-closed for training
+    direction: it returns `buildable_count=0`, `legacy_excluded_count=8`, and
+    no default candidates when all reusable packs require synthesized legacy
+    lifecycle readback.
+  - legacy synthesized packs remain inspectable only through explicit opt-in:
+    `--list-buildable --include-legacy-buildable` returns the same `8`
+    inspection-only legacy packs with `surface_freshness=legacy_candidate_pack_synthesized_lifecycle`.
 
 ## Immediate Verification Queue
 
@@ -256,9 +334,15 @@ Rust focused tests:
   -> pass (`1` test)
 - `cargo test --quiet execution_tree_closed_loop_branch_admission_keeps_strict_trend_pullback_wait_for_reversion_observe_only -- --nocapture`
   -> pass (`1` test)
-- `cargo test --quiet ranker_target_export_canonicalizes_provenance_prefixed_branch_paths -- --nocapture`
+- `cargo test --quiet ranker_target_export_preserves_exact_provenance_prefixed_branch_paths -- --nocapture`
+  -> pass (`1` test)
+- `cargo test --quiet target_export_uses_exact_branch_trade_direction_over_snapshot_fallback -- --nocapture`
   -> pass (`1` test)
 - `cargo test --quiet apply_external_scores_matches_provenance_prefixed_rows_from_canonical_branch_input -- --nocapture`
+  -> pass (`1` test)
+- `cargo test --quiet execution_candidate_preserves_trace_branch_path_for_neutral_no_trade -- --nocapture`
+  -> pass (`1` test)
+- `cargo test --quiet execution_candidate_preserves_strict_trend_pullback_trace_path_without_report_branch_path_but_does_not_promote -- --nocapture`
   -> pass (`1` test)
 - `cargo test --quiet strategy_library_import_does_not_promote_practical_gate_from_metadata_flags -- --nocapture`
   -> pass (`1` test)
@@ -276,22 +360,26 @@ Python/support-script focused tests:
 - `python3 -m unittest support.scripts.research.tests.test_factor_candidate_pack -v`
   -> pass (`17/17`)
 - `python3 -m unittest support.scripts.research.tests.test_factor_candidate_resolver -v`
-  -> pass (`9/9`)
+  -> pass (`17/17`)
 
 Current-turn compact audits:
 
 - `python3 support/scripts/done_definition_audit.py --compact --output /tmp/ict-engine-goal-20260527-done-now.json`
   -> pass, but `completion_ready=false` because heavy gates remain skipped by
   default.
-- `python3 support/scripts/factor_claim_terminalization_audit.py --compact --output /tmp/ict-engine-goal-20260527-factor-now.json`
-  -> `status=needs_attention`, `active_claims=13`, `live_factor_processes=2`,
+- `python3 support/scripts/factor_claim_terminalization_audit.py --compact --output /tmp/ict-engine-goal-20260527-factor-now2.json`
+  -> `status=needs_attention`, `active_claims=4`,
+  `invalid_active_claims=0`, `live_factor_processes=0`,
   `promotion_allowed_true=0`, `trade_usable_true=0`.
-- `python3 support/scripts/release_readiness_audit.py --compact --check-remotes --output /tmp/ict-engine-goal-20260527-release-now.json`
+- `python3 support/scripts/release_readiness_audit.py --compact --check-remotes --output /tmp/ict-engine-goal-20260527-release-now2.json`
   -> `status=needs_fix`, unresolved
-  `worktree_clean_for_release`, `remote_readback`; tag availability still
-  skipped behind the remote-readback gate.
+  `worktree_clean_for_release`,
+  `source_origin_matches_selected_source`,
+  `release_version_tag_available`; current readback reports
+  `source_ahead_of_origin=42` and local `Cargo.toml version=0.1.7` colliding
+  with existing release tag `v0.1.7`.
 
-Current-tree runtime smoke:
+Earlier same-day runtime smoke (not rerun in this continuation):
 
 - Run root: `/tmp/ict-engine-objective-audit-now.H99bU1`
 - Commands:
@@ -318,9 +406,11 @@ Current-tree runtime smoke:
   remains `not proven` because end-to-end current-tree completion evidence is
   incomplete.
 - 2026-05-27: fresh factor/release reruns changed the blocker surface again.
-  Factor closure regressed to `active_claims=13`, `live_factor_processes=2`;
-  release closure now fails on `worktree_clean_for_release` plus
-  `remote_readback`, with tag availability skipped behind the remote gate.
+  Factor closure is currently down to `active_claims=4`,
+  `invalid_active_claims=0`, `live_factor_processes=0`; release closure now
+  fails on `worktree_clean_for_release`,
+  `source_origin_matches_selected_source`, and
+  `release_version_tag_available`.
 - 2026-05-27: the current-turn compact reruns still show no promotion surface:
   `done_definition_audit` remains partial without heavy gates,
   `factor_claim_terminalization_audit` still has `promotion_allowed_true=0` and

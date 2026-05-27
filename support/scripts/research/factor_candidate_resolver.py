@@ -41,9 +41,17 @@ def _artifact_path(path: str | Path, repo_root: Path) -> Path:
     return (repo_root / artifact_path).resolve()
 
 
-def _artifact_ref(path: str | Path) -> str:
+def _artifact_ref(path: str | Path, repo_root: Path | None = None) -> str:
     artifact_path = Path(path).expanduser()
-    return str(artifact_path)
+    if artifact_path.is_absolute():
+        if repo_root is not None:
+            repo_root = repo_root.resolve()
+            try:
+                return artifact_path.resolve().relative_to(repo_root).as_posix()
+            except ValueError:
+                pass
+        return artifact_path.name
+    return artifact_path.as_posix()
 
 
 def _load_profiles(repo_root: Path) -> list[dict[str, Any]]:
@@ -177,7 +185,7 @@ def _artifact_plan(candidate: dict[str, Any], repo_root: Path) -> dict[str, Any]
             "artifact_ready": artifact_ready,
             "build_mode": "candidate_pack_dir" if artifact_ready else None,
             "candidate_pack_dir_path": pack_dir,
-            "candidate_pack_dir_ref": _artifact_ref(candidate_pack_dir),
+            "candidate_pack_dir_ref": _artifact_ref(candidate_pack_dir, repo_root),
             "pack_build_reason": (
                 "buildable_from_repo_candidate_pack"
                 if artifact_ready
@@ -298,15 +306,15 @@ def _reusable_input_refs(candidate: dict[str, Any], repo_root: Path) -> list[str
     artifact_source = candidate.get("artifact_source", {})
     candidate_pack_dir = artifact_source.get("candidate_pack_dir")
     if candidate_pack_dir:
-        refs.append(_artifact_ref(candidate_pack_dir))
+        refs.append(_artifact_ref(candidate_pack_dir, repo_root))
     backtest_zip = artifact_source.get("freqtrade_backtest_zip")
     if backtest_zip:
-        refs.append(_artifact_ref(backtest_zip))
+        refs.append(_artifact_ref(backtest_zip, repo_root))
     strategy_library_json = artifact_source.get("strategy_library_json")
     if strategy_library_json:
-        refs.append(_artifact_ref(strategy_library_json))
+        refs.append(_artifact_ref(strategy_library_json, repo_root))
     for benchmark_json in artifact_source.get("regime_benchmark_jsons", []):
-        refs.append(_artifact_ref(benchmark_json))
+        refs.append(_artifact_ref(benchmark_json, repo_root))
     strategy_source = candidate.get("strategy_source")
     if strategy_source:
         refs.append(str(strategy_source))
@@ -560,12 +568,20 @@ def list_buildable_candidates(
     *,
     repo_root: Path,
     candidates: list[dict[str, Any]],
+    include_legacy: bool = False,
 ) -> dict[str, Any]:
-    buildable = [
+    all_buildable = [
         _candidate_list_entry(candidate, repo_root)
         for candidate in candidates
         if candidate["artifact_ready"]
     ]
+    buildable = [
+        candidate
+        for candidate in all_buildable
+        if include_legacy
+        or candidate.get("surface_freshness") != "legacy_candidate_pack_synthesized_lifecycle"
+    ]
+    legacy_excluded_count = len(all_buildable) - len(buildable)
     promotion_ready_count = sum(
         1
         for candidate in buildable
@@ -582,6 +598,7 @@ def list_buildable_candidates(
         "summary": {
             "buildable_count": len(buildable),
             "candidate_count": len(candidates),
+            "legacy_excluded_count": legacy_excluded_count,
             "promotion_ready_count": promotion_ready_count,
             "trade_usable_count": trade_usable_count,
             "inspection_only_count": inspection_only_count,
@@ -601,7 +618,7 @@ def verify_repo_native_pack_contracts(
         candidate_pack_dir = artifact_source.get("candidate_pack_dir")
         if not candidate_pack_dir:
             continue
-        pack_ref = _artifact_ref(candidate_pack_dir)
+        pack_ref = _artifact_ref(candidate_pack_dir, repo_root)
         registered_pack_dirs.setdefault(pack_ref, []).append(candidate["candidate_id"])
 
     packs: list[dict[str, Any]] = []
@@ -795,7 +812,9 @@ def build_candidate_packs(
                 candidate_id=candidate["candidate_id"],
                 artifact_family="factor_candidate_pack",
                 artifact_files=[f"{name}.json" for name in bundle],
-                source_refs={"source_backtest_zip": str(zip_path)},
+                source_refs={
+                    "source_backtest_zip": _artifact_ref(zip_path, repo_root)
+                },
             )
             built.append(
                 {
@@ -804,7 +823,7 @@ def build_candidate_packs(
                     "artifact_family": "factor_candidate_pack",
                     "pack_dir": _output_ref(candidate_dir, output_dir),
                     "pack_manifest_path": _output_ref(manifest_path, output_dir),
-                    "source_backtest_zip": str(zip_path),
+                    "source_backtest_zip": _artifact_ref(zip_path, repo_root),
                     "aggregate_trade_count": bundle["factor_eval_grid_summary"][
                         "trade_density_summary"
                     ]["aggregate_trade_count"],
@@ -828,8 +847,8 @@ def build_candidate_packs(
             continue
 
         if artifact_plan["build_mode"] == "strategy_library_json":
-            manifest_path = artifact_plan["strategy_library_json_path"]
-            manifest = _load_json(manifest_path)
+            source_manifest_path = artifact_plan["strategy_library_json_path"]
+            manifest = _load_json(source_manifest_path)
             artifact_source = candidate.get("artifact_source", {})
             autoresearch_status_path = artifact_source.get("autoresearch_status_json")
             autoresearch_status = (
@@ -851,7 +870,11 @@ def build_candidate_packs(
                 candidate_id=candidate["candidate_id"],
                 artifact_family="factor_candidate_pack",
                 artifact_files=[f"{name}.json" for name in bundle],
-                source_refs={"source_strategy_library_json": str(manifest_path)},
+                source_refs={
+                    "source_strategy_library_json": _artifact_ref(
+                        source_manifest_path, repo_root
+                    )
+                },
             )
             built.append(
                 {
@@ -860,7 +883,9 @@ def build_candidate_packs(
                     "artifact_family": "factor_candidate_pack",
                     "pack_dir": _output_ref(candidate_dir, output_dir),
                     "pack_manifest_path": _output_ref(manifest_path, output_dir),
-                    "source_strategy_library_json": str(manifest_path),
+                    "source_strategy_library_json": _artifact_ref(
+                        source_manifest_path, repo_root
+                    ),
                     "aggregate_trade_count": bundle["factor_eval_grid_summary"][
                         "trade_density_summary"
                     ]["aggregate_trade_count"],
@@ -901,7 +926,8 @@ def build_candidate_packs(
                 artifact_files=[f"{name}.json" for name in bundle],
                 source_refs={
                     "source_benchmark_paths": [
-                        str(path) for path in artifact_plan["regime_benchmark_paths"]
+                        _artifact_ref(path, repo_root)
+                        for path in artifact_plan["regime_benchmark_paths"]
                     ]
                 },
             )
@@ -971,6 +997,11 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         help="Print the repo-local buildable candidate packs without reading historical board docs.",
     )
     parser.add_argument(
+        "--include-legacy-buildable",
+        action="store_true",
+        help="Include legacy candidate-pack surfaces that require synthesized lifecycle readback.",
+    )
+    parser.add_argument(
         "--backfill-pack-manifests",
         action="store_true",
         help="Write pack_manifest.json into repo-native example candidate-pack directories.",
@@ -1020,6 +1051,7 @@ def main(argv: list[str] | None = None) -> int:
         buildable_payload = list_buildable_candidates(
             repo_root=repo_root,
             candidates=registry["candidates"],
+            include_legacy=args.include_legacy_buildable,
         )
         if args.output_format == "human":
             _print_human_buildable_list(buildable_payload)

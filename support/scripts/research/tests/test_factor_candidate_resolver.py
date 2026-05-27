@@ -494,7 +494,7 @@ class FactorCandidateResolverTests(unittest.TestCase):
             else:
                 self.assertIn("regime_primary_gate_pending_v1", skipped)
 
-    def test_list_buildable_candidates_surfaces_curated_pack_metrics(self) -> None:
+    def test_list_buildable_candidates_excludes_legacy_synthesized_packs_by_default(self) -> None:
         registry = resolver.build_candidate_registry(repo_root=REPO_ROOT)
 
         payload = resolver.list_buildable_candidates(
@@ -502,7 +502,24 @@ class FactorCandidateResolverTests(unittest.TestCase):
             candidates=registry["candidates"],
         )
 
+        self.assertEqual(payload["summary"]["buildable_count"], 0)
+        self.assertEqual(payload["summary"]["legacy_excluded_count"], 8)
+        self.assertEqual(payload["summary"]["promotion_ready_count"], 0)
+        self.assertEqual(payload["summary"]["trade_usable_count"], 0)
+        self.assertEqual(payload["summary"]["inspection_only_count"], 0)
+        self.assertEqual(payload["buildable_candidates"], [])
+
+    def test_list_buildable_candidates_can_include_legacy_synthesized_packs_explicitly(self) -> None:
+        registry = resolver.build_candidate_registry(repo_root=REPO_ROOT)
+
+        payload = resolver.list_buildable_candidates(
+            repo_root=REPO_ROOT,
+            candidates=registry["candidates"],
+            include_legacy=True,
+        )
+
         self.assertEqual(payload["summary"]["buildable_count"], 8)
+        self.assertEqual(payload["summary"]["legacy_excluded_count"], 0)
         self.assertEqual(payload["summary"]["promotion_ready_count"], 0)
         self.assertEqual(payload["summary"]["trade_usable_count"], 0)
         self.assertEqual(payload["summary"]["inspection_only_count"], 8)
@@ -826,6 +843,72 @@ class FactorCandidateResolverTests(unittest.TestCase):
                 "buildable_from_reusable_artifact",
             )
 
+    def test_build_candidate_registry_normalizes_absolute_reusable_input_refs(self) -> None:
+        with TemporaryDirectory() as tmpdir:
+            repo_root = Path(tmpdir)
+            (repo_root / "config").mkdir(parents=True, exist_ok=True)
+            artifact_dir = repo_root / "portable"
+            artifact_dir.mkdir(parents=True, exist_ok=True)
+            strategy_library = artifact_dir / "strategy_library.json"
+            strategy_library.write_text(
+                json.dumps(
+                    {
+                        "manifest_version": "1.0",
+                        "timeframe": "15m",
+                        "strategies": [
+                            {
+                                "name": "PortableStrategy",
+                                "status": "ok",
+                                "metadata": {},
+                                "validation_metrics": {
+                                    "sharpe": 0.1,
+                                    "trade_count": 2,
+                                    "profit_factor": 1.1,
+                                    "total_profit_pct": 0.5,
+                                },
+                                "per_pair_metrics": {
+                                    "NQ/USD": {
+                                        "sharpe": 0.1,
+                                        "trade_count": 2,
+                                        "profit_factor": 1.1,
+                                        "total_profit_pct": 0.5,
+                                    }
+                                },
+                            }
+                        ],
+                    }
+                ),
+                encoding="utf-8",
+            )
+            (repo_root / "config" / "factor_candidate_harness_presets.json").write_text(
+                json.dumps(
+                    {
+                        "schema_version": "factor-candidate-harness-presets/v1",
+                        "candidates": [
+                            {
+                                "candidate_id": "portable_strategy_library_candidate",
+                                "display_name": "Portable Strategy Library Candidate",
+                                "artifact_source": {
+                                    "strategy_library_json": str(strategy_library)
+                                },
+                            }
+                        ],
+                    }
+                ),
+                encoding="utf-8",
+            )
+
+            bundle = resolver.build_candidate_registry(repo_root=repo_root)
+
+            candidate = bundle["candidates"][0]
+            self.assertEqual(
+                candidate["reusable_input_refs"],
+                ["portable/strategy_library.json"],
+            )
+            self.assertTrue(
+                all(not ref.startswith("/") for ref in candidate["reusable_input_refs"])
+            )
+
     def test_build_candidate_registry_marks_candidate_pack_dir_without_manifest_unbuildable(self) -> None:
         with TemporaryDirectory() as tmpdir:
             repo_root = Path(tmpdir)
@@ -933,6 +1016,178 @@ class FactorCandidateResolverTests(unittest.TestCase):
             self.assertEqual(
                 expression["strategy_name"],
                 "TomacNQKillzoneBreakout15m",
+            )
+            manifest = json.loads(
+                (
+                    output_dir
+                    / "packs"
+                    / "strategy_library_candidate"
+                    / "pack_manifest.json"
+                ).read_text(encoding="utf-8")
+            )
+            self.assertEqual(
+                manifest["source_refs"]["source_strategy_library_json"],
+                "strategy_library.json",
+            )
+            self.assertEqual(
+                pack_index["built_candidates"][0]["source_strategy_library_json"],
+                "strategy_library.json",
+            )
+            self.assertFalse(
+                manifest["source_refs"]["source_strategy_library_json"].startswith("/")
+            )
+
+    def test_build_candidate_packs_normalizes_absolute_freqtrade_zip_source_ref(self) -> None:
+        backtest_payload = {
+            "strategy": {
+                "PortableZipStrategy": {
+                    "strategy_name": "PortableZipStrategy",
+                    "results_per_pair": [
+                        {
+                            "key": "TOTAL",
+                            "trades": 5,
+                            "profit_factor": 1.4,
+                            "winrate": 0.6,
+                            "sharpe": 1.1,
+                            "total_profit_pct": 3.0,
+                        }
+                    ],
+                    "total_trades": 5,
+                    "wins": 3,
+                    "losses": 2,
+                    "draws": 0,
+                    "timeframe": "15m",
+                }
+            }
+        }
+        with TemporaryDirectory() as tmpdir:
+            root = Path(tmpdir)
+            zip_path = root / "portable-backtest.zip"
+            output_dir = root / "out"
+            import zipfile
+
+            with zipfile.ZipFile(zip_path, "w") as archive:
+                archive.writestr(
+                    "backtest-result.json",
+                    json.dumps(backtest_payload),
+                )
+
+            pack_index = resolver.build_candidate_packs(
+                repo_root=root,
+                output_dir=output_dir,
+                candidates=[
+                    {
+                        "candidate_id": "portable_freqtrade_candidate",
+                        "display_name": "Portable Freqtrade Candidate",
+                        "strategy_name": "PortableZipStrategy",
+                        "artifact_source": {
+                            "freqtrade_backtest_zip": str(zip_path)
+                        },
+                    }
+                ],
+            )
+
+            manifest = json.loads(
+                (
+                    output_dir
+                    / "packs"
+                    / "portable_freqtrade_candidate"
+                    / "pack_manifest.json"
+                ).read_text(encoding="utf-8")
+            )
+            self.assertEqual(
+                manifest["source_refs"]["source_backtest_zip"],
+                "portable-backtest.zip",
+            )
+            self.assertEqual(
+                pack_index["built_candidates"][0]["source_backtest_zip"],
+                "portable-backtest.zip",
+            )
+            self.assertFalse(manifest["source_refs"]["source_backtest_zip"].startswith("/"))
+
+    def test_build_candidate_packs_normalizes_absolute_regime_benchmark_source_refs(self) -> None:
+        nq = {
+            "symbol": "NQ",
+            "base_timeframe": "1d",
+            "bar_count": 4651,
+            "truth_mode": "post_transition_direction",
+            "ranked_results": [
+                {
+                    "name": "trained_family_extra_trees_v1",
+                    "eval_macro_f1": 0.427327,
+                    "eval_covered_precision": 0.433515,
+                    "eval_coverage": 0.393266,
+                    "transition_f1": 0.0,
+                    "resonance_4h": 0.0,
+                    "resonance_1d": 0.0,
+                    "flip_rate": 0.0,
+                }
+            ],
+        }
+        spy = {
+            "symbol": "SPY",
+            "base_timeframe": "1d",
+            "bar_count": 2513,
+            "truth_mode": "post_transition_direction",
+            "ranked_results": [
+                {
+                    "name": "trained_extra_trees_v1",
+                    "eval_macro_f1": 0.449186,
+                    "eval_covered_precision": 0.42623,
+                    "eval_coverage": 0.404509,
+                    "transition_f1": 0.0,
+                    "resonance_4h": 0.0,
+                    "resonance_1d": 0.0,
+                    "flip_rate": 0.0,
+                }
+            ],
+        }
+
+        with TemporaryDirectory() as tmpdir:
+            root = Path(tmpdir)
+            data_dir = root / "portable"
+            data_dir.mkdir(parents=True, exist_ok=True)
+            nq_path = data_dir / "nq.json"
+            spy_path = data_dir / "spy.json"
+            nq_path.write_text(json.dumps(nq), encoding="utf-8")
+            spy_path.write_text(json.dumps(spy), encoding="utf-8")
+            output_dir = root / "out"
+
+            pack_index = resolver.build_candidate_packs(
+                repo_root=root,
+                output_dir=output_dir,
+                candidates=[
+                    {
+                        "candidate_id": "portable_regime_candidate",
+                        "display_name": "Portable Regime Candidate",
+                        "artifact_source": {
+                            "regime_benchmark_jsons": [
+                                str(nq_path),
+                                str(spy_path),
+                            ]
+                        },
+                        "reusable_input_kind": "regime_benchmark_json",
+                    }
+                ],
+            )
+
+            manifest = json.loads(
+                (
+                    output_dir
+                    / "packs"
+                    / "portable_regime_candidate"
+                    / "pack_manifest.json"
+                ).read_text(encoding="utf-8")
+            )
+            self.assertEqual(
+                manifest["source_refs"]["source_benchmark_paths"],
+                ["portable/nq.json", "portable/spy.json"],
+            )
+            self.assertTrue(
+                all(
+                    not ref.startswith("/")
+                    for ref in manifest["source_refs"]["source_benchmark_paths"]
+                )
             )
 
 
