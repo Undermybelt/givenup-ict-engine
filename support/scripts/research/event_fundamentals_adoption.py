@@ -195,7 +195,8 @@ def build_command_set(
         ),
         "auto_quant_adoption_review": (
             f"cargo run --quiet -- auto-quant-adoption-review --symbol {workflow_symbol} "
-            f"--state-dir {shell_quote(state_dir)}"
+            f"--state-dir {shell_quote(state_dir)} "
+            f"--sidecar-handoff {shell_quote(bundle_artifact_name)}"
         ),
     }
 

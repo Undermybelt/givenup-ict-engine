@@ -80,6 +80,7 @@ Status legend: `done`, `active`, `next`, `blocked`, `not_yet`.
 | done | Extend the sidecar lane beyond the minimal smoke pack | Helper now emits compact profile-contract readiness for covered vs missing sidecar contracts, and full four-artifact smoke is verified. |
 | done | Push the sidecar lane one step closer to downstream practicality | Helper now emits compact lag-safety warnings and a downstream handoff summary. |
 | done | Decide the first true consumer of the sidecar handoff | First consumer is now `ict-engine auto-quant-adoption-review --sidecar-handoff <event_fundamentals_adoption_bundle.json>`; it remains explicit, optional, and readback-only. |
+| done | Wire helper-generated AQ review suggestions through the new sidecar review bridge | `event_fundamentals_adoption.py` now emits `auto_quant_adoption_review` suggestions with `--sidecar-handoff event_fundamentals_adoption_bundle.json`, so the first consumer is both implemented and actually surfaced to users. |
 | next | Decide the first non-review runtime consumer of the sidecar handoff | Candidate next step: one downstream runtime surface may opt into this bundle after proving fail-closed semantics and keeping zero-config unchanged. |
 
 ## Verification Checklist
@@ -210,3 +211,12 @@ Status legend: `done`, `active`, `next`, `blocked`, `not_yet`.
     - `cargo test review_surfaces_sidecar_handoff_readiness_when_explicitly_provided -- --nocapture`
     - `cargo test test_cli_auto_quant_setup_commands_use_extracted_args -- --nocapture`
     - `cargo fmt --check`
+  - Helper suggestion closure:
+    - `event_fundamentals_adoption.py` now emits
+      `auto_quant_adoption_review --sidecar-handoff event_fundamentals_adoption_bundle.json`
+      in both the machine bundle and `suggested_commands.sh`
+    - GREEN verification passed:
+      - `python3 -m unittest support/scripts/research/tests/test_event_fundamentals_adoption.py -v`
+        - passed `3` tests
+      - `python3 -m py_compile support/scripts/research/event_fundamentals_adoption.py support/scripts/research/tests/test_event_fundamentals_adoption.py`
+        - passed

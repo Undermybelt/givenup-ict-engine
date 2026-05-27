@@ -280,6 +280,10 @@ Current checkpoint:
   - merged sidecar `usage_warnings` in `notes`;
 - `--human` now prints `sidecar_status=<value|not_provided>` while preserving
   the existing short review summary contract.
+- the helper-side suggestion bridge is now closed too:
+  - `support/scripts/research/event_fundamentals_adoption.py` emits
+    `auto_quant_adoption_review --sidecar-handoff event_fundamentals_adoption_bundle.json`
+    in both bundle suggestions and `suggested_commands.sh`
 
 Explicit boundary:
 - zero-config/default AQ review remains unchanged when `--sidecar-handoff` is
@@ -292,6 +296,8 @@ Planned verification:
 - `cargo test review_surfaces_sidecar_handoff_readiness_when_explicitly_provided -- --nocapture`
 - `cargo test test_cli_auto_quant_setup_commands_use_extracted_args -- --nocapture`
 - `cargo fmt --check`
+- `python3 -m unittest support/scripts/research/tests/test_event_fundamentals_adoption.py -v`
+- `python3 -m py_compile support/scripts/research/event_fundamentals_adoption.py support/scripts/research/tests/test_event_fundamentals_adoption.py`
 
 If clean:
 - stage only the AQ adoption review/readback/docs files for this slice;

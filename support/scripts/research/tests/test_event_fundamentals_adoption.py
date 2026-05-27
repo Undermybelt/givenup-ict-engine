@@ -71,6 +71,10 @@ class EventFundamentalsAdoptionTests(unittest.TestCase):
             "event_fundamentals_adoption_bundle.json",
             bundle["suggested_commands"]["review_sidecars"],
         )
+        self.assertIn(
+            "--sidecar-handoff 'event_fundamentals_adoption_bundle.json'",
+            bundle["suggested_commands"]["auto_quant_adoption_review"],
+        )
 
     def test_main_writes_bundle_and_dual_lane_command_file(self) -> None:
         with TemporaryDirectory() as tmpdir:
@@ -114,6 +118,10 @@ class EventFundamentalsAdoptionTests(unittest.TestCase):
             self.assertIn("workflow-status", shell)
             self.assertIn("review_sidecars", shell)
             self.assertIn("--profile thrill3r-nq-event-fundamentals-v1", shell)
+            self.assertIn(
+                "--sidecar-handoff 'event_fundamentals_adoption_bundle.json'",
+                shell,
+            )
 
     def test_full_artifact_pack_marks_profile_contract_ready(self) -> None:
         bundle = adoption.build_adoption_bundle(
