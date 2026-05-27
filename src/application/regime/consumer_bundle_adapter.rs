@@ -745,17 +745,16 @@ fn strategy_library_branch_rank_key(
 fn strategy_library_branch_context_to_adapter(
     context: &StrategyLibraryBranchContext,
 ) -> RegimeConsumerBundleAdapter {
-    let decision_state = if context.trade_usable && context.promotion_allowed {
-        "accepted"
-    } else {
-        "auto_quant_strategy_library_branch_context"
-    };
+    // Strategy-library imports are advisory branch traces until the current
+    // runtime explicitly revalidates the live plane.
+    let decision_state = "auto_quant_strategy_library_branch_context";
+    let runtime_trade_usable = false;
     RegimeConsumerBundleAdapter {
         status: BundleStatus::Loaded,
         latest_decision: Some(RegimeDecisionSummary {
             timestamp: String::new(),
             decision_state: decision_state.to_string(),
-            trade_usable: context.trade_usable,
+            trade_usable: runtime_trade_usable,
             final_label: format!("primary::{}", context.main_regime),
             label_set: vec![
                 format!("primary::{}", context.main_regime),
@@ -774,7 +773,7 @@ fn strategy_library_branch_context_to_adapter(
             execution_tree_hint: "observe_branch_context".to_string(),
             bbn_evidence_hint: serde_json::json!({
                 "regime_decision_state": decision_state,
-                "regime_trade_usable": context.trade_usable,
+                "regime_trade_usable": runtime_trade_usable,
                 "regime_label": format!("primary::{}", context.main_regime),
                 "regime_label_set": [
                     format!("primary::{}", context.main_regime),
@@ -801,7 +800,7 @@ fn strategy_library_branch_context_to_adapter(
                 "stable_profit_score": context.stable_profit_score
             }),
             user_vrp_nq_context: Value::Null,
-            trade_usable: context.trade_usable,
+            trade_usable: runtime_trade_usable,
         }),
         error: Some(format!(
             "source=auto_quant_strategy_library strategy={}",
@@ -1501,5 +1500,83 @@ mod tests {
             .rationale
             .iter()
             .any(|item| item.contains("regime_bundle_bbn_evidence_promoted_gate_to_pass_hard")));
+    }
+
+    #[test]
+    fn strategy_library_import_does_not_promote_practical_gate_from_metadata_flags() {
+        let manifest: StrategyLibraryManifest = serde_json::from_value(serde_json::json!({
+            "manifest_version": "1.0",
+            "strategies": [{
+                "name": "ImportedButNotRuntimeGranted",
+                "status": "ok",
+                "metadata": {
+                    "main_regime": "TrendExpansion",
+                    "sub_regime": "MomentumPersistence",
+                    "sub_sub_regime_or_profit_factor": "macd_zero_line_reclaim",
+                    "profit_factor": "macd_zero_line_reclaim_long_v1",
+                    "regime_profit_branch_path": "TrendExpansion -> MomentumPersistence -> macd_zero_line_reclaim -> macd_zero_line_reclaim_long_v1",
+                    "promotion_allowed": true,
+                    "trade_usable": true
+                },
+                "validation_metrics": {
+                    "sharpe": 0.6358,
+                    "total_profit_pct": 3.15,
+                    "trade_count": 17,
+                    "win_rate_pct": 58.8235,
+                    "profit_factor": 1.20
+                }
+            }]
+        }))
+        .unwrap();
+
+        let adapter =
+            RegimeConsumerBundleAdapter::from_strategy_library_manifest(&manifest).unwrap();
+        let decision = adapter.latest_decision.as_ref().expect("latest_decision");
+        assert_eq!(
+            decision.decision_state,
+            "auto_quant_strategy_library_branch_context"
+        );
+        assert!(!decision.trade_usable);
+        assert_eq!(
+            adapter
+                .consumer_hints
+                .as_ref()
+                .map(|hints| hints.trade_usable),
+            Some(false)
+        );
+
+        let mut filter = PreBayesEvidenceFilter {
+            policy: PreBayesEvidencePolicy {
+                hard_pass_quality_threshold: 0.75,
+                neutralized_quality_threshold: 0.40,
+                ..PreBayesEvidencePolicy::default()
+            },
+            filtered_market_regime_label: "range".to_string(),
+            filtered_liquidity_context_label: "neutral".to_string(),
+            filtered_factor_alignment: "mixed".to_string(),
+            filtered_factor_uncertainty: "low".to_string(),
+            filtered_multi_timeframe_direction_bias: "bullish".to_string(),
+            filtered_multi_timeframe_resonance_label: "aligned".to_string(),
+            evidence_quality_score: 0.624,
+            gating_status: "pass_neutralized".to_string(),
+            pass_to_bbn: true,
+            uses_soft_evidence: true,
+            evidence_assignments: BTreeMap::from([
+                ("market_regime".to_string(), "range".to_string()),
+                ("liquidity_context".to_string(), "neutral".to_string()),
+                ("factor_alignment".to_string(), "mixed".to_string()),
+                ("factor_uncertainty".to_string(), "low".to_string()),
+            ]),
+            ..PreBayesEvidenceFilter::default()
+        };
+
+        let status = adapter.apply_bbn_soft_evidence_to_pre_bayes_filter(&mut filter, true);
+
+        assert_eq!(status, RegimeBbnEvidenceApplicationStatus::Skipped);
+        assert_eq!(filter.gating_status, "pass_neutralized");
+        assert_eq!(filter.evidence_quality_score, 0.624);
+        assert!(!filter.rationale.iter().any(|item| item.contains(
+            "regime_bundle_bbn_evidence_promoted_gate_to_pass_hard"
+        )));
     }
 }

@@ -123,24 +123,31 @@ The objective is only complete if current evidence proves all of the following:
 
 - Severity: medium
 - Evidence:
-  - `src/application/regime/consumer_bundle_adapter.rs` still maps imported
-    strategy-library metadata into `trade_usable` and `promotion_allowed`
-    carrying hints.
+  - the earlier implementation in
+    `src/application/regime/consumer_bundle_adapter.rs` let imported
+    strategy-library metadata set `decision_state=accepted` and propagate
+    `trade_usable=true` into advisory hints.
 - Risk:
-  - if an upstream manifest ever marks these flags true without the runtime live
-    plane, downstream consumers could over-trust imported metadata.
+  - if an upstream manifest marks practical flags true without runtime live-plane
+    revalidation, downstream consumers can over-trust imported metadata and
+    promote Pre-Bayes/BBN gate quality from an advisory branch trace.
 - Next:
-  - verify whether this path is advisory-only or can affect closed-loop
-    admission/runtime readiness on the current tree;
-  - add or extend a regression if it can taint runtime practical status.
+  - keep the new regression in the focused verification set whenever
+    strategy-library metadata semantics change;
+  - still re-prove that no other advisory import surface can mutate live-plane
+    readiness without current runtime revalidation.
 - Current readback:
   - `load_optional_or_strategy_library()` can source a strategy-library manifest
     when no explicit bundle path is provided, but
-    `strategy_library_branch_context_to_adapter()` tags the path as
-    `auto_quant_strategy_library_branch_context`, sets
-    `execution_tree_hint=observe_branch_context`, and does not directly mark the
-    runtime closed loop admitted. This looks advisory-first, but it should stay
-    under review whenever strategy-library metadata semantics change.
+    `strategy_library_branch_context_to_adapter()` is now forced advisory-only:
+    `decision_state=auto_quant_strategy_library_branch_context`,
+    `latest_decision.trade_usable=false`,
+    `bbn_evidence_hint.regime_trade_usable=false`, and
+    `consumer_hints.trade_usable=false` even if the imported manifest claims
+    `promotion_allowed=true` / `trade_usable=true`.
+  - Focused regression
+    `strategy_library_import_does_not_promote_practical_gate_from_metadata_flags`
+    reproduced the old fail-open path, then passed after the fix.
 
 ### V-005: branch-path canonicalization is an active dirty-tree change and must be verified against downstream score matching
 
@@ -218,6 +225,10 @@ Rust focused tests:
   -> pass (`1` test)
 - `cargo test --quiet apply_external_scores_matches_provenance_prefixed_rows_from_canonical_branch_input -- --nocapture`
   -> pass (`1` test)
+- `cargo test --quiet strategy_library_import_does_not_promote_practical_gate_from_metadata_flags -- --nocapture`
+  -> pass (`1` test)
+- `cargo test --quiet application::regime::consumer_bundle_adapter::tests:: -- --nocapture`
+  -> pass (`7` tests)
 
 Python/support-script focused tests:
 
@@ -276,3 +287,7 @@ Current-tree runtime smoke:
   `factor_claim_terminalization_audit` still has `promotion_allowed_true=0` and
   `trade_usable_true=0`, and the fresh `/tmp` demo smoke remains
   `execution_observe_only` / `live_trade_status=blocked`.
+- 2026-05-27: reproduced and fixed a real advisory-import loophole.
+  Strategy-library manifests can no longer self-assert `accepted` practical
+  status or elevate BBN gate quality through imported `trade_usable=true`
+  metadata; the new regression and focused adapter suite both pass.
