@@ -366,31 +366,59 @@ def _validate_trade_frequency(
     violations: list[str],
 ) -> None:
     timestamps: list[datetime] = []
+    timestamps_by_pair: dict[str, list[datetime]] = {}
     for index, row in enumerate(rows):
         timestamp = _row_timestamp(row)
         if timestamp is None:
             violations.append(f"row[{index}].missing_open_timestamp")
             continue
         timestamps.append(timestamp)
+        pair = str(row.get("pair") or "").strip()
+        if pair:
+            timestamps_by_pair.setdefault(pair, []).append(timestamp)
     if not timestamps:
         return
+    if timestamps_by_pair:
+        max_daily = max(
+            _max_daily_count(pair_timestamps) for pair_timestamps in timestamps_by_pair.values()
+        )
+    else:
+        max_daily = _max_daily_count(timestamps)
+    if max_daily > max_trades_per_day:
+        violations.append(f"frequency.trades_per_day_gt_max:{max_daily:.2f}>{max_trades_per_day:.2f}")
+    if timestamps_by_pair:
+        pair_gaps = [
+            gap
+            for pair_timestamps in timestamps_by_pair.values()
+            for gap in [_max_gap_days(pair_timestamps)]
+            if gap is not None
+        ]
+        max_gap = max(pair_gaps) if pair_gaps else None
+    else:
+        max_gap = _max_gap_days(timestamps)
+    if max_gap is None:
+        return
+    if max_gap > max_trade_gap_days:
+        violations.append(f"frequency.max_gap_days_gt_allowed:{max_gap:.2f}>{max_trade_gap_days:.2f}")
+
+
+def _max_daily_count(timestamps: list[datetime]) -> int:
     by_day: dict[str, int] = {}
     for timestamp in timestamps:
         day = timestamp.date().isoformat()
         by_day[day] = by_day.get(day, 0) + 1
-    max_daily = max(by_day.values())
-    if max_daily > max_trades_per_day:
-        violations.append(f"frequency.trades_per_day_gt_max:{max_daily:.2f}>{max_trades_per_day:.2f}")
+    return max(by_day.values(), default=0)
+
+
+def _max_gap_days(timestamps: list[datetime]) -> float | None:
     if len(timestamps) < 2:
-        return
+        return None
     sorted_ts = sorted(timestamps)
     gaps = [
         (later - earlier).total_seconds() / 86_400.0
         for earlier, later in zip(sorted_ts, sorted_ts[1:])
     ]
-    max_gap = max(gaps)
-    if max_gap > max_trade_gap_days:
-        violations.append(f"frequency.max_gap_days_gt_allowed:{max_gap:.2f}>{max_trade_gap_days:.2f}")
+    return max(gaps)
 
 
 def _row_timestamp(row: dict[str, object]) -> datetime | None:

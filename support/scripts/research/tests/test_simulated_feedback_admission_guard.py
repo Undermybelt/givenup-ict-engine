@@ -145,6 +145,34 @@ class SimulatedFeedbackAdmissionGuardTests(unittest.TestCase):
         self.assertFalse(result["blocker_categories"]["frequency"]["ok"])
         self.assertIn("repair_trade_frequency_or_window", result["next_action_keywords"])
 
+    def test_pair_scoped_daily_frequency_does_not_fail_multi_pair_portfolio(self) -> None:
+        base = {
+            "feedback_source": "retained_real_event_label_simulation",
+            "branch_path": "TrendExpansion -> Basket -> balanced_portfolio -> test_v1",
+            "regime_profit_branch_path": "TrendExpansion -> Basket -> balanced_portfolio -> test_v1",
+            "main_regime": "TrendExpansion",
+            "mtf_trend_resonance": {
+                "enabled": True,
+                "aligned": True,
+                "min_aligned": 3,
+                "aligned_timeframes": ["5m", "15m", "30m"],
+            },
+        }
+        rows = [
+            {**base, "trade_id": "nq-1", "pair": "NQ/USD", "open_ts_ms": 1778248740000},
+            {**base, "trade_id": "nq-2", "pair": "NQ/USD", "open_ts_ms": 1778248800000},
+            {**base, "trade_id": "nq-3", "pair": "NQ/USD", "open_ts_ms": 1778248860000},
+            {**base, "trade_id": "ym-1", "pair": "YM/USD", "open_ts_ms": 1778248920000},
+            {**base, "trade_id": "xau-1", "pair": "XAU/USD", "open_ts_ms": 1778248980000},
+            {**base, "trade_id": "late", "pair": "NQ/USD", "open_ts_ms": 1779458340000},
+        ]
+
+        result = guard.validate_bundle(rows, summary={"source": "retained_real_event_label_simulation"})
+
+        self.assertFalse(result["ok"])
+        self.assertNotIn("frequency.trades_per_day_gt_max:5.00>3.00", result["violations"])
+        self.assertIn("frequency.max_gap_days_gt_allowed:14.00>3.00", result["violations"])
+
     def test_classifies_downstream_prerequisite_blockers(self) -> None:
         rows = [
             {

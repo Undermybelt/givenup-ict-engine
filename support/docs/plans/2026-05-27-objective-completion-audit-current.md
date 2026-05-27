@@ -22,10 +22,10 @@ Status: `not proven / not complete`
 Reason:
 
 1. Board B ownership is still crowded. `python3 support/scripts/factor_claim_terminalization_audit.py --compact`
-   now reports `active_claims=9`, `invalid_active_claims=0`,
-   `live_factor_processes=0`, `status=needs_attention`,
-   `attention_groups.by_owner={"codex":9}`, and
-   `next_action=terminalize or externalize active claims`.
+   now reports `active_claims=10`, `invalid_active_claims=0`,
+   `live_factor_processes=4`, `status=needs_attention`,
+   `attention_groups.by_owner={"codex":10}`, and
+   `next_action=terminalize or externalize active claims; wait for live factor processes to exit or claim them before closure`.
 2. The authoritative release/closed-loop handoff
    `support/docs/plans/2026-05-12-hotplug-personal-data-release-handoff-todo.md`
    still records multiple `blocked` rows stating release/objective completion is
@@ -114,12 +114,22 @@ The objective is only complete if current evidence proves all of the following:
 - Severity: high
 - Evidence:
   - older handoff packets prove isolated links;
-  - current audit has not yet re-executed a fresh same-tree proof chain.
+  - current audit still has no fresh same-tree green closure chain;
+  - the strongest available TOMAC root was rerun in this turn via
+    `python3 support/scripts/research/tomac_tod_balanced_trade_label_sidecar.py --exact-root /tmp/ict-engine-tomac-tod-balanced-practical-repair-20260526T214903+0800/top1965_comp40_floor50_exact_suppressed --output-dir /tmp/ict-engine-tomac-practical-closure-20260527T165046+0800/sidecar-rerun`
+    and remained fail-closed with `trade_count_parity=true`,
+    `purged_cv_gate=reject`, bounded provider parity now proven, and remaining
+    downstream blockers narrowed to
+    `frequency.max_gap_days_gt_allowed:350.00>3.00`,
+    `raw_scored_mature_rows_lt_30`, `production_validation_rows_lt_30`,
+    `observation_validation_rows_lt_30`,
+    `execution_readiness_lt_0.65`,
+    `transition_hazard_gte_0.60`, and `actionable_false`.
 - Risk:
   - current code may have drifted away from the last accepted packets.
 - Next:
   - revalidate the narrowest high-signal command/test set for lifecycle,
-    execution-tree admission, workflow-status normalization, and path-ranker
+  execution-tree admission, workflow-status normalization, and path-ranker
     branch-path canonicalization.
 
 ### V-004: imported branch/context surfaces still deserve bypass review
@@ -172,14 +182,18 @@ The objective is only complete if current evidence proves all of the following:
 
 - Severity: medium
 - Evidence:
-  - older tracker text named unresolved `remote_readback`;
+  - older tracker text named unresolved
+    `source_origin_matches_selected_source` and
+    `release_version_tag_available`;
   - fresh
     `python3 support/scripts/release_readiness_audit.py --compact --check-remotes`
-    now reports unresolved `worktree_clean_for_release`,
-    `source_origin_matches_selected_source`, and
-    `release_version_tag_available`;
-  - `HEAD` is `45` commits ahead of `origin/main`, and `Cargo.toml` version
-    `0.1.7` is already tagged on the release mirror.
+    now reports unresolved `worktree_clean_for_release` and
+    `remote_readback`, with `release_version_tag_available` skipped behind the
+    remote gate;
+  - the current network readback preserves the transport nuance: both the
+    declared `origin` remote and the release mirror fail with connection-closed
+    errors, while the fallback public probe is still recorded under
+    `origin.fallback_public_probe`.
 - Risk:
   - repeating stale blocker names can send the next turn to the wrong fix lane
     and overstate what is actually knowable from the current network state.
@@ -194,10 +208,20 @@ The objective is only complete if current evidence proves all of the following:
 - Evidence:
   - the earlier 2026-05-27 factor packet reported `active_claims=10`,
     `live_factor_processes=0`;
-  - the latest rerun now reports `active_claims=9`,
-    `invalid_active_claims=0`, `live_factor_processes=0`,
-    `blocking_reasons=["active_claims"]`, and
-    `attention_groups.by_owner={"codex":9}`.
+  - an intermediate same-turn checkpoint improved the surface to
+    `active_claims=6`, `invalid_active_claims=0`,
+    `live_factor_processes=3`,
+    `blocking_reasons=["active_claims","live_factor_processes"]`,
+    `attention_groups.by_owner={"codex":6}`;
+  - the latest rerun in this continuation has drifted again and now reports
+    `active_claims=10`, `invalid_active_claims=0`,
+    `live_factor_processes=4`,
+    `blocking_reasons=["active_claims","live_factor_processes"]`, and
+    `attention_groups.by_owner={"codex":10}`;
+  - the same-turn classifier fix still matters: one prior live-process blocker
+    was a diagnostic false positive
+    (`tomac_tod_balanced_provider_parity_probe.py`), and that probe no longer
+    inflates `live_factor_processes`.
 - Risk:
   - completion language based on stale same-day packets is not reliable even
     within one audit session; factor closure can regress while docs still look
@@ -207,11 +231,11 @@ The objective is only complete if current evidence proves all of the following:
   - if a stronger factor-completion claim is ever attempted, require same-turn
     rerun evidence rather than cached `/tmp` artifacts from earlier in the day.
 - Current concurrency readback:
-  - the latest factor audit no longer shows a live factor process or invalid
-    active claim surface;
-  - closure is still blocked because `attention_claim_count=9` remains nonzero,
-    and all current attention claims still belong to `codex`, so the repo still
-    lacks a clean same-turn factor-closure surface.
+  - the latest factor audit still shows no invalid active claim surface;
+  - closure is still blocked because `attention_claim_count=10` remains
+    nonzero, `attention_live_process_count=4`, and all current attention claims
+    still belong to `codex`, so the repo still lacks a clean same-turn
+    factor-closure surface.
 
 ### V-011: reusable strategy-library provenance was still leaking caller-local path assumptions
 
@@ -242,6 +266,48 @@ The objective is only complete if current evidence proves all of the following:
     `support.scripts.research.tests.test_factor_candidate_pack` and
     `support.scripts.research.tests.test_factor_candidate_resolver` now pass
     `36` tests.
+
+### V-012: balanced-TOD sidecar was inventing downstream blockers instead of hydrating same-root evidence
+
+- Severity: medium
+- Evidence:
+  - `support/scripts/research/tomac_tod_balanced_trade_label_sidecar.py`
+    previously hard-coded `provider_parity=false`,
+    `raw_scored_mature_rows=0`, `production_validation_rows=0`,
+    `observation_validation_rows=0` in the admission summary passed to
+    `simulated_feedback_admission_guard.py`;
+  - the sibling downstream exact root already carried real same-root evidence in
+    `checks/terminal_metrics.json` and `path_ranker_model/trainer_artifact.json`;
+  - new focused regression
+    `test_run_sidecar_hydrates_downstream_summary_from_sibling_artifacts`
+    failed before the fix and passed after the owner was patched.
+- Risk:
+  - the practical-closure audit could overstate downstream failure by reusing
+    synthetic placeholder values even when the exact root already had richer
+    validation/readiness truth.
+- Next:
+  - keep the hydrated readback path in the focused verification set;
+  - keep the provider-parity proof path in the focused verification set;
+  - keep frequency semantics pair-aware for basket labels instead of reverting
+    to aggregate daily-count gating.
+- Current readback:
+  - the sidecar now hydrates validation/readiness/actionability from the latest
+    sibling `downstream-exact-tomac-tod-balanced*` root and consumes
+    `checks/provider_parity_probe.json` when present;
+  - a bounded live IBKR probe now exists at
+    `checks/provider_parity_probe.json` with
+    `decision=bounded_provider_parity_recent_rows_present` for
+    `MNQ/MYM/MGC` on `1 D`;
+  - rerunning the real same-root sidecar preserved the actual downstream state
+    for this root: `raw_scored_mature_rows=1`,
+    `production_validation_rows=1`, `observation_validation_rows=0`,
+    `execution_readiness=0.4606046164602364`,
+    `transition_hazard=0.6248959443126174`,
+    `execution_candidate_actionable=false`;
+  - the guard no longer misclassifies the multi-pair basket on aggregate daily
+    trade count; after the frequency-owner fix the only surviving frequency
+    blocker is the real pair-scoped gap
+    `frequency.max_gap_days_gt_allowed:350.00>3.00`.
 
 ### V-010: current-turn heavy done-definition proof can lag behind blocker drift
 
@@ -370,16 +436,18 @@ Current-turn compact audits:
 - `python3 support/scripts/done_definition_audit.py --compact --output /tmp/ict-engine-goal-20260527-done-now.json`
   -> pass, but `completion_ready=false` because heavy gates remain skipped by
   default.
-- `python3 support/scripts/factor_claim_terminalization_audit.py --compact --output /tmp/ict-engine-goal-20260527-factor-resume2.json`
-  -> `status=needs_attention`, `active_claims=9`,
-  `invalid_active_claims=0`, `live_factor_processes=0`,
+- `python3 support/scripts/factor_claim_terminalization_audit.py --compact --output /tmp/ict-engine-goal-20260527-factor-clusters.json`
+  -> earlier same-turn cluster checkpoint:
+  `status=needs_attention`, `active_claims=12`,
+  `invalid_active_claims=0`, `live_factor_processes=4`,
   `promotion_allowed_true=0`, `trade_usable_true=0`,
-  `attention_groups.by_owner={"codex":9}`.
-- `python3 support/scripts/release_readiness_audit.py --compact --check-remotes --output /tmp/ict-engine-goal-20260527-release-resume2.json`
+  `attention_groups.by_owner={"codex":12}`,
+  `attention_clusters[0].claim_count=2`.
+- `python3 support/scripts/release_readiness_audit.py --compact --check-remotes --output /tmp/ict-engine-goal-20260527-release-resume3.json`
   -> `status=needs_fix`, unresolved
   `worktree_clean_for_release`,
-  `source_origin_matches_selected_source`,
-  `release_version_tag_available`.
+  `remote_readback`; `release_version_tag_available` remains skipped behind the
+  remote gate.
 
 Earlier same-day runtime smoke (not rerun in this continuation):
 
@@ -408,12 +476,17 @@ Earlier same-day runtime smoke (not rerun in this continuation):
   remains `not proven` because end-to-end current-tree completion evidence is
   incomplete.
 - 2026-05-27: fresh factor/release reruns changed the blocker surface again.
-  Factor closure is currently back at `active_claims=9`,
-  `invalid_active_claims=0`, `live_factor_processes=0`, with
-  `attention_groups.by_owner={"codex":9}`; release closure now fails on
-  `worktree_clean_for_release`,
-  `source_origin_matches_selected_source`, and
-  `release_version_tag_available`.
+  An earlier same-turn checkpoint moved factor closure back to
+  `active_claims=12`, `invalid_active_claims=0`,
+  `live_factor_processes=4`, with `attention_groups.by_owner={"codex":12}` and
+  a duplicate `NQCadenceLift` family cluster; release closure now fails on
+  `worktree_clean_for_release` and `remote_readback`, with tag availability
+  still blocked behind the remote gate.
+- 2026-05-27: the latest compact factor rerun in this continuation drifted
+  again to `active_claims=10`, `invalid_active_claims=0`,
+  `live_factor_processes=4`, and `attention_groups.by_owner={"codex":10}`.
+  This removed the earlier duplicate-family cluster but still leaves the repo
+  far from a clean same-turn practical-closure surface.
 - 2026-05-27: the current-turn compact reruns still show no promotion surface:
   `done_definition_audit` remains partial without heavy gates,
   `factor_claim_terminalization_audit` still has `promotion_allowed_true=0` and
