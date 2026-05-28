@@ -17,6 +17,60 @@ source release gate by itself.
 
 ## Fresh Evidence
 
+2026-05-29 coordination/readback refresh:
+
+- Fresh coordinated snapshot before this fix:
+  `python3 support/scripts/objective_closure_snapshot.py --compact --check-remotes --output-dir /tmp/ict-engine-goal-20260529-codex-current`
+  remained `summary.status=not_complete`. It also exposed a packet
+  coordination loophole: the factor child counted the active audit-only claim
+  `20260529T003643+0800-codex-closed-loop-loophole-audit.claim` as a fresh
+  active factor blocker even though the claim explicitly forbids provider,
+  IBKR, Auto-Quant, freqtrade, and `run_tomac` launches and has
+  `promotion_allowed=false`, `trade_usable=false`, and `update_goal=false`.
+- Implemented fix: `support/scripts/factor_claim_terminalization_audit.py` now
+  classifies conservative `active_audit_only` / `active_coordination_only`
+  claims as `coordination_only` only when they also carry explicit false
+  practical flags and no-launch/read-only audit language. These claims remain
+  visible in the full report and are counted as
+  `coordination_only_active_claims`, but they no longer pollute compact
+  attention queues or `active_claims` factor-closure blockers.
+- Parent packet reuse fix: `support/scripts/objective_closure_snapshot.py` now
+  lifts `coordination_only_active_claims` into the factor surface so a reader
+  can distinguish ignored coordination work from real factor debt without
+  opening the child packet.
+- Fresh factor audit after the fix:
+  `/tmp/ict-engine-goal-20260529-factor-after-coordination-fix.json` reported
+  `coordination_only_active_claims=1` while the real factor surface remained
+  red: `active_claims=5`, `live_factor_processes=1`,
+  `active_claims_without_live_process=5`, `stale_safe_takeover_candidates=4`,
+  `promotion_allowed_true=0`, and `trade_usable_true=0`. The audit-only claim
+  was no longer the queue head; the first fresh factor action was
+  `20260529T004000+0800-codex-tomac-camarilla-pivot-reclaim-takeover.claim`.
+- Fresh coordinated snapshot after the fix:
+  `/tmp/ict-engine-goal-20260529-codex-after-coordination-fix/objective_closure_snapshot.json`
+  remained `summary.status=not_complete`. The parent factor surface now showed
+  `coordination_only_active_claims=1`, but practical closure was still blocked
+  by real active factor claims and live runtime PID `11367` rooted at
+  `ict-engine-tomac-tod-balanced-predicate-density-expansion-autoquant-loop-20260529T004128+0800`.
+- The same snapshot found a separate source-debt quarantine drift: tracked
+  practical-admission source was still clean
+  (`tracked_violation_count=0`), but the untracked wrapper-debt fingerprint was
+  line-sensitive and moved when an untracked wrapper shifted the same violation
+  from one line to another. The fingerprint now hashes the stable violation
+  signature (`file`, `key`, `value`, `violation`) and preserves duplicate
+  signatures, but ignores incidental line/column churn. The refreshed quarantine
+  hash is `35777afdfd203c1cc17bb995c487e8ac29866c39616b1e887c9acea80079b2e0`
+  for the reviewed residue counts (`untracked_violation_count=193`,
+  `untracked_violating_files=115`). If the signature set drifts again, the
+  blocker reappears.
+- Focused verification passed:
+  `python3 -m unittest support.scripts.tests.test_done_definition_audit support.scripts.tests.test_factor_claim_terminalization_audit support.scripts.tests.test_objective_closure_snapshot -v`
+  ran `114/114 OK`. The new regression first failed on
+  `summary.status='needs_attention'` for a valid audit-only claim, then passed
+  after the classifier fix. A second regression first failed on line-sensitive
+  practical-admission debt fingerprints, then passed after the stable-signature
+  fingerprint fix.
+
 2026-05-28 continuation readback:
 
 - `python3 support/scripts/objective_closure_snapshot.py --compact --check-remotes --output-dir /tmp/ict-engine-goal-20260528-codex-current-continuation-after-manifest`

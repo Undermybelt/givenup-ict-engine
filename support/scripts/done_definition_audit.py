@@ -348,8 +348,25 @@ def _summarize_practical_admission_scan(reports: list[dict], *, tracked_files: s
 
 
 def _violation_fingerprint(violations: list[dict]) -> str:
+    stable_violations = [
+        {
+            "file": violation.get("file"),
+            "key": violation.get("key"),
+            "value": violation.get("value"),
+            "violation": violation.get("violation"),
+        }
+        for violation in violations
+    ]
     payload = json.dumps(
-        violations,
+        sorted(
+            stable_violations,
+            key=lambda item: (
+                str(item.get("file") or ""),
+                str(item.get("key") or ""),
+                str(item.get("value") or ""),
+                str(item.get("violation") or ""),
+            ),
+        ),
         ensure_ascii=True,
         separators=(",", ":"),
         sort_keys=True,

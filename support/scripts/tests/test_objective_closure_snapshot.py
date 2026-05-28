@@ -603,6 +603,7 @@ class ObjectiveClosureSnapshotTest(unittest.TestCase):
                     "summary": {
                         "status": "needs_attention",
                         "active_claims": 10,
+                        "coordination_only_active_claims": 1,
                         "invalid_active_claims": 0,
                         "live_factor_processes": 2,
                         "active_claims_without_live_process": 8,
@@ -730,6 +731,10 @@ class ObjectiveClosureSnapshotTest(unittest.TestCase):
             "rerun with --run-all-heavy before treating done-definition as completion proof",
         )
         self.assertEqual(snapshot["audits"]["factor_closure"]["surface"]["live_factor_processes"], 2)
+        self.assertEqual(
+            snapshot["audits"]["factor_closure"]["surface"]["coordination_only_active_claims"],
+            1,
+        )
         self.assertEqual(
             snapshot["audits"]["factor_closure"]["surface"]["active_claims_without_live_process"],
             8,

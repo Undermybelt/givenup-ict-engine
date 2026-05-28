@@ -24,6 +24,7 @@ from done_definition_audit import (  # noqa: E402
     evaluate_help_audit_policy,
     summarize,
     write_practical_admission_debt_manifest,
+    _violation_fingerprint,
 )
 
 
@@ -733,9 +734,7 @@ Measured on 2026-05-22:
                     "violation": "practical_flag_without_extension_complete_guard",
                 }
             ]
-            fingerprint = hashlib.sha256(
-                json.dumps(untracked_violations, sort_keys=True, separators=(",", ":"), ensure_ascii=True).encode()
-            ).hexdigest()
+            fingerprint = _violation_fingerprint(untracked_violations)
             quarantine_path.write_text(
                 json.dumps(
                     {
@@ -772,6 +771,37 @@ Measured on 2026-05-22:
         self.assertEqual(manifest["quarantine"]["decision"], "quarantined_untracked_wrapper_debt")
         self.assertEqual(manifest["quarantine"]["manifest_file"], "support/docs/audits/practical-admission-source-debt-quarantine.json")
         self.assertEqual(manifest["quarantine"]["untracked_violations_sha256"], fingerprint)
+
+    def test_violation_fingerprint_ignores_incidental_line_churn_but_preserves_signature(self) -> None:
+        baseline = [
+            {
+                "file": "support/docs/experiments/actionable-regime-confidence/scripts/run_untracked_bad_v1.py",
+                "line": 4613,
+                "column": 39,
+                "key": "survives_5bps_per_side",
+                "value": "trades >= 30 and scored[\"5bps_per_side_total_profit_pct\"] > 0",
+                "violation": "five_bps_survival_uses_trade_density_floor",
+            },
+            {
+                "file": "support/docs/experiments/actionable-regime-confidence/scripts/run_untracked_bad_v1.py",
+                "line": 4614,
+                "column": 29,
+                "key": "promotion_allowed",
+                "value": "downstream_allowed",
+                "violation": "practical_flag_without_extension_complete_guard",
+            },
+        ]
+        moved = [
+            {**baseline[1], "line": 4651, "column": 31},
+            {**baseline[0], "line": 4650, "column": 39},
+        ]
+        changed_signature = [
+            {**baseline[0], "value": "trades >= 10 and scored[\"5bps_per_side_total_profit_pct\"] > 0"},
+            baseline[1],
+        ]
+
+        self.assertEqual(_violation_fingerprint(baseline), _violation_fingerprint(moved))
+        self.assertNotEqual(_violation_fingerprint(baseline), _violation_fingerprint(changed_signature))
 
 
 if __name__ == "__main__":

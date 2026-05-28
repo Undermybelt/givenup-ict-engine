@@ -298,6 +298,7 @@ def _factor_surface(report: dict[str, Any]) -> dict[str, Any]:
         "report_timestamp": report.get("generated_at"),
         "status": summary.get("status"),
         "active_claims": summary.get("active_claims"),
+        "coordination_only_active_claims": summary.get("coordination_only_active_claims"),
         "invalid_active_claims": summary.get("invalid_active_claims"),
         "live_factor_processes": summary.get("live_factor_processes"),
         "active_claims_without_live_process": summary.get("active_claims_without_live_process"),
