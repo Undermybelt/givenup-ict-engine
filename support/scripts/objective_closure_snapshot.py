@@ -341,7 +341,11 @@ def _release_surface(report: dict[str, Any]) -> dict[str, Any]:
                 continue
             if gate.get("status") == "skip":
                 details = gate.get("details", {})
-                if isinstance(details, dict) and details.get("enable_with") == "--check-remotes":
+                if (
+                    isinstance(details, dict)
+                    and details.get("enable_with") == "--check-remotes"
+                    and details.get("reason") == "network_check_not_enabled"
+                ):
                     skipped_remote_gates.append(gate_id)
             details = gate.get("details", {})
             if not isinstance(details, dict):

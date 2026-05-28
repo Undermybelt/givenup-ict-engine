@@ -358,3 +358,20 @@ release/readiness gates from a clean selected source slice.
   passed with `expected_tag=v0.1.7`, and the remaining blockers were
   `worktree_clean_for_release`, `source_origin_matches_selected_source`, and
   `release_version_tag_available`.
+
+2026-05-29 remote-skip classifier correction:
+
+- Follow-up loophole found from live objective readback: when
+  `--check-remotes` was enabled but `remote_readback` failed, the child release
+  audit correctly skipped `release_version_tag_available` because mirror tags
+  were unavailable. The parent snapshot incorrectly classified that downstream
+  skip as `release_remote_checks_not_run`.
+- Implemented fix: `objective_closure_snapshot.py` now treats skipped release
+  remote gates as not-run evidence only when the gate detail reason is
+  `network_check_not_enabled`. Skips blocked by a failed remote readback stay
+  under `release_readiness_blocked` / `remote_readback`.
+- Regression added:
+  `test_build_snapshot_does_not_call_tag_skip_remote_checks_not_run_when_remote_readback_failed`.
+  Combined verification passed:
+  `python3 -m unittest support.scripts.tests.test_release_readiness_audit support.scripts.tests.test_objective_closure_snapshot -v`
+  ran `49/49 OK`.
