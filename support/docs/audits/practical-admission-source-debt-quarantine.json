@@ -1,0 +1,15 @@
+{
+  "schema_version": "practical-admission-source-debt-quarantine/v1",
+  "generated_at": "2026-05-28T12:10:00Z",
+  "decision": "quarantined_untracked_wrapper_debt",
+  "scope": "Untracked support/docs/experiments/actionable-regime-confidence/scripts/run_*.py practical-admission violations present in the shared worktree on 2026-05-28.",
+  "rationale": "The tracked source gate has zero practical-admission wrapper violations. The remaining debt is untracked wrapper residue from concurrent factor work; it must stay visible and excluded from completion/release claims until the files are either removed, tracked and fixed, or otherwise retired.",
+  "untracked_violation_count": 193,
+  "untracked_violating_files": 115,
+  "untracked_violations_sha256": "3904d386383561ff9a7e39784f6a0f38a51b43fd90dc2f6e5e68449c1c44f289",
+  "source_packet": "/tmp/ict-engine-goal-20260528-codex-after-heavy-proof/practical_admission_source_debt_manifest.json",
+  "promotion_allowed": false,
+  "trade_usable": false,
+  "update_goal": false,
+  "next_action": "Before objective closure or release, rerun done_definition_audit/objective_closure_snapshot and require this fingerprint to match; if it drifts, treat the new untracked debt as unquarantined until reviewed."
+}

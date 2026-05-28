@@ -1034,6 +1034,50 @@ trade_usable=false
         )
         self.assertNotIn("terminalize or externalize active claims", summary["next_action"])
 
+    def test_summarize_matches_tmp_and_private_tmp_live_runtime_roots(self) -> None:
+        summary = summarize(
+            [
+                {
+                    "status": "active",
+                    "run_root": "/tmp/ict-engine-tomac-example-20260528T211900+0800/run",
+                    "tmp_root": "/tmp/ict-engine-tomac-example-20260528T211900+0800",
+                    "run_root_exists": True,
+                    "decision": "exact_aq_launch_in_progress",
+                    "active_task": "wait for terminal exact-AQ evidence",
+                    "scope": "Board B exact AQ launch",
+                    "promotion_allowed": False,
+                    "trade_usable": False,
+                    "missing_identity_fields": [],
+                    "last_progress_at": "2026-05-28T13:19:00+00:00",
+                }
+            ],
+            live_processes=[
+                {
+                    "pid": 15179,
+                    "ppid": 10858,
+                    "elapsed": "02:07",
+                    "command_excerpt": "python run_tomac.py",
+                    "run_root": "/private/tmp/ict-engine-tomac-example-20260528T211900+0800",
+                    "exit_file": None,
+                    "exit_file_exists": False,
+                }
+            ],
+            now=datetime(2026, 5, 28, 13, 36, 0, tzinfo=timezone.utc),
+        )
+
+        self.assertEqual(summary["active_claims"], 1)
+        self.assertEqual(summary["live_factor_processes"], 1)
+        self.assertEqual(summary["active_claims_without_live_process"], 0)
+        self.assertEqual(summary["fresh_active_claims_without_live_process"], 0)
+        self.assertNotIn(
+            "wait for fresh active claims to progress, then rerun before terminalizing",
+            summary["next_action"],
+        )
+        self.assertIn(
+            "wait for live factor processes to exit or claim them before closure",
+            summary["next_action"],
+        )
+
     def test_format_report_compact_surfaces_fresh_active_claim_queue(self) -> None:
         full_report = {
             "schema_version": "factor-claim-terminalization-audit/v1",

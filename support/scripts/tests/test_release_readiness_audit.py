@@ -169,6 +169,31 @@ R  old.rs -> new.rs
         self.assertEqual(gate["details"]["origin_status"], "pass")
         self.assertEqual(gate["details"]["release_mirror_status"], "fail")
 
+    def test_remote_readback_failure_points_to_origin_when_only_origin_fails(self) -> None:
+        gate = evaluate_remote_readback(
+            origin_state="fail",
+            origin_details={
+                "returncode": 128,
+                "stdout": "",
+                "stderr": "fatal: unable to access origin\n",
+                "remote_name": "origin",
+            },
+            mirror_state="pass",
+            mirror_details={
+                "returncode": 0,
+                "stdout": "mirror-head\trefs/heads/main\n",
+                "stderr": "",
+                "remote_name": "release_mirror",
+            },
+        )
+
+        self.assertEqual(gate["status"], "fail")
+        self.assertEqual(gate["details"]["origin_status"], "fail")
+        self.assertEqual(gate["details"]["release_mirror_status"], "pass")
+        self.assertIn("source origin", gate["details"]["next_action"])
+        self.assertNotIn("restore release mirror git/network/auth readback", gate["details"]["next_action"])
+        self.assertIn("--check-remotes", gate["details"]["next_action"])
+
     def test_remote_readback_failure_keeps_public_fallback_diagnostics(self) -> None:
         gate = evaluate_remote_readback(
             origin_state="fail",

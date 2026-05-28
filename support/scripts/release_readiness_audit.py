@@ -268,13 +268,18 @@ def evaluate_remote_readback(
     }
     if status != "pass":
         diagnostic_class = classify_remote_probe_drift(effective_origin_details, effective_mirror_details)
+        failed_sides = failed_remote_readback_sides(
+            effective_origin_state,
+            effective_mirror_state,
+        )
         details.update(
             {
                 "blocked_gate": "release_version_tag_available",
-                "next_action": remote_readback_next_action(diagnostic_class),
+                "next_action": remote_readback_next_action(diagnostic_class, failed_sides),
                 "rule": "release mirror heads and tags must be readable before tag availability can be trusted",
             }
         )
+        details["failed_sides"] = failed_sides
         if diagnostic_class:
             details["diagnostic_class"] = diagnostic_class
     return {
@@ -302,13 +307,27 @@ def effective_remote_readback(state: str, details: dict[str, Any]) -> tuple[str,
     return "pass", merged
 
 
-def remote_readback_next_action(diagnostic_class: str | None) -> str:
+def failed_remote_readback_sides(origin_state: str, mirror_state: str) -> list[str]:
+    failed: list[str] = []
+    if origin_state != "pass":
+        failed.append("origin")
+    if mirror_state != "pass":
+        failed.append("release_mirror")
+    return failed
+
+
+def remote_readback_next_action(diagnostic_class: str | None, failed_sides: list[str]) -> str:
     if diagnostic_class == "https_probe_ssh_transport_drift":
         return (
             "restore release mirror readback after checking local git transport rewrite drift "
             "for `url.*.insteadof`, `core.sshCommand`, and `http.*.proxy` "
             "(for example `git config --show-origin --get-regexp '^(url\\..*\\.insteadof|core\\.sshCommand|http\\..*\\.proxy)$'`), "
             "or rerun from a network that can reach the release mirror, then rerun release readiness audit with --check-remotes"
+        )
+    if failed_sides == ["origin"]:
+        return (
+            "restore source origin git/network/auth readback, or rerun from a network "
+            "that can reach origin, then rerun release readiness audit with --check-remotes"
         )
     return (
         "restore release mirror git/network/auth readback, or rerun from a network "

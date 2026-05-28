@@ -208,6 +208,7 @@ def _done_surface(report: dict[str, Any]) -> dict[str, Any]:
                     "violation_count": details.get("violation_count"),
                     "violating_files": details.get("violating_files"),
                     "debt_manifest_file": details.get("debt_manifest_file"),
+                    "quarantine": details.get("quarantine"),
                     "sample_violations": details.get("sample_violations", []),
                 }
     return {
@@ -259,7 +260,20 @@ def _apply_done_definition_proof(
     if proof_status is None:
         return done_surface
     if proof_status.get("proof_applied") is True:
-        return proof_status
+        merged = dict(done_surface)
+        for key in (
+            "status",
+            "completion_ready",
+            "evidence_level",
+            "unresolved",
+            "skipped_gates",
+            "next_action",
+            "proof_source",
+            "proof_applied",
+        ):
+            if key in proof_status:
+                merged[key] = proof_status[key]
+        return merged
     merged = dict(done_surface)
     for key in ("proof_source", "proof_applied", "proof_rejected_reason"):
         if key in proof_status:
@@ -361,8 +375,16 @@ def summarize_snapshot(
     if isinstance(practical_source, dict):
         untracked_count = practical_source.get("untracked_violation_count")
         if isinstance(untracked_count, int) and untracked_count > 0:
-            blockers.append("practical_admission_source_debt")
-            blocker_details["practical_admission_source_debt"] = {
+            quarantine = practical_source.get("quarantine")
+            quarantine_matched = isinstance(quarantine, dict) and quarantine.get("matched") is True
+            detail_key = (
+                "quarantined_practical_admission_source_debt"
+                if quarantine_matched
+                else "practical_admission_source_debt"
+            )
+            if not quarantine_matched:
+                blockers.append("practical_admission_source_debt")
+            detail = {
                 "tracked_violation_count": practical_source.get("tracked_violation_count"),
                 "tracked_violating_files": practical_source.get("tracked_violating_files"),
                 "untracked_violation_count": practical_source.get("untracked_violation_count"),
@@ -371,6 +393,9 @@ def summarize_snapshot(
                 "violating_files": practical_source.get("violating_files"),
                 "debt_manifest_file": practical_source.get("debt_manifest_file"),
             }
+            if quarantine_matched:
+                detail["quarantine_manifest_file"] = quarantine.get("manifest_file")
+            blocker_details[detail_key] = detail
     if factor_surface.get("status") != "pass":
         blockers.append("factor_closure_blocked")
     practical_promotions = factor_surface.get("promotion_allowed_true")
@@ -433,7 +458,9 @@ def summarize_snapshot(
         )
     if isinstance(practical_source, dict):
         untracked_count = practical_source.get("untracked_violation_count")
-        if isinstance(untracked_count, int) and untracked_count > 0:
+        quarantine = practical_source.get("quarantine")
+        quarantine_matched = isinstance(quarantine, dict) and quarantine.get("matched") is True
+        if isinstance(untracked_count, int) and untracked_count > 0 and not quarantine_matched:
             prioritized_next_actions.append(
                 {
                     "surface": "done_definition",

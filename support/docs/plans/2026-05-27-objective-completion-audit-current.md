@@ -1338,3 +1338,83 @@ Final same-turn drift readback:
 - Release readiness remains red on `worktree_clean_for_release`,
   `source_origin_matches_selected_source`, and
   `release_version_tag_available`.
+
+## 2026-05-28 Current Refresh - Quarantine, Remote-Side, And Tmp-Root Actionability
+
+Latest authoritative packets for this refresh:
+
+- heavy done-definition proof:
+  `/tmp/ict-engine-goal-20260528-current-heavy-done.json`
+- live release action check:
+  `/tmp/ict-engine-goal-20260528-release-origin-action.json`
+- live factor attribution check:
+  `/tmp/ict-engine-goal-20260528-factor-after-tmpmatch.json`
+- proofed parent snapshot:
+  `/tmp/ict-engine-goal-20260528-origin-action-proofed-snapshot/objective_closure_snapshot.json`
+
+Commands:
+
+```bash
+python3 support/scripts/done_definition_audit.py --run-all-heavy --compact --output /tmp/ict-engine-goal-20260528-current-heavy-done.json
+python3 -m unittest support.scripts.tests.test_done_definition_audit support.scripts.tests.test_objective_closure_snapshot -v
+python3 -m unittest support.scripts.tests.test_release_readiness_audit -v
+python3 -m unittest support.scripts.tests.test_factor_claim_terminalization_audit -v
+python3 support/scripts/release_readiness_audit.py --compact --check-remotes --output /tmp/ict-engine-goal-20260528-release-origin-action.json
+python3 support/scripts/factor_claim_terminalization_audit.py --compact --output /tmp/ict-engine-goal-20260528-factor-after-tmpmatch.json
+python3 support/scripts/objective_closure_snapshot.py --compact --check-remotes --done-definition-proof /tmp/ict-engine-goal-20260528-current-heavy-done.json --output-dir /tmp/ict-engine-goal-20260528-origin-action-proofed-snapshot --timeout-seconds 300
+```
+
+Current command truth:
+
+- full done-definition proof passed all `9/9` gates with
+  `completion_ready=true`, including cargo check, clippy, cargo test, and
+  smoke acceptance;
+- focused verification passed: done/objective `45/45`, release readiness
+  `22/22`, factor-claim audit `67/67`;
+- practical-admission source debt is now explicitly quarantined, not hidden:
+  tracked violations remain `0`, untracked residue remains `193` violations in
+  `115` files, and the quarantine fingerprint matches
+  `support/docs/audits/practical-admission-source-debt-quarantine.json`;
+- release readiness still fails, but live readback now distinguishes sides:
+  release mirror readback passed, origin readback timed out, and the action now
+  says to restore `source origin` readback instead of blaming the release
+  mirror;
+- factor closure remains red, but the `/tmp` claim root vs `/private/tmp` live
+  process alias is no longer double-counted as a fresh claim without live
+  runtime. The live TOD stability-guard root is now owned by its active claim,
+  leaving only two fresh no-live claims plus one live runtime in the live factor
+  queue at `/tmp/ict-engine-goal-20260528-factor-after-tmpmatch.json`.
+
+Loopholes found and fixed:
+
+- Applying a full done-definition proof could previously replace the current
+  light done-definition surface and drop current practical-source debt details.
+  `objective_closure_snapshot.py` now merges proof status into the current
+  surface, preserving current quarantine/debt evidence while using the heavy
+  proof only for full-gate coverage.
+- Untracked practical-admission wrapper debt could stay as a permanent parent
+  blocker even after it was reviewed as untracked multi-agent residue. The
+  new quarantine manifest records the exact fingerprint and keeps the debt
+  visible as `quarantined_practical_admission_source_debt` without letting it
+  masquerade as tracked-source failure or completion proof.
+- `release_readiness_audit.py` previously emitted release-mirror recovery text
+  even when only origin readback failed. It now records `failed_sides` and gives
+  source-origin recovery text when the release mirror is readable.
+- `factor_claim_terminalization_audit.py` compared `/tmp` and `/private/tmp`
+  run roots literally, so macOS tmp aliasing could make a live-owned claim also
+  appear in the fresh-without-live queue. Runtime ownership matching now
+  normalizes tmp aliases and lane subdirs before comparing roots.
+
+Requirement verdict updates:
+
+- Evidence-pack coordination/reuse improved again: compact parent packets
+  preserve proof, debt, quarantine, failed remote side, and live-runtime claim
+  ownership in the right layers.
+- The full objective remains `not_complete`: no same-tree practical closure
+  packet has `promotion_allowed_true>0` and `trade_usable_true>0`, factor work
+  is still active, and release readiness is still blocked by dirty worktree plus
+  source-origin/tag state.
+- A narrow commit of this verified audit-hardening slice is justified if it
+  stages only the touched audit scripts, their tests, the quarantine manifest,
+  and these tracking docs. A completion claim for the broader objective would
+  still be false.

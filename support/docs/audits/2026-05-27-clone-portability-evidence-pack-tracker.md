@@ -173,6 +173,65 @@ Result:
   - public GitHub reachability issues
   - actual release-mirror readback failures
 
+### 3. Strategy-library provenance no longer leaks caller-local absolute paths
+
+Problem before this slice:
+
+- `support/scripts/research/factor_candidate_pack.py` preserved
+  `metadata.source_artifact` as `str(zip_path)` when building a strategy
+  library manifest from a `freqtrade` backtest zip
+- when the caller passed an absolute path, the exported manifest embedded a
+  maintainer-local filesystem path inside a supposedly reusable evidence asset
+- the strategy-library projection also dropped `source_artifact`, so consumers
+  lost a stable provenance hint while still risking local-path leakage one
+  layer earlier
+
+Change made:
+
+- freqtrade zip provenance is now normalized to a portable reference
+  (`backtest.zip` for absolute caller-local inputs)
+- exported strategy-library manifests now retain that portable
+  `metadata.source_artifact` field instead of silently dropping it
+
+Result:
+
+- reusable evidence exports no longer depend on maintainer-local absolute paths
+- clone users still receive a provenance hint for the originating input
+  artifact
+- portability and provenance both improve without widening the pack contract
+
+### 4. Coordinated closure snapshot shells no longer hard-code one workstation's paths
+
+Problem before this slice:
+
+- `support/scripts/objective_closure_snapshot.py --output-dir ...` wrote a
+  reusable coordination packet, but the packet embedded:
+  - absolute `repo_root`
+  - absolute `options.output_dir`
+  - absolute child `evidence_files`
+  - absolute repo-local script paths inside `audit_commands`
+- that made the packet harder to move across clones or attach to another audit
+  handoff without carrying one machine's filesystem layout as an implicit
+  contract
+
+Change made:
+
+- the persisted snapshot now uses packet-relative references when
+  `--output-dir` is supplied:
+  - `repo_root` becomes `ict-engine`
+  - `options.output_dir` becomes `.`
+  - child evidence files are stored as local filenames
+  - repo-local script entries in `audit_commands` are rewritten to
+    `support/scripts/...`
+
+Result:
+
+- the parent coordinated closure snapshot remains self-contained inside its output root
+- clone users can move or compare the packet without inheriting
+  maintainer-local absolute path assumptions
+- current blocker truth still survives, but the parent packet contract is now more
+  reusable
+
 ## What is still not good enough
 
 ### 1. Release readiness is still blocked by real current-state evidence
@@ -200,6 +259,90 @@ means “drop a directory and it automatically becomes a product candidate” is
 still false. That should be documented as the intended contract unless the repo
 later chooses directory auto-discovery.
 
+### 3. Coordinated closure factor child payload now supports packet-safe runtime labels
+
+Problem before this slice:
+
+- the parent `objective_closure_snapshot.json` had already become portable, but
+  the factor child compact payload still carried local runtime paths such as:
+  - `claims_dir=/tmp/ict-engine-agent-claims/board-b-factor-refinement`
+  - live-process `run_root=/private/tmp/...`
+  - live-process `exit_file=/private/tmp/...`
+
+Change made:
+
+- `support/scripts/factor_claim_terminalization_audit.py` now supports
+  `--portable-paths` for compact output
+- `support/scripts/objective_closure_snapshot.py` now passes that flag when it
+  writes coordinated packet children under `--output-dir`
+- compact factor child payloads now collapse runtime-local `/tmp` and
+  `/private/tmp` paths into packet-safe labels while preserving:
+  - blocker counts
+  - `run_root_state`
+  - `exit_file_state`
+  - live-process presence
+
+Result:
+
+- the coordinated factor child payload is now substantially more clone-portable
+- operational blocker truth is retained without embedding workstation-local tmp
+  roots in the compact packet
+- this closes the specific factor-child portability debt, even though the full
+  objective is still blocked by live factor/release truth
+
+### 4. Practical-source debt quarantine and proof reuse now preserve current evidence
+
+Problem before this slice:
+
+- the parent objective packet could apply a prior heavy done-definition proof
+  and accidentally drop the current light child details for practical-source
+  debt
+- reviewed untracked wrapper residue stayed indistinguishable from unreviewed
+  objective blockers, even when tracked source was clean
+
+Change made:
+
+- `objective_closure_snapshot.py` now merges proof fields into the current
+  done-definition surface instead of replacing the surface wholesale
+- `done_definition_audit.py` writes a practical-source debt manifest with a
+  stable untracked-violation fingerprint
+- `support/docs/audits/practical-admission-source-debt-quarantine.json` records
+  the reviewed fingerprint for the current untracked multi-agent residue
+
+Result:
+
+- full done-definition proof can be reused without losing current source-debt
+  evidence
+- tracked-source regressions still fail closed
+- untracked residue stays visible as quarantined debt and cannot silently become
+  release/completion proof
+
+### 5. Release and factor action queues are more precise
+
+Problem before this slice:
+
+- `release_readiness_audit.py` could tell operators to restore release-mirror
+  readback even when the release mirror was readable and only source `origin`
+  failed
+- `factor_claim_terminalization_audit.py` compared `/tmp` and `/private/tmp`
+  literally, so a macOS tmp alias could make one live-owned active claim also
+  appear in the fresh-without-live queue
+
+Change made:
+
+- release remote readback now records `failed_sides` and emits source-origin
+  action text when only origin fails
+- factor live-runtime ownership now normalizes tmp aliases and lane subdirs
+  before comparing claim roots with live process roots
+
+Result:
+
+- parent evidence packets point release operators at the actual failing remote
+  side
+- factor action queues avoid double-counting one live-owned lane as both live
+  and fresh-without-live
+- current blocker truth remains red, but it is more actionable and less noisy
+
 ## Recommended compatibility contract
 
 For public clone users, keep the extension model explicit:
@@ -220,6 +363,20 @@ Tests:
 
 - `python3 -m unittest support.scripts.research.tests.test_factor_candidate_resolver support.scripts.tests.test_release_readiness_audit -v`
   - passed `27` tests
+- `python3 -m unittest support.scripts.research.tests.test_factor_candidate_pack support.scripts.research.tests.test_factor_candidate_resolver -v`
+  - passed `31` tests
+- `python3 -m unittest support.scripts.tests.test_objective_closure_snapshot -v`
+  - passed `9` tests
+- `python3 -m unittest support.scripts.tests.test_factor_claim_terminalization_audit -v`
+  - passed `52` tests
+- `python3 -m unittest support.scripts.tests.test_done_definition_audit support.scripts.tests.test_objective_closure_snapshot -v`
+  - passed `45` tests
+- `python3 -m unittest support.scripts.tests.test_release_readiness_audit -v`
+  - passed `22` tests
+- `python3 -m unittest support.scripts.tests.test_factor_claim_terminalization_audit -v`
+  - passed `67` tests
+- `python3 support/scripts/done_definition_audit.py --run-all-heavy --compact --output /tmp/ict-engine-goal-20260528-current-heavy-done.json`
+  - passed all `9/9` gates with `completion_ready=true`
 
 Current-state probes:
 
@@ -227,6 +384,42 @@ Current-state probes:
   - current result: `needs_fix`
 - `python3 support/scripts/research/factor_candidate_resolver.py --repo-root . --output-dir /tmp/ict-engine-candidate-pack-audit.PtVwYo --build-packs`
   - current result: `built_pack_count=8`
+- portable provenance probe:
+  - a fresh synthetic strategy-library export now emits
+    `metadata.source_artifact="backtest.zip"` instead of an absolute temp path
+- portable closure-snapshot probe:
+  - `python3 support/scripts/objective_closure_snapshot.py --compact --check-remotes --output-dir /tmp/ict-engine-goal-20260527-closure-snapshot-portable4`
+    now emits a packet with:
+    - `repo_root="ict-engine"`
+    - `options.output_dir="."`
+    - `audit_commands[*][0]="python3"`
+    - `factor_closure` child audit invoked with `--portable-paths`
+    - child evidence files stored as relative filenames
+    - current blocker truth still explicit:
+      `factor_closure.status=needs_attention`,
+      `active_claims=14`,
+      `live_factor_processes=1`,
+      `release_readiness.unresolved=["worktree_clean_for_release","remote_readback"]`
+  - `rg -n '/Users|/private/tmp|/opt/homebrew|python3\.13|/tmp/ict-engine-goal-20260527-closure-snapshot-portable4' /tmp/ict-engine-goal-20260527-closure-snapshot-portable4/objective_closure_snapshot.json`
+    returned no matches
+  - factor child packet-safe proof:
+    - `factor_claim_terminalization_audit.compact.json` now emits:
+      - `claims_dir="ict-engine-agent-claims/board-b-factor-refinement"`
+      - `run_root="ict-engine-..."`
+      - `exit_file="ict-engine-.../checks/..."` for live processes
+    - `rg -n '/Users|/private/tmp|/tmp/ict-engine-goal-20260527-closure-snapshot-portable4|claims_dir|run_root|exit_file' /tmp/ict-engine-goal-20260527-closure-snapshot-portable4/factor_claim_terminalization_audit.compact.json`
+      no longer shows workstation-local absolute tmp roots; remaining matches are
+      the field names themselves
+- proof/quarantine/actionability probes:
+  - `/tmp/ict-engine-goal-20260528-origin-action-proofed-snapshot/objective_closure_snapshot.json`
+    remains `status=not_complete`, with full done-definition proof applied and
+    current practical-source quarantine evidence preserved
+  - `/tmp/ict-engine-goal-20260528-release-origin-action.json` shows
+    `failed_sides=["origin"]`, release mirror readback passing, and next action
+    focused on source origin readback
+  - `/tmp/ict-engine-goal-20260528-factor-after-tmpmatch.json` shows the
+    macOS `/tmp`/`/private/tmp` live TOD root matched to its claim, reducing the
+    fresh-without-live queue to genuinely non-live claims
 
 Example emitted manifest:
 

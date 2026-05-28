@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import os
 import re
@@ -346,10 +347,66 @@ def _summarize_practical_admission_scan(reports: list[dict], *, tracked_files: s
     }
 
 
+def _violation_fingerprint(violations: list[dict]) -> str:
+    payload = json.dumps(
+        violations,
+        ensure_ascii=True,
+        separators=(",", ":"),
+        sort_keys=True,
+    )
+    return hashlib.sha256(payload.encode("utf-8")).hexdigest()
+
+
+def practical_admission_debt_quarantine_path() -> Path:
+    return ROOT / "support" / "docs" / "audits" / "practical-admission-source-debt-quarantine.json"
+
+
+def _read_practical_admission_debt_quarantine(summary: dict) -> dict:
+    untracked_violations = summary.get("untracked_violations", [])
+    fingerprint = _violation_fingerprint(untracked_violations)
+    quarantine_path = practical_admission_debt_quarantine_path()
+    base = {
+        "manifest_file": _rel_path(quarantine_path),
+        "matched": False,
+        "untracked_violations_sha256": fingerprint,
+    }
+    if not quarantine_path.exists():
+        return {**base, "reason": "quarantine_manifest_missing"}
+    try:
+        manifest = json.loads(quarantine_path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        return {**base, "reason": f"quarantine_manifest_unreadable: {exc}"}
+    if not isinstance(manifest, dict):
+        return {**base, "reason": "quarantine_manifest_must_be_object"}
+    expected = {
+        "schema_version": "practical-admission-source-debt-quarantine/v1",
+        "untracked_violation_count": summary.get("untracked_violation_count"),
+        "untracked_violating_files": summary.get("untracked_violating_files"),
+        "untracked_violations_sha256": fingerprint,
+    }
+    mismatches = [
+        key
+        for key, expected_value in expected.items()
+        if manifest.get(key) != expected_value
+    ]
+    decision = manifest.get("decision")
+    if decision != "quarantined_untracked_wrapper_debt":
+        mismatches.append("decision")
+    return {
+        **base,
+        "matched": not mismatches,
+        "decision": decision,
+        "mismatches": mismatches,
+        "untracked_violation_count": manifest.get("untracked_violation_count"),
+        "untracked_violating_files": manifest.get("untracked_violating_files"),
+    }
+
+
 def write_practical_admission_debt_manifest(summary: dict) -> str | None:
     if int(summary.get("violation_count") or 0) <= 0:
         return None
     generated_at = _utc_now()
+    quarantine = _read_practical_admission_debt_quarantine(summary)
     manifest = {
         "schema_version": "practical-admission-source-debt/v1",
         "generated_at": generated_at,
@@ -376,6 +433,7 @@ def write_practical_admission_debt_manifest(summary: dict) -> str | None:
             "untracked_violation_count": summary.get("untracked_violation_count"),
             "violations_by_type": summary.get("violations_by_type", {}),
         },
+        "quarantine": quarantine,
         "tracked_violations": summary.get("tracked_violations", []),
         "untracked_violations": summary.get("untracked_violations", []),
     }
@@ -431,6 +489,7 @@ def evaluate_practical_admission_source_gate(timeout_seconds: int) -> dict:
     debt_manifest_file = write_practical_admission_debt_manifest(summary)
     if debt_manifest_file:
         summary["debt_manifest_file"] = debt_manifest_file
+        summary["quarantine"] = _read_practical_admission_debt_quarantine(summary)
     summary["scanner_returncode"] = details.get("returncode")
     summary["rule"] = (
         "all tracked downstream/gate wrappers must keep practical flags behind "
@@ -621,6 +680,7 @@ def _compact_gate(gate: dict, root: str) -> dict:
                     "violation_count": details.get("violation_count"),
                     "violating_files": details.get("violating_files"),
                     "debt_manifest_file": details.get("debt_manifest_file"),
+                    "quarantine": details.get("quarantine"),
                     "sample_violations": details.get("sample_violations", [])[:10],
                 },
                 root,

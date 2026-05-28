@@ -577,16 +577,18 @@ def _looks_like_wait_only_active_claim(claim: dict[str, Any]) -> bool:
 
 
 def _claim_owns_live_runtime(claim: dict[str, Any], live_processes: list[dict[str, Any]]) -> bool:
-    live_run_roots = {str(process.get("run_root")) for process in live_processes if process.get("run_root")}
+    live_run_roots = {
+        _runtime_match_path(str(process.get("run_root")))
+        for process in live_processes
+        if process.get("run_root")
+    }
     for key in ("run_root", "tmp_root"):
         value = claim.get(key)
         if not isinstance(value, str) or not value:
             continue
-        claim_path = Path(value)
+        claim_path = _runtime_match_path(value)
         for live_root in live_run_roots:
-            if not isinstance(live_root, str) or not live_root:
-                continue
-            live_path = Path(live_root)
+            live_path = live_root
             if claim_path == live_path:
                 return True
             if _is_relative_to(live_path, claim_path) or _is_relative_to(claim_path, live_path):
@@ -603,6 +605,13 @@ def _claim_owns_live_runtime(claim: dict[str, Any], live_processes: list[dict[st
         if claim_branch_path and process_branch_path and claim_branch_path == process_branch_path:
             return True
     return False
+
+
+def _runtime_match_path(value: str) -> Path:
+    text = str(value)
+    if text.startswith("/private/tmp/"):
+        text = "/tmp/" + text.removeprefix("/private/tmp/")
+    return _normalize_tmp_run_root(Path(text))
 
 
 def _is_relative_to(path: Path, other: Path) -> bool:

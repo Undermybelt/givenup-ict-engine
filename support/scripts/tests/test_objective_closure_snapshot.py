@@ -285,6 +285,60 @@ class ObjectiveClosureSnapshotTest(unittest.TestCase):
             summary["prioritized_next_actions"],
         )
 
+    def test_summarize_snapshot_treats_quarantined_untracked_source_debt_as_externalized(self) -> None:
+        summary = summarize_snapshot(
+            {
+                "completion_ready": True,
+                "quickstart_surface": "pass",
+                "practical_admission_source_surface": {
+                    "status": "pass",
+                    "tracked_violation_count": 0,
+                    "tracked_violating_files": 0,
+                    "untracked_violation_count": 3,
+                    "untracked_violating_files": 2,
+                    "debt_manifest_file": "practical_admission_source_debt_manifest.json",
+                    "quarantine": {
+                        "matched": True,
+                        "decision": "quarantined_untracked_wrapper_debt",
+                        "manifest_file": "support/docs/audits/practical-admission-source-debt-quarantine.json",
+                    },
+                },
+            },
+            {
+                "status": "pass",
+                "promotion_allowed_true": 1,
+                "trade_usable_true": 1,
+            },
+            {
+                "status": "pass",
+                "unresolved_next_actions": {},
+            },
+            snapshot_timestamp="2026-05-28T12:00:00Z",
+        )
+
+        self.assertNotIn("practical_admission_source_debt", summary["blockers"])
+        self.assertEqual(
+            summary["blocker_details"]["quarantined_practical_admission_source_debt"],
+            {
+                "tracked_violation_count": 0,
+                "tracked_violating_files": 0,
+                "untracked_violation_count": 3,
+                "untracked_violating_files": 2,
+                "violation_count": None,
+                "violating_files": None,
+                "debt_manifest_file": "practical_admission_source_debt_manifest.json",
+                "quarantine_manifest_file": "support/docs/audits/practical-admission-source-debt-quarantine.json",
+            },
+        )
+        self.assertNotIn(
+            {
+                "surface": "done_definition",
+                "reason": "practical_admission_source_debt",
+                "action": "retire, quarantine, or track unsafe untracked practical-admission wrappers before objective closure",
+            },
+            summary["prioritized_next_actions"],
+        )
+
     def test_summarize_snapshot_lists_every_live_factor_runtime_action(self) -> None:
         live_roots = [
             {"pid": 1001, "run_root": "root-a"},
@@ -1157,6 +1211,109 @@ class ObjectiveClosureSnapshotTest(unittest.TestCase):
         self.assertFalse(done_surface["proof_applied"])
         self.assertEqual(done_surface["proof_rejected_reason"], "proof_not_completion_ready")
         self.assertIn("done_definition_not_completion_ready", snapshot["summary"]["blockers"])
+
+    def test_build_snapshot_preserves_current_practical_source_surface_when_applying_done_proof(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp)
+            audit_results = {
+                "done_definition": {
+                    "command": {"argv": ["done"], "returncode": 0},
+                    "report": {
+                        "timestamp_utc": "2026-05-28T12:00:00Z",
+                        "summary": {
+                            "status": "pass",
+                            "completion_ready": False,
+                            "evidence_level": "partial_skipped_gates",
+                            "unresolved": [],
+                            "skipped_gates": ["cargo_test"],
+                            "next_action": "rerun heavy gates",
+                        },
+                        "gates": [
+                            {"id": "quickstart_surface", "status": "pass"},
+                            {
+                                "id": "practical_admission_source_surface",
+                                "status": "pass",
+                                "details": {
+                                    "tracked_violation_count": 0,
+                                    "tracked_violating_files": 0,
+                                    "untracked_violation_count": 3,
+                                    "untracked_violating_files": 2,
+                                    "debt_manifest_file": str(output_dir / "child-debt.json"),
+                                    "quarantine": {
+                                        "matched": True,
+                                        "decision": "quarantined_untracked_wrapper_debt",
+                                        "manifest_file": "support/docs/audits/practical-admission-source-debt-quarantine.json",
+                                    },
+                                },
+                            },
+                        ],
+                    },
+                    "output_path": output_dir / "done_definition_audit.compact.json",
+                },
+                "factor_closure": {
+                    "command": {"argv": ["factor"], "returncode": 0},
+                    "report": {
+                        "generated_at": "2026-05-28T12:00:01+00:00",
+                        "summary": {
+                            "status": "pass",
+                            "active_claims": 0,
+                            "invalid_active_claims": 0,
+                            "live_factor_processes": 0,
+                            "blocking_reasons": [],
+                            "promotion_allowed_true": 1,
+                            "trade_usable_true": 1,
+                        },
+                    },
+                    "output_path": output_dir / "factor_claim_terminalization_audit.compact.json",
+                },
+                "release_readiness": {
+                    "command": {"argv": ["release"], "returncode": 0},
+                    "report": {
+                        "timestamp_utc": "2026-05-28T12:00:02Z",
+                        "summary": {"status": "pass", "unresolved": []},
+                    },
+                    "output_path": output_dir / "release_readiness_audit.compact.json",
+                },
+            }
+            (output_dir / "child-debt.json").write_text(
+                json.dumps({"schema_version": "practical-admission-source-debt/v1"}),
+                encoding="utf-8",
+            )
+
+            snapshot = build_snapshot(
+                audit_results,
+                run_all_heavy=False,
+                check_remotes=False,
+                output_dir=output_dir,
+                done_definition_proof={
+                    "path": output_dir / "heavy_done_definition.compact.json",
+                    "report": {
+                        "timestamp_utc": "2026-05-28T11:59:00Z",
+                        "summary": {
+                            "status": "pass",
+                            "completion_ready": True,
+                            "evidence_level": "full_enabled_gate_coverage",
+                            "unresolved": [],
+                            "skipped_gates": [],
+                            "next_action": "done-definition gates have full enabled coverage",
+                        },
+                        "gates": [{"id": "quickstart_surface", "status": "pass"}],
+                    },
+                },
+            )
+
+        done_surface = snapshot["audits"]["done_definition"]["surface"]
+        self.assertTrue(done_surface["completion_ready"])
+        self.assertTrue(done_surface["proof_applied"])
+        self.assertEqual(
+            done_surface["practical_admission_source_surface"]["quarantine"]["matched"],
+            True,
+        )
+        self.assertNotIn("practical_admission_source_debt", snapshot["summary"]["blockers"])
+        self.assertIn(
+            "quarantined_practical_admission_source_debt",
+            snapshot["summary"]["blocker_details"],
+        )
 
     def test_stage_done_definition_proof_copies_external_proof_into_packet(self) -> None:
         with tempfile.TemporaryDirectory() as src_tmp, tempfile.TemporaryDirectory() as packet_tmp:

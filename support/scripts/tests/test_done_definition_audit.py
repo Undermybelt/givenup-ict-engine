@@ -7,6 +7,7 @@ import time
 import unittest
 from pathlib import Path
 import json
+import hashlib
 
 SCRIPTS_ROOT = Path(__file__).resolve().parents[1]
 if str(SCRIPTS_ROOT) not in sys.path:
@@ -22,6 +23,7 @@ from done_definition_audit import (  # noqa: E402
     run_command,
     evaluate_help_audit_policy,
     summarize,
+    write_practical_admission_debt_manifest,
 )
 
 
@@ -715,6 +717,61 @@ Measured on 2026-05-22:
         self.assertEqual(gate["details"]["untracked_scanned_files"], 1)
         self.assertEqual(gate["details"]["untracked_violating_files"], 1)
         self.assertEqual(gate["details"]["untracked_violation_count"], 1)
+
+    def test_practical_admission_debt_manifest_reports_quarantine_match(self) -> None:
+        import done_definition_audit
+
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            quarantine_path = root / "support" / "docs" / "audits" / "practical-admission-source-debt-quarantine.json"
+            quarantine_path.parent.mkdir(parents=True)
+            untracked_violations = [
+                {
+                    "file": "support/docs/experiments/actionable-regime-confidence/scripts/run_untracked_bad_v1.py",
+                    "line": 9,
+                    "key": "trade_usable",
+                    "violation": "practical_flag_without_extension_complete_guard",
+                }
+            ]
+            fingerprint = hashlib.sha256(
+                json.dumps(untracked_violations, sort_keys=True, separators=(",", ":"), ensure_ascii=True).encode()
+            ).hexdigest()
+            quarantine_path.write_text(
+                json.dumps(
+                    {
+                        "schema_version": "practical-admission-source-debt-quarantine/v1",
+                        "untracked_violation_count": 1,
+                        "untracked_violating_files": 1,
+                        "untracked_violations_sha256": fingerprint,
+                        "decision": "quarantined_untracked_wrapper_debt",
+                    }
+                ),
+                encoding="utf-8",
+            )
+
+            original_root = done_definition_audit.ROOT
+            try:
+                done_definition_audit.ROOT = root
+                manifest_path = write_practical_admission_debt_manifest(
+                    {
+                        "violation_count": 1,
+                        "tracked_violation_count": 0,
+                        "tracked_violating_files": 0,
+                        "untracked_violation_count": 1,
+                        "untracked_violating_files": 1,
+                        "violations_by_type": {"practical_flag_without_extension_complete_guard": 1},
+                        "tracked_violations": [],
+                        "untracked_violations": untracked_violations,
+                    }
+                )
+            finally:
+                done_definition_audit.ROOT = original_root
+
+        manifest = json.loads(Path(manifest_path).read_text(encoding="utf-8"))
+        self.assertTrue(manifest["quarantine"]["matched"])
+        self.assertEqual(manifest["quarantine"]["decision"], "quarantined_untracked_wrapper_debt")
+        self.assertEqual(manifest["quarantine"]["manifest_file"], "support/docs/audits/practical-admission-source-debt-quarantine.json")
+        self.assertEqual(manifest["quarantine"]["untracked_violations_sha256"], fingerprint)
 
 
 if __name__ == "__main__":
