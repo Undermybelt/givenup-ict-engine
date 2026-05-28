@@ -330,3 +330,31 @@ release/readiness gates from a clean selected source slice.
   so future objective snapshots used for release/completion evidence are run
   with `--check-remotes`, and snapshots without remote checks fail closed when
   remote/tag gates are skipped.
+
+2026-05-29 release-doc tag-consistency continuation:
+
+- New loophole found: `release_readiness_audit.py` only scanned release signoff
+  and release notes for historical/blocking prose. It did not parse the selected
+  release tag, so signoff and notes could disagree, or both could remain on an
+  older tag after `Cargo.toml` moves to a new unused release version.
+- Implemented fix: `evaluate_docs_freshness` now extracts `Selected candidate`
+  from `support/docs/audits/release-signoff.md`, `Version` from
+  `support/docs/release-notes-draft.md`, and compares both against the selected
+  Cargo version when the full audit runs. It emits
+  `release_docs_tag_mismatch`, `release_signoff_tag_mismatch`, or
+  `release_notes_tag_mismatch` with compact `expected_tag`, `signoff_tag`, and
+  `notes_tag` telemetry.
+- Scope note: an attempted implicit comparison from signoff source commit to
+  current `HEAD` was rejected before commit because committing refreshed
+  signoff text changes `HEAD`; source alignment remains owned by
+  `source_origin_matches_selected_source` and the clean selected export flow.
+- Regression coverage added for signoff/notes tag mismatch and Cargo-version
+  drift. Focused verification passed:
+  `python3 -m unittest support.scripts.tests.test_release_readiness_audit -v`
+  ran `24/24 OK`.
+- Live release readiness after the fix:
+  `python3 support/scripts/release_readiness_audit.py --compact --check-remotes`
+  reported `summary.status=needs_fix`, `release_docs_fresh_for_selected_tag`
+  passed with `expected_tag=v0.1.7`, and the remaining blockers were
+  `worktree_clean_for_release`, `source_origin_matches_selected_source`, and
+  `release_version_tag_available`.

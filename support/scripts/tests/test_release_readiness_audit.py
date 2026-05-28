@@ -400,6 +400,45 @@ R  old.rs -> new.rs
         )
         self.assertIn("selected tag/export", gate["details"]["next_action"])
 
+    def test_docs_freshness_fails_when_signoff_and_notes_select_different_tags(self) -> None:
+        gate = evaluate_docs_freshness(
+            "\n".join(
+                [
+                    "Selected candidate: `v0.1.8`",
+                    "Selected source commit: 547133b8e17f9c92c9e9cc9c4d901c5c0b3918df",
+                ]
+            ),
+            "Version: `v0.1.7`",
+        )
+
+        self.assertEqual(gate["status"], "fail")
+        self.assertIn("release_docs_tag_mismatch", gate["details"]["markers"])
+        self.assertEqual(gate["details"]["signoff_tag"], "v0.1.8")
+        self.assertEqual(gate["details"]["notes_tag"], "v0.1.7")
+
+    def test_docs_freshness_fails_when_selected_cargo_version_drifts(self) -> None:
+        gate = evaluate_docs_freshness(
+            "\n".join(
+                [
+                    "Selected candidate: `v0.1.7`",
+                    "Selected source commit: 518b05579cb3d851accae1da43f8a9cf6d637389",
+                ]
+            ),
+            "Version: `v0.1.7`",
+            selected_version="0.1.8",
+        )
+
+        self.assertEqual(gate["status"], "fail")
+        self.assertIn("release_signoff_tag_mismatch", gate["details"]["markers"])
+        self.assertIn("release_notes_tag_mismatch", gate["details"]["markers"])
+        self.assertEqual(gate["details"]["expected_tag"], "v0.1.8")
+        self.assertEqual(gate["details"]["signoff_tag"], "v0.1.7")
+        self.assertEqual(gate["details"]["notes_tag"], "v0.1.7")
+        self.assertEqual(
+            gate["details"]["signoff_source_commit"],
+            "518b05579cb3d851accae1da43f8a9cf6d637389",
+        )
+
     def test_summarize_needs_fix_when_any_required_gate_fails(self) -> None:
         summary = summarize(
             [

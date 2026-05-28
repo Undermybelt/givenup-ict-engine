@@ -456,21 +456,40 @@ def evaluate_docs_freshness(
     notes_text: str,
     signoff_path: str = "support/docs/audits/release-signoff.md",
     notes_path: str = "support/docs/release-notes-draft.md",
+    selected_version: str | None = None,
 ) -> dict[str, Any]:
     markers: list[str] = []
     signoff_lower = signoff_text.lower()
     notes_lower = notes_text.lower()
+    signoff_tag = _extract_release_doc_tag(signoff_text)
+    notes_tag = _extract_release_doc_tag(notes_text)
+    signoff_source_commit = _extract_release_doc_source_commit(signoff_text)
+    expected_tag = f"v{selected_version}" if selected_version else None
     if "historical" in signoff_lower or "not current release permission" in signoff_lower:
         markers.append("release_signoff_historical")
     if "historical" in notes_lower or "not valid release notes" in notes_lower:
         markers.append("release_notes_historical")
     if "no release permission" in signoff_lower or "do not publish" in signoff_lower:
         markers.append("release_signoff_blocks_publish")
+    if signoff_tag and notes_tag and signoff_tag != notes_tag:
+        markers.append("release_docs_tag_mismatch")
+    if expected_tag and signoff_tag and signoff_tag != expected_tag:
+        markers.append("release_signoff_tag_mismatch")
+    if expected_tag and notes_tag and notes_tag != expected_tag:
+        markers.append("release_notes_tag_mismatch")
     details: dict[str, Any] = {
         "markers": markers,
         "doc_paths": [signoff_path, notes_path],
         "rule": "signoff and release notes must describe the selected fresh tag/export, not historical evidence",
     }
+    if expected_tag:
+        details["expected_tag"] = expected_tag
+    if signoff_tag:
+        details["signoff_tag"] = signoff_tag
+    if notes_tag:
+        details["notes_tag"] = notes_tag
+    if signoff_source_commit:
+        details["signoff_source_commit"] = signoff_source_commit
     if markers:
         details["next_action"] = "refresh release signoff and release notes for the selected tag/export, then rerun release readiness audit"
     return {
@@ -478,6 +497,25 @@ def evaluate_docs_freshness(
         "status": "pass" if not markers else "fail",
         "details": details,
     }
+
+
+def _extract_release_doc_tag(text: str) -> str | None:
+    patterns = [
+        r"(?im)^\s*Selected candidate:\s*`?(v\d+\.\d+\.\d+)`?\s*$",
+        r"(?im)^\s*Version:\s*`?(v\d+\.\d+\.\d+)`?\s*$",
+    ]
+    for pattern in patterns:
+        match = re.search(pattern, text)
+        if match:
+            return match.group(1)
+    return None
+
+
+def _extract_release_doc_source_commit(text: str) -> str | None:
+    match = re.search(r"(?im)^\s*Selected source commit:\s*`?([0-9a-f]{7,40})`?\s*$", text)
+    if match:
+        return match.group(1)
+    return None
 
 
 def parse_origin_divergence(text: str, ref: str = "origin/main") -> dict[str, Any]:
@@ -559,6 +597,7 @@ def build_report(root: Path, check_remotes: bool) -> dict[str, Any]:
         evaluate_docs_freshness(
             (root / "support/docs/audits/release-signoff.md").read_text(encoding="utf-8"),
             (root / "support/docs/release-notes-draft.md").read_text(encoding="utf-8"),
+            selected_version=str(metadata.get("version") or ""),
         ),
     ]
 
