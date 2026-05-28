@@ -147,7 +147,7 @@ def practical_admission_flags(branch_local_admitted, extension_complete=False):
     }
 
 def build_metrics(all_ok, exact_branch_survived, actionable, hazard, pda, readiness):
-    pass_exec = all_ok and exact_branch_survived and actionable and hazard < 0.60 and pda and readiness >= 0.65
+    pass_exec = all_ok and exact_branch_survived and actionable and hazard < 0.60 and pda and readiness >= 0.45
     practical = practical_admission_flags(pass_exec)
     return {
         "branch_local_admitted": practical["branch_local_admitted"],
@@ -177,7 +177,7 @@ def practical_admission_flags(branch_local_admitted, extension_complete=False):
     }
 
 def build_metrics(all_ok, exact_branch_survived, actionable, hazard, pda, readiness):
-    pass_exec = all_ok and exact_branch_survived and actionable and hazard < 0.60 and readiness >= 0.65
+    pass_exec = all_ok and exact_branch_survived and actionable and hazard < 0.60 and readiness >= 0.45
     practical = practical_admission_flags(pass_exec)
     return {
         "pda_hybrid_alignment": pda,

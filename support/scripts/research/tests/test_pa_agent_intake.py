@@ -41,6 +41,10 @@ class PaAgentIntakeTests(unittest.TestCase):
             bundle["candidate_pack_template"]["promotion_state"],
             "candidate_observation",
         )
+        self.assertEqual(
+            bundle["personal_profile"]["strict_gate_policy"]["execution_readiness_min"],
+            0.45,
+        )
 
     def test_opt_in_pa_agent_root_extracts_cycle_enum_and_prompt_inventory(self) -> None:
         with TemporaryDirectory() as tmpdir:

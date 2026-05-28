@@ -24,7 +24,7 @@ DEFAULT_PERSONAL_PROFILE: dict[str, Any] = {
         "aq_to_downstream_direction_consistent": True,
         "transition_hazard_lt": 0.60,
         "pda_hybrid_alignment": True,
-        "execution_readiness_min": 0.65,
+        "execution_readiness_min": 0.45,
     },
     "promotion_policy": "never_promote_pa_agent_alone",
 }

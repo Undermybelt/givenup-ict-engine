@@ -205,7 +205,7 @@ class SimulatedFeedbackAdmissionGuardTests(unittest.TestCase):
             "raw_scored_mature_rows": 12,
             "production_validation_rows": 10,
             "observation_validation_rows": 29,
-            "execution_readiness": 0.52,
+            "execution_readiness": 0.44,
             "transition_hazard": 0.75,
             "actionable": False,
         }
@@ -246,7 +246,7 @@ class SimulatedFeedbackAdmissionGuardTests(unittest.TestCase):
             "raw_scored_mature_rows": 30,
             "production_validation_rows": 30,
             "observation_validation_rows": 30,
-            "execution_readiness": 0.67,
+            "execution_readiness": 0.45,
             "transition_hazard": 0.2,
             "actionable": True,
         }
