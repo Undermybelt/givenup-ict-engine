@@ -297,6 +297,16 @@ def summarize_snapshot(
         blockers.append("quickstart_surface_drift")
     if factor_surface.get("status") != "pass":
         blockers.append("factor_closure_blocked")
+    practical_promotions = factor_surface.get("promotion_allowed_true")
+    practical_trade_usable = factor_surface.get("trade_usable_true")
+    if (
+        factor_surface.get("status") == "pass"
+        and isinstance(practical_promotions, int)
+        and practical_promotions <= 0
+        and isinstance(practical_trade_usable, int)
+        and practical_trade_usable <= 0
+    ):
+        blockers.append("same_tree_practical_closure_unproven")
     if release_surface.get("status") != "pass":
         blockers.append("release_readiness_blocked")
 
@@ -337,7 +347,7 @@ def summarize_snapshot(
             )
     prioritized_next_actions: list[dict[str, str]] = []
     done_next = done_surface.get("next_action")
-    if isinstance(done_next, str) and done_next:
+    if isinstance(done_next, str) and done_next and not done_surface.get("completion_ready"):
         prioritized_next_actions.append(
             {
                 "surface": "done_definition",
@@ -429,6 +439,14 @@ def summarize_snapshot(
                 "surface": "factor_closure",
                 "reason": "practical_closure_blocked",
                 "action": factor_next,
+            }
+        )
+    if "same_tree_practical_closure_unproven" in blockers:
+        prioritized_next_actions.append(
+            {
+                "surface": "factor_closure",
+                "reason": "same_tree_practical_closure_unproven",
+                "action": "produce or locate a same-tree practical closure packet with promotion_allowed_true>0 and trade_usable_true>0",
             }
         )
     release_next_actions = release_surface.get("unresolved_next_actions", {})

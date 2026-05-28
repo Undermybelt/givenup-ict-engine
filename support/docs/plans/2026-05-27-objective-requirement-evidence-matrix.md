@@ -1065,6 +1065,63 @@ Requirement verdict updates:
 - Completion commit: still `contradicted_by_current_state` for the overall
   objective; only a narrow verified classifier/tracking commit would be valid.
 
+## 2026-05-28 Heavy Done-Definition Refresh - Completion Proof Gap Removed
+
+Latest authoritative packet for this refresh:
+
+- `/tmp/ict-engine-goal-20260528-codex-cont2-heavy-snapshot2/objective_closure_snapshot.json`
+
+Current command truth:
+
+- parent command exited `1` by design for the red packet;
+- parent summary: `status=not_complete`, `completion_proven=false`, blockers
+  `factor_closure_blocked` and `release_readiness_blocked`;
+- done-definition child: `status=pass`, `completion_ready=true`,
+  `evidence_level=full_enabled_gate_coverage`, `skipped_gates=[]`;
+- factor child: `status=needs_attention`, `active_claims=2`,
+  `live_factor_processes=2`, `fresh_active_claims_without_live_process=1`,
+  `promotion_allowed_true=0`, and `trade_usable_true=0`;
+- release child: `status=needs_fix`, unresolved `worktree_clean_for_release`
+  and `remote_readback`.
+
+Loophole found and fixed:
+
+- After heavy done-definition passed, the parent snapshot still emitted a
+  `done_definition` prioritized action with reason `completion_proof_gap` and
+  action `done-definition gates have full enabled coverage`.
+- `support/scripts/objective_closure_snapshot.py` now adds a done-definition
+  prioritized action only while `completion_ready=false`. The child status text
+  remains in `child_next_actions`, but it no longer competes with real blockers.
+
+Verification:
+
+```bash
+python3 support/scripts/done_definition_audit.py --run-all-heavy --compact --output /tmp/ict-engine-goal-20260528-codex-cont2-heavy-done.json
+python3 -m unittest support.scripts.tests.test_objective_closure_snapshot -v
+python3 support/scripts/objective_closure_snapshot.py --compact --run-all-heavy --check-remotes --output-dir /tmp/ict-engine-goal-20260528-codex-cont2-heavy-snapshot2 --timeout-seconds 1200
+```
+
+Results:
+
+- standalone heavy done-definition audit passed `8/8` gates;
+- objective snapshot suite passed `15/15`;
+- heavy parent snapshot exited `1` with a valid `not_complete` packet and no
+  done-definition priority action.
+
+Requirement verdict updates:
+
+- Done-definition proof coverage: `proven_current` for this snapshot.
+- Evidence-pack coordination: stronger; parent priority queue now lists only
+  remaining blockers after a child surface is green.
+- Practical end-to-end profitability factor: still
+  `contradicted_by_current_state`; no `trade_usable=true` practical chain is
+  present and active Board B claims/processes remain fresh.
+- Release readiness: still `contradicted_by_current_state` due to dirty
+  worktree and remote readback.
+- Completion commit: still `contradicted_by_current_state` for the full
+  objective; a narrow verified snapshot-actionability commit is valid only as
+  incremental progress.
+
 ## 2026-05-28 TOMAC Gate1 Rows Schema Blocker-Report Repair
 
 Latest authoritative packets for this refresh:
@@ -1117,3 +1174,58 @@ Requirement verdict updates:
   blockers, but no same-tree practical `trade_usable=true` chain exists.
 - Completion commit: only this blocker-report parser/test/tracking slice is
   commit-eligible; the overall objective remains unproven.
+
+## 2026-05-28 Practical Closure Explicit-Blocker Refresh
+
+Latest authoritative packet for this refresh:
+
+- `/tmp/ict-engine-goal-20260528-practical-blocker-20260528T095326+0800/objective_closure_snapshot.json`
+
+Current command truth:
+
+- parent command exited `1` by design for the red packet;
+- parent summary: `status=not_complete`, `completion_proven=false`, blockers
+  `done_definition_not_completion_ready`,
+  `same_tree_practical_closure_unproven`, and `release_readiness_blocked`;
+- factor child: `status=pass`, `active_claims=0`, `live_factor_processes=0`,
+  `promotion_allowed_true=0`, and `trade_usable_true=0`;
+- release child: `status=needs_fix`, unresolved `worktree_clean_for_release`
+  and `remote_readback`.
+
+Loophole found and fixed:
+
+- `factor_claim_terminalization_audit.py` returning `status=pass` means active
+  claim/runtime debt is clear. It does not prove a same-tree practical factor
+  exists.
+- `support/scripts/objective_closure_snapshot.py` now keeps the parent packet
+  red with `same_tree_practical_closure_unproven` when the factor child reports
+  explicit zero practical lanes (`promotion_allowed_true=0` and
+  `trade_usable_true=0`).
+- The prioritized action queue now names the missing proof directly:
+  produce or locate a same-tree practical closure packet with
+  `promotion_allowed_true>0` and `trade_usable_true>0`.
+
+Verification:
+
+```bash
+python3 -m unittest support.scripts.tests.test_objective_closure_snapshot.ObjectiveClosureSnapshotTest.test_summarize_snapshot_blocks_when_no_practical_factor_is_trade_usable -v
+python3 -m unittest support.scripts.tests.test_objective_closure_snapshot -v
+python3 support/scripts/objective_closure_snapshot.py --compact --check-remotes --output-dir /tmp/ict-engine-goal-20260528-practical-blocker-20260528T095326+0800
+```
+
+Results:
+
+- new focused RED first failed on the old `surface_green_manual_end_to_end_proof_required`
+  behavior, then passed after the owner fix;
+- full objective snapshot suite passed `16/16`;
+- live parent snapshot now exposes the same-tree practical-closure gap as a
+  first-class blocker even when claim/runtime debt is clear.
+
+Requirement verdict updates:
+
+- Evidence-pack coordination: stronger; no-active-claims is no longer confused
+  with practical factor closure in the parent packet.
+- Practical end-to-end profitability factor: still
+  `contradicted_by_current_state`; there is no current `trade_usable=true` lane.
+- Completion commit: only this snapshot/test/tracking slice is commit-eligible;
+  the overall objective remains unproven.

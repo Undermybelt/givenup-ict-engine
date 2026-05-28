@@ -92,6 +92,64 @@ class ObjectiveClosureSnapshotTest(unittest.TestCase):
         self.assertFalse(summary["completion_proven"])
         self.assertIn("same_tree_practical_closure_packet", summary["manual_requirements_remaining"])
 
+    def test_summarize_snapshot_blocks_when_no_practical_factor_is_trade_usable(self) -> None:
+        summary = summarize_snapshot(
+            {
+                "completion_ready": True,
+                "quickstart_surface": "pass",
+            },
+            {
+                "status": "pass",
+                "promotion_allowed_true": 0,
+                "trade_usable_true": 0,
+                "next_action": "no claim terminalization blockers found",
+            },
+            {
+                "status": "pass",
+            },
+            snapshot_timestamp="2026-05-27T11:00:10Z",
+        )
+
+        self.assertEqual(summary["status"], "not_complete")
+        self.assertFalse(summary["surface_green"])
+        self.assertIn("same_tree_practical_closure_unproven", summary["blockers"])
+        self.assertIn(
+            {
+                "surface": "factor_closure",
+                "reason": "same_tree_practical_closure_unproven",
+                "action": "produce or locate a same-tree practical closure packet with promotion_allowed_true>0 and trade_usable_true>0",
+            },
+            summary["prioritized_next_actions"],
+        )
+
+    def test_summarize_snapshot_does_not_prioritize_done_definition_when_full_coverage_passes(self) -> None:
+        summary = summarize_snapshot(
+            {
+                "completion_ready": True,
+                "quickstart_surface": "pass",
+                "next_action": "done-definition gates have full enabled coverage",
+            },
+            {
+                "status": "needs_attention",
+                "next_action": "wait for fresh active claims to progress",
+            },
+            {
+                "status": "pass",
+                "unresolved_next_actions": {},
+            },
+            snapshot_timestamp="2026-05-27T11:00:10Z",
+        )
+
+        self.assertNotIn("done_definition_not_completion_ready", summary["blockers"])
+        self.assertNotIn(
+            {
+                "surface": "done_definition",
+                "reason": "completion_proof_gap",
+                "action": "done-definition gates have full enabled coverage",
+            },
+            summary["prioritized_next_actions"],
+        )
+
     def test_summarize_snapshot_lists_every_live_factor_runtime_action(self) -> None:
         live_roots = [
             {"pid": 1001, "run_root": "root-a"},

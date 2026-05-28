@@ -1342,3 +1342,44 @@ Implication:
   practical completion remains disproven. There is still no same-tree
   `trade_usable=true` chain, heavy done-definition gates are skipped, and
   release readiness is red on worktree/source/tag checks.
+
+## 2026-05-28 Heavy Done-Definition Refresh - Green Child Is Not A Next Action
+
+Current answer remains: no, this still is not complete.
+
+Fresh evidence:
+
+- Standalone heavy done-definition audit passed all `8/8` gates at
+  `/tmp/ict-engine-goal-20260528-codex-cont2-heavy-done.json`:
+  `completion_ready=true`, `evidence_level=full_enabled_gate_coverage`, and no
+  skipped gates.
+- The first heavy parent refresh proved a packet UX loophole: the parent still
+  prioritized done-definition as `completion_proof_gap` even after the child
+  was green.
+- `support/scripts/objective_closure_snapshot.py` now suppresses done-definition
+  prioritized actions when `completion_ready=true`; regression coverage lives in
+  `test_summarize_snapshot_does_not_prioritize_done_definition_when_full_coverage_passes`.
+- The regenerated heavy parent packet is
+  `/tmp/ict-engine-goal-20260528-codex-cont2-heavy-snapshot2/objective_closure_snapshot.json`.
+  It exits `1`, reports `summary.status=not_complete`, and now has blockers
+  only `factor_closure_blocked` and `release_readiness_blocked`.
+
+Verification:
+
+- `python3 support/scripts/done_definition_audit.py --run-all-heavy --compact --output /tmp/ict-engine-goal-20260528-codex-cont2-heavy-done.json`
+  passed `8/8` gates.
+- `python3 -m unittest support.scripts.tests.test_objective_closure_snapshot -v`
+  passed `15/15`.
+- `python3 support/scripts/objective_closure_snapshot.py --compact --run-all-heavy --check-remotes --output-dir /tmp/ict-engine-goal-20260528-codex-cont2-heavy-snapshot2 --timeout-seconds 1200`
+  exited `1` with the expected red packet.
+
+Implication:
+
+- Consumer evidence-pack coordination is cleaner: parent action queues no
+  longer ask operators to work on a green done-definition child. Practical
+  completion remains disproven because current factor closure has active fresh
+  claims/live runtimes with `trade_usable_true=0`, and release readiness is
+  still red on `worktree_clean_for_release` and `remote_readback`.
+- Parent completion semantics are stricter now: an otherwise green factor
+  closure with explicit `promotion_allowed_true=0` and `trade_usable_true=0`
+  becomes `same_tree_practical_closure_unproven`, not surface-green.

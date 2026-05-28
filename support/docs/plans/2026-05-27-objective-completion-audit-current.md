@@ -981,3 +981,27 @@ Earlier same-day runtime smoke (not rerun in this continuation):
   `worktree_clean_for_release`, `source_origin_matches_selected_source`, and
   `release_version_tag_available`. This is a verified actionability/classifier
   slice only; it is not objective completion.
+- 2026-05-28: continuation heavy done-definition refresh closed one stale
+  proof gap but exposed a parent-action UX loophole. Standalone heavy audit
+  `python3 support/scripts/done_definition_audit.py --run-all-heavy --compact --output /tmp/ict-engine-goal-20260528-codex-cont2-heavy-done.json`
+  passed all `8/8` gates with `completion_ready=true` and
+  `evidence_level=full_enabled_gate_coverage`. The first heavy parent packet
+  still listed done-definition as a `completion_proof_gap` priority even though
+  that surface was green. `support/scripts/objective_closure_snapshot.py` now
+  suppresses done-definition prioritized next actions when
+  `completion_ready=true`, with regression
+  `test_summarize_snapshot_does_not_prioritize_done_definition_when_full_coverage_passes`.
+  Verification: `python3 -m unittest support.scripts.tests.test_objective_closure_snapshot -v`
+  passed `15/15`. Live heavy parent packet
+  `/tmp/ict-engine-goal-20260528-codex-cont2-heavy-snapshot2/objective_closure_snapshot.json`
+  deliberately exits `1` but now has blockers only `factor_closure_blocked` and
+  `release_readiness_blocked`; done-definition is green with
+  `completion_ready=true`. Factor closure remains red with `active_claims=2`,
+  `live_factor_processes=2`, `promotion_allowed_true=0`, and
+  `trade_usable_true=0`. Release readiness remains red on
+  `worktree_clean_for_release` and `remote_readback`. This is still not
+  objective completion.
+- The same slice also made the parent practical blocker explicit for the future
+  all-child-green case: when factor closure is otherwise `pass` but reports
+  `promotion_allowed_true=0` and `trade_usable_true=0`, the parent now emits
+  `same_tree_practical_closure_unproven` instead of becoming surface-green.
