@@ -20,6 +20,17 @@ HELPER_NAME = "practical_admission_flags"
 HELPER_RESULT_NAMES = frozenset(("practical", "practical_flags", "admission_flags"))
 BRANCH_ADMISSION_NAMES = frozenset(("admitted", "branch_local_admitted", "pass_exec", "pass_execution"))
 DOWNSTREAM_ADMISSION_NAMES = frozenset(("downstream", "downstream_allowed"))
+PASSIVE_READBACK_NAMES = frozenset((
+    "claim",
+    "decision",
+    "fields",
+    "latest",
+    "latest_decision",
+    "live_trade",
+    "payload",
+    "report",
+    "summary_flags",
+))
 PDA_HARD_GATE_PATTERNS = (
     " and pda",
     "pda and ",
@@ -95,6 +106,24 @@ def is_practical_helper_value(node: ast.AST, key: str) -> bool:
     index = node.slice
     if isinstance(index, ast.Constant) and index.value == key:
         return True
+    return False
+
+
+def is_passive_practical_readback(node: ast.AST, key: str) -> bool:
+    if isinstance(node, ast.Call) and isinstance(node.func, ast.Name) and node.func.id == "bool" and node.args:
+        return is_passive_practical_readback(node.args[0], key)
+    if isinstance(node, ast.Call) and isinstance(node.func, ast.Attribute) and node.func.attr == "get":
+        value = node.func.value
+        if isinstance(value, ast.Name) and value.id in PASSIVE_READBACK_NAMES:
+            if node.args and isinstance(node.args[0], ast.Constant) and node.args[0].value == key:
+                return True
+    if isinstance(node, ast.Call) and isinstance(node.func, ast.Name) and node.func.id == "_extract_bool":
+        if node.args and isinstance(node.args[0], ast.Constant) and node.args[0].value == key:
+            return True
+    if isinstance(node, ast.Subscript):
+        value = node.value
+        if isinstance(value, ast.Name) and value.id in PASSIVE_READBACK_NAMES:
+            return isinstance(node.slice, ast.Constant) and node.slice.value == key
     return False
 
 
@@ -190,6 +219,9 @@ class PracticalAssignmentVisitor(ast.NodeVisitor):
         self.pda_tainted_admission_names: dict[str, dict[str, Any]] = {}
         self.transition_tainted_admission_names: dict[str, dict[str, Any]] = {}
         self.learning_tainted_names: set[str] = set()
+        self.false_practical_names: dict[str, str] = {}
+        self.passive_practical_readback_names: dict[str, str] = {}
+        self.dict_context_stack: list[str] = []
         self.violations: list[dict[str, Any]] = []
 
     def transition_taint_for_value(self, node: ast.AST) -> dict[str, Any] | None:
@@ -217,14 +249,48 @@ class PracticalAssignmentVisitor(ast.NodeVisitor):
 
     def visit_FunctionDef(self, node: ast.FunctionDef) -> Any:
         self.function_stack.append(node.name)
-        self.generic_visit(node)
-        self.function_stack.pop()
+        prior_helper_result_names = self.helper_result_names
+        prior_pda_tainted_names = self.pda_tainted_admission_names
+        prior_transition_tainted_names = self.transition_tainted_admission_names
+        prior_learning_tainted_names = self.learning_tainted_names
+        prior_false_practical_names = self.false_practical_names
+        prior_passive_practical_readback_names = self.passive_practical_readback_names
+        self.helper_result_names = set()
+        self.pda_tainted_admission_names = {}
+        self.transition_tainted_admission_names = {}
+        self.learning_tainted_names = set()
+        self.false_practical_names = {}
+        self.passive_practical_readback_names = {}
+        try:
+            self.generic_visit(node)
+        finally:
+            self.helper_result_names = prior_helper_result_names
+            self.pda_tainted_admission_names = prior_pda_tainted_names
+            self.transition_tainted_admission_names = prior_transition_tainted_names
+            self.learning_tainted_names = prior_learning_tainted_names
+            self.false_practical_names = prior_false_practical_names
+            self.passive_practical_readback_names = prior_passive_practical_readback_names
+            self.function_stack.pop()
+
+    def track_safe_name_assignment(self, target: ast.expr, value: ast.AST) -> None:
+        if not isinstance(target, ast.Name):
+            return
+        self.false_practical_names.pop(target.id, None)
+        self.passive_practical_readback_names.pop(target.id, None)
+        if target.id in PRACTICAL_KEYS and is_false_literal(value):
+            self.false_practical_names[target.id] = target.id
+            return
+        for key in PRACTICAL_KEYS:
+            if is_passive_practical_readback(value, key):
+                self.passive_practical_readback_names[target.id] = key
+                return
 
     def visit_Assign(self, node: ast.Assign) -> Any:
         learning_tainted = self.is_learning_tainted_value(node.value)
         for target in node.targets:
             if isinstance(target, ast.Name) and learning_tainted:
                 self.learning_tainted_names.add(target.id)
+            self.track_safe_name_assignment(target, node.value)
         if self.calls_practical_helper(node.value):
             self.record_pda_helper_argument_violation(node.value)
             for target in node.targets:
@@ -301,6 +367,7 @@ class PracticalAssignmentVisitor(ast.NodeVisitor):
         if node.value is not None and isinstance(node.target, ast.Name):
             if self.is_learning_tainted_value(node.value):
                 self.learning_tainted_names.add(node.target.id)
+            self.track_safe_name_assignment(node.target, node.value)
         if node.value is not None and self.calls_practical_helper(node.value):
             self.record_pda_helper_argument_violation(node.value)
             if isinstance(node.target, ast.Name):
@@ -380,6 +447,7 @@ class PracticalAssignmentVisitor(ast.NodeVisitor):
 
     def visit_Dict(self, node: ast.Dict) -> Any:
         in_helper = bool(self.function_stack and self.function_stack[-1] in self.helpers)
+        in_allowed_targets = "allowed_targets" in self.dict_context_stack
         for key_node, value_node in zip(node.keys, node.values):
             if key_node is None:
                 continue
@@ -395,6 +463,8 @@ class PracticalAssignmentVisitor(ast.NodeVisitor):
                             "violation": "five_bps_survival_uses_trade_density_floor",
                         }
                     )
+                continue
+            if in_allowed_targets:
                 continue
             if self.is_learning_tainted_value(value_node):
                 self.violations.append(
@@ -418,7 +488,16 @@ class PracticalAssignmentVisitor(ast.NodeVisitor):
                     "violation": "practical_flag_without_extension_complete_guard",
                 }
             )
-        self.generic_visit(node)
+        for key_node, value_node in zip(node.keys, node.values):
+            key = string_key(key_node) if key_node is not None else None
+            if key == "allowed_targets":
+                self.dict_context_stack.append("allowed_targets")
+                try:
+                    self.visit(value_node)
+                finally:
+                    self.dict_context_stack.pop()
+            else:
+                self.visit(value_node)
 
     def visit_Call(self, node: ast.Call) -> Any:
         if isinstance(node.func, ast.Name) and node.func.id == "dict":
@@ -499,6 +578,12 @@ class PracticalAssignmentVisitor(ast.NodeVisitor):
 
     def is_safe_practical_value(self, node: ast.AST, key: str) -> bool:
         if is_false_literal(node):
+            return True
+        if is_passive_practical_readback(node, key):
+            return True
+        if isinstance(node, ast.Name) and self.false_practical_names.get(node.id) == key:
+            return True
+        if isinstance(node, ast.Name) and self.passive_practical_readback_names.get(node.id) == key:
             return True
         if isinstance(node, ast.Subscript):
             if not isinstance(node.value, ast.Name) or node.value.id not in self.helper_result_names:

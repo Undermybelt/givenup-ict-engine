@@ -33,6 +33,9 @@ PRACTICAL_ADMISSION_SOURCE_CHECK_PATH = (
 PRACTICAL_ADMISSION_WRAPPER_ROOT = (
     ROOT / "support" / "docs" / "experiments" / "actionable-regime-confidence" / "scripts"
 )
+PRACTICAL_ADMISSION_REPORT_FILES = (
+    ROOT / "support" / "scripts" / "research" / "regime_root_survivor_blocker_report.py",
+)
 DEFAULT_SMOKE_STATE_PREFIX = "/tmp/ict-engine-done-definition-audit-smoke"
 
 
@@ -489,6 +492,12 @@ def evaluate_practical_admission_source_gate(timeout_seconds: int) -> dict:
         )
 
     wrapper_files = sorted(PRACTICAL_ADMISSION_WRAPPER_ROOT.glob("run_*.py"))
+    report_files = sorted(
+        path
+        for path in PRACTICAL_ADMISSION_REPORT_FILES
+        if path.exists() and path.resolve().is_relative_to(ROOT.resolve())
+    )
+    scan_files = sorted({*wrapper_files, *report_files})
     if not wrapper_files:
         return _gate(
             "practical_admission_source_surface",
@@ -497,7 +506,7 @@ def evaluate_practical_admission_source_gate(timeout_seconds: int) -> dict:
         )
 
     status, details = run_command(
-        [sys.executable, str(PRACTICAL_ADMISSION_SOURCE_CHECK_PATH), *map(str, wrapper_files)],
+        [sys.executable, str(PRACTICAL_ADMISSION_SOURCE_CHECK_PATH), *map(str, scan_files)],
         cwd=ROOT,
         timeout=timeout_seconds,
     )
@@ -513,7 +522,7 @@ def evaluate_practical_admission_source_gate(timeout_seconds: int) -> dict:
         failed_details["error"] = "invalid_practical_admission_scan_shape"
         return _gate("practical_admission_source_surface", "fail", failed_details)
 
-    tracked_files = tracked_wrapper_file_set(wrapper_files, timeout_seconds)
+    tracked_files = tracked_wrapper_file_set(scan_files, timeout_seconds)
     summary = _summarize_practical_admission_scan(reports, tracked_files=tracked_files)
     debt_manifest_file = write_practical_admission_debt_manifest(summary)
     if debt_manifest_file:

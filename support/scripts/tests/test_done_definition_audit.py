@@ -602,6 +602,83 @@ Measured on 2026-05-22:
         )
         self.assertEqual(gate["details"]["sample_violations"][0]["key"], "promotion_allowed")
 
+    def test_practical_admission_source_gate_scans_tracked_helper_reports(self) -> None:
+        import done_definition_audit
+
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            scanner = root / "support" / "scripts" / "research" / "downstream_practical_admission_source_check.py"
+            wrapper_root = root / "support" / "docs" / "experiments" / "actionable-regime-confidence" / "scripts"
+            helper = root / "support" / "scripts" / "research" / "regime_root_survivor_blocker_report.py"
+            scanner.parent.mkdir(parents=True)
+            wrapper_root.mkdir(parents=True)
+            scanner.write_text("# scanner placeholder\n", encoding="utf-8")
+            (wrapper_root / "run_good_v1.py").write_text("# good\n", encoding="utf-8")
+            helper.write_text("# helper\n", encoding="utf-8")
+            captured: dict[str, list[str]] = {}
+
+            def fake_run_command(cmd, *, cwd, timeout, env=None):
+                del cwd, timeout, env
+                if cmd[:3] == ["git", "ls-files", "--"]:
+                    return (
+                        "pass",
+                        {
+                            "returncode": 0,
+                            "stdout": "\n".join(
+                                [
+                                    "support/docs/experiments/actionable-regime-confidence/scripts/run_good_v1.py",
+                                    "support/scripts/research/regime_root_survivor_blocker_report.py",
+                                ]
+                            )
+                            + "\n",
+                            "stderr": "",
+                        },
+                    )
+                captured["scan_cmd"] = list(map(str, cmd))
+                self.assertIn(str(scanner), cmd)
+                self.assertIn(str(wrapper_root / "run_good_v1.py"), cmd)
+                self.assertIn(str(helper), cmd)
+                return (
+                    "pass",
+                    {
+                        "returncode": 0,
+                        "stdout": json.dumps(
+                            [
+                                {"file": str(wrapper_root / "run_good_v1.py"), "ok": True, "violations": []},
+                                {"file": str(helper), "ok": True, "violations": []},
+                            ]
+                        ),
+                        "stderr": "",
+                    },
+                )
+
+            originals = (
+                done_definition_audit.ROOT,
+                done_definition_audit.PRACTICAL_ADMISSION_SOURCE_CHECK_PATH,
+                done_definition_audit.PRACTICAL_ADMISSION_WRAPPER_ROOT,
+                done_definition_audit.PRACTICAL_ADMISSION_REPORT_FILES,
+                done_definition_audit.run_command,
+            )
+            try:
+                done_definition_audit.ROOT = root
+                done_definition_audit.PRACTICAL_ADMISSION_SOURCE_CHECK_PATH = scanner
+                done_definition_audit.PRACTICAL_ADMISSION_WRAPPER_ROOT = wrapper_root
+                done_definition_audit.PRACTICAL_ADMISSION_REPORT_FILES = (helper,)
+                done_definition_audit.run_command = fake_run_command
+                gate = evaluate_practical_admission_source_gate(30)
+            finally:
+                (
+                    done_definition_audit.ROOT,
+                    done_definition_audit.PRACTICAL_ADMISSION_SOURCE_CHECK_PATH,
+                    done_definition_audit.PRACTICAL_ADMISSION_WRAPPER_ROOT,
+                    done_definition_audit.PRACTICAL_ADMISSION_REPORT_FILES,
+                    done_definition_audit.run_command,
+                ) = originals
+
+        self.assertEqual(gate["status"], "pass")
+        self.assertEqual(gate["details"]["scanned_files"], 2)
+        self.assertIn(str(helper), captured["scan_cmd"])
+
     def test_practical_admission_source_gate_passes_when_wrapper_scan_is_clean(self) -> None:
         import done_definition_audit
 

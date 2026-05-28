@@ -350,6 +350,130 @@ def build_report():
             ["promotion_allowed", "trade_usable"],
         )
 
+    def test_allows_passive_lifecycle_readback_view(self) -> None:
+        path = self.write_source(
+            """
+def closed_loop_consumption_view(lifecycle):
+    live_trade = (lifecycle or {}).get("live_trade") or {}
+    promotion_allowed = bool(live_trade.get("promotion_allowed", False))
+    trade_usable = bool(live_trade.get("trade_usable", False))
+    return {
+        "closed_loop_consumption_status": "promotion_ready" if promotion_allowed and trade_usable else "inspection_only",
+        "promotion_allowed": promotion_allowed,
+        "trade_usable": trade_usable,
+    }
+"""
+        )
+
+        report = checker.check_source_file(path)
+
+        self.assertTrue(report["ok"])
+        self.assertEqual(report["violations"], [])
+
+    def test_allows_passive_claim_readback_view(self) -> None:
+        path = self.write_source(
+            """
+def claim_readback(claim):
+    return {
+        "claim_file": claim.get("claim_file"),
+        "promotion_allowed": claim.get("promotion_allowed"),
+        "trade_usable": claim.get("trade_usable"),
+    }
+"""
+        )
+
+        report = checker.check_source_file(path)
+
+        self.assertTrue(report["ok"])
+        self.assertEqual(report["violations"], [])
+
+    def test_allows_passive_serialized_claim_bool_extraction(self) -> None:
+        path = self.write_source(
+            """
+def parse_claim(fields, serialized):
+    if not isinstance(fields.get("promotion_allowed"), bool):
+        fields["promotion_allowed"] = _extract_bool("promotion_allowed", serialized)
+    if not isinstance(fields.get("trade_usable"), bool):
+        fields["trade_usable"] = _extract_bool("trade_usable", serialized)
+    return fields
+"""
+        )
+
+        report = checker.check_source_file(path)
+
+        self.assertTrue(report["ok"])
+        self.assertEqual(report["violations"], [])
+
+    def test_allows_explicit_false_name_aliases(self) -> None:
+        path = self.write_source(
+            """
+def build_report():
+    promotion_allowed = False
+    trade_usable = False
+    update_goal = False
+    return {
+        "promotion_allowed": promotion_allowed,
+        "trade_usable": trade_usable,
+        "update_goal": update_goal,
+    }
+"""
+        )
+
+        report = checker.check_source_file(path)
+
+        self.assertTrue(report["ok"])
+        self.assertEqual(report["violations"], [])
+
+    def test_does_not_trust_false_name_alias_after_reassignment(self) -> None:
+        path = self.write_source(
+            """
+def build_report(pass_exec):
+    promotion_allowed = False
+    promotion_allowed = pass_exec
+    return {"promotion_allowed": promotion_allowed}
+"""
+        )
+
+        report = checker.check_source_file(path)
+
+        self.assertFalse(report["ok"])
+        self.assertEqual(report["violations"][0]["key"], "promotion_allowed")
+
+    def test_allows_passive_report_subscript_readback(self) -> None:
+        path = self.write_source(
+            """
+def print_summary(report):
+    return {
+        "promotion_allowed": report["promotion_allowed"],
+        "trade_usable": report["trade_usable"],
+    }
+"""
+        )
+
+        report = checker.check_source_file(path)
+
+        self.assertTrue(report["ok"])
+        self.assertEqual(report["violations"], [])
+
+    def test_allows_diagnostic_allowed_targets_context(self) -> None:
+        path = self.write_source(
+            """
+def build_report(allowed):
+    return {
+        "decision": "diagnostic_only",
+        "allowed_targets": {
+            "promotion_allowed": allowed,
+            "trade_usable": allowed,
+        },
+    }
+"""
+        )
+
+        report = checker.check_source_file(path)
+
+        self.assertTrue(report["ok"])
+        self.assertEqual(report["violations"], [])
+
     def test_does_not_trust_practical_dict_without_helper_call(self) -> None:
         path = self.write_source(
             """

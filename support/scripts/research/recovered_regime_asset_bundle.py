@@ -50,8 +50,9 @@ def build_decision_from_asset(
     best_lcb = min_lcb or min(
         value for value in (calibration_lcb, test_lcb) if value is not None
     )
+    downstream_live_admitted = False
     scope_limited = "scope_limited" in asset.get("status", "") or asset.get("ingestion_state") != "promoted_runtime"
-    trade_usable = bool(allow_trade_usable and not scope_limited and best_lcb >= 0.95)
+    trade_usable = False
     decision_state = "single_label_95" if trade_usable else "single_label_95_scope_limited"
     primary_label = _label_to_primary(label)
     branch_path = (
@@ -60,10 +61,13 @@ def build_decision_from_asset(
     )
     reasons = [
         "recovered_95_confidence_asset",
-        "scope_limited_no_runtime_promotion",
         f"status={asset.get('status', '')}",
         f"ingestion_state={asset.get('ingestion_state', '')}",
     ]
+    if scope_limited:
+        reasons.append("scope_limited_no_runtime_promotion")
+    if not downstream_live_admitted:
+        reasons.append("recovered_regime_asset_requires_downstream_live_admission")
     return {
         "schema_version": "regime-high-confidence-decision/v1",
         "timestamp": timestamp,
@@ -145,7 +149,7 @@ def build_bundle(decision: dict[str, Any], decision_path: Path) -> dict[str, Any
             "main_runtime_mutation": "none",
             "optional_for_consumers": True,
             "token_friendly": True,
-            "promotion_allowed": decision["trade_usable"],
+            "promotion_allowed": False,
         },
     }
 
