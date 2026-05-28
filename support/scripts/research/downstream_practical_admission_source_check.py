@@ -27,6 +27,12 @@ PDA_HARD_GATE_PATTERNS = (
     "pda_hybrid_alignment is True",
     "pda_hybrid_alignment_true",
 )
+TRANSITION_HARD_GATE_PATTERNS = (
+    "hazard < 0.60",
+    "transition_hazard < 0.60",
+    "hybrid_transition_hazard < 0.60",
+    "transition_hazard_gte_0.60",
+)
 TWO_BPS_DOWNSTREAM_PATTERNS = (
     "survivors_2",
     "survivors_2bps",
@@ -95,6 +101,11 @@ def is_practical_helper_value(node: ast.AST, key: str) -> bool:
 def contains_pda_hard_gate(source: str, node: ast.AST) -> bool:
     text = expression_text(source, node)
     return any(pattern in text for pattern in PDA_HARD_GATE_PATTERNS)
+
+
+def contains_transition_hard_gate(source: str, node: ast.AST) -> bool:
+    text = expression_text(source, node)
+    return any(pattern in text for pattern in TRANSITION_HARD_GATE_PATTERNS)
 
 
 def contains_two_bps_downstream_gate(source: str, node: ast.AST) -> bool:
@@ -177,8 +188,32 @@ class PracticalAssignmentVisitor(ast.NodeVisitor):
         self.function_stack: list[str] = []
         self.helper_result_names: set[str] = set()
         self.pda_tainted_admission_names: dict[str, dict[str, Any]] = {}
+        self.transition_tainted_admission_names: dict[str, dict[str, Any]] = {}
         self.learning_tainted_names: set[str] = set()
         self.violations: list[dict[str, Any]] = []
+
+    def transition_taint_for_value(self, node: ast.AST) -> dict[str, Any] | None:
+        if contains_transition_hard_gate(self.source, node):
+            return {
+                "line": getattr(node, "lineno", 0),
+                "column": getattr(node, "col_offset", 0),
+                "value": expression_text(self.source, node),
+            }
+        for child in ast.walk(node):
+            if isinstance(child, ast.Name) and child.id in self.transition_tainted_admission_names:
+                return self.transition_tainted_admission_names[child.id]
+        return None
+
+    def record_transition_hard_gate_violation(self, *, key: str, taint: dict[str, Any]) -> None:
+        self.violations.append(
+            {
+                "line": taint["line"],
+                "column": taint["column"],
+                "key": key,
+                "value": taint["value"],
+                "violation": "branch_local_admission_uses_transition_hard_gate",
+            }
+        )
 
     def visit_FunctionDef(self, node: ast.FunctionDef) -> Any:
         self.function_stack.append(node.name)
@@ -203,6 +238,16 @@ class PracticalAssignmentVisitor(ast.NodeVisitor):
                         "column": getattr(node.value, "col_offset", getattr(node, "col_offset", 0)),
                         "value": expression_text(self.source, node.value),
                     }
+        transition_taint = self.transition_taint_for_value(node.value)
+        if transition_taint is not None:
+            for target in node.targets:
+                if isinstance(target, ast.Name):
+                    self.transition_tainted_admission_names[target.id] = transition_taint
+                    if target.id in BRANCH_ADMISSION_NAMES:
+                        self.record_transition_hard_gate_violation(
+                            key=target.id,
+                            taint=transition_taint,
+                        )
         for target in node.targets:
             if isinstance(target, ast.Name) and target.id in DOWNSTREAM_ADMISSION_NAMES:
                 if contains_two_bps_downstream_gate(self.source, node.value):
@@ -267,6 +312,14 @@ class PracticalAssignmentVisitor(ast.NodeVisitor):
                     "column": getattr(node.value, "col_offset", getattr(node, "col_offset", 0)),
                     "value": expression_text(self.source, node.value),
                 }
+        transition_taint = self.transition_taint_for_value(node.value) if node.value is not None else None
+        if transition_taint is not None and isinstance(node.target, ast.Name):
+            self.transition_tainted_admission_names[node.target.id] = transition_taint
+            if isinstance(node.target, ast.Name) and node.target.id in BRANCH_ADMISSION_NAMES:
+                self.record_transition_hard_gate_violation(
+                    key=node.target.id,
+                    taint=transition_taint,
+                )
         if (
             node.value is not None
             and isinstance(node.target, ast.Name)
@@ -427,17 +480,22 @@ class PracticalAssignmentVisitor(ast.NodeVisitor):
             }
         elif isinstance(branch_arg, ast.Name):
             taint = self.pda_tainted_admission_names.get(branch_arg.id)
-        if taint is None:
-            return
-        self.violations.append(
-            {
-                "line": taint["line"],
-                "column": taint["column"],
-                "key": "branch_local_admitted",
-                "value": taint["value"],
-                "violation": "branch_local_admission_uses_pda_hard_gate",
-            }
-        )
+        if taint is not None:
+            self.violations.append(
+                {
+                    "line": taint["line"],
+                    "column": taint["column"],
+                    "key": "branch_local_admitted",
+                    "value": taint["value"],
+                    "violation": "branch_local_admission_uses_pda_hard_gate",
+                }
+            )
+        transition_taint = self.transition_taint_for_value(branch_arg)
+        if transition_taint is not None:
+            self.record_transition_hard_gate_violation(
+                key="branch_local_admitted",
+                taint=transition_taint,
+            )
 
     def is_safe_practical_value(self, node: ast.AST, key: str) -> bool:
         if is_false_literal(node):

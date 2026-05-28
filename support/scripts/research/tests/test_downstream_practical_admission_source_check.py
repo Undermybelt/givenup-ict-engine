@@ -163,7 +163,7 @@ def build_metrics(all_ok, exact_branch_survived, actionable, hazard, pda, readin
         self.assertFalse(report["ok"])
         self.assertEqual(report["violations"][0]["violation"], "branch_local_admission_uses_pda_hard_gate")
 
-    def test_allows_pda_telemetry_not_in_branch_local_hard_gate(self) -> None:
+    def test_flags_transition_hazard_as_branch_local_hard_gate(self) -> None:
         path = self.write_source(
             """
 def practical_admission_flags(branch_local_admitted, extension_complete=False):
@@ -182,6 +182,73 @@ def build_metrics(all_ok, exact_branch_survived, actionable, hazard, pda, readin
     return {
         "pda_hybrid_alignment": pda,
         "pda_required": False,
+        "branch_local_admitted": practical["branch_local_admitted"],
+        "promotion_allowed": practical["promotion_allowed"],
+        "trade_usable": practical["trade_usable"],
+        "update_goal": practical["update_goal"],
+    }
+"""
+        )
+
+        report = checker.check_source_file(path)
+
+        self.assertFalse(report["ok"])
+        self.assertEqual(report["violations"][0]["violation"], "branch_local_admission_uses_transition_hard_gate")
+
+    def test_flags_transition_hazard_taint_through_intermediate_guard(self) -> None:
+        path = self.write_source(
+            """
+def practical_admission_flags(branch_local_admitted, extension_complete=False):
+    practical_allowed = bool(branch_local_admitted and extension_complete)
+    return {
+        "branch_local_admitted": bool(branch_local_admitted),
+        "extension_complete": bool(extension_complete),
+        "promotion_allowed": practical_allowed,
+        "trade_usable": practical_allowed,
+        "update_goal": practical_allowed,
+    }
+
+def build_metrics(branch_ok, transition_hazard, readiness):
+    hazard_ok = transition_hazard < 0.60
+    pass_exec = branch_ok and hazard_ok and readiness >= 0.45
+    practical = practical_admission_flags(pass_exec)
+    return {
+        "transition_hazard": transition_hazard,
+        "branch_local_admitted": practical["branch_local_admitted"],
+        "promotion_allowed": practical["promotion_allowed"],
+        "trade_usable": practical["trade_usable"],
+        "update_goal": practical["update_goal"],
+    }
+"""
+        )
+
+        report = checker.check_source_file(path)
+
+        self.assertFalse(report["ok"])
+        self.assertEqual(report["violations"][0]["violation"], "branch_local_admission_uses_transition_hard_gate")
+        self.assertEqual(report["violations"][0]["key"], "branch_local_admitted")
+
+    def test_allows_pda_and_transition_telemetry_not_in_branch_local_hard_gate(self) -> None:
+        path = self.write_source(
+            """
+def practical_admission_flags(branch_local_admitted, extension_complete=False):
+    practical_allowed = bool(branch_local_admitted and extension_complete)
+    return {
+        "branch_local_admitted": bool(branch_local_admitted),
+        "extension_complete": bool(extension_complete),
+        "promotion_allowed": practical_allowed,
+        "trade_usable": practical_allowed,
+        "update_goal": practical_allowed,
+    }
+
+def build_metrics(all_ok, exact_branch_survived, actionable, hazard, pda, readiness):
+    pass_exec = all_ok and exact_branch_survived and actionable and readiness >= 0.45
+    practical = practical_admission_flags(pass_exec)
+    return {
+        "pda_hybrid_alignment": pda,
+        "transition_hazard": hazard,
+        "pda_required": False,
+        "transition_hazard_required": False,
         "branch_local_admitted": practical["branch_local_admitted"],
         "promotion_allowed": practical["promotion_allowed"],
         "trade_usable": practical["trade_usable"],
