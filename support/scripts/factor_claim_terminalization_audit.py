@@ -19,6 +19,8 @@ SUMMARY_CANDIDATES = (
     "summaries/terminal_decision_summary.md",
     "summaries/terminal_summary.json",
     "checks/terminal_metrics.json",
+    "run/summaries/terminal_summary.json",
+    "run/checks/terminal_metrics.json",
 )
 LIVE_FACTOR_PROCESS_MARKERS = (
     "run_tomac",
@@ -174,6 +176,7 @@ def _summary_indicates_terminalized(summary_flags: dict[str, Any]) -> bool:
         return True
     status = str(summary_flags.get("status", "")).strip().lower()
     return status.startswith("terminal") or status in {
+        "launch_blocked_by_collision_guard",
         "launch_finished",
         "readback_complete",
         "complete",
@@ -288,6 +291,13 @@ def read_claim(path: Path, root: Path) -> dict[str, Any]:
     if trade_usable is None:
         trade_usable = summary_flags.get("trade_usable")
     status = _status(fields, summary_flags=summary_flags)
+    summary_decision = (
+        summary_flags.get("decision")
+        or summary_flags.get("terminal_decision")
+        or summary_flags.get("terminal_status")
+    )
+    if summary_decision is None and _summary_indicates_terminalized(summary_flags):
+        summary_decision = summary_flags.get("status")
     missing_identity_fields = _missing_active_claim_identity_fields(fields) if status != "terminalized" else []
 
     run_root_exists = bool(run_root and run_root.exists())
@@ -308,7 +318,7 @@ def read_claim(path: Path, root: Path) -> dict[str, Any]:
         "active_task": fields.get("active_task"),
         "non_goals": fields.get("non_goals"),
         "write_surface": fields.get("write_surface"),
-        "decision": fields.get("decision") or fields.get("terminal_decision") or fields.get("terminal_status"),
+        "decision": fields.get("decision") or fields.get("terminal_decision") or fields.get("terminal_status") or summary_decision,
         "claimed_at": fields.get("claimed_at"),
         "last_progress_at": fields.get("last_progress_at"),
         "terminalized_at": fields.get("terminalized_at") or fields.get("terminal_at"),

@@ -499,6 +499,58 @@ trade_usable=false
                 ["terminalized", "terminalized", "terminalized"],
             )
 
+    def test_build_report_treats_nested_collision_guard_terminal_summary_as_terminalized(self) -> None:
+        with tempfile.TemporaryDirectory() as repo_tmp, tempfile.TemporaryDirectory() as claims_tmp:
+            repo_root = Path(repo_tmp)
+            claims_dir = Path(claims_tmp)
+            run_root = repo_root / "support" / "docs" / "experiments" / "run-collision-guard"
+            nested_summary_dir = run_root / "run" / "summaries"
+            nested_summary_dir.mkdir(parents=True)
+            (nested_summary_dir / "terminal_summary.json").write_text(
+                json.dumps(
+                    {
+                        "status": "launch_blocked_by_collision_guard",
+                        "scan_executed": False,
+                        "aq_executed": False,
+                        "target_row_count": 0,
+                        "collision_guard": {
+                            "ready": False,
+                            "foreign_active_claims": ["foreign.claim"],
+                        },
+                    }
+                ),
+                encoding="utf-8",
+            )
+
+            (claims_dir / "collision-active.claim").write_text(
+                f"""
+agent_name=codex-collision-guard
+owner=codex
+claimed_at=2026-05-29T04:13:00+0800
+last_progress_at=2026-05-29T04:13:00+0800
+scope=Board B same-root guarded launch
+active_task=run guarded launch if final self audit clears
+non_goals=no promotion from launch guard
+write_surface=/tmp/example-workdoc.md
+run_root={run_root.relative_to(repo_root)}
+status=active
+progress_report=/tmp/example-progress.md
+promotion_allowed=false
+trade_usable=false
+""",
+                encoding="utf-8",
+            )
+
+            report = build_report(claims_dir=claims_dir, repo_root=repo_root)
+
+        self.assertEqual(report["summary"]["active_claims"], 0)
+        self.assertEqual(report["summary"]["terminalized_claims"], 1)
+        self.assertEqual(report["claims"][0]["status"], "terminalized")
+        self.assertEqual(report["claims"][0]["decision"], "launch_blocked_by_collision_guard")
+        self.assertEqual(report["claims"][0]["summary_files"], ["run/summaries/terminal_summary.json"])
+        self.assertIs(report["claims"][0]["promotion_allowed"], False)
+        self.assertIs(report["claims"][0]["trade_usable"], False)
+
     def test_compact_portable_paths_collapses_tmp_runtime_paths(self) -> None:
         report = {
             "schema_version": "factor-claim-terminalization-audit/v1",
