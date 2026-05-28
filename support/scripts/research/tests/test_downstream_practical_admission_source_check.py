@@ -71,6 +71,68 @@ def build_metrics(pass_exec):
         self.assertTrue(report["ok"])
         self.assertEqual(report["violations"], [])
 
+    def test_flags_practical_helper_that_ignores_extension_complete(self) -> None:
+        path = self.write_source(
+            """
+def practical_admission_flags(branch_local_admitted, extension_complete=False):
+    practical_allowed = bool(branch_local_admitted)
+    return {
+        "branch_local_admitted": bool(branch_local_admitted),
+        "extension_complete": bool(extension_complete),
+        "promotion_allowed": practical_allowed,
+        "trade_usable": practical_allowed,
+        "update_goal": practical_allowed,
+    }
+
+def build_metrics(pass_exec):
+    practical = practical_admission_flags(pass_exec)
+    return {
+        "promotion_allowed": practical["promotion_allowed"],
+        "trade_usable": practical["trade_usable"],
+        "update_goal": practical["update_goal"],
+    }
+"""
+        )
+
+        report = checker.check_source_file(path)
+
+        self.assertFalse(report["ok"])
+        self.assertEqual(
+            sorted(hit["key"] for hit in report["violations"]),
+            ["promotion_allowed", "promotion_allowed", "trade_usable", "trade_usable", "update_goal", "update_goal"],
+        )
+
+    def test_flags_practical_helper_that_ors_extension_complete(self) -> None:
+        path = self.write_source(
+            """
+def practical_admission_flags(branch_local_admitted, extension_complete=False):
+    practical_allowed = bool(branch_local_admitted or extension_complete)
+    return {
+        "branch_local_admitted": bool(branch_local_admitted),
+        "extension_complete": bool(extension_complete),
+        "promotion_allowed": practical_allowed,
+        "trade_usable": practical_allowed,
+        "update_goal": practical_allowed,
+    }
+
+def build_metrics(pass_exec):
+    practical = practical_admission_flags(pass_exec)
+    return {
+        "promotion_allowed": practical["promotion_allowed"],
+        "trade_usable": practical["trade_usable"],
+        "update_goal": practical["update_goal"],
+    }
+"""
+        )
+
+        report = checker.check_source_file(path)
+
+        self.assertFalse(report["ok"])
+        self.assertEqual(
+            sorted(hit["key"] for hit in report["violations"]),
+            ["promotion_allowed", "promotion_allowed", "trade_usable", "trade_usable", "update_goal", "update_goal"],
+        )
+
     def test_flags_pda_as_branch_local_hard_gate_before_helper(self) -> None:
         path = self.write_source(
             """

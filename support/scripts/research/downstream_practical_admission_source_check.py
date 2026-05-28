@@ -65,6 +65,22 @@ def is_false_literal(node: ast.AST) -> bool:
     return isinstance(node, ast.Constant) and node.value is False
 
 
+def references_name(node: ast.AST, name: str) -> bool:
+    return any(isinstance(child, ast.Name) and child.id == name for child in ast.walk(node))
+
+
+def references_any_name(node: ast.AST, names: set[str]) -> bool:
+    return any(isinstance(child, ast.Name) and child.id in names for child in ast.walk(node))
+
+
+def is_branch_extension_and_guard(node: ast.AST) -> bool:
+    if isinstance(node, ast.Call) and isinstance(node.func, ast.Name) and node.func.id == "bool" and node.args:
+        return is_branch_extension_and_guard(node.args[0])
+    if isinstance(node, ast.BoolOp) and isinstance(node.op, ast.And):
+        return references_name(node, "branch_local_admitted") and references_name(node, "extension_complete")
+    return False
+
+
 def is_practical_helper_value(node: ast.AST, key: str) -> bool:
     if not isinstance(node, ast.Subscript):
         return False
@@ -106,9 +122,52 @@ def helper_names(tree: ast.AST) -> set[str]:
     for node in ast.walk(tree):
         if isinstance(node, ast.FunctionDef) and node.name == HELPER_NAME:
             arg_names = {arg.arg for arg in node.args.args}
-            if "branch_local_admitted" in arg_names and "extension_complete" in arg_names:
+            if (
+                "branch_local_admitted" in arg_names
+                and "extension_complete" in arg_names
+                and practical_helper_values_are_extension_guarded(node)
+            ):
                 names.add(node.name)
     return names
+
+
+def practical_helper_values_are_extension_guarded(node: ast.FunctionDef) -> bool:
+    extension_guarded_names: set[str] = set()
+    for child in ast.walk(node):
+        if isinstance(child, ast.Assign) and is_branch_extension_and_guard(child.value):
+            for target in child.targets:
+                if isinstance(target, ast.Name):
+                    extension_guarded_names.add(target.id)
+        if isinstance(child, ast.AnnAssign) and child.value is not None:
+            if is_branch_extension_and_guard(child.value) and isinstance(child.target, ast.Name):
+                extension_guarded_names.add(child.target.id)
+
+    found_practical_keys: set[str] = set()
+    for child in ast.walk(node):
+        if isinstance(child, ast.Dict):
+            for key_node, value_node in zip(child.keys, child.values):
+                if key_node is None:
+                    continue
+                key = string_key(key_node)
+                if key not in PRACTICAL_KEYS:
+                    continue
+                found_practical_keys.add(key)
+                if not is_false_literal(value_node) and not (
+                    is_branch_extension_and_guard(value_node) or references_any_name(value_node, extension_guarded_names)
+                ):
+                    return False
+        if isinstance(child, ast.Call) and isinstance(child.func, ast.Name) and child.func.id == "dict":
+            for keyword in child.keywords:
+                key = keyword.arg
+                if key not in PRACTICAL_KEYS:
+                    continue
+                found_practical_keys.add(key)
+                value_node = keyword.value
+                if not is_false_literal(value_node) and not (
+                    is_branch_extension_and_guard(value_node) or references_any_name(value_node, extension_guarded_names)
+                ):
+                    return False
+    return PRACTICAL_KEYS.issubset(found_practical_keys)
 
 
 class PracticalAssignmentVisitor(ast.NodeVisitor):
