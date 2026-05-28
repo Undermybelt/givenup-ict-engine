@@ -308,6 +308,38 @@ class PracticalAssignmentVisitor(ast.NodeVisitor):
             )
         self.generic_visit(node)
 
+    def visit_Call(self, node: ast.Call) -> Any:
+        if isinstance(node.func, ast.Name) and node.func.id == "dict":
+            in_helper = bool(self.function_stack and self.function_stack[-1] in self.helpers)
+            for keyword in node.keywords:
+                key = keyword.arg
+                if key is None or key not in PRACTICAL_KEYS:
+                    continue
+                value_node = keyword.value
+                if self.is_learning_tainted_value(value_node):
+                    self.violations.append(
+                        {
+                            "line": getattr(value_node, "lineno", getattr(node, "lineno", 0)),
+                            "column": getattr(value_node, "col_offset", getattr(node, "col_offset", 0)),
+                            "key": key,
+                            "value": expression_text(self.source, value_node),
+                            "violation": "learning_admission_reused_as_practical_flag",
+                        }
+                    )
+                    continue
+                if in_helper or self.is_safe_practical_value(value_node, key):
+                    continue
+                self.violations.append(
+                    {
+                        "line": getattr(value_node, "lineno", getattr(node, "lineno", 0)),
+                        "column": getattr(value_node, "col_offset", getattr(node, "col_offset", 0)),
+                        "key": key,
+                        "value": expression_text(self.source, value_node),
+                        "violation": "practical_flag_without_extension_complete_guard",
+                    }
+                )
+        self.generic_visit(node)
+
     def calls_practical_helper(self, node: ast.AST) -> bool:
         return (
             isinstance(node, ast.Call)
