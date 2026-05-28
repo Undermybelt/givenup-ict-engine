@@ -132,6 +132,102 @@ class ObjectiveClosureSnapshotTest(unittest.TestCase):
             summary["prioritized_next_actions"],
         )
 
+    def test_build_snapshot_blocks_on_untracked_practical_admission_source_debt(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp)
+            audit_results = {
+                "done_definition": {
+                    "command": {"argv": ["done"], "returncode": 0},
+                    "report": {
+                        "timestamp_utc": "2026-05-28T11:00:00Z",
+                        "summary": {
+                            "status": "pass",
+                            "completion_ready": True,
+                            "evidence_level": "full_enabled_gate_coverage",
+                            "unresolved": [],
+                            "skipped_gates": [],
+                            "next_action": "done-definition gates have full enabled coverage",
+                        },
+                        "gates": [
+                            {"id": "quickstart_surface", "status": "pass"},
+                            {
+                                "id": "practical_admission_source_surface",
+                                "status": "pass",
+                                "details": {
+                                    "tracked_violation_count": 0,
+                                    "untracked_violation_count": 3,
+                                    "untracked_violating_files": 2,
+                                    "sample_violations": [
+                                        {
+                                            "file": "support/docs/experiments/actionable-regime-confidence/scripts/run_untracked_bad_v1.py",
+                                            "violation": "practical_flag_without_extension_complete_guard",
+                                        }
+                                    ],
+                                },
+                            },
+                        ],
+                    },
+                    "output_path": output_dir / "done_definition_audit.compact.json",
+                },
+                "factor_closure": {
+                    "command": {"argv": ["factor"], "returncode": 0},
+                    "report": {
+                        "generated_at": "2026-05-28T11:00:01+00:00",
+                        "summary": {
+                            "status": "pass",
+                            "active_claims": 0,
+                            "invalid_active_claims": 0,
+                            "live_factor_processes": 0,
+                            "blocking_reasons": [],
+                            "promotion_allowed_true": 1,
+                            "trade_usable_true": 1,
+                            "next_action": "no claim terminalization blockers found",
+                        },
+                        "attention_claim_count": 0,
+                        "attention_live_process_count": 0,
+                        "attention_groups": {"by_owner": {}},
+                    },
+                    "output_path": output_dir / "factor_claim_terminalization_audit.compact.json",
+                },
+                "release_readiness": {
+                    "command": {"argv": ["release"], "returncode": 0},
+                    "report": {
+                        "timestamp_utc": "2026-05-28T11:00:02Z",
+                        "summary": {
+                            "status": "pass",
+                            "unresolved": [],
+                            "pass_count": 3,
+                            "fail_count": 0,
+                            "skip_count": 0,
+                        },
+                    },
+                    "output_path": output_dir / "release_readiness_audit.compact.json",
+                },
+            }
+
+            snapshot = build_snapshot(
+                audit_results,
+                run_all_heavy=True,
+                check_remotes=True,
+                output_dir=output_dir,
+            )
+
+        summary = snapshot["summary"]
+        self.assertEqual(summary["status"], "not_complete")
+        self.assertIn("practical_admission_source_debt", summary["blockers"])
+        self.assertIn(
+            {
+                "surface": "done_definition",
+                "reason": "practical_admission_source_debt",
+                "action": "retire, quarantine, or track unsafe untracked practical-admission wrappers before objective closure",
+            },
+            summary["prioritized_next_actions"],
+        )
+        self.assertEqual(
+            snapshot["audits"]["done_definition"]["surface"]["practical_admission_source_surface"]["untracked_violation_count"],
+            3,
+        )
+
     def test_summarize_snapshot_does_not_prioritize_done_definition_when_full_coverage_passes(self) -> None:
         summary = summarize_snapshot(
             {

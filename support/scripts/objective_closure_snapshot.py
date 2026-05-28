@@ -189,17 +189,32 @@ def _done_surface(report: dict[str, Any]) -> dict[str, Any]:
     summary = report.get("summary", {})
     gates = report.get("gates", [])
     quickstart_status = None
+    practical_admission_source_surface = None
     if isinstance(gates, list):
         for gate in gates:
-            if isinstance(gate, dict) and gate.get("id") == "quickstart_surface":
+            if not isinstance(gate, dict):
+                continue
+            if gate.get("id") == "quickstart_surface":
                 quickstart_status = gate.get("status")
-                break
+            elif gate.get("id") == "practical_admission_source_surface":
+                details = gate.get("details", {})
+                practical_admission_source_surface = {
+                    "status": gate.get("status"),
+                    "tracked_violation_count": details.get("tracked_violation_count"),
+                    "tracked_violating_files": details.get("tracked_violating_files"),
+                    "untracked_violation_count": details.get("untracked_violation_count"),
+                    "untracked_violating_files": details.get("untracked_violating_files"),
+                    "violation_count": details.get("violation_count"),
+                    "violating_files": details.get("violating_files"),
+                    "sample_violations": details.get("sample_violations", []),
+                }
     return {
         "report_timestamp": report.get("timestamp_utc"),
         "status": summary.get("status"),
         "completion_ready": bool(summary.get("completion_ready")),
         "evidence_level": summary.get("evidence_level"),
         "quickstart_surface": quickstart_status,
+        "practical_admission_source_surface": practical_admission_source_surface,
         "unresolved": summary.get("unresolved", []),
         "skipped_gates": summary.get("skipped_gates", []),
         "next_action": summary.get("next_action"),
@@ -339,6 +354,11 @@ def summarize_snapshot(
         blockers.append("done_definition_not_completion_ready")
     if done_surface.get("quickstart_surface") != "pass":
         blockers.append("quickstart_surface_drift")
+    practical_source = done_surface.get("practical_admission_source_surface")
+    if isinstance(practical_source, dict):
+        untracked_count = practical_source.get("untracked_violation_count")
+        if isinstance(untracked_count, int) and untracked_count > 0:
+            blockers.append("practical_admission_source_debt")
     if factor_surface.get("status") != "pass":
         blockers.append("factor_closure_blocked")
     practical_promotions = factor_surface.get("promotion_allowed_true")
@@ -399,6 +419,16 @@ def summarize_snapshot(
                 "action": done_next,
             }
         )
+    if isinstance(practical_source, dict):
+        untracked_count = practical_source.get("untracked_violation_count")
+        if isinstance(untracked_count, int) and untracked_count > 0:
+            prioritized_next_actions.append(
+                {
+                    "surface": "done_definition",
+                    "reason": "practical_admission_source_debt",
+                    "action": "retire, quarantine, or track unsafe untracked practical-admission wrappers before objective closure",
+                }
+            )
     factor_next = factor_surface.get("next_action")
     if isinstance(factor_next, str) and factor_next:
         factor_queue = factor_surface.get("attention_action_queue", {})

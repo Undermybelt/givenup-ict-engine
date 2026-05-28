@@ -562,6 +562,21 @@ def _compact_gate(gate: dict, root: str) -> dict:
     }
     if gate.get("status") != "pass":
         compact["details"] = _compact_value(gate.get("details", {}), root)
+    elif gate.get("id") == "practical_admission_source_surface":
+        details = gate.get("details", {})
+        if int(details.get("untracked_violation_count") or 0) > 0:
+            compact["details"] = _compact_value(
+                {
+                    "tracked_violation_count": details.get("tracked_violation_count"),
+                    "tracked_violating_files": details.get("tracked_violating_files"),
+                    "untracked_violation_count": details.get("untracked_violation_count"),
+                    "untracked_violating_files": details.get("untracked_violating_files"),
+                    "violation_count": details.get("violation_count"),
+                    "violating_files": details.get("violating_files"),
+                    "sample_violations": details.get("sample_violations", [])[:10],
+                },
+                root,
+            )
     return compact
 
 

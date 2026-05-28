@@ -223,6 +223,41 @@ Measured on 2026-05-22:
         self.assertEqual(summary["evidence_level"], "full_enabled_gate_coverage")
         self.assertEqual(summary["skipped_gates"], [])
 
+    def test_compact_report_keeps_passed_practical_admission_untracked_debt(self) -> None:
+        report = {
+            "timestamp_utc": "2026-05-28T11:10:00Z",
+            "repo_root": str(SCRIPTS_ROOT.parents[1]),
+            "summary": {"status": "pass"},
+            "gates": [
+                {
+                    "id": "practical_admission_source_surface",
+                    "status": "pass",
+                    "heavy": False,
+                    "details": {
+                        "tracked_violation_count": 0,
+                        "tracked_violating_files": 0,
+                        "untracked_violation_count": 2,
+                        "untracked_violating_files": 1,
+                        "violation_count": 2,
+                        "violating_files": 1,
+                        "sample_violations": [
+                            {
+                                "file": "support/docs/experiments/actionable-regime-confidence/scripts/run_untracked_bad_v1.py",
+                                "violation": "practical_flag_without_extension_complete_guard",
+                            }
+                        ],
+                    },
+                }
+            ],
+        }
+
+        compact = json.loads(format_report(report, compact=True))
+        gate = compact["gates"][0]
+
+        self.assertEqual(gate["status"], "pass")
+        self.assertEqual(gate["details"]["untracked_violation_count"], 2)
+        self.assertEqual(gate["details"]["tracked_violation_count"], 0)
+
     def test_run_command_timeout_details_are_json_serializable(self) -> None:
         status, details = run_command(
             [
