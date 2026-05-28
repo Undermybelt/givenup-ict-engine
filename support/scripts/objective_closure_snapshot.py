@@ -338,12 +338,53 @@ def _factor_surface(report: dict[str, Any]) -> dict[str, Any]:
         "blocking_reasons": summary.get("blocking_reasons", []),
         "promotion_allowed_true": summary.get("promotion_allowed_true"),
         "trade_usable_true": summary.get("trade_usable_true"),
+        "same_tree_practical_closure": summary.get(
+            "same_tree_practical_closure",
+            report.get("same_tree_practical_closure"),
+        ),
         "next_action": summary.get("next_action"),
         "attention_claim_count": report.get("attention_claim_count"),
         "attention_live_process_count": report.get("attention_live_process_count"),
         "attention_by_owner": by_owner,
         "attention_by_actionability": by_actionability,
         "attention_action_queue": attention_action_queue if isinstance(attention_action_queue, dict) else {},
+    }
+
+
+def _same_tree_practical_closure_detail(factor_surface: dict[str, Any]) -> dict[str, Any] | None:
+    packet = factor_surface.get("same_tree_practical_closure")
+    if not isinstance(packet, dict):
+        return None
+    if packet.get("status") != "pass":
+        return None
+    if packet.get("promotion_allowed") is not True:
+        return None
+    if packet.get("trade_usable") is not True:
+        return None
+    if packet.get("provider_execution_feedback_chain") != "pass":
+        return None
+    evidence_packet = packet.get("evidence_packet")
+    if not isinstance(evidence_packet, str) or not evidence_packet.strip():
+        return None
+    return packet
+
+
+def _practical_closure_blocker_detail(factor_surface: dict[str, Any]) -> dict[str, Any]:
+    promotion_allowed = factor_surface.get("promotion_allowed_true")
+    trade_usable = factor_surface.get("trade_usable_true")
+    raw_flags_positive = any(
+        isinstance(value, int) and value > 0
+        for value in (promotion_allowed, trade_usable)
+    )
+    return {
+        "reason": (
+            "raw_factor_claim_flags_are_not_validated_practical_closure"
+            if raw_flags_positive
+            else "validated_same_tree_practical_closure_packet_missing"
+        ),
+        "promotion_allowed_true": promotion_allowed,
+        "trade_usable_true": trade_usable,
+        "same_tree_practical_closure": factor_surface.get("same_tree_practical_closure"),
     }
 
 
@@ -519,16 +560,12 @@ def summarize_snapshot(
             blocker_details[detail_key] = detail
     if factor_surface.get("status") != "pass":
         blockers.append("factor_closure_blocked")
-    practical_promotions = factor_surface.get("promotion_allowed_true")
-    practical_trade_usable = factor_surface.get("trade_usable_true")
-    if (
-        factor_surface.get("status") == "pass"
-        and isinstance(practical_promotions, int)
-        and practical_promotions <= 0
-        and isinstance(practical_trade_usable, int)
-        and practical_trade_usable <= 0
-    ):
+    practical_closure = _same_tree_practical_closure_detail(factor_surface)
+    if factor_surface.get("status") == "pass" and practical_closure is None:
         blockers.append("same_tree_practical_closure_unproven")
+        blocker_details["same_tree_practical_closure_unproven"] = _practical_closure_blocker_detail(
+            factor_surface
+        )
     if release_surface.get("status") != "pass":
         blockers.append("release_readiness_blocked")
     skipped_remote_gates = release_surface.get("skipped_remote_gates")
@@ -538,10 +575,9 @@ def summarize_snapshot(
             "skipped_gates": skipped_remote_gates,
         }
 
-    manual_requirements_remaining = [
-        "same_tree_practical_closure_packet",
-        "truthful_completion_commit",
-    ]
+    manual_requirements_remaining = ["truthful_completion_commit"]
+    if practical_closure is None:
+        manual_requirements_remaining.insert(0, "same_tree_practical_closure_packet")
     surface_green = not blockers
     status = (
         "surface_green_manual_end_to_end_proof_required"
@@ -701,7 +737,7 @@ def summarize_snapshot(
             {
                 "surface": "factor_closure",
                 "reason": "same_tree_practical_closure_unproven",
-                "action": "produce or locate a same-tree practical closure packet with promotion_allowed_true>0 and trade_usable_true>0",
+                "action": "produce or locate a validated same_tree_practical_closure packet; do not use raw promotion_allowed_true/trade_usable_true claim counters as proof",
             }
         )
     release_next_actions = release_surface.get("unresolved_next_actions", {})

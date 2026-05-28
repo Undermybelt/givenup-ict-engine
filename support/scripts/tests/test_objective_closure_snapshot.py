@@ -74,7 +74,7 @@ class ObjectiveClosureSnapshotTest(unittest.TestCase):
         self.assertEqual(summary["child_report_age_seconds"], {})
         self.assertEqual(summary["prioritized_next_actions"], [])
 
-    def test_summarize_snapshot_keeps_manual_requirement_even_when_child_surfaces_are_green(self) -> None:
+    def test_summarize_snapshot_blocks_without_validated_same_tree_practical_closure_packet(self) -> None:
         summary = summarize_snapshot(
             {
                 "completion_ready": True,
@@ -89,10 +89,90 @@ class ObjectiveClosureSnapshotTest(unittest.TestCase):
             snapshot_timestamp="2026-05-27T11:00:10Z",
         )
 
+        self.assertEqual(summary["status"], "not_complete")
+        self.assertFalse(summary["surface_green"])
+        self.assertFalse(summary["completion_proven"])
+        self.assertIn("same_tree_practical_closure_unproven", summary["blockers"])
+        self.assertEqual(
+            summary["blocker_details"]["same_tree_practical_closure_unproven"],
+            {
+                "reason": "validated_same_tree_practical_closure_packet_missing",
+                "promotion_allowed_true": None,
+                "trade_usable_true": None,
+                "same_tree_practical_closure": None,
+            },
+        )
+        self.assertIn("same_tree_practical_closure_packet", summary["manual_requirements_remaining"])
+
+    def test_summarize_snapshot_does_not_treat_raw_factor_claim_flags_as_practical_closure(self) -> None:
+        summary = summarize_snapshot(
+            {
+                "completion_ready": True,
+                "quickstart_surface": "pass",
+            },
+            {
+                "status": "pass",
+                "promotion_allowed_true": 1,
+                "trade_usable_true": 1,
+                "next_action": "no claim terminalization blockers found",
+            },
+            {
+                "status": "pass",
+            },
+            snapshot_timestamp="2026-05-27T11:00:10Z",
+        )
+
+        self.assertEqual(summary["status"], "not_complete")
+        self.assertFalse(summary["surface_green"])
+        self.assertIn("same_tree_practical_closure_unproven", summary["blockers"])
+        self.assertEqual(
+            summary["blocker_details"]["same_tree_practical_closure_unproven"],
+            {
+                "reason": "raw_factor_claim_flags_are_not_validated_practical_closure",
+                "promotion_allowed_true": 1,
+                "trade_usable_true": 1,
+                "same_tree_practical_closure": None,
+            },
+        )
+        self.assertIn(
+            {
+                "surface": "factor_closure",
+                "reason": "same_tree_practical_closure_unproven",
+                "action": "produce or locate a validated same_tree_practical_closure packet; do not use raw promotion_allowed_true/trade_usable_true claim counters as proof",
+            },
+            summary["prioritized_next_actions"],
+        )
+
+    def test_summarize_snapshot_allows_surface_green_with_validated_practical_closure_packet(self) -> None:
+        summary = summarize_snapshot(
+            {
+                "completion_ready": True,
+                "quickstart_surface": "pass",
+            },
+            {
+                "status": "pass",
+                "promotion_allowed_true": 0,
+                "trade_usable_true": 0,
+                "same_tree_practical_closure": {
+                    "status": "pass",
+                    "promotion_allowed": True,
+                    "trade_usable": True,
+                    "provider_execution_feedback_chain": "pass",
+                    "evidence_packet": "same_tree_practical_closure.json",
+                },
+            },
+            {
+                "status": "pass",
+            },
+            snapshot_timestamp="2026-05-27T11:00:10Z",
+        )
+
         self.assertEqual(summary["status"], "surface_green_manual_end_to_end_proof_required")
         self.assertTrue(summary["surface_green"])
         self.assertFalse(summary["completion_proven"])
-        self.assertIn("same_tree_practical_closure_packet", summary["manual_requirements_remaining"])
+        self.assertNotIn("same_tree_practical_closure_unproven", summary["blockers"])
+        self.assertNotIn("same_tree_practical_closure_packet", summary["manual_requirements_remaining"])
+        self.assertIn("truthful_completion_commit", summary["manual_requirements_remaining"])
 
     def test_summarize_snapshot_blocks_when_no_practical_factor_is_trade_usable(self) -> None:
         summary = summarize_snapshot(
@@ -128,7 +208,7 @@ class ObjectiveClosureSnapshotTest(unittest.TestCase):
             {
                 "surface": "factor_closure",
                 "reason": "same_tree_practical_closure_unproven",
-                "action": "produce or locate a same-tree practical closure packet with promotion_allowed_true>0 and trade_usable_true>0",
+                "action": "produce or locate a validated same_tree_practical_closure packet; do not use raw promotion_allowed_true/trade_usable_true claim counters as proof",
             },
             summary["prioritized_next_actions"],
         )

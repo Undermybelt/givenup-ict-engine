@@ -56,6 +56,14 @@
     "test_command": "python3 -m unittest support.scripts.tests.test_factor_claim_terminalization_audit -v"
   },
   {
+    "name": "objective_closure_snapshot",
+    "stability": "audit_helper",
+    "entrypoint": "support/scripts/objective_closure_snapshot.py",
+    "safe_default": true,
+    "requires_data": false,
+    "test_command": "python3 -m unittest support.scripts.tests.test_objective_closure_snapshot -v"
+  },
+  {
     "name": "check_factor_truth_map",
     "stability": "docs_guard",
     "entrypoint": "support/scripts/check_factor_truth_map.py",

@@ -502,3 +502,54 @@ training/refinement.
   claim and a stale-safe Donchian continuation prep claim; `promotion_allowed_true=0`
   and `trade_usable_true=0` remained false. This repair improves evidence
   package coordination but does not prove same-tree practical closure.
+
+## 2026-05-29T07:29+0800 Practical Closure Proof Contract Repair
+
+- Fresh routed resume readback found a real objective-closure contradiction:
+  `objective_closure_snapshot.py` inferred same-tree practical closure from raw
+  factor-claim audit counters `promotion_allowed_true` and `trade_usable_true`,
+  while `factor_claim_terminalization_audit.py` correctly treats those positive
+  raw claim flags as `needs_attention` blockers. A real clean claim-hygiene
+  audit therefore could not both pass and use those raw counters as proof.
+- Root cause: raw claim flags are ownership/readback hygiene signals, not a
+  validated provider->execution->feedback practical closure packet. Using them
+  as completion evidence could turn stale or unsafe positive claim metadata into
+  objective-closure proof.
+- Scoped repair: `support/scripts/objective_closure_snapshot.py` now requires a
+  structured `same_tree_practical_closure` packet with `status=pass`, explicit
+  `promotion_allowed=true`, `trade_usable=true`,
+  `provider_execution_feedback_chain=pass`, and a non-empty `evidence_packet`.
+  Raw `promotion_allowed_true` / `trade_usable_true` counters remain diagnostic
+  blocker details only.
+- Regression coverage added in
+  `support/scripts/tests/test_objective_closure_snapshot.py`:
+  missing validated packet blocks closure, raw positive claim counters do not
+  prove closure, and a validated same-tree practical closure packet is the only
+  fixture path that can make the child surfaces green.
+- Verification:
+  `python3 -m unittest support.scripts.tests.test_objective_closure_snapshot -v`
+  passed `34/34` after the repair.
+- Current factor/practical runtime boundary remains unchanged. Fresh readback at
+  the start of this slice showed DonchianTurtle ownership still active/fresh
+  under `/tmp/ict-engine-tomac-donchian-turtle-breakout-real-aq-20260529T070904+0800`,
+  with `promotion_allowed=false`, `trade_usable=false`, and `update_goal=false`.
+  This static contract repair did not launch, take over, or terminalize any
+  factor/AQ/TOMAC work and does not complete the full objective.
+- Post-fix compact claim audit drifted again and exited `1`: `active_claims=4`,
+  `live_factor_processes=1`, `promotion_allowed_true=0`, and
+  `trade_usable_true=0`. Fresh active claims were OpeningDrive/PriorDay child AQ
+  launch, OpeningDrive materialization rehearing, Greedy practical-admission
+  source debug, and practical frontier selection; PID `50959` was running
+  `run_tomac.py` under the OpeningDrive/PriorDay child AQ launch root. Do not
+  take over or launch practical work while these owners remain fresh/live.
+- Fresh aggregate snapshot
+  `/tmp/ict-engine-closure-practical-packet-contract-20260529T0730/objective_closure_snapshot.json`
+  exited `1` after the contract repair. Because this run intentionally skipped
+  heavy gates and remote checks, current blockers are
+  `done_definition_not_completion_ready`, `factor_closure_blocked`,
+  `release_readiness_blocked`, and `release_remote_checks_not_run`; practical
+  source debt remains quarantined with tracked violations `0`.
+- That snapshot saw `factor_closure` red with `active_claims=2`,
+  `live_factor_processes=1`, and `same_tree_practical_closure=null`; manual
+  requirements still include `same_tree_practical_closure_packet` and
+  `truthful_completion_commit`. Full objective remains incomplete.
