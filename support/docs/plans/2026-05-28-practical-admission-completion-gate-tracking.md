@@ -47,6 +47,23 @@ source release gate by itself.
   `/tmp/ict-engine-tomac-session-window-sweep-reclaim-prep-20260528T012234+0800`.
   This is current evidence against objective completion and against launching a
   sibling TOMAC/AQ lane.
+- Follow-up post-commit readback found a second factor-closure loophole: a live
+  `cargo run --quiet -- factor-research ... --state-dir /private/tmp/ict-engine-*`
+  process under the OpeningDrive materialization root appeared in focused `ps`,
+  while compact claim audit still reported `live_factor_processes=0`. The
+  classifier only recognized direct `ict-engine analyze/workflow-status/...`
+  commands, not cargo-launched factor-lifecycle CLI work.
+- Implemented fix: `support/scripts/factor_claim_terminalization_audit.py` now
+  treats direct `ict-engine` or `cargo run -- ...` factor lifecycle commands
+  (`factor-research`, `factor-autoresearch`, and `auto-quant-agent-material*`)
+  as live Board B occupancy only when a `/tmp` or `/private/tmp` `ict-engine-*`
+  run root/state/output path is present. Readback probes, unittest processes,
+  and help-only commands remain ignored.
+- RED/GREEN regression:
+  `test_live_process_classifier_detects_cargo_factor_research_board_b_cli_child`
+  first failed because `_is_live_factor_command(...)` returned `False`, then
+  passed after the classifier fix. Focused guard tests for direct binary CLI,
+  `ps|rg` readbacks, and bare `rg` readbacks also passed.
 
 2026-05-29 post-Camarilla terminalization refresh:
 

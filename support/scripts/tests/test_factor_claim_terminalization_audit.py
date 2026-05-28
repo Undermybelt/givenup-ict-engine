@@ -1403,6 +1403,23 @@ trade_usable=false
             Path("/tmp/ict-engine-nq-twoleg-openingdrive-obs30-mtf-readback-followup"),
         )
 
+    def test_live_process_classifier_detects_cargo_factor_research_board_b_cli_child(self) -> None:
+        command = (
+            "/Users/example/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo run --quiet -- "
+            "factor-research --symbol TOMAC_NQ_BIDIR_OPENING_DRIVE_EXACT_DOWNSTREAM_V1 "
+            "--data /private/tmp/ict-engine-tomac-opening-drive-exact-practical-gate-materialization-20260528T092748+0800/"
+            "feedback-replay-dryrun-futures-path/windows/obs_33_clean_root/cleaned-1m/"
+            "tomac_nq_bidir_opening_drive_exact_downstream_v1.continuous-1m.json "
+            "--state-dir /private/tmp/ict-engine-tomac-opening-drive-exact-practical-gate-materialization-20260528T092748+0800/"
+            "feedback-replay-dryrun-futures-path/state"
+        )
+
+        self.assertTrue(_is_live_factor_command(command))
+        self.assertEqual(
+            _extract_run_root(command),
+            Path("/private/tmp/ict-engine-tomac-opening-drive-exact-practical-gate-materialization-20260528T092748+0800"),
+        )
+
     def test_live_process_classifier_detects_tomac_helper_scans(self) -> None:
         command = (
             "/opt/homebrew/bin/python3 "

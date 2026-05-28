@@ -835,12 +835,19 @@ def _is_tomac_prep_wrapper_launch(command: str) -> bool:
 
 def _is_direct_ict_engine_board_b_cli_command(command: str) -> bool:
     normalized = " ".join(command.split())
-    if not re.search(r"(?:^|\s)(?:\S*/)?ict-engine\s+(?:analyze|workflow-status|pre-bayes-status|policy-training-status|update)\b", normalized):
+    direct_binary = re.search(
+        r"(?:^|\s)(?:\S*/)?ict-engine\s+(?:analyze|workflow-status|pre-bayes-status|policy-training-status|update|factor-research|factor-autoresearch|auto-quant-agent-material[^\s]*)\b",
+        normalized,
+    )
+    cargo_cli = re.search(
+        r"(?:^|\s)(?:\S*/)?cargo\s+run\b.*(?:^|\s)--\s+(?:factor-research|factor-autoresearch|auto-quant-agent-material[^\s]*)\b",
+        normalized,
+    )
+    if not (direct_binary or cargo_cli):
         return False
     run_root = _extract_run_root(command)
     if run_root is None:
         return False
-    run_root_text = str(run_root)
     return _is_board_b_run_root(run_root)
 
 
