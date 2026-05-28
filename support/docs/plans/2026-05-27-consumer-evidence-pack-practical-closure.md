@@ -1422,3 +1422,39 @@ Implication:
 - Release evidence packets are more reusable/actionable under intermittent
   transport failures, but release readiness and practical trading usefulness are
   still disproven by current evidence.
+
+## 2026-05-28 Staged Done-Definition Proof Reuse Refresh
+
+Current answer remains: no, this still is not complete.
+
+Fresh evidence:
+
+- `support/scripts/objective_closure_snapshot.py` now supports
+  `--done-definition-proof <json>` for reusing a prior heavy
+  `done_definition_audit.py` packet in a lighter coordinated snapshot.
+- The proof is accepted only when it is full coverage (`completion_ready=true`
+  and no skipped gates). Partial/skipped proof is recorded as rejected and does
+  not suppress `done_definition_not_completion_ready`.
+- With `--output-dir`, the proof is copied into the packet as
+  `done_definition_proof.compact.json`; `evidence_files.done_definition_proof`
+  and `audits.done_definition.surface.proof_source` both use that portable
+  filename.
+- Live packet
+  `/tmp/ict-engine-goal-20260528-codex-cont4-proof-reuse-staged/objective_closure_snapshot.json`
+  applies the heavy proof and leaves only the real current blockers:
+  factor closure and release readiness.
+
+Verification:
+
+- `python3 -m unittest support.scripts.tests.test_objective_closure_snapshot -v`
+  passed `19/19`.
+- `python3 support/scripts/objective_closure_snapshot.py --compact --check-remotes --done-definition-proof /tmp/ict-engine-goal-20260528-codex-cont2-heavy-done.json --output-dir /tmp/ict-engine-goal-20260528-codex-cont4-proof-reuse-staged --timeout-seconds 300`
+  exited `1` with a valid red packet and portable staged proof.
+
+Implication:
+
+- Consumer evidence packs are lighter and more reusable: operators can attach a
+  current heavy done-definition proof once, then rerun cheaper coordination
+  snapshots while preserving fail-closed semantics. Practical trading usefulness
+  is still disproven by `promotion_allowed_true=0`, `trade_usable_true=0`, and
+  active/live Board B factor occupancy.

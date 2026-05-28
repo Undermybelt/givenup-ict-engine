@@ -1020,3 +1020,18 @@ Earlier same-day runtime smoke (not rerun in this continuation):
   `/tmp/ict-engine-goal-20260528-codex-cont3-post-release/objective_closure_snapshot.json`
   remains `not_complete` with fresh Board B factor claims and
   `promotion_allowed_true=0` / `trade_usable_true=0`.
+- 2026-05-28: proof-reuse continuation closed the non-heavy parent snapshot UX
+  gap without weakening completion gates. `support/scripts/objective_closure_snapshot.py`
+  now accepts `--done-definition-proof <json>` and applies it only when the
+  referenced `done_definition_audit.py` packet is full coverage
+  (`completion_ready=true` with no skipped gates). When `--output-dir` is used,
+  the proof is copied into the packet as `done_definition_proof.compact.json`
+  so reusable evidence packs do not point back to an external `/tmp` file. TDD
+  coverage added valid-proof, partial-proof rejection, and proof-staging
+  regressions; `python3 -m unittest support.scripts.tests.test_objective_closure_snapshot -v`
+  passed `19/19`. Live verification:
+  `python3 support/scripts/objective_closure_snapshot.py --compact --check-remotes --done-definition-proof /tmp/ict-engine-goal-20260528-codex-cont2-heavy-done.json --output-dir /tmp/ict-engine-goal-20260528-codex-cont4-proof-reuse-staged --timeout-seconds 300`
+  exited `1` with `done_definition.proof_applied=true`, portable proof source
+  `done_definition_proof.compact.json`, and blockers only
+  `factor_closure_blocked` plus `release_readiness_blocked`. This is a
+  reusable evidence-pack UX improvement, not objective completion.

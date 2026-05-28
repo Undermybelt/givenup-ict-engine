@@ -206,6 +206,50 @@ def _done_surface(report: dict[str, Any]) -> dict[str, Any]:
     }
 
 
+def _done_definition_proof_status(
+    proof: dict[str, Any] | None,
+    *,
+    output_dir: Path | None,
+) -> dict[str, Any] | None:
+    if proof is None:
+        return None
+    report = proof.get("report")
+    if not isinstance(report, dict):
+        return {
+            "proof_applied": False,
+            "proof_rejected_reason": "proof_report_missing",
+        }
+    surface = _done_surface(report)
+    proof_path = proof.get("path")
+    if isinstance(proof_path, Path):
+        surface["proof_source"] = _portable_path(proof_path, output_dir=output_dir)
+    surface["proof_applied"] = False
+    if not surface.get("completion_ready"):
+        surface["proof_rejected_reason"] = "proof_not_completion_ready"
+        return surface
+    skipped_gates = surface.get("skipped_gates")
+    if isinstance(skipped_gates, list) and skipped_gates:
+        surface["proof_rejected_reason"] = "proof_has_skipped_gates"
+        return surface
+    surface["proof_applied"] = True
+    return surface
+
+
+def _apply_done_definition_proof(
+    done_surface: dict[str, Any],
+    proof_status: dict[str, Any] | None,
+) -> dict[str, Any]:
+    if proof_status is None:
+        return done_surface
+    if proof_status.get("proof_applied") is True:
+        return proof_status
+    merged = dict(done_surface)
+    for key in ("proof_source", "proof_applied", "proof_rejected_reason"):
+        if key in proof_status:
+            merged[key] = proof_status[key]
+    return merged
+
+
 def _factor_surface(report: dict[str, Any]) -> dict[str, Any]:
     summary = report.get("summary", {})
     attention_groups = report.get("attention_groups", {})
@@ -481,13 +525,18 @@ def build_snapshot(
     run_all_heavy: bool,
     check_remotes: bool,
     output_dir: Path | None,
+    done_definition_proof: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     done_report = audit_results["done_definition"]["report"]
     factor_report = audit_results["factor_closure"]["report"]
     release_report = audit_results["release_readiness"]["report"]
 
     snapshot_timestamp = _utc_now()
-    done_surface = _done_surface(done_report)
+    proof_status = _done_definition_proof_status(
+        done_definition_proof,
+        output_dir=output_dir,
+    )
+    done_surface = _apply_done_definition_proof(_done_surface(done_report), proof_status)
     factor_surface = _factor_surface(factor_report)
     release_surface = _release_surface(release_report)
     summary = summarize_snapshot(
@@ -501,6 +550,13 @@ def build_snapshot(
         name: _portable_path(spec.get("output_path"), output_dir=output_dir)
         for name, spec in audit_results.items()
     }
+    if done_definition_proof is not None:
+        proof_path = done_definition_proof.get("path")
+        evidence_files["done_definition_proof"] = (
+            _portable_path(proof_path, output_dir=output_dir)
+            if isinstance(proof_path, Path)
+            else None
+        )
 
     return {
         "schema_version": "objective-closure-snapshot/v1",
@@ -511,6 +567,7 @@ def build_snapshot(
             "run_all_heavy": run_all_heavy,
             "check_remotes": check_remotes,
             "output_dir": _portable_output_dir(output_dir),
+            "done_definition_proof": evidence_files.get("done_definition_proof"),
         },
         "audit_commands": {
             name: _portable_argv(spec["command"]["argv"], output_dir=output_dir)
@@ -616,7 +673,40 @@ def parse_args() -> argparse.Namespace:
         type=int,
         help="per-child timeout in seconds; defaults to 90, or 300 when --run-all-heavy is enabled",
     )
+    parser.add_argument(
+        "--done-definition-proof",
+        type=Path,
+        help="optional prior done_definition_audit JSON to apply when it proves full enabled gate coverage",
+    )
     return parser.parse_args()
+
+
+def read_done_definition_proof(path: Path | None) -> dict[str, Any] | None:
+    if path is None:
+        return None
+    resolved = path.resolve()
+    parsed = json.loads(resolved.read_text(encoding="utf-8"))
+    if not isinstance(parsed, dict):
+        raise ValueError("done_definition_proof_must_be_object")
+    return {"path": resolved, "report": parsed}
+
+
+def stage_done_definition_proof(
+    proof: dict[str, Any] | None,
+    *,
+    output_dir: Path | None,
+) -> dict[str, Any] | None:
+    if proof is None or output_dir is None:
+        return proof
+    report = proof.get("report")
+    if not isinstance(report, dict):
+        return proof
+    staged_path = output_dir / "done_definition_proof.compact.json"
+    staged_path.write_text(
+        json.dumps(report, ensure_ascii=True, separators=(",", ":")) + "\n",
+        encoding="utf-8",
+    )
+    return {"path": staged_path, "report": report}
 
 
 def main() -> int:
@@ -628,6 +718,23 @@ def main() -> int:
         args.timeout_seconds,
         run_all_heavy=args.run_all_heavy,
     )
+    try:
+        done_definition_proof = stage_done_definition_proof(
+            read_done_definition_proof(args.done_definition_proof),
+            output_dir=output_dir,
+        )
+    except Exception as exc:  # pragma: no cover - exercised via CLI failures
+        failure_report = build_failure_report(
+            failed_audit="done_definition_proof",
+            error=str(exc),
+            command_result={"argv": ["read", str(args.done_definition_proof)]},
+            run_all_heavy=args.run_all_heavy,
+            check_remotes=args.check_remotes,
+            output_dir=output_dir,
+        )
+        write_report_file(failure_report, output_dir)
+        sys.stdout.write(format_report(failure_report, compact=args.compact))
+        return 2
 
     specs = build_audit_specs(
         output_dir=output_dir,
@@ -663,6 +770,7 @@ def main() -> int:
         run_all_heavy=args.run_all_heavy,
         check_remotes=args.check_remotes,
         output_dir=output_dir,
+        done_definition_proof=done_definition_proof,
     )
     write_report_file(snapshot, output_dir)
     sys.stdout.write(format_report(snapshot, compact=args.compact))

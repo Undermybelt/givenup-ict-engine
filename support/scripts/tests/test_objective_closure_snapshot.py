@@ -18,6 +18,7 @@ from objective_closure_snapshot import (  # noqa: E402
     build_snapshot,
     effective_timeout_seconds,
     format_report,
+    stage_done_definition_proof,
     run_command,
     snapshot_exit_code,
     summarize_snapshot,
@@ -831,3 +832,178 @@ class ObjectiveClosureSnapshotTest(unittest.TestCase):
         self.assertEqual(snapshot["audit_commands"]["release_readiness"][1], "support/scripts/release_readiness_audit.py")
         self.assertEqual(snapshot["audit_commands"]["done_definition"][0], "python3")
         self.assertEqual(snapshot["evidence_files"]["release_readiness"], "release_readiness_audit.compact.json")
+
+    def test_build_snapshot_applies_valid_done_definition_proof_without_hiding_other_blockers(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp)
+            proof_path = output_dir / "heavy_done_definition.compact.json"
+            audit_results = {
+                "done_definition": {
+                    "command": {"argv": ["done"], "returncode": 0},
+                    "report": {
+                        "timestamp_utc": "2026-05-28T01:00:00Z",
+                        "summary": {
+                            "status": "pass",
+                            "completion_ready": False,
+                            "evidence_level": "partial_skipped_gates",
+                            "unresolved": [],
+                            "skipped_gates": ["cargo_test"],
+                            "next_action": "rerun with --run-all-heavy before treating done-definition as completion proof",
+                        },
+                        "gates": [{"id": "quickstart_surface", "status": "pass"}],
+                    },
+                    "output_path": output_dir / "done_definition_audit.compact.json",
+                },
+                "factor_closure": {
+                    "command": {"argv": ["factor"], "returncode": 1},
+                    "report": {
+                        "generated_at": "2026-05-28T01:00:01+00:00",
+                        "summary": {
+                            "status": "needs_attention",
+                            "active_claims": 1,
+                            "invalid_active_claims": 0,
+                            "live_factor_processes": 1,
+                            "blocking_reasons": ["active_claims", "live_factor_processes"],
+                            "promotion_allowed_true": 0,
+                            "trade_usable_true": 0,
+                            "next_action": "wait for live factor process",
+                        },
+                    },
+                    "output_path": output_dir / "factor_claim_terminalization_audit.compact.json",
+                },
+                "release_readiness": {
+                    "command": {"argv": ["release"], "returncode": 1},
+                    "report": {
+                        "timestamp_utc": "2026-05-28T01:00:02Z",
+                        "summary": {
+                            "status": "needs_fix",
+                            "unresolved": ["worktree_clean_for_release"],
+                            "pass_count": 2,
+                            "fail_count": 1,
+                            "skip_count": 0,
+                        },
+                        "gates": [
+                            {
+                                "id": "worktree_clean_for_release",
+                                "status": "fail",
+                                "details": {"next_action": "commit or exclude a narrow source slice"},
+                            }
+                        ],
+                    },
+                    "output_path": output_dir / "release_readiness_audit.compact.json",
+                },
+            }
+            done_definition_proof = {
+                "path": proof_path,
+                "report": {
+                    "timestamp_utc": "2026-05-28T00:59:00Z",
+                    "summary": {
+                        "status": "pass",
+                        "completion_ready": True,
+                        "evidence_level": "full_enabled_gate_coverage",
+                        "unresolved": [],
+                        "skipped_gates": [],
+                        "next_action": "done-definition gates have full enabled coverage",
+                    },
+                    "gates": [{"id": "quickstart_surface", "status": "pass"}],
+                },
+            }
+
+            snapshot = build_snapshot(
+                audit_results,
+                run_all_heavy=False,
+                check_remotes=True,
+                output_dir=output_dir,
+                done_definition_proof=done_definition_proof,
+            )
+
+        done_surface = snapshot["audits"]["done_definition"]["surface"]
+        self.assertTrue(done_surface["completion_ready"])
+        self.assertEqual(done_surface["proof_source"], "heavy_done_definition.compact.json")
+        self.assertTrue(done_surface["proof_applied"])
+        self.assertNotIn("done_definition_not_completion_ready", snapshot["summary"]["blockers"])
+        self.assertIn("factor_closure_blocked", snapshot["summary"]["blockers"])
+        self.assertIn("release_readiness_blocked", snapshot["summary"]["blockers"])
+        self.assertFalse(
+            any(
+                action["surface"] == "done_definition"
+                and action["reason"] == "completion_proof_gap"
+                for action in snapshot["summary"]["prioritized_next_actions"]
+            )
+        )
+
+    def test_build_snapshot_rejects_partial_done_definition_proof(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp)
+            audit_results = {
+                "done_definition": {
+                    "command": {"argv": ["done"], "returncode": 0},
+                    "report": {
+                        "timestamp_utc": "2026-05-28T01:00:00Z",
+                        "summary": {
+                            "status": "pass",
+                            "completion_ready": False,
+                            "evidence_level": "partial_skipped_gates",
+                            "unresolved": [],
+                            "skipped_gates": ["cargo_test"],
+                            "next_action": "rerun heavy gates",
+                        },
+                        "gates": [{"id": "quickstart_surface", "status": "pass"}],
+                    },
+                    "output_path": output_dir / "done_definition_audit.compact.json",
+                },
+                "factor_closure": {
+                    "command": {"argv": ["factor"], "returncode": 0},
+                    "report": {"summary": {"status": "pass"}},
+                    "output_path": output_dir / "factor_claim_terminalization_audit.compact.json",
+                },
+                "release_readiness": {
+                    "command": {"argv": ["release"], "returncode": 0},
+                    "report": {"summary": {"status": "pass", "unresolved": []}},
+                    "output_path": output_dir / "release_readiness_audit.compact.json",
+                },
+            }
+
+            snapshot = build_snapshot(
+                audit_results,
+                run_all_heavy=False,
+                check_remotes=False,
+                output_dir=output_dir,
+                done_definition_proof={
+                    "path": output_dir / "partial_done_definition.compact.json",
+                    "report": {
+                        "timestamp_utc": "2026-05-28T00:59:00Z",
+                        "summary": {
+                            "status": "pass",
+                            "completion_ready": False,
+                            "evidence_level": "partial_skipped_gates",
+                            "unresolved": [],
+                            "skipped_gates": ["cargo_test"],
+                        },
+                    },
+                },
+            )
+
+        done_surface = snapshot["audits"]["done_definition"]["surface"]
+        self.assertFalse(done_surface["proof_applied"])
+        self.assertEqual(done_surface["proof_rejected_reason"], "proof_not_completion_ready")
+        self.assertIn("done_definition_not_completion_ready", snapshot["summary"]["blockers"])
+
+    def test_stage_done_definition_proof_copies_external_proof_into_packet(self) -> None:
+        with tempfile.TemporaryDirectory() as src_tmp, tempfile.TemporaryDirectory() as packet_tmp:
+            source_path = Path(src_tmp) / "heavy.json"
+            output_dir = Path(packet_tmp)
+            source_report = {"summary": {"completion_ready": True, "skipped_gates": []}}
+            source_path.write_text(json.dumps(source_report), encoding="utf-8")
+
+            staged = stage_done_definition_proof(
+                {"path": source_path, "report": source_report},
+                output_dir=output_dir,
+            )
+
+            self.assertEqual(staged["path"], output_dir / "done_definition_proof.compact.json")
+            self.assertEqual(staged["report"], source_report)
+            self.assertEqual(
+                json.loads((output_dir / "done_definition_proof.compact.json").read_text(encoding="utf-8")),
+                source_report,
+            )

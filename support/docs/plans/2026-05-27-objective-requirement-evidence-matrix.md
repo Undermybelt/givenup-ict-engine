@@ -1332,3 +1332,46 @@ Requirement verdict updates:
   parent packet; separate release audit also showed the tree remains dirty and
   release/version/origin readiness is not complete.
 - Completion commit: the full objective remains unproven; do not mark complete.
+
+## 2026-05-28 Staged Done-Definition Proof Reuse
+
+Latest authoritative packet for this refresh:
+
+- `/tmp/ict-engine-goal-20260528-codex-cont4-proof-reuse-staged/objective_closure_snapshot.json`
+
+Current command truth:
+
+- parent command exited `1` by design for the red packet;
+- parent summary: `status=not_complete`, blockers `factor_closure_blocked` and
+  `release_readiness_blocked` only;
+- done-definition child: `proof_applied=true`, `completion_ready=true`,
+  `evidence_level=full_enabled_gate_coverage`, `skipped_gates=[]`, and portable
+  `proof_source=done_definition_proof.compact.json`;
+- factor child: still red with `active_claims=3`, `live_factor_processes=1`,
+  `promotion_allowed_true=0`, and `trade_usable_true=0`;
+- release child: still red on `worktree_clean_for_release` and `remote_readback`.
+
+Verification:
+
+```bash
+python3 -m unittest support.scripts.tests.test_objective_closure_snapshot -v
+python3 support/scripts/objective_closure_snapshot.py --compact --check-remotes --done-definition-proof /tmp/ict-engine-goal-20260528-codex-cont2-heavy-done.json --output-dir /tmp/ict-engine-goal-20260528-codex-cont4-proof-reuse-staged --timeout-seconds 300
+```
+
+Results:
+
+- objective snapshot tests passed `19/19`;
+- non-heavy parent snapshots can now consume a validated heavy proof packet
+  without rerunning heavy gates, while rejecting partial proofs;
+- reusable evidence packs are self-contained because the proof packet is staged
+  under the output directory.
+
+Requirement verdict updates:
+
+- Evidence-pack coordination: improved and `proven_current` for staged
+  done-definition proof reuse.
+- Practical end-to-end profitability factor: still
+  `contradicted_by_current_state`; fresh/live factor occupancy and zero
+  practical flags remain.
+- Release readiness: still `contradicted_by_current_state`.
+- Completion commit: full objective remains unproven; do not mark complete.
