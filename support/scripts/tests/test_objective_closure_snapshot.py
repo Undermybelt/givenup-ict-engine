@@ -1320,6 +1320,104 @@ class ObjectiveClosureSnapshotTest(unittest.TestCase):
             snapshot["summary"]["blocker_details"],
         )
 
+    def test_build_snapshot_blocks_when_release_remote_checks_are_skipped(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp)
+            audit_results = {
+                "done_definition": {
+                    "command": {"argv": ["done"], "returncode": 0},
+                    "report": {
+                        "timestamp_utc": "2026-05-28T13:00:00Z",
+                        "summary": {
+                            "status": "pass",
+                            "completion_ready": True,
+                            "evidence_level": "full_enabled_gate_coverage",
+                            "unresolved": [],
+                            "skipped_gates": [],
+                            "next_action": "done-definition gates have full enabled coverage",
+                        },
+                        "gates": [{"id": "quickstart_surface", "status": "pass"}],
+                    },
+                    "output_path": output_dir / "done_definition_audit.compact.json",
+                },
+                "factor_closure": {
+                    "command": {"argv": ["factor"], "returncode": 0},
+                    "report": {
+                        "generated_at": "2026-05-28T13:00:01+00:00",
+                        "summary": {
+                            "status": "pass",
+                            "active_claims": 0,
+                            "invalid_active_claims": 0,
+                            "live_factor_processes": 0,
+                            "blocking_reasons": [],
+                            "promotion_allowed_true": 1,
+                            "trade_usable_true": 1,
+                            "next_action": "no claim terminalization blockers found",
+                        },
+                    },
+                    "output_path": output_dir / "factor_claim_terminalization_audit.compact.json",
+                },
+                "release_readiness": {
+                    "command": {"argv": ["release"], "returncode": 0},
+                    "report": {
+                        "timestamp_utc": "2026-05-28T13:00:02Z",
+                        "summary": {
+                            "status": "pass",
+                            "unresolved": [],
+                            "pass_count": 3,
+                            "fail_count": 0,
+                            "skip_count": 2,
+                        },
+                        "gates": [
+                            {
+                                "id": "remote_readback",
+                                "status": "skip",
+                                "details": {
+                                    "enable_with": "--check-remotes",
+                                    "reason": "network_check_not_enabled",
+                                },
+                            },
+                            {
+                                "id": "release_version_tag_available",
+                                "status": "skip",
+                                "details": {
+                                    "enable_with": "--check-remotes",
+                                    "reason": "network_check_not_enabled",
+                                    "rule": "release tag availability must be checked against release mirror tags, not local tags",
+                                },
+                            },
+                        ],
+                    },
+                    "output_path": output_dir / "release_readiness_audit.compact.json",
+                },
+            }
+
+            snapshot = build_snapshot(
+                audit_results,
+                run_all_heavy=False,
+                check_remotes=False,
+                output_dir=output_dir,
+            )
+
+        self.assertEqual(snapshot["summary"]["status"], "not_complete")
+        self.assertIn("release_remote_checks_not_run", snapshot["summary"]["blockers"])
+        self.assertEqual(
+            snapshot["summary"]["blocker_details"]["release_remote_checks_not_run"],
+            {"skipped_gates": ["remote_readback", "release_version_tag_available"]},
+        )
+        self.assertEqual(
+            snapshot["audits"]["release_readiness"]["surface"]["skipped_remote_gates"],
+            ["remote_readback", "release_version_tag_available"],
+        )
+        self.assertIn(
+            {
+                "surface": "release_readiness",
+                "reason": "release_remote_checks_not_run",
+                "action": "rerun objective closure with --check-remotes before treating release readiness as closed",
+            },
+            snapshot["summary"]["prioritized_next_actions"],
+        )
+
     def test_stage_done_definition_proof_copies_external_proof_into_packet(self) -> None:
         with tempfile.TemporaryDirectory() as src_tmp, tempfile.TemporaryDirectory() as packet_tmp:
             source_path = Path(src_tmp) / "heavy.json"

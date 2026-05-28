@@ -331,6 +331,7 @@ def _release_surface(report: dict[str, Any]) -> dict[str, Any]:
     summary = report.get("summary", {})
     gates = report.get("gates", [])
     unresolved_next_actions: dict[str, str] = {}
+    skipped_remote_gates: list[str] = []
     if isinstance(gates, list):
         for gate in gates:
             if not isinstance(gate, dict):
@@ -338,6 +339,10 @@ def _release_surface(report: dict[str, Any]) -> dict[str, Any]:
             gate_id = gate.get("id")
             if not isinstance(gate_id, str):
                 continue
+            if gate.get("status") == "skip":
+                details = gate.get("details", {})
+                if isinstance(details, dict) and details.get("enable_with") == "--check-remotes":
+                    skipped_remote_gates.append(gate_id)
             details = gate.get("details", {})
             if not isinstance(details, dict):
                 continue
@@ -351,6 +356,7 @@ def _release_surface(report: dict[str, Any]) -> dict[str, Any]:
         "pass_count": summary.get("pass_count"),
         "fail_count": summary.get("fail_count"),
         "skip_count": summary.get("skip_count"),
+        "skipped_remote_gates": skipped_remote_gates,
         "unresolved_next_actions": {
             gate_id: unresolved_next_actions[gate_id]
             for gate_id in summary.get("unresolved", [])
@@ -411,6 +417,12 @@ def summarize_snapshot(
         blockers.append("same_tree_practical_closure_unproven")
     if release_surface.get("status") != "pass":
         blockers.append("release_readiness_blocked")
+    skipped_remote_gates = release_surface.get("skipped_remote_gates")
+    if isinstance(skipped_remote_gates, list) and skipped_remote_gates:
+        blockers.append("release_remote_checks_not_run")
+        blocker_details["release_remote_checks_not_run"] = {
+            "skipped_gates": skipped_remote_gates,
+        }
 
     manual_requirements_remaining = [
         "same_tree_practical_closure_packet",
@@ -589,6 +601,14 @@ def summarize_snapshot(
                         "action": action,
                     }
                 )
+    if "release_remote_checks_not_run" in blockers:
+        prioritized_next_actions.append(
+            {
+                "surface": "release_readiness",
+                "reason": "release_remote_checks_not_run",
+                "action": "rerun objective closure with --check-remotes before treating release readiness as closed",
+            }
+        )
     return {
         "status": status,
         "completion_proven": False,

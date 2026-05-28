@@ -285,3 +285,48 @@ done-definition evidence. Remaining work is to keep untracked violating wrappers
 out of release/source claims, produce a same-tree practical closure packet with
 a genuinely trade-usable factor, clear live factor runtimes, and clear
 release/readiness gates from a clean selected source slice.
+
+2026-05-29 remote-check continuation:
+
+- New loophole found: `objective_closure_snapshot.py` could run
+  `release_readiness_audit.py` without `--check-remotes`. In that mode the
+  child release audit can skip `remote_readback` and
+  `release_version_tag_available`; a parent completion packet could therefore
+  under-report source-origin drift or a reused release tag if other local gates
+  were green.
+- Implemented fix: the parent release surface now preserves skipped remote
+  gates as `skipped_remote_gates`; `summarize_snapshot` fails closed with
+  `release_remote_checks_not_run` and points operators to rerun objective
+  closure with `--check-remotes` before treating release readiness as closed.
+- Regression added:
+  `test_build_snapshot_blocks_when_release_remote_checks_are_skipped` first
+  failed because the snapshot reported
+  `surface_green_manual_end_to_end_proof_required` despite skipped
+  `remote_readback` and `release_version_tag_available`, then passed after the
+  fix.
+- Focused verification passed:
+  `python3 -m unittest support.scripts.tests.test_objective_closure_snapshot -v`
+  ran `24/24 OK`.
+- Live no-remote packet after the fix:
+  `/tmp/ict-engine-closed-loop-snapshot-20260529T0205-codex-remote-skip-redguard/objective_closure_snapshot.json`
+  reported `summary.status=not_complete` with blockers
+  `factor_closure_blocked`, `release_readiness_blocked`, and the new
+  `release_remote_checks_not_run`. Its release child showed
+  `skipped_remote_gates=[remote_readback, release_version_tag_available]`.
+- Live remote-readback packet:
+  `/tmp/ict-engine-closed-loop-snapshot-20260529T0205-codex-remote-check-readback/objective_closure_snapshot.json`
+  reported `summary.status=not_complete` with blockers
+  `factor_closure_blocked` and `release_readiness_blocked`. With remotes
+  enabled, release readiness surfaced `worktree_clean_for_release`,
+  `source_origin_matches_selected_source`, and `release_version_tag_available`
+  directly.
+- Current factor closure was moving again during this readback: the factor
+  child reported `active_claims=1`, `live_factor_processes=3`,
+  `promotion_allowed_true=0`, and `trade_usable_true=0`, rooted at the active
+  TOMAC liquidity-sweep ADX/chandelier efficiency meta-gate launch. Do not
+  take over while that live runtime owns the lane.
+- Runtime skill sync: updated
+  `~/.hermes/skills/software-development/ict-engine-maintenance-loop/SKILL.md`
+  so future objective snapshots used for release/completion evidence are run
+  with `--check-remotes`, and snapshots without remote checks fail closed when
+  remote/tag gates are skipped.
