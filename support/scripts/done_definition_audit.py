@@ -8,6 +8,7 @@ import re
 import signal
 import subprocess
 import sys
+from collections import Counter
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -24,6 +25,12 @@ SCRIPTS_GUIDE_PATH = ROOT / "support" / "scripts" / "SCRIPTS.md"
 SCRIPT_MANIFEST_PATH = ROOT / "support" / "scripts" / "script_manifest.json"
 HELP_AUDIT_PATH = ROOT / "support" / "scripts" / "help_audit.py"
 SMOKE_SCRIPT_PATH = ROOT / "support" / "scripts" / "smoke_acceptance.sh"
+PRACTICAL_ADMISSION_SOURCE_CHECK_PATH = (
+    ROOT / "support" / "scripts" / "research" / "downstream_practical_admission_source_check.py"
+)
+PRACTICAL_ADMISSION_WRAPPER_ROOT = (
+    ROOT / "support" / "docs" / "experiments" / "actionable-regime-confidence" / "scripts"
+)
 DEFAULT_SMOKE_STATE_PREFIX = "/tmp/ict-engine-done-definition-audit-smoke"
 
 
@@ -260,6 +267,92 @@ def evaluate_help_audit_policy(timeout_seconds: int) -> dict:
     )
 
 
+def _rel_path(path: Path) -> str:
+    try:
+        return str(path.relative_to(ROOT))
+    except ValueError:
+        return str(path)
+
+
+def _summarize_practical_admission_scan(reports: list[dict]) -> dict:
+    violations: list[dict] = []
+    violating_files: set[str] = set()
+    by_type: Counter[str] = Counter()
+    for report in reports:
+        file_path = str(report.get("file") or "")
+        for violation in report.get("violations") or []:
+            normalized = dict(violation)
+            if file_path:
+                normalized["file"] = _repo_relative_text(file_path, str(ROOT))
+            violations.append(normalized)
+            if file_path:
+                violating_files.add(file_path)
+            by_type[str(violation.get("violation") or "unknown")] += 1
+
+    return {
+        "scanned_files": len(reports),
+        "violating_files": len(violating_files),
+        "violation_count": len(violations),
+        "violations_by_type": dict(sorted(by_type.items())),
+        "sample_violations": violations[:10],
+    }
+
+
+def evaluate_practical_admission_source_gate(timeout_seconds: int) -> dict:
+    if not PRACTICAL_ADMISSION_SOURCE_CHECK_PATH.exists():
+        return _gate(
+            "practical_admission_source_surface",
+            "fail",
+            {"error": f"missing file: {_rel_path(PRACTICAL_ADMISSION_SOURCE_CHECK_PATH)}"},
+        )
+    if not PRACTICAL_ADMISSION_WRAPPER_ROOT.exists():
+        return _gate(
+            "practical_admission_source_surface",
+            "fail",
+            {"error": f"missing wrapper root: {_rel_path(PRACTICAL_ADMISSION_WRAPPER_ROOT)}"},
+        )
+
+    wrapper_files = sorted(PRACTICAL_ADMISSION_WRAPPER_ROOT.glob("run_*.py"))
+    if not wrapper_files:
+        return _gate(
+            "practical_admission_source_surface",
+            "fail",
+            {"error": f"no run_*.py wrappers found under {_rel_path(PRACTICAL_ADMISSION_WRAPPER_ROOT)}"},
+        )
+
+    status, details = run_command(
+        [sys.executable, str(PRACTICAL_ADMISSION_SOURCE_CHECK_PATH), *map(str, wrapper_files)],
+        cwd=ROOT,
+        timeout=timeout_seconds,
+    )
+    try:
+        reports = json.loads(details.get("stdout") or "[]")
+    except json.JSONDecodeError as exc:
+        failed_details = dict(details)
+        failed_details["error"] = f"invalid_practical_admission_scan_json: {exc}"
+        return _gate("practical_admission_source_surface", "fail", failed_details)
+
+    if not isinstance(reports, list):
+        failed_details = dict(details)
+        failed_details["error"] = "invalid_practical_admission_scan_shape"
+        return _gate("practical_admission_source_surface", "fail", failed_details)
+
+    summary = _summarize_practical_admission_scan(reports)
+    summary["scanner_returncode"] = details.get("returncode")
+    summary["rule"] = (
+        "all downstream/gate wrappers must keep practical flags behind "
+        "practical_admission_flags(..., extension_complete=...) and avoid 2bps/density fail-open gates"
+    )
+    if status == "fail" and summary["violation_count"] == 0:
+        summary["stderr"] = details.get("stderr", "")
+        return _gate("practical_admission_source_surface", "fail", summary)
+    return _gate(
+        "practical_admission_source_surface",
+        "pass" if summary["violation_count"] == 0 else "fail",
+        summary,
+    )
+
+
 def _env_flag(name: str) -> bool:
     return os.environ.get(name, "").strip().lower() in {"1", "true", "yes", "on"}
 
@@ -488,6 +581,12 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
         help="Timeout for `support/scripts/help_audit.py`.",
     )
     parser.add_argument(
+        "--practical-admission-source-timeout-seconds",
+        type=int,
+        default=180,
+        help="Timeout for downstream practical-admission wrapper source scan.",
+    )
+    parser.add_argument(
         "--heavy-timeout-seconds",
         type=int,
         default=900,
@@ -536,6 +635,11 @@ def main(argv: list[str] | None = None) -> int:
 
     gates.append(evaluate_quickstart_surface())
     gates.append(evaluate_script_governance())
+    gates.append(
+        evaluate_practical_admission_source_gate(
+            args.practical_admission_source_timeout_seconds
+        )
+    )
     gates.append(evaluate_help_audit_policy(args.help_audit_timeout_seconds))
     gates.extend(evaluate_heavy_checks(args))
 

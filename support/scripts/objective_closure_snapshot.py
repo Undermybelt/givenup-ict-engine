@@ -445,6 +445,20 @@ def summarize_snapshot(
                                 "action": action,
                             }
                         )
+            missing_run_root_claims = factor_queue.get("missing_run_root_claims", [])
+            if isinstance(missing_run_root_claims, list) and missing_run_root_claims:
+                for item in missing_run_root_claims:
+                    if not isinstance(item, dict):
+                        continue
+                    claim_file = item.get("claim_file")
+                    if isinstance(claim_file, str) and claim_file:
+                        prioritized_next_actions.append(
+                            {
+                                "surface": "factor_closure",
+                                "reason": "missing_run_root_claim",
+                                "action": f"restore run root for {claim_file} or terminalize the claim with explicit evidence",
+                            }
+                        )
             stale_claims = factor_queue.get("stale_safe_takeover_claims", [])
             if isinstance(stale_claims, list) and stale_claims:
                 for item in stale_claims:
@@ -478,13 +492,14 @@ def summarize_snapshot(
                                 "action": f"wait for {pid_prefix}run_root {run_root} to exit or claim it explicitly",
                             }
                         )
-        prioritized_next_actions.append(
-            {
-                "surface": "factor_closure",
-                "reason": "practical_closure_blocked",
-                "action": factor_next,
-            }
-        )
+        if factor_surface.get("status") != "pass":
+            prioritized_next_actions.append(
+                {
+                    "surface": "factor_closure",
+                    "reason": "practical_closure_blocked",
+                    "action": factor_next,
+                }
+            )
     if "same_tree_practical_closure_unproven" in blockers:
         prioritized_next_actions.append(
             {

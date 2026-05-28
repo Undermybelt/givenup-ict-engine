@@ -1138,6 +1138,14 @@ def _attention_action_queue(
         [claim for claim in attention_claims if claim.get("fresh_without_live_process")],
         key=claim_sort_key,
     )
+    missing_run_root_claims = sorted(
+        [
+            claim
+            for claim in attention_claims
+            if claim.get("run_root_state") == "missing"
+        ],
+        key=claim_sort_key,
+    )
     return {
         "fresh_active_claims_without_live_process": [
             {
@@ -1146,6 +1154,14 @@ def _attention_action_queue(
                 "status": claim.get("status"),
             }
             for claim in fresh_non_live_claims
+        ],
+        "missing_run_root_claims": [
+            {
+                "claim_file": claim.get("claim_file"),
+                "age_minutes": claim.get("age_minutes"),
+                "run_root_state": "missing",
+            }
+            for claim in missing_run_root_claims
         ],
         "externalize_wait_only_claims": [
             {

@@ -14,6 +14,7 @@ if str(SCRIPTS_ROOT) not in sys.path:
 
 from done_definition_audit import (  # noqa: E402
     build_smoke_environment,
+    evaluate_practical_admission_source_gate,
     evaluate_quickstart_surface,
     evaluate_main_rs_guardrail,
     format_report,
@@ -390,6 +391,134 @@ Measured on 2026-05-22:
         self.assertEqual(gate["status"], "pass")
         self.assertEqual(captured["timeout"], 600)
         self.assertEqual(captured["env_timeout"], "600")
+
+    def test_practical_admission_source_gate_fails_on_unsafe_wrapper_scan(self) -> None:
+        import done_definition_audit
+
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            scanner = root / "support" / "scripts" / "research" / "downstream_practical_admission_source_check.py"
+            wrapper_root = root / "support" / "docs" / "experiments" / "actionable-regime-confidence" / "scripts"
+            scanner.parent.mkdir(parents=True)
+            wrapper_root.mkdir(parents=True)
+            scanner.write_text("# scanner placeholder\n", encoding="utf-8")
+            (wrapper_root / "run_bad_v1.py").write_text("# bad\n", encoding="utf-8")
+
+            def fake_run_command(cmd, *, cwd, timeout, env=None):
+                del cwd, timeout, env
+                self.assertIn(str(scanner), cmd)
+                self.assertIn(str(wrapper_root / "run_bad_v1.py"), cmd)
+                return (
+                    "fail",
+                    {
+                        "returncode": 1,
+                        "stdout": json.dumps(
+                            [
+                                {
+                                    "file": str(wrapper_root / "run_bad_v1.py"),
+                                    "ok": False,
+                                    "violations": [
+                                        {
+                                            "line": 7,
+                                            "column": 20,
+                                            "key": "promotion_allowed",
+                                            "value": "admitted",
+                                            "violation": "practical_flag_without_extension_complete_guard",
+                                        }
+                                    ],
+                                }
+                            ]
+                        ),
+                        "stderr": "",
+                    },
+                )
+
+            originals = (
+                done_definition_audit.ROOT,
+                done_definition_audit.PRACTICAL_ADMISSION_SOURCE_CHECK_PATH,
+                done_definition_audit.PRACTICAL_ADMISSION_WRAPPER_ROOT,
+                done_definition_audit.run_command,
+            )
+            try:
+                done_definition_audit.ROOT = root
+                done_definition_audit.PRACTICAL_ADMISSION_SOURCE_CHECK_PATH = scanner
+                done_definition_audit.PRACTICAL_ADMISSION_WRAPPER_ROOT = wrapper_root
+                done_definition_audit.run_command = fake_run_command
+                gate = evaluate_practical_admission_source_gate(30)
+            finally:
+                (
+                    done_definition_audit.ROOT,
+                    done_definition_audit.PRACTICAL_ADMISSION_SOURCE_CHECK_PATH,
+                    done_definition_audit.PRACTICAL_ADMISSION_WRAPPER_ROOT,
+                    done_definition_audit.run_command,
+                ) = originals
+
+        self.assertEqual(gate["id"], "practical_admission_source_surface")
+        self.assertEqual(gate["status"], "fail")
+        self.assertEqual(gate["details"]["scanned_files"], 1)
+        self.assertEqual(gate["details"]["violating_files"], 1)
+        self.assertEqual(gate["details"]["violation_count"], 1)
+        self.assertEqual(
+            gate["details"]["violations_by_type"],
+            {"practical_flag_without_extension_complete_guard": 1},
+        )
+        self.assertEqual(gate["details"]["sample_violations"][0]["key"], "promotion_allowed")
+
+    def test_practical_admission_source_gate_passes_when_wrapper_scan_is_clean(self) -> None:
+        import done_definition_audit
+
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            scanner = root / "support" / "scripts" / "research" / "downstream_practical_admission_source_check.py"
+            wrapper_root = root / "support" / "docs" / "experiments" / "actionable-regime-confidence" / "scripts"
+            scanner.parent.mkdir(parents=True)
+            wrapper_root.mkdir(parents=True)
+            scanner.write_text("# scanner placeholder\n", encoding="utf-8")
+            (wrapper_root / "run_good_v1.py").write_text("# good\n", encoding="utf-8")
+
+            def fake_run_command(cmd, *, cwd, timeout, env=None):
+                del cmd, cwd, timeout, env
+                return (
+                    "pass",
+                    {
+                        "returncode": 0,
+                        "stdout": json.dumps(
+                            [
+                                {
+                                    "file": str(wrapper_root / "run_good_v1.py"),
+                                    "ok": True,
+                                    "violations": [],
+                                }
+                            ]
+                        ),
+                        "stderr": "",
+                    },
+                )
+
+            originals = (
+                done_definition_audit.ROOT,
+                done_definition_audit.PRACTICAL_ADMISSION_SOURCE_CHECK_PATH,
+                done_definition_audit.PRACTICAL_ADMISSION_WRAPPER_ROOT,
+                done_definition_audit.run_command,
+            )
+            try:
+                done_definition_audit.ROOT = root
+                done_definition_audit.PRACTICAL_ADMISSION_SOURCE_CHECK_PATH = scanner
+                done_definition_audit.PRACTICAL_ADMISSION_WRAPPER_ROOT = wrapper_root
+                done_definition_audit.run_command = fake_run_command
+                gate = evaluate_practical_admission_source_gate(30)
+            finally:
+                (
+                    done_definition_audit.ROOT,
+                    done_definition_audit.PRACTICAL_ADMISSION_SOURCE_CHECK_PATH,
+                    done_definition_audit.PRACTICAL_ADMISSION_WRAPPER_ROOT,
+                    done_definition_audit.run_command,
+                ) = originals
+
+        self.assertEqual(gate["status"], "pass")
+        self.assertEqual(gate["details"]["scanned_files"], 1)
+        self.assertEqual(gate["details"]["violating_files"], 0)
+        self.assertEqual(gate["details"]["violation_count"], 0)
 
 
 if __name__ == "__main__":

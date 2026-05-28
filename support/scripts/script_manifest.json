@@ -29,7 +29,7 @@
     "entrypoint": "support/scripts/done_definition_audit.py",
     "safe_default": true,
     "requires_data": false,
-    "test_command": "python3 support/scripts/done_definition_audit.py"
+    "test_command": "python3 -m unittest support.scripts.tests.test_done_definition_audit -v"
   },
   {
     "name": "release_readiness_audit",

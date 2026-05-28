@@ -1668,6 +1668,25 @@ class Dummy:
                     "summary_files": [],
                 },
                 {
+                    "claim_file": "fresh-missing.claim",
+                    "claim_path": "/tmp/claims/fresh-missing.claim",
+                    "status": "active",
+                    "agent_name": "codex-fresh-missing",
+                    "owner": "codex",
+                    "scope": "fresh missing root",
+                    "decision": None,
+                    "run_root": "/tmp/fresh-missing-run",
+                    "run_root_exists": False,
+                    "promotion_allowed": False,
+                    "trade_usable": False,
+                    "age_minutes": 4,
+                    "live_runtime_owner": False,
+                    "wait_only_without_live_process": False,
+                    "fresh_without_live_process": True,
+                    "stale_safe_takeover_candidate": False,
+                    "summary_files": [],
+                },
+                {
                     "claim_file": "positive.claim",
                     "claim_path": "/tmp/claims/positive.claim",
                     "status": "terminalized",
@@ -1697,22 +1716,30 @@ class Dummy:
         self.assertNotIn("claims", compact)
         self.assertNotIn("repo_root", compact)
         self.assertEqual(compact["summary"], full_report["summary"])
-        self.assertEqual(compact["attention_claim_count"], 2)
+        self.assertEqual(compact["attention_claim_count"], 3)
         self.assertEqual(
             compact["attention_groups"],
             {
                 "by_actionability": {
                     "active_claim_debt": 1,
+                    "fresh_active_without_live_process": 1,
                     "stale_safe_takeover_candidate": 1,
                 },
-                "by_owner": {"codex": 2},
-                "by_run_root_state": {"missing": 1, "present": 1},
-                "by_status": {"active": 1, "terminalized": 1},
+                "by_owner": {"codex": 3},
+                "by_run_root_state": {"missing": 2, "present": 1},
+                "by_status": {"active": 2, "terminalized": 1},
             },
         )
         self.assertEqual(
             compact["attention_clusters"],
             [
+                {
+                    "owner": "codex",
+                    "scope_family": "fresh missing root",
+                    "claim_count": 1,
+                    "status_counts": {"active": 1},
+                    "claim_files": ["fresh-missing.claim"],
+                },
                 {
                     "owner": "codex",
                     "scope_family": "positive flag",
@@ -1729,13 +1756,37 @@ class Dummy:
                 },
             ],
         )
-        self.assertEqual([claim["claim_file"] for claim in compact["attention_claims"]], ["active.claim", "positive.claim"])
-        self.assertEqual([claim["agent_name"] for claim in compact["attention_claims"]], ["codex-active-lane", "codex-positive-review"])
+        self.assertEqual(
+            [claim["claim_file"] for claim in compact["attention_claims"]],
+            ["active.claim", "fresh-missing.claim", "positive.claim"],
+        )
+        self.assertEqual(
+            [claim["agent_name"] for claim in compact["attention_claims"]],
+            ["codex-active-lane", "codex-fresh-missing", "codex-positive-review"],
+        )
         self.assertEqual(compact["attention_claims"][0]["run_root_state"], "missing")
         self.assertEqual(
             compact["attention_action_queue"],
             {
-                "fresh_active_claims_without_live_process": [],
+                "fresh_active_claims_without_live_process": [
+                    {
+                        "claim_file": "fresh-missing.claim",
+                        "age_minutes": 4,
+                        "status": "active",
+                    }
+                ],
+                "missing_run_root_claims": [
+                    {
+                        "claim_file": "active.claim",
+                        "age_minutes": 91,
+                        "run_root_state": "missing",
+                    },
+                    {
+                        "claim_file": "fresh-missing.claim",
+                        "age_minutes": 4,
+                        "run_root_state": "missing",
+                    },
+                ],
                 "externalize_wait_only_claims": [
                     {
                         "claim_file": "active.claim",

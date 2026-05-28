@@ -114,6 +114,15 @@ class ObjectiveClosureSnapshotTest(unittest.TestCase):
         self.assertEqual(summary["status"], "not_complete")
         self.assertFalse(summary["surface_green"])
         self.assertIn("same_tree_practical_closure_unproven", summary["blockers"])
+        self.assertNotIn("factor_closure_blocked", summary["blockers"])
+        self.assertNotIn(
+            {
+                "surface": "factor_closure",
+                "reason": "practical_closure_blocked",
+                "action": "no claim terminalization blockers found",
+            },
+            summary["prioritized_next_actions"],
+        )
         self.assertIn(
             {
                 "surface": "factor_closure",
@@ -301,6 +310,41 @@ class ObjectiveClosureSnapshotTest(unittest.TestCase):
                 "surface": "factor_closure",
                 "reason": "fresh_active_claim_without_live_runtime",
                 "action": "wait for owner progress or inspect fresh active claim fresh.claim before terminalizing",
+            },
+            summary["prioritized_next_actions"],
+        )
+
+    def test_summarize_snapshot_lists_missing_run_root_factor_actions(self) -> None:
+        summary = summarize_snapshot(
+            {
+                "completion_ready": True,
+                "quickstart_surface": "pass",
+            },
+            {
+                "status": "needs_attention",
+                "next_action": "restore or terminalize missing run roots",
+                "attention_action_queue": {
+                    "missing_run_root_claims": [
+                        {
+                            "claim_file": "missing-root.claim",
+                            "age_minutes": 4,
+                            "run_root_state": "missing",
+                        }
+                    ]
+                },
+            },
+            {
+                "status": "pass",
+                "unresolved_next_actions": {},
+            },
+            snapshot_timestamp="2026-05-27T11:00:10Z",
+        )
+
+        self.assertIn(
+            {
+                "surface": "factor_closure",
+                "reason": "missing_run_root_claim",
+                "action": "restore run root for missing-root.claim or terminalize the claim with explicit evidence",
             },
             summary["prioritized_next_actions"],
         )
