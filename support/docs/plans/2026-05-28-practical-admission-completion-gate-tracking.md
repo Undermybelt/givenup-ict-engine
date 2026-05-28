@@ -17,6 +17,46 @@ source release gate by itself.
 
 ## Fresh Evidence
 
+2026-05-29 release-proof reuse slice:
+
+- New packet-cooperation loophole found: `objective_closure_snapshot.py` could
+  reuse a heavy `done_definition_audit.py` proof, but it had no equivalent path
+  for a clean selected-export `release_readiness_audit.py` proof. That meant a
+  dirty shared worktree child audit could keep surfacing
+  `worktree_clean_for_release` even when a clean export had already proven the
+  release tree was clean and only `source_origin_matches_selected_source`
+  remained.
+- Implemented fix: `objective_closure_snapshot.py` now accepts
+  `--release-readiness-proof <release_readiness_audit.json>`, stages it as
+  `release_readiness_proof.compact.json` when `--output-dir` is set, and applies
+  it only when the parent snapshot itself ran `--check-remotes`, the proof has
+  `remote_details.enabled=true`, no skipped gates, and
+  `worktree_clean_for_release` passed for the same selected `head` as the live
+  child release audit. Invalid, stale-head, or partial proof remains fail-closed
+  and cannot suppress the current release child surface.
+- RED/GREEN regressions added for applying a clean release proof without hiding
+  `source_origin_matches_selected_source`, rejecting a proof that skipped remote
+  checks, rejecting a proof when the parent snapshot omitted `--check-remotes`,
+  rejecting stale-head proof, and staging the proof into the packet. Related
+  verification passed:
+  `python3 -m unittest support.scripts.tests.test_release_readiness_audit support.scripts.tests.test_objective_closure_snapshot -v`
+  ran `54/54 OK`.
+- Live proofed objective snapshot:
+  `/tmp/ict-engine-goal-20260529-codex-release-proof-same-head-snapshot/objective_closure_snapshot.json`
+  applied both `done_definition_proof.compact.json` and
+  `release_readiness_proof.compact.json`. The release surface now carries only
+  `unresolved=["source_origin_matches_selected_source"]`; the prior dirty-tree
+  `worktree_clean_for_release` action is no longer the parent queue head. The
+  objective still correctly remains `summary.status=not_complete` with blockers
+  `same_tree_practical_closure_unproven` and `release_readiness_blocked`. The
+  same-head clean release proof was produced from temporary detached worktree
+  `/tmp/ict-engine-clean-release-proof-22762af4` and the worktree was removed
+  after the proof was written.
+- Current factor audit in that packet had no active/live claim blockers, but it
+  still reported `promotion_allowed_true=0` and `trade_usable_true=0`, so the
+  practical factor objective is not complete. This slice did not terminalize or
+  launch into any factor lane.
+
 2026-05-29 active-inventory coordination readback:
 
 - Heavy done-definition proof now exists at

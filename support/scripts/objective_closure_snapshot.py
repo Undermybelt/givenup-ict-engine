@@ -364,6 +364,7 @@ def _release_surface(report: dict[str, Any]) -> dict[str, Any]:
             if isinstance(next_action, str) and next_action:
                 unresolved_next_actions[gate_id] = next_action
     return {
+        "head": report.get("head"),
         "report_timestamp": report.get("timestamp_utc"),
         "status": summary.get("status"),
         "unresolved": summary.get("unresolved", []),
@@ -377,6 +378,95 @@ def _release_surface(report: dict[str, Any]) -> dict[str, Any]:
             if gate_id in unresolved_next_actions
         },
     }
+
+
+def _gate_status(report: dict[str, Any], gate_id: str) -> str | None:
+    gates = report.get("gates", [])
+    if not isinstance(gates, list):
+        return None
+    for gate in gates:
+        if isinstance(gate, dict) and gate.get("id") == gate_id:
+            status = gate.get("status")
+            return status if isinstance(status, str) else None
+    return None
+
+
+def _release_skip_count(report: dict[str, Any], surface: dict[str, Any]) -> int | None:
+    skip_count = surface.get("skip_count")
+    if isinstance(skip_count, int):
+        return skip_count
+    gates = report.get("gates", [])
+    if isinstance(gates, list):
+        return sum(1 for gate in gates if isinstance(gate, dict) and gate.get("status") == "skip")
+    return None
+
+
+def _release_readiness_proof_status(
+    proof: dict[str, Any] | None,
+    *,
+    output_dir: Path | None,
+    check_remotes: bool,
+    current_release_surface: dict[str, Any],
+) -> dict[str, Any] | None:
+    if proof is None:
+        return None
+    report = proof.get("report")
+    if not isinstance(report, dict):
+        return {
+            "proof_applied": False,
+            "proof_rejected_reason": "proof_report_missing",
+        }
+    surface = _release_surface(report)
+    proof_path = proof.get("path")
+    if isinstance(proof_path, Path):
+        surface["proof_source"] = _portable_path(proof_path, output_dir=output_dir)
+    surface["proof_applied"] = False
+    if not check_remotes:
+        surface["proof_rejected_reason"] = "snapshot_remote_checks_not_enabled"
+        return surface
+
+    proof_head = surface.get("head")
+    current_head = current_release_surface.get("head")
+    if proof_head != current_head:
+        surface["proof_rejected_reason"] = "proof_head_mismatch"
+        return surface
+
+    remote_details = report.get("remote_details", {})
+    remote_enabled = isinstance(remote_details, dict) and remote_details.get("enabled") is True
+    if not remote_enabled or surface.get("skipped_remote_gates"):
+        surface["proof_rejected_reason"] = "proof_remote_checks_not_enabled"
+        return surface
+
+    skip_count = _release_skip_count(report, surface)
+    if isinstance(skip_count, int) and skip_count > 0:
+        surface["proof_rejected_reason"] = "proof_has_skipped_gates"
+        return surface
+
+    worktree_status = _gate_status(report, "worktree_clean_for_release")
+    if worktree_status is None:
+        surface["proof_rejected_reason"] = "proof_worktree_clean_gate_missing"
+        return surface
+    if worktree_status != "pass":
+        surface["proof_rejected_reason"] = "proof_worktree_not_clean"
+        return surface
+
+    surface["proof_applied"] = True
+    return surface
+
+
+def _apply_release_readiness_proof(
+    release_surface: dict[str, Any],
+    proof_status: dict[str, Any] | None,
+) -> dict[str, Any]:
+    if proof_status is None:
+        return release_surface
+    if proof_status.get("proof_applied") is True:
+        return dict(proof_status)
+    merged = dict(release_surface)
+    for key in ("proof_source", "proof_applied", "proof_rejected_reason"):
+        if key in proof_status:
+            merged[key] = proof_status[key]
+    return merged
 
 
 def summarize_snapshot(
@@ -646,6 +736,7 @@ def build_snapshot(
     check_remotes: bool,
     output_dir: Path | None,
     done_definition_proof: dict[str, Any] | None = None,
+    release_readiness_proof: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     done_report = audit_results["done_definition"]["report"]
     factor_report = audit_results["factor_closure"]["report"]
@@ -658,7 +749,17 @@ def build_snapshot(
     )
     done_surface = _apply_done_definition_proof(_done_surface(done_report), proof_status)
     factor_surface = _factor_surface(factor_report)
-    release_surface = _release_surface(release_report)
+    current_release_surface = _release_surface(release_report)
+    release_proof_status = _release_readiness_proof_status(
+        release_readiness_proof,
+        output_dir=output_dir,
+        check_remotes=check_remotes,
+        current_release_surface=current_release_surface,
+    )
+    release_surface = _apply_release_readiness_proof(
+        current_release_surface,
+        release_proof_status,
+    )
 
     evidence_files = {
         name: _portable_path(spec.get("output_path"), output_dir=output_dir)
@@ -691,6 +792,13 @@ def build_snapshot(
             if isinstance(proof_path, Path)
             else None
         )
+    if release_readiness_proof is not None:
+        proof_path = release_readiness_proof.get("path")
+        evidence_files["release_readiness_proof"] = (
+            _portable_path(proof_path, output_dir=output_dir)
+            if isinstance(proof_path, Path)
+            else None
+        )
 
     return {
         "schema_version": "objective-closure-snapshot/v1",
@@ -702,6 +810,7 @@ def build_snapshot(
             "check_remotes": check_remotes,
             "output_dir": _portable_output_dir(output_dir),
             "done_definition_proof": evidence_files.get("done_definition_proof"),
+            "release_readiness_proof": evidence_files.get("release_readiness_proof"),
         },
         "audit_commands": {
             name: _portable_argv(spec["command"]["argv"], output_dir=output_dir)
@@ -812,6 +921,11 @@ def parse_args() -> argparse.Namespace:
         type=Path,
         help="optional prior done_definition_audit JSON to apply when it proves full enabled gate coverage",
     )
+    parser.add_argument(
+        "--release-readiness-proof",
+        type=Path,
+        help="optional prior release_readiness_audit JSON from a clean selected export with remote checks enabled",
+    )
     return parser.parse_args()
 
 
@@ -843,6 +957,34 @@ def stage_done_definition_proof(
     return {"path": staged_path, "report": report}
 
 
+def read_release_readiness_proof(path: Path | None) -> dict[str, Any] | None:
+    if path is None:
+        return None
+    resolved = path.resolve()
+    parsed = json.loads(resolved.read_text(encoding="utf-8"))
+    if not isinstance(parsed, dict):
+        raise ValueError("release_readiness_proof_must_be_object")
+    return {"path": resolved, "report": parsed}
+
+
+def stage_release_readiness_proof(
+    proof: dict[str, Any] | None,
+    *,
+    output_dir: Path | None,
+) -> dict[str, Any] | None:
+    if proof is None or output_dir is None:
+        return proof
+    report = proof.get("report")
+    if not isinstance(report, dict):
+        return proof
+    staged_path = output_dir / "release_readiness_proof.compact.json"
+    staged_path.write_text(
+        json.dumps(report, ensure_ascii=True, separators=(",", ":")) + "\n",
+        encoding="utf-8",
+    )
+    return {"path": staged_path, "report": report}
+
+
 def main() -> int:
     args = parse_args()
     output_dir = args.output_dir.resolve() if args.output_dir else None
@@ -862,6 +1004,23 @@ def main() -> int:
             failed_audit="done_definition_proof",
             error=str(exc),
             command_result={"argv": ["read", str(args.done_definition_proof)]},
+            run_all_heavy=args.run_all_heavy,
+            check_remotes=args.check_remotes,
+            output_dir=output_dir,
+        )
+        write_report_file(failure_report, output_dir)
+        sys.stdout.write(format_report(failure_report, compact=args.compact))
+        return 2
+    try:
+        release_readiness_proof = stage_release_readiness_proof(
+            read_release_readiness_proof(args.release_readiness_proof),
+            output_dir=output_dir,
+        )
+    except Exception as exc:  # pragma: no cover - exercised via CLI failures
+        failure_report = build_failure_report(
+            failed_audit="release_readiness_proof",
+            error=str(exc),
+            command_result={"argv": ["read", str(args.release_readiness_proof)]},
             run_all_heavy=args.run_all_heavy,
             check_remotes=args.check_remotes,
             output_dir=output_dir,
@@ -905,6 +1064,7 @@ def main() -> int:
         check_remotes=args.check_remotes,
         output_dir=output_dir,
         done_definition_proof=done_definition_proof,
+        release_readiness_proof=release_readiness_proof,
     )
     write_report_file(snapshot, output_dir)
     sys.stdout.write(format_report(snapshot, compact=args.compact))

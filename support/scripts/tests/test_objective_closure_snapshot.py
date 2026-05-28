@@ -19,6 +19,7 @@ from objective_closure_snapshot import (  # noqa: E402
     effective_timeout_seconds,
     format_report,
     stage_done_definition_proof,
+    stage_release_readiness_proof,
     run_command,
     snapshot_exit_code,
     summarize_snapshot,
@@ -1546,5 +1547,328 @@ class ObjectiveClosureSnapshotTest(unittest.TestCase):
             self.assertEqual(staged["report"], source_report)
             self.assertEqual(
                 json.loads((output_dir / "done_definition_proof.compact.json").read_text(encoding="utf-8")),
+                source_report,
+            )
+
+    def test_build_snapshot_applies_clean_release_readiness_proof_without_hiding_origin_blocker(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp)
+            proof_path = output_dir / "clean_export_release.compact.json"
+            audit_results = {
+                "done_definition": {
+                    "command": {"argv": ["done"], "returncode": 0},
+                    "report": {
+                        "timestamp_utc": "2026-05-28T14:00:00Z",
+                        "summary": {
+                            "status": "pass",
+                            "completion_ready": True,
+                            "evidence_level": "full_enabled_gate_coverage",
+                            "unresolved": [],
+                            "skipped_gates": [],
+                        },
+                        "gates": [{"id": "quickstart_surface", "status": "pass"}],
+                    },
+                    "output_path": output_dir / "done_definition_audit.compact.json",
+                },
+                "factor_closure": {
+                    "command": {"argv": ["factor"], "returncode": 0},
+                    "report": {
+                        "generated_at": "2026-05-28T14:00:01+00:00",
+                        "summary": {
+                            "status": "pass",
+                            "active_claims": 0,
+                            "invalid_active_claims": 0,
+                            "live_factor_processes": 0,
+                            "blocking_reasons": [],
+                            "promotion_allowed_true": 1,
+                            "trade_usable_true": 1,
+                        },
+                    },
+                    "output_path": output_dir / "factor_claim_terminalization_audit.compact.json",
+                },
+                "release_readiness": {
+                    "command": {"argv": ["release"], "returncode": 1},
+                    "report": {
+                        "timestamp_utc": "2026-05-28T14:00:02Z",
+                        "remote_details": {"enabled": True},
+                        "summary": {
+                            "status": "needs_fix",
+                            "unresolved": ["worktree_clean_for_release", "source_origin_matches_selected_source"],
+                            "pass_count": 7,
+                            "fail_count": 2,
+                            "skip_count": 0,
+                        },
+                        "gates": [
+                            {
+                                "id": "worktree_clean_for_release",
+                                "status": "fail",
+                                "details": {"next_action": "commit or exclude a narrow source slice"},
+                            },
+                            {
+                                "id": "source_origin_matches_selected_source",
+                                "status": "fail",
+                                "details": {"next_action": "sync local source with origin/main before selecting a release export commit"},
+                            },
+                        ],
+                    },
+                    "output_path": output_dir / "release_readiness_audit.compact.json",
+                },
+            }
+            release_readiness_proof = {
+                "path": proof_path,
+                "report": {
+                    "timestamp_utc": "2026-05-28T13:59:00Z",
+                    "remote_details": {"enabled": True},
+                    "summary": {
+                        "status": "needs_fix",
+                        "unresolved": ["source_origin_matches_selected_source"],
+                        "pass_count": 8,
+                        "fail_count": 1,
+                        "skip_count": 0,
+                    },
+                    "gates": [
+                        {"id": "worktree_clean_for_release", "status": "pass", "details": {}},
+                        {
+                            "id": "source_origin_matches_selected_source",
+                            "status": "fail",
+                            "details": {"next_action": "sync local source with origin/main before selecting a release export commit"},
+                        },
+                    ],
+                },
+            }
+
+            snapshot = build_snapshot(
+                audit_results,
+                run_all_heavy=False,
+                check_remotes=True,
+                output_dir=output_dir,
+                release_readiness_proof=release_readiness_proof,
+            )
+
+        release_surface = snapshot["audits"]["release_readiness"]["surface"]
+        self.assertTrue(release_surface["proof_applied"])
+        self.assertEqual(release_surface["proof_source"], "clean_export_release.compact.json")
+        self.assertEqual(release_surface["unresolved"], ["source_origin_matches_selected_source"])
+        self.assertIn("release_readiness_blocked", snapshot["summary"]["blockers"])
+        self.assertNotIn(
+            {
+                "surface": "release_readiness",
+                "reason": "worktree_clean_for_release",
+                "action": "commit or exclude a narrow source slice",
+            },
+            snapshot["summary"]["prioritized_next_actions"],
+        )
+        self.assertIn(
+            {
+                "surface": "release_readiness",
+                "reason": "source_origin_matches_selected_source",
+                "action": "sync local source with origin/main before selecting a release export commit",
+            },
+            snapshot["summary"]["prioritized_next_actions"],
+        )
+        self.assertEqual(snapshot["evidence_files"]["release_readiness_proof"], "clean_export_release.compact.json")
+
+    def test_build_snapshot_rejects_release_readiness_proof_without_remote_checks(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp)
+            audit_results = {
+                "done_definition": {
+                    "command": {"argv": ["done"], "returncode": 0},
+                    "report": {
+                        "summary": {"status": "pass", "completion_ready": True, "skipped_gates": []},
+                        "gates": [{"id": "quickstart_surface", "status": "pass"}],
+                    },
+                    "output_path": output_dir / "done_definition_audit.compact.json",
+                },
+                "factor_closure": {
+                    "command": {"argv": ["factor"], "returncode": 0},
+                    "report": {"summary": {"status": "pass", "promotion_allowed_true": 1, "trade_usable_true": 1}},
+                    "output_path": output_dir / "factor_claim_terminalization_audit.compact.json",
+                },
+                "release_readiness": {
+                    "command": {"argv": ["release"], "returncode": 1},
+                    "report": {
+                        "summary": {"status": "needs_fix", "unresolved": ["worktree_clean_for_release"], "skip_count": 0},
+                        "gates": [
+                            {
+                                "id": "worktree_clean_for_release",
+                                "status": "fail",
+                                "details": {"next_action": "commit or exclude a narrow source slice"},
+                            }
+                        ],
+                    },
+                    "output_path": output_dir / "release_readiness_audit.compact.json",
+                },
+            }
+
+            snapshot = build_snapshot(
+                audit_results,
+                run_all_heavy=False,
+                check_remotes=True,
+                output_dir=output_dir,
+                release_readiness_proof={
+                    "path": output_dir / "partial_release.compact.json",
+                    "report": {
+                        "remote_details": {"enabled": False},
+                        "summary": {"status": "pass", "unresolved": [], "skip_count": 2},
+                        "gates": [{"id": "worktree_clean_for_release", "status": "pass"}],
+                    },
+                },
+            )
+
+        release_surface = snapshot["audits"]["release_readiness"]["surface"]
+        self.assertFalse(release_surface["proof_applied"])
+        self.assertEqual(release_surface["proof_rejected_reason"], "proof_remote_checks_not_enabled")
+        self.assertEqual(release_surface["unresolved"], ["worktree_clean_for_release"])
+
+    def test_build_snapshot_rejects_release_readiness_proof_for_different_head(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp)
+            audit_results = {
+                "done_definition": {
+                    "command": {"argv": ["done"], "returncode": 0},
+                    "report": {
+                        "summary": {"status": "pass", "completion_ready": True, "skipped_gates": []},
+                        "gates": [{"id": "quickstart_surface", "status": "pass"}],
+                    },
+                    "output_path": output_dir / "done_definition_audit.compact.json",
+                },
+                "factor_closure": {
+                    "command": {"argv": ["factor"], "returncode": 0},
+                    "report": {"summary": {"status": "pass", "promotion_allowed_true": 1, "trade_usable_true": 1}},
+                    "output_path": output_dir / "factor_claim_terminalization_audit.compact.json",
+                },
+                "release_readiness": {
+                    "command": {"argv": ["release"], "returncode": 1},
+                    "report": {
+                        "head": "current-selected-head",
+                        "remote_details": {"enabled": True},
+                        "summary": {
+                            "status": "needs_fix",
+                            "unresolved": ["worktree_clean_for_release", "source_origin_matches_selected_source"],
+                            "skip_count": 0,
+                        },
+                        "gates": [
+                            {
+                                "id": "worktree_clean_for_release",
+                                "status": "fail",
+                                "details": {"next_action": "commit or exclude a narrow source slice"},
+                            },
+                            {
+                                "id": "source_origin_matches_selected_source",
+                                "status": "fail",
+                                "details": {"next_action": "push selected source commit or publish from a clean export at the selected commit"},
+                            },
+                        ],
+                    },
+                    "output_path": output_dir / "release_readiness_audit.compact.json",
+                },
+            }
+
+            snapshot = build_snapshot(
+                audit_results,
+                run_all_heavy=False,
+                check_remotes=True,
+                output_dir=output_dir,
+                release_readiness_proof={
+                    "path": output_dir / "stale_release.compact.json",
+                    "report": {
+                        "head": "older-clean-export-head",
+                        "remote_details": {"enabled": True},
+                        "summary": {
+                            "status": "needs_fix",
+                            "unresolved": ["source_origin_matches_selected_source"],
+                            "skip_count": 0,
+                        },
+                        "gates": [
+                            {"id": "worktree_clean_for_release", "status": "pass"},
+                            {
+                                "id": "source_origin_matches_selected_source",
+                                "status": "fail",
+                                "details": {"next_action": "push selected source commit or publish from a clean export at the selected commit"},
+                            },
+                        ],
+                    },
+                },
+            )
+
+        release_surface = snapshot["audits"]["release_readiness"]["surface"]
+        self.assertFalse(release_surface["proof_applied"])
+        self.assertEqual(release_surface["proof_rejected_reason"], "proof_head_mismatch")
+        self.assertEqual(
+            release_surface["unresolved"],
+            ["worktree_clean_for_release", "source_origin_matches_selected_source"],
+        )
+
+    def test_build_snapshot_rejects_release_readiness_proof_when_snapshot_remote_checks_are_disabled(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp)
+            audit_results = {
+                "done_definition": {
+                    "command": {"argv": ["done"], "returncode": 0},
+                    "report": {
+                        "summary": {"status": "pass", "completion_ready": True, "skipped_gates": []},
+                        "gates": [{"id": "quickstart_surface", "status": "pass"}],
+                    },
+                    "output_path": output_dir / "done_definition_audit.compact.json",
+                },
+                "factor_closure": {
+                    "command": {"argv": ["factor"], "returncode": 0},
+                    "report": {"summary": {"status": "pass", "promotion_allowed_true": 1, "trade_usable_true": 1}},
+                    "output_path": output_dir / "factor_claim_terminalization_audit.compact.json",
+                },
+                "release_readiness": {
+                    "command": {"argv": ["release"], "returncode": 0},
+                    "report": {
+                        "remote_details": {"enabled": False},
+                        "summary": {"status": "pass", "unresolved": [], "skip_count": 2},
+                        "gates": [
+                            {
+                                "id": "remote_readback",
+                                "status": "skip",
+                                "details": {"enable_with": "--check-remotes", "reason": "network_check_not_enabled"},
+                            }
+                        ],
+                    },
+                    "output_path": output_dir / "release_readiness_audit.compact.json",
+                },
+            }
+
+            snapshot = build_snapshot(
+                audit_results,
+                run_all_heavy=False,
+                check_remotes=False,
+                output_dir=output_dir,
+                release_readiness_proof={
+                    "path": output_dir / "clean_release.compact.json",
+                    "report": {
+                        "remote_details": {"enabled": True},
+                        "summary": {"status": "pass", "unresolved": [], "skip_count": 0},
+                        "gates": [{"id": "worktree_clean_for_release", "status": "pass"}],
+                    },
+                },
+            )
+
+        release_surface = snapshot["audits"]["release_readiness"]["surface"]
+        self.assertFalse(release_surface["proof_applied"])
+        self.assertEqual(release_surface["proof_rejected_reason"], "snapshot_remote_checks_not_enabled")
+        self.assertIn("release_remote_checks_not_run", snapshot["summary"]["blockers"])
+
+    def test_stage_release_readiness_proof_copies_external_proof_into_packet(self) -> None:
+        with tempfile.TemporaryDirectory() as src_tmp, tempfile.TemporaryDirectory() as packet_tmp:
+            source_path = Path(src_tmp) / "release.json"
+            output_dir = Path(packet_tmp)
+            source_report = {"remote_details": {"enabled": True}, "summary": {"status": "pass", "skip_count": 0}}
+            source_path.write_text(json.dumps(source_report), encoding="utf-8")
+
+            staged = stage_release_readiness_proof(
+                {"path": source_path, "report": source_report},
+                output_dir=output_dir,
+            )
+
+            self.assertEqual(staged["path"], output_dir / "release_readiness_proof.compact.json")
+            self.assertEqual(staged["report"], source_report)
+            self.assertEqual(
+                json.loads((output_dir / "release_readiness_proof.compact.json").read_text(encoding="utf-8")),
                 source_report,
             )
