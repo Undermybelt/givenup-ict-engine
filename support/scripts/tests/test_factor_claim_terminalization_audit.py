@@ -470,14 +470,33 @@ trade_usable=false
 """,
                 encoding="utf-8",
             )
+            (claims_dir / "stale-active-decision.claim").write_text(
+                f"""
+agent_name=codex-derived-terminal-stale-active
+owner=codex
+claimed_at=2026-05-27T13:50:04+0800
+last_progress_at=2026-05-27T13:55:00+0800
+scope=Board B same-root terminal packet with stale active decision
+active_task=read stale active decision after terminal metrics landed
+non_goals=no relaunch
+write_surface=/tmp/example-stale-active-workdoc.md
+run_root={decision_run_root.relative_to(repo_root)}
+status=active
+decision=active_loop_still_running
+progress_report=/tmp/example-stale-active-progress.md
+promotion_allowed=false
+trade_usable=false
+""",
+                encoding="utf-8",
+            )
 
             report = build_report(claims_dir=claims_dir, repo_root=repo_root)
 
-            self.assertEqual(report["summary"]["terminalized_claims"], 2)
+            self.assertEqual(report["summary"]["terminalized_claims"], 3)
             self.assertEqual(report["summary"]["active_claims"], 0)
             self.assertEqual(
                 [claim["status"] for claim in report["claims"]],
-                ["terminalized", "terminalized"],
+                ["terminalized", "terminalized", "terminalized"],
             )
 
     def test_compact_portable_paths_collapses_tmp_runtime_paths(self) -> None:
@@ -1129,6 +1148,56 @@ trade_usable=false
                 }
             ],
         )
+
+    def test_valid_audit_only_coordination_claim_does_not_block_factor_closure(self) -> None:
+        with tempfile.TemporaryDirectory() as repo_tmp, tempfile.TemporaryDirectory() as claims_tmp:
+            repo_root = Path(repo_tmp)
+            claims_dir = Path(claims_tmp)
+            run_root = Path(repo_tmp) / "ict-engine-closed-loop-loophole-audit"
+            run_root.mkdir()
+            (run_root / "workdoc.md").write_text("# audit\n", encoding="utf-8")
+
+            (claims_dir / "audit-only.claim").write_text(
+                json.dumps(
+                    {
+                        "schema_version": "board-b-factor-claim/v1",
+                        "agent_name": "codex-closed-loop-loophole-audit",
+                        "owner": "codex",
+                        "claimed_at": "2026-05-29T00:36:43+0800",
+                        "last_progress_at": "2026-05-29T00:36:43+0800",
+                        "scope": "Closed-loop factor-training loophole audit and current objective evidence review; no provider, IBKR, Auto-Quant, freqtrade, or run_tomac launch.",
+                        "active_task": "Audit current evidence, objective snapshot coverage, active claims, and code-level done-definition gaps; patch only concrete verified defects.",
+                        "non_goals": [
+                            "Do not launch provider, IBKR, Auto-Quant, freqtrade, or run_tomac.py during this audit claim.",
+                            "Do not touch active TOMAC factor lanes except read-only claim/workdoc/artifact inspection.",
+                            "Do not mark promotion_allowed, trade_usable, or update_goal true unless the full current closed-loop evidence proves it.",
+                        ],
+                        "write_surface": str(run_root / "workdoc.md"),
+                        "run_root": str(run_root),
+                        "tmp_root": str(run_root),
+                        "branch_path": "objective-closure-audit -> factor-training closed-loop loophole ledger",
+                        "factor_id": "closed_loop_factor_training_loophole_audit_20260529T003643",
+                        "status": "active_audit_only",
+                        "decision": "objective_not_proven_audit_in_progress",
+                        "progress_report": "promotion_allowed=false trade_usable=false update_goal=false",
+                        "promotion_allowed": False,
+                        "trade_usable": False,
+                        "update_goal": False,
+                    },
+                    indent=2,
+                ),
+                encoding="utf-8",
+            )
+
+            report = build_report(claims_dir=claims_dir, repo_root=repo_root)
+            compact = format_report(report, compact=True)
+
+        self.assertEqual(report["summary"]["status"], "pass")
+        self.assertEqual(report["summary"]["active_claims"], 0)
+        self.assertEqual(report["summary"]["coordination_only_active_claims"], 1)
+        self.assertEqual(report["summary"]["blocking_reasons"], [])
+        self.assertEqual(compact["attention_claim_count"], 0)
+        self.assertEqual(compact["attention_action_queue"]["fresh_active_claims_without_live_process"], [])
 
     def test_build_report_flags_active_claims_missing_board_local_identity_fields(self) -> None:
         with tempfile.TemporaryDirectory() as repo_tmp, tempfile.TemporaryDirectory() as claims_tmp:

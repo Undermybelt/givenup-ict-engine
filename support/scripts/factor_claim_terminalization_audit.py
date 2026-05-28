@@ -201,10 +201,10 @@ def _status(fields: dict[str, Any], summary_flags: dict[str, Any] | None = None)
         or "terminalized" in status
     ):
         return "terminalized"
-    if status.startswith("active") and _decision_indicates_active(decision):
-        return "active"
     if _summary_indicates_terminalized(summary_flags):
         return "terminalized"
+    if status.startswith("active") and _decision_indicates_active(decision):
+        return "active"
     if status.startswith("active"):
         return "active"
     if decision:
@@ -322,8 +322,51 @@ def read_claim(path: Path, root: Path) -> dict[str, Any]:
         "missing_identity_fields": missing_identity_fields,
         "promotion_allowed": promotion_allowed,
         "trade_usable": trade_usable,
+        "coordination_only": _is_coordination_only_claim(fields),
         "summary_files": summary_flags.get("summary_files", []),
     }
+
+
+def _is_coordination_only_claim(fields: dict[str, Any]) -> bool:
+    status = str(fields.get("status") or "").strip().lower()
+    if not (status.startswith("active_audit_only") or status.startswith("active_coordination_only")):
+        return False
+    if fields.get("promotion_allowed") is not False or fields.get("trade_usable") is not False:
+        return False
+    text = _claim_purpose_text(fields)
+    if not any(marker in text for marker in ("audit", "loophole", "objective", "evidence review", "read-only")):
+        return False
+    no_launch_markers = (
+        "no provider",
+        "do not launch provider",
+        "no auto-quant",
+        "do not launch provider, ibkr, auto-quant, freqtrade, or run_tomac",
+        "no provider, ibkr, auto-quant, freqtrade, or run_tomac launch",
+        "no freqtrade",
+        "no run_tomac",
+        "read-only claim/workdoc/artifact inspection",
+    )
+    return any(marker in text for marker in no_launch_markers)
+
+
+def _claim_purpose_text(fields: dict[str, Any]) -> str:
+    values = [
+        fields.get("status"),
+        fields.get("decision"),
+        fields.get("scope"),
+        fields.get("active_task"),
+        fields.get("non_goals"),
+        fields.get("branch_path"),
+        fields.get("factor_id"),
+        fields.get("progress_report"),
+    ]
+    parts: list[str] = []
+    for value in values:
+        if isinstance(value, list):
+            parts.extend(str(item) for item in value)
+        elif value is not None:
+            parts.append(str(value))
+    return " ".join(" ".join(parts).lower().split())
 
 
 def _missing_run_root_needs_attention(
@@ -431,6 +474,7 @@ def summarize(
     now = now or datetime.now(timezone.utc)
     stale_active_claims = 0
     stale_safe_takeover_candidates = 0
+    coordination_only_active_claims = 0
     active_claims_without_live_process = 0
     wait_only_active_claims_without_live_process = 0
     fresh_active_claims_without_live_process = 0
@@ -444,14 +488,19 @@ def summarize(
             claim["live_runtime_owner"] = False
             claim["wait_only_without_live_process"] = False
             continue
+        if claim.get("coordination_only"):
+            coordination_only_active_claims += 1
+            claim["age_minutes"] = _claim_age_minutes(claim, now)
+            claim["stale_safe_takeover_candidate"] = False
+            claim["live_runtime_owner"] = False
+            claim["wait_only_without_live_process"] = False
+            claim["fresh_without_live_process"] = False
+            continue
         claim["live_runtime_owner"] = _claim_owns_live_runtime(claim, live_processes)
         claim["wait_only_without_live_process"] = bool(
             not claim["live_runtime_owner"] and _looks_like_wait_only_active_claim(claim)
         )
-        last_progress_at = _parse_claim_datetime(claim.get("last_progress_at"))
-        age_minutes = None
-        if last_progress_at is not None:
-            age_minutes = max(0, int((now - last_progress_at).total_seconds() // 60))
+        age_minutes = _claim_age_minutes(claim, now)
         claim["age_minutes"] = age_minutes
         is_stale = age_minutes is not None and age_minutes >= STALE_CLAIM_MINUTES
         claim["stale_safe_takeover_candidate"] = bool(
@@ -477,11 +526,15 @@ def summarize(
         stale_wait_only_active_claims_without_live_process += int(
             claim["wait_only_without_live_process"] and claim["stale_safe_takeover_candidate"]
         )
-    active_claims = sum(1 for claim in claims if claim.get("status") == "active")
+    active_claims = sum(
+        1 for claim in claims if claim.get("status") == "active" and not claim.get("coordination_only")
+    )
     invalid_active_claims = sum(
         1
         for claim in claims
-        if claim.get("status") != "terminalized" and claim.get("missing_identity_fields")
+        if claim.get("status") != "terminalized"
+        and not claim.get("coordination_only")
+        and claim.get("missing_identity_fields")
     )
     valid_active_claims = active_claims - invalid_active_claims
     for claim in claims:
@@ -547,6 +600,7 @@ def summarize(
         "invalid_active_claims": invalid_active_claims,
         "stale_active_claims": stale_active_claims,
         "stale_safe_takeover_candidates": stale_safe_takeover_candidates,
+        "coordination_only_active_claims": coordination_only_active_claims,
         "active_claims_without_live_process": active_claims_without_live_process,
         "wait_only_active_claims_without_live_process": wait_only_active_claims_without_live_process,
         "fresh_active_claims_without_live_process": fresh_active_claims_without_live_process,
@@ -559,6 +613,13 @@ def summarize(
         "blocking_reasons": blocking_reasons,
         "next_action": "; ".join(next_actions) if next_actions else "no claim terminalization blockers found",
     }
+
+
+def _claim_age_minutes(claim: dict[str, Any], now: datetime) -> int | None:
+    last_progress_at = _parse_claim_datetime(claim.get("last_progress_at"))
+    if last_progress_at is None:
+        return None
+    return max(0, int((now - last_progress_at).total_seconds() // 60))
 
 
 def _looks_like_wait_only_active_claim(claim: dict[str, Any]) -> bool:
@@ -1103,6 +1164,8 @@ def format_report(
 
 
 def _claim_needs_attention(claim: dict[str, Any]) -> bool:
+    if claim.get("coordination_only"):
+        return False
     return bool(
         claim.get("status") != "terminalized"
         or claim.get("missing_run_root_attention")
@@ -1160,6 +1223,7 @@ def _compact_claim(claim: dict[str, Any], root: str, portable_paths: bool = Fals
         "stale_safe_takeover_candidate": claim.get("stale_safe_takeover_candidate", False),
         "fresh_without_live_process": claim.get("fresh_without_live_process", False),
         "missing_run_root_attention": missing_run_root_attention,
+        "coordination_only": claim.get("coordination_only", False),
         "summary_files": claim.get("summary_files", []),
     }
 
