@@ -783,7 +783,7 @@ trade_usable=false
                 "promotion_allowed_true",
             ],
         )
-        self.assertIn("terminalize or externalize active claims", summary["next_action"])
+        self.assertIn("wait for fresh active claims to progress", summary["next_action"])
         self.assertIn("restore or terminalize missing run roots", summary["next_action"])
         self.assertIn("review positive trade/promotion flags", summary["next_action"])
 
@@ -937,6 +937,90 @@ trade_usable=false
         self.assertIn(
             "externalize or terminalize wait-only active claims that do not own a live runtime",
             summary["next_action"],
+        )
+
+    def test_summarize_surfaces_fresh_active_claims_without_live_process_as_wait_not_cleanup(self) -> None:
+        summary = summarize(
+            [
+                {
+                    "status": "active_setup",
+                    "run_root": "/tmp/ict-engine-fresh-active",
+                    "tmp_root": "/tmp/ict-engine-fresh-active",
+                    "run_root_exists": True,
+                    "decision": None,
+                    "active_task": "create packet then inspect live claims",
+                    "scope": "Board B fresh continuation setup",
+                    "promotion_allowed": False,
+                    "trade_usable": False,
+                    "missing_identity_fields": [],
+                    "last_progress_at": "2026-05-27T15:59:00+00:00",
+                }
+            ],
+            live_processes=[],
+            now=datetime(2026, 5, 27, 16, 0, 0, tzinfo=timezone.utc),
+        )
+
+        self.assertEqual(summary["active_claims"], 1)
+        self.assertEqual(summary["active_claims_without_live_process"], 1)
+        self.assertEqual(summary["wait_only_active_claims_without_live_process"], 0)
+        self.assertEqual(summary["stale_safe_takeover_candidates"], 0)
+        self.assertEqual(summary["fresh_active_claims_without_live_process"], 1)
+        self.assertIn(
+            "wait for fresh active claims to progress, then rerun before terminalizing",
+            summary["next_action"],
+        )
+        self.assertNotIn("terminalize or externalize active claims", summary["next_action"])
+
+    def test_format_report_compact_surfaces_fresh_active_claim_queue(self) -> None:
+        full_report = {
+            "schema_version": "factor-claim-terminalization-audit/v1",
+            "generated_at": "2026-05-28T01:14:00+00:00",
+            "claims_dir": "/tmp/claims",
+            "repo_root": "/repo",
+            "summary": {
+                "status": "needs_attention",
+                "active_claims": 1,
+                "fresh_active_claims_without_live_process": 1,
+            },
+            "claims": [
+                {
+                    "claim_file": "fresh.claim",
+                    "claim_path": "/tmp/claims/fresh.claim",
+                    "status": "active",
+                    "agent_name": "codex-fresh",
+                    "owner": "codex",
+                    "scope": "fresh setup",
+                    "run_root": "/tmp/fresh",
+                    "run_root_exists": True,
+                    "promotion_allowed": False,
+                    "trade_usable": False,
+                    "age_minutes": 2,
+                    "live_runtime_owner": False,
+                    "wait_only_without_live_process": False,
+                    "stale_safe_takeover_candidate": False,
+                    "fresh_without_live_process": True,
+                    "missing_identity_fields": [],
+                    "summary_files": [],
+                }
+            ],
+            "live_factor_processes": [],
+        }
+
+        compact = format_report(full_report, compact=True)
+
+        self.assertEqual(
+            compact["attention_groups"]["by_actionability"],
+            {"fresh_active_without_live_process": 1},
+        )
+        self.assertEqual(
+            compact["attention_action_queue"]["fresh_active_claims_without_live_process"],
+            [
+                {
+                    "claim_file": "fresh.claim",
+                    "age_minutes": 2,
+                    "status": "active",
+                }
+            ],
         )
 
     def test_build_report_flags_active_claims_missing_board_local_identity_fields(self) -> None:
@@ -1139,6 +1223,27 @@ trade_usable=false
             "Resources/Python.app/Contents/MacOS/Python "
             "support/scripts/research/tomac_factor_coverage_matrix.py "
             "--tomac-root support/docs/experiments/actionable-regime-confidence/runs"
+        )
+
+        self.assertFalse(_is_live_factor_command(command))
+
+    def test_live_process_classifier_ignores_run_tomac_help_probe(self) -> None:
+        command = (
+            "/opt/homebrew/Cellar/python@3.13/3.13.12_1/Frameworks/Python.framework/Versions/3.13/"
+            "Resources/Python.app/Contents/MacOS/Python "
+            "/private/tmp/ict-engine-tomac-opening-drive-twoleg-participation-quality-persistence-lift-autoquant-loop-20260528T011500/"
+            "aq_workspace/run_tomac.py --help"
+        )
+
+        self.assertFalse(_is_live_factor_command(command))
+
+    def test_live_process_classifier_ignores_unittest_names_with_factor_markers(self) -> None:
+        command = (
+            "/opt/homebrew/Cellar/python@3.13/3.13.12_1/Frameworks/Python.framework/Versions/3.13/"
+            "Resources/Python.app/Contents/MacOS/Python -m unittest "
+            "support.scripts.tests.test_factor_claim_terminalization_audit."
+            "FactorClaimTerminalizationAuditTest."
+            "test_live_process_classifier_ignores_run_tomac_help_probe -v"
         )
 
         self.assertFalse(_is_live_factor_command(command))
@@ -1594,6 +1699,7 @@ class Dummy:
         self.assertEqual(
             compact["attention_action_queue"],
             {
+                "fresh_active_claims_without_live_process": [],
                 "externalize_wait_only_claims": [
                     {
                         "claim_file": "active.claim",

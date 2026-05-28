@@ -409,6 +409,7 @@ def summarize(
     stale_safe_takeover_candidates = 0
     active_claims_without_live_process = 0
     wait_only_active_claims_without_live_process = 0
+    fresh_active_claims_without_live_process = 0
     for claim in claims:
         claim["status"] = _status(claim)
         if claim.get("status") == "terminalized":
@@ -432,12 +433,18 @@ def summarize(
             and not claim.get("missing_identity_fields")
             and not claim["live_runtime_owner"]
         )
+        claim["fresh_without_live_process"] = bool(
+            not claim["live_runtime_owner"]
+            and not claim["wait_only_without_live_process"]
+            and not claim["stale_safe_takeover_candidate"]
+        )
         if is_stale:
             stale_active_claims += 1
         if claim["stale_safe_takeover_candidate"]:
             stale_safe_takeover_candidates += 1
         active_claims_without_live_process += int(not claim["live_runtime_owner"])
         wait_only_active_claims_without_live_process += int(claim["wait_only_without_live_process"])
+        fresh_active_claims_without_live_process += int(claim["fresh_without_live_process"])
     active_claims = sum(1 for claim in claims if claim.get("status") == "active")
     invalid_active_claims = sum(
         1
@@ -461,7 +468,10 @@ def summarize(
     next_actions: list[str] = []
     if active_claims:
         blocking_reasons.append("active_claims")
-        next_actions.append("terminalize or externalize active claims")
+        if fresh_active_claims_without_live_process:
+            next_actions.append("wait for fresh active claims to progress, then rerun before terminalizing")
+        if active_claims - fresh_active_claims_without_live_process:
+            next_actions.append("terminalize or externalize active claims")
     if wait_only_active_claims_without_live_process:
         next_actions.append("externalize or terminalize wait-only active claims that do not own a live runtime")
     if invalid_active_claims:
@@ -491,6 +501,7 @@ def summarize(
         "stale_safe_takeover_candidates": stale_safe_takeover_candidates,
         "active_claims_without_live_process": active_claims_without_live_process,
         "wait_only_active_claims_without_live_process": wait_only_active_claims_without_live_process,
+        "fresh_active_claims_without_live_process": fresh_active_claims_without_live_process,
         "live_factor_processes": live_factor_processes,
         "missing_run_roots": missing_run_roots,
         "trade_usable_true": trade_usable_true,
@@ -637,6 +648,10 @@ def detect_live_factor_processes() -> list[dict[str, Any]]:
 def _is_live_factor_command(command: str) -> bool:
     if _looks_like_readback_command(command):
         return False
+    if _is_test_runner_command(command):
+        return False
+    if _is_help_only_command(command):
+        return False
     if _is_await_launch_wrapper(command):
         return False
     if _is_tomac_diagnostic_script(command):
@@ -651,6 +666,16 @@ def _is_live_factor_command(command: str) -> bool:
         run_root = _extract_run_root(command)
         return bool(run_root and _is_board_b_run_root(run_root))
     return any(marker in command for marker in LIVE_FACTOR_PROCESS_MARKERS)
+
+
+def _is_test_runner_command(command: str) -> bool:
+    normalized = " ".join(command.split())
+    return bool(re.search(r"(?:^|\s)(?:python\d*(?:\.\d+)?|\S*/Python)\s+-m\s+unittest(?:\s|$)", normalized))
+
+
+def _is_help_only_command(command: str) -> bool:
+    normalized = " ".join(command.split())
+    return bool(re.search(r"(?:^|\s)(?:--help|-h)(?:\s|$)", normalized))
 
 
 def _is_await_launch_wrapper(command: str) -> bool:
@@ -1061,6 +1086,7 @@ def _compact_claim(claim: dict[str, Any], root: str, portable_paths: bool = Fals
         "live_runtime_owner": claim.get("live_runtime_owner", False),
         "wait_only_without_live_process": claim.get("wait_only_without_live_process", False),
         "stale_safe_takeover_candidate": claim.get("stale_safe_takeover_candidate", False),
+        "fresh_without_live_process": claim.get("fresh_without_live_process", False),
         "summary_files": claim.get("summary_files", []),
     }
 
@@ -1084,7 +1110,19 @@ def _attention_action_queue(
         [claim for claim in attention_claims if claim.get("stale_safe_takeover_candidate")],
         key=claim_sort_key,
     )
+    fresh_non_live_claims = sorted(
+        [claim for claim in attention_claims if claim.get("fresh_without_live_process")],
+        key=claim_sort_key,
+    )
     return {
+        "fresh_active_claims_without_live_process": [
+            {
+                "claim_file": claim.get("claim_file"),
+                "age_minutes": claim.get("age_minutes"),
+                "status": claim.get("status"),
+            }
+            for claim in fresh_non_live_claims
+        ],
         "externalize_wait_only_claims": [
             {
                 "claim_file": claim.get("claim_file"),
@@ -1183,6 +1221,8 @@ def _actionability_class(claim: dict[str, Any]) -> str:
         return "stale_safe_takeover_candidate"
     if claim.get("wait_only_without_live_process"):
         return "wait_only_without_live_process"
+    if claim.get("fresh_without_live_process"):
+        return "fresh_active_without_live_process"
     return "active_claim_debt"
 
 
