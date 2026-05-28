@@ -94,8 +94,177 @@ post-training gates. This is not a completion claim.
   As of 2026-05-28T20:40+0800 no `autoquant_clean_1m_gate.json`, row CSV, or
   `run_tomac_1m.exit` existed under that root, so no WPR/ADX factor verdict can
   be claimed yet.
+- 2026-05-29T01:12+0800 current continuation terminalized the Camarilla
+  takeover lane fail-closed after a same-turn collision audit cleared and the
+  bounded clean-AQ run completed. Evidence: `/tmp/ict-engine-tomac-camarilla-pivot-reclaim-takeover-20260529T004000+0800/aq/summary.json`,
+  `aq/summaries/autoquant_clean_1m_gate.json`, and
+  `aq/summaries/autoquant_clean_1m_rows.csv`. Gate readback:
+  `decision=observation_no_autoquant_survivor_yet`, `survivors_5bps=[]`,
+  `trade_count=37`, `trades_per_day=0.020307`, `raw_total_profit_pct=-0.29`,
+  `5bps_per_side_total_profit_pct=-3.99`, `gate1_survivor=false`,
+  `promotion_allowed=false`, `trade_usable=false`, and `update_goal=false`.
+  Do not rerun this exact Camarilla R3/S3 reclaim branch unchanged.
+- 2026-05-29T01:02+0800 local NQ/YM pair-relative scan terminalized
+  fail-closed: `/tmp/ict-engine-tomac-pair-relative-value-local-20260529T005849+0800/pair_relative_scan/leaderboard.csv`
+  and `scan_results.json` showed `576/576` rows as `reject_5bps_economics`.
+  Best visible row had `trades_5bps=693`, `tps_5bps=1.0058055152394776`,
+  `net_ret_5bps=-1.4204168257241325`, and `pf_5bps=0.031417706140557056`.
+  No Gate-1 survivor or downstream admission exists.
+- 2026-05-29T01:05+0800 InitialBalance SessionFilteredCadenceLift terminalized
+  fail-closed under `/tmp/ict-engine-tomac-initial-balance-cadence-lift-takeover-20260529T004432+0800/aq/`:
+  `rank_rows=2`, `survivors_5bps=[]`, `best_raw_total_profit_pct=0.85`,
+  `best_5bps_total_profit_pct=-49.25`, and all downstream/live-use flags false.
+- 2026-05-29T00:59+0800 Balanced TOD PredicateDensityExpansion terminalized
+  fail-closed under `/private/tmp/ict-engine-tomac-tod-balanced-predicate-density-expansion-autoquant-loop-20260529T004128+0800/`:
+  `rank_rows=12`, `survivors_5bps=[]`, best raw total profit `1.15%`, best
+  5bps total profit `-9.53%`, and all downstream/live-use flags false.
+- 2026-05-29T01:15+0800 objective snapshot at
+  `/tmp/ict-engine-closed-loop-snapshot-20260529T0115-codex/` intentionally
+  exited red with `summary.status=not_complete`. Current blockers remain
+  `done_definition_not_completion_ready`, `practical_admission_source_debt`,
+  `factor_closure_blocked`, and `release_readiness_blocked`.
+- 2026-05-29T01:23+0800 objective snapshot at
+  `/tmp/ict-engine-closed-loop-snapshot-20260529T0125-codex-current/`
+  intentionally exited red with `summary.status=not_complete`. At that point
+  `factor_closure` was clear (`active_claims=0`, `live_factor_processes=0`),
+  practical-admission source debt quarantine matched the current fingerprint
+  (`untracked_violation_count=229`, `untracked_violating_files=148`), and the
+  remaining blockers were `done_definition_not_completion_ready`,
+  `same_tree_practical_closure_unproven`, and `release_readiness_blocked`.
+- 2026-05-29T01:22+0800 Donchian Trend Breakout launch terminalized
+  fail-closed under
+  `/tmp/ict-engine-tomac-donchian-trend-breakout-launch-20260529T011300+0800/`:
+  `scan_executed=true`, `raw_rows=216`, `exact_rows=48`, and all exact rows
+  rejected `reject_5bps_economics`. Best visible exact row was `XAU
+  donchian240_trend_break_rv1.2_h120` with `trades_5bps=974`,
+  `net_ret_5bps=-0.8514279729459038`, and `pf_5bps=0.522739863490043`.
+  No downstream/live-use flags were admitted.
+- 2026-05-29T01:16+0800 SessionClusterCadenceRepair terminalized fail-closed
+  under
+  `/private/tmp/ict-engine-tomac-session-cluster-cadence-takeover-20260529T004301+0800/`:
+  `portfolio_decision=reject_low_density`, `trades=151`,
+  `trades_per_all_session=0.09704370179948586`, `5bps net_ret=0.046725327720012665`,
+  `5bps profit_factor=1.1516561661614149`, but track-record surplus remained
+  negative and exact AQ was not admitted. Practical flags stayed false.
+- 2026-05-29T01:38+0800 SessionWindowSweepReclaim terminalized without a
+  usable AQ survivor under
+  `/tmp/ict-engine-tomac-session-window-sweep-reclaim-prep-20260528T012234+0800/`.
+  Wrapper summary showed `status=launch_complete`, `coverage_exit=0`,
+  `scan_exit=0`, and `target_row_count=4` for ES/YM/NQ/6E strategy specs, but
+  AQ gate readback showed `run_tomac_1m.exit=-9`, `rank_rows=0`,
+  `survivors_5bps=[]`, `downstream_allowed=false`, `pre_bayes_allowed=false`,
+  `bbn_allowed=false`, `catboost_allowed=false`, and
+  `execution_tree_allowed=false`. Do not rerun this exact packet unchanged
+  without a structural/runtime fix for the `-9` AQ termination and zero rank rows.
+- 2026-05-29T01:43+0800 NR7 ExcursionCap was prepared for a distinct launch but
+  not launched. Workdoc:
+  `/tmp/ict-engine-tomac-nr7-range-expansion-excursion-cap-launch-20260529T014051+0800/workdoc.md`.
+  Final prelaunch audit found newly fresh active OpeningDrive materialization
+  claims, so the NR7 claim was terminalized as
+  `terminalized_wait_only_blocked_by_fresh_active_claims` with
+  `promotion_allowed=false`, `trade_usable=false`, and `update_goal=false`.
+- 2026-05-29T01:46+0800 objective snapshot at
+  `/tmp/ict-engine-closed-loop-snapshot-20260529T0147-codex-current/`
+  intentionally exited red with `summary.status=not_complete`. Current blockers
+  are `done_definition_not_completion_ready`, `factor_closure_blocked`, and
+  `release_readiness_blocked`; source-debt quarantine now matches the current
+  untracked fingerprint.
+- 2026-05-29T01:48+0800 compact claim audit narrowed the current no-launch
+  blocker to one fresh active no-runtime claim:
+  `/tmp/ict-engine-agent-claims/board-b-factor-refinement/20260529T014234+0800-codex-tomac-opening-drive-exact-materialization-takeover.claim`.
+  It remains active on same-root OpeningDrive materialization repair/readback,
+  with `promotion_allowed=false`, `trade_usable=false`, and no live runtime.
+- 2026-05-29T01:54+0800 heavy done-definition audit completed green at
+  `/tmp/ict-engine-goal-20260529-codex-heavy-done-definition-015033.json`:
+  `summary.status=pass`, `completion_ready=true`, `evidence_level=full_enabled_gate_coverage`,
+  `pass_count=9`, `fail_count=0`, `skip_count=0`. The smoke artifacts are under
+  `/tmp/ict-engine-done-definition-audit-smoke-20260528T175315750924Z-87302/`
+  and command output under
+  `/tmp/ict-engine-done-definition-audit-smoke-20260528T175315750924Z-87302-out/`.
+  This removes the heavy-proof gap, but it does not prove practical/live factor closure.
+- 2026-05-29T01:54+0800 compact audit still blocked factor launch/takeover:
+  `active_claims=2`, `live_factor_processes=0`, `fresh_active_claims_without_live_process=2`,
+  `promotion_allowed_true=0`, and `trade_usable_true=0`. The fresh active claims are
+  `/tmp/ict-engine-agent-claims/board-b-factor-refinement/20260529T014234+0800-codex-tomac-opening-drive-exact-materialization-takeover.claim`
+  and
+  `/tmp/ict-engine-agent-claims/board-b-factor-refinement/20260529T015241+0800-codex-tomac-tod-balanced-parent-validation-ranker-repair.claim`.
+  Direct workdoc readback showed both lanes are same-root readback/repair lanes, both
+  under the one-hour stale threshold, and both explicitly keep `promotion_allowed=false`,
+  `trade_usable=false`, and `update_goal=false`.
+- 2026-05-29T01:57+0800 proof-aware objective snapshot at
+  `/tmp/ict-engine-closed-loop-snapshot-20260529T0158-codex-heavyproof/`
+  intentionally exited red with `summary.status=not_complete`. With the heavy
+  done-definition proof applied, the current blockers narrowed to
+  `factor_closure_blocked` and `release_readiness_blocked`. The practical-admission
+  source-debt quarantine currently matches the untracked fingerprint
+  (`untracked_violation_count=229`, `untracked_violating_files=148`, tracked violations `0`).
+  Manual requirements still include `same_tree_practical_closure_packet` and
+  `truthful_completion_commit`.
+- 2026-05-29T02:00+0800 proof-aware objective snapshot at
+  `/tmp/ict-engine-closed-loop-snapshot-20260529T0200-codex-heavyproof-postclear/`
+  intentionally exited red with `summary.status=not_complete`. Heavy done-definition
+  proof applied, factor closure was temporarily clear (`active_claims=0`,
+  `live_factor_processes=0`), but `promotion_allowed_true=0` and
+  `trade_usable_true=0`, so blockers were `same_tree_practical_closure_unproven`
+  and `release_readiness_blocked`.
+- 2026-05-29T02:02-02:06+0800 drift readback found a claim-audit collision gap:
+  `ps` showed ChandelierEfficiencyMetaGate live, but compact audit had previously
+  missed the launch wrapper before the child `run_tomac.py` appeared, allowing duplicate
+  NR7/DailyDonchian/Chandelier claims to be created. The root cause was
+  `_is_live_factor_command()` returning false for `run_tomac_*_autoquant_loop_v*.py`
+  wrappers without explicit root args because the generic `tomac_*.py` branch required
+  a run root. Fixed in `support/scripts/factor_claim_terminalization_audit.py` with a
+  focused regression test. Verification: RED test failed, then
+  `python3 -m unittest support.scripts.tests.test_factor_claim_terminalization_audit -v`
+  passed `71/71 OK`. Post-fix compact audit correctly reports the active Chandelier
+  owner: `active_claims=1`, `live_factor_processes=3`, `live_runtime_owner=true`,
+  `promotion_allowed_true=0`, `trade_usable_true=0`.
 
 ## Current Blockers
+
+Latest current-state readback, 2026-05-29T01:57+0800:
+
+Update, 2026-05-29T02:06+0800:
+
+- The OpeningDrive and TOD Balanced false-negative-amnesty claims terminalized fail-closed.
+  OpeningDrive pardoned the old `execution_readiness_below_0_65` blocker but remained
+  `execution_observe_only` with ranker `execution_gate_status=observe`; TOD Balanced
+  cleared provider parity but remained fail-closed with `payoff_gate=reject`,
+  `purged_cv_gate=reject`, `path_ranker_target_row_count=0`, and validation still
+  `raw_scored_mature=1/30`, `production_validation=0/30`, `observation_validation=0/30`.
+- Current hard blocker is again runtime/ownership: post-fix compact audit reports live
+  ChandelierEfficiencyMetaGate runtime under
+  `/tmp/ict-engine-tomac-liquidity-sweep-adx-chandelier-efficiency-meta-gate-launch-20260529T012620+0800`,
+  with the active claim
+  `/tmp/ict-engine-agent-claims/board-b-factor-refinement/20260529T012620+0800-codex-tomac-liquidity-sweep-adx-chandelier-efficiency-meta-gate-launch.claim`.
+  Do not launch, take over, or clean up duplicate NR7/DailyDonchian packets while this
+  runtime is live.
+- The objective still lacks a same-tree practical closure packet; `promotion_allowed_true=0`
+  and `trade_usable_true=0` remain true in every current audit.
+
+Previous readback, 2026-05-29T01:57+0800:
+
+- `factor_closure_blocked`: compact audit reports two fresh active no-runtime claims:
+  OpeningDrive exact materialization repair
+  (`20260529T014234+0800-codex-tomac-opening-drive-exact-materialization-takeover.claim`)
+  and TOD Balanced parent validation/ranker repair
+  (`20260529T015241+0800-codex-tomac-tod-balanced-parent-validation-ranker-repair.claim`).
+  Both are fresh, valid, non-wait-only active claims. Do not take over or launch a sibling
+  provider/AQ/TOMAC lane until they terminalize or become stale-safe by the one-hour rule
+  with no matching live process/artifact writes.
+- `same_tree_practical_closure_packet` is still missing. Current audits still show
+  `promotion_allowed_true=0` and `trade_usable_true=0`; no same-tree packet proves
+  provider/training admission -> Pre-Bayes -> BBN -> path-ranker consumption -> execution
+  tree -> feedback/live-use.
+- `release_readiness_blocked`: `release_readiness_audit` still fails
+  `worktree_clean_for_release`. The worktree is shared and heavily dirty, so do not claim
+  release/source readiness or stage unrelated files.
+- Heavy done-definition proof is currently green via
+  `/tmp/ict-engine-goal-20260529-codex-heavy-done-definition-015033.json`; if this becomes
+  stale, rerun `objective_closure_snapshot.py` with `--run-all-heavy` or pass a fresh
+  `--done-definition-proof` artifact before using it as completion evidence.
+
+Historical blocker log follows for provenance.
 
 The latest no-remote objective snapshot at
 `/tmp/ict-engine-goal-20260528-codex-current-verification-no-remotes/` reports:
@@ -129,6 +298,31 @@ The latest no-remote objective snapshot at
   stale-safe by the one-hour rule and no live process remains.
 - `release_readiness_blocked`: the worktree is not clean for release/source
   attribution.
+- `factor_closure_blocked`: after the Camarilla terminalization, fresh active
+  claims appeared and must not be duplicated or taken over before the stale-safe
+  threshold: `/tmp/ict-engine-agent-claims/board-b-factor-refinement/20260529T004301+0800-codex-tomac-session-cluster-cadence-takeover.claim`
+  and `/tmp/ict-engine-agent-claims/board-b-factor-refinement/20260529T011300+0800-codex-tomac-donchian-trend-breakout-launch.claim`.
+  Latest compact audit around 2026-05-29T01:16+0800 reported `active_claims=2`,
+  `live_factor_processes=0`, `promotion_allowed_true=0`, and
+  `trade_usable_true=0`; this is still a no-launch window.
+- `practical_admission_source_debt`: the source-debt fingerprint drifted again.
+  The latest done-definition/objective snapshot observed `untracked_violation_count=229`
+  across `148` untracked files, while
+  `support/docs/audits/practical-admission-source-debt-quarantine.json` still
+  records the older `193` / `115` quarantine. Do not refresh that quarantine
+  blindly; either review and retire/quarantine the new fingerprint deliberately,
+  or track/fix the wrappers.
+- `factor_closure_blocked`: as of 2026-05-29T01:48+0800 compact audit reports
+  `active_claims=1`, `live_factor_processes=0`, `promotion_allowed_true=0`, and
+  `trade_usable_true=0`. The fresh active no-runtime claim is
+  `/tmp/ict-engine-agent-claims/board-b-factor-refinement/20260529T014234+0800-codex-tomac-opening-drive-exact-materialization-takeover.claim`.
+  It is a same-root OpeningDrive materialization/readback claim and must not be
+  duplicated or taken over before owner progress or the stale-safe rule.
+- `same_tree_practical_closure_unproven`: current snapshots still show
+  `promotion_allowed_true=0` and `trade_usable_true=0`. No current factor has a
+  same-tree packet proving provider/training admission, Pre-Bayes, BBN,
+  path-ranker consumption, execution tree materialization, feedback, and
+  practical live-use together.
 
 ## Decision
 
@@ -156,3 +350,22 @@ attributable source, and fully run done-definition/release gates.
 6. Produce or locate one same-tree practical closure packet that proves the
    provider -> training/admission -> Pre-Bayes -> BBN -> path-ranker ->
    execution tree -> feedback path without promotion shortcuts.
+7. While the SessionCluster and Donchian claims are fresh, do not launch a
+   sibling AQ/provider lane. Re-run compact audit and focused `ps`; only take
+   over after the one-hour stale rule plus no matching live process/artifacts.
+8. If the fresh claims terminalize fail-closed, rotate to a materially different
+   family with a valid claim/workdoc. Do not rerun unchanged PredicateDensity,
+   InitialBalanceCadenceLift, NQ/YM PairRelativeValue, Camarilla, or the
+   explicitly low-density DailyDonchian child variants.
+9. Current no-launch window: wait for the fresh OpeningDrive materialization
+   takeover claim to progress or terminalize, then rerun
+   `python3 support/scripts/factor_claim_terminalization_audit.py --compact --portable-paths`
+   and focused `ps` before any factor launch. Do not start NR7 ExcursionCap,
+   ChandelierEfficiencyMetaGate, or any sibling TOMAC/AQ/provider lane while the
+   claim is fresh active.
+10. Current no-launch window now includes the fresh TOD Balanced parent
+    validation/ranker repair claim. Next safe action is read-only: rerun compact audit
+    plus focused `ps`, then inspect/terminalize only after owner progress or stale-safe
+    timeout. If both active claims clear and no live process appears, rerun
+    `python3 support/scripts/objective_closure_snapshot.py --compact --done-definition-proof /tmp/ict-engine-goal-20260529-codex-heavy-done-definition-015033.json --output-dir /tmp/<fresh>`
+    before choosing any new lane.

@@ -1431,6 +1431,16 @@ trade_usable=false
 
         self.assertTrue(_is_live_factor_command(command))
 
+    def test_live_process_classifier_detects_tomac_autoquant_loop_wrappers_without_root_args(self) -> None:
+        command = (
+            "/opt/homebrew/Cellar/python@3.13/3.13.12_1/Frameworks/Python.framework/"
+            "Versions/3.13/Resources/Python.app/Contents/MacOS/Python "
+            "support/docs/experiments/actionable-regime-confidence/scripts/"
+            "run_tomac_liquidity_sweep_adx_chandelier_efficiency_meta_gate_autoquant_loop_v1.py"
+        )
+
+        self.assertTrue(_is_live_factor_command(command))
+
     def test_live_process_classifier_ignores_tomac_await_launch_watchers(self) -> None:
         command = (
             "/opt/homebrew/bin/python3 "

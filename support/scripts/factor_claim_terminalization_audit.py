@@ -796,6 +796,8 @@ def _is_live_factor_command(command: str) -> bool:
         return True
     if re.search(r"(?:^|\s)\S*tomac_[^\s/]*_(?:scan|postscan)\.py\b", command):
         return True
+    if re.search(r"(?:^|\s)\S*run_tomac_[^\s/]*\.py\b", command):
+        return True
     if re.search(r"(?:^|\s)\S*tomac_[^\s/]*\.py\b", command):
         run_root = _extract_run_root(command)
         return bool(run_root and _is_board_b_run_root(run_root))
