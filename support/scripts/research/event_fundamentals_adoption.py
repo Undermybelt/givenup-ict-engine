@@ -155,6 +155,7 @@ def build_factor_research_command(
     objective: str,
     state_dir: str,
     profile_selector: str | None,
+    bundle_artifact_name: str,
 ) -> str:
     parts = [
         "cargo run --quiet -- factor-research",
@@ -162,6 +163,7 @@ def build_factor_research_command(
         f"--objective {objective}",
         "--backend auto-quant",
         "--auto-quant-profile synthetic_ohlcv",
+        f"--auxiliary-evidence {shell_quote(bundle_artifact_name)}",
         f"--state-dir {shell_quote(state_dir)}",
         "--human",
     ]
@@ -192,6 +194,7 @@ def build_command_set(
             objective,
             state_dir,
             profile_selector,
+            bundle_artifact_name,
         ),
         "auto_quant_adoption_review": (
             f"cargo run --quiet -- auto-quant-adoption-review --symbol {workflow_symbol} "

@@ -202,7 +202,7 @@ fn load_auxiliary_evidence_override(path: Option<&str>) -> Result<Option<Auxilia
 fn load_auxiliary_evidence_from_path(path: &str) -> Result<AuxiliaryMarketEvidence> {
     if !std::path::Path::new(path).exists() {
         anyhow::bail!(
-            "factor_research_auxiliary_evidence_missing: flag=--auxiliary-evidence path={} expected=AuxiliaryMarketEvidence JSON or analyze-report JSON containing supporting.auxiliary recovery=export auxiliary market/options evidence or rerun without --auxiliary-evidence until that artifact exists",
+            "factor_research_auxiliary_evidence_missing: flag=--auxiliary-evidence path={} expected=AuxiliaryMarketEvidence JSON, analyze-report JSON containing supporting.auxiliary, or event-fundamentals sidecar bundle recovery=export auxiliary market/options evidence or rerun without --auxiliary-evidence until that artifact exists",
             path
         );
     }
@@ -213,6 +213,9 @@ fn load_auxiliary_evidence_from_path(path: &str) -> Result<AuxiliaryMarketEviden
     }
     let value: serde_json::Value = serde_json::from_str(&raw)
         .with_context(|| format!("parsing auxiliary/options evidence JSON from {}", path))?;
+    if let Some(auxiliary) = event_fundamentals_sidecar_bundle_to_auxiliary(&value)? {
+        return Ok(auxiliary);
+    }
     let nested = value
         .get("supporting")
         .and_then(|supporting| supporting.get("auxiliary"))
@@ -223,6 +226,128 @@ fn load_auxiliary_evidence_from_path(path: &str) -> Result<AuxiliaryMarketEviden
         )?;
     serde_json::from_value::<AuxiliaryMarketEvidence>(nested)
         .with_context(|| format!("deserializing AuxiliaryMarketEvidence from {}", path))
+}
+
+fn event_fundamentals_sidecar_bundle_to_auxiliary(
+    value: &serde_json::Value,
+) -> Result<Option<AuxiliaryMarketEvidence>> {
+    if value.get("schema_version").and_then(|item| item.as_str())
+        != Some("event-fundamentals-adoption/v1")
+    {
+        return Ok(None);
+    }
+
+    let profile_contract_ready = value
+        .get("artifact_readiness")
+        .and_then(|item| item.get("profile_contract_ready"))
+        .and_then(|item| item.as_bool())
+        .unwrap_or(false);
+    let readiness_label = value
+        .get("downstream_handoff")
+        .and_then(|item| item.get("readiness"))
+        .and_then(|item| item.as_str())
+        .unwrap_or("unknown");
+    let allowed_use_modes: Vec<String> = value
+        .get("downstream_handoff")
+        .and_then(|item| item.get("allowed_use_modes"))
+        .and_then(|item| item.as_array())
+        .map(|items| {
+            items
+                .iter()
+                .filter_map(|item| item.as_str().map(str::to_string))
+                .collect()
+        })
+        .unwrap_or_default();
+    let allows_factor_research_opt_in = allowed_use_modes
+        .iter()
+        .any(|mode| mode == "factor_research_opt_in");
+
+    if !profile_contract_ready || !allows_factor_research_opt_in {
+        anyhow::bail!(
+            "factor_research_auxiliary_sidecar_incomplete: expected profile_contract_ready=true and allowed_use_modes to include factor_research_opt_in readiness={} allowed_use_modes={:?}",
+            readiness_label,
+            allowed_use_modes
+        );
+    }
+
+    let workflow_symbol = value
+        .get("workflow_symbol")
+        .and_then(|item| item.as_str())
+        .or_else(|| value.get("market_key").and_then(|item| item.as_str()))
+        .context("event-fundamentals sidecar bundle missing workflow_symbol / market_key")?;
+    let market_key = value
+        .get("market_key")
+        .and_then(|item| item.as_str())
+        .unwrap_or(workflow_symbol);
+    let spot_kind = infer_sidecar_spot_kind(market_key, workflow_symbol);
+
+    let mut notes = vec![
+        "event_fundamentals_sidecar_bundle".to_string(),
+        format!("sidecar_bundle_readiness={readiness_label}"),
+        format!("sidecar_market_key={market_key}"),
+    ];
+    if let Some(warnings) = value.get("usage_warnings").and_then(|item| item.as_array()) {
+        notes.extend(
+            warnings
+                .iter()
+                .filter_map(|item| item.as_str().map(str::to_string)),
+        );
+    }
+
+    Ok(Some(AuxiliaryMarketEvidence {
+        spot_symbol: workflow_symbol.to_string(),
+        options_symbol: workflow_symbol.to_string(),
+        spot_kind,
+        spot_last_close: None,
+        futures_last_close: None,
+        spot_return: None,
+        futures_return: None,
+        raw_basis_bps: None,
+        normalized_basis_bps: None,
+        rolling_price_ratio_mean: None,
+        put_call_oi_ratio: None,
+        put_call_volume_ratio: None,
+        near_atm_implied_volatility: None,
+        near_atm_delta: None,
+        near_atm_gamma: None,
+        near_atm_vega: None,
+        call_gamma_oi: None,
+        put_gamma_oi: None,
+        gamma_skew: None,
+        hedge_pressure_direction: None,
+        hedge_pressure_score: Some(0.0),
+        long_bias: 0.0,
+        short_bias: 0.0,
+        uncertainty_penalty: 0.0,
+        notes,
+    }))
+}
+
+fn infer_sidecar_spot_kind(market_key: &str, workflow_symbol: &str) -> SpotInstrumentKind {
+    if workflow_symbol.trim().starts_with('^') {
+        return SpotInstrumentKind::Index;
+    }
+
+    let normalized_market = market_key.trim().to_ascii_uppercase();
+    if matches!(
+        normalized_market.as_str(),
+        "NQ" | "MNQ"
+            | "ES"
+            | "MES"
+            | "YM"
+            | "MYM"
+            | "RTY"
+            | "M2K"
+            | "RUT"
+            | "SPX"
+            | "NDX"
+            | "DJI"
+            | "VIX"
+    ) {
+        SpotInstrumentKind::Index
+    } else {
+        SpotInstrumentKind::Equity
+    }
 }
 
 fn build_auxiliary_runtime_notes(
@@ -358,5 +483,104 @@ mod tests {
         assert_eq!(auxiliary.spot_symbol, "SPY");
         assert_eq!(auxiliary.options_symbol, "SPY");
         assert_eq!(auxiliary.hedge_pressure_direction.as_deref(), Some("short"));
+    }
+
+    #[test]
+    fn loads_auxiliary_evidence_from_event_fundamentals_sidecar_bundle_when_ready() {
+        let temp = tempfile::NamedTempFile::new().unwrap();
+        let payload = serde_json::json!({
+            "schema_version": "event-fundamentals-adoption/v1",
+            "market_key": "NQ",
+            "workflow_symbol": "NQ_EVENT_CONTEXT",
+            "artifact_readiness": {
+                "profile_contract_ready": true,
+                "covered_contract_count": 4,
+                "covered_contract_ids": [
+                    "dividend_event_series",
+                    "earnings_event_series",
+                    "lagged_fundamentals_sidecar",
+                    "macro_event_series"
+                ],
+                "missing_contract_ids": []
+            },
+            "usage_warnings": [
+                "Lag fundamentals by effective date before backtest or live reuse.",
+                "Keep macro events aligned to scheduled release timestamps and explicit importance tiers."
+            ],
+            "downstream_handoff": {
+                "readiness": "profile_contract_ready",
+                "missing_artifact_kinds": [],
+                "allowed_use_modes": [
+                    "research_context",
+                    "factor_research_opt_in",
+                    "auto_quant_handoff_context"
+                ]
+            }
+        });
+        std::fs::write(temp.path(), serde_json::to_string(&payload).unwrap()).unwrap();
+
+        let auxiliary = load_auxiliary_evidence_from_path(temp.path().to_str().unwrap()).unwrap();
+        assert_eq!(auxiliary.spot_symbol, "NQ_EVENT_CONTEXT");
+        assert_eq!(auxiliary.options_symbol, "NQ_EVENT_CONTEXT");
+        assert_eq!(auxiliary.spot_kind, SpotInstrumentKind::Index);
+        assert_eq!(auxiliary.long_bias, 0.0);
+        assert_eq!(auxiliary.short_bias, 0.0);
+        assert_eq!(auxiliary.uncertainty_penalty, 0.0);
+        assert!(auxiliary
+            .notes
+            .iter()
+            .any(|note| note == "event_fundamentals_sidecar_bundle"));
+        assert!(auxiliary
+            .notes
+            .iter()
+            .any(|note| note == "sidecar_bundle_readiness=profile_contract_ready"));
+        assert!(auxiliary
+            .notes
+            .iter()
+            .any(|note| note.contains("Lag fundamentals by effective date")));
+    }
+
+    #[test]
+    fn rejects_event_fundamentals_sidecar_bundle_when_not_ready_for_factor_research() {
+        let temp = tempfile::NamedTempFile::new().unwrap();
+        let payload = serde_json::json!({
+            "schema_version": "event-fundamentals-adoption/v1",
+            "market_key": "NQ",
+            "workflow_symbol": "NQ_EVENT_CONTEXT",
+            "artifact_readiness": {
+                "profile_contract_ready": false,
+                "covered_contract_count": 2,
+                "covered_contract_ids": [
+                    "earnings_event_series",
+                    "lagged_fundamentals_sidecar"
+                ],
+                "missing_contract_ids": [
+                    "dividend_event_series",
+                    "macro_event_series"
+                ]
+            },
+            "usage_warnings": [
+                "Lag fundamentals by effective date before backtest or live reuse."
+            ],
+            "downstream_handoff": {
+                "readiness": "partial_sidecar_pack",
+                "missing_artifact_kinds": ["dividends", "macro"],
+                "allowed_use_modes": [
+                    "research_context",
+                    "auto_quant_handoff_context"
+                ]
+            }
+        });
+        std::fs::write(temp.path(), serde_json::to_string(&payload).unwrap()).unwrap();
+
+        let err = load_auxiliary_evidence_from_path(temp.path().to_str().unwrap()).unwrap_err();
+        let message = format!("{err:#}");
+
+        assert!(
+            message.contains("factor_research_auxiliary_sidecar_incomplete"),
+            "{message}"
+        );
+        assert!(message.contains("profile_contract_ready"), "{message}");
+        assert!(message.contains("factor_research_opt_in"), "{message}");
     }
 }

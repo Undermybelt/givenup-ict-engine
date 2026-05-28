@@ -41,7 +41,7 @@ pub(crate) struct FactorResearchArgs {
     pub(crate) auto_quant_profile: Option<String>,
     #[arg(
         long,
-        help = "Optional path to AuxiliaryMarketEvidence JSON, or a full analyze-report JSON containing supporting.auxiliary"
+        help = "Optional path to AuxiliaryMarketEvidence JSON, a full analyze-report JSON containing supporting.auxiliary, or a ready event-fundamentals sidecar bundle"
     )]
     pub(crate) auxiliary_evidence: Option<String>,
     #[arg(long, help = "Optional mutation spec JSON path")]
@@ -141,7 +141,7 @@ pub(crate) struct FactorAutoresearchArgs {
     pub(crate) auto_quant_profile: Option<String>,
     #[arg(
         long,
-        help = "Optional path to AuxiliaryMarketEvidence JSON, or a full analyze-report JSON containing supporting.auxiliary"
+        help = "Optional path to AuxiliaryMarketEvidence JSON, a full analyze-report JSON containing supporting.auxiliary, or a ready event-fundamentals sidecar bundle"
     )]
     pub(crate) auxiliary_evidence: Option<String>,
     #[arg(
@@ -208,7 +208,7 @@ pub(crate) struct FactorBacktestArgs {
     pub(crate) paired_data: Option<String>,
     #[arg(
         long,
-        help = "Optional path to AuxiliaryMarketEvidence JSON, or a full analyze-report JSON containing supporting.auxiliary"
+        help = "Optional path to AuxiliaryMarketEvidence JSON, a full analyze-report JSON containing supporting.auxiliary, or a ready event-fundamentals sidecar bundle"
     )]
     pub(crate) auxiliary_evidence: Option<String>,
     #[arg(
