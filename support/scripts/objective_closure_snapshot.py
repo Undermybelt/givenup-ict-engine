@@ -4,6 +4,7 @@ from __future__ import annotations
 import argparse
 import json
 import re
+import shutil
 import subprocess
 import sys
 from datetime import datetime, timezone
@@ -206,6 +207,7 @@ def _done_surface(report: dict[str, Any]) -> dict[str, Any]:
                     "untracked_violating_files": details.get("untracked_violating_files"),
                     "violation_count": details.get("violation_count"),
                     "violating_files": details.get("violating_files"),
+                    "debt_manifest_file": details.get("debt_manifest_file"),
                     "sample_violations": details.get("sample_violations", []),
                 }
     return {
@@ -350,6 +352,7 @@ def summarize_snapshot(
     snapshot_timestamp: str | None = None,
 ) -> dict[str, Any]:
     blockers: list[str] = []
+    blocker_details: dict[str, Any] = {}
     if not done_surface.get("completion_ready"):
         blockers.append("done_definition_not_completion_ready")
     if done_surface.get("quickstart_surface") != "pass":
@@ -359,6 +362,15 @@ def summarize_snapshot(
         untracked_count = practical_source.get("untracked_violation_count")
         if isinstance(untracked_count, int) and untracked_count > 0:
             blockers.append("practical_admission_source_debt")
+            blocker_details["practical_admission_source_debt"] = {
+                "tracked_violation_count": practical_source.get("tracked_violation_count"),
+                "tracked_violating_files": practical_source.get("tracked_violating_files"),
+                "untracked_violation_count": practical_source.get("untracked_violation_count"),
+                "untracked_violating_files": practical_source.get("untracked_violating_files"),
+                "violation_count": practical_source.get("violation_count"),
+                "violating_files": practical_source.get("violating_files"),
+                "debt_manifest_file": practical_source.get("debt_manifest_file"),
+            }
     if factor_surface.get("status") != "pass":
         blockers.append("factor_closure_blocked")
     practical_promotions = factor_surface.get("promotion_allowed_true")
@@ -555,6 +567,7 @@ def summarize_snapshot(
         "surface_green": surface_green,
         "blocker_count": len(blockers),
         "blockers": blockers,
+        "blocker_details": blocker_details,
         "manual_requirements_remaining": manual_requirements_remaining,
         "next_action": next_action,
         "child_next_actions": child_next_actions,
@@ -584,17 +597,31 @@ def build_snapshot(
     done_surface = _apply_done_definition_proof(_done_surface(done_report), proof_status)
     factor_surface = _factor_surface(factor_report)
     release_surface = _release_surface(release_report)
+
+    evidence_files = {
+        name: _portable_path(spec.get("output_path"), output_dir=output_dir)
+        for name, spec in audit_results.items()
+    }
+    practical_source = done_surface.get("practical_admission_source_surface")
+    if output_dir and isinstance(practical_source, dict):
+        debt_manifest_file = practical_source.get("debt_manifest_file")
+        if isinstance(debt_manifest_file, str) and debt_manifest_file:
+            source_path = Path(debt_manifest_file).expanduser()
+            if source_path.exists():
+                staged_path = output_dir / "practical_admission_source_debt_manifest.json"
+                if source_path.resolve() != staged_path.resolve():
+                    shutil.copyfile(source_path, staged_path)
+                practical_source["debt_manifest_file"] = _portable_path(staged_path, output_dir=output_dir)
+                evidence_files["practical_admission_source_debt_manifest"] = _portable_path(
+                    staged_path,
+                    output_dir=output_dir,
+                )
     summary = summarize_snapshot(
         done_surface,
         factor_surface,
         release_surface,
         snapshot_timestamp=snapshot_timestamp,
     )
-
-    evidence_files = {
-        name: _portable_path(spec.get("output_path"), output_dir=output_dir)
-        for name, spec in audit_results.items()
-    }
     if done_definition_proof is not None:
         proof_path = done_definition_proof.get("path")
         evidence_files["done_definition_proof"] = (

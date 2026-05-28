@@ -157,6 +157,7 @@ class ObjectiveClosureSnapshotTest(unittest.TestCase):
                                     "tracked_violation_count": 0,
                                     "untracked_violation_count": 3,
                                     "untracked_violating_files": 2,
+                                    "debt_manifest_file": str(output_dir / "child-debt.json"),
                                     "sample_violations": [
                                         {
                                             "file": "support/docs/experiments/actionable-regime-confidence/scripts/run_untracked_bad_v1.py",
@@ -204,6 +205,16 @@ class ObjectiveClosureSnapshotTest(unittest.TestCase):
                     "output_path": output_dir / "release_readiness_audit.compact.json",
                 },
             }
+            (output_dir / "child-debt.json").write_text(
+                json.dumps(
+                    {
+                        "schema_version": "practical-admission-source-debt/v1",
+                        "summary": {"untracked_violation_count": 3},
+                        "untracked_violations": [{"file": "run_untracked_bad_v1.py"}],
+                    }
+                ),
+                encoding="utf-8",
+            )
 
             snapshot = build_snapshot(
                 audit_results,
@@ -211,10 +222,23 @@ class ObjectiveClosureSnapshotTest(unittest.TestCase):
                 check_remotes=True,
                 output_dir=output_dir,
             )
+            staged_manifest_exists = (output_dir / "practical_admission_source_debt_manifest.json").exists()
 
         summary = snapshot["summary"]
         self.assertEqual(summary["status"], "not_complete")
         self.assertIn("practical_admission_source_debt", summary["blockers"])
+        self.assertEqual(
+            summary["blocker_details"]["practical_admission_source_debt"],
+            {
+                "tracked_violation_count": 0,
+                "tracked_violating_files": None,
+                "untracked_violation_count": 3,
+                "untracked_violating_files": 2,
+                "violation_count": None,
+                "violating_files": None,
+                "debt_manifest_file": "practical_admission_source_debt_manifest.json",
+            },
+        )
         self.assertIn(
             {
                 "surface": "done_definition",
@@ -227,6 +251,11 @@ class ObjectiveClosureSnapshotTest(unittest.TestCase):
             snapshot["audits"]["done_definition"]["surface"]["practical_admission_source_surface"]["untracked_violation_count"],
             3,
         )
+        self.assertEqual(
+            snapshot["evidence_files"]["practical_admission_source_debt_manifest"],
+            "practical_admission_source_debt_manifest.json",
+        )
+        self.assertTrue(staged_manifest_exists)
 
     def test_summarize_snapshot_does_not_prioritize_done_definition_when_full_coverage_passes(self) -> None:
         summary = summarize_snapshot(

@@ -8,6 +8,7 @@ import re
 import signal
 import subprocess
 import sys
+import tempfile
 from collections import Counter
 from datetime import datetime, timezone
 from pathlib import Path
@@ -340,7 +341,50 @@ def _summarize_practical_admission_scan(reports: list[dict], *, tracked_files: s
         "untracked_violation_count": len(untracked_violations),
         "violations_by_type": dict(sorted(by_type.items())),
         "sample_violations": tracked_violations[:10] or untracked_violations[:10],
+        "tracked_violations": tracked_violations,
+        "untracked_violations": untracked_violations,
     }
+
+
+def write_practical_admission_debt_manifest(summary: dict) -> str | None:
+    if int(summary.get("violation_count") or 0) <= 0:
+        return None
+    generated_at = _utc_now()
+    manifest = {
+        "schema_version": "practical-admission-source-debt/v1",
+        "generated_at": generated_at,
+        "timestamp_utc": generated_at,
+        "scanned_files": summary.get("scanned_files"),
+        "violating_files": summary.get("violating_files"),
+        "violation_count": summary.get("violation_count"),
+        "tracked_scanned_files": summary.get("tracked_scanned_files"),
+        "tracked_violating_files": summary.get("tracked_violating_files"),
+        "tracked_violation_count": summary.get("tracked_violation_count"),
+        "untracked_scanned_files": summary.get("untracked_scanned_files"),
+        "untracked_violating_files": summary.get("untracked_violating_files"),
+        "untracked_violation_count": summary.get("untracked_violation_count"),
+        "violations_by_type": summary.get("violations_by_type", {}),
+        "summary": {
+            "scanned_files": summary.get("scanned_files"),
+            "violating_files": summary.get("violating_files"),
+            "violation_count": summary.get("violation_count"),
+            "tracked_scanned_files": summary.get("tracked_scanned_files"),
+            "tracked_violating_files": summary.get("tracked_violating_files"),
+            "tracked_violation_count": summary.get("tracked_violation_count"),
+            "untracked_scanned_files": summary.get("untracked_scanned_files"),
+            "untracked_violating_files": summary.get("untracked_violating_files"),
+            "untracked_violation_count": summary.get("untracked_violation_count"),
+            "violations_by_type": summary.get("violations_by_type", {}),
+        },
+        "tracked_violations": summary.get("tracked_violations", []),
+        "untracked_violations": summary.get("untracked_violations", []),
+    }
+    output_path = Path(tempfile.gettempdir()) / f"ict-engine-practical-admission-source-debt-{os.getpid()}.json"
+    output_path.write_text(
+        json.dumps(manifest, ensure_ascii=True, indent=2, sort_keys=True) + "\n",
+        encoding="utf-8",
+    )
+    return str(output_path)
 
 
 def evaluate_practical_admission_source_gate(timeout_seconds: int) -> dict:
@@ -384,6 +428,9 @@ def evaluate_practical_admission_source_gate(timeout_seconds: int) -> dict:
 
     tracked_files = tracked_wrapper_file_set(wrapper_files, timeout_seconds)
     summary = _summarize_practical_admission_scan(reports, tracked_files=tracked_files)
+    debt_manifest_file = write_practical_admission_debt_manifest(summary)
+    if debt_manifest_file:
+        summary["debt_manifest_file"] = debt_manifest_file
     summary["scanner_returncode"] = details.get("returncode")
     summary["rule"] = (
         "all tracked downstream/gate wrappers must keep practical flags behind "
@@ -573,6 +620,7 @@ def _compact_gate(gate: dict, root: str) -> dict:
                     "untracked_violating_files": details.get("untracked_violating_files"),
                     "violation_count": details.get("violation_count"),
                     "violating_files": details.get("violating_files"),
+                    "debt_manifest_file": details.get("debt_manifest_file"),
                     "sample_violations": details.get("sample_violations", [])[:10],
                 },
                 root,

@@ -17,6 +17,45 @@ source release gate by itself.
 
 ## Fresh Evidence
 
+2026-05-28 continuation readback:
+
+- `python3 support/scripts/objective_closure_snapshot.py --compact --check-remotes --output-dir /tmp/ict-engine-goal-20260528-codex-current-continuation-after-manifest`
+  emitted a still-red coordinated packet with `summary.status=not_complete` and
+  blockers `done_definition_not_completion_ready`,
+  `practical_admission_source_debt`, `factor_closure_blocked`, and
+  `release_readiness_blocked`.
+- The factor child drifted again while this audit continued: `active_claims=2`,
+  `live_factor_processes=0`, `active_claims_without_live_process=2`,
+  `wait_only_active_claims_without_live_process=1`,
+  `promotion_allowed_true=0`, and `trade_usable_true=0`. Both current factor
+  claims are fresh, so this continuation did not terminalize or overwrite them.
+- The staged packet now includes
+  `practical_admission_source_debt_manifest.json` with direct top-level counts,
+  not only nested `summary` counts: `scanned_files=915`,
+  `tracked_scanned_files=28`, `tracked_violation_count=0`,
+  `untracked_scanned_files=887`, `untracked_violation_count=193`, and
+  `violations_by_type={practical_flag_without_extension_complete_guard:62,
+  five_bps_survival_uses_trade_density_floor:82,
+  downstream_admission_uses_2bps_survivor_gate:49}`.
+- A follow-up live readback caught and fixed one more packet-portability
+  loophole: `summary.blocker_details.practical_admission_source_debt` initially
+  copied the child temp manifest path, while `evidence_files` was packet-safe.
+  `/tmp/ict-engine-goal-20260528-codex-current-continuation-after-blockerdetails-fix/objective_closure_snapshot.json`
+  now keeps the same blocker red but exposes
+  `debt_manifest_file="practical_admission_source_debt_manifest.json"` directly
+  in the parent summary.
+- That same final snapshot shows the factor surface is still actively moving:
+  `active_claims=4`, `live_factor_processes=1`,
+  `active_claims_without_live_process=4`,
+  `wait_only_active_claims_without_live_process=2`, one missing run-root claim,
+  `promotion_allowed_true=0`, and `trade_usable_true=0`. This is current proof
+  against objective completion, not a residual paperwork issue.
+- Focused verification for this packet-shape/readback improvement passed:
+  `python3 -m unittest support.scripts.tests.test_done_definition_audit -v`
+  ran `21/21 OK`, and
+  `python3 -m unittest support.scripts.tests.test_objective_closure_snapshot -v`
+  ran `21/21 OK`.
+
 - `python3 support/scripts/factor_claim_terminalization_audit.py --compact`
   reported `status=pass`, `active_claims=0`, `live_factor_processes=0`,
   `promotion_allowed_true=0`, and `trade_usable_true=0`.
@@ -57,6 +96,12 @@ survivors, or trade-density predicates into practical downstream readiness.
 wrappers with the existing source checker, splits tracked versus untracked
 files with `git ls-files`, and fails the done-definition audit only when unsafe
 patterns remain in tracked source.
+
+The debt manifest emitted by that gate now mirrors the core scan counts at the
+top level (`tracked_violation_count`, `untracked_violation_count`,
+`violations_by_type`, and related file counts) while preserving the original
+nested `summary` block. This keeps the evidence packet lightweight for simple
+readers and still backward-compatible for existing consumers.
 
 This intentionally does not mass-edit untracked historical wrappers in one
 broad slice. It makes the committed-source objective fail closed if tracked
