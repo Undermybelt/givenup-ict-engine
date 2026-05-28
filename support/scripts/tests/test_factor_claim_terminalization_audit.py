@@ -787,6 +787,33 @@ trade_usable=false
         self.assertIn("restore or terminalize missing run roots", summary["next_action"])
         self.assertIn("review positive trade/promotion flags", summary["next_action"])
 
+    def test_terminalized_no_launch_missing_root_does_not_block_closure(self) -> None:
+        with tempfile.TemporaryDirectory() as repo_tmp, tempfile.TemporaryDirectory() as claims_tmp:
+            repo_root = Path(repo_tmp)
+            claims_dir = Path(claims_tmp)
+            missing_root = Path(repo_tmp) / "never-created-aq-root"
+            (claims_dir / "duplicate-no-launch.claim").write_text(
+                f"""
+agent_name=codex-duplicate-no-launch
+owner=codex
+status=terminalized_duplicate_collision_deferred
+decision=terminalized_duplicate_collision_deferred_no_launch
+scope=duplicate launch packet that intentionally never created AQ output
+run_root={missing_root}
+promotion_allowed=false
+trade_usable=false
+""",
+                encoding="utf-8",
+            )
+
+            report = build_report(claims_dir=claims_dir, repo_root=repo_root)
+
+        self.assertEqual(report["summary"]["status"], "pass")
+        self.assertEqual(report["summary"]["terminalized_claims"], 1)
+        self.assertEqual(report["summary"]["missing_run_roots"], 0)
+        self.assertEqual(report["summary"]["blocking_reasons"], [])
+        self.assertFalse(report["claims"][0]["missing_run_root_attention"])
+
     def test_build_report_marks_unclaimed_live_factor_processes_attention(self) -> None:
         with tempfile.TemporaryDirectory() as repo_tmp, tempfile.TemporaryDirectory() as claims_tmp:
             repo_root = Path(repo_tmp)

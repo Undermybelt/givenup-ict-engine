@@ -290,6 +290,14 @@ def read_claim(path: Path, root: Path) -> dict[str, Any]:
     status = _status(fields, summary_flags=summary_flags)
     missing_identity_fields = _missing_active_claim_identity_fields(fields) if status != "terminalized" else []
 
+    run_root_exists = bool(run_root and run_root.exists())
+    missing_run_root_attention = _missing_run_root_needs_attention(
+        status=status,
+        run_root=str(run_root) if run_root else None,
+        run_root_exists=run_root_exists,
+        promotion_allowed=promotion_allowed,
+        trade_usable=trade_usable,
+    )
     return {
         "claim_file": path.name,
         "claim_path": str(path),
@@ -307,7 +315,8 @@ def read_claim(path: Path, root: Path) -> dict[str, Any]:
         "factor_id": fields.get("factor_id"),
         "branch_path": fields.get("branch_path"),
         "run_root": str(run_root) if run_root else None,
-        "run_root_exists": bool(run_root and run_root.exists()),
+        "run_root_exists": run_root_exists,
+        "missing_run_root_attention": missing_run_root_attention,
         "tmp_root": str(tmp_root) if tmp_root else None,
         "tmp_root_exists": bool(tmp_root and tmp_root.exists()),
         "missing_identity_fields": missing_identity_fields,
@@ -315,6 +324,21 @@ def read_claim(path: Path, root: Path) -> dict[str, Any]:
         "trade_usable": trade_usable,
         "summary_files": summary_flags.get("summary_files", []),
     }
+
+
+def _missing_run_root_needs_attention(
+    *,
+    status: str,
+    run_root: str | None,
+    run_root_exists: bool,
+    promotion_allowed: object,
+    trade_usable: object,
+) -> bool:
+    if not run_root or run_root_exists:
+        return False
+    if status != "terminalized":
+        return True
+    return promotion_allowed is True or trade_usable is True
 
 
 def _parse_claim_datetime(value: object) -> datetime | None:
@@ -460,7 +484,9 @@ def summarize(
         if claim.get("status") != "terminalized" and claim.get("missing_identity_fields")
     )
     valid_active_claims = active_claims - invalid_active_claims
-    missing_run_roots = sum(1 for claim in claims if claim.get("run_root") and not claim.get("run_root_exists"))
+    for claim in claims:
+        claim["missing_run_root_attention"] = _claim_missing_run_root_needs_attention(claim)
+    missing_run_roots = sum(1 for claim in claims if claim.get("missing_run_root_attention"))
     trade_usable_true = sum(1 for claim in claims if claim.get("trade_usable") is True)
     promotion_allowed_true = sum(1 for claim in claims if claim.get("promotion_allowed") is True)
     live_factor_processes = len(live_processes)
@@ -1070,9 +1096,21 @@ def format_report(
 def _claim_needs_attention(claim: dict[str, Any]) -> bool:
     return bool(
         claim.get("status") != "terminalized"
-        or (claim.get("run_root") and not claim.get("run_root_exists"))
+        or claim.get("missing_run_root_attention")
         or claim.get("promotion_allowed") is True
         or claim.get("trade_usable") is True
+    )
+
+
+def _claim_missing_run_root_needs_attention(claim: dict[str, Any]) -> bool:
+    if "missing_run_root_attention" in claim:
+        return bool(claim.get("missing_run_root_attention"))
+    return _missing_run_root_needs_attention(
+        status=str(claim.get("status") or ""),
+        run_root=claim.get("run_root") if isinstance(claim.get("run_root"), str) else None,
+        run_root_exists=bool(claim.get("run_root_exists")),
+        promotion_allowed=claim.get("promotion_allowed"),
+        trade_usable=claim.get("trade_usable"),
     )
 
 
@@ -1094,6 +1132,7 @@ def _compact_claim(claim: dict[str, Any], root: str, portable_paths: bool = Fals
     if claim.get("run_root"):
         run_root_state = "present" if claim.get("run_root_exists") else "missing"
     actionability_class = _actionability_class(claim)
+    missing_run_root_attention = _claim_missing_run_root_needs_attention(claim)
     return {
         "claim_file": _compact_text(claim.get("claim_file"), root, portable_paths=portable_paths),
         "status": _compact_text(claim.get("status"), root, portable_paths=portable_paths),
@@ -1111,6 +1150,7 @@ def _compact_claim(claim: dict[str, Any], root: str, portable_paths: bool = Fals
         "wait_only_without_live_process": claim.get("wait_only_without_live_process", False),
         "stale_safe_takeover_candidate": claim.get("stale_safe_takeover_candidate", False),
         "fresh_without_live_process": claim.get("fresh_without_live_process", False),
+        "missing_run_root_attention": missing_run_root_attention,
         "summary_files": claim.get("summary_files", []),
     }
 
@@ -1142,7 +1182,7 @@ def _attention_action_queue(
         [
             claim
             for claim in attention_claims
-            if claim.get("run_root_state") == "missing"
+            if claim.get("missing_run_root_attention")
         ],
         key=claim_sort_key,
     )
