@@ -1122,6 +1122,55 @@ Requirement verdict updates:
   objective; a narrow verified snapshot-actionability commit is valid only as
   incremental progress.
 
+## 2026-05-28 Release Mirror Fallback Diagnostics Refresh
+
+Latest authoritative packets for this refresh:
+
+- `/tmp/ict-engine-goal-20260528-codex-cont3-current/objective_closure_snapshot.json`
+- `/tmp/ict-engine-goal-20260528-codex-cont3-release-readiness.json`
+- `/tmp/ict-engine-goal-20260528-codex-cont3-post-release/objective_closure_snapshot.json`
+
+Current command truth:
+
+- the initial current packet reported `remote_readback` failure for the release
+  mirror, with an HTTPS mirror argv but `Connection closed ... port 22`, which
+  is consistent with a git URL rewrite / SSH transport issue;
+- `support/scripts/release_readiness_audit.py` now creates the same
+  `fallback_public_probe` diagnostic plan for GitHub HTTPS URLs that it already
+  created for SSH origins, and uses it for the release mirror probe;
+- after the patch, live release readback succeeded in this environment and the
+  release audit now fails on concrete current-state blockers:
+  `worktree_clean_for_release`, `source_origin_matches_selected_source`, and
+  `release_version_tag_available`;
+- the post-fix parent packet still reports `status=not_complete`, with factor
+  closure blocked by fresh active claims/live runtime and release readiness red.
+
+Verification:
+
+```bash
+python3 -m unittest support.scripts.tests.test_release_readiness_audit -v
+python3 support/scripts/release_readiness_audit.py --compact --check-remotes --output /tmp/ict-engine-goal-20260528-codex-cont3-release-readiness.json
+python3 support/scripts/objective_closure_snapshot.py --compact --check-remotes --output-dir /tmp/ict-engine-goal-20260528-codex-cont3-post-release --timeout-seconds 300
+```
+
+Results:
+
+- release readiness suite passed `19/19`;
+- release audit exited `1` with actionable release blockers and readable mirror
+  tags;
+- coordinated parent snapshot exited `1` with `not_complete`.
+
+Requirement verdict updates:
+
+- Evidence-pack coordination: stronger; intermittent release mirror transport
+  failures now preserve release-mirror fallback diagnostics, not only origin
+  fallback diagnostics.
+- Release readiness: still `contradicted_by_current_state`; dirty worktree,
+  source/origin drift, and tag reuse remain real blockers.
+- Practical end-to-end profitability factor: still
+  `contradicted_by_current_state`; no `trade_usable=true` practical chain is
+  present.
+
 ## 2026-05-28 TOMAC Gate1 Rows Schema Blocker-Report Repair
 
 Latest authoritative packets for this refresh:

@@ -1383,3 +1383,42 @@ Implication:
 - Parent completion semantics are stricter now: an otherwise green factor
   closure with explicit `promotion_allowed_true=0` and `trade_usable_true=0`
   becomes `same_tree_practical_closure_unproven`, not surface-green.
+
+## 2026-05-28 Release Mirror Fallback Diagnostics Refresh
+
+Current answer remains: no, this still is not complete.
+
+Fresh evidence:
+
+- `/tmp/ict-engine-goal-20260528-codex-cont3-current/objective_closure_snapshot.json`
+  showed release `remote_readback` failing against the release mirror with an
+  HTTPS argv but SSH-style `Connection closed ... port 22`, so the packet did
+  not clearly separate GitHub reachability from git URL rewrite / SSH transport
+  drift.
+- `support/scripts/release_readiness_audit.py` now builds no-rewrite HTTPS
+  fallback diagnostics for GitHub HTTPS URLs and uses that release-mirror probe
+  path in addition to the existing origin fallback path.
+- Live post-fix release audit
+  `/tmp/ict-engine-goal-20260528-codex-cont3-release-readiness.json` reached
+  mirror readback and now reports the concrete current blockers:
+  `worktree_clean_for_release`, `source_origin_matches_selected_source`, and
+  `release_version_tag_available`.
+- Post-fix parent packet
+  `/tmp/ict-engine-goal-20260528-codex-cont3-post-release/objective_closure_snapshot.json`
+  remains `not_complete`; factor closure has fresh active claims/live runtime,
+  `promotion_allowed_true=0`, and `trade_usable_true=0`.
+
+Verification:
+
+- `python3 -m unittest support.scripts.tests.test_release_readiness_audit -v`
+  passed `19/19`.
+- `python3 support/scripts/release_readiness_audit.py --compact --check-remotes --output /tmp/ict-engine-goal-20260528-codex-cont3-release-readiness.json`
+  exited `1` with concrete release blockers.
+- `python3 support/scripts/objective_closure_snapshot.py --compact --check-remotes --output-dir /tmp/ict-engine-goal-20260528-codex-cont3-post-release --timeout-seconds 300`
+  exited `1` with `summary.status=not_complete`.
+
+Implication:
+
+- Release evidence packets are more reusable/actionable under intermittent
+  transport failures, but release readiness and practical trading usefulness are
+  still disproven by current evidence.

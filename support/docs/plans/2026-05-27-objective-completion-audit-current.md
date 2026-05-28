@@ -1005,3 +1005,18 @@ Earlier same-day runtime smoke (not rerun in this continuation):
   all-child-green case: when factor closure is otherwise `pass` but reports
   `promotion_allowed_true=0` and `trade_usable_true=0`, the parent now emits
   `same_tree_practical_closure_unproven` instead of becoming surface-green.
+- 2026-05-28: release-readiness remote diagnostics were tightened after
+  `/tmp/ict-engine-goal-20260528-codex-cont3-current/objective_closure_snapshot.json`
+  showed `remote_readback` failing on the release mirror with an SSH-style
+  `Connection closed ... port 22` error despite an HTTPS mirror URL. The audit
+  now builds a no-rewrite HTTPS fallback probe plan for GitHub HTTPS URLs and
+  uses it for the release mirror, matching the existing origin fallback shape.
+  Verification: `python3 -m unittest support.scripts.tests.test_release_readiness_audit -v`
+  passed `19/19`. The post-fix live release audit at
+  `/tmp/ict-engine-goal-20260528-codex-cont3-release-readiness.json` reached
+  remote readback and now fails on the concrete release blockers
+  `worktree_clean_for_release`, `source_origin_matches_selected_source`, and
+  `release_version_tag_available`. The parent packet at
+  `/tmp/ict-engine-goal-20260528-codex-cont3-post-release/objective_closure_snapshot.json`
+  remains `not_complete` with fresh Board B factor claims and
+  `promotion_allowed_true=0` / `trade_usable_true=0`.

@@ -11,6 +11,7 @@ if str(SCRIPTS_ROOT) not in sys.path:
     sys.path.insert(0, str(SCRIPTS_ROOT))
 
 from release_readiness_audit import (  # noqa: E402
+    build_public_remote_probe_plan,
     evaluate_docs_freshness,
     evaluate_remote_readback,
     evaluate_source_origin_alignment,
@@ -26,6 +27,33 @@ from release_readiness_audit import (  # noqa: E402
 
 
 class ReleaseReadinessAuditTest(unittest.TestCase):
+    def test_build_public_remote_probe_plan_converts_github_ssh_origin_to_https_fallback(self) -> None:
+        plan = build_public_remote_probe_plan(
+            "origin",
+            "git@github.com:Undermybelt/givenup-ict-engine.git",
+        )
+
+        self.assertEqual(plan["remote_name"], "origin")
+        self.assertEqual(plan["declared_url"], "git@github.com:Undermybelt/givenup-ict-engine.git")
+        self.assertEqual(plan["default_target"], "origin")
+        self.assertEqual(
+            plan["fallback_public_url"],
+            "https://github.com/Undermybelt/givenup-ict-engine.git",
+        )
+        self.assertEqual(plan["fallback_transport"], "https_public_no_rewrite")
+
+    def test_build_public_remote_probe_plan_marks_https_github_url_for_no_rewrite_probe(self) -> None:
+        plan = build_public_remote_probe_plan(
+            "release_mirror",
+            "https://github.com/Undermybelt/ict-engine-release.git",
+        )
+
+        self.assertEqual(
+            plan["fallback_public_url"],
+            "https://github.com/Undermybelt/ict-engine-release.git",
+        )
+        self.assertEqual(plan["fallback_transport"], "https_public_no_rewrite")
+
     def test_parse_cargo_metadata_reads_release_fields(self) -> None:
         metadata = parse_cargo_metadata(
             """
@@ -133,6 +161,77 @@ R  old.rs -> new.rs
         self.assertIn("--check-remotes", gate["details"]["next_action"])
         self.assertEqual(gate["details"]["origin_status"], "pass")
         self.assertEqual(gate["details"]["release_mirror_status"], "fail")
+
+    def test_remote_readback_failure_keeps_public_fallback_diagnostics(self) -> None:
+        gate = evaluate_remote_readback(
+            origin_state="fail",
+            origin_details={
+                "argv": ["git", "ls-remote", "--heads", "--tags", "origin"],
+                "returncode": 128,
+                "stdout": "",
+                "stderr": "Connection closed by 198.18.0.190 port 22\nfatal: Could not read from remote repository.\n",
+                "remote_name": "origin",
+                "declared_url": "git@github.com:Undermybelt/givenup-ict-engine.git",
+                "fallback_public_probe": {
+                    "target": "https://github.com/Undermybelt/givenup-ict-engine.git",
+                    "transport": "https_public_no_rewrite",
+                    "result": {
+                        "argv": [
+                            "git",
+                            "ls-remote",
+                            "--heads",
+                            "--tags",
+                            "https://github.com/Undermybelt/givenup-ict-engine.git",
+                        ],
+                        "returncode": 128,
+                        "stdout": "",
+                        "stderr": "fatal: unable to access 'https://github.com/Undermybelt/givenup-ict-engine.git/': LibreSSL SSL_connect: SSL_ERROR_SYSCALL in connection to github.com:443 ",
+                    },
+                },
+            },
+            mirror_state="fail",
+            mirror_details={
+                "returncode": 128,
+                "stdout": "",
+                "stderr": "fatal: unable to access 'https://github.com/Undermybelt/ict-engine-release.git/': LibreSSL SSL_connect: SSL_ERROR_SYSCALL in connection to github.com:443 ",
+            },
+        )
+
+        self.assertEqual(gate["status"], "fail")
+        self.assertEqual(
+            gate["details"]["origin"]["fallback_public_probe"]["target"],
+            "https://github.com/Undermybelt/givenup-ict-engine.git",
+        )
+        self.assertEqual(
+            gate["details"]["origin"]["fallback_public_probe"]["transport"],
+            "https_public_no_rewrite",
+        )
+        self.assertIn("restore release mirror git/network/auth readback", gate["details"]["next_action"])
+
+    def test_remote_readback_failure_surfaces_release_mirror_fallback_diagnostics(self) -> None:
+        gate = evaluate_remote_readback(
+            origin_state="pass",
+            origin_details={"returncode": 0, "stdout": "abc\trefs/heads/main\n", "stderr": ""},
+            mirror_state="fail",
+            mirror_details={
+                "argv": ["git", "ls-remote", "--heads", "--tags", "https://github.com/Undermybelt/ict-engine-release.git"],
+                "returncode": 128,
+                "stdout": "",
+                "stderr": "Connection closed by 198.18.0.190 port 22\n",
+                "fallback_public_probe": {
+                    "target": "https://github.com/Undermybelt/ict-engine-release.git",
+                    "transport": "https_public_no_rewrite",
+                    "result": {"returncode": 128, "stderr": "Connection closed by 198.18.0.190 port 22\n"},
+                },
+            },
+        )
+
+        mirror = gate["details"]["release_mirror"]
+        self.assertEqual(
+            mirror["fallback_public_probe"]["target"],
+            "https://github.com/Undermybelt/ict-engine-release.git",
+        )
+        self.assertEqual(mirror["fallback_public_probe"]["transport"], "https_public_no_rewrite")
 
     def test_source_origin_alignment_does_not_compare_mirror_commit_to_source_head(self) -> None:
         gate = evaluate_source_origin_alignment(

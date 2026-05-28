@@ -89,6 +89,26 @@ def parse_ls_remote(text: str) -> dict[str, dict[str, str]]:
     return {"heads": heads, "tags": tags}
 
 
+def build_public_remote_probe_plan(remote_name: str, declared_url: str) -> dict[str, Any]:
+    plan: dict[str, Any] = {
+        "remote_name": remote_name,
+        "declared_url": declared_url,
+        "default_target": remote_name,
+    }
+    match = re.fullmatch(r"git@github\.com:(.+?)(?:\.git)?", declared_url.strip())
+    if match:
+        repo_path = match.group(1)
+        plan["fallback_public_url"] = f"https://github.com/{repo_path}.git"
+        plan["fallback_transport"] = "https_public_no_rewrite"
+        return plan
+    https_match = re.fullmatch(r"https://github\.com/(.+?)(?:\.git)?", declared_url.strip())
+    if https_match:
+        repo_path = https_match.group(1)
+        plan["fallback_public_url"] = f"https://github.com/{repo_path}.git"
+        plan["fallback_transport"] = "https_public_no_rewrite"
+    return plan
+
+
 def evaluate_worktree_clean(status_text: str) -> dict[str, Any]:
     entries = [line for line in status_text.splitlines() if line.strip()]
     details = summarize_worktree_status(entries)
@@ -244,6 +264,78 @@ def evaluate_remote_readback(
     }
 
 
+def read_remote_probe(
+    root: Path,
+    remote_name: str,
+    timeout: int = 30,
+) -> tuple[str, dict[str, Any]]:
+    state, details = run_command(
+        ["git", "ls-remote", "--heads", "--tags", remote_name],
+        root,
+        timeout=timeout,
+    )
+    declared_state, declared_details = run_command(
+        ["git", "remote", "get-url", remote_name],
+        root,
+        timeout=10,
+    )
+    if declared_state != "pass":
+        return state, details
+
+    declared_url = declared_details["stdout"].strip()
+    if not declared_url:
+        return state, details
+
+    plan = build_public_remote_probe_plan(remote_name, declared_url)
+    details["remote_name"] = remote_name
+    details["declared_url"] = declared_url
+    if state == "pass" or not plan.get("fallback_public_url"):
+        return state, details
+
+    fallback_target = str(plan["fallback_public_url"])
+    fallback_state, fallback_details = run_command(
+        ["git", "ls-remote", "--heads", "--tags", fallback_target],
+        root,
+        timeout=timeout,
+    )
+    details["fallback_public_probe"] = {
+        "target": fallback_target,
+        "transport": plan["fallback_transport"],
+        "result": fallback_details,
+    }
+    return state, details
+
+
+def read_url_remote_probe(
+    root: Path,
+    remote_name: str,
+    remote_url: str,
+    timeout: int = 30,
+) -> tuple[str, dict[str, Any]]:
+    state, details = run_command(
+        ["git", "ls-remote", "--heads", "--tags", remote_url],
+        root,
+        timeout=timeout,
+    )
+    plan = build_public_remote_probe_plan(remote_name, remote_url)
+    details["remote_name"] = remote_name
+    details["declared_url"] = remote_url
+    if state == "pass" or not plan.get("fallback_public_url"):
+        return state, details
+    fallback_target = str(plan["fallback_public_url"])
+    fallback_state, fallback_details = run_command(
+        ["git", "ls-remote", "--heads", "--tags", fallback_target],
+        root,
+        timeout=timeout,
+    )
+    details["fallback_public_probe"] = {
+        "target": fallback_target,
+        "transport": plan["fallback_transport"],
+        "result": fallback_details,
+    }
+    return state, details
+
+
 def evaluate_cargo_release_policy(metadata: dict[str, Any]) -> dict[str, Any]:
     publish = metadata.get("publish")
     license_name = metadata.get("license")
@@ -378,10 +470,11 @@ def build_report(root: Path, check_remotes: bool) -> dict[str, Any]:
 
     remote_details: dict[str, Any] = {"enabled": check_remotes}
     if check_remotes:
-        origin_state, origin_details = run_command(["git", "ls-remote", "--heads", "--tags", "origin"], root, timeout=30)
-        mirror_state, mirror_details = run_command(
-            ["git", "ls-remote", "--heads", "--tags", RELEASE_MIRROR_URL],
+        origin_state, origin_details = read_remote_probe(root, "origin", timeout=30)
+        mirror_state, mirror_details = read_url_remote_probe(
             root,
+            "release_mirror",
+            RELEASE_MIRROR_URL,
             timeout=30,
         )
         if origin_state == "pass" and mirror_state == "pass":
