@@ -13,7 +13,7 @@ import transition_evidence_aggregator as agg  # noqa: E402
 
 
 class TransitionEvidenceAggregatorTests(unittest.TestCase):
-    def test_transition_alert_blocks_execution_when_confidence_fails_and_drift_fires(self) -> None:
+    def test_transition_alert_remains_telemetry_when_confidence_fails_and_drift_fires(self) -> None:
         regime = {
             "candidate_id": "regime-a",
             "confidence_95": False,
@@ -32,7 +32,8 @@ class TransitionEvidenceAggregatorTests(unittest.TestCase):
         self.assertTrue(result["transition_alert_95"])
         self.assertGreaterEqual(result["transition_hazard"], 0.95)
         self.assertIn("bocd", result["drift_flags"])
-        self.assertEqual(result["execution_tree_block_hint"], "transition_guardrail")
+        self.assertEqual(result["execution_tree_block_hint"], "none")
+        self.assertEqual(result["transition_hazard_role"], "telemetry_only")
 
     def test_transition_evidence_allows_execution_when_regime_is_stable(self) -> None:
         regime = {

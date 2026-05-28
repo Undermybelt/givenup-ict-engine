@@ -860,9 +860,6 @@ fn strict_trend_pullback_wait_for_reversion_observe_only(
     let readiness_ok = output
         .execution_readiness
         .is_some_and(|readiness| readiness >= EXECUTION_GATE_READY);
-    let transition_ok = output
-        .hybrid_transition_hazard
-        .is_some_and(|hazard| hazard < 0.60);
     strict_trend_pullback_root
         && output.gate_status == "ready"
         && output.branch == "wait_for_reversion"
@@ -870,7 +867,6 @@ fn strict_trend_pullback_wait_for_reversion_observe_only(
         && readiness_ok
         && output.path_ranker_score_used_by_execution_tree
         && output.ranker_validation_ready
-        && transition_ok
 }
 
 fn build_execution_tree_closed_loop_branch_admission_value(
@@ -890,16 +886,12 @@ fn build_execution_tree_closed_loop_branch_admission_value(
     let execution_readiness_ready = output
         .execution_readiness
         .is_some_and(|readiness| readiness >= EXECUTION_GATE_READY);
-    let transition_hazard_ready = output
-        .hybrid_transition_hazard
-        .is_some_and(|hazard| hazard < 0.60);
     let ranker_live_ready =
         output.path_ranker_score_used_by_execution_tree && output.ranker_validation_ready;
     let live_plane_ready = pre_bayes_ready
         && execution_ready
         && execution_tree_ready
         && execution_readiness_ready
-        && transition_hazard_ready
         && ranker_live_ready;
     let ready = live_plane_ready;
     let actionable = ready;
@@ -927,8 +919,8 @@ fn build_execution_tree_closed_loop_branch_admission_value(
     evidence.push(format!("execution_tree_gate_status={}", output.gate_status));
     evidence.push(format!("execution_tree_branch={}", output.branch));
     evidence.push(format!(
-        "live_plane_predicates=execution_readiness_ready={} transition_hazard_ready={} ranker_live_ready={}",
-        execution_readiness_ready, transition_hazard_ready, ranker_live_ready
+        "live_plane_predicates=execution_readiness_ready={} ranker_live_ready={}",
+        execution_readiness_ready, ranker_live_ready
     ));
     if strict_trend_pullback_wait_for_reversion_observe_only(path_id, output) {
         evidence.push("strict_trend_pullback_wait_for_reversion_observe_only=true".to_string());
@@ -1336,7 +1328,7 @@ mod tests {
             gate_status: "observe".to_string(),
             branch: "transition_guardrail".to_string(),
             execution_bias: "guarded".to_string(),
-            decision_hint: "execution_guarded_due_to_high_transition_hazard".to_string(),
+            decision_hint: "execution_guarded_due_to_low_remaining_regime_duration".to_string(),
             ..ExecutionTreeOutput::default()
         };
         let mut artifact =
@@ -1466,7 +1458,7 @@ mod tests {
             branch: "fill_viable".to_string(),
             execution_bias: "aggressive".to_string(),
             execution_readiness: Some(0.67),
-            hybrid_transition_hazard: Some(0.41),
+            hybrid_transition_hazard: Some(0.91),
             path_ranker_score_used_by_execution_tree: true,
             ranker_validation_ready: true,
             pda_hybrid_alignment: Some(false),
@@ -1487,6 +1479,13 @@ mod tests {
         assert_eq!(value["promotion_allowed"], true);
         assert_eq!(value["trade_usable"], true);
         assert_eq!(value["update_goal"], true);
+        let evidence = value["evidence"].as_array().unwrap();
+        assert!(evidence.iter().any(|item| {
+            item.as_str()
+                == Some(
+                    "live_plane_predicates=execution_readiness_ready=true ranker_live_ready=true",
+                )
+        }));
     }
 
     #[test]
@@ -1558,16 +1557,6 @@ mod tests {
             &missing_validation,
         );
         assert_eq!(missing_validation_value["status"], "fail_closed");
-
-        let mut high_transition = output.clone();
-        high_transition.hybrid_transition_hazard = Some(0.60);
-        let high_transition_value = build_execution_tree_closed_loop_branch_admission_value(
-            strict_trend_path,
-            "pass_neutralized",
-            "ready",
-            &high_transition,
-        );
-        assert_eq!(high_transition_value["status"], "fail_closed");
 
         let mut pda_misaligned = output.clone();
         pda_misaligned.pda_hybrid_alignment = Some(false);

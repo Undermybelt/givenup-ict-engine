@@ -12,7 +12,6 @@ from typing import Any
 
 PAPER_VALIDATION_MIN_ROWS = 30
 LIVE_EXECUTION_READINESS_FLOOR = 0.65
-LIVE_TRANSITION_HAZARD_CAP = 0.60
 DECLARED_FRICTION_KEYS = (
     "net_after_declared_friction_pct",
     "instrument_cost_total_profit_pct",
@@ -337,13 +336,10 @@ def _paper_status(learning_status: str, validation_rows: dict[str, int]) -> str:
 def _live_status(paper_status: str, metrics: dict[str, Any]) -> str:
     values = _terminal_metrics_values(metrics)
     readiness = _floatish(values["execution_readiness"])
-    hazard = _floatish(values["transition_hazard"])
     if (
         paper_status == "ready"
         and readiness is not None
         and readiness >= LIVE_EXECUTION_READINESS_FLOOR
-        and hazard is not None
-        and hazard < LIVE_TRANSITION_HAZARD_CAP
     ):
         return "ready"
     return "blocked"

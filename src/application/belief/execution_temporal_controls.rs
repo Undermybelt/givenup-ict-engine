@@ -248,9 +248,5 @@ mod tests {
         assert_eq!(output.execution_bias, "aggressive");
         assert_eq!(output.decision_hint, "execution_first_fill");
         assert_eq!(output.hybrid_transition_hazard, Some(0.78));
-        assert!(!output
-            .split_reason_lineage
-            .iter()
-            .any(|line| line.contains("execution_guarded_due_to_high_transition_hazard")));
     }
 }

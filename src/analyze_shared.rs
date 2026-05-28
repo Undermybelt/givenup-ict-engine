@@ -1467,15 +1467,12 @@ fn strict_trend_pullback_wait_for_reversion_trace_ready(
             .get("ranker_validation_ready")
             .and_then(serde_json::Value::as_bool)
             .unwrap_or(false);
-    let transition_ok =
-        trace_output_number(output, "hybrid_transition_hazard").is_some_and(|hazard| hazard < 0.60);
     strict_trend_pullback_root
         && gate_ready
         && wait_for_reversion
         && bias_not_skip
         && readiness_ok
         && ranker_used
-        && transition_ok
 }
 
 fn execution_tree_output_branch_is_fill_viable(output: &serde_json::Value) -> bool {
@@ -1596,14 +1593,12 @@ fn same_root_execution_tree_admission_for_analyze(
             .and_then(serde_json::Value::as_bool)
             .unwrap_or(false);
     let execution_readiness = trace_output_number(output, "execution_readiness")?;
-    let transition_hazard = trace_output_number(output, "hybrid_transition_hazard")?;
     let actionable_admission = direction_can_action
         && pre_bayes_ready
         && admitted
         && execution_tree_ready
         && ranker_used
-        && execution_readiness >= 0.65
-        && transition_hazard < 0.60;
+        && execution_readiness >= 0.65;
     if !pre_bayes_ready {
         return None;
     }

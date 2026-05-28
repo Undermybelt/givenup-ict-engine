@@ -4313,12 +4313,6 @@ fn build_analyze_report(input: BuildAnalyzeReportInput<'_>) -> Result<AnalyzeRep
         &hybrid_regime_packet,
     ));
     stage_trace.event("build_analyze_report:execution_tree_scored");
-    if hybrid_regime_packet.transition_hazard.unwrap_or_default() >= 0.60 {
-        trade_plan.uncertainties.push(format!(
-            "hybrid_transition_hazard={:.3}",
-            hybrid_regime_packet.transition_hazard.unwrap_or_default()
-        ));
-    }
     if hybrid_regime_packet
         .evidence
         .iter()
@@ -13201,7 +13195,7 @@ mod tests {
     }
 
     #[test]
-    fn test_apply_regime_execution_guardrail_blocks_on_high_transition_hazard() {
+    fn test_apply_regime_execution_guardrail_keeps_high_transition_hazard_as_telemetry() {
         let output = apply_regime_execution_guardrail(
             ict_engine::application::orchestration::ExecutionTreeOutput {
                 gate_status: "ready".to_string(),
@@ -13219,7 +13213,7 @@ mod tests {
                 transition_hazard: Some(0.78),
                 duration_elapsed_bars: Some(4),
                 duration_model: Some("negative_binomial".to_string()),
-                duration_remaining_expected_bars: Some(2.0),
+                duration_remaining_expected_bars: Some(4.0),
                 regime_membership: BTreeMap::new(),
                 feature_attribution: BTreeMap::new(),
                 evidence: Vec::new(),
@@ -13232,12 +13226,11 @@ mod tests {
                 timeframe_alignment_score: Some(1.0),
             },
         );
-        assert_eq!(output.gate_status, "observe");
-        assert_eq!(output.branch, "transition_guardrail");
-        assert_eq!(
-            output.decision_hint,
-            "execution_guarded_due_to_high_transition_hazard"
-        );
+        assert_eq!(output.gate_status, "ready");
+        assert_eq!(output.branch, "fill_viable");
+        assert_eq!(output.execution_bias, "aggressive");
+        assert_eq!(output.hybrid_transition_hazard, Some(0.78));
+        assert_eq!(output.decision_hint, "execution_first_fill");
     }
 
     #[test]

@@ -16,7 +16,6 @@ PRE_BAYES_ACCEPTED_GATE_STATUSES = {"pass", "pass_hard", "pass_neutralized"}
 VALIDATION_MIN_ROWS = 30
 REGIME_CONFIDENCE_FLOOR = 0.95
 LIVE_EXECUTION_READINESS_FLOOR = 0.65
-LIVE_TRANSITION_HAZARD_CAP = 0.60
 
 
 def practical_admission_flags(branch_local_admitted: bool, extension_complete: bool = False) -> dict[str, bool]:
@@ -377,8 +376,6 @@ def lifecycle_decision(report: dict[str, Any]) -> tuple[dict[str, Any], str]:
         live_blockers.append(f"execution_candidate_{downstream['execution_candidate_status'] or 'missing'}")
     if downstream["execution_readiness"] is None or downstream["execution_readiness"] < LIVE_EXECUTION_READINESS_FLOOR:
         live_blockers.append("execution_readiness_below_0_65")
-    if downstream["transition_hazard"] is None or downstream["transition_hazard"] >= LIVE_TRANSITION_HAZARD_CAP:
-        live_blockers.append("transition_hazard_ge_0_60")
     if downstream["ranker_validation_ready"] is not True:
         live_blockers.append("ranker_validation_not_ready")
     if execution["path_ranker_score_visible_to_execution_tree"] and not execution["path_ranker_score_used_by_execution_tree"]:

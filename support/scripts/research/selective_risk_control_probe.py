@@ -33,7 +33,6 @@ class Rule:
     bucket: str
     score_min: float
     readiness_min: float
-    transition_max: float | None
     duration_min: float | None
     require_ranker_used: bool
 
@@ -45,9 +44,6 @@ class Rule:
             return False
         if row.execution_readiness is None or row.execution_readiness < self.readiness_min:
             return False
-        if self.transition_max is not None:
-            if row.transition_hazard is None or row.transition_hazard > self.transition_max:
-                return False
         if self.duration_min is not None:
             if row.duration_remaining is None or row.duration_remaining < self.duration_min:
                 return False
@@ -60,7 +56,6 @@ class Rule:
             "bucket": self.bucket,
             "score_min": self.score_min,
             "readiness_min": self.readiness_min,
-            "transition_max": self.transition_max,
             "duration_min": self.duration_min,
             "require_ranker_used": self.require_ranker_used,
         }
@@ -191,7 +186,7 @@ def join_scan_truth(
                 JoinedWindow(
                     window=row["window"],
                     timestamp=timestamp,
-                    bucket=transition_bucket(transition),
+                    bucket="all",
                     execution_readiness=parse_float(row.get("execution_readiness")),
                     prediction_vote_score=parse_float(row.get("prediction_vote_score")),
                     ranker_score=parse_float(row.get("ranker_score_raw_path_score")),
@@ -222,40 +217,32 @@ def candidate_rules(rows: Iterable[JoinedWindow]) -> Iterable[Rule]:
     readiness_values = sorted(
         {row.execution_readiness for row in rows if row.execution_readiness is not None}
     )
-    transition_values = sorted(
-        {row.transition_hazard for row in rows if row.transition_hazard is not None}
-    )
     duration_values = sorted(
         {row.duration_remaining for row in rows if row.duration_remaining is not None}
     )
     score_thresholds = quantile_thresholds(score_values, [0.0, 0.25, 0.5, 0.75])
     readiness_thresholds = quantile_thresholds(readiness_values, [0.0, 0.25, 0.5, 0.75])
-    transition_thresholds = [None] + quantile_thresholds(
-        transition_values, [0.25, 0.5, 0.75, 1.0]
-    )
     duration_thresholds = [None] + quantile_thresholds(duration_values, [0.0, 0.25, 0.5])
-    buckets = ["all"] + sorted({row.bucket for row in rows})
+    buckets = ["all"]
 
     seen = set()
     for bucket in buckets:
         for score_min in score_thresholds:
             for readiness_min in readiness_thresholds:
-                for transition_max in transition_thresholds:
-                    for duration_min in duration_thresholds:
-                        for require_ranker_used in [False, True]:
-                            rule = Rule(
-                                bucket=bucket,
-                                score_min=score_min,
-                                readiness_min=readiness_min,
-                                transition_max=transition_max,
-                                duration_min=duration_min,
-                                require_ranker_used=require_ranker_used,
-                            )
-                            key = tuple(rule.as_dict().items())
-                            if key in seen:
-                                continue
-                            seen.add(key)
-                            yield rule
+                for duration_min in duration_thresholds:
+                    for require_ranker_used in [False, True]:
+                        rule = Rule(
+                            bucket=bucket,
+                            score_min=score_min,
+                            readiness_min=readiness_min,
+                            duration_min=duration_min,
+                            require_ranker_used=require_ranker_used,
+                        )
+                        key = tuple(rule.as_dict().items())
+                        if key in seen:
+                            continue
+                        seen.add(key)
+                        yield rule
 
 
 def quantile_thresholds(values: list[float], quantiles: list[float]) -> list[float]:
@@ -266,14 +253,6 @@ def quantile_thresholds(values: list[float], quantiles: list[float]) -> list[flo
         index = min(len(values) - 1, max(0, int(round((len(values) - 1) * quantile))))
         result.append(values[index])
     return sorted(set(result))
-
-
-def transition_bucket(transition_hazard: float | None) -> str:
-    if transition_hazard is None:
-        return "transition_unknown"
-    if transition_hazard >= 0.60:
-        return "high_transition"
-    return "stable_or_low_transition"
 
 
 def window_last_timestamp(windows_dir: Path, window: str) -> str:

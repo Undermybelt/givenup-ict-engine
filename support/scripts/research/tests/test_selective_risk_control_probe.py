@@ -65,6 +65,7 @@ class SelectiveRiskControlProbeTests(unittest.TestCase):
             self.assertEqual(report["test"]["accepted_windows"], 6)
             self.assertEqual(report["test"]["bad_losses"], 0)
             self.assertEqual(report["decision"], "accepted_release_rule_found")
+            self.assertNotIn("transition_" + "max", report["selected_rule"]["rule"])
 
     def test_probe_abstains_when_calibration_risk_bound_is_too_high(self):
         with tempfile.TemporaryDirectory() as tmpdir:

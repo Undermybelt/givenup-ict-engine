@@ -7,8 +7,6 @@ from typing import Any
 
 DEFAULT_THRESHOLDS = {
     "alert_transition_prob": 0.95,
-    "block_transition_hazard": 0.8,
-    "watch_transition_hazard": 0.35,
     "max_stable_transition_prob": 0.2,
     "max_stable_flip_rate": 0.2,
 }
@@ -74,15 +72,7 @@ def build_transition_evidence(
     flags = _drift_flags(rows, float(merged["alert_transition_prob"]))
     regime_confidence_ok = bool(regime_report.get("confidence_95", False))
     regime_gate = str(regime_report.get("regime_confidence_gate", ""))
-    transition_alert_95 = hazard >= float(merged["alert_transition_prob"]) or (
-        not regime_confidence_ok and hazard >= float(merged["block_transition_hazard"])
-    )
-    if transition_alert_95:
-        block_hint = "transition_guardrail"
-    elif not regime_confidence_ok or regime_gate == "reject" or hazard >= float(merged["watch_transition_hazard"]):
-        block_hint = "watch_transition"
-    else:
-        block_hint = "none"
+    transition_alert_95 = hazard >= float(merged["alert_transition_prob"])
 
     return {
         "schema_version": "transition-evidence-aggregator/v1",
@@ -90,7 +80,8 @@ def build_transition_evidence(
         "transition_alert_95": transition_alert_95,
         "transition_hazard": hazard,
         "drift_flags": flags,
-        "execution_tree_block_hint": block_hint,
+        "execution_tree_block_hint": "none",
+        "transition_hazard_role": "telemetry_only",
         "regime_confidence_gate": regime_gate,
         "regime_confidence_95": regime_confidence_ok,
         "source_count": len(rows),
@@ -104,8 +95,6 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--drift-jsonl")
     parser.add_argument("--output-json", required=True)
     parser.add_argument("--alert-transition-prob", type=float, default=DEFAULT_THRESHOLDS["alert_transition_prob"])
-    parser.add_argument("--block-transition-hazard", type=float, default=DEFAULT_THRESHOLDS["block_transition_hazard"])
-    parser.add_argument("--watch-transition-hazard", type=float, default=DEFAULT_THRESHOLDS["watch_transition_hazard"])
     return parser.parse_args(argv)
 
 
@@ -116,8 +105,6 @@ def main(argv: list[str] | None = None) -> int:
         drift_rows=_load_jsonl(Path(args.drift_jsonl)) if args.drift_jsonl else [],
         thresholds={
             "alert_transition_prob": args.alert_transition_prob,
-            "block_transition_hazard": args.block_transition_hazard,
-            "watch_transition_hazard": args.watch_transition_hazard,
         },
     )
     _write_json(Path(args.output_json), result)

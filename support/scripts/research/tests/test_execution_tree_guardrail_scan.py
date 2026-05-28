@@ -112,7 +112,7 @@ class ExecutionTreeGuardrailScanTests(unittest.TestCase):
                                 "execution_bias": "guarded",
                                 "execution_score": 0.5 + index / 100.0,
                                 "branch_probability": 0.0,
-                                "decision_hint": "execution_guarded_due_to_high_transition_hazard",
+                                "decision_hint": "execution_guarded_due_to_low_remaining_regime_duration",
                             }
                         }
                     )
@@ -131,7 +131,7 @@ class ExecutionTreeGuardrailScanTests(unittest.TestCase):
                                 "execution_bias": "guarded",
                                 "execution_score": 0.5 + index / 100.0,
                                 "branch_probability": 0.0,
-                                "decision_hint": "execution_guarded_due_to_high_transition_hazard",
+                                "decision_hint": "execution_guarded_due_to_low_remaining_regime_duration",
                                 "split_reason_lineage": [
                                     f"execution_readiness=0.{index}000 \u2192 gate_status=blocked",
                                     f"hybrid_transition_hazard=0.{index}500",
