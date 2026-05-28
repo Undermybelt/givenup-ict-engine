@@ -17,6 +17,32 @@ source release gate by itself.
 
 ## Fresh Evidence
 
+2026-05-29 post-Camarilla terminalization refresh:
+
+- Fresh coordinated snapshot:
+  `/tmp/ict-engine-goal-20260529-codex-post-camarilla-terminal-011337/objective_closure_snapshot.json`
+  remained `summary.status=not_complete`. Camarilla was terminalized
+  fail-closed, but a different fresh SessionClusterCadenceRepair claim became
+  the factor queue head:
+  `20260529T004301+0800-codex-tomac-session-cluster-cadence-takeover.claim`.
+  That claim was fresh-owned, so this slice did not terminalize, overwrite, or
+  launch into that factor lane.
+- Current practical-admission source scan still reports tracked source clean:
+  `tracked_violation_count=0`. The untracked scratch-wrapper residue grew to
+  `untracked_violation_count=229` across `untracked_violating_files=148`, all
+  verified as Git-untracked existing files with `git ls-files --error-unmatch`.
+  Violation type counts are
+  `practical_flag_without_extension_complete_guard=62`,
+  `five_bps_survival_uses_trade_density_floor=82`,
+  `downstream_admission_uses_2bps_survivor_gate=49`, and
+  `branch_local_admission_uses_transition_hard_gate=36`.
+- The practical-admission debt quarantine was refreshed only for this reviewed
+  untracked residue set. The stable signature fingerprint is now
+  `cf3fdd92df9dc62b101fb8f47879f9a48147c12721e28025984e323799443f2e`. This
+  does not make the objective complete or release-ready; it only externalizes
+  the reviewed untracked scratch debt so tracked-source completion evidence can
+  remain distinguishable from dirty shared-worktree residue.
+
 2026-05-29 coordination/readback refresh:
 
 - Fresh coordinated snapshot before this fix:
