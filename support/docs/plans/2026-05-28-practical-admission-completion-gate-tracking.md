@@ -19,6 +19,26 @@ source release gate by itself.
 
 2026-05-29 active-inventory coordination readback:
 
+- Heavy done-definition proof now exists at
+  `/tmp/ict-engine-goal-20260529-codex-heavy-done-definition-015033.json`.
+  It ran all enabled heavy gates and reported `completion_ready=true`,
+  `evidence_level=full_enabled_gate_coverage`, `pass_count=9`, `skip_count=0`,
+  and no unresolved gates. Heavy gates passed for `cargo check --all-targets`,
+  `cargo clippy --all-targets -- -D warnings`, `cargo test`, and
+  `support/scripts/smoke_acceptance.sh` with `/tmp` state.
+- Proof-applied coordinated snapshot:
+  `/tmp/ict-engine-goal-20260529-codex-heavy-proof-snapshot-015430/objective_closure_snapshot.json`
+  applied `done_definition_proof.compact.json` and removed
+  `done_definition_not_completion_ready`. The full objective still remained
+  `summary.status=not_complete` with blockers `factor_closure_blocked` and
+  `release_readiness_blocked`. The factor blocker was fresh active same-root
+  practicalization work, not a stale audit artifact:
+  `20260529T014234+0800-codex-tomac-opening-drive-exact-materialization-takeover.claim`
+  and
+  `20260529T015241+0800-codex-tomac-tod-balanced-parent-validation-ranker-repair.claim`.
+  Both carried false practical flags, and the factor surface still had
+  `promotion_allowed_true=0` and `trade_usable_true=0`.
+
 - Fresh coordinated snapshot before this fix:
   `/tmp/ict-engine-goal-20260529-codex-cont-current-013026/objective_closure_snapshot.json`
   remained `summary.status=not_complete` with blockers
