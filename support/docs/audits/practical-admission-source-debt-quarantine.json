@@ -1,15 +1,15 @@
 {
   "schema_version": "practical-admission-source-debt-quarantine/v1",
-  "generated_at": "2026-05-28T17:15:33Z",
+  "generated_at": "2026-05-28T22:01:42Z",
   "decision": "quarantined_untracked_wrapper_debt",
-  "scope": "Untracked support/docs/experiments/actionable-regime-confidence/scripts/run_*.py practical-admission violations present in the shared worktree on 2026-05-28.",
+  "scope": "Untracked support/docs/experiments/actionable-regime-confidence/scripts/run_*.py practical-admission violations present in the shared worktree on 2026-05-29.",
   "rationale": "The tracked source gate has zero practical-admission wrapper violations. The remaining debt is untracked wrapper residue from concurrent factor work; it must stay visible and excluded from completion/release claims until the files are either removed, tracked and fixed, or otherwise retired.",
-  "untracked_violation_count": 229,
-  "untracked_violating_files": 148,
-  "untracked_violations_sha256": "cf3fdd92df9dc62b101fb8f47879f9a48147c12721e28025984e323799443f2e",
-  "source_packet": "/tmp/ict-engine-goal-20260529-codex-post-camarilla-terminal-011337/practical_admission_source_debt_manifest.json",
+  "untracked_violation_count": 268,
+  "untracked_violating_files": 154,
+  "untracked_violations_sha256": "a8c52bf4dae69cd43839c39adc29382e82734d11ed5cf4a6ca8b73ef15d78d7e",
+  "source_packet": "/tmp/ict-engine-closure-refresh-20260529-codex/practical_admission_source_debt_manifest.json",
   "promotion_allowed": false,
   "trade_usable": false,
   "update_goal": false,
-  "next_action": "Before objective closure or release, rerun done_definition_audit/objective_closure_snapshot and require this fingerprint to match; if it drifts, treat the new untracked debt as unquarantined until reviewed."
+  "next_action": "Before objective closure or release, rerun done_definition_audit/objective_closure_snapshot and require this fingerprint to match; if it drifts, treat the new untracked debt as unquarantined until reviewed. This quarantine does not make the untracked wrappers release-ready or trade-usable."
 }

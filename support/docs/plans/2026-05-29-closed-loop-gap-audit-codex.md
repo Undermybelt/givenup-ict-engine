@@ -83,6 +83,40 @@ training/refinement.
   Before terminalizing this packet, compact audit reported `active_claims=2`.
   After terminalizing this packet, compact audit reported `active_claims=1`,
   `live_factor_processes=0`, and one fresh wait-only OpeningDrive claim.
+- `2026-05-29T06:01:42+0800`: Fresh coordinated closure snapshot at
+  `/tmp/ict-engine-closure-refresh-20260529-codex/objective_closure_snapshot.json`
+  exited `1` and kept the full objective red. Current blockers were
+  `done_definition_not_completion_ready`, `practical_admission_source_debt`,
+  `factor_closure_blocked`, `release_readiness_blocked`, and
+  `release_remote_checks_not_run`.
+- The practical-admission source debt drift was additive untracked-wrapper
+  residue, not tracked production source debt. The current manifest scanned
+  `919` files with `tracked_violation_count=0`; untracked debt moved to
+  `untracked_violating_files=154`, `untracked_violation_count=268`, and
+  fingerprint
+  `a8c52bf4dae69cd43839c39adc29382e82734d11ed5cf4a6ca8b73ef15d78d7e`.
+  Compared with the prior packet, the `39` added signatures are untracked
+  `branch_local_admission_uses_transition_hard_gate` wrappers. The quarantine
+  manifest was refreshed to this fingerprint, preserving
+  `promotion_allowed=false`, `trade_usable=false`, and `update_goal=false`.
+- Same-turn factor readback still shows one active wait-only OpeningDrive claim
+  (`20260529T042851+0800-codex-tomac-opening-drive-exact-execution-window-audit.claim`),
+  age about `12` minutes, `live_factor_processes=0`, and no practical flags.
+  It is a wait/inspect target, not a takeover or terminalization target in this
+  slice.
+- Post-quarantine readback at
+  `/tmp/ict-engine-closure-refresh-20260529-codex-after-quarantine/objective_closure_snapshot.json`
+  proves the quarantine matched the current untracked debt fingerprint and the
+  source-debt blocker moved to
+  `blocker_details.quarantined_practical_admission_source_debt`. The full
+  objective still exited `1` with blockers
+  `done_definition_not_completion_ready`, `factor_closure_blocked`,
+  `release_readiness_blocked`, and `release_remote_checks_not_run`.
+- Factor state drifted during verification: the post-quarantine snapshot shows
+  `active_claims=2`, `fresh_active_claims_without_live_process=2`,
+  `live_factor_processes=1`, and live runtime root
+  `ict-engine-tomac-opening-drive-exact-long-aq-probe-20260529T0532+0800`.
+  This confirms the no-launch/no-takeover boundary for this slice.
 
 ## Verification
 
@@ -108,6 +142,39 @@ training/refinement.
   - `python3 support/scripts/factor_claim_terminalization_audit.py --compact`
     exited `1`; active claims still block factor closure.
   - `git diff --check` exited `0`.
+- Current continuation readback:
+  - `python3 support/scripts/objective_closure_snapshot.py --compact --output-dir /tmp/ict-engine-closure-refresh-20260529-codex`
+    exited `1` before quarantine refresh, with the blocker set recorded above.
+  - `python3 support/scripts/done_definition_audit.py --compact` exited `0`
+    but `completion_ready=false`, `evidence_level=partial_skipped_gates`,
+    skipped heavy gates `cargo_check_all_targets`,
+    `cargo_clippy_all_targets_deny_warnings`, `cargo_test`, and
+    `smoke_acceptance_tmp_state`, and reported the same untracked source-debt
+    fingerprint drift before the quarantine refresh.
+  - `python3 support/scripts/factor_claim_terminalization_audit.py --compact`
+    exited `1` with `active_claims=1`, `wait_only_active_claims_without_live_process=1`,
+    `live_factor_processes=0`, `promotion_allowed_true=0`, and
+    `trade_usable_true=0`.
+  - `python3 - <<'PY' ...` compared the prior and current practical-admission
+    debt manifests and found `added_count=39`, `removed_count=0`; all added
+    signatures were untracked transition-hard-gate wrapper debt.
+  - `python3 -m unittest support.scripts.tests.test_done_definition_audit -v`
+    passed `25/25`.
+  - `python3 -m unittest support.scripts.tests.test_objective_closure_snapshot -v`
+    passed `32/32`.
+  - `python3 -m json.tool support/docs/audits/practical-admission-source-debt-quarantine.json >/dev/null`
+    and the same JSON validation for the staged debt manifest both passed.
+  - `git diff --check -- support/docs/audits/practical-admission-source-debt-quarantine.json support/docs/plans/2026-05-29-closed-loop-gap-audit-codex.md`
+    exited `0`.
+  - `python3 support/scripts/objective_closure_snapshot.py --compact --output-dir /tmp/ict-engine-closure-refresh-20260529-codex-after-quarantine`
+    exited `1` with the source debt quarantined and the remaining blocker set
+    listed above.
+  - `python3 support/scripts/done_definition_audit.py --compact` exited `0`
+    with `completion_ready=false`, `tracked_violation_count=0`,
+    `untracked_violation_count=268`, and quarantine `matched=true`.
+  - `python3 support/scripts/factor_claim_terminalization_audit.py --compact`
+    exited `1` after verification drifted factor state to two fresh active
+    claims plus one live runtime process; no practical flags were true.
 
 ## Terminal Decision
 
@@ -116,3 +183,11 @@ training/refinement.
 - Keep `promotion_allowed=false`, `trade_usable=false`, and `update_goal=false`.
 - Do not launch provider/AQ/TOMAC/factor-research work until active claims are
   rechecked and cleared or stale-safe takeover rules are satisfied.
+- Quarantining current untracked wrapper debt is evidence bookkeeping only; it
+  does not make those wrappers release-ready, tracked, reusable, or practical.
+  Next closure proof must rerun the coordinated snapshot and still resolve the
+  fresh factor claim, heavy done-definition gates, clean release source slice,
+  and remote checks.
+- This slice can only be committed as a narrow evidence/quarantine update after
+  staging proves no active factor runtime files or unrelated dirty work are
+  included.
