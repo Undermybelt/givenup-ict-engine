@@ -208,6 +208,18 @@ def run_command(
     )
 
 
+def git_head(root: Path) -> str | None:
+    status, details = run_command(
+        ["git", "rev-parse", "HEAD"],
+        cwd=root,
+        timeout=20,
+    )
+    if status != "pass":
+        return None
+    head = str(details.get("stdout") or "").strip()
+    return head or None
+
+
 def evaluate_help_audit_policy(timeout_seconds: int) -> dict:
     if not HELP_AUDIT_PATH.exists():
         return _gate(
@@ -713,6 +725,7 @@ def format_report(report: dict, *, compact: bool = False) -> str:
     gates = report.get("gates", [])
     compact_report = {
         "timestamp_utc": report.get("timestamp_utc"),
+        "head": report.get("head"),
         "summary": report.get("summary"),
         "gate_count": len(gates),
         "gates": [_compact_gate(gate, root) for gate in gates],
@@ -833,6 +846,7 @@ def main(argv: list[str] | None = None) -> int:
     report = {
         "timestamp_utc": _utc_now(),
         "repo_root": str(ROOT),
+        "head": git_head(ROOT),
         "summary": summary,
         "gates": gates,
     }

@@ -57,6 +57,25 @@ source release gate by itself.
   practical factor objective is not complete. This slice did not terminalize or
   launch into any factor lane.
 
+2026-05-29 done-definition proof identity follow-up:
+
+- Follow-up loophole found before closing this slice: done-definition proof
+  reuse had the same stale-proof risk as release proof reuse. The compact
+  `done_definition_audit.py` report did not include the selected Git `head`, so
+  an older heavy proof could be applied to a newer child audit.
+- Implemented fix: `done_definition_audit.py` now records the current Git
+  `head` in full and compact reports, and `objective_closure_snapshot.py`
+  rejects `--done-definition-proof` when the proof head is missing or differs
+  from the live child done-definition audit head. Legacy no-head heavy proofs
+  remain visible but fail closed for objective completion.
+- RED/GREEN regressions added for compact done-definition head retention and
+  stale-head done-definition proof rejection. Focused verification passed:
+  `python3 -m unittest support.scripts.tests.test_done_definition_audit.DoneDefinitionAuditTest.test_compact_report_keeps_selected_head_for_proof_identity support.scripts.tests.test_objective_closure_snapshot.ObjectiveClosureSnapshotTest.test_build_snapshot_rejects_done_definition_proof_for_different_head support.scripts.tests.test_objective_closure_snapshot.ObjectiveClosureSnapshotTest.test_build_snapshot_applies_valid_done_definition_proof_without_hiding_other_blockers support.scripts.tests.test_objective_closure_snapshot.ObjectiveClosureSnapshotTest.test_build_snapshot_rejects_partial_done_definition_proof support.scripts.tests.test_objective_closure_snapshot.ObjectiveClosureSnapshotTest.test_build_snapshot_preserves_current_practical_source_surface_when_applying_done_proof -v`
+  ran `5/5 OK`.
+- Expanded related verification passed:
+  `python3 -m unittest support.scripts.tests.test_done_definition_audit support.scripts.tests.test_release_readiness_audit support.scripts.tests.test_objective_closure_snapshot -v`
+  ran `80/80 OK`.
+
 2026-05-29 active-inventory coordination readback:
 
 - Heavy done-definition proof now exists at

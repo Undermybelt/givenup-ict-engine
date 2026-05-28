@@ -222,6 +222,7 @@ def _done_surface(report: dict[str, Any]) -> dict[str, Any]:
                     "sample_violations": details.get("sample_violations", []),
                 }
     return {
+        "head": report.get("head"),
         "report_timestamp": report.get("timestamp_utc"),
         "status": summary.get("status"),
         "completion_ready": bool(summary.get("completion_ready")),
@@ -238,6 +239,7 @@ def _done_definition_proof_status(
     proof: dict[str, Any] | None,
     *,
     output_dir: Path | None,
+    current_done_surface: dict[str, Any],
 ) -> dict[str, Any] | None:
     if proof is None:
         return None
@@ -252,6 +254,14 @@ def _done_definition_proof_status(
     if isinstance(proof_path, Path):
         surface["proof_source"] = _portable_path(proof_path, output_dir=output_dir)
     surface["proof_applied"] = False
+    proof_head = surface.get("head")
+    current_head = current_done_surface.get("head")
+    if proof_head is None or current_head is None:
+        surface["proof_rejected_reason"] = "proof_head_missing"
+        return surface
+    if proof_head != current_head:
+        surface["proof_rejected_reason"] = "proof_head_mismatch"
+        return surface
     if not surface.get("completion_ready"):
         surface["proof_rejected_reason"] = "proof_not_completion_ready"
         return surface
@@ -743,11 +753,13 @@ def build_snapshot(
     release_report = audit_results["release_readiness"]["report"]
 
     snapshot_timestamp = _utc_now()
+    current_done_surface = _done_surface(done_report)
     proof_status = _done_definition_proof_status(
         done_definition_proof,
         output_dir=output_dir,
+        current_done_surface=current_done_surface,
     )
-    done_surface = _apply_done_definition_proof(_done_surface(done_report), proof_status)
+    done_surface = _apply_done_definition_proof(current_done_surface, proof_status)
     factor_surface = _factor_surface(factor_report)
     current_release_surface = _release_surface(release_report)
     release_proof_status = _release_readiness_proof_status(

@@ -1097,6 +1097,7 @@ class ObjectiveClosureSnapshotTest(unittest.TestCase):
                 "done_definition": {
                     "command": {"argv": ["done"], "returncode": 0},
                     "report": {
+                        "head": "selected-source-head",
                         "timestamp_utc": "2026-05-28T01:00:00Z",
                         "summary": {
                             "status": "pass",
@@ -1152,6 +1153,7 @@ class ObjectiveClosureSnapshotTest(unittest.TestCase):
             done_definition_proof = {
                 "path": proof_path,
                 "report": {
+                    "head": "selected-source-head",
                     "timestamp_utc": "2026-05-28T00:59:00Z",
                     "summary": {
                         "status": "pass",
@@ -1195,6 +1197,7 @@ class ObjectiveClosureSnapshotTest(unittest.TestCase):
                 "done_definition": {
                     "command": {"argv": ["done"], "returncode": 0},
                     "report": {
+                        "head": "selected-source-head",
                         "timestamp_utc": "2026-05-28T01:00:00Z",
                         "summary": {
                             "status": "pass",
@@ -1228,6 +1231,7 @@ class ObjectiveClosureSnapshotTest(unittest.TestCase):
                 done_definition_proof={
                     "path": output_dir / "partial_done_definition.compact.json",
                     "report": {
+                        "head": "selected-source-head",
                         "timestamp_utc": "2026-05-28T00:59:00Z",
                         "summary": {
                             "status": "pass",
@@ -1245,6 +1249,66 @@ class ObjectiveClosureSnapshotTest(unittest.TestCase):
         self.assertEqual(done_surface["proof_rejected_reason"], "proof_not_completion_ready")
         self.assertIn("done_definition_not_completion_ready", snapshot["summary"]["blockers"])
 
+    def test_build_snapshot_rejects_done_definition_proof_for_different_head(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp)
+            audit_results = {
+                "done_definition": {
+                    "command": {"argv": ["done"], "returncode": 0},
+                    "report": {
+                        "head": "current-selected-head",
+                        "timestamp_utc": "2026-05-28T01:00:00Z",
+                        "summary": {
+                            "status": "pass",
+                            "completion_ready": False,
+                            "evidence_level": "partial_skipped_gates",
+                            "unresolved": [],
+                            "skipped_gates": ["cargo_test"],
+                            "next_action": "rerun heavy gates",
+                        },
+                        "gates": [{"id": "quickstart_surface", "status": "pass"}],
+                    },
+                    "output_path": output_dir / "done_definition_audit.compact.json",
+                },
+                "factor_closure": {
+                    "command": {"argv": ["factor"], "returncode": 0},
+                    "report": {"summary": {"status": "pass"}},
+                    "output_path": output_dir / "factor_claim_terminalization_audit.compact.json",
+                },
+                "release_readiness": {
+                    "command": {"argv": ["release"], "returncode": 0},
+                    "report": {"head": "current-selected-head", "summary": {"status": "pass", "unresolved": []}},
+                    "output_path": output_dir / "release_readiness_audit.compact.json",
+                },
+            }
+
+            snapshot = build_snapshot(
+                audit_results,
+                run_all_heavy=False,
+                check_remotes=False,
+                output_dir=output_dir,
+                done_definition_proof={
+                    "path": output_dir / "stale_done_definition.compact.json",
+                    "report": {
+                        "head": "older-heavy-proof-head",
+                        "timestamp_utc": "2026-05-28T00:59:00Z",
+                        "summary": {
+                            "status": "pass",
+                            "completion_ready": True,
+                            "evidence_level": "full_enabled_gate_coverage",
+                            "unresolved": [],
+                            "skipped_gates": [],
+                        },
+                        "gates": [{"id": "quickstart_surface", "status": "pass"}],
+                    },
+                },
+            )
+
+        done_surface = snapshot["audits"]["done_definition"]["surface"]
+        self.assertFalse(done_surface["proof_applied"])
+        self.assertEqual(done_surface["proof_rejected_reason"], "proof_head_mismatch")
+        self.assertIn("done_definition_not_completion_ready", snapshot["summary"]["blockers"])
+
     def test_build_snapshot_preserves_current_practical_source_surface_when_applying_done_proof(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             output_dir = Path(tmp)
@@ -1252,6 +1316,7 @@ class ObjectiveClosureSnapshotTest(unittest.TestCase):
                 "done_definition": {
                     "command": {"argv": ["done"], "returncode": 0},
                     "report": {
+                        "head": "selected-source-head",
                         "timestamp_utc": "2026-05-28T12:00:00Z",
                         "summary": {
                             "status": "pass",
@@ -1321,6 +1386,7 @@ class ObjectiveClosureSnapshotTest(unittest.TestCase):
                 done_definition_proof={
                     "path": output_dir / "heavy_done_definition.compact.json",
                     "report": {
+                        "head": "selected-source-head",
                         "timestamp_utc": "2026-05-28T11:59:00Z",
                         "summary": {
                             "status": "pass",

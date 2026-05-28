@@ -263,6 +263,19 @@ Measured on 2026-05-22:
         self.assertEqual(gate["details"]["tracked_violation_count"], 0)
         self.assertEqual(gate["details"]["debt_manifest_file"], "/tmp/practical-admission-source-debt.json")
 
+    def test_compact_report_keeps_selected_head_for_proof_identity(self) -> None:
+        report = {
+            "timestamp_utc": "2026-05-28T11:10:00Z",
+            "repo_root": str(SCRIPTS_ROOT.parents[1]),
+            "head": "selected-source-head",
+            "summary": {"status": "pass"},
+            "gates": [{"id": "a", "status": "pass", "details": {}}],
+        }
+
+        parsed = json.loads(format_report(report, compact=True))
+
+        self.assertEqual(parsed["head"], "selected-source-head")
+
     def test_practical_admission_source_gate_writes_debt_manifest(self) -> None:
         import done_definition_audit
 
