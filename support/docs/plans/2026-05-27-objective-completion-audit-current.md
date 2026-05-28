@@ -1035,3 +1035,68 @@ Earlier same-day runtime smoke (not rerun in this continuation):
   `done_definition_proof.compact.json`, and blockers only
   `factor_closure_blocked` plus `release_readiness_blocked`. This is a
   reusable evidence-pack UX improvement, not objective completion.
+
+## 2026-05-28 Current Refresh - Missing-Root Queue Actionability
+
+Latest authoritative packet for this refresh:
+
+- `/tmp/ict-engine-goal-20260528-codex-missingroot-queue/objective_closure_snapshot.json`
+
+Commands:
+
+```bash
+python3 support/scripts/factor_claim_terminalization_audit.py --compact --output /tmp/ict-engine-goal-20260528-codex-live-factor-now.json
+python3 support/scripts/release_readiness_audit.py --compact --check-remotes --output /tmp/ict-engine-goal-20260528-codex-live-release-now.json
+python3 support/scripts/objective_closure_snapshot.py --compact --check-remotes --done-definition-proof /tmp/ict-engine-goal-20260528-heavy-done-current.json --output-dir /tmp/ict-engine-goal-20260528-codex-missingroot-queue --timeout-seconds 300
+python3 -m unittest support.scripts.tests.test_factor_claim_terminalization_audit -v
+python3 -m unittest support.scripts.tests.test_objective_closure_snapshot -v
+```
+
+Current command truth:
+
+- parent summary remains `status=not_complete` and shell exit `1`;
+- done-definition remains green through staged proof
+  (`completion_ready=true`, `evidence_level=full_enabled_gate_coverage`);
+- factor child is again red from concurrent fresh claims:
+  `active_claims=2`, `live_factor_processes=0`,
+  `fresh_active_claims_without_live_process=2`,
+  `promotion_allowed_true=0`, and `trade_usable_true=0`;
+- release readiness remains red on `worktree_clean_for_release`,
+  `source_origin_matches_selected_source`, and
+  `release_version_tag_available`.
+
+Loopholes found and fixed:
+
+- When factor closure was `status=pass` but same-tree practical promotion was
+  still unproven, the parent priority list could still include the child text
+  `no claim terminalization blockers found` as a `practical_closure_blocked`
+  action. The parent now suppresses generic factor child actions when the
+  factor claim plane is already pass, leaving the specific
+  `same_tree_practical_closure_unproven` action as the only factor action.
+- When factor closure reported `missing_run_roots`, the compact child packet
+  exposed only a generic next action and did not queue the exact affected
+  claims. `factor_claim_terminalization_audit.py` now emits
+  `attention_action_queue.missing_run_root_claims`, and
+  `objective_closure_snapshot.py` lifts those exact claims into parent
+  `summary.prioritized_next_actions`.
+
+Verification:
+
+- `python3 -m unittest support.scripts.tests.test_factor_claim_terminalization_audit -v`
+  passed `65/65`.
+- `python3 -m unittest support.scripts.tests.test_objective_closure_snapshot -v`
+  passed `20/20`.
+- Live packet `/tmp/ict-engine-goal-20260528-codex-missingroot-queue/objective_closure_snapshot.json`
+  remained red and listed the two fresh factor claims plus the three release
+  blockers directly at parent priority level.
+
+Requirement verdict updates:
+
+- Evidence-pack coordination/reuse improved: parent packets no longer surface
+  a no-op factor action after claim-plane pass, and missing-root blockers are
+  directly actionable without a second child read.
+- Practical end-to-end profitability factor remains
+  `contradicted_by_current_state`; fresh factor claims exist and all practical
+  flags are false.
+- Completion commit remains invalid because same-tree practical closure and
+  release readiness are still unproven.

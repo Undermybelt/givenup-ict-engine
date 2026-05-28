@@ -1375,3 +1375,50 @@ Requirement verdict updates:
   practical flags remain.
 - Release readiness: still `contradicted_by_current_state`.
 - Completion commit: full objective remains unproven; do not mark complete.
+
+## 2026-05-28 Current Refresh 6 - Missing-Root Queue Actionability
+
+Latest authoritative packet for this continuation:
+
+- `/tmp/ict-engine-goal-20260528-codex-missingroot-queue/objective_closure_snapshot.json`
+
+Command truth:
+
+- `python3 support/scripts/objective_closure_snapshot.py --compact --check-remotes --done-definition-proof /tmp/ict-engine-goal-20260528-heavy-done-current.json --output-dir /tmp/ict-engine-goal-20260528-codex-missingroot-queue --timeout-seconds 300` exited `1` as expected for a valid but unproven packet.
+- Parent blockers are `factor_closure_blocked` and `release_readiness_blocked`.
+- Done-definition proof is applied and green: `completion_ready=true`,
+  `evidence_level=full_enabled_gate_coverage`.
+- Factor child reports `active_claims=2`, `live_factor_processes=0`,
+  `fresh_active_claims_without_live_process=2`, `promotion_allowed_true=0`,
+  and `trade_usable_true=0`.
+- Release child reports unresolved `worktree_clean_for_release`,
+  `source_origin_matches_selected_source`, and
+  `release_version_tag_available`.
+
+Loophole fixes in this slice:
+
+- Parent `summary.prioritized_next_actions` no longer adds a generic
+  `practical_closure_blocked` action when factor closure is already `pass` and
+  the only factor blocker is the stricter
+  `same_tree_practical_closure_unproven` manual requirement.
+- Compact factor packets now include
+  `attention_action_queue.missing_run_root_claims`, and parent snapshots lift
+  those exact missing-root claims into prioritized actions.
+
+Verification:
+
+- `python3 -m unittest support.scripts.tests.test_factor_claim_terminalization_audit -v`
+  passed `65/65`.
+- `python3 -m unittest support.scripts.tests.test_objective_closure_snapshot -v`
+  passed `20/20`.
+
+Requirement verdict updates:
+
+- Evidence-pack coordination is stronger for current-tree reuse: no-op factor
+  actions are suppressed after claim-plane pass, and missing-root blockers are
+  exact queue entries instead of prose-only instructions.
+- Practical end-to-end profitability factor remains
+  `contradicted_by_current_state`; current factor claims are fresh and no
+  practical flags are true.
+- Completion commit remains invalid; this is a verified actionability slice,
+  not completion of the full objective.
