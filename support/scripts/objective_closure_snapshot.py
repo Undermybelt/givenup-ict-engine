@@ -3,8 +3,10 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import re
 import shutil
+import signal
 import subprocess
 import sys
 from datetime import datetime, timezone
@@ -54,29 +56,37 @@ def effective_timeout_seconds(requested: int | None, *, run_all_heavy: bool) -> 
 
 
 def run_command(argv: list[str], cwd: Path, timeout: int = 60) -> dict[str, Any]:
+    process = subprocess.Popen(
+        argv,
+        cwd=cwd,
+        text=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        start_new_session=True,
+    )
     try:
-        result = subprocess.run(
-            argv,
-            cwd=cwd,
-            text=True,
-            capture_output=True,
-            timeout=timeout,
-            check=False,
-        )
+        stdout, stderr = process.communicate(timeout=timeout)
     except subprocess.TimeoutExpired as exc:
+        try:
+            os.killpg(process.pid, signal.SIGKILL)
+        except ProcessLookupError:
+            pass
+        except PermissionError:
+            process.kill()
+        stdout, stderr = process.communicate()
         return {
             "argv": argv,
             "returncode": None,
             "error": "timeout",
             "timeout_seconds": timeout,
-            "stdout": _text(exc.stdout),
-            "stderr": _text(exc.stderr),
+            "stdout": _text(stdout or exc.stdout),
+            "stderr": _text(stderr or exc.stderr),
         }
     return {
         "argv": argv,
-        "returncode": result.returncode,
-        "stdout": result.stdout,
-        "stderr": result.stderr,
+        "returncode": process.returncode,
+        "stdout": stdout,
+        "stderr": stderr,
     }
 
 
