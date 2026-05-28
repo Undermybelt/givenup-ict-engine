@@ -594,12 +594,21 @@ def build_report(gate1_path: Path, execution_candidate_path: Path, execution_tre
     report["decision"] = decision
     report["blockers"] = blockers
     report["next_action"] = next_action
-    report["promotion_allowed"] = lifecycle["live_trade"]["promotion_allowed"]
-    report["trade_usable"] = lifecycle["live_trade"]["trade_usable"]
+    branch_local_admitted = lifecycle["live_trade"]["status"] == "ready"
+    practical = practical_admission_flags(branch_local_admitted)
+    report["promotion_allowed"] = practical["promotion_allowed"]
+    report["trade_usable"] = practical["trade_usable"]
     return report
 
 
 def render_markdown(report: dict[str, Any]) -> str:
+    lifecycle = report.get("factor_profitability_lifecycle") or {}
+    learning = lifecycle.get("learning_admission") if isinstance(lifecycle, dict) else {}
+    paper = lifecycle.get("paper_admission") if isinstance(lifecycle, dict) else {}
+    live = lifecycle.get("live_trade") if isinstance(lifecycle, dict) else {}
+    learning = learning if isinstance(learning, dict) else {}
+    paper = paper if isinstance(paper, dict) else {}
+    live = live if isinstance(live, dict) else {}
     lines = [
         "# Regime-Root Survivor Blocker Report",
         "",
@@ -630,6 +639,16 @@ def render_markdown(report: dict[str, Any]) -> str:
         f"- observation_validation: `{report['validation']['observation_validation_rows']}/{report['validation']['observation_validation_min_rows']}`",
         f"- path_ranker_visible: `{report['execution_tree']['path_ranker_score_visible_to_execution_tree']}`",
         f"- path_ranker_used: `{report['execution_tree']['path_ranker_score_used_by_execution_tree']}`",
+        "",
+        "## Factor Profitability Lifecycle",
+        "",
+        f"- learning_admission_status: `{learning.get('status')}`",
+        f"- paper_admission_status: `{paper.get('status')}`",
+        f"- live_trade_status: `{live.get('status')}`",
+        f"- extension_complete: `{live.get('extension_complete')}`",
+        f"- promotion_allowed: `{live.get('promotion_allowed')}`",
+        f"- trade_usable: `{live.get('trade_usable')}`",
+        f"- update_goal: `{live.get('update_goal')}`",
         "",
         "## Blockers",
         "",

@@ -320,6 +320,36 @@ def build_metrics(branch_ok):
         )
         self.assertEqual(report["violations"][0]["key"], "trade_usable")
 
+    def test_flags_lifecycle_live_trade_assignment_without_local_helper_contract(self) -> None:
+        path = self.write_source(
+            """
+def lifecycle_decision():
+    lifecycle = {
+        "learning_admission": {"status": "admitted"},
+        "live_trade": {
+            "promotion_allowed": False,
+            "trade_usable": False,
+        },
+    }
+    return lifecycle
+
+def build_report():
+    lifecycle = lifecycle_decision()
+    report = {}
+    report["promotion_allowed"] = lifecycle["live_trade"]["promotion_allowed"]
+    report["trade_usable"] = lifecycle["live_trade"]["trade_usable"]
+    return report
+"""
+        )
+
+        report = checker.check_source_file(path)
+
+        self.assertFalse(report["ok"])
+        self.assertEqual(
+            sorted(hit["key"] for hit in report["violations"]),
+            ["promotion_allowed", "trade_usable"],
+        )
+
     def test_does_not_trust_practical_dict_without_helper_call(self) -> None:
         path = self.write_source(
             """

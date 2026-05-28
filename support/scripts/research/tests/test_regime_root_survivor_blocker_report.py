@@ -795,6 +795,13 @@ class RegimeRootSurvivorBlockerReportTests(unittest.TestCase):
         self.assertFalse(built["promotion_allowed"])
         self.assertFalse(built["trade_usable"])
 
+        rendered = report.render_markdown(built)
+
+        self.assertIn("live_trade_status: `ready`", rendered)
+        self.assertIn("extension_complete: `False`", rendered)
+        self.assertIn("promotion_allowed: `False`", rendered)
+        self.assertIn("trade_usable: `False`", rendered)
+
     def test_pda_regime_family_disagreement_is_telemetry_not_learning_blocker(self) -> None:
         metrics = {
             "branch_fields_preserved": True,
