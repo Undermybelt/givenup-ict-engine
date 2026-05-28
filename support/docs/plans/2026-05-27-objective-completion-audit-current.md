@@ -1266,3 +1266,75 @@ Precommit drift readback:
   `worktree_clean_for_release`; exact release gate names are still time-variant
   and must be rerun before the next release fix, but the full objective remains
   blocked either way.
+
+## 2026-05-28 Current Refresh - Practical Source Debt Preserved In Compact Packets
+
+Latest authoritative packet for this refresh:
+
+- `/tmp/ict-engine-goal-20260528-cont-current/objective_closure_snapshot.json`
+
+Commands:
+
+```bash
+python3 -m unittest support.scripts.tests.test_done_definition_audit support.scripts.tests.test_objective_closure_snapshot -v
+python3 support/scripts/factor_claim_terminalization_audit.py --compact --portable-paths --output /tmp/ict-engine-goal-20260528-cont-factor.json
+python3 support/scripts/release_readiness_audit.py --compact --check-remotes > /tmp/ict-engine-goal-20260528-cont-release.json
+python3 support/scripts/objective_closure_snapshot.py --compact --check-remotes --output-dir /tmp/ict-engine-goal-20260528-cont-current
+```
+
+Current command truth:
+
+- focused verification passed `41/41` for done-definition and objective
+  snapshot tests;
+- compact done-definition now preserves passed practical-source debt details:
+  `practical_admission_source_surface.status=pass`,
+  `tracked_violation_count=0`, `untracked_violation_count=193`, and
+  `untracked_violating_files=115`;
+- parent summary remains `status=not_complete` and now includes blocker
+  `practical_admission_source_debt` in addition to
+  `done_definition_not_completion_ready`, `factor_closure_blocked`, and
+  `release_readiness_blocked`;
+- factor closure has drifted from a live process to a fresh active claim without
+  live runtime:
+  `20260528T183406+0800-codex-tomac-ict-wpr-fractal-reclaim-fullwindow-launch.claim`,
+  still with `promotion_allowed_true=0` and `trade_usable_true=0`;
+- release readiness remains red on `worktree_clean_for_release`,
+  `source_origin_matches_selected_source`, and
+  `release_version_tag_available`.
+
+Loophole found and fixed:
+
+- Before this slice, a compact done-definition child could drop details for a
+  passed `practical_admission_source_surface`, so the parent objective packet
+  could not see untracked unsafe wrapper residue. `done_definition_audit.py`
+  now keeps minimal untracked debt fields for this passed gate, and
+  `objective_closure_snapshot.py` promotes that debt to the parent blocker
+  `practical_admission_source_debt` with an explicit next action.
+
+Requirement verdict updates:
+
+- Evidence-pack coordination is stronger: compact child packets now preserve a
+  material non-release blocker even when the tracked-source gate passes.
+- The full objective remains not complete. The practical-source debt is not a
+  tracked-source failure, but it must be retired, quarantined, or explicitly
+  tracked before objective closure because those wrappers can otherwise be
+  mistaken for reusable evidence.
+- A narrow commit of this compact-packet visibility slice is justified if it
+  stages only the two audit scripts, their focused tests, and these tracking
+  docs. A completion commit remains false.
+
+Final same-turn drift readback:
+
+- `/tmp/ict-engine-goal-20260528-cont-final/objective_closure_snapshot.json`
+  supersedes the exact factor counts above. It still exits `1` and remains
+  `status=not_complete`.
+- Factor claim/runtime closure cleared during the turn:
+  `factor_closure.status=pass`, `active_claims=0`, and
+  `live_factor_processes=0`. This removes raw claim debt but does not prove
+  practical closure because `promotion_allowed_true=0` and `trade_usable_true=0`.
+- The parent blockers are now `done_definition_not_completion_ready`,
+  `practical_admission_source_debt`, `same_tree_practical_closure_unproven`,
+  and `release_readiness_blocked`.
+- Release readiness remains red on `worktree_clean_for_release`,
+  `source_origin_matches_selected_source`, and
+  `release_version_tag_available`.

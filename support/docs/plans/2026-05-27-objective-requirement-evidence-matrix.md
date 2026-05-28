@@ -1691,3 +1691,68 @@ Precommit drift readback:
   network/state-variant even after the no-rewrite fallback hardening. Treat the
   stable class as `release_readiness_blocked` and rerun the child audit before
   choosing the next release fix.
+
+## 2026-05-28 Current Refresh 9 - Compact Practical Source Debt Propagation
+
+Latest authoritative packet for this continuation:
+
+- `/tmp/ict-engine-goal-20260528-cont-current/objective_closure_snapshot.json`
+
+Command truth:
+
+- `python3 -m unittest support.scripts.tests.test_done_definition_audit support.scripts.tests.test_objective_closure_snapshot -v`
+  passed `41/41`.
+- `python3 support/scripts/objective_closure_snapshot.py --compact --check-remotes --output-dir /tmp/ict-engine-goal-20260528-cont-current`
+  exited `1`; parent summary stayed `status=not_complete`.
+- Done-definition child remains `status=pass` but not completion proof because
+  heavy gates are skipped. Its compact surface now preserves
+  `practical_admission_source_surface` details even though the gate passed:
+  `tracked_violation_count=0`, `untracked_violation_count=193`, and
+  `untracked_violating_files=115`.
+- Parent blockers are now
+  `done_definition_not_completion_ready`, `practical_admission_source_debt`,
+  `factor_closure_blocked`, and `release_readiness_blocked`.
+- Factor closure is still red, now as one fresh active claim without live
+  runtime:
+  `20260528T183406+0800-codex-tomac-ict-wpr-fractal-reclaim-fullwindow-launch.claim`;
+  practical flags remain false.
+- Release readiness is still red on `worktree_clean_for_release`,
+  `source_origin_matches_selected_source`, and
+  `release_version_tag_available` in the direct child readback.
+
+Loophole fixes in this slice:
+
+- Compact done-definition output now keeps minimal untracked practical-source
+  debt for a passed `practical_admission_source_surface`, instead of dropping
+  pass-gate details.
+- Objective snapshots now surface that debt as `practical_admission_source_debt`
+  and include a parent-level action to retire, quarantine, or track unsafe
+  untracked practical-admission wrappers before objective closure.
+
+Requirement verdict updates:
+
+- Evidence-pack coordination is stronger: a compact parent packet can now see
+  material untracked practical wrapper debt without requiring full child JSON
+  inspection.
+- Evidence-pack reuse remains incomplete: untracked unsafe wrappers are not
+  tracked-source failures, but they are still objective-closure debt because
+  they can be mistaken for reusable practical evidence.
+- Practical end-to-end profitability factor remains
+  `contradicted_by_current_state`; no current packet has practical flags true.
+- Completion commit remains invalid. This slice only hardens visibility and
+  actionability of a known blocker.
+
+Final same-turn drift readback:
+
+- `/tmp/ict-engine-goal-20260528-cont-final/objective_closure_snapshot.json`
+  is the freshest packet for this continuation. It still exits `1` and remains
+  `status=not_complete`.
+- Factor closure improved to `status=pass` with `active_claims=0` and
+  `live_factor_processes=0`, but practical closure remains unproven because
+  `promotion_allowed_true=0` and `trade_usable_true=0`.
+- Parent blockers are now `done_definition_not_completion_ready`,
+  `practical_admission_source_debt`, `same_tree_practical_closure_unproven`,
+  and `release_readiness_blocked`.
+- Release readiness remains red on `worktree_clean_for_release`,
+  `source_origin_matches_selected_source`, and
+  `release_version_tag_available`.
