@@ -375,3 +375,25 @@ release/readiness gates from a clean selected source slice.
   Combined verification passed:
   `python3 -m unittest support.scripts.tests.test_release_readiness_audit support.scripts.tests.test_objective_closure_snapshot -v`
   ran `49/49 OK`.
+
+2026-05-29 release retarget to `v0.1.8`:
+
+- Current release readiness with remote checks reported `release_version_tag_available`
+  failed because `Cargo.toml` still selected `0.1.7` while the release mirror
+  already contained `v0.1.7`.
+- Implemented retarget: updated `Cargo.toml`, the root `Cargo.lock` package
+  entry, `support/docs/release-notes-draft.md`, and
+  `support/docs/audits/release-signoff.md` from `v0.1.7` to `v0.1.8`. The docs
+  explicitly state this is only a retargeted candidate and full release
+  readiness still requires a clean selected-source export, source-origin
+  alignment, and full release gates.
+- Verification:
+  `cargo metadata --locked --no-deps --format-version 1` succeeded and reported
+  package `ict-engine` version `0.1.8` in `/tmp/ict-engine-v018-cargo-metadata.json`.
+- `python3 -m unittest support.scripts.tests.test_release_readiness_audit -v`
+  ran `24/24 OK`.
+- `python3 support/scripts/release_readiness_audit.py --compact --check-remotes`
+  still reported `summary.status=needs_fix`, but `release_version_tag_available`
+  passed for `candidate_tag=v0.1.8` with `blocking_tags=[]`. Remaining release
+  blockers were `worktree_clean_for_release` and
+  `source_origin_matches_selected_source`.

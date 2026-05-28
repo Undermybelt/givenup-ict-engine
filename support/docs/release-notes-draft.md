@@ -1,60 +1,57 @@
 # Release Notes
 
-Version: `v0.1.7`
-Draft date: 2026-05-24
-Status: selected clean candidate for the private `ict-engine-release` mirror.
+Version: `v0.1.8`
+Draft date: 2026-05-29
+Status: retargeted candidate for the private `ict-engine-release` mirror; full
+release readiness remains blocked until the current source is exported from a
+clean tree and remote/source readback passes.
 
 ## Scope
 
-`v0.1.7` carries the release-mirror continuation after `v0.1.5` exposed a
-mirror CI docs-runtime-isolation failure and `v0.1.6` delivered the immediate
-correction without rewriting the failed tag.
+`v0.1.8` carries the release-mirror continuation after `v0.1.7` was already
+present in the private release mirror. It preserves the prior mirror-only
+release boundary and avoids rewriting or reusing the published `v0.1.7` tag.
 
-This tag is the next selected source snapshot after follow-up Board A/B
-gate/source repairs and release-audit timeout hardening were committed and
-verified from a clean worktree. It remains a private source mirror release, not
-a crates.io, npm/npx, Homebrew, Docker, binary, or public package-manager
-release.
+This tag is the next selected source snapshot after follow-up objective-closure
+and release-readiness audit hardening. It remains a private source mirror
+release, not a crates.io, npm/npx, Homebrew, Docker, binary, or public
+package-manager release.
 
-## Changes since `v0.1.6`
+## Changes since `v0.1.7`
 
-- Preserves the `v0.1.6` privacy/docs-runtime isolation correction.
-- Includes Board A/B source-side readback and gate repairs through
-  `0ae337610e4d3e37078915bcee484f693ebb81f7`.
-- Hardens release/done-definition helper timeout propagation in
-  `518b05579cb3d851accae1da43f8a9cf6d637389`.
-- Keeps the public zero-config consumer path and mirror-only release policy.
+- Preserves the prior privacy/docs-runtime isolation correction and mirror-only
+  release policy.
+- Adds objective-closure fail-closed handling for release remote/tag checks.
+- Adds release signoff/notes/Cargo tag-consistency checks.
+- Keeps the public zero-config consumer path as the release smoke baseline.
 
-## Final clean verification
+## Required clean verification
 
-Clean worktree:
-`/tmp/ict-engine-release-clean-current-20260524T185534+0800`
-at `518b05579cb3d851accae1da43f8a9cf6d637389`.
+The current retarget only clears the reused-tag blocker. Before publishing,
+create a clean selected-source export and rerun the full release gate suite from
+that export.
 
-Gate log:
-`/tmp/ict-engine-v017-current-gates-20260524T185534+0800/gates.log`.
+Minimum gates:
 
-Passed gates:
-
-- release readiness after source push: pass.
-- docs runtime isolation: exit `0`.
-- release privacy audit: exit `0`, `release_blocking_hits=0`.
-- release/done-definition helper tests: exit `0`.
-- cargo fmt: exit `0`.
-- cargo clippy `--locked --all-targets -- -D warnings`: exit `0`.
-- cargo test `--locked`: exit `0`.
+- `python3 support/scripts/release_readiness_audit.py --compact --check-remotes`
+- `python3 support/scripts/ci/check_docs_runtime_isolation.py`
+- `python3 support/scripts/release_privacy_audit.py . --compact`
+- focused helper tests for changed release/objective scripts
+- `cargo fmt --check`
+- `cargo clippy --locked --all-targets -- -D warnings`
+- `cargo test --locked`
 - zero-config smoke: `provider-status --compact`, demo `analyze --human`, and
-  `workflow-status --agent`: all exit `0`.
+  `workflow-status --agent`
 
 ## Release requirements
 
-Publish `v0.1.7` from the selected committed `HEAD` only after readback confirms:
+Publish `v0.1.8` from the selected committed `HEAD` only after readback confirms:
 
 - mirror `main` advances on `Undermybelt/ict-engine-release`;
-- tag `v0.1.7` exists and resolves to the published mirror commit;
-- GitHub release `v0.1.7` exists;
+- tag `v0.1.8` exists and resolves to the published mirror commit;
+- GitHub release `v0.1.8` exists;
 - no package-manager publication is enabled.
 
 ## Release label
 
-`ict-engine v0.1.7`
+`ict-engine v0.1.8`
