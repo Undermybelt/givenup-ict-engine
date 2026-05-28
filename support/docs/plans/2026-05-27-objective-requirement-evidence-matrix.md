@@ -1005,3 +1005,62 @@ Requirement verdict updates:
 - Completion commit: still `contradicted_by_current_state`; commit only the
   verified classifier/tracking improvement slice, not an objective-completion
   claim.
+
+## 2026-05-28 WaitSplit Refresh - Fresh Wait-Only Claims Are Wait Targets
+
+Latest authoritative packet for this refresh:
+
+- `/tmp/ict-engine-goal-20260528-codex-next-waitsplit2/objective_closure_snapshot.json`
+
+Current command truth:
+
+- parent command exited `1` by design for the red packet;
+- parent summary: `status=not_complete`, `completion_proven=false`, blockers
+  `done_definition_not_completion_ready`, `factor_closure_blocked`, and
+  `release_readiness_blocked`;
+- factor child: `status=needs_attention`, `active_claims=2`,
+  `live_factor_processes=1`, `fresh_active_claims_without_live_process=2`,
+  `fresh_wait_only_active_claims_without_live_process=0`,
+  `stale_wait_only_active_claims_without_live_process=0`,
+  `promotion_allowed_true=0`, and `trade_usable_true=0`;
+- release child: `status=needs_fix`, unresolved
+  `worktree_clean_for_release`, `source_origin_matches_selected_source`, and
+  `release_version_tag_available`.
+
+Loophole found and fixed:
+
+- The factor summary's generic cleanup calculation subtracted fresh active and
+  fresh wait-only claims from `active_claims`, but still counted live-owned
+  active claims as cleanup. That made a live-owned lane plus a fresh wait-only
+  prep claim surface the unsafe action `terminalize or externalize active
+  claims`.
+- `support/scripts/factor_claim_terminalization_audit.py` now computes cleanup
+  from explicit claim state: active, not live-owned, not fresh-without-live,
+  and not fresh wait-only. Stale wait-only claims still surface cleanup.
+
+Verification:
+
+```bash
+python3 -m unittest support.scripts.tests.test_factor_claim_terminalization_audit -v
+python3 -m unittest support.scripts.tests.test_objective_closure_snapshot -v
+python3 support/scripts/objective_closure_snapshot.py --compact --check-remotes --output-dir /tmp/ict-engine-goal-20260528-codex-next-waitsplit2
+git diff --check -- support/scripts/factor_claim_terminalization_audit.py support/scripts/objective_closure_snapshot.py support/scripts/tests/test_factor_claim_terminalization_audit.py support/scripts/tests/test_objective_closure_snapshot.py support/docs/plans/2026-05-27-objective-completion-audit-current.md support/docs/plans/2026-05-27-objective-requirement-evidence-matrix.md support/docs/plans/2026-05-27-consumer-evidence-pack-practical-closure.md
+```
+
+Results:
+
+- factor audit suite passed `65/65`;
+- objective snapshot suite passed `14/14`;
+- snapshot command exited `1` with a valid `not_complete` packet;
+- diff whitespace check passed.
+
+Requirement verdict updates:
+
+- Evidence-pack coordination: stronger; fresh wait-only claims are wait targets,
+  stale wait-only claims are cleanup targets, and live-owned active claims stay
+  under live-runtime wait actions.
+- Practical end-to-end profitability factor: still
+  `contradicted_by_current_state`; no `trade_usable=true` practical chain is
+  present.
+- Completion commit: still `contradicted_by_current_state` for the overall
+  objective; only a narrow verified classifier/tracking commit would be valid.

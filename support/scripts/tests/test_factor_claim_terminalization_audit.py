@@ -934,8 +934,44 @@ trade_usable=false
         self.assertEqual(summary["active_claims"], 2)
         self.assertEqual(summary["active_claims_without_live_process"], 1)
         self.assertEqual(summary["wait_only_active_claims_without_live_process"], 1)
+        self.assertEqual(summary["fresh_wait_only_active_claims_without_live_process"], 1)
+        self.assertEqual(summary["stale_wait_only_active_claims_without_live_process"], 0)
         self.assertIn(
-            "externalize or terminalize wait-only active claims that do not own a live runtime",
+            "wait for fresh wait-only claims to progress or stale-safe timeout",
+            summary["next_action"],
+        )
+        self.assertNotIn("terminalize or externalize active claims", summary["next_action"])
+
+    def test_summarize_surfaces_stale_wait_only_claims_as_cleanup(self) -> None:
+        summary = summarize(
+            [
+                {
+                    "status": "active_prep_surface_ready_wait_board_clear",
+                    "run_root": "/tmp/ict-engine-stale-wait",
+                    "tmp_root": "/tmp/ict-engine-stale-wait",
+                    "run_root_exists": True,
+                    "decision": "launch_ready_prep_only_wait_live_factor_processes_to_clear",
+                    "active_task": "wait for shared writers to clear before launch",
+                    "scope": "Board B stale wait-only claim",
+                    "promotion_allowed": False,
+                    "trade_usable": False,
+                    "missing_identity_fields": [],
+                    "last_progress_at": "2026-05-27T14:00:00+00:00",
+                }
+            ],
+            live_processes=[],
+            now=datetime(2026, 5, 27, 16, 0, 0, tzinfo=timezone.utc),
+        )
+
+        self.assertEqual(summary["wait_only_active_claims_without_live_process"], 1)
+        self.assertEqual(summary["fresh_wait_only_active_claims_without_live_process"], 0)
+        self.assertEqual(summary["stale_wait_only_active_claims_without_live_process"], 1)
+        self.assertIn(
+            "terminalize or externalize active claims",
+            summary["next_action"],
+        )
+        self.assertIn(
+            "externalize or terminalize stale-safe wait-only active claims that do not own a live runtime",
             summary["next_action"],
         )
 

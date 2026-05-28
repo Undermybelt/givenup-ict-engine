@@ -410,6 +410,8 @@ def summarize(
     active_claims_without_live_process = 0
     wait_only_active_claims_without_live_process = 0
     fresh_active_claims_without_live_process = 0
+    fresh_wait_only_active_claims_without_live_process = 0
+    stale_wait_only_active_claims_without_live_process = 0
     for claim in claims:
         claim["status"] = _status(claim)
         if claim.get("status") == "terminalized":
@@ -445,6 +447,12 @@ def summarize(
         active_claims_without_live_process += int(not claim["live_runtime_owner"])
         wait_only_active_claims_without_live_process += int(claim["wait_only_without_live_process"])
         fresh_active_claims_without_live_process += int(claim["fresh_without_live_process"])
+        fresh_wait_only_active_claims_without_live_process += int(
+            claim["wait_only_without_live_process"] and not claim["stale_safe_takeover_candidate"]
+        )
+        stale_wait_only_active_claims_without_live_process += int(
+            claim["wait_only_without_live_process"] and claim["stale_safe_takeover_candidate"]
+        )
     active_claims = sum(1 for claim in claims if claim.get("status") == "active")
     invalid_active_claims = sum(
         1
@@ -470,10 +478,24 @@ def summarize(
         blocking_reasons.append("active_claims")
         if fresh_active_claims_without_live_process:
             next_actions.append("wait for fresh active claims to progress, then rerun before terminalizing")
-        if active_claims - fresh_active_claims_without_live_process:
+        cleanup_active_claims = sum(
+            1
+            for claim in claims
+            if claim.get("status") == "active"
+            and not claim["live_runtime_owner"]
+            and not claim["fresh_without_live_process"]
+            and not (
+                claim["wait_only_without_live_process"]
+                and not claim["stale_safe_takeover_candidate"]
+            )
+        )
+        if cleanup_active_claims > 0:
             next_actions.append("terminalize or externalize active claims")
     if wait_only_active_claims_without_live_process:
-        next_actions.append("externalize or terminalize wait-only active claims that do not own a live runtime")
+        if fresh_wait_only_active_claims_without_live_process:
+            next_actions.append("wait for fresh wait-only claims to progress or stale-safe timeout")
+        if stale_wait_only_active_claims_without_live_process:
+            next_actions.append("externalize or terminalize stale-safe wait-only active claims that do not own a live runtime")
     if invalid_active_claims:
         blocking_reasons.append("invalid_active_claims")
         next_actions.append("repair active claims with agent_name, exact task, non_goals, write_surface, and run/tmp root")
@@ -502,6 +524,8 @@ def summarize(
         "active_claims_without_live_process": active_claims_without_live_process,
         "wait_only_active_claims_without_live_process": wait_only_active_claims_without_live_process,
         "fresh_active_claims_without_live_process": fresh_active_claims_without_live_process,
+        "fresh_wait_only_active_claims_without_live_process": fresh_wait_only_active_claims_without_live_process,
+        "stale_wait_only_active_claims_without_live_process": stale_wait_only_active_claims_without_live_process,
         "live_factor_processes": live_factor_processes,
         "missing_run_roots": missing_run_roots,
         "trade_usable_true": trade_usable_true,

@@ -435,6 +435,82 @@ The objective is only complete if current evidence proves all of the following:
   - rerun the coordinated snapshot before any stronger claim because the live
     runtime set is still moving.
 
+### V-021: parent priority list duplicated wait-only stale-safe factor claims
+
+- Severity: low
+- Evidence:
+  - the fresh same-turn coordinated snapshot at
+    `/tmp/ict-engine-goal-20260528-codex-current-live/objective_closure_snapshot.json`
+    remained red, but also showed a packet UX defect: wait-only claims that
+    were also stale-safe takeover candidates appeared twice in
+    `summary.prioritized_next_actions`, once as
+    `wait_only_stale_safe_takeover_candidate` and again as
+    `stale_safe_takeover_queue_head`;
+  - this did not change completion truth, but it made the compact parent packet
+    less lightweight and could make a next agent review the same claim twice.
+- Risk:
+  - duplicated parent actions weaken the packet's role as the single first-read
+    coordination surface and can waste cleanup turns on already surfaced claim
+    files.
+- Current readback:
+  - `summarize_snapshot()` now tracks factor claim files already surfaced by
+    wait-only actions and skips duplicate stale-safe parent actions for the same
+    claim file;
+  - the regression
+    `test_summarize_snapshot_deduplicates_wait_only_stale_factor_claim_actions`
+    was added, and
+    `python3 -m unittest support.scripts.tests.test_objective_closure_snapshot -v`
+    passed `13/13`;
+  - the regenerated packet at
+    `/tmp/ict-engine-goal-20260528-codex-current-dedup/objective_closure_snapshot.json`
+    now lists four wait-only stale-safe claim actions plus two non-wait stale
+    takeover actions, without duplicating the same wait-only claim files.
+- Next:
+  - keep this regression in the focused packet suite;
+  - continue treating the packet as non-completion evidence because factor
+    closure, done-definition heavy proof, and release readiness are still red.
+
+### V-022: fresh active factor claims were phrased like terminalization targets
+
+- Severity: medium
+- Evidence:
+  - the fresh same-turn coordinated snapshot at
+    `/tmp/ict-engine-goal-20260528-codex-cont-current/objective_closure_snapshot.json`
+    had no stale-safe factor queue and no live factor process, but still exposed
+    a generic factor action of `terminalize or externalize active claims`;
+  - direct claim inspection showed the remaining active claim was a fresh setup
+    packet (`codex-tomac-practical-continuation-20260528T091403.claim`) created
+    minutes earlier, so terminalization would have been the wrong default
+    coordination instruction;
+  - the later live packet at
+    `/tmp/ict-engine-goal-20260528-codex-cont-fresh-action/objective_closure_snapshot.json`
+    proves the repaired shape: the factor child now reports
+    `fresh_active_claims_without_live_process=3` and the parent priority list
+    says to wait for/inspect each fresh claim before terminalizing.
+- Risk:
+  - a downstream maintainer could treat fresh claim ownership as stale cleanup
+    debt, collide with another agent's newly created lane, or erase useful
+    coordination state before the owner has a chance to terminalize it.
+- Current readback:
+  - `factor_claim_terminalization_audit.py` now distinguishes
+    `fresh_active_claims_without_live_process` from wait-only/stale cleanup
+    targets and emits a `fresh_active_claims_without_live_process` queue in the
+    compact child packet;
+  - `objective_closure_snapshot.py` now lifts those fresh claim heads into
+    parent `summary.prioritized_next_actions` with the reason
+    `fresh_active_claim_without_live_runtime`;
+  - focused verification passed:
+    `python3 -m unittest support.scripts.tests.test_factor_claim_terminalization_audit -v`
+    (`64/64`) and
+    `python3 -m unittest support.scripts.tests.test_objective_closure_snapshot -v`
+    (`14/14`).
+- Next:
+  - keep fresh active claims as wait/inspect targets until they become stale,
+    terminalized, or live-runtime owners;
+  - continue treating the overall objective as not complete because the same
+    live packet still has `trade_usable_true=0`, skipped heavy done-definition
+    gates, and red release readiness.
+
 ### V-011: reusable strategy-library provenance was still leaking caller-local path assumptions
 
 - Severity: medium
@@ -794,6 +870,22 @@ Earlier same-day runtime smoke (not rerun in this continuation):
   `trade_usable_true=0`; the new wait-only claim is fresh prep-only
   `20260528T012234+0800-codex-tomac-session-window-sweep-reclaim-prep.claim`,
   not stale cleanup debt.
+- 2026-05-28: found and fixed the same parent-queue loophole for non-live claim
+  queues. `objective_closure_snapshot.py` previously lifted only the first
+  `externalize_wait_only_claims` entry and only the first
+  `stale_safe_takeover_claims` entry into parent
+  `summary.prioritized_next_actions`. The current code now lifts every
+  wait-only and stale-safe queue entry, and
+  `support/scripts/tests/test_objective_closure_snapshot.py` covers multiple
+  entries for both queues. Verification passed:
+  `test_objective_closure_snapshot` `11/11` and
+  `test_factor_claim_terminalization_audit` `60/60`. Fresh packet
+  `/tmp/ict-engine-goal-20260528-codex-refresh-current8/objective_closure_snapshot.json`
+  proves parity: child wait-only entries `2` and parent wait-only actions `2`,
+  child live roots `4` and parent live-root actions `4`. Objective status still
+  remains `not_complete`; factor closure has `trade_usable_true=0`, and the two
+  wait-only claims are both fresh prep-only waiting lanes rather than stale
+  cleanup targets.
 - 2026-05-28: after the stale-exit fix commit, a standalone compact audit
   briefly reported `active_claims=0` and `live_factor_processes=0`, but that
   zero-claim readback was not durable enough for a completion claim. The fresh
@@ -833,3 +925,59 @@ Earlier same-day runtime smoke (not rerun in this continuation):
   this evidence-coordination contract. Verification:
   `python3 -m unittest support.scripts.tests.test_objective_closure_snapshot -v`
   passed `11/11`.
+- 2026-05-28: current9 refresh at
+  `/tmp/ict-engine-goal-20260528-codex-refresh-current9/objective_closure_snapshot.json`
+  remains `summary.status=not_complete` with blockers
+  `done_definition_not_completion_ready`, `factor_closure_blocked`, and
+  `release_readiness_blocked`. Standalone factor audit
+  `/tmp/ict-engine-goal-20260528-factor-refresh-current9.json` reports
+  `active_claims=6`, `live_factor_processes=3`,
+  `active_claims_without_live_process=3`,
+  `wait_only_active_claims_without_live_process=3`,
+  `stale_safe_takeover_candidates=0`, `promotion_allowed_true=0`, and
+  `trade_usable_true=0`. Direct `ps` confirms live PIDs `48896`, `50505`, and
+  `63225` still exist. Donchian and Crabel terminal summaries remain
+  `launch_in_progress`; the two-leg AQ root has round exit files but no
+  terminal practical admission. Parent/child action parity holds for this
+  packet: child wait-only entries `3` and parent wait-only actions `3`; child
+  live roots `3` and parent live-root actions `3`. The safe action remains
+  wait/recheck or owner externalization, not takeover, promotion, completion,
+  or commit.
+- 2026-05-28: current10/current11 found and fixed another consumer-automation
+  loophole in `support/scripts/objective_closure_snapshot.py`: the coordinated
+  snapshot could emit `summary.status=not_complete` while the CLI returned
+  shell exit `0`. That was unsafe for reusable gate automation because a red
+  packet could look successful to scripts. The new `snapshot_exit_code()` owner
+  returns `1` for valid but unproven/red snapshots, `2` for `snapshot_failed`,
+  and `0` only when `summary.completion_proven=true`. Focused TDD red/green
+  covered this in
+  `test_snapshot_exit_code_fails_closed_when_completion_is_unproven`. Live
+  verification:
+  `python3 support/scripts/objective_closure_snapshot.py --compact --check-remotes --output-dir /tmp/ict-engine-goal-20260528-codex-refresh-current11`
+  now returns `EXIT:1` while writing a valid `not_complete` packet. Current11
+  factor closure is still worse, not better: `active_claims=7`,
+  `live_factor_processes=3`, `active_claims_without_live_process=4`,
+  `wait_only_active_claims_without_live_process=4`,
+  `stale_safe_takeover_candidates=0`, `promotion_allowed_true=0`, and
+  `trade_usable_true=0`. The new fourth wait-only claim is fresh prep-only
+  `20260528T013829+0800-codex-tomac-initial-balance-extension-session-filtered-cadence-lift-prep.claim`;
+  no takeover or completion is safe.
+- 2026-05-28: wait-split refresh tightened the factor-action classifier again.
+  Fresh wait-only prep claims without a live process are now separated from
+  stale-safe wait-only cleanup claims, and live-runtime-owned active claims no
+  longer leak into the generic `terminalize or externalize active claims`
+  action. Verification:
+  `python3 -m unittest support.scripts.tests.test_factor_claim_terminalization_audit -v`
+  passed `65/65`; `python3 -m unittest support.scripts.tests.test_objective_closure_snapshot -v`
+  passed `14/14`; `git diff --check -- <touched files>` passed. The current
+  coordinated packet at
+  `/tmp/ict-engine-goal-20260528-codex-next-waitsplit2/objective_closure_snapshot.json`
+  deliberately exits shell `1` and reports `summary.status=not_complete` with
+  blockers `done_definition_not_completion_ready`, `factor_closure_blocked`,
+  and `release_readiness_blocked`. Factor closure currently has
+  `active_claims=2`, `live_factor_processes=1`,
+  `fresh_active_claims_without_live_process=2`, `promotion_allowed_true=0`,
+  and `trade_usable_true=0`. Release readiness remains red on
+  `worktree_clean_for_release`, `source_origin_matches_selected_source`, and
+  `release_version_tag_available`. This is a verified actionability/classifier
+  slice only; it is not objective completion.

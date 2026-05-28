@@ -229,6 +229,15 @@ def _factor_surface(report: dict[str, Any]) -> dict[str, Any]:
         "wait_only_active_claims_without_live_process": summary.get(
             "wait_only_active_claims_without_live_process"
         ),
+        "fresh_active_claims_without_live_process": summary.get(
+            "fresh_active_claims_without_live_process"
+        ),
+        "fresh_wait_only_active_claims_without_live_process": summary.get(
+            "fresh_wait_only_active_claims_without_live_process"
+        ),
+        "stale_wait_only_active_claims_without_live_process": summary.get(
+            "stale_wait_only_active_claims_without_live_process"
+        ),
         "stale_safe_takeover_candidates": summary.get("stale_safe_takeover_candidates"),
         "blocking_reasons": summary.get("blocking_reasons", []),
         "promotion_allowed_true": summary.get("promotion_allowed_true"),
@@ -339,7 +348,23 @@ def summarize_snapshot(
     factor_next = factor_surface.get("next_action")
     if isinstance(factor_next, str) and factor_next:
         factor_queue = factor_surface.get("attention_action_queue", {})
+        surfaced_factor_claims: set[str] = set()
         if isinstance(factor_queue, dict):
+            fresh_claims = factor_queue.get("fresh_active_claims_without_live_process", [])
+            if isinstance(fresh_claims, list) and fresh_claims:
+                for item in fresh_claims:
+                    if not isinstance(item, dict):
+                        continue
+                    claim_file = item.get("claim_file")
+                    if isinstance(claim_file, str) and claim_file:
+                        surfaced_factor_claims.add(claim_file)
+                        prioritized_next_actions.append(
+                            {
+                                "surface": "factor_closure",
+                                "reason": "fresh_active_claim_without_live_runtime",
+                                "action": f"wait for owner progress or inspect fresh active claim {claim_file} before terminalizing",
+                            }
+                        )
             wait_only_claims = factor_queue.get("externalize_wait_only_claims", [])
             if isinstance(wait_only_claims, list) and wait_only_claims:
                 for item in wait_only_claims:
@@ -347,6 +372,7 @@ def summarize_snapshot(
                         continue
                     claim_file = item.get("claim_file")
                     if isinstance(claim_file, str) and claim_file:
+                        surfaced_factor_claims.add(claim_file)
                         stale_safe = bool(item.get("stale_safe_takeover_candidate"))
                         reason = (
                             "wait_only_stale_safe_takeover_candidate"
@@ -372,6 +398,9 @@ def summarize_snapshot(
                         continue
                     claim_file = item.get("claim_file")
                     if isinstance(claim_file, str) and claim_file:
+                        if claim_file in surfaced_factor_claims:
+                            continue
+                        surfaced_factor_claims.add(claim_file)
                         prioritized_next_actions.append(
                             {
                                 "surface": "factor_closure",
@@ -535,6 +564,15 @@ def format_report(report: dict[str, Any], *, compact: bool) -> str:
     return json.dumps(report, ensure_ascii=True, indent=2, sort_keys=True) + "\n"
 
 
+def snapshot_exit_code(report: dict[str, Any]) -> int:
+    summary = report.get("summary", {})
+    if isinstance(summary, dict) and summary.get("status") == "snapshot_failed":
+        return 2
+    if isinstance(summary, dict) and summary.get("completion_proven") is True:
+        return 0
+    return 1
+
+
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description="Aggregate done-definition, factor-closure, and release-readiness into one compact objective snapshot."
@@ -610,7 +648,7 @@ def main() -> int:
     )
     write_report_file(snapshot, output_dir)
     sys.stdout.write(format_report(snapshot, compact=args.compact))
-    return 0
+    return snapshot_exit_code(snapshot)
 
 
 if __name__ == "__main__":

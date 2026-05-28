@@ -19,6 +19,7 @@ from objective_closure_snapshot import (  # noqa: E402
     effective_timeout_seconds,
     format_report,
     run_command,
+    snapshot_exit_code,
     summarize_snapshot,
     write_report_file,
 )
@@ -208,6 +209,89 @@ class ObjectiveClosureSnapshotTest(unittest.TestCase):
                 "action": "review takeover ownership of stale-b.claim",
             },
             factor_actions,
+        )
+
+    def test_summarize_snapshot_lists_fresh_active_claims_as_wait_before_terminalize(self) -> None:
+        summary = summarize_snapshot(
+            {
+                "completion_ready": False,
+                "quickstart_surface": "pass",
+            },
+            {
+                "status": "needs_attention",
+                "next_action": "wait for fresh active claims to progress, then rerun before terminalizing",
+                "attention_action_queue": {
+                    "fresh_active_claims_without_live_process": [
+                        {
+                            "claim_file": "fresh.claim",
+                            "age_minutes": 2,
+                            "status": "active_setup",
+                        }
+                    ]
+                },
+            },
+            {
+                "status": "pass",
+                "unresolved_next_actions": {},
+            },
+            snapshot_timestamp="2026-05-27T11:00:10Z",
+        )
+
+        self.assertIn(
+            {
+                "surface": "factor_closure",
+                "reason": "fresh_active_claim_without_live_runtime",
+                "action": "wait for owner progress or inspect fresh active claim fresh.claim before terminalizing",
+            },
+            summary["prioritized_next_actions"],
+        )
+
+    def test_summarize_snapshot_deduplicates_wait_only_stale_factor_claim_actions(self) -> None:
+        summary = summarize_snapshot(
+            {
+                "completion_ready": False,
+                "quickstart_surface": "pass",
+            },
+            {
+                "status": "needs_attention",
+                "next_action": "clear factor claims",
+                "attention_action_queue": {
+                    "externalize_wait_only_claims": [
+                        {
+                            "claim_file": "same.claim",
+                            "stale_safe_takeover_candidate": True,
+                        }
+                    ],
+                    "stale_safe_takeover_claims": [
+                        {
+                            "claim_file": "same.claim",
+                            "wait_only_without_live_process": True,
+                        }
+                    ],
+                },
+            },
+            {
+                "status": "pass",
+                "unresolved_next_actions": {},
+            },
+            snapshot_timestamp="2026-05-27T11:00:10Z",
+        )
+
+        claim_actions = [
+            action
+            for action in summary["prioritized_next_actions"]
+            if "same.claim" in action["action"]
+        ]
+
+        self.assertEqual(
+            claim_actions,
+            [
+                {
+                    "surface": "factor_closure",
+                    "reason": "wait_only_stale_safe_takeover_candidate",
+                    "action": "externalize or terminalize stale-safe same.claim",
+                }
+            ],
         )
 
     def test_build_snapshot_emits_quickstart_chain_and_evidence_files(self) -> None:
@@ -556,6 +640,20 @@ class ObjectiveClosureSnapshotTest(unittest.TestCase):
         self.assertNotIn("\n  ", text)
         self.assertIn('"status":"not_complete"', text)
         json.loads(text)
+
+    def test_snapshot_exit_code_fails_closed_when_completion_is_unproven(self) -> None:
+        self.assertEqual(
+            snapshot_exit_code({"summary": {"status": "not_complete", "completion_proven": False}}),
+            1,
+        )
+        self.assertEqual(
+            snapshot_exit_code({"summary": {"status": "snapshot_failed"}}),
+            2,
+        )
+        self.assertEqual(
+            snapshot_exit_code({"summary": {"status": "complete", "completion_proven": True}}),
+            0,
+        )
 
     def test_run_command_returns_structured_timeout_details(self) -> None:
         status = run_command(
