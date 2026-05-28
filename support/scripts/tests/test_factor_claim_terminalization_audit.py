@@ -1403,6 +1403,21 @@ trade_usable=false
             Path("/tmp/ict-engine-nq-twoleg-openingdrive-obs30-mtf-readback-followup"),
         )
 
+    def test_live_process_classifier_detects_auto_quant_ingest_real_trades_board_b_cli_child(self) -> None:
+        command = (
+            ".local-artifacts/cargo-target/debug/ict-engine auto-quant-ingest-real-trades "
+            "--symbol TOMAC_TOD_BALANCED_EXACT_DOWNSTREAM_V1 "
+            "--state-dir /tmp/ict-engine-tomac-tod-balanced-validation-materialization-20260529T023440+0800/state "
+            "--trades /tmp/ict-engine-tomac-tod-balanced-validation-materialization-20260529T023440+0800/materials/tod_balanced_simulated_real_trades.jsonl "
+            "--source auto_quant_simulated_feedback:tod_balanced_validation_materialization"
+        )
+
+        self.assertTrue(_is_live_factor_command(command))
+        self.assertEqual(
+            _extract_run_root(command),
+            Path("/tmp/ict-engine-tomac-tod-balanced-validation-materialization-20260529T023440+0800"),
+        )
+
     def test_live_process_classifier_detects_cargo_factor_research_board_b_cli_child(self) -> None:
         command = (
             "/Users/example/.rustup/toolchains/stable-aarch64-apple-darwin/bin/cargo run --quiet -- "

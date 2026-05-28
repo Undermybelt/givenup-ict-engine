@@ -242,6 +242,31 @@ post-training gates. This is not a completion claim.
   ran `23/23 OK`, and
   `git diff --check -- support/scripts/research/regime_root_survivor_blocker_report.py support/scripts/research/tests/test_regime_root_survivor_blocker_report.py support/docs/plans/2026-05-28-factor-training-closed-loop-continuation-codex-current.md`
   returned clean.
+- 2026-05-29T02:52+0800 post-commit drift check found another claim-audit
+  collision gap: compact audit had reported `live_factor_processes=0`, but
+  focused `ps` still showed
+  `.local-artifacts/cargo-target/debug/ict-engine auto-quant-ingest-real-trades`
+  running under
+  `/tmp/ict-engine-tomac-tod-balanced-validation-materialization-20260529T023440+0800/state`.
+  Root cause: `_is_direct_ict_engine_board_b_cli_command()` recognized direct
+  `ict-engine` Board B commands such as `analyze`, `workflow-status`,
+  `factor-research`, and `auto-quant-agent-material`, but omitted
+  `auto-quant-ingest-real-trades`, so a terminalized claim could mask a still
+  running feedback-ingest state writer. The current fix adds that command to
+  the live Board B CLI classifier and covers it with
+  `test_live_process_classifier_detects_auto_quant_ingest_real_trades_board_b_cli_child`.
+  Verification: an old-vs-current module probe showed `old_is_live=False` and
+  `current_is_live=True` for the exact TOD command, focused unittest passed,
+  full `python3 -m unittest support.scripts.tests.test_factor_claim_terminalization_audit -v`
+  ran `72/72 OK`, and `git diff --check -- support/scripts/factor_claim_terminalization_audit.py support/scripts/tests/test_factor_claim_terminalization_audit.py`
+  returned clean.
+- 2026-05-29T02:52+0800 compact audit after the fix intentionally fails closed:
+  `status=needs_attention`, `active_claims=1`, `live_factor_processes=2`,
+  `promotion_allowed_true=0`, `trade_usable_true=0`. Live roots are
+  `ict-engine-tomac-tod-balanced-validation-materialization-20260529T023440+0800`
+  for the feedback ingest and
+  `ict-engine-tomac-ict-wpr-fractal-reclaim-gate1-launch-20260529T024603+0800`
+  for the active WPR Gate 1 scan. This is a no-launch/no-completion state.
 
 ## Current Blockers
 

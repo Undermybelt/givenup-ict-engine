@@ -838,7 +838,7 @@ def _is_tomac_prep_wrapper_launch(command: str) -> bool:
 def _is_direct_ict_engine_board_b_cli_command(command: str) -> bool:
     normalized = " ".join(command.split())
     direct_binary = re.search(
-        r"(?:^|\s)(?:\S*/)?ict-engine\s+(?:analyze|workflow-status|pre-bayes-status|policy-training-status|update|factor-research|factor-autoresearch|auto-quant-agent-material[^\s]*)\b",
+        r"(?:^|\s)(?:\S*/)?ict-engine\s+(?:analyze|workflow-status|pre-bayes-status|policy-training-status|update|factor-research|factor-autoresearch|auto-quant-agent-material[^\s]*|auto-quant-ingest-real-trades)\b",
         normalized,
     )
     cargo_cli = re.search(
