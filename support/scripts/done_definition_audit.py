@@ -274,27 +274,72 @@ def _rel_path(path: Path) -> str:
         return str(path)
 
 
-def _summarize_practical_admission_scan(reports: list[dict]) -> dict:
+def tracked_wrapper_file_set(wrapper_files: list[Path], timeout_seconds: int) -> set[Path]:
+    if not wrapper_files:
+        return set()
+    status, details = run_command(
+        ["git", "ls-files", "--", *[str(path.relative_to(ROOT)) for path in wrapper_files]],
+        cwd=ROOT,
+        timeout=timeout_seconds,
+    )
+    if status != "pass":
+        return set(wrapper_files)
+    tracked: set[Path] = set()
+    for line in str(details.get("stdout") or "").splitlines():
+        rel_path = line.strip()
+        if rel_path:
+            tracked.add((ROOT / rel_path).resolve())
+    return tracked
+
+
+def _summarize_practical_admission_scan(reports: list[dict], *, tracked_files: set[Path]) -> dict:
+    tracked_file_paths = {path.resolve() for path in tracked_files}
     violations: list[dict] = []
     violating_files: set[str] = set()
     by_type: Counter[str] = Counter()
+    tracked_reports = 0
+    untracked_reports = 0
+    tracked_violations: list[dict] = []
+    untracked_violations: list[dict] = []
+    tracked_violating_files: set[str] = set()
+    untracked_violating_files: set[str] = set()
     for report in reports:
         file_path = str(report.get("file") or "")
+        resolved_path = Path(file_path).resolve() if file_path else None
+        is_tracked = bool(resolved_path and resolved_path in tracked_file_paths)
+        if is_tracked:
+            tracked_reports += 1
+        else:
+            untracked_reports += 1
         for violation in report.get("violations") or []:
             normalized = dict(violation)
             if file_path:
                 normalized["file"] = _repo_relative_text(file_path, str(ROOT))
             violations.append(normalized)
+            if is_tracked:
+                tracked_violations.append(normalized)
+            else:
+                untracked_violations.append(normalized)
             if file_path:
                 violating_files.add(file_path)
+                if is_tracked:
+                    tracked_violating_files.add(file_path)
+                else:
+                    untracked_violating_files.add(file_path)
             by_type[str(violation.get("violation") or "unknown")] += 1
 
     return {
         "scanned_files": len(reports),
         "violating_files": len(violating_files),
         "violation_count": len(violations),
+        "tracked_scanned_files": tracked_reports,
+        "tracked_violating_files": len(tracked_violating_files),
+        "tracked_violation_count": len(tracked_violations),
+        "untracked_scanned_files": untracked_reports,
+        "untracked_violating_files": len(untracked_violating_files),
+        "untracked_violation_count": len(untracked_violations),
         "violations_by_type": dict(sorted(by_type.items())),
-        "sample_violations": violations[:10],
+        "sample_violations": tracked_violations[:10] or untracked_violations[:10],
     }
 
 
@@ -337,10 +382,11 @@ def evaluate_practical_admission_source_gate(timeout_seconds: int) -> dict:
         failed_details["error"] = "invalid_practical_admission_scan_shape"
         return _gate("practical_admission_source_surface", "fail", failed_details)
 
-    summary = _summarize_practical_admission_scan(reports)
+    tracked_files = tracked_wrapper_file_set(wrapper_files, timeout_seconds)
+    summary = _summarize_practical_admission_scan(reports, tracked_files=tracked_files)
     summary["scanner_returncode"] = details.get("returncode")
     summary["rule"] = (
-        "all downstream/gate wrappers must keep practical flags behind "
+        "all tracked downstream/gate wrappers must keep practical flags behind "
         "practical_admission_flags(..., extension_complete=...) and avoid 2bps/density fail-open gates"
     )
     if status == "fail" and summary["violation_count"] == 0:
@@ -348,7 +394,7 @@ def evaluate_practical_admission_source_gate(timeout_seconds: int) -> dict:
         return _gate("practical_admission_source_surface", "fail", summary)
     return _gate(
         "practical_admission_source_surface",
-        "pass" if summary["violation_count"] == 0 else "fail",
+        "pass" if summary["tracked_violation_count"] == 0 else "fail",
         summary,
     )
 

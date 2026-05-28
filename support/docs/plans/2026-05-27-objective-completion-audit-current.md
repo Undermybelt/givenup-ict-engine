@@ -1035,6 +1035,32 @@ Earlier same-day runtime smoke (not rerun in this continuation):
   `done_definition_proof.compact.json`, and blockers only
   `factor_closure_blocked` plus `release_readiness_blocked`. This is a
   reusable evidence-pack UX improvement, not objective completion.
+- 2026-05-28: release-readback transport-drift diagnostics are now explicit.
+  Root-cause evidence from the live host showed local git rewrite rules:
+  `git config --show-origin --get-regexp '^(url\..*\.insteadof|http\..*\.proxy|core\.sshCommand)$'`
+  returned `url.git@github.com:.insteadof https://github.com/`, which explains
+  why an HTTPS fallback probe could still fail with SSH-style
+  `Connection closed ... port 22`. `support/scripts/release_readiness_audit.py`
+  now classifies this case as `https_probe_ssh_transport_drift` and its
+  `remote_readback` next action explicitly tells operators to inspect
+  `url.*.insteadof`, `core.sshCommand`, and `http.*.proxy` before treating it
+  as generic network/auth failure. Verification:
+  `python3 -m unittest support.scripts.tests.test_release_readiness_audit -v`
+  passed `20/20`; targeted regression
+  `test_remote_readback_failure_classifies_https_probe_ssh_transport_drift`
+  passed. Fresh direct release audit
+  `/tmp/ict-engine-goal-20260528-transport-drift-release-readiness.json`
+  reached remote tags and now fails on the concrete release blockers
+  `worktree_clean_for_release`, `source_origin_matches_selected_source`, and
+  `release_version_tag_available`, while the coordinated parent packet
+  `/tmp/ict-engine-goal-20260528-transport-drift-objective/objective_closure_snapshot.json`
+  hit the intermittent transport-drift readback path and preserved the sharper
+  next action. The same parent packet also proves factor-claim debt is cleared:
+  `factor_closure.status=pass`, `active_claims=0`, and
+  `live_factor_processes=0`, so the blocker moved from raw claim closure to
+  `same_tree_practical_closure_unproven` because `promotion_allowed_true=0`
+  and `trade_usable_true=0` remain false. This is still not objective
+  completion.
 
 ## 2026-05-28 Current Refresh - Missing-Root Queue Actionability
 
@@ -1100,3 +1126,143 @@ Requirement verdict updates:
   flags are false.
 - Completion commit remains invalid because same-tree practical closure and
   release readiness are still unproven.
+
+## 2026-05-28 Current Refresh - Release No-Rewrite Fallback Readback
+
+Latest authoritative packet for this refresh:
+
+- `/tmp/ict-engine-goal-20260528-cont-norewrite-snapshot/objective_closure_snapshot.json`
+
+Commands:
+
+```bash
+python3 -m unittest support.scripts.tests.test_release_readiness_audit -v
+python3 support/scripts/release_readiness_audit.py --compact --check-remotes --output /tmp/ict-engine-goal-20260528-cont-release-norewrite.json
+python3 support/scripts/objective_closure_snapshot.py --compact --check-remotes --done-definition-proof /tmp/ict-engine-goal-20260528-heavy-done-current.json --output-dir /tmp/ict-engine-goal-20260528-cont-norewrite-snapshot --timeout-seconds 300
+```
+
+Current command truth:
+
+- release child no longer reports `remote_readback` after true no-rewrite
+  readback; unresolved release gates are now the concrete
+  `worktree_clean_for_release`, `source_origin_matches_selected_source`, and
+  `release_version_tag_available` gates;
+- done-definition remains green through staged full proof;
+- factor child remains red with wait-only claims, one missing run-root claim,
+  one live runtime root, and `promotion_allowed_true=0` /
+  `trade_usable_true=0`;
+- parent summary remains `status=not_complete` with blockers
+  `factor_closure_blocked` and `release_readiness_blocked`.
+
+Loopholes found and fixed:
+
+- The GitHub HTTPS fallback was named `https_public_no_rewrite`, but the probe
+  inherited local git config. On this host `url.git@github.com:.insteadof
+  https://github.com/` can rewrite HTTPS probes back to SSH and intermittently
+  create false `remote_readback` blockers.
+- `release_readiness_audit.py` now runs public GitHub HTTPS fallback probes
+  with `GIT_CONFIG_GLOBAL=/dev/null` and `GIT_CONFIG_NOSYSTEM=1`, and treats a
+  successful fallback as effective readback while preserving raw probe
+  diagnostics.
+
+Verification:
+
+- `python3 -m unittest support.scripts.tests.test_release_readiness_audit -v`
+  passed `21/21`.
+- Live release audit `/tmp/ict-engine-goal-20260528-cont-release-norewrite.json`
+  reached origin and release mirror heads/tags and shifted release blockers to
+  dirty worktree, source-origin drift, and tag reuse.
+- Live objective packet `/tmp/ict-engine-goal-20260528-cont-norewrite-snapshot/objective_closure_snapshot.json`
+  exited `1` and stayed red for the correct remaining factor/release blockers.
+
+Requirement verdict updates:
+
+- Evidence-pack release readback is more reusable across hosts with local git
+  rewrite config; the fallback probe now matches its no-rewrite name.
+- Release readiness is still `contradicted_by_current_state`, but the blocker
+  is now concrete source/worktree/tag state rather than transport ambiguity.
+- Practical end-to-end profitability factor remains
+  `contradicted_by_current_state`; no current packet has practical flags true.
+- Completion commit remains invalid.
+
+## 2026-05-28 Current Refresh - Tracked Practical Gate And Live Runtime Blockers
+
+Latest authoritative packet for this refresh:
+
+- `/tmp/ict-engine-goal-20260528-codex-after-tracked-practical/objective_closure_snapshot.json`
+
+Commands:
+
+```bash
+python3 -m unittest support.scripts.tests.test_release_readiness_audit -v
+python3 -m unittest support.scripts.tests.test_done_definition_audit -v
+python3 -m unittest support.scripts.tests.test_objective_closure_snapshot -v
+python3 -m unittest support.scripts.research.tests.test_downstream_practical_admission_source_check -v
+python3 support/scripts/done_definition_audit.py --output /tmp/ict-engine-goal-20260528-codex-done-current-full.json
+python3 support/scripts/release_readiness_audit.py --compact --check-remotes > /tmp/ict-engine-goal-20260528-codex-release-current.json
+python3 support/scripts/factor_claim_terminalization_audit.py --compact --portable-paths --output /tmp/ict-engine-goal-20260528-codex-factor-current.json
+python3 support/scripts/objective_closure_snapshot.py --compact --check-remotes --output-dir /tmp/ict-engine-goal-20260528-codex-after-tracked-practical
+```
+
+Current command truth:
+
+- focused verification passed: release readiness `21/21`, done-definition
+  `19/19`, objective snapshot `20/20`, and practical-admission scanner `12/12`;
+- done-definition light gate is stronger but still not completion proof:
+  `status=pass`, `completion_ready=false`,
+  `evidence_level=partial_skipped_gates`, and skipped heavy gates
+  `cargo_check_all_targets`, `cargo_clippy_all_targets_deny_warnings`,
+  `cargo_test`, and `smoke_acceptance_tmp_state`;
+- practical-admission source gate now passes only because tracked source is
+  clean: `tracked_scanned_files=28`, `tracked_violation_count=0`, while
+  untracked wrapper residue remains visible with `untracked_scanned_files=887`
+  and `untracked_violation_count=193`;
+- factor closure is red from live runtime owners:
+  `active_claims=2`, `live_factor_processes=2`,
+  `active_claims_without_live_process=0`, `promotion_allowed_true=0`, and
+  `trade_usable_true=0`;
+- release readiness is red on `worktree_clean_for_release`,
+  `source_origin_matches_selected_source`, and
+  `release_version_tag_available`;
+- parent summary remains `status=not_complete` with blockers
+  `done_definition_not_completion_ready`, `factor_closure_blocked`, and
+  `release_readiness_blocked`.
+
+Loopholes found and fixed:
+
+- `done_definition_audit.py` now includes a tracked-source
+  `practical_admission_source_surface` gate. It runs the existing source
+  checker over wrapper files, uses `git ls-files` to separate committed source
+  from untracked multi-agent residue, and fails the done-definition audit if
+  tracked wrappers regress into practical-admission fail-open patterns.
+- `release_readiness_audit.py` now neutralizes local git config for public
+  GitHub HTTPS fallback probes and preserves transport-drift diagnostics. A
+  successful public fallback is effective remote readback, so release blockers
+  now point at concrete worktree/source/tag facts when remotes are reachable.
+
+Requirement verdict updates:
+
+- Evidence-pack and audit UX improved: tracked practical-admission failures and
+  host git rewrite drift are now first-class machine-readable gates instead of
+  hidden loopholes.
+- The full objective is still not complete: no same-tree practical closure
+  packet has `promotion_allowed_true>0` and `trade_usable_true>0`, two live
+  factor runtimes currently own claims, heavy done-definition gates were not
+  rerun, and release readiness is red.
+- A narrow audit-hardening commit is justified if it includes only the verified
+  source/tests/docs above; a completion commit for the broader objective would
+  still be false.
+
+Precommit drift readback:
+
+- `/tmp/ict-engine-goal-20260528-precommit-snapshot/objective_closure_snapshot.json`
+  remains `status=not_complete` with blocker classes
+  `done_definition_not_completion_ready`, `factor_closure_blocked`, and
+  `release_readiness_blocked`.
+- Factor closure drifted down to one live runtime owner (`pid=75414`, run root
+  `ict-engine-tomac-ict-wpr-fractal-reclaim-continuation-20260528T182219+0800`)
+  but practical flags stayed false.
+- Release readiness drifted back to unresolved `remote_readback` plus
+  `worktree_clean_for_release`; exact release gate names are still time-variant
+  and must be rerun before the next release fix, but the full objective remains
+  blocked either way.

@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import re
 import subprocess
 import sys
@@ -22,7 +23,16 @@ def repo_root(anchor: Path) -> Path:
     raise RuntimeError(f"could not discover repo root from {anchor}")
 
 
-def run_command(argv: list[str], cwd: Path, timeout: int = 20) -> tuple[str, dict[str, Any]]:
+def run_command(
+    argv: list[str],
+    cwd: Path,
+    timeout: int = 20,
+    env_overrides: dict[str, str] | None = None,
+) -> tuple[str, dict[str, Any]]:
+    env = None
+    if env_overrides:
+        env = os.environ.copy()
+        env.update(env_overrides)
     try:
         result = subprocess.run(
             argv,
@@ -31,6 +41,7 @@ def run_command(argv: list[str], cwd: Path, timeout: int = 20) -> tuple[str, dic
             capture_output=True,
             timeout=timeout,
             check=False,
+            env=env,
         )
     except subprocess.TimeoutExpired as exc:
         return (
@@ -95,17 +106,23 @@ def build_public_remote_probe_plan(remote_name: str, declared_url: str) -> dict[
         "declared_url": declared_url,
         "default_target": remote_name,
     }
+    no_rewrite_env = {
+        "GIT_CONFIG_GLOBAL": "/dev/null",
+        "GIT_CONFIG_NOSYSTEM": "1",
+    }
     match = re.fullmatch(r"git@github\.com:(.+?)(?:\.git)?", declared_url.strip())
     if match:
         repo_path = match.group(1)
         plan["fallback_public_url"] = f"https://github.com/{repo_path}.git"
         plan["fallback_transport"] = "https_public_no_rewrite"
+        plan["fallback_env_overrides"] = no_rewrite_env
         return plan
     https_match = re.fullmatch(r"https://github\.com/(.+?)(?:\.git)?", declared_url.strip())
     if https_match:
         repo_path = https_match.group(1)
         plan["fallback_public_url"] = f"https://github.com/{repo_path}.git"
         plan["fallback_transport"] = "https_public_no_rewrite"
+        plan["fallback_env_overrides"] = no_rewrite_env
     return plan
 
 
@@ -237,31 +254,87 @@ def evaluate_remote_readback(
     mirror_state: str,
     mirror_details: dict[str, Any],
 ) -> dict[str, Any]:
-    status = "pass" if origin_state == "pass" and mirror_state == "pass" else "fail"
+    effective_origin_state, effective_origin_details = effective_remote_readback(origin_state, origin_details)
+    effective_mirror_state, effective_mirror_details = effective_remote_readback(mirror_state, mirror_details)
+    status = "pass" if effective_origin_state == "pass" and effective_mirror_state == "pass" else "fail"
     details: dict[str, Any] = {
         "enabled": True,
-        "origin_status": origin_state,
-        "release_mirror_status": mirror_state,
-        "origin": origin_details,
-        "release_mirror": mirror_details,
+        "origin_status": "pass_via_fallback" if origin_state != "pass" and effective_origin_state == "pass" else origin_state,
+        "release_mirror_status": "pass_via_fallback" if mirror_state != "pass" and effective_mirror_state == "pass" else mirror_state,
+        "origin_raw_status": origin_state,
+        "release_mirror_raw_status": mirror_state,
+        "origin": effective_origin_details,
+        "release_mirror": effective_mirror_details,
     }
     if status != "pass":
+        diagnostic_class = classify_remote_probe_drift(effective_origin_details, effective_mirror_details)
         details.update(
             {
                 "blocked_gate": "release_version_tag_available",
-                "next_action": (
-                    "restore release mirror git/network/auth readback, or rerun from a network "
-                    "that can reach the release mirror, then rerun release readiness audit with "
-                    "--check-remotes"
-                ),
+                "next_action": remote_readback_next_action(diagnostic_class),
                 "rule": "release mirror heads and tags must be readable before tag availability can be trusted",
             }
         )
+        if diagnostic_class:
+            details["diagnostic_class"] = diagnostic_class
     return {
         "id": "remote_readback",
         "status": status,
         "details": details,
     }
+
+
+def effective_remote_readback(state: str, details: dict[str, Any]) -> tuple[str, dict[str, Any]]:
+    if state == "pass":
+        return state, details
+    fallback = details.get("fallback_public_probe")
+    if not isinstance(fallback, dict):
+        return state, details
+    result = fallback.get("result")
+    if not isinstance(result, dict) or result.get("returncode") != 0:
+        return state, details
+    merged = dict(details)
+    merged["effective_readback"] = "fallback_public_probe"
+    merged["raw_probe"] = {key: value for key, value in details.items() if key != "fallback_public_probe"}
+    for key in ("argv", "returncode", "stdout", "stderr"):
+        if key in result:
+            merged[key] = result[key]
+    return "pass", merged
+
+
+def remote_readback_next_action(diagnostic_class: str | None) -> str:
+    if diagnostic_class == "https_probe_ssh_transport_drift":
+        return (
+            "restore release mirror readback after checking local git transport rewrite drift "
+            "for `url.*.insteadof`, `core.sshCommand`, and `http.*.proxy` "
+            "(for example `git config --show-origin --get-regexp '^(url\\..*\\.insteadof|core\\.sshCommand|http\\..*\\.proxy)$'`), "
+            "or rerun from a network that can reach the release mirror, then rerun release readiness audit with --check-remotes"
+        )
+    return (
+        "restore release mirror git/network/auth readback, or rerun from a network "
+        "that can reach the release mirror, then rerun release readiness audit with "
+        "--check-remotes"
+    )
+
+
+def classify_remote_probe_drift(*remote_details: dict[str, Any]) -> str | None:
+    for details in remote_details:
+        fallback = details.get("fallback_public_probe")
+        if not isinstance(fallback, dict):
+            continue
+        target = fallback.get("target")
+        transport = fallback.get("transport")
+        result = fallback.get("result")
+        if not isinstance(target, str) or not isinstance(result, dict):
+            continue
+        stderr_text = _text(result.get("stderr"))
+        if (
+            transport == "https_public_no_rewrite"
+            and target.startswith("https://github.com/")
+            and "port 22" in stderr_text
+        ):
+            return "https_probe_ssh_transport_drift"
+    return None
 
 
 def read_remote_probe(
@@ -297,6 +370,7 @@ def read_remote_probe(
         ["git", "ls-remote", "--heads", "--tags", fallback_target],
         root,
         timeout=timeout,
+        env_overrides=plan.get("fallback_env_overrides"),
     )
     details["fallback_public_probe"] = {
         "target": fallback_target,
@@ -327,6 +401,7 @@ def read_url_remote_probe(
         ["git", "ls-remote", "--heads", "--tags", fallback_target],
         root,
         timeout=timeout,
+        env_overrides=plan.get("fallback_env_overrides"),
     )
     details["fallback_public_probe"] = {
         "target": fallback_target,
@@ -477,9 +552,11 @@ def build_report(root: Path, check_remotes: bool) -> dict[str, Any]:
             RELEASE_MIRROR_URL,
             timeout=30,
         )
-        if origin_state == "pass" and mirror_state == "pass":
-            origin = parse_ls_remote(origin_details["stdout"])
-            mirror = parse_ls_remote(mirror_details["stdout"])
+        effective_origin_state, effective_origin_details = effective_remote_readback(origin_state, origin_details)
+        effective_mirror_state, effective_mirror_details = effective_remote_readback(mirror_state, mirror_details)
+        if effective_origin_state == "pass" and effective_mirror_state == "pass":
+            origin = parse_ls_remote(effective_origin_details["stdout"])
+            mirror = parse_ls_remote(effective_mirror_details["stdout"])
             divergence: dict[str, Any] | None = None
             divergence_state, divergence_details = run_command(
                 ["git", "rev-list", "--left-right", "--count", "origin/main...HEAD"],
@@ -494,6 +571,12 @@ def build_report(root: Path, check_remotes: bool) -> dict[str, Any]:
                     "origin_main": origin["heads"].get("main"),
                     "release_mirror_main": mirror["heads"].get("main"),
                     "release_mirror_tags": sorted(mirror["tags"]),
+                    "origin_raw_status": origin_state,
+                    "release_mirror_raw_status": mirror_state,
+                    "origin_status": "pass_via_fallback" if origin_state != "pass" else "pass",
+                    "release_mirror_status": "pass_via_fallback" if mirror_state != "pass" else "pass",
+                    "origin": effective_origin_details,
+                    "release_mirror": effective_mirror_details,
                     "origin_divergence": divergence if divergence else divergence_details,
                 }
             )

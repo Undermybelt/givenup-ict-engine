@@ -406,6 +406,15 @@ Measured on 2026-05-22:
 
             def fake_run_command(cmd, *, cwd, timeout, env=None):
                 del cwd, timeout, env
+                if cmd[:3] == ["git", "ls-files", "--"]:
+                    return (
+                        "pass",
+                        {
+                            "returncode": 0,
+                            "stdout": "support/docs/experiments/actionable-regime-confidence/scripts/run_bad_v1.py\n",
+                            "stderr": "",
+                        },
+                    )
                 self.assertIn(str(scanner), cmd)
                 self.assertIn(str(wrapper_root / "run_bad_v1.py"), cmd)
                 return (
@@ -519,6 +528,80 @@ Measured on 2026-05-22:
         self.assertEqual(gate["details"]["scanned_files"], 1)
         self.assertEqual(gate["details"]["violating_files"], 0)
         self.assertEqual(gate["details"]["violation_count"], 0)
+
+    def test_practical_admission_source_gate_reports_untracked_violations_without_failing_tracked_source(self) -> None:
+        import done_definition_audit
+
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            scanner = root / "support" / "scripts" / "research" / "downstream_practical_admission_source_check.py"
+            wrapper_root = root / "support" / "docs" / "experiments" / "actionable-regime-confidence" / "scripts"
+            scanner.parent.mkdir(parents=True)
+            wrapper_root.mkdir(parents=True)
+            scanner.write_text("# scanner placeholder\n", encoding="utf-8")
+            tracked = wrapper_root / "run_tracked_good_v1.py"
+            untracked = wrapper_root / "run_untracked_bad_v1.py"
+            tracked.write_text("# tracked good\n", encoding="utf-8")
+            untracked.write_text("# untracked bad\n", encoding="utf-8")
+
+            def fake_run_command(cmd, *, cwd, timeout, env=None):
+                del cmd, cwd, timeout, env
+                return (
+                    "fail",
+                    {
+                        "returncode": 1,
+                        "stdout": json.dumps(
+                            [
+                                {"file": str(tracked), "ok": True, "violations": []},
+                                {
+                                    "file": str(untracked),
+                                    "ok": False,
+                                    "violations": [
+                                        {
+                                            "line": 9,
+                                            "column": 20,
+                                            "key": "trade_usable",
+                                            "value": "admitted",
+                                            "violation": "practical_flag_without_extension_complete_guard",
+                                        }
+                                    ],
+                                },
+                            ]
+                        ),
+                        "stderr": "",
+                    },
+                )
+
+            originals = (
+                done_definition_audit.ROOT,
+                done_definition_audit.PRACTICAL_ADMISSION_SOURCE_CHECK_PATH,
+                done_definition_audit.PRACTICAL_ADMISSION_WRAPPER_ROOT,
+                done_definition_audit.run_command,
+                done_definition_audit.tracked_wrapper_file_set,
+            )
+            try:
+                done_definition_audit.ROOT = root
+                done_definition_audit.PRACTICAL_ADMISSION_SOURCE_CHECK_PATH = scanner
+                done_definition_audit.PRACTICAL_ADMISSION_WRAPPER_ROOT = wrapper_root
+                done_definition_audit.run_command = fake_run_command
+                done_definition_audit.tracked_wrapper_file_set = lambda wrapper_files, timeout_seconds: {tracked}
+                gate = evaluate_practical_admission_source_gate(30)
+            finally:
+                (
+                    done_definition_audit.ROOT,
+                    done_definition_audit.PRACTICAL_ADMISSION_SOURCE_CHECK_PATH,
+                    done_definition_audit.PRACTICAL_ADMISSION_WRAPPER_ROOT,
+                    done_definition_audit.run_command,
+                    done_definition_audit.tracked_wrapper_file_set,
+                ) = originals
+
+        self.assertEqual(gate["status"], "pass")
+        self.assertEqual(gate["details"]["tracked_scanned_files"], 1)
+        self.assertEqual(gate["details"]["tracked_violating_files"], 0)
+        self.assertEqual(gate["details"]["tracked_violation_count"], 0)
+        self.assertEqual(gate["details"]["untracked_scanned_files"], 1)
+        self.assertEqual(gate["details"]["untracked_violating_files"], 1)
+        self.assertEqual(gate["details"]["untracked_violation_count"], 1)
 
 
 if __name__ == "__main__":

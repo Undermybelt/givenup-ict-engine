@@ -1376,6 +1376,160 @@ Requirement verdict updates:
 - Release readiness: still `contradicted_by_current_state`.
 - Completion commit: full objective remains unproven; do not mark complete.
 
+## 2026-05-28 Active Claim Refresh - Prior-Day CUSUM Fail-Closed
+
+Latest authoritative packet for this refresh:
+
+- `/tmp/ict-engine-goal-20260528-next/objective_closure_snapshot.json`
+
+Commands:
+
+```bash
+python3 support/scripts/factor_claim_terminalization_audit.py --compact
+python3 support/scripts/release_readiness_audit.py --compact --check-remotes
+python3 support/scripts/objective_closure_snapshot.py --compact --check-remotes --done-definition-proof /tmp/ict-engine-goal-20260528-heavy-done-current.json --output-dir /tmp/ict-engine-goal-20260528-next
+```
+
+Current command truth:
+
+- parent summary: `status=not_complete`, blockers `factor_closure_blocked` and
+  `release_readiness_blocked`;
+- done-definition child: `proof_applied=true`, `completion_ready=true`, and
+  `evidence_level=full_enabled_gate_coverage` from the staged heavy proof;
+- factor child before terminalizing the new evidence: `active_claims=4`,
+  `live_factor_processes=0`, `fresh_active_claims_without_live_process=1`,
+  `fresh_wait_only_active_claims_without_live_process=3`,
+  `promotion_allowed_true=0`, and `trade_usable_true=0`;
+- release child: `status=needs_fix`, unresolved `worktree_clean_for_release`
+  and `remote_readback`.
+
+Terminalized lane:
+
+- claim:
+  `/tmp/ict-engine-agent-claims/board-b-factor-refinement/20260528T101654+0800-codex-tomac-prior-day-extreme-cusum-deadzone.claim`
+- run root:
+  `/tmp/ict-engine-tomac-prior-day-extreme-cusum-deadzone-20260528T101654+0800`
+- terminal artifacts:
+  `/tmp/ict-engine-tomac-prior-day-extreme-cusum-deadzone-20260528T101654+0800/aq/summaries/autoquant_clean_1m_gate.json`
+  and
+  `/tmp/ict-engine-tomac-prior-day-extreme-cusum-deadzone-20260528T101654+0800/aq/summaries/autoquant_clean_1m_rows.csv`
+- readback: `run_tomac_1m.exit=0`, `rank_rows=2`,
+  `decision=observation_no_autoquant_survivor_yet`, `survivors_5bps=[]`,
+  `downstream_allowed=false`, `promotion_allowed=false`,
+  `trade_usable=false`, and NQ rows show `trade_count=0` with
+  `gate1_survivor=False`.
+
+Fresh lanes preserved:
+
+- DenseTrendPullbackReclaim remains `active_wait_only_runtime_clear` after a
+  collision abort; its partial `aq/clean/NQ` files are not terminal evidence.
+- MiddayCompressionFailedBreakVwapFade and H4MidnightMacdRsiSessionCadenceGuard
+  are fresh prep-only wait claims and are not stale-safe takeover targets.
+
+Requirement verdict updates:
+
+- Practical end-to-end profitability factor: still
+  `contradicted_by_current_state`; the only newly terminalized branch is
+  fail-closed and all practical flags remain false.
+- Factor closure: improved by removing one active launch claim, but still red
+  until the remaining fresh/wait-only claims clear or terminalize.
+- Completion commit: still invalid because factor closure and release readiness
+  are red.
+
+## 2026-05-28 Same-Tree Practical Candidate Refresh - Claim Debt Cleared
+
+Latest authoritative packet for this refresh:
+
+- `/tmp/ict-engine-goal-20260528-next-practical-audit/objective_closure_snapshot.json`
+
+Commands:
+
+```bash
+python3 support/scripts/factor_claim_terminalization_audit.py --compact
+python3 support/scripts/objective_closure_snapshot.py --compact --check-remotes --done-definition-proof /tmp/ict-engine-goal-20260528-heavy-done-current.json --output-dir /tmp/ict-engine-goal-20260528-next-practical-audit
+```
+
+Current command truth:
+
+- factor child is now clean on the claim/runtime plane:
+  `status=pass`, `active_claims=0`, `live_factor_processes=0`,
+  `promotion_allowed_true=0`, and `trade_usable_true=0`;
+- parent summary remains `status=not_complete` with blockers
+  `same_tree_practical_closure_unproven` and
+  `release_readiness_blocked`;
+- done-definition remains green through the staged heavy proof
+  (`completion_ready=true`, `evidence_level=full_enabled_gate_coverage`);
+- release readiness is still red on `worktree_clean_for_release` and
+  `remote_readback`.
+
+Claim-debt conclusion:
+
+- the old blocker family `factor_closure_blocked` from fresh claims/live
+  runtimes is no longer the current truth for this packet;
+- claim debt is cleared, but the parent is still correctly red because no
+  current-tree packet proves `promotion_allowed_true>0` and
+  `trade_usable_true>0`.
+
+Strongest grounded same-tree failure sample:
+
+- root:
+  `/tmp/ict-engine-tomac-opening-drive-exact-practical-gate-materialization-20260528T092748+0800`
+- final blocker report:
+  `/tmp/ict-engine-tomac-opening-drive-exact-practical-gate-materialization-20260528T092748+0800/final_feedback_replay_blocker_report.json`
+- this is the strongest currently materialized downstream practicalization
+  packet on the live tree, because it already preserved the exact Gate 1
+  survivor and then materially improved downstream learning evidence without
+  rerunning Gate 1;
+- same-root downstream state after the bounded feedback replay:
+  `raw_scored_mature_rows=1155`,
+  `production_validation_rows=1155`,
+  `observation_validation_rows=32`,
+  `transition_hazard=0.4302190118650065`,
+  `ranker_validation_ready=true`;
+- remaining true blockers are now narrower and downstream-specific:
+  `execution_candidate_status=execution_observe_only`,
+  `execution_readiness=0.4571420722343286`,
+  `path_ranker_visible_but_not_used`,
+  `declared_friction_expectancy_missing`,
+  `regime_confidence_missing`;
+- implication: the strongest exact-root packet is no longer blocked by sparse
+  maturity counts or transition hazard, but it still cannot promote because the
+  execution gate is observe-only and the lifecycle plane lacks declared
+  friction expectancy plus regime confidence.
+
+Most likely next same-tree breakthrough candidate:
+
+- candidate launch packet:
+  `/tmp/ict-engine-tomac-tod-balanced-slot-coverage-excursion-lift-launch-20260528T130655+0800/workdoc.md`
+- why this candidate matters:
+  it stays under the strongest balanced TOD exact root and explicitly targets
+  the remaining cadence plus excursion blockers without lowering gates;
+- current limitation:
+  `ls -la /tmp/ict-engine-tomac-tod-balanced-slot-coverage-excursion-lift-launch-20260528T130655+0800/run`
+  reports `No such file or directory`, so this slice currently has a launch
+  workdoc only and no run-root artifact set;
+- implication:
+  Balanced SlotCoverage is the most plausible next live candidate to attack the
+  practical gap, but it is not yet an evidentiary same-tree practical-closure
+  packet and cannot be counted toward completion.
+
+Requirement verdict updates:
+
+- Evidence-pack coordination: stronger; claim debt is explicitly cleared and no
+  longer conflated with practical closure proof.
+- Practical end-to-end profitability factor: still
+  `contradicted_by_current_state`; no current packet has
+  `promotion_allowed_true>0` and `trade_usable_true>0`.
+- Exact downstream blocker identification: stronger; the strongest grounded
+  exact root now points at execution-plane materialization
+  (`observe_only`, low readiness, ranker visible-not-used, missing friction
+  expectancy, missing regime confidence), not claim debt.
+- Next likely breakthrough path: Balanced SlotCoverage remains the best next
+  live launch candidate, but only as a future action until it produces real
+  run-root artifacts.
+- Completion commit: still invalid because same-tree practical closure and
+  release readiness both remain unproven.
+
 ## 2026-05-28 Current Refresh 6 - Missing-Root Queue Actionability
 
 Latest authoritative packet for this continuation:
@@ -1422,3 +1576,118 @@ Requirement verdict updates:
   practical flags are true.
 - Completion commit remains invalid; this is a verified actionability slice,
   not completion of the full objective.
+
+## 2026-05-28 Current Refresh 7 - Release No-Rewrite Fallback Readback
+
+Latest authoritative packet for this continuation:
+
+- `/tmp/ict-engine-goal-20260528-cont-norewrite-snapshot/objective_closure_snapshot.json`
+
+Command truth:
+
+- `python3 -m unittest support.scripts.tests.test_release_readiness_audit -v`
+  passed `21/21`.
+- `python3 support/scripts/release_readiness_audit.py --compact --check-remotes --output /tmp/ict-engine-goal-20260528-cont-release-norewrite.json`
+  exited `1` with unresolved gates `worktree_clean_for_release`,
+  `source_origin_matches_selected_source`, and
+  `release_version_tag_available`; `remote_readback` was no longer unresolved.
+- `python3 support/scripts/objective_closure_snapshot.py --compact --check-remotes --done-definition-proof /tmp/ict-engine-goal-20260528-heavy-done-current.json --output-dir /tmp/ict-engine-goal-20260528-cont-norewrite-snapshot --timeout-seconds 300`
+  exited `1`, with parent blockers `factor_closure_blocked` and
+  `release_readiness_blocked`.
+
+Loophole fixes in this slice:
+
+- Public GitHub fallback probes now run with `GIT_CONFIG_GLOBAL=/dev/null` and
+  `GIT_CONFIG_NOSYSTEM=1` so local `url.*.insteadof` rules cannot rewrite the
+  fallback back to SSH.
+- A successful public fallback is counted as effective readback for source and
+  tag gates while the raw failed/default probe remains in diagnostics.
+
+Requirement verdict updates:
+
+- Evidence-pack release readback is stronger and less host-config dependent;
+  release blockers now name concrete worktree/source/tag facts when remotes are
+  readable.
+- Practical end-to-end profitability factor remains
+  `contradicted_by_current_state`; current factor state includes wait-only
+  claims, a missing run-root claim, one live runtime root, and no practical
+  positive flags.
+- Completion commit remains invalid because the full objective still lacks a
+  same-tree practical closure packet and release-ready source state.
+
+## 2026-05-28 Current Refresh 8 - Tracked Practical Gate And Live Runtime Blockers
+
+Latest authoritative packet for this continuation:
+
+- `/tmp/ict-engine-goal-20260528-codex-after-tracked-practical/objective_closure_snapshot.json`
+
+Command truth:
+
+- `python3 -m unittest support.scripts.tests.test_release_readiness_audit -v`
+  passed `21/21`.
+- `python3 -m unittest support.scripts.tests.test_done_definition_audit -v`
+  passed `19/19`.
+- `python3 -m unittest support.scripts.tests.test_objective_closure_snapshot -v`
+  passed `20/20`.
+- `python3 -m unittest support.scripts.research.tests.test_downstream_practical_admission_source_check -v`
+  passed `12/12`.
+- `python3 support/scripts/done_definition_audit.py --output /tmp/ict-engine-goal-20260528-codex-done-current-full.json`
+  reported `completion_ready=false` only because heavy gates were skipped, and
+  the new `practical_admission_source_surface` passed for tracked source:
+  `tracked_scanned_files=28`, `tracked_violation_count=0`,
+  `untracked_scanned_files=887`, and `untracked_violation_count=193`.
+- `python3 support/scripts/release_readiness_audit.py --compact --check-remotes > /tmp/ict-engine-goal-20260528-codex-release-current.json`
+  exited `1` with unresolved `worktree_clean_for_release`,
+  `source_origin_matches_selected_source`, and `release_version_tag_available`.
+  The remote readback gate itself was not unresolved in this direct run.
+- `python3 support/scripts/factor_claim_terminalization_audit.py --compact --portable-paths --output /tmp/ict-engine-goal-20260528-codex-factor-current.json`
+  exited `1` with `active_claims=2`, `live_factor_processes=2`,
+  `active_claims_without_live_process=0`, `promotion_allowed_true=0`, and
+  `trade_usable_true=0`.
+- `python3 support/scripts/objective_closure_snapshot.py --compact --check-remotes --output-dir /tmp/ict-engine-goal-20260528-codex-after-tracked-practical`
+  exited `1`; parent summary stayed `status=not_complete` with blockers
+  `done_definition_not_completion_ready`, `factor_closure_blocked`, and
+  `release_readiness_blocked`. Parent priorities named live factor runtime PIDs
+  `75414` and `77137`, plus the three release gates above.
+
+Loophole fixes in this slice:
+
+- `done_definition_audit.py` now runs the practical-admission source scanner as
+  a lightweight gate and separates tracked from untracked wrappers with
+  `git ls-files`. This prevents committed unsafe practical-admission wrappers
+  from hiding behind skipped heavy gates while avoiding false release-source
+  failure from untracked multi-agent wrapper residue.
+- `release_readiness_audit.py` now neutralizes local git rewrite config for
+  public GitHub HTTPS fallback probes and treats a successful public fallback as
+  effective remote readback while preserving raw probe diagnostics.
+
+Requirement verdict updates:
+
+- Evidence-pack coordination and reuse are stronger for the committed source:
+  release readback is less host-config dependent, and tracked unsafe practical
+  admission source cannot be hidden by partial done-definition evidence.
+- The untracked wrapper residue remains visible and must stay out of release
+  source claims, but it is not a tracked-source gate failure.
+- Practical end-to-end profitability factor remains
+  `contradicted_by_current_state`; two live factor runtimes are active and no
+  current packet has `promotion_allowed_true>0` or `trade_usable_true>0`.
+- Completion commit for the full objective remains invalid. A narrow commit of
+  this audit-hardening slice is valid only if it stages exactly the related
+  source/tests/docs and leaves unrelated factor artifacts unstaged.
+
+Precommit drift readback:
+
+- `/tmp/ict-engine-goal-20260528-precommit-snapshot/objective_closure_snapshot.json`
+  supersedes the exact live counts above for immediate continuation. It still
+  exits `1` with parent `status=not_complete` and the same blocker classes:
+  `done_definition_not_completion_ready`, `factor_closure_blocked`, and
+  `release_readiness_blocked`.
+- The factor child drifted from two live runtimes to one live runtime
+  (`pid=75414`, run root
+  `ict-engine-tomac-ict-wpr-fractal-reclaim-continuation-20260528T182219+0800`),
+  with `promotion_allowed_true=0` and `trade_usable_true=0` unchanged.
+- The release child drifted back to unresolved `remote_readback` plus
+  `worktree_clean_for_release`, showing that release gate names remain
+  network/state-variant even after the no-rewrite fallback hardening. Treat the
+  stable class as `release_readiness_blocked` and rerun the child audit before
+  choosing the next release fix.

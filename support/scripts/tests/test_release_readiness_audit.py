@@ -53,6 +53,13 @@ class ReleaseReadinessAuditTest(unittest.TestCase):
             "https://github.com/Undermybelt/ict-engine-release.git",
         )
         self.assertEqual(plan["fallback_transport"], "https_public_no_rewrite")
+        self.assertEqual(
+            plan["fallback_env_overrides"],
+            {
+                "GIT_CONFIG_GLOBAL": "/dev/null",
+                "GIT_CONFIG_NOSYSTEM": "1",
+            },
+        )
 
     def test_parse_cargo_metadata_reads_release_fields(self) -> None:
         metadata = parse_cargo_metadata(
@@ -232,6 +239,107 @@ R  old.rs -> new.rs
             "https://github.com/Undermybelt/ict-engine-release.git",
         )
         self.assertEqual(mirror["fallback_public_probe"]["transport"], "https_public_no_rewrite")
+
+    def test_remote_readback_uses_successful_public_fallback_as_effective_readback(self) -> None:
+        gate = evaluate_remote_readback(
+            origin_state="fail",
+            origin_details={
+                "argv": ["git", "ls-remote", "--heads", "--tags", "origin"],
+                "returncode": 128,
+                "stdout": "",
+                "stderr": "Connection closed by 198.18.0.26 port 22\n",
+                "remote_name": "origin",
+                "declared_url": "git@github.com:Undermybelt/givenup-ict-engine.git",
+                "fallback_public_probe": {
+                    "target": "https://github.com/Undermybelt/givenup-ict-engine.git",
+                    "transport": "https_public_no_rewrite",
+                    "result": {
+                        "argv": [
+                            "git",
+                            "ls-remote",
+                            "--heads",
+                            "--tags",
+                            "https://github.com/Undermybelt/givenup-ict-engine.git",
+                        ],
+                        "returncode": 0,
+                        "stdout": "source-head\trefs/heads/main\n",
+                        "stderr": "",
+                    },
+                },
+            },
+            mirror_state="pass",
+            mirror_details={
+                "argv": ["git", "ls-remote", "--heads", "--tags", "https://github.com/Undermybelt/ict-engine-release.git"],
+                "returncode": 0,
+                "stdout": "mirror-head\trefs/heads/main\nv0\trefs/tags/v0.1.7\n",
+                "stderr": "",
+                "remote_name": "release_mirror",
+                "declared_url": "https://github.com/Undermybelt/ict-engine-release.git",
+            },
+        )
+
+        self.assertEqual(gate["status"], "pass")
+        self.assertEqual(gate["details"]["origin_status"], "pass_via_fallback")
+        self.assertEqual(gate["details"]["origin_raw_status"], "fail")
+        self.assertNotIn("blocked_gate", gate["details"])
+
+    def test_remote_readback_failure_classifies_https_probe_ssh_transport_drift(self) -> None:
+        gate = evaluate_remote_readback(
+            origin_state="fail",
+            origin_details={
+                "argv": ["git", "ls-remote", "--heads", "--tags", "origin"],
+                "returncode": 128,
+                "stdout": "",
+                "stderr": "Connection closed by 198.18.0.190 port 22\nfatal: Could not read from remote repository.\n",
+                "remote_name": "origin",
+                "declared_url": "git@github.com:Undermybelt/givenup-ict-engine.git",
+                "fallback_public_probe": {
+                    "target": "https://github.com/Undermybelt/givenup-ict-engine.git",
+                    "transport": "https_public_no_rewrite",
+                    "result": {
+                        "argv": [
+                            "git",
+                            "ls-remote",
+                            "--heads",
+                            "--tags",
+                            "https://github.com/Undermybelt/givenup-ict-engine.git",
+                        ],
+                        "returncode": 128,
+                        "stdout": "",
+                        "stderr": "Connection closed by 198.18.0.190 port 22\n",
+                    },
+                },
+            },
+            mirror_state="fail",
+            mirror_details={
+                "argv": ["git", "ls-remote", "--heads", "--tags", "https://github.com/Undermybelt/ict-engine-release.git"],
+                "returncode": 128,
+                "stdout": "",
+                "stderr": "Connection closed by 198.18.0.190 port 22\n",
+                "remote_name": "release_mirror",
+                "declared_url": "https://github.com/Undermybelt/ict-engine-release.git",
+                "fallback_public_probe": {
+                    "target": "https://github.com/Undermybelt/ict-engine-release.git",
+                    "transport": "https_public_no_rewrite",
+                    "result": {
+                        "argv": [
+                            "git",
+                            "ls-remote",
+                            "--heads",
+                            "--tags",
+                            "https://github.com/Undermybelt/ict-engine-release.git",
+                        ],
+                        "returncode": 128,
+                        "stdout": "",
+                        "stderr": "Connection closed by 198.18.0.190 port 22\n",
+                    },
+                },
+            },
+        )
+
+        self.assertEqual(gate["details"]["diagnostic_class"], "https_probe_ssh_transport_drift")
+        self.assertIn("insteadof", gate["details"]["next_action"])
+        self.assertIn("core.sshCommand", gate["details"]["next_action"])
 
     def test_source_origin_alignment_does_not_compare_mirror_commit_to_source_head(self) -> None:
         gate = evaluate_source_origin_alignment(
