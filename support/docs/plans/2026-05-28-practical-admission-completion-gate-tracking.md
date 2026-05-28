@@ -17,6 +17,37 @@ source release gate by itself.
 
 ## Fresh Evidence
 
+2026-05-29 active-inventory coordination readback:
+
+- Fresh coordinated snapshot before this fix:
+  `/tmp/ict-engine-goal-20260529-codex-cont-current-013026/objective_closure_snapshot.json`
+  remained `summary.status=not_complete` with blockers
+  `done_definition_not_completion_ready`, `factor_closure_blocked`, and
+  `release_readiness_blocked`. The factor child also exposed one false action
+  queue item: `false-negative-amnesty-20260529T013008.claim.json` was an
+  `active_inventory` claim for artifact scanning with `promotion_allowed=false`,
+  `trade_usable=false`, and explicit no-provider/AQ-launch language, but the
+  compact audit treated it as wait-only factor debt.
+- Implemented fix: `support/scripts/factor_claim_terminalization_audit.py` now
+  classifies conservative `active_inventory` claims as coordination-only only
+  when they also carry false practical flags plus audit/inventory/artifact-scan
+  purpose text and no-launch/read-only language. This keeps real active factor
+  claims blocking while preventing bookkeeping inventory scans from polluting
+  compact factor action queues.
+- RED/GREEN regression:
+  `test_valid_inventory_claim_does_not_block_factor_closure` first failed with
+  `summary.status='needs_attention'`, then passed after the classifier fix.
+  Focused verification also passed the existing audit-only, wait-only, and fresh
+  active-claim guard regressions.
+- Fresh compact factor audit after the fix still intentionally exited red for
+  real runtime ownership: `active_claims=1`, `live_factor_processes=1`,
+  `wait_only_active_claims_without_live_process=0`, `promotion_allowed_true=0`,
+  and `trade_usable_true=0`. The only queue head was the live
+  SessionWindowSweepReclaim launch claim rooted at
+  `/tmp/ict-engine-tomac-session-window-sweep-reclaim-prep-20260528T012234+0800`.
+  This is current evidence against objective completion and against launching a
+  sibling TOMAC/AQ lane.
+
 2026-05-29 post-Camarilla terminalization refresh:
 
 - Fresh coordinated snapshot:

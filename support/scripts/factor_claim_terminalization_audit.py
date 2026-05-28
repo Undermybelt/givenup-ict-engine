@@ -329,12 +329,26 @@ def read_claim(path: Path, root: Path) -> dict[str, Any]:
 
 def _is_coordination_only_claim(fields: dict[str, Any]) -> bool:
     status = str(fields.get("status") or "").strip().lower()
-    if not (status.startswith("active_audit_only") or status.startswith("active_coordination_only")):
+    coordination_status = (
+        status.startswith("active_audit_only")
+        or status.startswith("active_coordination_only")
+        or status.startswith("active_inventory")
+    )
+    if not coordination_status:
         return False
     if fields.get("promotion_allowed") is not False or fields.get("trade_usable") is not False:
         return False
     text = _claim_purpose_text(fields)
-    if not any(marker in text for marker in ("audit", "loophole", "objective", "evidence review", "read-only")):
+    purpose_markers = (
+        "audit",
+        "loophole",
+        "objective",
+        "evidence review",
+        "read-only",
+        "inventory",
+        "artifact scan",
+    )
+    if not any(marker in text for marker in purpose_markers):
         return False
     no_launch_markers = (
         "no provider",

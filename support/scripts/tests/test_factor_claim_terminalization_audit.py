@@ -1199,6 +1199,48 @@ trade_usable=false
         self.assertEqual(compact["attention_claim_count"], 0)
         self.assertEqual(compact["attention_action_queue"]["fresh_active_claims_without_live_process"], [])
 
+    def test_valid_inventory_claim_does_not_block_factor_closure(self) -> None:
+        with tempfile.TemporaryDirectory() as repo_tmp, tempfile.TemporaryDirectory() as claims_tmp:
+            repo_root = Path(repo_tmp)
+            claims_dir = Path(claims_tmp)
+            run_root = Path(repo_tmp) / "ict-engine-false-negative-amnesty"
+            run_root.mkdir()
+            (run_root / "workdoc.md").write_text("# inventory\n", encoding="utf-8")
+
+            (claims_dir / "inventory.claim.json").write_text(
+                json.dumps(
+                    {
+                        "agent_name": "hermes-gpt55-false-negative-amnesty",
+                        "owner": "Hermes GPT-5.5",
+                        "claimed_at": "20260529T013008",
+                        "last_progress_at": "20260529T013008",
+                        "scope": "False-negative amnesty inventory for old readiness/transition/PDA blockers",
+                        "active_task": "Scan artifacts for candidates wrongly blocked by old gates; no provider/AQ launch yet",
+                        "non_goals": "No Board docs as active source; no trade usability promotion without current artifacts",
+                        "write_surface": str(run_root / "workdoc.md"),
+                        "run_root": str(run_root),
+                        "tmp_root": str(run_root),
+                        "status": "active_inventory",
+                        "progress_report": "created claim/workdoc/repo packet; next run compact audit and artifact scans",
+                        "promotion_allowed": False,
+                        "trade_usable": False,
+                        "update_goal": False,
+                    },
+                    indent=2,
+                ),
+                encoding="utf-8",
+            )
+
+            report = build_report(claims_dir=claims_dir, repo_root=repo_root)
+            compact = format_report(report, compact=True)
+
+        self.assertEqual(report["summary"]["status"], "pass")
+        self.assertEqual(report["summary"]["active_claims"], 0)
+        self.assertEqual(report["summary"]["coordination_only_active_claims"], 1)
+        self.assertEqual(report["summary"]["blocking_reasons"], [])
+        self.assertEqual(compact["attention_claim_count"], 0)
+        self.assertEqual(compact["attention_action_queue"]["fresh_active_claims_without_live_process"], [])
+
     def test_build_report_flags_active_claims_missing_board_local_identity_fields(self) -> None:
         with tempfile.TemporaryDirectory() as repo_tmp, tempfile.TemporaryDirectory() as claims_tmp:
             repo_root = Path(repo_tmp)
