@@ -888,26 +888,22 @@ fn build_execution_tree_closed_loop_branch_admission_value(
         .is_some_and(|readiness| readiness >= EXECUTION_GATE_READY);
     let ranker_live_ready =
         output.path_ranker_score_used_by_execution_tree && output.ranker_validation_ready;
-    let live_plane_ready = pre_bayes_ready
+    let execution_plane_ready = pre_bayes_ready
         && execution_ready
         && execution_tree_ready
         && execution_readiness_ready
         && ranker_live_ready;
-    let ready = live_plane_ready;
+    let ready = execution_plane_ready;
     let actionable = ready;
     let review_status = if actionable {
         "promote_latest"
     } else {
         "observe"
     };
-    let status = if ready && actionable {
-        "admitted"
-    } else {
-        "fail_closed"
-    };
     let learning_admission_status = "not_evaluated";
     let paper_admission_status = "not_evaluated";
-    let live_trade_status = if live_plane_ready { "ready" } else { "blocked" };
+    let live_trade_status = "blocked";
+    let status = "fail_closed";
     let mut evidence = Vec::new();
     if !pre_bayes_gate_status.trim().is_empty() {
         evidence.push(format!("pre_bayes_gate_status={pre_bayes_gate_status}"));
@@ -928,8 +924,8 @@ fn build_execution_tree_closed_loop_branch_admission_value(
 
     serde_json::json!({
         "status": status,
-        "reason": if status == "admitted" {
-            "exact_structural_branch_ready_and_actionable"
+        "reason": if ready && actionable {
+            "execution_plane_ready_but_lifecycle_tuple_missing"
         } else {
             "exact_structural_branch_visible_but_not_ready_or_actionable"
         },
@@ -943,9 +939,9 @@ fn build_execution_tree_closed_loop_branch_admission_value(
         "learning_admission_status": learning_admission_status,
         "paper_admission_status": paper_admission_status,
         "live_trade_status": live_trade_status,
-        "promotion_allowed": live_trade_status == "ready",
-        "trade_usable": live_trade_status == "ready",
-        "update_goal": live_trade_status == "ready",
+        "promotion_allowed": false,
+        "trade_usable": false,
+        "update_goal": false,
         "ready": ready,
         "actionable": actionable,
         "execution_tree_gate_status": output.gate_status,
@@ -1452,7 +1448,8 @@ mod tests {
     }
 
     #[test]
-    fn execution_tree_closed_loop_branch_admission_accepts_fill_viable_only_with_live_predicates() {
+    fn execution_tree_closed_loop_branch_admission_keeps_fill_viable_non_practical_without_lifecycle_tuple(
+    ) {
         let output = ExecutionTreeOutput {
             gate_status: "ready".to_string(),
             branch: "fill_viable".to_string(),
@@ -1472,13 +1469,17 @@ mod tests {
             &output,
         );
 
-        assert_eq!(value["status"], "admitted");
+        assert_eq!(value["status"], "fail_closed");
+        assert_eq!(
+            value["reason"],
+            "execution_plane_ready_but_lifecycle_tuple_missing"
+        );
         assert_eq!(value["ready"], true);
         assert_eq!(value["actionable"], true);
-        assert_eq!(value["live_trade_status"], "ready");
-        assert_eq!(value["promotion_allowed"], true);
-        assert_eq!(value["trade_usable"], true);
-        assert_eq!(value["update_goal"], true);
+        assert_eq!(value["live_trade_status"], "blocked");
+        assert_eq!(value["promotion_allowed"], false);
+        assert_eq!(value["trade_usable"], false);
+        assert_eq!(value["update_goal"], false);
         let evidence = value["evidence"].as_array().unwrap();
         assert!(evidence.iter().any(|item| {
             item.as_str()
@@ -1486,6 +1487,36 @@ mod tests {
                     "live_plane_predicates=execution_readiness_ready=true ranker_live_ready=true",
                 )
         }));
+    }
+
+    #[test]
+    fn execution_tree_ready_live_plane_does_not_promote_without_lifecycle_tuple() {
+        let output = ExecutionTreeOutput {
+            gate_status: "ready".to_string(),
+            branch: "fill_viable".to_string(),
+            execution_bias: "aggressive".to_string(),
+            execution_readiness: Some(0.67),
+            path_ranker_score_used_by_execution_tree: true,
+            ranker_validation_ready: true,
+            ..ExecutionTreeOutput::default()
+        };
+
+        let value = build_execution_tree_closed_loop_branch_admission_value(
+            "TrendExpansion -> SessionDirectionalBias -> NoLookaheadGreedyComposite -> greedy_v1",
+            "pass_neutralized",
+            "execution_ready",
+            &output,
+        );
+
+        assert_eq!(value["ready"], true);
+        assert_eq!(value["actionable"], true);
+        assert_eq!(value["status"], "fail_closed");
+        assert_eq!(value["learning_admission_status"], "not_evaluated");
+        assert_eq!(value["paper_admission_status"], "not_evaluated");
+        assert_eq!(value["live_trade_status"], "blocked");
+        assert_eq!(value["promotion_allowed"], false);
+        assert_eq!(value["trade_usable"], false);
+        assert_eq!(value["update_goal"], false);
     }
 
     #[test]

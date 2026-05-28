@@ -553,3 +553,81 @@ training/refinement.
   `live_factor_processes=1`, and `same_tree_practical_closure=null`; manual
   requirements still include `same_tree_practical_closure_packet` and
   `truthful_completion_commit`. Full objective remains incomplete.
+
+## 2026-05-29T07:36+0800 Execution-Plane / Lifecycle Guard Repair
+
+- Fresh routed continuation re-read `skill-router.md`, `project-router.md`, repo
+  `CLAUDE.md`/`AGENTS.md`/`AGENT.md`, and installed runtime skill
+  `software-development/ict-engi-fact-rese-muta/SKILL.md` before action.
+- Concrete loophole found in the Greedy stateful packet:
+  `/tmp/ict-engine-tomac-greedy-stateful-full-ladder-local-analyze-20260529T065416+0800/command-output/02_workflow_status_agent.out`
+  surfaced `closed_loop_branch_admission.promotion_allowed=true`,
+  `trade_usable=true`, `update_goal=true`, and lifecycle practical flags true
+  from execution/readiness surfaces, while
+  `04_policy_training_status_agent.out` reported `live_ready_count=0`,
+  `live_trade_usable_count=0`, `promotion_allowed=false`, and
+  `trade_usable=false`.
+- Scoped Rust repair:
+  `src/application/orchestration/execution_tree.rs` now treats execution-plane
+  readiness as `ready/actionable` evidence only. Without a complete lifecycle
+  tuple it emits `status=fail_closed`, `live_trade_status=blocked`, and
+  practical flags false, with reason
+  `execution_plane_ready_but_lifecycle_tuple_missing` when the execution plane
+  itself is ready.
+- Scoped Rust repair:
+  `src/application/orchestration/workflow_status.rs` now requires the complete
+  tuple `learning_admission_status=admitted`, `paper_admission_status=ready`,
+  `live_trade_status=ready`, `promotion_allowed=true`, `trade_usable=true`, and
+  `update_goal=true` before surfacing a structural branch as admitted/live
+  usable. Stale trace or bundle practical flags without learning/paper planes
+  are normalized to `fail_closed` / `blocked` / false.
+- Tests added or updated around the contract:
+  `execution_tree_ready_live_plane_does_not_promote_without_lifecycle_tuple`,
+  `workflow_factor_profitability_lifecycle_rejects_live_flags_without_learning_and_paper`,
+  and
+  `structural_branch_admission_sanitizes_trace_live_flags_without_lifecycle_planes`.
+- Patched Greedy readback command wrote
+  `/tmp/ict-engine-tomac-greedy-stateful-full-ladder-local-analyze-20260529T065416+0800/command-output/09_workflow_status_after_lifecycle_guard.out`.
+  It now reports `closed_loop_branch_admission.status=fail_closed`,
+  `live_trade_status=blocked`, `promotion_allowed=false`, `trade_usable=false`,
+  and lifecycle practical flags false.
+- Current coordination readback at `2026-05-29T07:37+0800` still blocks any new
+  factor/runtime action: compact claim audit exited `1` with
+  `active_claims=3`, `fresh_active_claims_without_live_process=3`,
+  `live_factor_processes=0`, `promotion_allowed_true=0`, and
+  `trade_usable_true=0`. The active claims are fresh TOD Balanced validation /
+  ranker-continuation owners, not stale-safe takeover candidates.
+- Focused verification after the doc/skill updates passed:
+  `cargo test closed_loop_branch_admission -- --nocapture` (`5/5`),
+  `cargo test same_root -- --nocapture` (`8` matched tests across lib/main),
+  `cargo test factor_profitability_lifecycle -- --nocapture` (`6/6`), and
+  `cargo test live_flags -- --nocapture` (`2/2`). The `same_root` run waited on
+  a concurrent heavy done-definition Cargo owner before completing; it did not
+  fail.
+- Hygiene verification passed for the scoped repo diff:
+  `git diff --check -- src/application/orchestration/execution_tree.rs src/application/orchestration/workflow_status.rs support/docs/plans/2026-05-29-closed-loop-gap-audit-codex.md`.
+  Hermes skill whitespace check passed separately with
+  `git -C /Users/thrill3r/.hermes diff --check -- skills/software-development/ict-engi-fact-rese-muta/SKILL.md`.
+- This repair closes one workflow-status practical-flag leak. It does not prove
+  same-tree practical closure, does not create a practical factor, and does not
+  complete the full objective. Required manual blockers remain
+  `same_tree_practical_closure_packet` and `truthful_completion_commit`, plus
+  live release-readiness constraints.
+
+## 2026-05-29T07:46+0800 Post-Repair Objective Snapshot
+
+- Snapshot command:
+  `python3 support/scripts/objective_closure_snapshot.py --compact --output-dir /tmp/ict-engine-closure-after-lifecycle-guard-20260529T0745`.
+- Snapshot artifact:
+  `/tmp/ict-engine-closure-after-lifecycle-guard-20260529T0745/objective_closure_snapshot.json`.
+- Exit code `1`; status `not_complete`.
+- Factor closure child surface passed in this readback: `active_claims=0`,
+  `live_factor_processes=0`, `promotion_allowed_true=0`, and
+  `trade_usable_true=0`.
+- Remaining blockers are `done_definition_not_completion_ready`,
+  `same_tree_practical_closure_unproven`, `release_readiness_blocked`, and
+  `release_remote_checks_not_run`. Done-definition was partial because this
+  compact snapshot skipped heavy gates; release readiness failed
+  `worktree_clean_for_release` and skipped remote gates.
+- Manual requirements still open:
+  `same_tree_practical_closure_packet` and `truthful_completion_commit`.

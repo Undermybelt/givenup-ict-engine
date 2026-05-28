@@ -1146,7 +1146,9 @@ fn structural_closed_loop_branch_admission_value(candidate: &Value) -> Option<Va
                 .and_then(Value::as_bool)
         })
         .unwrap_or(false);
-    let explicit_live_ready = live_trade_status == "ready"
+    let explicit_live_ready = learning_admission_status == "admitted"
+        && paper_admission_status == "ready"
+        && live_trade_status == "ready"
         && explicit_promotion_allowed
         && explicit_trade_usable
         && explicit_update_goal;
@@ -1201,6 +1203,14 @@ fn structural_closed_loop_branch_admission_value(candidate: &Value) -> Option<Va
 
 fn closed_loop_admission_live_trade_ready(admission: &Value) -> bool {
     admission.get("status").and_then(Value::as_str) == Some("admitted")
+        && admission
+            .get("learning_admission_status")
+            .and_then(Value::as_str)
+            == Some("admitted")
+        && admission
+            .get("paper_admission_status")
+            .and_then(Value::as_str)
+            == Some("ready")
         && admission.get("live_trade_status").and_then(Value::as_str) == Some("ready")
         && admission
             .get("promotion_allowed")
@@ -6951,8 +6961,8 @@ mod tests {
                     "pre_bayes_gate_status": "pass_neutralized",
                     "review_status": "promote_latest",
                     "source_phase": "execution-tree-trace",
-                    "learning_admission_status": "not_evaluated",
-                    "paper_admission_status": "not_evaluated",
+                    "learning_admission_status": "admitted",
+                    "paper_admission_status": "ready",
                     "live_trade_status": "ready",
                     "promotion_allowed": true,
                     "trade_usable": true,
@@ -7032,8 +7042,8 @@ mod tests {
                     "pre_bayes_gate_status": "pass_neutralized",
                     "review_status": "promote_latest",
                     "source_phase": "execution-tree-trace",
-                    "learning_admission_status": "not_evaluated",
-                    "paper_admission_status": "not_evaluated",
+                    "learning_admission_status": "admitted",
+                    "paper_admission_status": "ready",
                     "live_trade_status": "ready",
                     "promotion_allowed": true,
                     "trade_usable": true,
@@ -7119,8 +7129,8 @@ mod tests {
                     "pre_bayes_gate_status": "pass_neutralized",
                     "review_status": "promote_latest",
                     "source_phase": "execution-tree-trace",
-                    "learning_admission_status": "not_evaluated",
-                    "paper_admission_status": "not_evaluated",
+                    "learning_admission_status": "admitted",
+                    "paper_admission_status": "ready",
                     "live_trade_status": "ready",
                     "promotion_allowed": true,
                     "trade_usable": true,
@@ -7222,8 +7232,8 @@ mod tests {
                     "pre_bayes_gate_status": "pass_neutralized",
                     "review_status": "promote_latest",
                     "source_phase": "execution-tree-trace",
-                    "learning_admission_status": "not_evaluated",
-                    "paper_admission_status": "not_evaluated",
+                    "learning_admission_status": "admitted",
+                    "paper_admission_status": "ready",
                     "live_trade_status": "ready",
                     "promotion_allowed": true,
                     "trade_usable": true,
@@ -7311,8 +7321,8 @@ mod tests {
                     "pre_bayes_gate_status": "pass_neutralized",
                     "review_status": "promote_latest",
                     "source_phase": "structural-recommended-path-bundle",
-                    "learning_admission_status": "not_evaluated",
-                    "paper_admission_status": "not_evaluated",
+                    "learning_admission_status": "admitted",
+                    "paper_admission_status": "ready",
                     "live_trade_status": "ready",
                     "promotion_allowed": true,
                     "trade_usable": true,
@@ -7393,8 +7403,8 @@ mod tests {
                     "pre_bayes_gate_status": "pass_neutralized",
                     "review_status": "promote_latest",
                     "source_phase": "structural-recommended-path-bundle",
-                    "learning_admission_status": "not_evaluated",
-                    "paper_admission_status": "not_evaluated",
+                    "learning_admission_status": "admitted",
+                    "paper_admission_status": "ready",
                     "live_trade_status": "ready",
                     "promotion_allowed": true,
                     "trade_usable": true,
@@ -7603,6 +7613,26 @@ mod tests {
     }
 
     #[test]
+    fn workflow_factor_profitability_lifecycle_rejects_live_flags_without_learning_and_paper() {
+        let admission = serde_json::json!({
+            "status": "admitted",
+            "learning_admission_status": "not_evaluated",
+            "paper_admission_status": "not_evaluated",
+            "live_trade_status": "ready",
+            "promotion_allowed": true,
+            "trade_usable": true,
+            "update_goal": true
+        });
+
+        let lifecycle = workflow_factor_profitability_lifecycle_value(Some(&admission));
+
+        assert_eq!(lifecycle["live_trade_status"], "blocked");
+        assert_eq!(lifecycle["promotion_allowed"], false);
+        assert_eq!(lifecycle["trade_usable"], false);
+        assert_eq!(lifecycle["update_goal"], false);
+    }
+
+    #[test]
     fn workflow_factor_profitability_lifecycle_sanitizes_fail_closed_practical_flags() {
         let admission = serde_json::json!({
             "status": "fail_closed",
@@ -7678,6 +7708,44 @@ mod tests {
         assert_eq!(admission["trade_usable"], false);
         assert_eq!(lifecycle["learning_admission_status"], "admitted");
         assert_eq!(lifecycle["paper_admission_status"], "ready");
+        assert_eq!(lifecycle["live_trade_status"], "blocked");
+        assert_eq!(lifecycle["trade_usable"], false);
+    }
+
+    #[test]
+    fn structural_branch_admission_sanitizes_trace_live_flags_without_lifecycle_planes() {
+        let candidate = serde_json::json!({
+            "source_phase": "structural-recommended-path-bundle",
+            "path_id": "TrendExpansion -> SessionDirectionalBias -> NoLookaheadGreedyComposite -> greedy_v1",
+            "path_label": "aggregate_feedback:greedy_v1",
+            "ready": true,
+            "actionable": true,
+            "candidate_status": "execution_ready",
+            "execution_gate_status": "execution_ready",
+            "pre_bayes_gate_status": "pass_neutralized",
+            "review_status": "promote_latest",
+            "execution_tree_closed_loop_branch_admission": {
+                "status": "admitted",
+                "learning_admission_status": "not_evaluated",
+                "paper_admission_status": "not_evaluated",
+                "live_trade_status": "ready",
+                "promotion_allowed": true,
+                "trade_usable": true,
+                "update_goal": true
+            }
+        });
+
+        let admission = structural_closed_loop_branch_admission_value(&candidate).unwrap();
+        let lifecycle = workflow_factor_profitability_lifecycle_value(Some(&admission));
+
+        assert_eq!(admission["status"], "fail_closed");
+        assert_eq!(
+            admission["reason"],
+            "structural_branch_ready_but_live_trade_plane_missing_or_blocked"
+        );
+        assert_eq!(admission["live_trade_status"], "blocked");
+        assert_eq!(admission["promotion_allowed"], false);
+        assert_eq!(admission["trade_usable"], false);
         assert_eq!(lifecycle["live_trade_status"], "blocked");
         assert_eq!(lifecycle["trade_usable"], false);
     }
