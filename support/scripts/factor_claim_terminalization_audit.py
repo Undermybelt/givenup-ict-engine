@@ -127,6 +127,10 @@ def _normalize_scalar(value: object) -> object:
     text = value.strip()
     if len(text) >= 2 and text[0] == text[-1] and text[0] in {'`', '"', "'"}:
         return text[1:-1].strip()
+    if text and text[0] in {'`', '"', "'"}:
+        closing = text.find(text[0], 1)
+        if closing > 0 and not text[closing + 1 :].strip(" .,:;!?"):
+            return text[1:closing].strip()
     return text
 
 
@@ -261,6 +265,54 @@ def _load_summary_flags(run_root: Path | None) -> dict[str, Any]:
     return evidence
 
 
+def _load_workdoc_terminal_flags(write_surface: object, run_root: Path | None, claim_root: Path) -> dict[str, Any]:
+    if run_root is None or not run_root.exists() or not isinstance(write_surface, str) or not write_surface.strip():
+        return {}
+    workdoc_path = Path(write_surface).expanduser()
+    if not workdoc_path.is_absolute():
+        workdoc_path = claim_root / workdoc_path
+    try:
+        resolved_workdoc = workdoc_path.resolve(strict=False)
+        resolved_run_root = run_root.resolve(strict=False)
+    except OSError:
+        return {}
+    if resolved_workdoc != resolved_run_root / "workdoc.md" and resolved_run_root not in resolved_workdoc.parents:
+        return {}
+    if not workdoc_path.exists() or not workdoc_path.is_file():
+        return {}
+    try:
+        text = workdoc_path.read_text(encoding="utf-8", errors="replace")
+    except OSError:
+        return {}
+    parsed_text_fields = parse_claim_text(text)
+    evidence: dict[str, Any] = {"summary_files": [str(workdoc_path.relative_to(run_root))]}
+    for key in ("decision", "terminal_decision", "terminal_status", "terminalized_at", "terminal_at", "status"):
+        value = parsed_text_fields.get(key)
+        if value not in (None, ""):
+            evidence[key] = value
+    for key in ("promotion_allowed", "trade_usable"):
+        value = parsed_text_fields.get(key)
+        if isinstance(value, bool):
+            evidence[key] = value
+    return evidence
+
+
+def _merge_terminal_evidence(*sources: dict[str, Any]) -> dict[str, Any]:
+    merged: dict[str, Any] = {}
+    summary_files: list[str] = []
+    for source in sources:
+        for rel_path in source.get("summary_files", []):
+            if rel_path not in summary_files:
+                summary_files.append(rel_path)
+        for key, value in source.items():
+            if key == "summary_files" or value in (None, ""):
+                continue
+            merged[key] = value
+    if summary_files:
+        merged["summary_files"] = summary_files
+    return merged
+
+
 def _find_key(value: object, target: str) -> object:
     if isinstance(value, dict):
         if target in value:
@@ -283,7 +335,10 @@ def read_claim(path: Path, root: Path) -> dict[str, Any]:
     claim_root = _claim_repo_root(fields, root)
     run_root = _resolved_run_root(fields.get("run_root"), claim_root)
     tmp_root = _resolved_run_root(fields.get("tmp_root"), claim_root)
-    summary_flags = _load_summary_flags(run_root)
+    summary_flags = _merge_terminal_evidence(
+        _load_summary_flags(run_root),
+        _load_workdoc_terminal_flags(fields.get("write_surface"), run_root, claim_root),
+    )
     promotion_allowed = fields.get("promotion_allowed")
     trade_usable = fields.get("trade_usable")
     if promotion_allowed is None:

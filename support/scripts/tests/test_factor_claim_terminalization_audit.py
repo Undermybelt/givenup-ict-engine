@@ -499,6 +499,59 @@ trade_usable=false
                 ["terminalized", "terminalized", "terminalized"],
             )
 
+    def test_build_report_treats_terminal_write_surface_workdoc_as_terminalized(self) -> None:
+        with tempfile.TemporaryDirectory() as repo_tmp, tempfile.TemporaryDirectory() as claims_tmp:
+            repo_root = Path(repo_tmp)
+            claims_dir = Path(claims_tmp)
+            run_root = repo_root / "support" / "docs" / "experiments" / "run-workdoc-terminal"
+            run_root.mkdir(parents=True)
+            workdoc = run_root / "workdoc.md"
+            workdoc.write_text(
+                """
+# Local analyze readback
+
+## Terminal Readback - 2026-05-29T07:01+0800
+
+- Execution tree improved, but this was local-only and observe-only.
+- Decision: `terminalized_stateful_local_analyze_execution_ready_observe_only_not_trade_usable`.
+- promotion_allowed=false
+- trade_usable=false
+- update_goal=false
+""",
+                encoding="utf-8",
+            )
+            (claims_dir / "workdoc-active.claim").write_text(
+                f"""
+agent_name=codex-workdoc-terminal
+owner=codex
+claimed_at=2026-05-29T06:54:16+0800
+last_progress_at=2026-05-29T06:54:16+0800
+scope=Board B local analyze with workdoc terminal readback
+active_task=read local analyze workdoc terminal state
+non_goals=no provider; no aq; no promotion
+write_surface={workdoc}
+run_root={run_root.relative_to(repo_root)}
+status=active
+progress_report=workdoc terminal readback landed
+promotion_allowed=false
+trade_usable=false
+""",
+                encoding="utf-8",
+            )
+
+            report = build_report(claims_dir=claims_dir, repo_root=repo_root)
+
+        self.assertEqual(report["summary"]["active_claims"], 0)
+        self.assertEqual(report["summary"]["terminalized_claims"], 1)
+        self.assertEqual(report["claims"][0]["status"], "terminalized")
+        self.assertEqual(
+            report["claims"][0]["decision"],
+            "terminalized_stateful_local_analyze_execution_ready_observe_only_not_trade_usable",
+        )
+        self.assertEqual(report["claims"][0]["summary_files"], ["workdoc.md"])
+        self.assertIs(report["claims"][0]["promotion_allowed"], False)
+        self.assertIs(report["claims"][0]["trade_usable"], False)
+
     def test_build_report_treats_nested_collision_guard_terminal_summary_as_terminalized(self) -> None:
         with tempfile.TemporaryDirectory() as repo_tmp, tempfile.TemporaryDirectory() as claims_tmp:
             repo_root = Path(repo_tmp)
