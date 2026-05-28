@@ -1064,3 +1064,56 @@ Requirement verdict updates:
   present.
 - Completion commit: still `contradicted_by_current_state` for the overall
   objective; only a narrow verified classifier/tracking commit would be valid.
+
+## 2026-05-28 TOMAC Gate1 Rows Schema Blocker-Report Repair
+
+Latest authoritative packets for this refresh:
+
+- `/tmp/ict-engine-goal-20260528-blocker-report-refresh.json`
+- `/tmp/ict-engine-goal-20260528-blocker-report-refresh.md`
+- `/tmp/ict-engine-tomac-opening-drive-exact-practical-gate-materialization-20260528T092748+0800/exact-downstream-replay-20260528T0934+0800/checks/terminal_metrics.json`
+
+Current command truth:
+
+- focused blocker-report tests passed `16/16`;
+- exact downstream replay had all 15 command exits at `0`;
+- regenerated blocker report preserved Gate 1 survivor
+  `tomac_nq_bidir_opening_drive_t10_w0_e900_x1245_exact_v1` from the TOMAC
+  compact `rows` schema;
+- regenerated blocker report no longer contains the false blocker
+  `no_real_cost_5bps_survivor`;
+- regenerated blocker report still correctly returns `decision=learning_blocked`,
+  `promotion_allowed=false`, and `trade_usable=false` because downstream gates
+  remain red: raw scored mature `1/30`, production validation `0/30`,
+  observation validation `0/30`, execution readiness below `0.65`, transition
+  hazard above `0.60`, and path-ranker score visible but not used.
+
+Loophole found and fixed:
+
+- `support/scripts/research/regime_root_survivor_blocker_report.py` did not count
+  TOMAC compact Gate 1 metrics where the 5bps density survivor lives under the
+  top-level `rows` array with `survives_5bps_density=true` and
+  `cost_5bps_side_pct`.
+- This made the objective audit overstate the upstream problem as missing Gate 1
+  economics even when the real blocker was downstream practical materialization.
+- The parser now accepts the compact `rows` schema, `survives_5bps_density`,
+  `cost_5bps_side_pct`, and `factor_id` labels while preserving fail-closed
+  downstream live-trade requirements.
+
+Verification:
+
+```bash
+python3 -m unittest support.scripts.research.tests.test_regime_root_survivor_blocker_report -v
+python3 support/scripts/research/regime_root_survivor_blocker_report.py --gate1-metrics /private/tmp/ict-engine-tomac-opening-drive-exact-owner-recovery-20260527T165131+0800/checks/terminal_metrics.json --execution-candidate /tmp/ict-engine-tomac-opening-drive-exact-practical-gate-materialization-20260528T092748+0800/exact-downstream-replay-20260528T0934+0800/state/TOMAC_NQ_BIDIR_OPENING_DRIVE_EXACT_DOWNSTREAM_V1/execution_candidate.json --execution-tree /tmp/ict-engine-tomac-opening-drive-exact-practical-gate-materialization-20260528T092748+0800/exact-downstream-replay-20260528T0934+0800/state/TOMAC_NQ_BIDIR_OPENING_DRIVE_EXACT_DOWNSTREAM_V1/execution_tree_trace.json --output-json /tmp/ict-engine-goal-20260528-blocker-report-refresh.json --output-md /tmp/ict-engine-goal-20260528-blocker-report-refresh.md
+git diff --check -- support/scripts/research/regime_root_survivor_blocker_report.py support/scripts/research/tests/test_regime_root_survivor_blocker_report.py support/docs/plans/2026-05-27-objective-requirement-evidence-matrix.md
+```
+
+Requirement verdict updates:
+
+- Gate 1 survivor readback: stronger; TOMAC compact `rows` metrics no longer
+  create a false `no_real_cost_5bps_survivor` blocker.
+- Practical end-to-end profitability factor: still
+  `contradicted_by_current_state`; the fixed report points at the real remaining
+  blockers, but no same-tree practical `trade_usable=true` chain exists.
+- Completion commit: only this blocker-report parser/test/tracking slice is
+  commit-eligible; the overall objective remains unproven.

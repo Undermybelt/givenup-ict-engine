@@ -197,7 +197,7 @@ def cost_survivors_5bps(metrics: dict[str, Any]) -> list[Any]:
         ):
             survivors.extend(listify(value))
     cost_rows: list[dict[str, Any]] = []
-    for key in ("cost_row", "cost_rows", "cost_stress", "cost_stress_rows", "selected_gate1_row"):
+    for key in ("cost_row", "cost_rows", "cost_stress", "cost_stress_rows", "selected_gate1_row", "rows"):
         value = metrics.get(key)
         if isinstance(value, dict):
             cost_rows.append(value)
@@ -212,14 +212,26 @@ def cost_survivors_5bps(metrics: dict[str, Any]) -> list[Any]:
                 cost_row.get("net_after_5bps_per_side_pct"),
                 cost_row.get("5bps_per_side_total_profit_pct"),
                 cost_row.get("five_bps_per_side_pct"),
+                cost_row.get("cost_5bps_side_pct"),
             )
             has_density = int(trade_count) > 0
-            survives_5bps = cost_row.get("survives_5bps_per_side") is True or float(net_5bps) > 0.0
+            survives_5bps = (
+                cost_row.get("survives_5bps_per_side") is True
+                or cost_row.get("survives_5bps_density") is True
+                or float(net_5bps) > 0.0
+            )
         except (TypeError, ValueError):
             has_density = False
             survives_5bps = False
         if has_density and survives_5bps:
-            survivors.append(cost_row.get("label") or cost_row.get("package_id") or cost_row.get("strategy_id") or cost_row.get("symbol") or "cost_row")
+            survivors.append(
+                cost_row.get("label")
+                or cost_row.get("package_id")
+                or cost_row.get("strategy_id")
+                or cost_row.get("factor_id")
+                or cost_row.get("symbol")
+                or "cost_row"
+            )
     return sorted(set(survivors))
 
 
