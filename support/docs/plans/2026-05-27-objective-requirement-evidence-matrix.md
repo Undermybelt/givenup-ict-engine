@@ -1278,3 +1278,57 @@ Requirement verdict updates:
   `contradicted_by_current_state`; there is no current `trade_usable=true` lane.
 - Completion commit: only this snapshot/test/tracking slice is commit-eligible;
   the overall objective remains unproven.
+
+## 2026-05-28 Heavy Parent Snapshot - Done Green, Factor Runtime Reopened
+
+Latest authoritative packet for this refresh:
+
+- `/tmp/ict-engine-goal-20260528-heavy-parent-current/objective_closure_snapshot.json`
+
+Current command truth:
+
+- parent command exited `1` by design for the red packet;
+- parent summary: `status=not_complete`, `completion_proven=false`, blockers
+  `factor_closure_blocked` and `release_readiness_blocked`;
+- done-definition child: `status=pass`, `completion_ready=true`,
+  `evidence_level=full_enabled_gate_coverage`, `skipped_gates=[]`;
+- factor child: `status=needs_attention`, `active_claims=3`,
+  `live_factor_processes=1`, `active_claims_without_live_process=3`,
+  `wait_only_active_claims_without_live_process=1`,
+  `promotion_allowed_true=0`, and `trade_usable_true=0`;
+- live runtime queue head:
+  `ict-engine-tomac-opening-drive-retest-compression-persistence-lift-20260528T100019+0800`
+  with PID `51831`;
+- fresh claim queue heads:
+  `20260528T100019+0800-codex-tomac-opening-drive-retest-compression-persistence-lift.claim`,
+  `20260528T100159+0800-codex-tomac-dense-trend-pullback-reclaim-aq.claim`, and
+  wait-only
+  `20260528T101757+0800-codex-tomac-midday-compression-failed-break-vwap-fade-prep.claim`;
+- release child: `status=needs_fix`, unresolved `worktree_clean_for_release`
+  and `remote_readback` in this coordinated packet.
+
+Verification:
+
+```bash
+python3 support/scripts/done_definition_audit.py --run-all-heavy --compact --output /tmp/ict-engine-goal-20260528-heavy-done-current.json
+python3 support/scripts/objective_closure_snapshot.py --compact --run-all-heavy --check-remotes --output-dir /tmp/ict-engine-goal-20260528-heavy-parent-current --timeout-seconds 1200
+```
+
+Results:
+
+- standalone heavy done-definition passed all `8/8` gates;
+- coordinated parent snapshot also proved done-definition green but caught fresh
+  live factor occupancy that appeared during the heavy run;
+- no current factor lane has `promotion_allowed=true` or `trade_usable=true`.
+
+Requirement verdict updates:
+
+- Done-definition proof coverage: `proven_current` in the coordinated parent
+  packet.
+- Practical end-to-end profitability factor: still
+  `contradicted_by_current_state`; fresh/live claims must be allowed to
+  terminalize or be inspected after ownership clears.
+- Release readiness: still `contradicted_by_current_state` in the coordinated
+  parent packet; separate release audit also showed the tree remains dirty and
+  release/version/origin readiness is not complete.
+- Completion commit: the full objective remains unproven; do not mark complete.
