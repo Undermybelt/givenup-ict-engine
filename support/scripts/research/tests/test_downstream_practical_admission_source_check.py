@@ -240,6 +240,54 @@ def build_metrics(decision):
             ],
         )
 
+    def test_flags_post_dict_practical_subscript_assignment_without_extension_contract(self) -> None:
+        path = self.write_source(
+            """
+def build_metrics(downstream_allowed):
+    metrics = {}
+    metrics["promotion_allowed"] = downstream_allowed
+    metrics["trade_usable"] = downstream_allowed
+    metrics["update_goal"] = downstream_allowed
+    return metrics
+"""
+        )
+
+        report = checker.check_source_file(path)
+
+        self.assertFalse(report["ok"])
+        self.assertEqual(
+            sorted(hit["key"] for hit in report["violations"]),
+            ["promotion_allowed", "trade_usable", "update_goal"],
+        )
+
+    def test_allows_post_dict_practical_subscript_assignment_from_helper(self) -> None:
+        path = self.write_source(
+            """
+def practical_admission_flags(branch_local_admitted, extension_complete=False):
+    practical_allowed = bool(branch_local_admitted and extension_complete)
+    return {
+        "branch_local_admitted": bool(branch_local_admitted),
+        "extension_complete": bool(extension_complete),
+        "promotion_allowed": practical_allowed,
+        "trade_usable": practical_allowed,
+        "update_goal": practical_allowed,
+    }
+
+def build_metrics(pass_exec):
+    practical = practical_admission_flags(pass_exec)
+    metrics = {}
+    metrics["promotion_allowed"] = practical["promotion_allowed"]
+    metrics["trade_usable"] = practical["trade_usable"]
+    metrics["update_goal"] = practical["update_goal"]
+    return metrics
+"""
+        )
+
+        report = checker.check_source_file(path)
+
+        self.assertTrue(report["ok"])
+        self.assertEqual(report["violations"], [])
+
     def test_flags_downstream_admission_from_2bps_survivors(self) -> None:
         path = self.write_source(
             """

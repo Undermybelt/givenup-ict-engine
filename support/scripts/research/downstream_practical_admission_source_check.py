@@ -167,6 +167,30 @@ class PracticalAssignmentVisitor(ast.NodeVisitor):
                             "violation": "five_bps_survival_uses_trade_density_floor",
                         }
                     )
+            if isinstance(target, ast.Subscript) and string_key(target.slice) in PRACTICAL_KEYS:
+                key = string_key(target.slice)
+                if key is None:
+                    continue
+                if self.is_learning_tainted_value(node.value):
+                    self.violations.append(
+                        {
+                            "line": getattr(node.value, "lineno", getattr(node, "lineno", 0)),
+                            "column": getattr(node.value, "col_offset", getattr(node, "col_offset", 0)),
+                            "key": key,
+                            "value": expression_text(self.source, node.value),
+                            "violation": "learning_admission_reused_as_practical_flag",
+                        }
+                    )
+                elif not self.is_safe_practical_value(node.value, key):
+                    self.violations.append(
+                        {
+                            "line": getattr(node.value, "lineno", getattr(node, "lineno", 0)),
+                            "column": getattr(node.value, "col_offset", getattr(node, "col_offset", 0)),
+                            "key": key,
+                            "value": expression_text(self.source, node.value),
+                            "violation": "practical_flag_without_extension_complete_guard",
+                        }
+                    )
         self.generic_visit(node)
 
     def visit_AnnAssign(self, node: ast.AnnAssign) -> Any:
@@ -214,6 +238,32 @@ class PracticalAssignmentVisitor(ast.NodeVisitor):
                     "violation": "five_bps_survival_uses_trade_density_floor",
                 }
             )
+        if (
+            node.value is not None
+            and isinstance(node.target, ast.Subscript)
+            and string_key(node.target.slice) in PRACTICAL_KEYS
+        ):
+            key = string_key(node.target.slice)
+            if key is not None and self.is_learning_tainted_value(node.value):
+                self.violations.append(
+                    {
+                        "line": getattr(node.value, "lineno", getattr(node, "lineno", 0)),
+                        "column": getattr(node.value, "col_offset", getattr(node, "col_offset", 0)),
+                        "key": key,
+                        "value": expression_text(self.source, node.value),
+                        "violation": "learning_admission_reused_as_practical_flag",
+                    }
+                )
+            elif key is not None and not self.is_safe_practical_value(node.value, key):
+                self.violations.append(
+                    {
+                        "line": getattr(node.value, "lineno", getattr(node, "lineno", 0)),
+                        "column": getattr(node.value, "col_offset", getattr(node, "col_offset", 0)),
+                        "key": key,
+                        "value": expression_text(self.source, node.value),
+                        "violation": "practical_flag_without_extension_complete_guard",
+                    }
+                )
         self.generic_visit(node)
 
     def visit_Dict(self, node: ast.Dict) -> Any:
