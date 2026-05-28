@@ -1,8 +1,7 @@
 use serde::{Deserialize, Serialize};
 
 pub const DEFAULT_REGIME_CONFIDENCE_FLOOR: f64 = 0.95;
-pub const LIVE_EXECUTION_READINESS_FLOOR: f64 = 0.65;
-pub const LIVE_TRANSITION_HAZARD_CAP: f64 = 0.60;
+pub const LIVE_EXECUTION_READINESS_FLOOR: f64 = 0.45;
 pub const PAPER_VALIDATION_MIN_ROWS: usize = 30;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
@@ -157,11 +156,6 @@ pub fn decide_profitability_lifecycle(
         Some(readiness) if readiness >= LIVE_EXECUTION_READINESS_FLOOR => {}
         Some(_) => live_blockers.push("execution_readiness_below_live_floor".to_string()),
         None => live_blockers.push("execution_readiness_missing".to_string()),
-    }
-    match input.transition_hazard {
-        Some(hazard) if hazard < LIVE_TRANSITION_HAZARD_CAP => {}
-        Some(_) => live_blockers.push("transition_hazard_above_live_cap".to_string()),
-        None => live_blockers.push("transition_hazard_missing".to_string()),
     }
     match input.execution_gate_status.as_deref().map(str::trim) {
         Some("ready" | "execution_ready" | "pass" | "admissible") => {}
@@ -336,7 +330,7 @@ mod tests {
             leakage_passed: true,
             provider_state: ProviderEvidenceState::Ready,
             execution_readiness: Some(0.80),
-            transition_hazard: Some(0.20),
+            transition_hazard: Some(0.99),
             pda_hybrid_alignment: Some(false),
             pre_bayes_gate_status: Some("pass_hard".to_string()),
             execution_gate_status: Some("ready".to_string()),
@@ -361,6 +355,45 @@ mod tests {
         assert_eq!(value["live"]["trade_usable"], true);
         assert!(value["learning"].get("promotion_allowed").is_none());
         assert!(value["paper"].get("trade_usable").is_none());
+    }
+
+    #[test]
+    fn lifecycle_does_not_use_transition_hazard_as_live_blocker() {
+        let input = ProfitabilityAdmissionInput {
+            regime_confidence: Some(0.98),
+            regime_confidence_floor: 0.95,
+            long_run_expectancy_after_declared_friction: Some(0.012),
+            evidence_count: 35,
+            leakage_passed: true,
+            provider_state: ProviderEvidenceState::Ready,
+            execution_readiness: Some(0.80),
+            transition_hazard: None,
+            pda_hybrid_alignment: Some(true),
+            pre_bayes_gate_status: Some("pass_hard".to_string()),
+            execution_gate_status: Some("ready".to_string()),
+            execution_tree_gate_status: Some("ready".to_string()),
+            execution_tree_branch: Some("fill_viable".to_string()),
+            path_ranker_score_used_by_execution_tree: true,
+            ranker_validation_ready: true,
+            validation_rows: ValidationRows {
+                raw_scored_mature: 35,
+                production: 35,
+                observation: 35,
+            },
+        };
+
+        let decision = decide_profitability_lifecycle(&input);
+
+        assert_eq!(decision.learning.status, AdmissionStatus::Admitted);
+        assert_eq!(decision.paper.status, AdmissionStatus::Ready);
+        assert_eq!(decision.live.status, AdmissionStatus::Ready);
+        assert!(decision.live.promotion_allowed);
+        assert!(decision.live.trade_usable);
+        assert!(!decision
+            .live
+            .blockers
+            .iter()
+            .any(|blocker| blocker.contains("transition_hazard")));
     }
 
     #[test]
@@ -442,5 +475,40 @@ mod tests {
         assert!(!decision.live.promotion_allowed);
         assert!(!decision.live.trade_usable);
         assert!(!decision.live.update_goal);
+    }
+
+    #[test]
+    fn lifecycle_accepts_observe_band_execution_readiness_for_live_plane() {
+        let input = ProfitabilityAdmissionInput {
+            regime_confidence: Some(0.99),
+            regime_confidence_floor: 0.95,
+            long_run_expectancy_after_declared_friction: Some(0.03),
+            evidence_count: 80,
+            leakage_passed: true,
+            provider_state: ProviderEvidenceState::Ready,
+            execution_readiness: Some(0.45),
+            transition_hazard: Some(0.10),
+            pda_hybrid_alignment: Some(true),
+            pre_bayes_gate_status: Some("pass_hard".to_string()),
+            execution_gate_status: Some("ready".to_string()),
+            execution_tree_gate_status: Some("ready".to_string()),
+            execution_tree_branch: Some("fill_viable".to_string()),
+            path_ranker_score_used_by_execution_tree: true,
+            ranker_validation_ready: true,
+            validation_rows: ValidationRows {
+                raw_scored_mature: 80,
+                production: 80,
+                observation: 80,
+            },
+        };
+
+        let decision = decide_profitability_lifecycle(&input);
+
+        assert_eq!(decision.learning.status, AdmissionStatus::Admitted);
+        assert_eq!(decision.paper.status, AdmissionStatus::Ready);
+        assert_eq!(decision.live.status, AdmissionStatus::Ready);
+        assert!(decision.live.promotion_allowed);
+        assert!(decision.live.trade_usable);
+        assert!(decision.live.update_goal);
     }
 }
