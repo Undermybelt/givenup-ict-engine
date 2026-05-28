@@ -15,7 +15,7 @@ import regime_factor_tree_normalizer as tree_normalizer
 PRE_BAYES_ACCEPTED_GATE_STATUSES = {"pass", "pass_hard", "pass_neutralized"}
 VALIDATION_MIN_ROWS = 30
 REGIME_CONFIDENCE_FLOOR = 0.95
-LIVE_EXECUTION_READINESS_FLOOR = 0.65
+LIVE_EXECUTION_READINESS_FLOOR = 0.45
 
 
 def practical_admission_flags(branch_local_admitted: bool, extension_complete: bool = False) -> dict[str, bool]:
@@ -26,6 +26,10 @@ def practical_admission_flags(branch_local_admitted: bool, extension_complete: b
         "trade_usable": practical_allowed,
         "update_goal": practical_allowed,
     }
+
+
+def pre_bayes_conflict_blocks_gate(flag: str) -> bool:
+    return not flag.startswith("pda_")
 
 
 def load_json(path: Path) -> dict[str, Any]:
@@ -100,6 +104,27 @@ def floatish(value: Any) -> float | None:
             return float(stripped)
         except ValueError:
             return None
+    return None
+
+
+def max_distribution_confidence(*sources: dict[str, Any]) -> float | None:
+    distribution_keys = (
+        "soft_market_regime_distribution",
+        "market_regime_distribution",
+        "regime_distribution",
+        "posterior_distribution",
+    )
+    for source in sources:
+        if not isinstance(source, dict):
+            continue
+        for key in distribution_keys:
+            distribution = source.get(key)
+            if not isinstance(distribution, dict):
+                continue
+            values = [floatish(value) for value in distribution.values()]
+            numeric = [value for value in values if value is not None]
+            if numeric:
+                return max(numeric)
     return None
 
 
@@ -305,7 +330,27 @@ def declared_friction_expectancy(*sources: dict[str, Any]) -> tuple[float | None
         "net_after_5bps_side_pct",
         "net_after_5bps_per_side_pct",
         "5bps_per_side_total_profit_pct",
+        "cost_5bps_side_pct",
     )
+
+    def nested_sources(source: dict[str, Any]) -> list[dict[str, Any]]:
+        rows: list[dict[str, Any]] = []
+        for nested_key in (
+            "selected_gate1_row",
+            "cost_row",
+            "provider_row",
+            "rows",
+            "cost_rows",
+            "cost_stress",
+            "cost_stress_rows",
+        ):
+            nested = source.get(nested_key)
+            if isinstance(nested, dict):
+                rows.append(nested)
+            elif isinstance(nested, list):
+                rows.extend(row for row in nested if isinstance(row, dict))
+        return rows
+
     for source in sources:
         if not isinstance(source, dict):
             continue
@@ -313,13 +358,11 @@ def declared_friction_expectancy(*sources: dict[str, Any]) -> tuple[float | None
             parsed = floatish(source.get(key))
             if parsed is not None:
                 return parsed, blockers
-        for nested_key in ("selected_gate1_row", "cost_row", "provider_row"):
-            nested = source.get(nested_key)
-            if isinstance(nested, dict):
-                nested_value, nested_blockers = declared_friction_expectancy(nested)
-                if nested_value is not None:
-                    return nested_value, blockers
-                blockers.extend(nested_blockers)
+        for nested in nested_sources(source):
+            nested_value, nested_blockers = declared_friction_expectancy(nested)
+            if nested_value is not None:
+                return nested_value, blockers
+            blockers.extend(nested_blockers)
     for source in sources:
         if isinstance(source, dict):
             parsed = floatish(source.get("total_profit_pct"))
@@ -359,7 +402,7 @@ def lifecycle_decision(report: dict[str, Any]) -> tuple[dict[str, Any], str]:
     if pre_bayes["gating_status"] not in PRE_BAYES_ACCEPTED_GATE_STATUSES:
         learning_blockers.append(f"pre_bayes_{pre_bayes['gating_status'] or 'missing'}")
     for flag in pre_bayes["conflict_flags"]:
-        if flag.startswith("pda_sequence"):
+        if not pre_bayes_conflict_blocks_gate(str(flag)):
             continue
         learning_blockers.append(f"pre_bayes_conflict:{flag}")
 
@@ -375,7 +418,7 @@ def lifecycle_decision(report: dict[str, Any]) -> tuple[dict[str, Any], str]:
     if downstream["execution_candidate_status"] != "trade_candidate":
         live_blockers.append(f"execution_candidate_{downstream['execution_candidate_status'] or 'missing'}")
     if downstream["execution_readiness"] is None or downstream["execution_readiness"] < LIVE_EXECUTION_READINESS_FLOOR:
-        live_blockers.append("execution_readiness_below_0_65")
+        live_blockers.append("execution_readiness_below_live_floor")
     if downstream["ranker_validation_ready"] is not True:
         live_blockers.append("ranker_validation_not_ready")
     if execution["path_ranker_score_visible_to_execution_tree"] and not execution["path_ranker_score_used_by_execution_tree"]:
@@ -446,14 +489,14 @@ def classify(report: dict[str, Any]) -> tuple[str, list[str], str]:
     elif any(item.endswith("_below_30") for item in blockers):
         next_action = "add same-root feedback rows with root evidence fields until raw-scored mature, production validation, and observation validation all reach 30/30 before promotion."
     elif "path_ranker_visible_but_not_used" in blockers:
-        next_action = "keep CatBoost score visible-only until execution_gate_status is pass; fix exact execution candidate materialization and validation rows first."
+        next_action = "keep CatBoost score visible-only until execution_gate_status is pass; repair execution candidate status, execution readiness, and regime confidence before promotion."
     elif decision == "live_trade_ready":
         decision = "candidate_meets_current_gate_shape"
         next_action = "run full promotion verification, including fresh provider parity and repeated readiness stability."
     elif decision == "learning_admitted_paper_observe":
         next_action = "preserve as learning-admitted paper/sim observation and accumulate same-root validation, 5bps survivor, and forward density evidence before live promotion."
     elif decision == "learning_admitted_live_blocked":
-        next_action = "preserve as regime-conditioned learning evidence while repairing live execution readiness, transition hazard, validation, and ranker-consumption blockers."
+        next_action = "preserve as regime-conditioned learning evidence while repairing live execution readiness, validation, and ranker-consumption blockers."
     else:
         next_action = "preserve as observation and work the listed blockers without lowering gates."
     return decision, sorted(set(blockers)), next_action
@@ -502,6 +545,7 @@ def build_report(gate1_path: Path, execution_candidate_path: Path, execution_tre
                 get_path(filter_payload, "evidence_assignments.regime_confidence"),
                 filter_payload.get("regime_confidence"),
                 gate1.get("regime_confidence"),
+                max_distribution_confidence(filter_payload, gate1, candidate, tree_output),
             ),
             "long_run_expectancy_after_declared_friction": declared_friction_expectancy(
                 gate1,

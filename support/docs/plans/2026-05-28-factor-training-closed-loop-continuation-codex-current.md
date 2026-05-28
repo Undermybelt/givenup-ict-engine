@@ -219,6 +219,29 @@ post-training gates. This is not a completion claim.
   passed `71/71 OK`. Post-fix compact audit correctly reports the active Chandelier
   owner: `active_claims=1`, `live_factor_processes=3`, `live_runtime_owner=true`,
   `promotion_allowed_true=0`, `trade_usable_true=0`.
+- 2026-05-29T02:32+0800 continuation readback found no current factor occupancy:
+  `python3 support/scripts/factor_claim_terminalization_audit.py --compact --portable-paths`
+  reported `status=pass`, `active_claims=0`, `live_factor_processes=0`,
+  `promotion_allowed_true=0`, and `trade_usable_true=0`; focused `ps` found no
+  TOMAC/AQ/provider/IBKR processes. This clears the no-launch collision window but
+  does not prove practical closure.
+- 2026-05-29T02:33+0800 blocker-report parity repair verified that Python now
+  mirrors the Rust Pre-Bayes conflict contract for PDA telemetry: regenerated
+  `/tmp/ict-engine-regime-root-blocker-report-pda-verify-20260529/report.json`
+  from the OpeningDrive materialization inputs removed
+  `pre_bayes_conflict:pda_regime_family_disagreement` from blockers while keeping
+  `execution_candidate_execution_observe_only`, `execution_readiness_below_live_floor`,
+  and `regime_confidence_below_floor`. The report still has
+  `promotion_allowed=false` and `trade_usable=false`.
+- Fresh verification for the blocker-report slice passed:
+  `python3 -m unittest support.scripts.research.tests.test_regime_root_survivor_blocker_report -v`
+  ran `18/18 OK`,
+  `python3 -m unittest support.scripts.tests.test_objective_closure_snapshot -v`
+  ran `25/25 OK`,
+  `python3 -m unittest support.scripts.tests.test_done_definition_audit -v`
+  ran `23/23 OK`, and
+  `git diff --check -- support/scripts/research/regime_root_survivor_blocker_report.py support/scripts/research/tests/test_regime_root_survivor_blocker_report.py support/docs/plans/2026-05-28-factor-training-closed-loop-continuation-codex-current.md`
+  returned clean.
 
 ## Current Blockers
 

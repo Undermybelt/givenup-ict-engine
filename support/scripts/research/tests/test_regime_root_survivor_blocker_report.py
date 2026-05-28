@@ -657,6 +657,78 @@ class RegimeRootSurvivorBlockerReportTests(unittest.TestCase):
         self.assertEqual(built["decision"], "learning_admitted_paper_observe")
         self.assertIn("same-root feedback", built["next_action"])
 
+    def test_tomac_rows_supply_declared_friction_and_soft_regime_confidence(self) -> None:
+        metrics = {
+            "branch_path": (
+                "TrendExpansion -> OpeningDrive -> BidirectionalIntradayTrendContinuation -> "
+                "tomac_nq_bidir_opening_drive_t10_w0_e900_x1245_exact_v1"
+            ),
+            "decision": "exact_aq_5bps_density_survivor",
+            "rows": [
+                {
+                    "factor_id": "tomac_nq_bidir_opening_drive_t10_w0_e900_x1245_exact_v1",
+                    "branch_path": (
+                        "TrendExpansion -> OpeningDrive -> BidirectionalIntradayTrendContinuation -> "
+                        "tomac_nq_bidir_opening_drive_t10_w0_e900_x1245_exact_v1"
+                    ),
+                    "trade_count": 985,
+                    "cost_5bps_side_pct": 571.46,
+                    "survives_5bps_density": True,
+                }
+            ],
+        }
+        candidate = {
+            "candidate_status": "execution_observe_only",
+            "actionable": False,
+            "pre_bayes_evidence_filter": {
+                "gating_status": "pass_neutralized",
+                "conflict_flags": [],
+                "soft_market_regime_distribution": {
+                    "bull": 0.6222829194229538,
+                    "range": 0.3777170805770462,
+                    "bear": 0.0,
+                },
+                "evidence_assignments": {
+                    "regime_profit_branch_path": metrics["branch_path"],
+                },
+            },
+        }
+        tree = {
+            "output": {
+                "execution_readiness": 0.4575,
+                "hybrid_transition_hazard": 0.4264,
+                "ranker_validation_ready": True,
+                "path_ranker_score_visible_to_execution_tree": True,
+                "path_ranker_score_used_by_execution_tree": False,
+                "split_reason_lineage": [
+                    "path_ranker=Ranker validation: raw_scored_mature=1226/30 production_validation=1226/30 observation_validation=33/30 ready=true"
+                ],
+            }
+        }
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            root = Path(tmpdir)
+            gate1_path = root / "gate1.json"
+            candidate_path = root / "candidate.json"
+            tree_path = root / "tree.json"
+            gate1_path.write_text(__import__("json").dumps(metrics), encoding="utf-8")
+            candidate_path.write_text(__import__("json").dumps(candidate), encoding="utf-8")
+            tree_path.write_text(__import__("json").dumps(tree), encoding="utf-8")
+
+            built = report.build_report(gate1_path, candidate_path, tree_path)
+
+        self.assertEqual(
+            built["gate1"]["exact_5bps_survivors"],
+            ["tomac_nq_bidir_opening_drive_t10_w0_e900_x1245_exact_v1"],
+        )
+        self.assertEqual(built["pre_bayes"]["long_run_expectancy_after_declared_friction"], 571.46)
+        self.assertEqual(built["pre_bayes"]["regime_confidence"], 0.6222829194229538)
+        self.assertNotIn("declared_friction_expectancy_missing", built["blockers"])
+        self.assertIn("regime_confidence_below_floor", built["blockers"])
+        self.assertNotIn("regime_confidence_missing", built["blockers"])
+        self.assertIn("execution readiness", built["next_action"])
+        self.assertNotIn("validation rows", built["next_action"])
+
     def test_pda_false_is_telemetry_not_basic_gate_blocker(self) -> None:
         metrics = {
             "branch_fields_preserved": True,
@@ -722,6 +794,63 @@ class RegimeRootSurvivorBlockerReportTests(unittest.TestCase):
         self.assertFalse(lifecycle["live_trade"]["promotion_allowed"])
         self.assertFalse(built["promotion_allowed"])
         self.assertFalse(built["trade_usable"])
+
+    def test_pda_regime_family_disagreement_is_telemetry_not_learning_blocker(self) -> None:
+        metrics = {
+            "branch_fields_preserved": True,
+            "branch_path": (
+                "TrendExpansion -> OpeningDrive -> BidirectionalIntradayTrendContinuation -> "
+                "tomac_nq_bidir_opening_drive_t10_w0_e900_x1245_exact_v1"
+            ),
+            "selected_gate1_row": {
+                "label": "opening-drive/exact-parent",
+                "trade_count": 1226,
+                "net_after_declared_friction_pct": 571.46,
+                "survives_5bps_per_side": True,
+            },
+            "regime_confidence": 0.96,
+            "raw_scored_mature_rows": 1226,
+            "production_validation_rows": 1226,
+            "observation_validation_rows": 33,
+        }
+        candidate = {
+            "candidate_status": "trade_candidate",
+            "actionable": True,
+            "pre_bayes_evidence_filter": {
+                "gating_status": "pass_neutralized",
+                "conflict_flags": ["pda_regime_family_disagreement"],
+                "evidence_assignments": {
+                    "regime_profit_branch_path": metrics["branch_path"],
+                },
+            },
+        }
+        tree = {
+            "output": {
+                "execution_readiness": 0.72,
+                "hybrid_transition_hazard": 0.39,
+                "pda_hybrid_alignment": False,
+                "ranker_validation_ready": True,
+                "path_ranker_score_visible_to_execution_tree": True,
+                "path_ranker_score_used_by_execution_tree": True,
+            }
+        }
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            root = Path(tmpdir)
+            gate1_path = root / "gate1.json"
+            candidate_path = root / "candidate.json"
+            tree_path = root / "tree.json"
+            gate1_path.write_text(__import__("json").dumps(metrics), encoding="utf-8")
+            candidate_path.write_text(__import__("json").dumps(candidate), encoding="utf-8")
+            tree_path.write_text(__import__("json").dumps(tree), encoding="utf-8")
+
+            built = report.build_report(gate1_path, candidate_path, tree_path)
+
+        self.assertNotIn(
+            "pre_bayes_conflict:pda_regime_family_disagreement",
+            built["blockers"],
+        )
+        self.assertEqual(built["factor_profitability_lifecycle"]["learning_admission"]["status"], "admitted")
 
     def test_regime_positive_sparse_candidate_is_learning_admitted_not_dropped(self) -> None:
         metrics = {
@@ -849,6 +978,7 @@ class RegimeRootSurvivorBlockerReportTests(unittest.TestCase):
         self.assertNotIn("raw_scored_mature_below_30", built["blockers"])
         self.assertNotIn("production_validation_below_30", built["blockers"])
         self.assertNotIn("observation_validation_below_30", built["blockers"])
+        self.assertNotIn("execution_readiness_below_live_floor", built["blockers"])
         self.assertEqual(built["decision"], "learning_admitted_live_blocked")
 
 
