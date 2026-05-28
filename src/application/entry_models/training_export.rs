@@ -156,10 +156,36 @@ struct StructuralPathRankingStatusRow {
 const REGIME_CONDITIONED_LEARNING_SUCCESS: &str = "regime_conditioned_learning_success";
 const LEARNING_ADMITTED_LIVE_BLOCKED_STATUS: &str = "learning_admitted_live_blocked";
 
+fn lifecycle_learning_admitted_status(status: Option<&str>) -> bool {
+    matches!(
+        status,
+        Some(
+            "observe"
+                | "pass"
+                | "ready"
+                | "execution_ready"
+                | "admissible"
+                | "paper_ready"
+                | "paper_admitted"
+                | "live_trade_ready"
+                | "live_trade_usable"
+        )
+    )
+}
+
 fn lifecycle_paper_ready_status(status: Option<&str>) -> bool {
     matches!(
         status,
-        Some("paper_ready" | "paper_admitted" | "live_trade_ready" | "live_trade_usable")
+        Some(
+            "pass"
+                | "ready"
+                | "execution_ready"
+                | "admissible"
+                | "paper_ready"
+                | "paper_admitted"
+                | "live_trade_ready"
+                | "live_trade_usable"
+        )
     )
 }
 
@@ -175,6 +201,11 @@ fn lifecycle_ready_row_has_mature_training_evidence(row: &StructuralPathRankingT
 
 fn lifecycle_paper_ready_row(row: &StructuralPathRankingTargetRow) -> bool {
     lifecycle_paper_ready_status(row.execution_gate_status.as_deref())
+        && lifecycle_ready_row_has_mature_training_evidence(row)
+}
+
+fn lifecycle_learning_admitted_row(row: &StructuralPathRankingTargetRow) -> bool {
+    lifecycle_learning_admitted_status(row.execution_gate_status.as_deref())
         && lifecycle_ready_row_has_mature_training_evidence(row)
 }
 
@@ -198,6 +229,7 @@ fn factor_profitability_lifecycle_status_from_target_rows(
             row.pending_reward_state == REGIME_CONDITIONED_LEARNING_SUCCESS
                 || row.execution_gate_status.as_deref()
                     == Some(LEARNING_ADMITTED_LIVE_BLOCKED_STATUS)
+                || lifecycle_learning_admitted_row(row)
         })
         .count();
     let learning_admitted_count = learning_from_summary.max(learning_from_rows);
@@ -5679,9 +5711,9 @@ detector_context:
             status
                 .factor_profitability_lifecycle
                 .learning_admitted_count,
-            0
+            1
         );
-        assert_eq!(status.factor_profitability_lifecycle.paper_ready_count, 0);
+        assert_eq!(status.factor_profitability_lifecycle.paper_ready_count, 1);
         assert_eq!(status.factor_profitability_lifecycle.live_ready_count, 0);
         assert_eq!(
             status
@@ -5692,8 +5724,93 @@ detector_context:
         assert!(!status.factor_profitability_lifecycle.promotion_allowed);
         assert!(!status.factor_profitability_lifecycle.trade_usable);
         assert!(status.summary_line.contains(
-            "factor_lifecycle: learning_admitted=0 paper_ready=0 live_ready=0 trade_usable=false"
+            "factor_lifecycle: learning_admitted=1 paper_ready=1 live_ready=0 trade_usable=false"
         ));
+    }
+
+    #[test]
+    fn policy_training_status_counts_observe_rows_for_learning_not_paper_ready() {
+        let temp = tempfile::tempdir().unwrap();
+        let symbol = "FACTOR_CANDIDATES";
+        let summary_dir = temp.path().join(symbol).join(POLICY_TRAINING_DIR);
+        std::fs::create_dir_all(&summary_dir).unwrap();
+        let mut pending_reward_states = BTreeMap::new();
+        pending_reward_states.insert("matured_failure".to_string(), 1);
+        let summary = StructuralPathRankingTargetExportSummary {
+            symbol: symbol.to_string(),
+            rows: 1,
+            candidate_set_id: "structural-candidates:FACTOR_CANDIDATES:observe-only".to_string(),
+            candidate_set_size: 1,
+            pending_reward_states,
+            mature_rows: 1,
+            rows_with_raw_path_score: 1,
+            rows_with_execution_gate_status: 1,
+            rows_with_training_weight: 1,
+            csv_path: summary_dir
+                .join("structural_path_ranking_target.csv")
+                .to_string_lossy()
+                .to_string(),
+            jsonl_path: summary_dir
+                .join("structural_path_ranking_target.jsonl")
+                .to_string_lossy()
+                .to_string(),
+            summary_path: summary_dir
+                .join(STRUCTURAL_PATH_RANKING_TARGET_SUMMARY_FILE)
+                .to_string_lossy()
+                .to_string(),
+            summary_line: "structural_path_ranking_target rows=1 mature_rows=1".to_string(),
+            ..StructuralPathRankingTargetExportSummary::default()
+        };
+        std::fs::write(
+            summary_dir.join(STRUCTURAL_PATH_RANKING_TARGET_SUMMARY_FILE),
+            serde_json::to_string_pretty(&summary).unwrap(),
+        )
+        .unwrap();
+        std::fs::write(
+            summary_dir.join("structural_path_ranking_target.jsonl"),
+            serde_json::to_string(&StructuralPathRankingTargetRow {
+                rank: 1,
+                candidate_set_id: summary.candidate_set_id.clone(),
+                candidate_set_size: 1,
+                path_id: "TrendExpansion -> IntradayMomentum -> observe_only_v1".to_string(),
+                scenario_id: "scenario:observe-only".to_string(),
+                path_label: "observe_only_v1".to_string(),
+                regime_profit_branch_path: Some(
+                    "TrendExpansion -> IntradayMomentum -> observe_only_v1".to_string(),
+                ),
+                direction: "Long".to_string(),
+                raw_path_score: Some(0.58),
+                execution_gate_status: Some("observe".to_string()),
+                pending_reward_state: "matured_failure".to_string(),
+                maturity_mask: true,
+                maturity_weight: 1.0,
+                calibrated_label: Some(0.0),
+                propensity_estimate: Some(0.5),
+                ips_weight: Some(2.0),
+                training_weight: Some(1.5),
+                regime_calibration_bucket: "TrendExpansion".to_string(),
+                behavior_policy_probability: 0.5,
+                experience_prior: 0.02,
+                current_posterior: 0.58,
+                structural_baseline_score: 0.4,
+                ..StructuralPathRankingTargetRow::default()
+            })
+            .unwrap(),
+        )
+        .unwrap();
+
+        let status = policy_training_status(temp.path().to_str().unwrap(), symbol, None).unwrap();
+
+        assert_eq!(
+            status
+                .factor_profitability_lifecycle
+                .learning_admitted_count,
+            1
+        );
+        assert_eq!(status.factor_profitability_lifecycle.paper_ready_count, 0);
+        assert_eq!(status.factor_profitability_lifecycle.live_ready_count, 0);
+        assert!(!status.factor_profitability_lifecycle.promotion_allowed);
+        assert!(!status.factor_profitability_lifecycle.trade_usable);
     }
 
     #[test]

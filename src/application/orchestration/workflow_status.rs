@@ -981,6 +981,56 @@ fn execution_candidate_value_from_same_root_execution_tree_trace(
     Some(candidate)
 }
 
+fn structural_execution_gate_learning_admitted(status: &str) -> bool {
+    matches!(
+        status.trim(),
+        "observe" | "pass" | "ready" | "execution_ready" | "admissible"
+    )
+}
+
+fn structural_execution_gate_paper_ready(status: &str) -> bool {
+    matches!(
+        status.trim(),
+        "pass" | "ready" | "execution_ready" | "admissible"
+    )
+}
+
+fn structural_candidate_ranker_feedback_ready(candidate: &Value) -> bool {
+    let runtime_status_ready = candidate
+        .pointer("/structural_recommended_path_bundle/path_ranker_runtime/status")
+        .and_then(Value::as_str)
+        .map(|status| {
+            matches!(
+                status,
+                "using_candidate_set_scores"
+                    | "using_history_scores"
+                    | "using_registered_artifact_scores"
+                    | "using_registered_model_scores"
+                    | "using_registered_service_scores"
+            )
+        })
+        .unwrap_or(false);
+    let runtime_enabled = candidate
+        .pointer("/structural_recommended_path_bundle/path_ranker_runtime/enabled")
+        .and_then(Value::as_bool)
+        .unwrap_or(false);
+    let score_present = candidate
+        .get("path_ranker_raw_score")
+        .and_then(Value::as_f64)
+        .is_some()
+        || candidate
+            .pointer("/structural_recommended_path_bundle/path_ranker_raw_score")
+            .and_then(Value::as_f64)
+            .is_some();
+    let feedback_confirmation_ready = candidate
+        .pointer("/structural_recommended_path_bundle/confirmation_summary")
+        .and_then(Value::as_str)
+        .map(|summary| summary.contains("pending_reward_state=matured_"))
+        .unwrap_or(false);
+
+    runtime_enabled && runtime_status_ready && score_present && feedback_confirmation_ready
+}
+
 fn structural_closed_loop_branch_admission_value(candidate: &Value) -> Option<Value> {
     let path_id = candidate.get("path_id").and_then(Value::as_str)?;
     let source_phase = candidate.get("source_phase").and_then(Value::as_str)?;
@@ -1005,6 +1055,41 @@ fn structural_closed_loop_branch_admission_value(candidate: &Value) -> Option<Va
         .get("review_status")
         .and_then(Value::as_str)
         .unwrap_or_default();
+    let explicit_learning_admission_status = candidate
+        .get("learning_admission_status")
+        .and_then(Value::as_str)
+        .or_else(|| {
+            candidate
+                .pointer("/execution_tree_closed_loop_branch_admission/learning_admission_status")
+                .and_then(Value::as_str)
+        });
+    let explicit_paper_admission_status = candidate
+        .get("paper_admission_status")
+        .and_then(Value::as_str)
+        .or_else(|| {
+            candidate
+                .pointer("/execution_tree_closed_loop_branch_admission/paper_admission_status")
+                .and_then(Value::as_str)
+        });
+    let ranker_feedback_ready = structural_candidate_ranker_feedback_ready(candidate);
+    let derived_learning_admission_status =
+        if structural_execution_gate_learning_admitted(execution_gate_status)
+            && ranker_feedback_ready
+        {
+            "admitted"
+        } else {
+            "not_evaluated"
+        };
+    let derived_paper_admission_status =
+        if structural_execution_gate_paper_ready(execution_gate_status) && ranker_feedback_ready {
+            "ready"
+        } else {
+            "not_evaluated"
+        };
+    let learning_admission_status =
+        explicit_learning_admission_status.unwrap_or(derived_learning_admission_status);
+    let paper_admission_status =
+        explicit_paper_admission_status.unwrap_or(derived_paper_admission_status);
     let explicit_live_trade_status = candidate
         .get("live_trade_status")
         .and_then(Value::as_str)
@@ -1102,8 +1187,8 @@ fn structural_closed_loop_branch_admission_value(candidate: &Value) -> Option<Va
         "pre_bayes_gate_status": pre_bayes_gate_status,
         "execution_gate_status": execution_gate_status,
         "review_status": review_status,
-        "learning_admission_status": "not_evaluated",
-        "paper_admission_status": "not_evaluated",
+        "learning_admission_status": learning_admission_status,
+        "paper_admission_status": paper_admission_status,
         "live_trade_status": normalized_live_trade_status,
         "promotion_allowed": normalized_practical_flags,
         "trade_usable": normalized_practical_flags,
@@ -7535,6 +7620,66 @@ mod tests {
         assert_eq!(lifecycle["promotion_allowed"], false);
         assert_eq!(lifecycle["trade_usable"], false);
         assert_eq!(lifecycle["update_goal"], false);
+    }
+
+    #[test]
+    fn workflow_factor_profitability_lifecycle_preserves_training_planes_without_live_plane() {
+        let admission = serde_json::json!({
+            "status": "fail_closed",
+            "learning_admission_status": "admitted",
+            "paper_admission_status": "ready",
+            "live_trade_status": "blocked",
+            "promotion_allowed": false,
+            "trade_usable": false,
+            "update_goal": false
+        });
+
+        let lifecycle = workflow_factor_profitability_lifecycle_value(Some(&admission));
+
+        assert_eq!(lifecycle["learning_admission_status"], "admitted");
+        assert_eq!(lifecycle["paper_admission_status"], "ready");
+        assert_eq!(lifecycle["live_trade_status"], "blocked");
+        assert_eq!(lifecycle["promotion_allowed"], false);
+        assert_eq!(lifecycle["trade_usable"], false);
+        assert_eq!(lifecycle["update_goal"], false);
+    }
+
+    #[test]
+    fn structural_branch_admission_derives_training_planes_from_ranker_feedback_without_live_plane()
+    {
+        let candidate = serde_json::json!({
+            "source_phase": "structural-recommended-path-bundle",
+            "path_id": "TrendExpansion -> SessionDirectionalBias -> NoLookaheadGreedyComposite -> greedy_v1",
+            "path_label": "aggregate_feedback:greedy_v1",
+            "ready": false,
+            "actionable": false,
+            "candidate_status": "pass",
+            "execution_gate_status": "pass",
+            "pre_bayes_gate_status": "observe_only",
+            "review_status": "observe",
+            "path_ranker_raw_score": 0.8498279112898877,
+            "structural_recommended_path_bundle": {
+                "confirmation_summary": "pending_reward_state=matured_success execution_gate_status=pass",
+                "path_ranker_runtime": {
+                    "enabled": true,
+                    "status": "using_candidate_set_scores"
+                }
+            }
+        });
+
+        let admission = structural_closed_loop_branch_admission_value(&candidate).unwrap();
+        let lifecycle = workflow_factor_profitability_lifecycle_value(Some(&admission));
+
+        assert_eq!(admission["status"], "fail_closed");
+        assert_eq!(admission["learning_admission_status"], "admitted");
+        assert_eq!(admission["paper_admission_status"], "ready");
+        assert_eq!(admission["live_trade_status"], "blocked");
+        assert_eq!(admission["promotion_allowed"], false);
+        assert_eq!(admission["trade_usable"], false);
+        assert_eq!(lifecycle["learning_admission_status"], "admitted");
+        assert_eq!(lifecycle["paper_admission_status"], "ready");
+        assert_eq!(lifecycle["live_trade_status"], "blocked");
+        assert_eq!(lifecycle["trade_usable"], false);
     }
 
     #[test]
