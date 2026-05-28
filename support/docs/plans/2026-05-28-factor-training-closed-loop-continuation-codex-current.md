@@ -267,10 +267,251 @@ post-training gates. This is not a completion claim.
   for the feedback ingest and
   `ict-engine-tomac-ict-wpr-fractal-reclaim-gate1-launch-20260529T024603+0800`
   for the active WPR Gate 1 scan. This is a no-launch/no-completion state.
+- 2026-05-29T03:03+0800 TOMAC TOD Balanced validation materialization
+  terminalized fail-closed under
+  `/tmp/ict-engine-tomac-tod-balanced-validation-materialization-20260529T023440+0800/`.
+  Converted feedback ingest completed with `04_ingest_converted_apply.exit=0`,
+  `trades_total=1633`, `trades_applied=1633`, `trades_invalid=0`,
+  `feedback_records_inserted=1633`, and `ledger_status=applied`. Same-root
+  readback improved learning/observation evidence but not practical readiness:
+  `learning_admitted=2`, `paper_ready=0`, `live_ready=0`,
+  `live_trade_usable=0`, `raw_scored_mature=3/30`,
+  `production_validation=3/30`, `observation_validation=1633/30`, execution
+  remained `execution_observe_only`, and the path-ranker score stayed visible
+  but not used by the execution tree. Keep `promotion_allowed=false`,
+  `trade_usable=false`, and `update_goal=false`.
+- 2026-05-29T03:02+0800 IctWprFractalReclaim Gate 1 terminalized fail-closed
+  under
+  `/tmp/ict-engine-tomac-ict-wpr-fractal-reclaim-gate1-launch-20260529T024603+0800/`.
+  `scan.exit=0`; `scan_results.json` has `720` retained-local candidates
+  across `ES/EUR/NQ/YM/XAU`, `0` hard `5bps` survivors, and all rows
+  `reject_5bps_economics`. Best visible row was XAU
+  `ict_wpr_fractal_reclaim_s1_a3_rv0.8_wpr80_ms5_st0.8_tg1.2_h30` with
+  `704` 5bps trades, `1.7087378640776698` trades/session,
+  `net_ret_5bps=-0.7031188903775669`, `profit_factor_5bps=0.010268350735357918`,
+  and `win_rate_5bps=0.036931818181818184`. No provider/AQ/IBKR/downstream,
+  paper/sim, promotion, or live-use gate was run.
+- 2026-05-29T03:07+0800 compact claim audit is clear again:
+  `status=pass`, `active_claims=0`, `live_factor_processes=0`,
+  `promotion_allowed_true=0`, and `trade_usable_true=0`. The proof-aware
+  objective snapshot at
+  `/tmp/ict-engine-closed-loop-snapshot-20260529T0308-codex-post-terminalization/`
+  intentionally exited red with `summary.status=not_complete`. With the heavy
+  done-definition proof applied and factor closure clear, remaining blockers are
+  `same_tree_practical_closure_unproven`, `release_readiness_blocked`, and
+  `release_remote_checks_not_run`.
+- 2026-05-29T03:09+0800 current-state drift superseded the 03:07 factor-closure
+  readback. A fresh compact audit now reports `status=needs_attention`,
+  `active_claims=2`, `live_factor_processes=0`, `promotion_allowed_true=0`,
+  and `trade_usable_true=0`. The fresh active no-runtime claims are
+  `/tmp/ict-engine-agent-claims/board-b-factor-refinement/20260529T030815+0800-codex-tomac-ict-wpr-fractal-reclaim-gate1-final.claim`
+  and
+  `/tmp/ict-engine-agent-claims/board-b-factor-refinement/20260529T030828+0800-codex-tomac-compression-breakout-continuation-launch.claim`.
+  Do not launch or take over while these claims are fresh; poll for owner
+  progress or wait for stale-safe conditions.
+- 2026-05-29T03:11+0800 both transient claims terminalized wait-only/no-launch.
+  The WPR final packet ceded before scan start because the fresh Compression
+  claim appeared; the Compression packet passed focused wrapper verification
+  but did not launch because the WPR final claim appeared in its final prelaunch
+  audit. A fresh compact audit then returned `status=pass`, `active_claims=0`,
+  `live_factor_processes=0`, `promotion_allowed_true=0`, and
+  `trade_usable_true=0`. This clears current claim/runtime blockers again but
+  does not prove practical closure.
+- 2026-05-29T03:13+0800 objective snapshot at
+  `/tmp/ict-engine-closed-loop-snapshot-20260529T0312-codex-post-transient-clear/`
+  intentionally exited red with `summary.status=not_complete`. Its current
+  blockers were `factor_closure_blocked`, `release_readiness_blocked`, and
+  `release_remote_checks_not_run`; factor closure was blocked by a fresh active
+  WPR run claim.
+- 2026-05-29T03:14-03:15+0800 compact audits showed the shared queue still
+  churning. CompressionBreakoutContinuation launch packets such as
+  `20260529T031205+0800` and `20260529T031318+0800` terminalized wait-only
+  before launch after final prelaunch audits found fresh active claims. The
+  currently material active blocker is the TOD Balanced policy-label repair
+  claim
+  `/tmp/ict-engine-agent-claims/board-b-factor-refinement/20260529T031215+0800-codex-tomac-tod-balanced-policy-label-repair.claim`.
+  It is same-root materialization work, not a fresh Gate 1 lane. Do not take
+  over, terminalize, or launch a sibling lane while this claim is fresh.
+- 2026-05-29T03:17+0800 the TOD Balanced policy-label repair claim
+  terminalized/externalized wait-only without launching a TOD repair command,
+  because the same-turn audit had seen fresher active Compression launch claims.
+  A fresh compact audit then returned `status=pass`, `active_claims=0`,
+  `live_factor_processes=0`, `promotion_allowed_true=0`, and
+  `trade_usable_true=0`.
+- 2026-05-29T03:18+0800 latest proof-aware objective snapshot at
+  `/tmp/ict-engine-closed-loop-snapshot-20260529T0318-codex-current-clear/`
+  intentionally exited red with `summary.status=not_complete`. The shared queue
+  churned again during the snapshot: `factor_closure` reported `active_claims=4`,
+  `live_factor_processes=0`, `promotion_allowed_true=0`, and
+  `trade_usable_true=0`. Fresh active no-runtime claims included TOD Balanced
+  policy-label repair packets (`20260529T031640+0800`, `20260529T031722+0800`)
+  and CompressionBreakoutContinuation launch packets (`20260529T031651+0800`,
+  `20260529T031710+0800`). Current blockers are `factor_closure_blocked`,
+  `release_readiness_blocked`, and `release_remote_checks_not_run`. Stop
+  launching/taking over in this churn window; wait for owner progress or
+  stale-safe conditions, then rerun compact audit.
+- 2026-05-29T03:29+0800 proof-aware objective snapshot at
+  `/tmp/ict-engine-closed-loop-snapshot-20260529T032902+0800-codex-current-clear/`
+  intentionally exited red with `summary.status=not_complete`. Heavy
+  done-definition proof was applied and practical-admission source debt remains
+  quarantined, but `factor_closure` was again blocked because a new
+  CompressionBreakoutContinuation clean-AQ launch started while the snapshot was
+  running. Snapshot blockers were `factor_closure_blocked`,
+  `release_readiness_blocked`, and `release_remote_checks_not_run`; manual
+  requirements still include `same_tree_practical_closure_packet` and
+  `truthful_completion_commit`.
+- 2026-05-29T03:30-03:32+0800 a launch-acquisition loophole was observed:
+  multiple CompressionBreakoutContinuation packets saw a clear audit in close
+  succession and attempted the same clean-AQ branch. Root
+  `/tmp/ict-engine-tomac-compression-breakout-continuation-launch-20260529T032803+0800`
+  was the actual live launch. Duplicate root
+  `/tmp/ict-engine-tomac-compression-breakout-continuation-launch-20260529T032834+0800`
+  was aborted before scan execution and terminalized
+  `terminalized_collision_aborted_no_factor_verdict`; root
+  `/tmp/ict-engine-tomac-compression-breakout-continuation-launch-20260529T032850+0800`
+  failed its prelaunch audit and did not launch. This produced no factor
+  verdict and no promotion/live-use evidence.
+- 2026-05-29T03:32+0800 narrow collision-guard fix added to the untracked
+  CompressionBreakout prep wrapper:
+  `support/docs/experiments/actionable-regime-confidence/scripts/run_tomac_compression_breakout_continuation_prep_v1.py`
+  now runs a final in-process full claim audit before spawning the clean-AQ
+  child, permits only its own root/parent claim, and writes
+  `launch_blocked_by_collision_guard` without scan execution if foreign active
+  claims or live roots exist. Regression tests in
+  `test_tomac_compression_breakout_continuation_prep_v1.py` cover foreign active
+  claims, foreign live roots, and own-root allowance. Verification:
+  `python3 -m unittest support.docs.experiments.actionable-regime-confidence.scripts.test_tomac_compression_breakout_continuation_prep_v1 -v`
+  ran `6/6 OK`; `python3 -m py_compile` on the wrapper and test passed. This
+  fixes one observed launch-race loophole for that wrapper only; it is not a
+  practical closure claim.
+- 2026-05-29T03:34+0800 compact audit still reports a no-launch window due to
+  the fresh active Darvas claim
+  `/tmp/ict-engine-agent-claims/board-b-factor-refinement/20260529T032916+0800-codex-ibkr-mnq1m-darvas-volume-breakout.claim`.
+  It has no visible live process yet, is not stale-safe, and keeps
+  `promotion_allowed=false`, `trade_usable=false`, and `update_goal=false`.
+  Do not launch or take over while it remains fresh.
+- 2026-05-29T03:41+0800 the Darvas claim terminalized fail-closed after a
+  same-turn IBKR MNQ 202606 1m 7 D fetch and AutoQuant material
+  batch/dispatch/rank. Fetch evidence:
+  `/tmp/ict-engine-ibkr-mnq1m-darvas-volume-breakout-20260529T032916+0800/checks/00_ibkr_fresh_fetch.exit=0`
+  and `10,709` provider rows. Wrapper evidence:
+  `/tmp/ict-engine-ibkr-mnq1m-darvas-volume-breakout-20260529T032916+0800/checks/01_darvas_wrapper.exit=0`
+  and terminal metrics under
+  `support/docs/experiments/actionable-regime-confidence/runs/20260529T034105+0800-codex-ibkr-mnq1m-darvas-volume-breakout-7d-gate1-v1/checks/terminal_metrics.json`.
+  Gate 1 failed economics: `rank_rows=4`, `rank_total_trade_count=20`,
+  `exact_1m_survivors_2bps=[]`, `exact_1m_survivors_5bps=[]`,
+  `downstream_allowed=false`, `promotion_allowed=false`, and
+  `trade_usable=false`.
+- 2026-05-29T03:43+0800 compact audit is clear again: `status=pass`,
+  `active_claims=0`, `live_factor_processes=0`, `promotion_allowed_true=0`,
+  and `trade_usable_true=0`. This clears current runtime/claim occupancy but
+  still does not prove practical closure because promotion/live-use counts are
+  both zero.
 
 ## Current Blockers
 
-Latest current-state readback, 2026-05-29T01:57+0800:
+Latest current-state readback, 2026-05-29T03:43+0800:
+
+- Factor closure occupancy is clear: compact audit reports `status=pass`,
+  `active_claims=0`, `live_factor_processes=0`, no attention claims, and no
+  live runtime roots.
+- DarvasVolumeBreakout terminalized fail-closed with fresh IBKR rows but no
+  2bps/5bps survivors, so it is not a downstream or live-use candidate.
+- A narrow launch-race loophole was fixed for the CompressionBreakout prep
+  wrapper, but that only prevents one duplicate-launch pattern. It does not
+  prove factor economics, downstream closure, or live usability.
+- The full objective remains unproven: no same-tree practical closure packet,
+  no `promotion_allowed_true>0`, and no `trade_usable_true>0`.
+
+Previous readback, 2026-05-29T03:34+0800:
+
+- Factor closure remains blocked by a fresh active DarvasVolumeBreakout claim:
+  `active_claims=1`, `live_factor_processes=0`, `promotion_allowed_true=0`, and
+  `trade_usable_true=0`. The claim is under the one-hour stale-safe threshold.
+- A narrow launch-race loophole was fixed for the CompressionBreakout prep
+  wrapper, but that only prevents one duplicate-launch pattern. It does not
+  prove factor economics, downstream closure, or live usability.
+- The full objective remains unproven: no same-tree practical closure packet,
+  no `promotion_allowed_true>0`, and no `trade_usable_true>0`.
+
+Previous readback, 2026-05-29T03:18+0800:
+
+- Factor closure is blocked again by fresh active no-runtime claims created
+  during the latest snapshot. Current proof says `active_claims=4` and
+  `live_factor_processes=0`; all promotion/live-use counts remain false.
+- Do not take over, terminalize, or launch sibling TOMAC/AQ/provider work while
+  these claims are fresh. The next safe action is read-only polling of active
+  claim/workdoc progress, then `python3 support/scripts/factor_claim_terminalization_audit.py --compact --portable-paths` after owner progress or stale-safe timeout.
+- The full objective remains unproven: no same-tree practical closure packet,
+  no `promotion_allowed_true>0`, and no `trade_usable_true>0`.
+
+Previous readback, 2026-05-29T03:17+0800:
+
+- Factor closure is currently clear again: compact audit reports `status=pass`,
+  `active_claims=0`, `live_factor_processes=0`, no attention claims, and no
+  live runtime roots.
+- The latest TOD policy-label repair and Compression launch packets in this
+  churn window terminalized wait-only/no-launch. They are not factor verdicts
+  and do not provide promotion/live-use evidence.
+- `promotion_allowed_true=0` and `trade_usable_true=0` still hold. The full
+  objective remains unproven until a same-tree practical closure packet exists.
+
+Previous readback, 2026-05-29T03:15+0800:
+
+- Factor closure is blocked by the fresh active TOD Balanced policy-label repair
+  claim. The competing Compression launch packets seen in the same window
+  terminalized wait-only/no-launch and are not factor verdicts.
+- The active TOD claim carries `promotion_allowed=false`, `trade_usable=false`,
+  and `update_goal=false`; it is not stale-safe.
+- Focused process scan showed no TOMAC/AQ/provider/IBKR writer. The current safe
+  action is read-only polling of those owner packets, not launching or taking
+  over.
+- The latest objective snapshot is therefore also red on `factor_closure_blocked`
+  in addition to release blockers.
+
+Previous readback, 2026-05-29T03:11+0800:
+
+- Factor closure is currently clear again: compact audit reports `status=pass`,
+  `active_claims=0`, `live_factor_processes=0`, no attention claims, and no
+  live runtime roots.
+- The two 03:08 claims are terminalized wait-only/no-launch and are not factor
+  verdicts. WPR final did not start a scan; CompressionBreakoutContinuation did
+  not start its launch command.
+- `same_tree_practical_closure_unproven` remains: audits still have
+  `promotion_allowed_true=0` and `trade_usable_true=0`; no same-tree practical
+  closure packet exists.
+
+Transient readback, 2026-05-29T03:09+0800:
+
+- Factor closure is blocked again by two fresh active no-runtime claims:
+  IctWprFractalReclaim Gate 1 final and CompressionBreakoutContinuation clean-AQ
+  launch. Both explicitly keep `promotion_allowed=false`,
+  `trade_usable=false`, and `update_goal=false`, but both are under the
+  stale-safe threshold and must not be taken over or duplicated.
+- Focused `ps` currently shows no TOMAC/AQ/provider/IBKR writer after excluding
+  readback commands, so the immediate action is read-only polling for owner
+  progress, not a new launch.
+
+Previous readback, 2026-05-29T03:07+0800:
+
+- Factor closure is currently clear: compact audit reports `status=pass`,
+  `active_claims=0`, `live_factor_processes=0`, no attention claims, and no
+  live runtime roots.
+- `same_tree_practical_closure_unproven` remains the primary objective blocker.
+  Current audits still have `promotion_allowed_true=0` and
+  `trade_usable_true=0`; no same-tree packet proves provider/training admission,
+  Pre-Bayes, BBN, path-ranker consumption, execution tree materialization,
+  feedback, and practical live-use together.
+- `release_readiness_blocked` remains because `release_readiness_audit` fails
+  `worktree_clean_for_release` in the shared dirty tree. Do not claim release
+  readiness or stage unrelated files.
+- `release_remote_checks_not_run` remains because the current objective snapshot
+  did not run remote readback/tag gates. This is secondary to the missing
+  practical closure packet.
+
+Historical blocker log follows for provenance.
+
+Prior current-state readback, 2026-05-29T01:57+0800:
 
 Update, 2026-05-29T02:06+0800:
 
