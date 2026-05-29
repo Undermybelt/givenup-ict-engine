@@ -255,6 +255,7 @@ class DirectModelArtifactTests(unittest.TestCase):
             "structural-path-ranking-trainer-manifest-v1",
         )
         self.assertEqual(artifact["output_transform"], "sigmoid")
+        self.assertEqual(artifact["execution_gate_min_path_prob"], 0.30)
         self.assertIn("current_posterior", artifact["numerical_feature_weights"])
         self.assertIn("rank", artifact["numerical_feature_weights"])
 

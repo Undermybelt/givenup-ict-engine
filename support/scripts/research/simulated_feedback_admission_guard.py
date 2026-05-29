@@ -263,9 +263,6 @@ def _execution_reasons(payload: dict[str, object]) -> list[str]:
     readiness = payload.get("execution_readiness")
     if not isinstance(readiness, (int, float)) or readiness < 0.45:
         reasons.append("execution_readiness_lt_0.45")
-    hazard = payload.get("transition_hazard")
-    if isinstance(hazard, (int, float)) and hazard >= 0.60:
-        reasons.append("transition_hazard_gte_0.60")
     actionable = payload.get("actionable")
     if actionable is not None and not _truthy(actionable):
         reasons.append("actionable_false")

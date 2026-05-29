@@ -451,10 +451,8 @@ pub fn canonicalize_structural_path_ranking_target_row(row: &mut StructuralPathR
         row.path_id = exact_path.clone();
     }
     if row.path_label.contains(" -> ") {
-        row.path_label =
-            structural_path_ranking_normalized_branch_path(&row.path_label).unwrap_or_else(|| {
-                row.path_label.clone()
-            });
+        row.path_label = structural_path_ranking_normalized_branch_path(&row.path_label)
+            .unwrap_or_else(|| row.path_label.clone());
     }
     row.regime_profit_branch_path = Some(exact_path);
     row.parent_regime_root = Some(segments[0].clone());
@@ -2485,6 +2483,55 @@ mod tests {
         let probability = structural_path_ranker_direct_model_probability(&model, &row);
 
         assert!((probability - 0.628).abs() < 1e-9);
+    }
+
+    #[test]
+    fn direct_model_execution_gate_honors_current_path_probability_floor() {
+        let temp = tempfile::tempdir().unwrap();
+        let symbol = "NQ";
+        let model_dir = temp
+            .path()
+            .join(symbol)
+            .join(STRUCTURAL_PATH_RANKING_RUNTIME_DIR)
+            .join("model");
+        fs::create_dir_all(&model_dir).unwrap();
+        let model_path = model_dir.join("path_ranker_direct_model.json");
+        fs::write(
+            &model_path,
+            serde_json::to_string(&StructuralPathRankerDirectModelArtifact {
+                model_family: STRUCTURAL_PATH_RANKER_DIRECT_MODEL_FAMILY_WEIGHTED_SUM_V1
+                    .to_string(),
+                output_transform: "identity".to_string(),
+                intercept: 0.487503,
+                lower_bound_margin: Some(0.05),
+                execution_gate_min_path_prob: Some(
+                    STRUCTURAL_PATH_RANKING_EXECUTION_GATE_MIN_PATH_PROB,
+                ),
+                ..StructuralPathRankerDirectModelArtifact::default()
+            })
+            .unwrap(),
+        )
+        .unwrap();
+        let row = test_target_row(
+            "structural-candidates:NQ:opening-drive",
+            "TrendExpansion -> OpeningDrive -> BidirectionalIntradayTrendContinuation -> tomac_nq_bidir_opening_drive_t10_w0_e900_x1245_exact_v1",
+            "unobserved",
+            0.5,
+            None,
+        );
+
+        let rows = score_structural_path_ranker_runtime_rows_with_direct_model(
+            temp.path().to_str().unwrap(),
+            symbol,
+            "model/path_ranker_direct_model.json",
+            STRUCTURAL_PATH_RANKER_DIRECT_MODEL_FAMILY_WEIGHTED_SUM_V1,
+            &[row],
+        )
+        .unwrap();
+
+        assert_eq!(rows.len(), 1);
+        assert!((rows[0].path_prob_lower_bound.unwrap() - 0.437503).abs() < 1e-12);
+        assert_eq!(rows[0].execution_gate_status.as_deref(), Some("pass"));
     }
 
     #[test]

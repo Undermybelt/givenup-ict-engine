@@ -64,6 +64,53 @@ class RegimeRootSurvivorBlockerReportTests(unittest.TestCase):
         )
         self.assertNotIn("no_real_cost_5bps_survivor", built["blockers"])
 
+    def test_exact_branch_survived_terminal_metrics_counts_5bps_survivor(self) -> None:
+        metrics = {
+            "branch_path": (
+                "TrendExpansion -> OpeningDrive -> BidirectionalIntradayTrendContinuation -> "
+                "tomac_nq_bidir_opening_drive_t10_w0_e900_x1245_exact_v1"
+            ),
+            "exact_branch_survived": True,
+            "branch_local_admitted": True,
+            "validation_ready": True,
+        }
+        candidate = {
+            "candidate_status": "execution_observe_only",
+            "actionable": False,
+            "pre_bayes_evidence_filter": {
+                "gating_status": "pass_neutralized",
+                "conflict_flags": [],
+                "evidence_assignments": {
+                    "regime_profit_branch_path": metrics["branch_path"],
+                },
+            },
+        }
+        tree = {
+            "output": {
+                "execution_readiness": 0.4575,
+                "ranker_validation_ready": True,
+                "path_ranker_score_visible_to_execution_tree": True,
+                "path_ranker_score_used_by_execution_tree": True,
+            }
+        }
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            root = Path(tmpdir)
+            gate1_path = root / "gate1.json"
+            candidate_path = root / "candidate.json"
+            tree_path = root / "tree.json"
+            gate1_path.write_text(__import__("json").dumps(metrics), encoding="utf-8")
+            candidate_path.write_text(__import__("json").dumps(candidate), encoding="utf-8")
+            tree_path.write_text(__import__("json").dumps(tree), encoding="utf-8")
+
+            built = report.build_report(gate1_path, candidate_path, tree_path)
+
+        self.assertEqual(
+            built["gate1"]["exact_5bps_survivors"],
+            ["tomac_nq_bidir_opening_drive_t10_w0_e900_x1245_exact_v1"],
+        )
+        self.assertNotIn("no_real_cost_5bps_survivor", built["blockers"])
+
     def test_current_cost_stress_schema_counts_5bps_survivor(self) -> None:
         metrics = {
             "branch_path": "US_EQ -> single_stock -> NET -> 5m -> RangeReversion -> factor",

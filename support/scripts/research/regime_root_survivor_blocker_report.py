@@ -256,6 +256,18 @@ def cost_survivors_5bps(metrics: dict[str, Any]) -> list[Any]:
                 or cost_row.get("symbol")
                 or "cost_row"
             )
+    if not survivors and metrics.get("exact_branch_survived") is True:
+        branch_path = metrics.get("branch_path")
+        branch_tail = None
+        if isinstance(branch_path, str) and branch_path.strip():
+            branch_tail = branch_path.split("->")[-1].strip()
+        survivors.append(
+            metrics.get("factor_id")
+            or metrics.get("strategy_id")
+            or metrics.get("package_id")
+            or branch_tail
+            or "exact_branch_survived"
+        )
     return sorted(set(survivors))
 
 

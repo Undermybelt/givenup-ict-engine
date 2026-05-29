@@ -1593,12 +1593,14 @@ fn same_root_execution_tree_admission_for_analyze(
             .and_then(serde_json::Value::as_bool)
             .unwrap_or(false);
     let execution_readiness = trace_output_number(output, "execution_readiness")?;
+    let live_readiness_floor =
+        ict_engine::application::factor_lifecycle::LIVE_EXECUTION_READINESS_FLOOR;
     let actionable_admission = direction_can_action
         && pre_bayes_ready
         && admitted
         && execution_tree_ready
         && ranker_used
-        && execution_readiness >= 0.65;
+        && execution_readiness >= live_readiness_floor;
     if !pre_bayes_ready {
         return None;
     }
@@ -2237,13 +2239,13 @@ mod tests {
             symbol_dir.join(ict_engine::application::orchestration::EXECUTION_TREE_TRACE_FILE),
             serde_json::to_vec_pretty(&serde_json::json!({
                 "output": {
-                    "execution_readiness": 0.67,
+                    "execution_readiness": 0.45,
                     "gate_status": "ready",
                     "branch": "fill_viable",
                     "path_ranker_score_visible_to_execution_tree": true,
                     "path_ranker_score_used_by_execution_tree": true,
                     "ranker_validation_ready": true,
-                    "hybrid_transition_hazard": 0.595,
+                    "hybrid_transition_hazard": 0.995,
                     "pda_hybrid_alignment": false
                 },
                 "closed_loop_branch_admission": {

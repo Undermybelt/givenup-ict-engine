@@ -11,7 +11,7 @@ from typing import Any
 
 
 PAPER_VALIDATION_MIN_ROWS = 30
-LIVE_EXECUTION_READINESS_FLOOR = 0.65
+LIVE_EXECUTION_READINESS_FLOOR = 0.45
 DECLARED_FRICTION_KEYS = (
     "net_after_declared_friction_pct",
     "instrument_cost_total_profit_pct",

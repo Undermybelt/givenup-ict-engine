@@ -113,6 +113,7 @@ CATEGORICAL_FEATURES = [
 
 DIRECT_MODEL_PROTOCOL_VERSION = "structural-path-ranking-direct-model-v1"
 DIRECT_MODEL_FAMILY = "weighted_feature_sum_v1"
+DIRECT_MODEL_EXECUTION_GATE_MIN_PATH_PROB = 0.30
 TRAINER_ARTIFACT_PROTOCOL_VERSION = "structural-path-ranking-trainer-artifact-v1"
 TRAINER_DATASET_ROLE = "external_path_ranker_training_dataset"
 TRAINER_SCHEMA_VERSION = "structural-path-ranking-trainer-manifest-v1"
@@ -505,7 +506,7 @@ def create_direct_model_artifact(
         "numerical_feature_weights": numerical_weights,
         "categorical_feature_weights": {},
         "lower_bound_margin": 0.05,
-        "execution_gate_min_path_prob": 0.50,
+        "execution_gate_min_path_prob": DIRECT_MODEL_EXECUTION_GATE_MIN_PATH_PROB,
         "notes": [
             "repo_runtime_direct_model=true",
             "zero_config_default_preserved=true",

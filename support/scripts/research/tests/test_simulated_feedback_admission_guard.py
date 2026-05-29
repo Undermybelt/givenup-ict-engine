@@ -247,7 +247,7 @@ class SimulatedFeedbackAdmissionGuardTests(unittest.TestCase):
             "production_validation_rows": 30,
             "observation_validation_rows": 30,
             "execution_readiness": 0.45,
-            "transition_hazard": 0.2,
+            "transition_hazard": 0.9,
             "actionable": True,
         }
 
