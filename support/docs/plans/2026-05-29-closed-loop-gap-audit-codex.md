@@ -554,6 +554,37 @@ training/refinement.
   requirements still include `same_tree_practical_closure_packet` and
   `truthful_completion_commit`. Full objective remains incomplete.
 
+## 2026-05-29T07:45+0800 Current Proof-Backed Closure Readback
+
+- Commit for the practical-closure proof-contract repair:
+  `91c79d24ff7262e1dfca98e287fcac04da763795` (`Require validated practical
+  closure packet`).
+- Heavy done-definition proof for this exact head:
+  `/tmp/ict-engine-done-definition-heavy-20260529-current-head-91c79d24.json`.
+  It exited `0` with `completion_ready=true`,
+  `evidence_level=full_enabled_gate_coverage`, `pass_count=9`, `fail_count=0`,
+  and `skip_count=0`.
+- Remote release readback for this exact head:
+  `/tmp/ict-engine-release-readiness-remote-20260529-current-head-91c79d24.json`.
+  It exited `1`; remote reads succeeded and `v0.1.8` remained available, but
+  release readiness still failed `worktree_clean_for_release` and
+  `source_origin_matches_selected_source` (`source_ahead_of_origin=105`).
+- Proof-backed objective snapshot:
+  `/tmp/ict-engine-closure-proof-backed-current-head-91c79d24-20260529T0745/objective_closure_snapshot.json`
+  exited `1`. Done-definition proof applied; release proof was rejected only
+  because release readiness itself still had worktree/source-origin blockers.
+- During that snapshot, a new fresh factor owner appeared:
+  `20260529T074237+0800-codex-tomac-session-cluster-cadence-repair.claim`.
+  It blocked factor closure with `active_claims=1` and later showed a live
+  `tomac_session_seasonality_scan.py` child under
+  `/tmp/ict-engine-tomac-session-cluster-cadence-repair-20260529T074237+0800`.
+  Standing practical flags remained `promotion_allowed=false`,
+  `trade_usable=false`, and `update_goal=false`.
+- Current full objective remains incomplete. The live/fresh SessionCluster owner
+  must terminalize before any practical closure attempt; release readiness still
+  needs a clean selected export/source-origin decision; and no validated
+  `same_tree_practical_closure` packet exists.
+
 ## 2026-05-29T07:36+0800 Execution-Plane / Lifecycle Guard Repair
 
 - Fresh routed continuation re-read `skill-router.md`, `project-router.md`, repo
@@ -631,3 +662,65 @@ training/refinement.
   `worktree_clean_for_release` and skipped remote gates.
 - Manual requirements still open:
   `same_tree_practical_closure_packet` and `truthful_completion_commit`.
+
+## 2026-05-29T08:02+0800 Practical Closure Packet Producer Repair
+
+- Fresh routed continuation re-read `skill-router.md`, `project-router.md`, repo
+  `CLAUDE.md`/`AGENTS.md`/`AGENT.md`, and installed runtime skill
+  `software-development/ict-engi-fact-rese-muta/SKILL.md` before action.
+- Current compact claim audit before the slice exited `1` with a fresh active
+  factor claim and no live factor process. Decision: no provider, AQ, TOMAC,
+  factor-research, paper/sim, or takeover work during the repair slice.
+- Concrete loophole: `objective_closure_snapshot.py` now requires a structured
+  `same_tree_practical_closure` packet, but `factor_claim_terminalization_audit.py`
+  had no durable discovery path for such a packet. That could leave completion
+  permanently dependent on an external/manual object not produced by the factor
+  closure child audit.
+- Scoped producer repair: `factor_claim_terminalization_audit.py` now discovers
+  exactly one valid `same_tree_practical_closure.json` under a terminalized
+  claim run root (`summaries/`, `checks/`, or run-root top level), validates
+  `status=pass`, `promotion_allowed=true`, `trade_usable=true`,
+  `provider_execution_feedback_chain=pass`, and requires the referenced
+  `evidence_packet` file to exist inside the same run root. It then surfaces the
+  normalized packet in `summary.same_tree_practical_closure` for
+  `objective_closure_snapshot.py` to consume. Multiple valid packets, invalid
+  booleans/status, or evidence paths outside the run root fail closed as `null`.
+- Regression tests added in
+  `support/scripts/tests/test_factor_claim_terminalization_audit.py`:
+  valid packet discovery, external evidence path rejection, and duplicate packet
+  ambiguity rejection.
+- Verification:
+  `python3 -m unittest support.scripts.tests.test_factor_claim_terminalization_audit -v`
+  passed `77/77`; `python3 -m unittest support.scripts.tests.test_objective_closure_snapshot -v`
+  passed `34/34`; `git diff --check -- support/scripts/factor_claim_terminalization_audit.py support/scripts/tests/test_factor_claim_terminalization_audit.py support/docs/plans/2026-05-29-closed-loop-gap-audit-codex.md`
+  passed.
+- The suspected TOMAC live-process classifier gap was checked directly against
+  the exact high-excursion command. `_is_live_factor_command(...)` returned
+  `true` and `_extract_run_root(...)` normalized the `--out` path to
+  `/tmp/ict-engine-tomac-overnight-inventory-fade-high-excursion-run-20260529T075433+0800`.
+  The existing custom TOMAC scanner tests also passed, so this slice did not
+  change the live-process regex.
+- The heavy done-definition audit that was running at checkpoint finished at
+  `/tmp/ict-engine-done-definition-heavy-20260529-current-head-fb0a423b.json`
+  with `completion_ready=true`, `evidence_level=full_enabled_gate_coverage`,
+  `pass_count=9`, `fail_count=0`, and `skip_count=0` for head
+  `fb0a423bf75518f92ad7d01d1298dc60b86407a3`.
+- The OvernightInventoryFade high-excursion owner terminalized at
+  `2026-05-29T08:02+0800` with `decision=terminalized_gate1_failed_reject_sparse_no_survivor`,
+  `leaderboard rows=162`, `survivors=0`, all decisions `reject_sparse`, and
+  final flags `promotion_allowed=false`, `trade_usable=false`, and
+  `update_goal=false`. Do not rerun that scan unchanged.
+- Real compact claim audit after the terminalization exited `0` with
+  `active_claims=0`, `live_factor_processes=0`, `promotion_allowed_true=0`,
+  `trade_usable_true=0`, and `same_tree_practical_closure=null`.
+- Real objective snapshot
+  `/tmp/ict-engine-closure-current-fb0a423b-20260529T0807/objective_closure_snapshot.json`
+  exited `1`. It remains red with blockers
+  `done_definition_not_completion_ready`, `same_tree_practical_closure_unproven`,
+  `release_readiness_blocked`, and `release_remote_checks_not_run`; manual
+  requirements remain `same_tree_practical_closure_packet` and
+  `truthful_completion_commit`.
+- This repair creates the missing producer/discovery contract only. It does not
+  create a practical factor, does not mark any active claim terminal, and does
+  not complete the full objective. Practical flags remain
+  `promotion_allowed=false`, `trade_usable=false`, and `update_goal=false`.

@@ -885,6 +885,137 @@ trade_usable=false
             self.assertEqual(report["claims"][0]["decision"], "drop_gate1_no_hard_5bps_density_survivor")
             self.assertEqual(report["claims"][1]["decision"], "drop_gate1")
 
+    def test_build_report_discovers_valid_same_tree_practical_closure_packet(self) -> None:
+        with tempfile.TemporaryDirectory() as repo_tmp, tempfile.TemporaryDirectory() as claims_tmp:
+            repo_root = Path(repo_tmp)
+            claims_dir = Path(claims_tmp)
+            run_root = repo_root / "support" / "docs" / "experiments" / "run-a"
+            summaries_dir = run_root / "summaries"
+            summaries_dir.mkdir(parents=True)
+            packet_path = summaries_dir / "same_tree_practical_closure.json"
+            packet_path.write_text(
+                json.dumps(
+                    {
+                        "status": "pass",
+                        "promotion_allowed": True,
+                        "trade_usable": True,
+                        "provider_execution_feedback_chain": "pass",
+                        "evidence_packet": "summaries/evidence-packet.json",
+                    }
+                ),
+                encoding="utf-8",
+            )
+            (summaries_dir / "evidence-packet.json").write_text(
+                '{"chain":"provider_execution_feedback"}',
+                encoding="utf-8",
+            )
+            (claims_dir / "terminal-practical.claim").write_text(
+                f"""
+owner=codex
+status=terminalized
+run_root={run_root.relative_to(repo_root)}
+decision=practical_closure_packet_validated
+promotion_allowed=false
+trade_usable=false
+""",
+                encoding="utf-8",
+            )
+
+            report = build_report(claims_dir=claims_dir, repo_root=repo_root)
+
+        self.assertEqual(report["summary"]["status"], "pass")
+        self.assertEqual(report["summary"]["promotion_allowed_true"], 0)
+        self.assertEqual(report["summary"]["trade_usable_true"], 0)
+        self.assertEqual(
+            report["summary"]["same_tree_practical_closure"],
+            {
+                "status": "pass",
+                "promotion_allowed": True,
+                "trade_usable": True,
+                "provider_execution_feedback_chain": "pass",
+                "evidence_packet": "support/docs/experiments/run-a/summaries/evidence-packet.json",
+                "packet_path": "support/docs/experiments/run-a/summaries/same_tree_practical_closure.json",
+                "claim_file": "terminal-practical.claim",
+                "run_root": "support/docs/experiments/run-a",
+            },
+        )
+
+    def test_build_report_ignores_practical_closure_packet_with_external_evidence_path(self) -> None:
+        with tempfile.TemporaryDirectory() as repo_tmp, tempfile.TemporaryDirectory() as claims_tmp:
+            repo_root = Path(repo_tmp)
+            claims_dir = Path(claims_tmp)
+            run_root = repo_root / "support" / "docs" / "experiments" / "run-a"
+            summaries_dir = run_root / "summaries"
+            summaries_dir.mkdir(parents=True)
+            external_evidence = Path(repo_tmp).parent / "outside-evidence.json"
+            external_evidence.write_text('{"chain":"external"}', encoding="utf-8")
+            (summaries_dir / "same_tree_practical_closure.json").write_text(
+                json.dumps(
+                    {
+                        "status": "pass",
+                        "promotion_allowed": True,
+                        "trade_usable": True,
+                        "provider_execution_feedback_chain": "pass",
+                        "evidence_packet": str(external_evidence),
+                    }
+                ),
+                encoding="utf-8",
+            )
+            (claims_dir / "terminal-practical.claim").write_text(
+                f"""
+owner=codex
+status=terminalized
+run_root={run_root.relative_to(repo_root)}
+decision=practical_closure_packet_invalid_external_evidence
+promotion_allowed=false
+trade_usable=false
+""",
+                encoding="utf-8",
+            )
+
+            report = build_report(claims_dir=claims_dir, repo_root=repo_root)
+
+        self.assertEqual(report["summary"]["status"], "pass")
+        self.assertIsNone(report["summary"]["same_tree_practical_closure"])
+
+    def test_build_report_requires_unique_practical_closure_packet(self) -> None:
+        with tempfile.TemporaryDirectory() as repo_tmp, tempfile.TemporaryDirectory() as claims_tmp:
+            repo_root = Path(repo_tmp)
+            claims_dir = Path(claims_tmp)
+            for name in ("run-a", "run-b"):
+                run_root = repo_root / "support" / "docs" / "experiments" / name
+                summaries_dir = run_root / "summaries"
+                summaries_dir.mkdir(parents=True)
+                (summaries_dir / "evidence-packet.json").write_text('{"chain":"ok"}', encoding="utf-8")
+                (summaries_dir / "same_tree_practical_closure.json").write_text(
+                    json.dumps(
+                        {
+                            "status": "pass",
+                            "promotion_allowed": True,
+                            "trade_usable": True,
+                            "provider_execution_feedback_chain": "pass",
+                            "evidence_packet": "summaries/evidence-packet.json",
+                        }
+                    ),
+                    encoding="utf-8",
+                )
+                (claims_dir / f"{name}.claim").write_text(
+                    f"""
+owner=codex
+status=terminalized
+run_root={run_root.relative_to(repo_root)}
+decision=practical_closure_packet_validated
+promotion_allowed=false
+trade_usable=false
+""",
+                    encoding="utf-8",
+                )
+
+            report = build_report(claims_dir=claims_dir, repo_root=repo_root)
+
+        self.assertEqual(report["summary"]["status"], "pass")
+        self.assertIsNone(report["summary"]["same_tree_practical_closure"])
+
     def test_summarize_marks_needs_attention_for_active_or_positive_claims(self) -> None:
         summary = summarize(
             [

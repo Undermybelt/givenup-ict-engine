@@ -22,6 +22,11 @@ SUMMARY_CANDIDATES = (
     "run/summaries/terminal_summary.json",
     "run/checks/terminal_metrics.json",
 )
+SAME_TREE_PRACTICAL_CLOSURE_CANDIDATES = (
+    "summaries/same_tree_practical_closure.json",
+    "checks/same_tree_practical_closure.json",
+    "same_tree_practical_closure.json",
+)
 LIVE_FACTOR_PROCESS_MARKERS = (
     "run_tomac",
     "run_local_nq_csv_regime_rooted",
@@ -548,9 +553,11 @@ def summarize(
     claims: list[dict[str, Any]],
     live_processes: list[dict[str, Any]] | None = None,
     now: datetime | None = None,
+    repo_root: Path | None = None,
 ) -> dict[str, Any]:
     live_processes = live_processes or []
     now = now or datetime.now(timezone.utc)
+    repo_root = repo_root or Path.cwd()
     stale_active_claims = 0
     stale_safe_takeover_candidates = 0
     coordination_only_active_claims = 0
@@ -621,6 +628,7 @@ def summarize(
     missing_run_roots = sum(1 for claim in claims if claim.get("missing_run_root_attention"))
     trade_usable_true = sum(1 for claim in claims if claim.get("trade_usable") is True)
     promotion_allowed_true = sum(1 for claim in claims if claim.get("promotion_allowed") is True)
+    same_tree_practical_closure = _discover_same_tree_practical_closure(claims, repo_root=repo_root)
     live_factor_processes = len(live_processes)
     needs_attention = bool(
         active_claims
@@ -689,9 +697,105 @@ def summarize(
         "missing_run_roots": missing_run_roots,
         "trade_usable_true": trade_usable_true,
         "promotion_allowed_true": promotion_allowed_true,
+        "same_tree_practical_closure": same_tree_practical_closure,
         "blocking_reasons": blocking_reasons,
         "next_action": "; ".join(next_actions) if next_actions else "no claim terminalization blockers found",
     }
+
+
+def _discover_same_tree_practical_closure(
+    claims: list[dict[str, Any]],
+    *,
+    repo_root: Path,
+) -> dict[str, Any] | None:
+    packets = [
+        packet
+        for claim in claims
+        if claim.get("status") == "terminalized"
+        for packet in [_load_same_tree_practical_closure_packet(claim, repo_root=repo_root)]
+        if packet is not None
+    ]
+    if len(packets) != 1:
+        return None
+    return packets[0]
+
+
+def _load_same_tree_practical_closure_packet(
+    claim: dict[str, Any],
+    *,
+    repo_root: Path,
+) -> dict[str, Any] | None:
+    run_root_text = claim.get("run_root")
+    if not isinstance(run_root_text, str) or not run_root_text:
+        return None
+    run_root = Path(run_root_text).expanduser()
+    if not run_root.exists() or not run_root.is_dir():
+        return None
+    for rel_path in SAME_TREE_PRACTICAL_CLOSURE_CANDIDATES:
+        packet_path = run_root / rel_path
+        packet = _read_valid_same_tree_practical_closure_packet(packet_path, run_root, repo_root=repo_root)
+        if packet is not None:
+            packet["claim_file"] = claim.get("claim_file")
+            packet["run_root"] = _path_for_report(run_root, repo_root=repo_root)
+            return packet
+    return None
+
+
+def _read_valid_same_tree_practical_closure_packet(
+    packet_path: Path,
+    run_root: Path,
+    *,
+    repo_root: Path,
+) -> dict[str, Any] | None:
+    if not packet_path.exists() or not packet_path.is_file():
+        return None
+    try:
+        parsed = json.loads(packet_path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return None
+    if not isinstance(parsed, dict):
+        return None
+    if parsed.get("status") != "pass":
+        return None
+    if parsed.get("promotion_allowed") is not True:
+        return None
+    if parsed.get("trade_usable") is not True:
+        return None
+    if parsed.get("provider_execution_feedback_chain") != "pass":
+        return None
+    evidence_packet = parsed.get("evidence_packet")
+    evidence_path = _resolve_run_root_scoped_path(evidence_packet, run_root)
+    if evidence_path is None:
+        return None
+    packet = dict(parsed)
+    packet["evidence_packet"] = _path_for_report(evidence_path, repo_root=repo_root)
+    packet["packet_path"] = _path_for_report(packet_path, repo_root=repo_root)
+    return packet
+
+
+def _resolve_run_root_scoped_path(value: object, run_root: Path) -> Path | None:
+    if not isinstance(value, str) or not value.strip():
+        return None
+    candidate = Path(value).expanduser()
+    if not candidate.is_absolute():
+        candidate = run_root / candidate
+    try:
+        resolved_candidate = candidate.resolve(strict=False)
+        resolved_run_root = run_root.resolve(strict=False)
+    except OSError:
+        return None
+    if resolved_candidate != resolved_run_root and not _is_relative_to(resolved_candidate, resolved_run_root):
+        return None
+    if not candidate.exists() or not candidate.is_file():
+        return None
+    return candidate
+
+
+def _path_for_report(path: Path, *, repo_root: Path) -> str:
+    try:
+        return str(path.resolve().relative_to(repo_root.resolve()))
+    except (OSError, ValueError):
+        return str(path)
 
 
 def _claim_age_minutes(claim: dict[str, Any], now: datetime) -> int | None:
@@ -776,7 +880,7 @@ def build_report(
         "generated_at": datetime.now(timezone.utc).isoformat(),
         "claims_dir": str(claims_dir),
         "repo_root": str(repo_root),
-        "summary": summarize(claims, live_processes=live_processes, now=now),
+        "summary": summarize(claims, live_processes=live_processes, now=now, repo_root=repo_root),
         "claims": claims,
         "live_factor_processes": live_processes,
     }
