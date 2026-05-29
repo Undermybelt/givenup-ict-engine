@@ -276,7 +276,7 @@ class PracticalAssignmentVisitor(ast.NodeVisitor):
         self.pda_tainted_admission_names = {}
         self.transition_tainted_admission_names = {}
         self.learning_tainted_names = set()
-        self.false_practical_names = {}
+        self.false_practical_names = dict(prior_false_practical_names)
         self.passive_practical_readback_names = {}
         try:
             self.generic_visit(node)
@@ -294,8 +294,8 @@ class PracticalAssignmentVisitor(ast.NodeVisitor):
             return
         self.false_practical_names.pop(target.id, None)
         self.passive_practical_readback_names.pop(target.id, None)
-        if target.id in PRACTICAL_KEYS and is_false_literal(value):
-            self.false_practical_names[target.id] = target.id
+        if is_false_literal(value):
+            self.false_practical_names[target.id] = target.id if target.id in PRACTICAL_KEYS else "*"
             return
         for key in PRACTICAL_KEYS:
             if is_passive_practical_readback(value, key):
@@ -603,6 +603,8 @@ class PracticalAssignmentVisitor(ast.NodeVisitor):
         if is_passive_practical_readback(node, key):
             return True
         if isinstance(node, ast.Name) and self.false_practical_names.get(node.id) == key:
+            return True
+        if isinstance(node, ast.Name) and self.false_practical_names.get(node.id) == "*":
             return True
         if isinstance(node, ast.Name) and self.passive_practical_readback_names.get(node.id) == key:
             return True

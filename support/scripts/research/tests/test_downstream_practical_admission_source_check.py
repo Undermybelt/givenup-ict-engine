@@ -541,6 +541,42 @@ def build_report():
         self.assertTrue(report["ok"])
         self.assertEqual(report["violations"], [])
 
+    def test_allows_module_level_false_default_aliases(self) -> None:
+        path = self.write_source(
+            """
+PROMOTION_ALLOWED_DEFAULT = False
+TRADE_USABLE_DEFAULT = False
+
+def build_report():
+    return {
+        "promotion_allowed": PROMOTION_ALLOWED_DEFAULT,
+        "trade_usable": TRADE_USABLE_DEFAULT,
+        "update_goal": False,
+    }
+"""
+        )
+
+        report = checker.check_source_file(path)
+
+        self.assertTrue(report["ok"])
+        self.assertEqual(report["violations"], [])
+
+    def test_does_not_trust_module_level_false_default_after_reassignment(self) -> None:
+        path = self.write_source(
+            """
+PROMOTION_ALLOWED_DEFAULT = False
+PROMOTION_ALLOWED_DEFAULT = compute_runtime_flag()
+
+def build_report():
+    return {"promotion_allowed": PROMOTION_ALLOWED_DEFAULT}
+"""
+        )
+
+        report = checker.check_source_file(path)
+
+        self.assertFalse(report["ok"])
+        self.assertEqual(report["violations"][0]["key"], "promotion_allowed")
+
     def test_does_not_trust_false_name_alias_after_reassignment(self) -> None:
         path = self.write_source(
             """

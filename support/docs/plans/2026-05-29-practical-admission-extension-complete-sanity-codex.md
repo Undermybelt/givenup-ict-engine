@@ -136,6 +136,21 @@ Required behavior:
   returned `status=not_complete`. Remote gates were no longer skipped;
   release blockers were `worktree_clean_for_release` and
   `source_origin_matches_selected_source`.
+- 2026-05-29T23:12 +0800: Follow-up scanner audit found that untracked fail-
+  closed wrappers using module-level constants such as
+  `PROMOTION_ALLOWED_DEFAULT = False` were being counted as practical-admission
+  debt. RED/GREEN added coverage for module-level false aliases and
+  reassignment invalidation. Verification:
+  `python3 -m unittest support.scripts.research.tests.test_downstream_practical_admission_source_check -v`
+  -> `Ran 34 tests`, `OK`; consumer regressions
+  `python3 -m unittest support.scripts.tests.test_done_definition_audit support.scripts.tests.test_objective_closure_snapshot -v`
+  -> `Ran 74 tests`, `OK`.
+- 2026-05-29T23:12 +0800: `python3 support/scripts/done_definition_audit.py --compact`
+  still reported tracked practical-admission violations `0` and
+  `completion_ready=false` because heavy gates were skipped. After the false-
+  alias fix, quarantined untracked practical-admission debt became `260`
+  violations across `145` files with fingerprint
+  `c2c70a41ab24da8ad9a621e0d130bc8e0ef0773b67e39eb497bdfbe35b7a9145`.
 
 ## Current Remaining Gaps
 
@@ -148,7 +163,8 @@ Required behavior:
   and
   `20260529T224555+0800-codex-nq-compound-rrr-chopfilter-practical-validation.claim`.
 - The practical-admission source debt is quarantined as untracked unsafe wrapper
-  debt only. It is not release-ready or trade-usable evidence.
+  debt only. Latest reviewed quarantine is `260` violations across `145`
+  untracked files. It is not release-ready or trade-usable evidence.
 - Heavy done-definition gates have not been run for this current `HEAD`.
 - Remote release checks have now run and passed readback, but release readiness
   still fails on dirty selected source and source-origin mismatch.
@@ -159,6 +175,10 @@ Required behavior:
   wrappers can no longer pass hardcoded, locally read back, or direct-returned
   positive `extension_complete` into `practical_admission_flags(...)` without
   being flagged by the source checker.
+- This slice also removes a false-positive class: fail-closed module-level
+  aliases to literal `False` are safe unless reassigned, so the checker no
+  longer inflates practical source debt for wrappers that only emit false
+  practical flags.
 - This slice does not close the full user objective. Keep
   `promotion_allowed=false`, `trade_usable=false`, and `update_goal=false` until
   a same-tree practical closure packet, current heavy done-definition proof,
