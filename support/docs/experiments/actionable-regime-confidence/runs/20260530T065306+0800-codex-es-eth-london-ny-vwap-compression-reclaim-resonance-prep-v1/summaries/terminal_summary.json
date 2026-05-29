@@ -1,0 +1,57 @@
+{
+  "created_at": "2026-05-30T06:53:06+0800",
+  "agent_name": "codex-es-eth-london-ny-vwap-compression-reclaim-resonance-prep",
+  "factor_id": "es_eth_london_ny_vwap_compression_reclaim_resonance_v1",
+  "branch_path": "LondonNySessionTransition -> VwapCompressionReclaim -> MtfResonance -> AtrBracketContinuation -> es_eth_london_ny_vwap_compression_reclaim_resonance_v1",
+  "full_rooted_identity_path": "FUTURES -> equity_index -> ES -> ETH/full_retained_session -> 1m origin + 5m/15m/30m/1h/4h/1d context -> LondonNySessionTransition -> VwapCompressionReclaim -> MtfResonance -> AtrBracketContinuation -> es_eth_london_ny_vwap_compression_reclaim_resonance_v1",
+  "session_scope": "ETH/full_retained_session",
+  "rth_filter_applied": false,
+  "source_data_root": "/Users/thrill3r/Auto-Quant/user_data/data",
+  "source_files": [
+    "ES_USD-1m.feather",
+    "ES_USD-5m.feather",
+    "ES_USD-15m.feather",
+    "ES_USD-30m.feather",
+    "ES_USD-1h.feather",
+    "ES_USD-4h.feather",
+    "ES_USD-1d.feather"
+  ],
+  "retained_session_coverage": {
+    "status": "pass_local_source_readback_only",
+    "rth_window": "09:30-16:00 America/New_York",
+    "timeframes": {
+      "1m": {"rows": 299107, "rth_rows": 116953, "non_rth_rows": 182154, "first_utc": "2012-04-23 13:38:00+00:00", "last_utc": "2025-08-04 12:10:00+00:00"},
+      "5m": {"rows": 89433, "rth_rows": 36021, "non_rth_rows": 53412, "first_utc": "2012-04-23 13:35:00+00:00", "last_utc": "2025-08-04 12:10:00+00:00"},
+      "15m": {"rows": 39717, "rth_rows": 15829, "non_rth_rows": 23888, "first_utc": "2012-04-23 13:30:00+00:00", "last_utc": "2025-08-04 12:00:00+00:00"},
+      "30m": {"rows": 23811, "rth_rows": 9466, "non_rth_rows": 14345, "first_utc": "2012-04-23 13:30:00+00:00", "last_utc": "2025-08-04 12:00:00+00:00"},
+      "1h": {"rows": 14036, "rth_rows": 5346, "non_rth_rows": 8690, "first_utc": "2012-04-23 13:00:00+00:00", "last_utc": "2025-08-04 12:00:00+00:00"},
+      "4h": {"rows": 5075, "rth_rows": 1804, "non_rth_rows": 3271, "first_utc": "2012-04-23 12:00:00+00:00", "last_utc": "2025-08-04 12:00:00+00:00"},
+      "1d": {"rows": 1383, "rth_rows": 0, "non_rth_rows": 1383, "first_utc": "2012-04-23 00:00:00+00:00", "last_utc": "2025-08-04 00:00:00+00:00"}
+    }
+  },
+  "duplicate_check": {
+    "exact_factor_id_found": false,
+    "notes": "Focused search found no exact existing factor/claim/tracking lane for this id."
+  },
+  "runtime_guard": {
+    "audit_status": "needs_attention",
+    "active_claims": 2,
+    "fresh_active_claims_without_live_process": 1,
+    "fresh_wait_only_active_claims_without_live_process": 1,
+    "live_factor_processes": 0,
+    "blocking_reasons": ["active_claims"]
+  },
+  "provider_fetch_started": false,
+  "ibkr_historical_started": false,
+  "auto_quant_started": false,
+  "freqtrade_started": false,
+  "paper_or_sim_started": false,
+  "pre_bayes_allowed": false,
+  "bbn_allowed": false,
+  "catboost_allowed": false,
+  "execution_tree_allowed": false,
+  "promotion_allowed": false,
+  "trade_usable": false,
+  "update_goal": false,
+  "decision": "terminalized_source_prep_no_launch_foreign_claims_blocked"
+}

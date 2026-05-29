@@ -1,0 +1,38 @@
+{
+  "created_at": "2026-05-30T06:53:06+0800",
+  "factor_id": "es_eth_london_ny_vwap_compression_reclaim_resonance_v1",
+  "session_scope": "ETH/full_retained_session",
+  "rth_filter_applied": false,
+  "retained_session_coverage_status": "pass_local_source_readback_only",
+  "origin_timeframe": "1m",
+  "context_timeframes": ["5m", "15m", "30m", "1h", "4h", "1d"],
+  "source_rows": {
+    "1m": 299107,
+    "5m": 89433,
+    "15m": 39717,
+    "30m": 23811,
+    "1h": 14036,
+    "4h": 5075,
+    "1d": 1383
+  },
+  "non_rth_rows": {
+    "1m": 182154,
+    "5m": 53412,
+    "15m": 23888,
+    "30m": 14345,
+    "1h": 8690,
+    "4h": 3271,
+    "1d": 1383
+  },
+  "provider_fetch_started": false,
+  "ibkr_historical_started": false,
+  "auto_quant_started": false,
+  "pre_bayes_allowed": false,
+  "bbn_allowed": false,
+  "catboost_allowed": false,
+  "execution_tree_allowed": false,
+  "promotion_allowed": false,
+  "trade_usable": false,
+  "update_goal": false,
+  "decision": "terminalized_source_prep_no_launch_foreign_claims_blocked"
+}
