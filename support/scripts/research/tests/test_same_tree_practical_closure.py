@@ -103,6 +103,12 @@ class SameTreePracticalClosureTests(unittest.TestCase):
 
         self.assertIsNone(closure.build_same_tree_practical_closure_packet(metrics))
 
+    def test_rejects_timed_out_command_result_even_when_exit_zero(self) -> None:
+        metrics = valid_metrics()
+        metrics["command_results"] = [{"name": "analyze", "exit": 0, "timed_out": True}]
+
+        self.assertIsNone(closure.build_same_tree_practical_closure_packet(metrics))
+
     def test_rejects_bad_market_data_provenance(self) -> None:
         metrics = valid_metrics()
         metrics["market_data_provenance"]["source_class"] = "raw_contract_stitching"

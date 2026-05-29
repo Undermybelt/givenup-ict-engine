@@ -114,7 +114,12 @@ def metrics_prove_same_tree_practical_closure(metrics: dict[str, Any]) -> bool:
     command_results = metrics.get("command_results")
     if not isinstance(command_results, list) or not command_results:
         return False
-    return all(isinstance(row, dict) and row.get("exit") == 0 for row in command_results)
+    return all(
+        isinstance(row, dict)
+        and row.get("exit") == 0
+        and row.get("timed_out") is not True
+        for row in command_results
+    )
 
 
 def lifecycle_tuple_proves_practical_closure(metrics: dict[str, Any]) -> bool:
