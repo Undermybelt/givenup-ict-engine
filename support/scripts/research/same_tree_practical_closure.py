@@ -120,7 +120,114 @@ def metrics_prove_same_tree_practical_closure(metrics: dict[str, Any]) -> bool:
         return False
     if not market_data_provenance_proves_practical_closure(metrics.get("market_data_provenance")):
         return False
+    if not session_scope_proves_practical_closure(metrics):
+        return False
+    if not cost_model_proves_practical_closure(metrics):
+        return False
     return command_results_prove_practical_closure(metrics.get("command_results"))
+
+
+def session_scope_proves_practical_closure(metrics: dict[str, Any]) -> bool:
+    scope = normalized_key(metrics.get("session_scope"))
+    if scope not in {"eth_full_retained_session", "full_retained_session", "eth"}:
+        return False
+    if metrics.get("rth_filter_applied") is not False:
+        return False
+    coverage = metrics.get("retained_session_coverage")
+    if not isinstance(coverage, dict):
+        return False
+    if normalized_text(coverage.get("status")) != "pass":
+        return False
+    if coverage.get("has_non_rth_rows") is not True:
+        return False
+    evidence = coverage.get("evidence") or coverage.get("evidence_path") or coverage.get("row_coverage_evidence")
+    return isinstance(evidence, str) and bool(evidence.strip())
+
+
+def cost_model_proves_practical_closure(metrics: dict[str, Any]) -> bool:
+    if metrics.get("promotion_cost_verified") is not True:
+        return False
+    cost_model = metrics.get("cost_model")
+    if not isinstance(cost_model, dict):
+        return False
+    if not cost_model_status_proves_practical_closure(cost_model.get("status")):
+        return False
+    required_text_field_groups = (
+        ("instrument_class",),
+        ("broker",),
+        ("pricing_plan",),
+        ("venue_routing", "exchange"),
+        ("currency",),
+        ("unit_convention",),
+        ("fee_effective_date",),
+    )
+    for keys in required_text_field_groups:
+        if not any(verified_cost_model_text(cost_model.get(key)) for key in keys):
+            return False
+    return cost_model_sources_prove_practical_closure(cost_model)
+
+
+def verified_cost_model_text(value: object) -> bool:
+    if not isinstance(value, str) or not value.strip():
+        return False
+    return not source_readback_has_blocker(normalized_text(value))
+
+
+def cost_model_status_proves_practical_closure(value: object) -> bool:
+    status = normalized_text(value)
+    if source_readback_has_blocker(status):
+        return False
+    return status == "pass" or status == "verified" or status.startswith("verified_")
+
+
+def cost_model_sources_prove_practical_closure(cost_model: dict[str, Any]) -> bool:
+    source_refs = cost_model.get("source_refs")
+    if isinstance(source_refs, dict) and source_refs:
+        return all(source_ref_proves_practical_closure(ref) for ref in source_refs.values())
+
+    official_source_refs = cost_model.get("official_source_refs")
+    if isinstance(official_source_refs, list) and official_source_refs:
+        return all(source_ref_proves_practical_closure(ref) for ref in official_source_refs)
+
+    return False
+
+
+def source_ref_proves_practical_closure(ref: object) -> bool:
+    if not isinstance(ref, dict):
+        return False
+    url = ref.get("url") or ref.get("source_url") or ref.get("href")
+    if not isinstance(url, str) or not url.startswith(("https://", "http://")):
+        return False
+
+    readback = normalized_text(
+        ref.get("same_turn_readback")
+        or ref.get("readback")
+        or ref.get("verification_status")
+        or ref.get("status")
+    )
+    if source_readback_has_blocker(readback):
+        return False
+    if "official_source_http_200" in readback and "rate_verified" in readback:
+        return True
+
+    http_status = ref.get("http_status") or ref.get("status_code")
+    rate_status = normalized_text(ref.get("rate_status"))
+    return str(http_status) == "200" and (ref.get("rate_verified") is True or rate_status == "rate_verified")
+
+
+def source_readback_has_blocker(readback: str) -> bool:
+    return any(
+        marker in readback
+        for marker in (
+            "not_rate_verified",
+            "official_source_http_403",
+            "official_source_http_404",
+            "http_403",
+            "http_404",
+            "unknown",
+            "unverified",
+        )
+    )
 
 
 def command_results_prove_practical_closure(value: object) -> bool:
@@ -297,4 +404,4 @@ def normalized_text(value: object) -> str:
 
 
 def normalized_key(value: object) -> str:
-    return normalized_text(value).replace("-", "_").replace(" ", "_")
+    return normalized_text(value).replace("-", "_").replace(" ", "_").replace("/", "_")

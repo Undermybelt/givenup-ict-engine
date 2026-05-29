@@ -1085,6 +1085,30 @@ trade_usable=false
                                 "parse_bad_rows": 0,
                             },
                         },
+                        "session_scope": "ETH/full_retained_session",
+                        "rth_filter_applied": False,
+                        "retained_session_coverage": {
+                            "status": "pass",
+                            "has_non_rth_rows": True,
+                            "evidence": "verified retained tradable-session rows outside RTH",
+                        },
+                        "promotion_cost_verified": True,
+                        "cost_model": {
+                            "status": "pass",
+                            "instrument_class": "futures",
+                            "broker": "IBKR",
+                            "pricing_plan": "fixed_or_tiered_verified",
+                            "venue_routing": "exchange_verified",
+                            "currency": "USD",
+                            "unit_convention": "per_contract_round_turn",
+                            "fee_effective_date": "2026-05-30",
+                            "official_source_refs": [
+                                {
+                                    "url": "https://www.interactivebrokers.com/en/pricing/commissions-futures.php",
+                                    "same_turn_readback": "official_source_http_200_rate_verified",
+                                }
+                            ],
+                        },
                         "command_results": practical_command_results(),
                     }
                 ),

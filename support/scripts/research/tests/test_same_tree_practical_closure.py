@@ -77,6 +77,30 @@ def valid_metrics() -> dict:
                 "max_abs_gross_return_pct": 4.2,
             },
         },
+        "session_scope": "ETH/full_retained_session",
+        "rth_filter_applied": False,
+        "retained_session_coverage": {
+            "status": "pass",
+            "has_non_rth_rows": True,
+            "evidence": "verified retained tradable-session rows outside RTH",
+        },
+        "promotion_cost_verified": True,
+        "cost_model": {
+            "status": "pass",
+            "instrument_class": "futures",
+            "broker": "IBKR",
+            "pricing_plan": "fixed_or_tiered_verified",
+            "venue_routing": "exchange_verified",
+            "currency": "USD",
+            "unit_convention": "per_contract_round_turn",
+            "fee_effective_date": "2026-05-30",
+            "official_source_refs": [
+                {
+                    "url": "https://www.interactivebrokers.com/en/pricing/commissions-futures.php",
+                    "same_turn_readback": "official_source_http_200_rate_verified",
+                }
+            ],
+        },
         "command_results": practical_command_results(),
     }
 
@@ -173,6 +197,52 @@ class SameTreePracticalClosureTests(unittest.TestCase):
         metrics["market_data_provenance"]["source_class"] = "raw_contract_stitching"
 
         self.assertIsNone(closure.build_same_tree_practical_closure_packet(metrics))
+
+    def test_rejects_rth_only_or_unverified_session_scope(self) -> None:
+        metrics = valid_metrics()
+        metrics["session_scope"] = "RTH_comparison"
+
+        self.assertIsNone(closure.build_same_tree_practical_closure_packet(metrics))
+
+        metrics = valid_metrics()
+        metrics["retained_session_coverage"]["has_non_rth_rows"] = False
+
+        self.assertIsNone(closure.build_same_tree_practical_closure_packet(metrics))
+
+    def test_rejects_unverified_or_incomplete_cost_model(self) -> None:
+        metrics = valid_metrics()
+        metrics["promotion_cost_verified"] = False
+
+        self.assertIsNone(closure.build_same_tree_practical_closure_packet(metrics))
+
+        metrics = valid_metrics()
+        metrics["cost_model"]["official_source_refs"] = []
+
+        self.assertIsNone(closure.build_same_tree_practical_closure_packet(metrics))
+
+        metrics = valid_metrics()
+        metrics["cost_model"]["official_source_refs"] = [
+            "https://www.interactivebrokers.com/en/pricing/commissions-futures.php"
+        ]
+
+        self.assertIsNone(closure.build_same_tree_practical_closure_packet(metrics))
+
+    def test_accepts_verified_cost_model_status_with_structured_source_readback(self) -> None:
+        metrics = valid_metrics()
+        metrics["cost_model"]["status"] = "verified_ibkr_official"
+
+        packet = closure.build_same_tree_practical_closure_packet(metrics)
+
+        self.assertIsNotNone(packet)
+
+    def test_accepts_exchange_field_as_cost_model_venue(self) -> None:
+        metrics = valid_metrics()
+        metrics["cost_model"].pop("venue_routing")
+        metrics["cost_model"]["exchange"] = "CME"
+
+        packet = closure.build_same_tree_practical_closure_packet(metrics)
+
+        self.assertIsNotNone(packet)
 
     def test_write_removes_stale_packet_when_metrics_fail(self) -> None:
         metrics = valid_metrics()

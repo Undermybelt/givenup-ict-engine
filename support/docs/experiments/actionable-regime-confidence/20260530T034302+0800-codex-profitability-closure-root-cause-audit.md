@@ -143,6 +143,37 @@ admission owners where current evidence shows a system loophole.
   `live_factor_processes=1`, `promotion_allowed_true=0`, `trade_usable_true=0`,
   and `same_tree_practical_closure=null`. Do not run the NQ practical lifecycle
   driver until the fresh CC claim and EUR/ETH live runtime clear.
+- 2026-05-30T05:16:52+0800: fixed a canonical same-tree practical-closure
+  validator loophole. Before this slice,
+  `metrics_prove_same_tree_practical_closure()` required lifecycle and staged
+  command evidence but did not require ETH/full retained session proof or a
+  verified cost-model packet. A RTH-only packet, or a packet with only
+  `promotion_cost_verified=true` plus a bare URL, could theoretically pass the
+  canonical helper if all other booleans were true. Added strict TDD coverage
+  and implementation so the helper now requires `session_scope` to normalize to
+  ETH/full retained session, `rth_filter_applied=false`, retained non-RTH row
+  coverage evidence, `promotion_cost_verified=true`, complete cost-model text
+  fields, and structured official-source readbacks proving HTTP 200 plus
+  `rate_verified`. Bare URL strings, unverified/unknown/not-rate-verified
+  source markers, HTTP 403, and HTTP 404 fail closed. The helper also accepts
+  common verified status text such as `verified_ibkr_official` and accepts
+  `exchange` as a cost venue field when `venue_routing` is absent, avoiding an
+  unnecessary false blocker for existing futures cost packets.
+  Verification passed:
+  `python3 -m unittest support.scripts.research.tests.test_same_tree_practical_closure -v`
+  ran 16 tests OK;
+  `python3 -m unittest support.scripts.tests.test_factor_claim_terminalization_audit -v`
+  ran 94 tests OK;
+  `python3 -m py_compile support/scripts/research/same_tree_practical_closure.py support/scripts/research/tests/test_same_tree_practical_closure.py support/scripts/factor_claim_terminalization_audit.py support/scripts/tests/test_factor_claim_terminalization_audit.py`
+  passed;
+  `git diff --check -- support/scripts/research/same_tree_practical_closure.py support/scripts/research/tests/test_same_tree_practical_closure.py support/scripts/tests/test_factor_claim_terminalization_audit.py`
+  passed. Final same-turn compact claim audit still blocks new live/AQ
+  lifecycle work: `status=needs_attention`, `active_claims=3`,
+  `fresh_active_claims_without_live_process=3`, `live_factor_processes=1`,
+  `promotion_allowed_true=0`, `trade_usable_true=0`, and
+  `same_tree_practical_closure=null`. The live root was the MGC Kalman VWAP
+  full-ladder Gate 1 run under
+  `support/docs/experiments/actionable-regime-confidence/runs/20260530T051755+0800-codex-ibkr-mgc1m-kalman-vwap-slope-reclaim-full-ladder-gate1-v1`.
 
 ## Root Cause Readback
 
