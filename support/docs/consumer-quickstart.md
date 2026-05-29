@@ -75,3 +75,16 @@ cargo run --quiet -- pre-bayes-status --symbol MY_SYMBOL --state-dir /tmp/ict-en
 - Public output must not require private profiles, private datasets, API keys, or
   maintainer-local paths.
 - Agent code should read structured fields, not display strings.
+
+## Factor Pack Contract
+
+- reusable example packs live under `support/examples/factor_candidate_packs/**`
+- a valid repo-native pack is a directory with:
+  - `pack_manifest.json`
+  - `factor_expression.json`
+  - `factor_eval_grid_summary.json`
+  - `transfer_score.json`
+- product-visible candidate selection is explicit, not implicit directory
+  scanning
+- if you add or remove packs, keep the registry/preset layer aligned so a fresh
+  clone sees the same candidate set

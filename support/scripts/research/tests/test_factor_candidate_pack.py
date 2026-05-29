@@ -613,6 +613,10 @@ Uses MTF: yes
         self.assertEqual(manifest["config_path"], "config.tomac.json")
         self.assertEqual(manifest["log_path"], "run_tomac_fvg.log")
         self.assertEqual(manifest["validation_errors"], [])
+        self.assertEqual(
+            manifest["strategies"][0]["metadata"]["source_artifact"],
+            "backtest.zip",
+        )
 
     def test_build_strategy_library_manifest_preserves_auto_quant_meta_block(self) -> None:
         backtest_payload = {
@@ -727,6 +731,7 @@ Created:         pending-first-commit
             ["tomac_n_q__killzone_breakout"],
         )
         self.assertEqual(strategy["metadata"]["asset_class"], "synthetic_ohlcv")
+        self.assertEqual(strategy["metadata"]["source_artifact"], "backtest.zip")
 
     def test_build_strategy_library_manifest_splits_expected_regime_branch_path(self) -> None:
         backtest_payload = {

@@ -348,6 +348,12 @@ def _branch_path_fields(expected_regime: Any) -> dict[str, str]:
     }
 
 
+def _portable_artifact_ref(path: Path) -> str:
+    if path.is_absolute():
+        return path.name
+    return path.as_posix()
+
+
 def build_manifest_from_freqtrade_backtest_zip(zip_path: Path) -> dict[str, Any]:
     with zipfile.ZipFile(zip_path) as archive:
         result_name = next(
@@ -430,7 +436,8 @@ def build_manifest_from_freqtrade_backtest_zip(zip_path: Path) -> dict[str, Any]
                         "paradigm": strategy_metadata.get("paradigm"),
                         "expected_regime": strategy_metadata.get("expected_regime"),
                         "factors_used": strategy_metadata.get("factors_used", []),
-                        "source_artifact": str(zip_path),
+                        # Preserve clone-safe provenance without leaking caller-local paths.
+                        "source_artifact": _portable_artifact_ref(zip_path),
                         "strategy_source_name": strategy_source_name,
                         "parent_strategy": strategy_metadata.get("parent_strategy"),
                         "asset_class": strategy_metadata.get("asset_class"),
@@ -508,6 +515,7 @@ def build_strategy_library_manifest_from_freqtrade_backtest_zip(
                     "base_factor": metadata.get("base_factor", ""),
                     "hypothesis": metadata.get("hypothesis", ""),
                     "paradigm": metadata.get("paradigm", ""),
+                    "source_artifact": metadata.get("source_artifact", ""),
                     "expected_regime": metadata.get("expected_regime", ""),
                     "main_regime": branch_fields["main_regime"],
                     "sub_regime": branch_fields["sub_regime"],

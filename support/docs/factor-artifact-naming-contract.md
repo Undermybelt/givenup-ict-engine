@@ -29,6 +29,7 @@ The factor-iteration lane therefore uses four distinct artifact layers.
 3. `candidate_pack`
    - Meaning: the white-box output contract produced by the factor-iteration helper layer.
    - Current family:
+     - `pack_manifest.json`
      - `factor_expression.json`
      - `factor_eval_grid_summary.json`
      - `transfer_score.json`
@@ -97,6 +98,9 @@ Every factor candidate registry entry should carry:
 - `candidate_pack_dir` is the preferred repo-local promotion input: it carries
   the distilled useful result without requiring raw Auto-Quant workspaces,
   private backtest zips, or historical board prose.
+- `pack_manifest.json` is the pack-local inventory/lineage surface. Consumers
+  should be able to inspect one pack directory in isolation and learn which
+  artifact files belong to it plus which reusable input produced it.
 - `temp_state_dir` does not become canonical merely because it is the newest artifact.
 - A lane may be `archive_reference_only + deferred` without being lost or invalid.
 - A lane with only prose history must be classified as

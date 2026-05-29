@@ -17,6 +17,39 @@ source release gate by itself.
 
 ## Fresh Evidence
 
+2026-05-29 dirty-worktree / stale-agent triage continuation:
+
+- User-expanded scope: audit stale dirty work from other agents, decide whether
+  coherent slices should be committed or left uncommitted, and decide whether a
+  user-facing release should proceed. This is part of the same completion
+  objective, not a separate release claim.
+- Current worktree readback on `main` at `HEAD=0be24d9bca0e8ad2fe36975bd8bfc3ef1479309c`:
+  `43` tracked dirty files and `1866` untracked files. Untracked residue is
+  mostly factor scratch/work output, not release material: `891` untracked
+  experiment scripts, `342` untracked experiment script tests, `609` other
+  support artifacts, `28` top-level factor files/directories, and `5` untracked
+  plan docs. Do not run `git add .` and do not publish from this shared tree.
+- Tracked dirty files currently split into independent slices:
+  consumer/factor-pack docs and clone-safe pack provenance;
+  same-root execution-readiness floor/ranker threshold changes;
+  IBKR historical fetch/port/retry repair;
+  freqtrade trade export and structural feedback replay helpers;
+  research guard/label utilities; old Board B archive/state writebacks. These
+  must be verified and staged by explicit path if they are adopted.
+- Current compact factor claim audit:
+  `python3 support/scripts/factor_claim_terminalization_audit.py --compact`
+  exited red with `active_claims=1`, `live_factor_processes=1`,
+  `promotion_allowed_true=0`, and `trade_usable_true=0`. The live owner is
+  `/tmp/ict-engine-tomac-kst-coppock-density-frontier-20260529T130647+0800`
+  via claim
+  `/tmp/ict-engine-agent-claims/board-b-factor-refinement/20260529T130647+0800-codex-tomac-kst-coppock-density-frontier.claim`.
+  This blocks practical-factor closure and any sibling factor launch/takeover.
+- Current release decision before further proof: do not publish. Release needs a
+  clean selected source/export, current remote/tag readback, no hidden practical
+  blockers, and a coherent committed slice. The shared dirty tree can be mined
+  for verified commits, but it is not itself a release candidate.
+
+
 2026-05-29 release-proof reuse slice:
 
 - New packet-cooperation loophole found: `objective_closure_snapshot.py` could

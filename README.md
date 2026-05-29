@@ -169,6 +169,18 @@ cargo run -- policy-training-status --symbol DEMO --state-dir /tmp/ict-engine-fi
 | `factor-candidate-packs` | curated reusable factor candidates | 🧍🤖 |
 | `regime-confidence-assets` | preserved high-confidence regime/source evidence | 🧍🤖 |
 
+**Factor pack contract**
+
+- repo-native packs live under `support/examples/factor_candidate_packs/**`
+- each reusable pack directory is expected to carry:
+  - `pack_manifest.json`
+  - `factor_expression.json`
+  - `factor_eval_grid_summary.json`
+  - `transfer_score.json`
+- adding or removing a pack directory alone does **not** make it a product-visible
+  candidate; selection still flows through the explicit registry/preset layer
+  so fresh clones stay deterministic
+
 **Default behavior is consumer-safe (｡♥‿♥｡):**
 
 - 🔓 no private provider profile required
