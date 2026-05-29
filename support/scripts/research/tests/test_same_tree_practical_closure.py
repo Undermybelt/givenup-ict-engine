@@ -12,6 +12,18 @@ sys.path.insert(0, str(SCRIPT_ROOT))
 import same_tree_practical_closure as closure  # noqa: E402
 
 
+def practical_command_results() -> list[dict]:
+    return [
+        {"name": "01_provider_data_fetch", "exit": 0, "timed_out": False},
+        {"name": "05_pre_bayes_status", "exit": 0, "timed_out": False},
+        {"name": "04_workflow_status_bbn", "exit": 0, "timed_out": False},
+        {"name": "11_train_catboost_path_ranker", "exit": 0, "timed_out": False},
+        {"name": "16_analyze_after_ranker_execution_tree", "exit": 0, "timed_out": False},
+        {"name": "08_ingest_simulated_trade_feedback", "exit": 0, "timed_out": False},
+        {"name": "19_policy_training_status", "exit": 0, "timed_out": False},
+    ]
+
+
 def valid_metrics() -> dict:
     return {
         "branch_path": "TrendExpansion -> Example -> factor_v1",
@@ -61,7 +73,7 @@ def valid_metrics() -> dict:
                 "max_abs_gross_return_pct": 4.2,
             },
         },
-        "command_results": [{"name": "all", "exit": 0, "timed_out": False}],
+        "command_results": practical_command_results(),
     }
 
 
@@ -112,6 +124,24 @@ class SameTreePracticalClosureTests(unittest.TestCase):
     def test_rejects_command_result_without_explicit_non_timeout_proof(self) -> None:
         metrics = valid_metrics()
         metrics["command_results"] = [{"name": "analyze", "exit": 0}]
+
+        self.assertIsNone(closure.build_same_tree_practical_closure_packet(metrics))
+
+    def test_rejects_aggregate_command_result_without_step_coverage(self) -> None:
+        metrics = valid_metrics()
+        metrics["command_results"] = [{"name": "all", "exit": 0, "timed_out": False}]
+
+        self.assertIsNone(closure.build_same_tree_practical_closure_packet(metrics))
+
+    def test_rejects_single_command_name_spoofing_every_required_stage(self) -> None:
+        metrics = valid_metrics()
+        metrics["command_results"] = [
+            {
+                "name": "provider_pre_bayes_workflow_catboost_execution_tree_feedback_policy_training",
+                "exit": 0,
+                "timed_out": False,
+            }
+        ]
 
         self.assertIsNone(closure.build_same_tree_practical_closure_packet(metrics))
 

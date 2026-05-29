@@ -481,3 +481,93 @@ Current truth after this slice:
 - The remaining active claim has not yet crossed the one-hour stale-takeover
   window, so this slice only closes another false-positive practical-closure
   path and does not create a practical/live usable factor.
+
+## 2026-05-30T01:22+0800 Live-Process Readback Classifier Guard
+
+Root cause handled in this slice:
+
+- The factor claim audit live-process classifier treated a bare readback command
+  such as `find ... -name run_tomac_*ym*py -print` as a live factor process
+  because the command referenced a `run_tomac_*.py` filename before the
+  readback filter rejected search-only commands.
+- This could create a false `live_factor_processes > 0` blocker and obscure the
+  real factor-closure state.
+
+Changes made:
+
+- Updated `support/scripts/factor_claim_terminalization_audit.py` so bare
+  `find` readbacks are filtered with `rg`/`grep` before factor wrapper matching.
+- Added
+  `FactorClaimTerminalizationAuditTest.test_live_process_classifier_ignores_bare_find_readback_commands`.
+- Updated the local ict-engine maintenance runtime skill so future agents treat
+  grep/sed/rg/find readbacks as non-owner command-introspection probes.
+
+Verification:
+
+- `python3 -m unittest support.scripts.tests.test_factor_claim_terminalization_audit.FactorClaimTerminalizationAuditTest.test_live_process_classifier_ignores_bare_find_readback_commands -v`
+  -> failed before the fix with `AssertionError: True is not false`, then `OK`
+  after the fix.
+- `python3 -m unittest support.scripts.tests.test_factor_claim_terminalization_audit -v`
+  -> `Ran 94 tests`, `OK`.
+- `python3 support/scripts/factor_claim_terminalization_audit.py --compact`
+  -> `live_factor_processes=0`, `fresh_active_claims_without_live_process=1`,
+  `promotion_allowed_true=0`, `trade_usable_true=0`,
+  `same_tree_practical_closure=null`.
+
+Current truth after this slice:
+
+- No validated `same_tree_practical_closure` packet exists.
+- Factor closure is still not complete: one active NQ screen claim remains fresh
+  and unterminalized, with `promotion_allowed_true=0`, `trade_usable_true=0`,
+  and `same_tree_practical_closure=null`.
+- This slice removes a false live-runtime blocker; it does not create a
+  practical/live usable factor.
+
+## 2026-05-30T01:24+0800 Closure Command Stage Coverage Guard
+
+Root cause handled in this slice:
+
+- The canonical practical-closure helper still accepted an aggregate command row
+  such as `{"name": "all", "exit": 0, "timed_out": false}`. That row proves
+  only a summary flag, not that provider/data, Pre-Bayes, BBN/workflow,
+  CatBoost/path-ranker, execution tree, feedback/update, and policy training
+  each executed successfully in the same rooted branch.
+- A single command name containing every stage keyword could also satisfy a
+  naive substring coverage check, so each required stage must be backed by a
+  distinct command result row.
+
+Changes made:
+
+- Added producer-level regression tests rejecting aggregate command evidence
+  and single-row keyword spoofing.
+- Added stage coverage requirements to
+  `support/scripts/research/same_tree_practical_closure.py`: command evidence
+  must contain distinct zero-exit, `timed_out=false` rows covering provider/data,
+  Pre-Bayes, BBN/workflow, CatBoost/path-ranker, execution tree,
+  feedback/update, and policy training.
+- Updated the audit-consumer valid fixture to use stage-level command evidence
+  instead of `name=all`.
+
+Verification:
+
+- `python3 -m unittest support.scripts.research.tests.test_same_tree_practical_closure.SameTreePracticalClosureTests.test_rejects_aggregate_command_result_without_step_coverage -v`
+  -> failed before the fix, then `OK` after the fix.
+- `python3 -m unittest support.scripts.research.tests.test_same_tree_practical_closure.SameTreePracticalClosureTests.test_rejects_single_command_name_spoofing_every_required_stage -v`
+  -> failed before the second-stage fix, then `OK` after the fix.
+- `python3 -m unittest support.scripts.research.tests.test_same_tree_practical_closure support.scripts.tests.test_factor_claim_terminalization_audit -v`
+  -> `Ran 104 tests`, `OK`.
+- `git diff --check -- support/scripts/research/same_tree_practical_closure.py support/scripts/research/tests/test_same_tree_practical_closure.py support/scripts/factor_claim_terminalization_audit.py support/scripts/tests/test_factor_claim_terminalization_audit.py support/docs/plans/2026-05-29-practical-admission-extension-complete-sanity-codex.md`
+  -> pass.
+
+Current truth after this slice:
+
+- No validated `same_tree_practical_closure` packet exists.
+- Practical closure remains blocked by current `/tmp` claim/runtime state. The
+  latest compact audit reported `active_claims=3`,
+  `fresh_active_claims_without_live_process=2`, `live_factor_processes=1`,
+  `promotion_allowed_true=0`, `trade_usable_true=0`, and
+  `same_tree_practical_closure=null`.
+- Release readiness remains blocked by `worktree_clean_for_release` and
+  `remote_readback`.
+- This slice closes another false-positive practical-closure path; it does not
+  create a practical/live usable factor.

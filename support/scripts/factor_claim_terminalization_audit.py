@@ -1164,7 +1164,7 @@ def _is_ibkr_provider_status_probe(command: str) -> bool:
 
 def _looks_like_readback_command(command: str) -> bool:
     normalized = _normalize_ps_command_text(command)
-    if re.match(r"^(?:\S*/)?(?:rg|grep|egrep|fgrep)\s", normalized.strip()):
+    if re.match(r"^(?:\S*/)?(?:rg|grep|egrep|fgrep|find)\s", normalized.strip()):
         return True
     if ("ps -axo" in normalized or "ps auxww" in normalized or "ps -p" in normalized) and (
         "| rg" in normalized or " rg " in normalized or "| grep" in normalized

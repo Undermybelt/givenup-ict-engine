@@ -29,6 +29,18 @@ from factor_claim_terminalization_audit import (  # noqa: E402
 )
 
 
+def practical_command_results() -> list[dict]:
+    return [
+        {"name": "01_provider_data_fetch", "exit": 0, "timed_out": False},
+        {"name": "05_pre_bayes_status", "exit": 0, "timed_out": False},
+        {"name": "04_workflow_status_bbn", "exit": 0, "timed_out": False},
+        {"name": "11_train_catboost_path_ranker", "exit": 0, "timed_out": False},
+        {"name": "16_analyze_after_ranker_execution_tree", "exit": 0, "timed_out": False},
+        {"name": "08_ingest_simulated_trade_feedback", "exit": 0, "timed_out": False},
+        {"name": "19_policy_training_status", "exit": 0, "timed_out": False},
+    ]
+
+
 class FactorClaimTerminalizationAuditTest(unittest.TestCase):
     def test_compact_live_process_marks_exit_file_stale_for_current_process(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
@@ -1073,7 +1085,7 @@ trade_usable=false
                                 "parse_bad_rows": 0,
                             },
                         },
-                        "command_results": [{"name": "all", "exit": 0, "timed_out": False}],
+                        "command_results": practical_command_results(),
                     }
                 ),
                 encoding="utf-8",
@@ -2345,6 +2357,14 @@ trade_usable=false
             "rg -i run_tomac_psar_arooncci|tomac-psar|run_ibkr_|"
             "auto-quant-agent-material|fetch_external\\.py|prepare_external\\.py|"
             "factor-research|01_full_repair"
+        )
+
+        self.assertFalse(_is_live_factor_command(command))
+
+    def test_live_process_classifier_ignores_bare_find_readback_commands(self) -> None:
+        command = (
+            "find support/docs/experiments/actionable-regime-confidence/scripts "
+            "-maxdepth 1 -type f -name run_tomac_*ym*py -print"
         )
 
         self.assertFalse(_is_live_factor_command(command))

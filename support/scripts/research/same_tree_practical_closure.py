@@ -34,6 +34,15 @@ DISALLOWED_MARKET_DATA_SOURCE_CLASSES = {
 DEPLOY_READY_READINESS_CONTRACT = (
     "deploy_ready_from_backtest_autoquant_provider_or_paper_sim_execution_chain_not_funded_fill"
 )
+REQUIRED_COMMAND_RESULT_STAGES: tuple[tuple[str, tuple[str, ...]], ...] = (
+    ("provider_data", ("provider", "fetch", "market_data", "market-data", "auto_quant_results_import")),
+    ("pre_bayes", ("pre_bayes", "pre-bayes")),
+    ("bbn_workflow", ("workflow", "bbn")),
+    ("path_ranker", ("path_ranker", "path-ranker", "catboost", "ranker")),
+    ("execution_tree", ("execution_tree", "execution-tree", "analyze_after_ranker")),
+    ("feedback_update", ("feedback", "update", "ingest_real_trade", "ingest_simulated_trade")),
+    ("policy_training", ("policy_training", "policy-training", "policy")),
+)
 
 
 def build_same_tree_practical_closure_packet(
@@ -111,15 +120,35 @@ def metrics_prove_same_tree_practical_closure(metrics: dict[str, Any]) -> bool:
         return False
     if not market_data_provenance_proves_practical_closure(metrics.get("market_data_provenance")):
         return False
-    command_results = metrics.get("command_results")
-    if not isinstance(command_results, list) or not command_results:
+    return command_results_prove_practical_closure(metrics.get("command_results"))
+
+
+def command_results_prove_practical_closure(value: object) -> bool:
+    if not isinstance(value, list) or not value:
         return False
-    return all(
-        isinstance(row, dict)
-        and row.get("exit") == 0
-        and row.get("timed_out") is False
-        for row in command_results
-    )
+    unmatched_command_names: list[str] = []
+    for row in value:
+        if not isinstance(row, dict):
+            return False
+        if row.get("exit") != 0 or row.get("timed_out") is not False:
+            return False
+        name = normalized_text(row.get("name"))
+        if not name:
+            return False
+        unmatched_command_names.append(name)
+    for _, markers in REQUIRED_COMMAND_RESULT_STAGES:
+        matched_index = next(
+            (
+                index
+                for index, command_name in enumerate(unmatched_command_names)
+                if any(marker in command_name for marker in markers)
+            ),
+            None,
+        )
+        if matched_index is None:
+            return False
+        unmatched_command_names.pop(matched_index)
+    return True
 
 
 def lifecycle_tuple_proves_practical_closure(metrics: dict[str, Any]) -> bool:
