@@ -70,14 +70,24 @@ import argparse
 import csv
 import json
 import os
+import socket
 import sys
 import time
 from datetime import datetime, timedelta, timezone
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any
+from typing import Any, Awaitable, Callable
 
 import requests
+
+
+IBKR_GATEWAY_PORT_CANDIDATES = [
+    ("TWS paper", 7497),
+    ("TWS live", 7496),
+    ("IB Gateway paper", 4002),
+    ("IB Gateway live", 4001),
+]
+IBKR_GATEWAY_PROBE_TIMEOUT_SECONDS = 0.15
 
 
 class _LazyPandasModule:
@@ -1510,6 +1520,116 @@ def _import_ibkr_bridge() -> tuple:
     return require_ibkr_enabled, IbkrRateLimiter, connect_with_client_id_fallback, ib_async
 
 
+def _probe_tcp_port(host: str, port: int, timeout: float = IBKR_GATEWAY_PROBE_TIMEOUT_SECONDS) -> bool:
+    try:
+        with socket.create_connection((host, port), timeout=timeout):
+            return True
+    except OSError:
+        return False
+
+
+def _reachable_ibkr_gateway_ports(host: str, probe=_probe_tcp_port) -> list[tuple[str, int]]:
+    reachable = []
+    for label, port in IBKR_GATEWAY_PORT_CANDIDATES:
+        if probe(host, port):
+            reachable.append((label, port))
+    return reachable
+
+
+def _resolve_ibkr_gateway_port(
+    host: str,
+    explicit_port: int | None,
+    *,
+    purpose: str,
+    probe=_probe_tcp_port,
+) -> int:
+    if explicit_port is not None:
+        return explicit_port
+
+    reachable = _reachable_ibkr_gateway_ports(host, probe=probe)
+    if not reachable:
+        candidates = ", ".join(f"{label}:{port}" for label, port in IBKR_GATEWAY_PORT_CANDIDATES)
+        raise SystemExit(
+            f"{purpose}: no reachable local IBKR API port on {host}; "
+            f"probed {candidates}. Launch TWS/IB Gateway with API enabled or pass --port explicitly."
+        )
+
+    selected_label, selected_port = reachable[0]
+    if len(reachable) == 1:
+        print(
+            f"  {purpose}: auto-selected {selected_label} port {selected_port}",
+            file=sys.stderr,
+        )
+    else:
+        choices = ", ".join(f"{label}:{port}" for label, port in reachable)
+        print(
+            f"  {purpose}: multiple reachable IBKR ports ({choices}); "
+            f"using {selected_label}:{selected_port}. Pass --port to override.",
+            file=sys.stderr,
+        )
+    return selected_port
+
+
+async def _ibkr_retry_empty_historical_request(
+    request_once: Callable[[], Awaitable[Any]],
+    reconnect_once: Callable[[], Awaitable[None]],
+    *,
+    should_retry: Callable[[], bool] | None = None,
+    max_attempts: int = 2,
+) -> tuple[Any, int]:
+    bars = []
+    for attempt in range(1, max_attempts + 1):
+        bars = await request_once()
+        if bars:
+            return bars, attempt
+        if should_retry is not None and not should_retry():
+            return bars, attempt
+        if attempt < max_attempts:
+            await reconnect_once()
+    return bars, max_attempts
+
+
+@dataclass(frozen=True)
+class _IbkrHistoricalRequestErrorClassification:
+    category: str
+    retryable: bool
+
+
+def _ibkr_classify_historical_request_error(
+    error_code: int,
+    error_message: str,
+) -> _IbkrHistoricalRequestErrorClassification:
+    lowered = (error_message or "").lower()
+    if "different ip address" in lowered:
+        return _IbkrHistoricalRequestErrorClassification(
+            category="broker_session_authority_blocked",
+            retryable=False,
+        )
+    if error_code == 10197 or "competing live session" in lowered:
+        return _IbkrHistoricalRequestErrorClassification(
+            category="competing_live_session",
+            retryable=False,
+        )
+    if error_code in {162, 165} and (
+        "returned no data" in lowered
+        or "no data" in lowered
+        or "未返回数据" in error_message
+    ):
+        return _IbkrHistoricalRequestErrorClassification(
+            category="historical_no_data",
+            retryable=False,
+        )
+    if error_code == 200:
+        return _IbkrHistoricalRequestErrorClassification(
+            category="contract_resolution_failed",
+            retryable=False,
+        )
+    return _IbkrHistoricalRequestErrorClassification(
+        category="request_error",
+        retryable=True,
+    )
+
+
 def _build_ibkr_contract(args: argparse.Namespace, ib_async_mod):
     def normalize_fut_contract_month(value: str | None) -> str:
         raw = (value or "").strip()
@@ -1550,6 +1670,11 @@ async def _ibkr_historical_async(args: argparse.Namespace) -> int:
 
     limiter = IbkrRateLimiter(redis_url=args.redis_url)
     contract = _build_ibkr_contract(args, ib_async)
+    args.port = _resolve_ibkr_gateway_port(
+        args.host,
+        args.port,
+        purpose="ibkr-historical",
+    )
 
     # Use the symbol as a stable identifier for the per-contract 6.5s lock.
     # (conId would be more precise but requires qualifying first, which itself
@@ -1565,8 +1690,15 @@ async def _ibkr_historical_async(args: argparse.Namespace) -> int:
             file=sys.stderr,
         )
 
-    ib = ib_async.IB()
-    try:
+    def new_ib_client():
+        client = ib_async.IB()
+        client.RaiseRequestErrors = True
+        return client
+
+    ib = new_ib_client()
+
+    async def connect_and_qualify() -> None:
+        nonlocal contract
         await limiter.wait_for_outbound_msg()
         try:
             selected_client_id, attempted_conflicts = await connect_with_client_id_fallback(
@@ -1589,43 +1721,88 @@ async def _ibkr_historical_async(args: argparse.Namespace) -> int:
                 f"and API enabled? Underlying error: {exc}"
             )
 
-        # Allow explicit delayed/frozen fallback for accounts where live
-        # entitlements are tied to another IP/session.
         if args.market_data_type != 1:
             await limiter.wait_for_outbound_msg()
             ib.reqMarketDataType(args.market_data_type)
         await limiter.wait_for_outbound_msg()
-        qualified = await ib.qualifyContractsAsync(contract)
+        qualified = await ib.qualifyContractsAsync(_build_ibkr_contract(args, ib_async))
         if not qualified or qualified[0] is None:
             raise SystemExit(f"contract not resolved: {args.symbol}")
         contract = qualified[0]
 
+    async def reconnect_and_requalify() -> None:
+        nonlocal ib
+        ib.disconnect()
+        ib = new_ib_client()
+        print(
+            f"  ibkr-historical: empty historical response for {args.symbol}; reconnecting and retrying once",
+            file=sys.stderr,
+        )
+        await connect_and_qualify()
+
+    try:
+        await connect_and_qualify()
+
         for index, chunk in enumerate(chunk_plan, 1):
-            await limiter.wait_for_historical(rl_id, args.bar_size, args.what_to_show)
-            await limiter.acquire_historical_slot()
-            try:
-                await limiter.wait_for_outbound_msg()
-                chunk_bars = await ib.reqHistoricalDataAsync(
-                    contract,
-                    endDateTime=current_end,
-                    durationStr=chunk.duration,
-                    barSizeSetting=args.bar_size,
-                    whatToShow=args.what_to_show,
-                    useRTH=bool(args.rth),
-                    formatDate=2,           # epoch seconds, easier downstream
-                    keepUpToDate=False,
-                    timeout=args.request_timeout,
-                )
-            finally:
-                limiter.release_historical_slot()
+            last_request_error: _IbkrHistoricalRequestErrorClassification | None = None
+
+            async def request_chunk():
+                nonlocal last_request_error
+                last_request_error = None
+                await limiter.wait_for_historical(rl_id, args.bar_size, args.what_to_show)
+                await limiter.acquire_historical_slot()
+                try:
+                    await limiter.wait_for_outbound_msg()
+                    try:
+                        return await ib.reqHistoricalDataAsync(
+                            contract,
+                            endDateTime=current_end,
+                            durationStr=chunk.duration,
+                            barSizeSetting=args.bar_size,
+                            whatToShow=args.what_to_show,
+                            useRTH=bool(args.rth),
+                            formatDate=2,           # epoch seconds, easier downstream
+                            keepUpToDate=False,
+                            timeout=args.request_timeout,
+                        )
+                    except ib_async.RequestError as exc:
+                        last_request_error = _ibkr_classify_historical_request_error(exc.code, exc.message)
+                        print(
+                            f"WARN: ibkr historical request error for {args.symbol} "
+                            f"({args.bar_size} {chunk.duration} {args.what_to_show}; "
+                            f"code={exc.code}; category={last_request_error.category}): "
+                            f"{exc.message}",
+                            file=sys.stderr,
+                        )
+                        if not last_request_error.retryable:
+                            print(
+                                f"  ibkr-historical: not retrying {args.symbol} after "
+                                f"{last_request_error.category}",
+                                file=sys.stderr,
+                            )
+                        return []
+                finally:
+                    limiter.release_historical_slot()
+
+            chunk_bars, used_attempts = await _ibkr_retry_empty_historical_request(
+                request_chunk,
+                reconnect_and_requalify,
+                should_retry=lambda: last_request_error is None or last_request_error.retryable,
+            )
             if not chunk_bars:
                 print(
                     f"WARN: ibkr historical chunk empty for {args.symbol} "
                     f"({args.bar_size} {chunk.duration} {args.what_to_show}; "
-                    f"chunk {index}/{len(chunk_plan)})",
+                    f"chunk {index}/{len(chunk_plan)}; attempts={used_attempts})",
                     file=sys.stderr,
                 )
                 break
+            if used_attempts > 1:
+                print(
+                    f"  ibkr-historical: recovered {args.symbol} {args.bar_size} "
+                    f"{chunk.duration} after reconnect retry",
+                    file=sys.stderr,
+                )
             all_bars.extend(chunk_bars)
             current_end = _ibkr_end_before_bars(chunk_bars)
             if not current_end:
@@ -1861,6 +2038,12 @@ async def _ibkr_bulk_async(args: argparse.Namespace) -> int:
         raise SystemExit(f"bulk config not found: {config_path}")
     raw = yaml.safe_load(config_path.read_text()) or {}
     gw = raw.get("gateway") or {}
+    gateway_host = gw.get("host", "127.0.0.1")
+    gateway_port = _resolve_ibkr_gateway_port(
+        gateway_host,
+        int(gw["port"]) if gw.get("port") is not None else args.port,
+        purpose="ibkr-bulk",
+    )
     out = raw.get("output") or {}
     defaults = raw.get("defaults") or {}
     symbols = raw.get("symbols") or []
@@ -1886,8 +2069,8 @@ async def _ibkr_bulk_async(args: argparse.Namespace) -> int:
     try:
         selected_client_id, attempted_conflicts = await connect_with_client_id_fallback(
             ib,
-            host=gw.get("host", "127.0.0.1"),
-            port=int(gw.get("port", args.port)),
+            host=gateway_host,
+            port=gateway_port,
             preferred_client_id=int(gw.get("client_id", args.client_id)),
             readonly=True,
         )
@@ -1900,7 +2083,7 @@ async def _ibkr_bulk_async(args: argparse.Namespace) -> int:
     except (ConnectionError, OSError, RuntimeError) as exc:
         raise SystemExit(
             f"Cannot reach IBKR Gateway at "
-            f"{gw.get('host', '127.0.0.1')}:{gw.get('port', args.port)} "
+            f"{gateway_host}:{gateway_port} "
             f"(clientId={gw.get('client_id', args.client_id)}). "
             f"Is IB Gateway / TWS running and API enabled? "
             f"Underlying error: {exc}"
@@ -2128,7 +2311,8 @@ def build_parser() -> argparse.ArgumentParser:
     ibh.add_argument("--right", choices=["C", "P"], default=None, help="OPT side")
     ibh.add_argument("--multiplier", default=None, help="FUT/OPT contract multiplier")
     ibh.add_argument("--host", default="127.0.0.1")
-    ibh.add_argument("--port", type=int, default=7497, help="7497 paper, 7496 live")
+    ibh.add_argument("--port", type=int, default=None,
+                      help="Explicit local IBKR API port. When omitted, probes 7497, 7496, 4002, and 4001.")
     ibh.add_argument("--client-id", type=int, default=21,
                       help="Bridge uses 20; this defaults to 21 to avoid clash")
     ibh.add_argument("--market-data-type", type=int, default=1, choices=[1, 2, 3, 4],
@@ -2150,8 +2334,8 @@ def build_parser() -> argparse.ArgumentParser:
     ibb.add_argument("--force", action="store_true",
                       help="Re-fetch even if the target CSV already exists.")
     ibb.add_argument("--host", default="127.0.0.1")
-    ibb.add_argument("--port", type=int, default=7497,
-                      help="Used only if YAML doesn't specify gateway.port")
+    ibb.add_argument("--port", type=int, default=None,
+                      help="Used only if YAML doesn't specify gateway.port; omitted = auto-probe 7497, 7496, 4002, 4001.")
     ibb.add_argument("--client-id", type=int, default=22,
                       help="Bridge=20, fetch_external single=21; bulk defaults to 22")
     ibb.add_argument("--redis-url", default="redis://localhost:6379")

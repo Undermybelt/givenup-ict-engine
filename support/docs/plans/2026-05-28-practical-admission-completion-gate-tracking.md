@@ -49,6 +49,30 @@ source release gate by itself.
   blockers, and a coherent committed slice. The shared dirty tree can be mined
   for verified commits, but it is not itself a release candidate.
 
+2026-05-29 reusable IBKR provider repair slice:
+
+- User clarification: stale factor work should not be committed as loose scripts;
+  reusable work must be packaged through the repo's structured formats. The
+  three MGC 1m experiment wrappers were therefore inspected and left unstaged in
+  the working tree. They still need conversion into a reusable pack/manifest
+  shape before any future commit.
+- Reusable core slice kept for commit: `support/scripts/auto_quant_external/fetch_external.py`
+  plus `support/scripts/auto_quant_external/tests/test_fetch_external_ibkr_chunking.py`.
+  The repair adds omitted-port auto-probing across standard local IBKR API
+  ports, preserves explicit `--port`, retries one empty historical response
+  after reconnect/requalification, and classifies nonretryable historical
+  request errors instead of looping blindly.
+- Verification passed for the reusable slice:
+  `python3 -m unittest support.scripts.auto_quant_external.tests.test_fetch_external_ibkr_chunking -v`
+  ran `11/11 OK`; `python3 -m py_compile` passed for the provider module, its
+  test, and the three inspected wrappers; `python3 support/scripts/auto_quant_external/fetch_external.py ibkr-historical --help`
+  and `python3 support/scripts/auto_quant_external/fetch_external.py ibkr-bulk --help`
+  both showed the omitted-port auto-probe contract; `git diff --check --cached`
+  passed before commit.
+- Release decision remains unchanged: do not publish from this checkout. This is
+  a reusable provider repair commit, not a practical-factor promotion or release
+  signoff.
+
 
 2026-05-29 release-proof reuse slice:
 
