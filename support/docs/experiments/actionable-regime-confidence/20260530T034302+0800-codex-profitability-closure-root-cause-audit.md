@@ -266,6 +266,22 @@ admission owners where current evidence shows a system loophole.
   so launch work is again blocked by current claim ownership. That newer
   blocker does not reclassify reserve packets as runtime owners, and practical
   counts remain zero.
+- 2026-05-30T06:36+0800: extended the same coordination-only fix to
+  no-launch source/cost prep packets. The EWZ Brazil policyflow packet
+  `20260530T063159+0800-codex-ewz-brazil-policyflow-vwap-reclaim-prep.claim`
+  explicitly had `status=active_source_cost_prep_no_launch`, false practical
+  flags, and non-goals forbidding provider, IBKR historical, AutoQuant,
+  Freqtrade/TOMAC, paper/sim/live, downstream lifecycle, and local backtest, but
+  it was still counted as a fresh active runtime blocker. Added RED/GREEN
+  coverage for that exact shape and extended the canonical classifier without
+  changing real lifecycle-driver ownership semantics. Verification passed:
+  `python3 -m unittest support.scripts.tests.test_factor_claim_terminalization_audit -v`
+  ran 100 tests OK;
+  `python3 -m py_compile support/scripts/factor_claim_terminalization_audit.py support/scripts/tests/test_factor_claim_terminalization_audit.py`
+  passed. Same-turn compact claim audit returned `status=pass`,
+  `active_claims=0`, `live_factor_processes=0`, `blocking_reasons=[]`, while
+  practical counts remain zero: `promotion_allowed_true=0`,
+  `trade_usable_true=0`, and `same_tree_practical_closure=null`.
 
 ## Root Cause Readback
 

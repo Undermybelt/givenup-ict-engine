@@ -2475,6 +2475,47 @@ progress_report: created source/cost reserve packet; no provider, IBKR historica
         self.assertEqual(compact["attention_claim_count"], 0)
         self.assertEqual(compact["attention_action_queue"]["fresh_active_claims_without_live_process"], [])
 
+    def test_source_cost_prep_no_launch_claim_does_not_block_factor_closure(self) -> None:
+        with tempfile.TemporaryDirectory() as repo_tmp, tempfile.TemporaryDirectory() as claims_tmp:
+            repo_root = Path(repo_tmp)
+            claims_dir = Path(claims_tmp)
+            run_root = Path(repo_tmp) / "ict-engine-ewz-source-cost-prep"
+            run_root.mkdir()
+            (run_root / "workdoc.md").write_text("# source cost prep\n", encoding="utf-8")
+
+            (claims_dir / "source-cost-prep.claim").write_text(
+                f"""
+agent_name: codex-ewz-brazil-policyflow-vwap-reclaim-prep
+owner: codex
+claimed_at: 2026-05-30T06:31:59+0800
+last_progress_at: 2026-05-30T06:31:59+0800
+scope: Board B no-launch source/cost prep packet for EWZ Brazil ETF ETH/full-session target policyflow VWAP reclaim factor branch.
+active_task: Preserve a distinct EWZ Brazil ETF regime-rooted profitability-factor training prep packet with official source/cost readback while fresh claims and live processes block provider/AQ/runtime launches.
+non_goals: no provider-status; no provider fetch; no IBKR historical; no AutoQuant/Freqtrade/TOMAC launch; no paper/sim/live; no downstream lifecycle; no local backtest; no promotion_allowed=true; no trade_usable=true; no update_goal=true.
+write_surface: {run_root / 'workdoc.md'}
+run_root: {run_root}
+tmp_root: {run_root}
+branch_path: ETF -> EWZ -> ETH/full_retained_session_target_unverified -> source_cost_prep
+factor_id: ewz_brazil_policyflow_vwap_reclaim_v1
+status: active_source_cost_prep_no_launch
+promotion_allowed: false
+trade_usable: false
+update_goal: false
+progress_report: created no-launch source/cost prep packet while fresh NQ claim blocked runtime; no provider/AQ/runtime launch.
+""".strip(),
+                encoding="utf-8",
+            )
+
+            report = build_report(claims_dir=claims_dir, repo_root=repo_root)
+            compact = format_report(report, compact=True)
+
+        self.assertEqual(report["summary"]["status"], "pass")
+        self.assertEqual(report["summary"]["active_claims"], 0)
+        self.assertEqual(report["summary"]["coordination_only_active_claims"], 1)
+        self.assertEqual(report["summary"]["blocking_reasons"], [])
+        self.assertEqual(compact["attention_claim_count"], 0)
+        self.assertEqual(compact["attention_action_queue"]["fresh_active_claims_without_live_process"], [])
+
     def test_build_report_flags_active_claims_missing_board_local_identity_fields(self) -> None:
         with tempfile.TemporaryDirectory() as repo_tmp, tempfile.TemporaryDirectory() as claims_tmp:
             repo_root = Path(repo_tmp)

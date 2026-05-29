@@ -580,6 +580,9 @@ def _is_coordination_only_claim(fields: dict[str, Any]) -> bool:
         or status.startswith("active_source_reserve")
         or status.startswith("active_cost_reserve")
         or status.startswith("active_knowledge_reserve")
+        or status.startswith("active_source_cost_prep_no_launch")
+        or status.startswith("active_source_prep_no_launch")
+        or status.startswith("active_cost_prep_no_launch")
     )
     coordination_text = _purpose_is_non_runtime_coordination(text)
     if not coordination_status and not coordination_text:
@@ -601,6 +604,11 @@ def _is_coordination_only_claim(fields: dict[str, Any]) -> bool:
         "knowledge reserve",
         "source intake",
         "source-intake",
+        "source/cost prep",
+        "source-cost prep",
+        "source prep",
+        "cost prep",
+        "no-launch source/cost prep",
     )
     if not any(marker in text for marker in purpose_markers):
         return False
@@ -626,6 +634,11 @@ def _purpose_is_non_runtime_coordination(text: str) -> bool:
         "knowledge reserve",
         "source intake",
         "source-intake",
+        "source/cost prep",
+        "source-cost prep",
+        "source prep",
+        "cost prep",
+        "no-launch source/cost prep",
     )
     no_launch_markers = (
         "no provider",
