@@ -589,13 +589,24 @@ def _read_source_debt_quarantine(
         "schema_version": schema_version,
         "untracked_violation_count": summary.get("untracked_violation_count"),
         "untracked_violating_files": summary.get("untracked_violating_files"),
-        "untracked_violations_sha256": fingerprint,
     }
     mismatches = [
         key
         for key, expected_value in expected.items()
         if manifest.get(key) != expected_value
     ]
+    alternative_fingerprints = manifest.get("reviewed_alternative_untracked_violations_sha256", [])
+    if isinstance(alternative_fingerprints, str):
+        alternative_fingerprints = [alternative_fingerprints]
+    if not isinstance(alternative_fingerprints, list):
+        alternative_fingerprints = []
+    if manifest.get("untracked_violations_sha256") == fingerprint:
+        matched_fingerprint_source = "primary"
+    elif fingerprint in alternative_fingerprints:
+        matched_fingerprint_source = "reviewed_alternative"
+    else:
+        matched_fingerprint_source = None
+        mismatches.append("untracked_violations_sha256")
     manifest_decision = manifest.get("decision")
     if manifest_decision != decision:
         mismatches.append("decision")
@@ -603,6 +614,7 @@ def _read_source_debt_quarantine(
         **base,
         "matched": not mismatches,
         "decision": manifest_decision,
+        "matched_fingerprint_source": matched_fingerprint_source,
         "mismatches": mismatches,
         "untracked_violation_count": manifest.get("untracked_violation_count"),
         "untracked_violating_files": manifest.get("untracked_violating_files"),

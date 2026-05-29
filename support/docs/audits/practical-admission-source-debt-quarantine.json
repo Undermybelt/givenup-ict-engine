@@ -1,13 +1,17 @@
 {
   "schema_version": "practical-admission-source-debt-quarantine/v1",
-  "generated_at": "2026-05-29T08:10:23Z",
+  "generated_at": "2026-05-29T10:00:45Z",
   "decision": "quarantined_untracked_wrapper_debt",
   "scope": "Untracked support/docs/experiments/actionable-regime-confidence/scripts/run_*.py practical-admission violations present in the shared worktree on 2026-05-29.",
   "rationale": "The tracked source gate has zero practical-admission wrapper violations. The remaining debt is untracked wrapper residue from concurrent factor work; it must stay visible and excluded from completion/release claims until the files are either removed, tracked and fixed, or otherwise retired.",
   "untracked_violation_count": 268,
   "untracked_violating_files": 153,
   "untracked_violations_sha256": "351b65a08b2b1dff0b4c81a237a301af49a7d3c5d1c0a93365fa938d066da2e6",
-  "source_packet": "/tmp/ict-engine-closed-loop-loophole-audit-codex-20260529T160308+0800/objective-snapshot-after-claimfix/practical_admission_source_debt_manifest.json",
+  "reviewed_alternative_untracked_violations_sha256": [
+    "f9f9828c248ed5f7e8fe745479c0c02cb04a928addca4e2aeff17106ab6355a2"
+  ],
+  "source_packet": "/tmp/ict-engine-goal-20260529T-current9-after-quarantine-alt/practical_admission_source_debt_manifest.json",
+  "reviewed_drift": "Compared with the 2026-05-29T08:10Z quarantine packet, the count and file set stayed unchanged at 268 violations across 153 untracked files. Three stable signatures in run_tomac_nq_bidir_opening_drive_exact_downstream_v1.py can drift between promotion_ready and live_ready for promotion_allowed, trade_usable, and update_goal; both signatures remain untracked unsafe practical-admission debt, not release or trade evidence.",
   "promotion_allowed": false,
   "trade_usable": false,
   "update_goal": false,

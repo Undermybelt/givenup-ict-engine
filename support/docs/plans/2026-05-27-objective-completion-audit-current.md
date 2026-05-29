@@ -1786,3 +1786,93 @@ Requirement verdict updates:
   then-current `HEAD`, wait for or explicitly claim/terminalize live factor
   lanes, and prove release readiness from a clean selected export with source
   origin alignment.
+
+## 2026-05-29 Current Refresh - Practical Closure Requires Full Lifecycle Tuple
+
+Latest authoritative packets for this refresh:
+
+- factor audit before this closure-contract hardening:
+  `/tmp/ict-engine-goal-20260529T-current5-factor.json`
+- release audit before this closure-contract hardening:
+  `/tmp/ict-engine-goal-20260529T-current5-release.json`
+- parent snapshot after the lifecycle tuple commit and quarantine-schema repair:
+  `/tmp/ict-engine-goal-20260529T-current9-after-quarantine-alt/objective_closure_snapshot.json`
+
+Commands:
+
+```bash
+python3 support/scripts/factor_claim_terminalization_audit.py --compact --output /tmp/ict-engine-goal-20260529T-current5-factor.json
+python3 support/scripts/release_readiness_audit.py --compact --check-remotes --output /tmp/ict-engine-goal-20260529T-current5-release.json
+python3 -m unittest support.scripts.tests.test_factor_claim_terminalization_audit -v
+python3 -m unittest support.scripts.tests.test_done_definition_audit -v
+python3 -m unittest support.scripts.tests.test_objective_closure_snapshot -v
+python3 support/scripts/objective_closure_snapshot.py --compact --check-remotes --output-dir /tmp/ict-engine-goal-20260529T-current9-after-quarantine-alt --timeout-seconds 120
+```
+
+Current command truth:
+
+- focused factor-claim regression suite passed: 88 tests, 0 failures;
+- done-definition audit regression suite passed: 31 tests, 0 failures;
+- objective snapshot regression suite passed: 40 tests, 0 failures;
+- `factor_claim_terminalization_audit.py` now rejects a
+  `same_tree_practical_closure` evidence packet unless it includes the full
+  lifecycle tuple: `learning_admission_status=admitted`,
+  `paper_admission_status=ready`, and `live_trade_status=ready`;
+- the positive fixture for a valid same-tree practical closure now carries that
+  tuple, and the negative fixture proves `live_trade_status=ready` alone cannot
+  satisfy practical closure when learning/paper admission remain
+  `not_evaluated`;
+- current factor audit in the latest parent snapshot is blocked by fresh
+  shared-worktree claims: `active_claims=3`, `live_factor_processes=0`,
+  `promotion_allowed_true=0`, `trade_usable_true=0`, and
+  `same_tree_practical_closure=null`;
+- release audit still exited `1` with unresolved `worktree_clean_for_release`
+  and `source_origin_matches_selected_source`; remote readback and tag
+  availability passed.
+- parent snapshot after the lifecycle tuple hardening exposed a separate
+  fail-closed blocker: `practical_admission_source_debt`, because the original
+  quarantine accepted only one fingerprint while the shared untracked-wrapper
+  residue can oscillate between two reviewed signatures for the same 268-count,
+  153-file debt set;
+- parent snapshot after the quarantine-schema repair shows the reviewed
+  practical-admission debt is quarantined and staged, not hidden:
+  `quarantined_practical_admission_source_debt` remains visible with 268
+  untracked violations across 153 files, while objective status remains
+  `not_complete` on `done_definition_not_completion_ready`,
+  `factor_closure_blocked`, and `release_readiness_blocked`.
+
+Loopholes found and classified:
+
+- A same-tree closure packet that only says `promotion_allowed=true`,
+  `trade_usable=true`, and `live_trade_status=ready` is insufficient. It can
+  skip the learning and paper-admission stages that are required to prove the
+  provider -> execution -> feedback -> training chain is actually reusable and
+  live-practical.
+- The closure contract now fails closed until the evidence packet proves all
+  three lifecycle statuses and the existing same-root, validation, ranker, and
+  command-exit requirements.
+- The practical-admission quarantine drift was reviewed rather than ignored.
+  Counts and file set stayed unchanged at 268 violations across 153 untracked
+  files; the stable signature change was limited to
+  `run_tomac_nq_bidir_opening_drive_exact_downstream_v1.py` switching the
+  `promotion_allowed`, `trade_usable`, and `update_goal` values between
+  `promotion_ready` and `live_ready`. Both signatures still violate the
+  extension-complete guard and remain untracked unsafe debt, not release or
+  trade evidence. The quarantine reader now supports an explicit
+  `reviewed_alternative_untracked_violations_sha256` list while still requiring
+  schema, decision, violation count, and violating file count to match.
+
+Requirement verdict updates:
+
+- Current objective status remains `not_complete`.
+- This hardening improves the practical-use proof standard but does not create
+  a practical factor. Current verified practical counts remain
+  `promotion_allowed_true=0`, `trade_usable_true=0`, with no validated
+  same-tree practical closure packet.
+- Externalizing the reviewed untracked debt can prevent fingerprint oscillation
+  from producing false new debt, but it does not retire the debt. Objective
+  completion still requires a validated same-tree practical closure packet,
+  heavy done-definition proof, clean/sanitized release readiness with selected
+  source alignment, and either retiring/tracking/fixing those wrappers or
+  preserving an explicit matching quarantine while all other gates prove the
+  requested end state.

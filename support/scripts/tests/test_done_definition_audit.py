@@ -1100,6 +1100,120 @@ Measured on 2026-05-22:
         self.assertEqual(manifest["quarantine"]["manifest_file"], "support/docs/audits/practical-admission-source-debt-quarantine.json")
         self.assertEqual(manifest["quarantine"]["untracked_violations_sha256"], fingerprint)
 
+    def test_practical_admission_debt_manifest_accepts_reviewed_alternative_fingerprint(self) -> None:
+        import done_definition_audit
+
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            quarantine_path = root / "support" / "docs" / "audits" / "practical-admission-source-debt-quarantine.json"
+            quarantine_path.parent.mkdir(parents=True)
+            original_violations = [
+                {
+                    "file": "support/docs/experiments/actionable-regime-confidence/scripts/run_untracked_bad_v1.py",
+                    "key": "trade_usable",
+                    "value": "promotion_ready",
+                    "violation": "practical_flag_without_extension_complete_guard",
+                }
+            ]
+            current_violations = [
+                {
+                    "file": "support/docs/experiments/actionable-regime-confidence/scripts/run_untracked_bad_v1.py",
+                    "key": "trade_usable",
+                    "value": "live_ready",
+                    "violation": "practical_flag_without_extension_complete_guard",
+                }
+            ]
+            original_fingerprint = _violation_fingerprint(original_violations)
+            current_fingerprint = _violation_fingerprint(current_violations)
+            quarantine_path.write_text(
+                json.dumps(
+                    {
+                        "schema_version": "practical-admission-source-debt-quarantine/v1",
+                        "untracked_violation_count": 1,
+                        "untracked_violating_files": 1,
+                        "untracked_violations_sha256": original_fingerprint,
+                        "reviewed_alternative_untracked_violations_sha256": [current_fingerprint],
+                        "decision": "quarantined_untracked_wrapper_debt",
+                    }
+                ),
+                encoding="utf-8",
+            )
+
+            original_root = done_definition_audit.ROOT
+            try:
+                done_definition_audit.ROOT = root
+                manifest_path = write_practical_admission_debt_manifest(
+                    {
+                        "violation_count": 1,
+                        "tracked_violation_count": 0,
+                        "tracked_violating_files": 0,
+                        "untracked_violation_count": 1,
+                        "untracked_violating_files": 1,
+                        "violations_by_type": {"practical_flag_without_extension_complete_guard": 1},
+                        "tracked_violations": [],
+                        "untracked_violations": current_violations,
+                    }
+                )
+            finally:
+                done_definition_audit.ROOT = original_root
+
+        manifest = json.loads(Path(manifest_path).read_text(encoding="utf-8"))
+        self.assertTrue(manifest["quarantine"]["matched"])
+        self.assertEqual(manifest["quarantine"]["matched_fingerprint_source"], "reviewed_alternative")
+        self.assertEqual(manifest["quarantine"]["untracked_violations_sha256"], current_fingerprint)
+
+    def test_practical_admission_debt_manifest_rejects_alternative_fingerprint_when_counts_drift(self) -> None:
+        import done_definition_audit
+
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            quarantine_path = root / "support" / "docs" / "audits" / "practical-admission-source-debt-quarantine.json"
+            quarantine_path.parent.mkdir(parents=True)
+            current_violations = [
+                {
+                    "file": "support/docs/experiments/actionable-regime-confidence/scripts/run_untracked_bad_v1.py",
+                    "key": "trade_usable",
+                    "value": "live_ready",
+                    "violation": "practical_flag_without_extension_complete_guard",
+                }
+            ]
+            current_fingerprint = _violation_fingerprint(current_violations)
+            quarantine_path.write_text(
+                json.dumps(
+                    {
+                        "schema_version": "practical-admission-source-debt-quarantine/v1",
+                        "untracked_violation_count": 2,
+                        "untracked_violating_files": 1,
+                        "untracked_violations_sha256": "old-fingerprint",
+                        "reviewed_alternative_untracked_violations_sha256": [current_fingerprint],
+                        "decision": "quarantined_untracked_wrapper_debt",
+                    }
+                ),
+                encoding="utf-8",
+            )
+
+            original_root = done_definition_audit.ROOT
+            try:
+                done_definition_audit.ROOT = root
+                manifest_path = write_practical_admission_debt_manifest(
+                    {
+                        "violation_count": 1,
+                        "tracked_violation_count": 0,
+                        "tracked_violating_files": 0,
+                        "untracked_violation_count": 1,
+                        "untracked_violating_files": 1,
+                        "violations_by_type": {"practical_flag_without_extension_complete_guard": 1},
+                        "tracked_violations": [],
+                        "untracked_violations": current_violations,
+                    }
+                )
+            finally:
+                done_definition_audit.ROOT = original_root
+
+        manifest = json.loads(Path(manifest_path).read_text(encoding="utf-8"))
+        self.assertFalse(manifest["quarantine"]["matched"])
+        self.assertIn("untracked_violation_count", manifest["quarantine"]["mismatches"])
+
     def test_violation_fingerprint_ignores_incidental_line_churn_but_preserves_signature(self) -> None:
         baseline = [
             {
