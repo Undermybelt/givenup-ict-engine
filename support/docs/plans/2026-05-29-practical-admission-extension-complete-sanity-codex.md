@@ -207,3 +207,62 @@ Required behavior:
   a same-tree practical closure packet, current heavy done-definition proof,
   clean release-readiness proof, and truthful completion commit all exist for
   the same current state.
+
+## 2026-05-30T00:15+0800 Canonical Closure Producer Slice
+
+Root cause handled in this slice:
+
+- The strict same-tree practical closure validator lived in
+  `support/scripts/factor_claim_terminalization_audit.py`, but wrappers could
+  still hand-write `same-tree-practical-closure/v1` packets. That kept producer
+  semantics separate from validator semantics and allowed recurring "near
+  practical" states to drift toward fake promotion surfaces.
+
+Changes made:
+
+- Added `support/scripts/research/same_tree_practical_closure.py` as the single
+  canonical builder/validator for `same-tree-practical-closure/v1` packets.
+- Changed `factor_claim_terminalization_audit.py` to validate evidence packets
+  through `metrics_prove_same_tree_practical_closure(...)` from that helper.
+- Extended `downstream_practical_admission_source_check.py` so manual
+  same-tree practical closure packet writers are flagged as
+  `manual_same_tree_practical_closure_packet_writer`; only the canonical helper
+  source is allowed to construct the schema directly.
+- Updated the NQ bidirectional opening-drive exact downstream wrapper to call
+  `write_same_tree_practical_closure_packet(...)` and keep local readiness
+  separate from practical flags. Branch-local admission can be true, but
+  `promotion_allowed`, `trade_usable`, and `update_goal` remain false unless the
+  full lifecycle packet passes the canonical helper.
+- Added script inventory entries for the canonical helper in
+  `support/scripts/SCRIPTS.md` and `support/scripts/script_manifest.json`.
+
+Verification:
+
+- `python3 -m unittest support.scripts.research.tests.test_same_tree_practical_closure support.scripts.tests.test_factor_claim_terminalization_audit support.scripts.research.tests.test_downstream_practical_admission_source_check -v`
+  -> `Ran 134 tests`, `OK`.
+- `python3 -m unittest support.docs.experiments.actionable-regime-confidence.scripts.test_tomac_nq_bidir_opening_drive_exact_downstream_v1 -v`
+  -> `Ran 11 tests`, `OK`.
+- `python3 support/scripts/check_script_manifest.py`
+  -> `script_manifest status=pass entries=32`.
+- `python3 -m py_compile support/scripts/research/same_tree_practical_closure.py support/scripts/factor_claim_terminalization_audit.py support/docs/experiments/actionable-regime-confidence/scripts/run_tomac_nq_bidir_opening_drive_exact_downstream_v1.py`
+  -> pass.
+- `python3 -m unittest support.scripts.tests.test_done_definition_audit support.scripts.tests.test_objective_closure_snapshot -v`
+  -> `Ran 74 tests`, `OK`.
+- `python3 support/scripts/done_definition_audit.py --compact --practical-admission-source-timeout-seconds 240`
+  -> `status=pass`, `completion_ready=false`, heavy gates skipped. Tracked
+  practical-admission violations remained `0`, but untracked debt drifted in
+  the shared worktree while scanning.
+- `python3 support/scripts/objective_closure_snapshot.py --compact --timeout-seconds 240 --output-dir /tmp/ict-engine-goal-20260530-codex-closure-producer-slice`
+  -> `status=not_complete`. Blockers included skipped heavy done-definition
+  gates, unquarantined/drifting untracked practical-admission debt, fresh active
+  claims, dirty release worktree, and skipped remote release checks.
+- `git diff --check` -> pass.
+
+Current truth after this slice:
+
+- No `same_tree_practical_closure` packet is validated.
+- `promotion_allowed_true=0`, `trade_usable_true=0` in factor closure.
+- Factor closure is blocked by fresh active claims with no live factor process;
+  latest objective snapshot saw 3 fresh active claims.
+- The full user objective remains incomplete. This slice removes a producer /
+  validator drift class; it does not produce a practical/live-usable factor.

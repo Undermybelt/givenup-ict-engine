@@ -176,6 +176,14 @@
     "test_command": "python3 -m unittest support.scripts.research.tests.test_regime_root_metrics_contract_check -v"
   },
   {
+    "name": "same_tree_practical_closure",
+    "stability": "read_only_utility",
+    "entrypoint": "support/scripts/research/same_tree_practical_closure.py",
+    "safe_default": true,
+    "requires_data": true,
+    "test_command": "python3 -m unittest support.scripts.research.tests.test_same_tree_practical_closure -v"
+  },
+  {
     "name": "downstream_practical_admission_source_check",
     "stability": "read_only_utility",
     "entrypoint": "support/scripts/research/downstream_practical_admission_source_check.py",

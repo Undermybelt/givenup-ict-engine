@@ -51,6 +51,10 @@ RETIRED_PRACTICAL_GATE_KEYS = frozenset((
     "transition_hazard_lt",
     "transition_hazard_required",
 ))
+CANONICAL_CLOSURE_BUILDER_NAMES = frozenset((
+    "build_same_tree_practical_closure_packet",
+    "write_same_tree_practical_closure_packet",
+))
 TWO_BPS_DOWNSTREAM_PATTERNS = (
     "survivors_2",
     "survivors_2bps",
@@ -174,6 +178,29 @@ def is_allowed_retired_gate_telemetry(key: str, value_node: ast.AST) -> bool:
     return key in {"pda_required", "transition_hazard_required"} and is_false_literal(value_node)
 
 
+def calls_canonical_same_tree_closure_builder(node: ast.AST) -> bool:
+    if not isinstance(node, ast.Call):
+        return False
+    if isinstance(node.func, ast.Name):
+        return node.func.id in CANONICAL_CLOSURE_BUILDER_NAMES
+    if isinstance(node.func, ast.Attribute):
+        return node.func.attr in CANONICAL_CLOSURE_BUILDER_NAMES
+    return False
+
+
+def dict_has_same_tree_practical_closure_schema(node: ast.Dict) -> bool:
+    for key_node, value_node in zip(node.keys, node.values):
+        if key_node is None:
+            continue
+        if string_key(key_node) == "schema_version":
+            return isinstance(value_node, ast.Constant) and value_node.value == "same-tree-practical-closure/v1"
+    return False
+
+
+def is_canonical_same_tree_closure_source(path: Path | None) -> bool:
+    return path is not None and path.name == "same_tree_practical_closure.py"
+
+
 def helper_names(tree: ast.AST) -> set[str]:
     names: set[str] = set()
     for node in ast.walk(tree):
@@ -228,9 +255,10 @@ def practical_helper_values_are_extension_guarded(node: ast.FunctionDef) -> bool
 
 
 class PracticalAssignmentVisitor(ast.NodeVisitor):
-    def __init__(self, source: str, helpers: set[str]) -> None:
+    def __init__(self, source: str, helpers: set[str], *, canonical_closure_source: bool = False) -> None:
         self.source = source
         self.helpers = helpers
+        self.canonical_closure_source = canonical_closure_source
         self.function_stack: list[str] = []
         self.helper_result_names: set[str] = set()
         self.pda_tainted_admission_names: dict[str, dict[str, Any]] = {}
@@ -240,6 +268,26 @@ class PracticalAssignmentVisitor(ast.NodeVisitor):
         self.passive_practical_readback_names: dict[str, str] = {}
         self.dict_context_stack: list[str] = []
         self.violations: list[dict[str, Any]] = []
+
+    def in_canonical_same_tree_closure_builder(self) -> bool:
+        return bool(
+            self.canonical_closure_source
+            and self.function_stack
+            and self.function_stack[-1] in CANONICAL_CLOSURE_BUILDER_NAMES
+        )
+
+    def record_manual_same_tree_practical_closure_writer(self, node: ast.AST, value: str) -> None:
+        if self.in_canonical_same_tree_closure_builder():
+            return
+        self.violations.append(
+            {
+                "line": getattr(node, "lineno", 0),
+                "column": getattr(node, "col_offset", 0),
+                "key": "same_tree_practical_closure",
+                "value": value,
+                "violation": "manual_same_tree_practical_closure_packet_writer",
+            }
+        )
 
     def transition_taint_for_value(self, node: ast.AST) -> dict[str, Any] | None:
         if contains_transition_hard_gate(self.source, node):
@@ -480,6 +528,12 @@ class PracticalAssignmentVisitor(ast.NodeVisitor):
         self.generic_visit(node)
 
     def visit_Dict(self, node: ast.Dict) -> Any:
+        if dict_has_same_tree_practical_closure_schema(node):
+            self.record_manual_same_tree_practical_closure_writer(
+                node,
+                "schema_version=same-tree-practical-closure/v1",
+            )
+            return
         in_helper = bool(self.function_stack and self.function_stack[-1] in self.helpers)
         in_allowed_targets = "allowed_targets" in self.dict_context_stack
         for key_node, value_node in zip(node.keys, node.values):
@@ -546,8 +600,22 @@ class PracticalAssignmentVisitor(ast.NodeVisitor):
     def visit_Call(self, node: ast.Call) -> Any:
         if self.calls_practical_helper(node):
             self.record_extension_complete_argument_violation(node)
+        if self.canonical_closure_source and calls_canonical_same_tree_closure_builder(node):
+            self.generic_visit(node)
+            return
         if isinstance(node.func, ast.Name) and node.func.id == "dict":
             in_helper = bool(self.function_stack and self.function_stack[-1] in self.helpers)
+            for keyword in node.keywords:
+                if (
+                    keyword.arg == "schema_version"
+                    and isinstance(keyword.value, ast.Constant)
+                    and keyword.value.value == "same-tree-practical-closure/v1"
+                ):
+                    self.record_manual_same_tree_practical_closure_writer(
+                        node,
+                        "schema_version=same-tree-practical-closure/v1",
+                    )
+                    return
             for keyword in node.keywords:
                 key = keyword.arg
                 if (
@@ -587,6 +655,21 @@ class PracticalAssignmentVisitor(ast.NodeVisitor):
                         "key": key,
                         "value": expression_text(self.source, value_node),
                         "violation": "practical_flag_without_extension_complete_guard",
+                    }
+                )
+        self.generic_visit(node)
+
+    def visit_Attribute(self, node: ast.Attribute) -> Any:
+        if node.attr == "write_text":
+            value_text = expression_text(self.source, node.value)
+            if "same_tree_practical_closure" in value_text:
+                self.violations.append(
+                    {
+                        "line": getattr(node, "lineno", 0),
+                        "column": getattr(node, "col_offset", 0),
+                        "key": "same_tree_practical_closure",
+                        "value": value_text,
+                        "violation": "manual_same_tree_practical_closure_packet_writer",
                     }
                 )
         self.generic_visit(node)
@@ -660,7 +743,11 @@ class PracticalAssignmentVisitor(ast.NodeVisitor):
 def check_source(source: str, *, path: Path | None = None) -> dict[str, Any]:
     tree = ast.parse(source, filename=str(path) if path else "<source>")
     helpers = helper_names(tree)
-    visitor = PracticalAssignmentVisitor(source, helpers)
+    visitor = PracticalAssignmentVisitor(
+        source,
+        helpers,
+        canonical_closure_source=is_canonical_same_tree_closure_source(path),
+    )
     visitor.visit(tree)
     violations = sorted(
         visitor.violations,

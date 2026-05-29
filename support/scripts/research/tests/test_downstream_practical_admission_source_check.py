@@ -421,6 +421,65 @@ def build_metrics():
         self.assertTrue(report["ok"])
         self.assertEqual(report["violations"], [])
 
+    def test_flags_manual_same_tree_practical_closure_packet_writer(self) -> None:
+        path = self.write_source(
+            """
+def write_summary(metrics):
+    closure_packet = {
+        "schema_version": "same-tree-practical-closure/v1",
+        "status": "pass",
+        "promotion_allowed": True,
+        "trade_usable": True,
+        "provider_execution_feedback_chain": "pass",
+        "evidence_packet": "checks/terminal_metrics.json",
+    }
+    closure_path.write_text(json.dumps(closure_packet))
+"""
+        )
+
+        report = checker.check_source_file(path)
+
+        self.assertFalse(report["ok"])
+        self.assertEqual(
+            {hit["violation"] for hit in report["violations"]},
+            {"manual_same_tree_practical_closure_packet_writer"},
+        )
+
+    def test_allows_canonical_same_tree_practical_closure_builder_call(self) -> None:
+        path = SCRIPT_ROOT / "same_tree_practical_closure.py"
+
+        report = checker.check_source_file(path)
+
+        self.assertTrue(report["ok"])
+        self.assertEqual(report["violations"], [])
+
+    def test_flags_local_same_tree_practical_closure_builder_spoof(self) -> None:
+        path = self.write_source(
+            """
+def build_same_tree_practical_closure_packet(metrics, evidence_packet="checks/terminal_metrics.json"):
+    return {
+        "schema_version": "same-tree-practical-closure/v1",
+        "status": "pass",
+        "promotion_allowed": True,
+        "trade_usable": True,
+        "provider_execution_feedback_chain": "pass",
+        "evidence_packet": evidence_packet,
+    }
+
+def write_summary(metrics):
+    packet = build_same_tree_practical_closure_packet(metrics)
+    closure_path.write_text(json.dumps(packet))
+"""
+        )
+
+        report = checker.check_source_file(path)
+
+        self.assertFalse(report["ok"])
+        self.assertEqual(
+            {hit["violation"] for hit in report["violations"]},
+            {"manual_same_tree_practical_closure_packet_writer"},
+        )
+
     def test_allows_explicit_false_observation_metrics(self) -> None:
         path = self.write_source(
             """

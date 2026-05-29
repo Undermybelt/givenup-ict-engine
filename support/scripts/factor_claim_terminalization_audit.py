@@ -12,6 +12,15 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
+SCRIPTS_DIR = Path(__file__).resolve().parent
+RESEARCH_DIR = SCRIPTS_DIR / "research"
+if str(RESEARCH_DIR) not in sys.path:
+    sys.path.insert(0, str(RESEARCH_DIR))
+
+from same_tree_practical_closure import (  # noqa: E402
+    metrics_prove_same_tree_practical_closure,
+)
+
 
 DEFAULT_CLAIMS_DIR = Path("/tmp/ict-engine-agent-claims/board-b-factor-refinement")
 STALE_CLAIM_MINUTES = 60
@@ -28,24 +37,6 @@ SAME_TREE_PRACTICAL_CLOSURE_CANDIDATES = (
     "checks/same_tree_practical_closure.json",
     "same_tree_practical_closure.json",
 )
-PRACTICAL_CLOSURE_ALLOWED_MARKET_DATA_SOURCE_CLASSES = {
-    "roll_adjusted_clean_feather",
-    "verified_provider_historical",
-    "ibkr_historical_verified",
-    "paper_execution_feedback",
-    "live_execution_feedback",
-    "paper_trade_feedback",
-    "live_trade_feedback",
-    "broker_execution_feedback",
-}
-PRACTICAL_CLOSURE_DISALLOWED_MARKET_DATA_SOURCE_CLASSES = {
-    "raw_contract_stitching",
-    "raw_csv_stitching",
-    "raw_local_csv_stitching",
-    "raw_databento_contract_stitching",
-    "tomac_raw_csv",
-    "raw_local_csv",
-}
 LIVE_FACTOR_PROCESS_MARKERS = (
     "run_tomac",
     "run_local_nq_csv_regime_rooted",
@@ -879,162 +870,7 @@ def _evidence_packet_proves_same_tree_practical_closure(evidence_path: Path) -> 
         return False
     if not isinstance(parsed, dict):
         return False
-    if parsed.get("promotion_allowed") is not True or parsed.get("trade_usable") is not True:
-        return False
-    if parsed.get("all_command_exits_zero") is not True:
-        return False
-    if parsed.get("exact_branch_survived") is not True:
-        return False
-    if parsed.get("execution_candidate_actionable") is not True:
-        return False
-    if parsed.get("branch_local_admitted") is not True:
-        return False
-    if parsed.get("validation_ready") is not True:
-        return False
-    if parsed.get("path_ranker_used") is not True:
-        return False
-    if parsed.get("path_ranker_score_used_by_execution_tree") is not True:
-        return False
-    candidate_status = str(parsed.get("execution_candidate_status") or "")
-    if candidate_status in {"", "no_trade", "observe", "discard"}:
-        return False
-    if not _validation_counters_cover_practical_chain(parsed.get("validation_counters")):
-        return False
-    if not _policy_training_summary_proves_practical_closure(parsed.get("policy_training_summary")):
-        return False
-    if not _lifecycle_tuple_proves_practical_closure(parsed):
-        return False
-    if not _market_data_provenance_proves_practical_closure(parsed.get("market_data_provenance")):
-        return False
-    command_results = parsed.get("command_results")
-    if not isinstance(command_results, list) or not command_results:
-        return False
-    return all(isinstance(row, dict) and row.get("exit") == 0 for row in command_results)
-
-
-def _lifecycle_tuple_proves_practical_closure(parsed: dict[str, Any]) -> bool:
-    return (
-        _normalized_text(parsed.get("learning_admission_status")) == "admitted"
-        and _normalized_text(parsed.get("paper_admission_status")) == "ready"
-        and _normalized_text(parsed.get("live_trade_status")) == "ready"
-    )
-
-
-def _policy_training_summary_proves_practical_closure(value: object) -> bool:
-    if not isinstance(value, dict) or not value:
-        return False
-    lifecycle = value.get("factor_profitability_lifecycle")
-    if lifecycle is None and any(
-        key in value
-        for key in (
-            "learning_admitted_count",
-            "paper_ready_count",
-            "live_ready_count",
-            "live_trade_usable_count",
-            "promotion_allowed",
-            "trade_usable",
-        )
-    ):
-        lifecycle = value
-    if not isinstance(lifecycle, dict):
-        return False
-    required_positive_counts = (
-        "learning_admitted_count",
-        "paper_ready_count",
-        "live_ready_count",
-        "live_trade_usable_count",
-    )
-    if any(_positive_int(lifecycle.get(key)) <= 0 for key in required_positive_counts):
-        return False
-    return lifecycle.get("promotion_allowed") is True and lifecycle.get("trade_usable") is True
-
-
-def _market_data_provenance_proves_practical_closure(value: object) -> bool:
-    if not isinstance(value, dict):
-        return False
-    if _normalized_text(value.get("status")) != "pass":
-        return False
-    source_class = _normalized_key(value.get("source_class") or value.get("provenance_class"))
-    if source_class in PRACTICAL_CLOSURE_DISALLOWED_MARKET_DATA_SOURCE_CLASSES:
-        return False
-    if source_class not in PRACTICAL_CLOSURE_ALLOWED_MARKET_DATA_SOURCE_CLASSES:
-        return False
-    for key in ("raw_contract_stitching", "raw_csv_stitching", "raw_local_csv_stitching"):
-        if value.get(key) is True:
-            return False
-    if not _return_sanity_proves_practical_closure(value.get("return_sanity")):
-        return False
-    return True
-
-
-def _return_sanity_proves_practical_closure(value: object) -> bool:
-    if not isinstance(value, dict):
-        return False
-    if _normalized_text(value.get("status")) != "pass":
-        return False
-    if _positive_int(value.get("extreme_abs_gross_gt_10pct_count")) > 0:
-        return False
-    if _positive_int(value.get("parse_bad_rows")) > 0:
-        return False
-    max_abs_gross_return_pct = _optional_float(value.get("max_abs_gross_return_pct"))
-    if max_abs_gross_return_pct is not None and max_abs_gross_return_pct > 10.0:
-        return False
-    return True
-
-
-def _optional_float(value: object) -> float | None:
-    if isinstance(value, bool) or value is None:
-        return None
-    if isinstance(value, (int, float)):
-        return float(value)
-    if isinstance(value, str):
-        try:
-            return float(value.strip())
-        except ValueError:
-            return None
-    return None
-
-
-def _positive_int(value: object) -> int:
-    if isinstance(value, bool):
-        return 0
-    if isinstance(value, int):
-        return value
-    if isinstance(value, float) and value.is_integer():
-        return int(value)
-    if isinstance(value, str):
-        text = value.strip()
-        if text.isdigit():
-            return int(text)
-    return 0
-
-
-def _normalized_text(value: object) -> str:
-    return str(value or "").strip().lower()
-
-
-def _normalized_key(value: object) -> str:
-    return _normalized_text(value).replace("-", "_").replace(" ", "_")
-
-
-def _validation_counters_cover_practical_chain(value: object) -> bool:
-    if not isinstance(value, dict):
-        return False
-    for key in ("raw_scored_mature", "production_validation", "observation_validation"):
-        actual, required = _parse_ratio(value.get(key))
-        if required <= 0 or actual < required:
-            return False
-    return True
-
-
-def _parse_ratio(value: object) -> tuple[int, int]:
-    if not isinstance(value, str) or "/" not in value:
-        return (0, 0)
-    left, right = value.split("/", 1)
-    try:
-        return (int(left), int(right))
-    except ValueError:
-        return (0, 0)
+    return metrics_prove_same_tree_practical_closure(parsed)
 
 
 def _resolve_run_root_scoped_path(value: object, run_root: Path) -> Path | None:
