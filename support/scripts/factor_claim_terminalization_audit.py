@@ -885,10 +885,24 @@ def _evidence_packet_proves_same_tree_practical_closure(evidence_path: Path) -> 
     policy_summary = parsed.get("policy_training_summary")
     if not isinstance(policy_summary, dict) or not policy_summary:
         return False
+    if not _lifecycle_tuple_proves_practical_closure(parsed):
+        return False
     command_results = parsed.get("command_results")
     if not isinstance(command_results, list) or not command_results:
         return False
     return all(isinstance(row, dict) and row.get("exit") == 0 for row in command_results)
+
+
+def _lifecycle_tuple_proves_practical_closure(parsed: dict[str, Any]) -> bool:
+    return (
+        _normalized_text(parsed.get("learning_admission_status")) == "admitted"
+        and _normalized_text(parsed.get("paper_admission_status")) == "ready"
+        and _normalized_text(parsed.get("live_trade_status")) == "ready"
+    )
+
+
+def _normalized_text(value: object) -> str:
+    return str(value or "").strip().lower()
 
 
 def _validation_counters_cover_practical_chain(value: object) -> bool:
