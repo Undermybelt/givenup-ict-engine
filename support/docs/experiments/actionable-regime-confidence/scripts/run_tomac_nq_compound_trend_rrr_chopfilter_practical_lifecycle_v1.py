@@ -4,6 +4,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import subprocess
 import sys
 from datetime import datetime
 from pathlib import Path
@@ -53,18 +54,32 @@ BRANCH_PATH = (
 )
 
 STATE = ROOT / "state"
+CMD = ROOT / "command-output"
 CHECKS = ROOT / "checks"
 SUMMARIES = ROOT / "summaries"
 MATERIALS = ROOT / "materials"
+MODEL_DIR = ROOT / "path_ranker_model"
+DATA_DIR = ROOT / "data/provider/normalized"
+SCORES = ROOT / "path_ranker_scores.csv"
+
+ICT = REPO / ".local-artifacts/cargo-target/debug/ict-engine"
+if not ICT.exists():
+    ICT = REPO / "target/debug/ict-engine"
+TRAINER = REPO / "support/scripts/auto_quant_external/pandas_path_ranker_trainer.py"
+PY_RUNNER = Path("python3")
 
 
 def configure_paths(root: Path) -> None:
-    global ROOT, STATE, CHECKS, SUMMARIES, MATERIALS
+    global ROOT, STATE, CMD, CHECKS, SUMMARIES, MATERIALS, MODEL_DIR, DATA_DIR, SCORES
     ROOT = Path(root)
     STATE = ROOT / "state"
+    CMD = ROOT / "command-output"
     CHECKS = ROOT / "checks"
     SUMMARIES = ROOT / "summaries"
     MATERIALS = ROOT / "materials"
+    MODEL_DIR = ROOT / "path_ranker_model"
+    DATA_DIR = ROOT / "data/provider/normalized"
+    SCORES = ROOT / "path_ranker_scores.csv"
 
 
 def read_json(path: Path) -> dict:
@@ -77,7 +92,42 @@ def read_json(path: Path) -> dict:
 
 def write_json(path: Path, payload: dict) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    path.write_text(
+        json.dumps(payload, indent=2, sort_keys=True, default=str) + "\n",
+        encoding="utf-8",
+    )
+
+
+def run_cmd(name: str, argv: list[object], timeout: int = 300) -> dict:
+    CMD.mkdir(parents=True, exist_ok=True)
+    CHECKS.mkdir(parents=True, exist_ok=True)
+    argv_s = [str(item) for item in argv]
+    (CMD / f"{name}.cmd").write_text(" ".join(argv_s) + "\n", encoding="utf-8")
+    try:
+        proc = subprocess.run(argv_s, cwd=REPO, text=True, capture_output=True, timeout=timeout)
+        stdout = proc.stdout
+        stderr = proc.stderr
+        rc = proc.returncode
+        timed_out = False
+    except subprocess.TimeoutExpired as exc:
+        stdout = exc.stdout or ""
+        stderr = (exc.stderr or "") + f"\nTIMEOUT after {timeout}s\n"
+        rc = 124
+        timed_out = True
+    if isinstance(stdout, bytes):
+        stdout = stdout.decode("utf-8", errors="replace")
+    if isinstance(stderr, bytes):
+        stderr = stderr.decode("utf-8", errors="replace")
+    (CMD / f"{name}.out").write_text(stdout, encoding="utf-8")
+    (CMD / f"{name}.err").write_text(stderr, encoding="utf-8")
+    (CHECKS / f"{name}.exit").write_text(f"{rc}\n", encoding="utf-8")
+    return {"name": name, "exit": rc, "timed_out": timed_out}
+
+
+def run_stage(stage: str, name: str, argv: list[object], timeout: int = 300) -> dict:
+    result = run_cmd(name, argv, timeout)
+    result["stage"] = stage
+    return result
 
 
 def market_data_provenance() -> dict:
@@ -179,6 +229,193 @@ def normalize_market_data_summary(data_summary: dict) -> dict:
     if isinstance(nested, dict):
         return nested
     return data_summary
+
+
+def trainer_cmd(*extra: object) -> list[object]:
+    return [PY_RUNNER, TRAINER, *extra]
+
+
+def build_lifecycle_command_plan(
+    *,
+    strategy_library: Path,
+    data_root: Path,
+    feedback_file: Path,
+) -> list[dict[str, object]]:
+    target_csv = STATE / SYMBOL / "policy_training/structural_path_ranking_target.csv"
+    trainer_artifact = MODEL_DIR / "trainer_artifact.json"
+    return [
+        {
+            "stage": "provider_data",
+            "name": "01_auto_quant_results_import",
+            "argv": [
+                ICT,
+                "auto-quant-results-import",
+                "--symbol",
+                SYMBOL,
+                "--state-dir",
+                STATE,
+                "--library",
+                strategy_library,
+            ],
+            "timeout": 180,
+        },
+        {
+            "stage": "pre_bayes",
+            "name": "02_auto_quant_prior_init",
+            "argv": [
+                ICT,
+                "auto-quant-prior-init",
+                "--symbol",
+                SYMBOL,
+                "--state-dir",
+                STATE,
+                "--library",
+                strategy_library,
+                "--temper",
+                "0.5",
+                "--prior-strength",
+                "4.0",
+            ],
+            "timeout": 180,
+        },
+        {
+            "stage": "execution_tree",
+            "name": "03_analyze_seed",
+            "argv": [ICT, "analyze", "--symbol", SYMBOL, "--data-root", data_root, "--state-dir", STATE, "--output-format", "json"],
+            "timeout": 300,
+        },
+        {
+            "stage": "bbn_workflow",
+            "name": "04_workflow_seed",
+            "argv": [ICT, "workflow-status", "--symbol", SYMBOL, "--state-dir", STATE, "--refresh", "--output-format", "json"],
+            "timeout": 120,
+        },
+        {
+            "stage": "pre_bayes",
+            "name": "05_pre_bayes_seed",
+            "argv": [ICT, "pre-bayes-status", "--symbol", SYMBOL, "--state-dir", STATE, "--refresh", "--output-format", "json"],
+            "timeout": 120,
+        },
+        {
+            "stage": "path_ranker",
+            "name": "06_export_target_seed",
+            "argv": [ICT, "export-structural-path-ranking-target", "--symbol", SYMBOL, "--state-dir", STATE],
+            "timeout": 120,
+        },
+        {
+            "stage": "feedback_update",
+            "name": "08_feedback_update",
+            "argv": [
+                ICT,
+                "auto-quant-ingest-real-trades",
+                "--symbol",
+                SYMBOL,
+                "--state-dir",
+                STATE,
+                "--trades",
+                feedback_file,
+                "--source",
+                "retained_real_event_label_simulation",
+            ],
+            "timeout": 300,
+        },
+        {
+            "stage": "path_ranker",
+            "name": "09_export_target_after_feedback",
+            "argv": [ICT, "export-structural-path-ranking-target", "--symbol", SYMBOL, "--state-dir", STATE],
+            "timeout": 120,
+        },
+        {
+            "stage": "policy_training",
+            "name": "10_policy_after_feedback",
+            "argv": [ICT, "policy-training-status", "--symbol", SYMBOL, "--state-dir", STATE, "--output-format", "json"],
+            "timeout": 120,
+        },
+        {
+            "stage": "path_ranker",
+            "name": "11_train_ranker",
+            "argv": trainer_cmd("--target-csv", target_csv, "--output-dir", MODEL_DIR, "--output-scores", SCORES, "--allow-direct-fallback"),
+            "timeout": 300,
+        },
+        {
+            "stage": "path_ranker",
+            "name": "12_apply_ranker",
+            "argv": trainer_cmd("--apply", "--model-dir", MODEL_DIR, "--target-csv", target_csv, "--output-scores", SCORES, "--allow-direct-fallback"),
+            "timeout": 180,
+        },
+        {
+            "stage": "path_ranker",
+            "name": "13_apply_scores_to_ict",
+            "argv": [ICT, "apply-structural-path-ranking-external-scores", "--symbol", SYMBOL, "--state-dir", STATE, "--scores-file", SCORES],
+            "timeout": 120,
+        },
+        {
+            "stage": "path_ranker",
+            "name": "14_register_trainer",
+            "argv": [
+                ICT,
+                "register-structural-path-ranking-trainer-artifact",
+                "--symbol",
+                SYMBOL,
+                "--state-dir",
+                STATE,
+                "--artifact-uri",
+                trainer_artifact,
+                "--model-family",
+                "weighted_feature_sum_v1",
+                "--trained-rows",
+                "1",
+                "--calibration-rows",
+                "0",
+            ],
+            "timeout": 120,
+        },
+        {
+            "stage": "path_ranker",
+            "name": "15_enable_runtime",
+            "argv": [ICT, "enable-structural-path-ranking-runtime", "--symbol", SYMBOL, "--state-dir", STATE, "--reuse-mode", "prefer_history"],
+            "timeout": 120,
+        },
+        {
+            "stage": "execution_tree",
+            "name": "16_analyze_after_ranker",
+            "argv": [ICT, "analyze", "--symbol", SYMBOL, "--data-root", data_root, "--state-dir", STATE, "--output-format", "json"],
+            "timeout": 300,
+        },
+        {
+            "stage": "bbn_workflow",
+            "name": "17_workflow_after_ranker",
+            "argv": [ICT, "workflow-status", "--symbol", SYMBOL, "--state-dir", STATE, "--refresh", "--output-format", "json"],
+            "timeout": 120,
+        },
+        {
+            "stage": "pre_bayes",
+            "name": "18_pre_bayes_after_ranker",
+            "argv": [ICT, "pre-bayes-status", "--symbol", SYMBOL, "--state-dir", STATE, "--refresh", "--output-format", "json"],
+            "timeout": 120,
+        },
+        {
+            "stage": "policy_training",
+            "name": "19_policy_after_ranker",
+            "argv": [ICT, "policy-training-status", "--symbol", SYMBOL, "--state-dir", STATE, "--output-format", "json"],
+            "timeout": 120,
+        },
+    ]
+
+
+def run_lifecycle_driver(plan: list[dict[str, object]]) -> list[dict]:
+    results: list[dict] = []
+    for step in plan:
+        result = run_stage(
+            str(step["stage"]),
+            str(step["name"]),
+            list(step["argv"]),
+            int(step.get("timeout") or 300),
+        )
+        results.append(result)
+        if result.get("exit") != 0 or result.get("timed_out") is True:
+            break
+    return results
 
 
 def staged_command_results() -> list[dict]:
@@ -326,16 +563,31 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         description="Summarize same-tree practical lifecycle evidence for the NQ compound RRR ChopFilter branch."
     )
     parser.add_argument("--root", default=str(ROOT))
+    parser.add_argument("--execute-driver", action="store_true")
+    parser.add_argument("--strategy-library", default=str(MATERIALS / "tomac_nq_compound_trend_rrr_chopfilter_strategy_library.json"))
+    parser.add_argument("--data-root", default=str(DATA_DIR))
+    parser.add_argument("--feedback-file", default=str(ROOT / "feedback/tomac_nq_compound_trend_rrr_chopfilter_simulated_feedback.jsonl"))
     return parser.parse_args(argv)
 
 
 def main(argv: list[str] | None = None) -> int:
     args = parse_args(argv)
     configure_paths(Path(args.root))
-    for directory in (STATE, CHECKS, SUMMARIES, MATERIALS):
+    for directory in (STATE, CMD, CHECKS, SUMMARIES, MATERIALS, MODEL_DIR, DATA_DIR):
         directory.mkdir(parents=True, exist_ok=True)
+    command_results = []
+    if args.execute_driver:
+        plan = build_lifecycle_command_plan(
+            strategy_library=Path(args.strategy_library),
+            data_root=Path(args.data_root),
+            feedback_file=Path(args.feedback_file),
+        )
+        write_json(CHECKS / "lifecycle_command_plan.json", {"steps": plan})
+        command_results = run_lifecycle_driver(plan)
+    else:
+        command_results = staged_command_results()
     metrics = write_summary(
-        command_results=staged_command_results(),
+        command_results=command_results,
         data_summary=market_data_provenance(),
         trade_summary={},
     )

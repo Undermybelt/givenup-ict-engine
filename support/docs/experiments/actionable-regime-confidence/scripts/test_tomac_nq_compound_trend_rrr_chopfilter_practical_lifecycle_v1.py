@@ -7,6 +7,7 @@ import sys
 import tempfile
 import unittest
 from pathlib import Path
+from unittest.mock import patch
 
 
 SCRIPT = Path(__file__).with_name(
@@ -291,6 +292,119 @@ class NqCompoundTrendRrrChopfilterPracticalLifecycleTests(unittest.TestCase):
             metrics = json.loads((root / "checks/terminal_metrics.json").read_text(encoding="utf-8"))
             self.assertFalse(metrics["all_command_exits_zero"])
             self.assertFalse((root / "summaries/same_tree_practical_closure.json").exists())
+
+    def test_lifecycle_command_plan_covers_required_same_tree_stages(self) -> None:
+        module = load_module()
+
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp) / "root"
+            module.configure_paths(root)
+            plan = module.build_lifecycle_command_plan(
+                strategy_library=root / "materials/strategy_library.json",
+                data_root=root / "data/provider/normalized",
+                feedback_file=root / "feedback/simulated_feedback.jsonl",
+            )
+
+        stages = {step["stage"] for step in plan}
+        names = {step["name"] for step in plan}
+        self.assertTrue(set(module.REQUIRED_COMMAND_RESULT_STAGES).issubset(stages))
+        self.assertIn("01_auto_quant_results_import", names)
+        self.assertIn("08_feedback_update", names)
+        self.assertTrue(any(name.endswith("policy_after_ranker") for name in names))
+
+    def test_lifecycle_driver_stops_after_first_failed_stage(self) -> None:
+        module = load_module()
+
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp) / "root"
+            module.configure_paths(root)
+            plan = [
+                {"stage": "provider_data", "name": "01_provider", "argv": ["ok"], "timeout": 1},
+                {"stage": "pre_bayes", "name": "02_prior", "argv": ["fail"], "timeout": 1},
+                {"stage": "bbn_workflow", "name": "03_workflow", "argv": ["skip"], "timeout": 1},
+            ]
+
+            def fake_run_stage(stage: str, name: str, argv: list[object], timeout: int = 300) -> dict:
+                return {"stage": stage, "name": name, "exit": 1 if name == "02_prior" else 0, "timed_out": False}
+
+            with patch.object(module, "run_stage", side_effect=fake_run_stage):
+                results = module.run_lifecycle_driver(plan)
+
+        self.assertEqual([row["name"] for row in results], ["01_provider", "02_prior"])
+        self.assertEqual(results[-1]["stage"], "pre_bayes")
+        self.assertEqual(results[-1]["exit"], 1)
+
+    def test_execute_driver_writes_serializable_command_plan(self) -> None:
+        module = load_module()
+
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp) / "root"
+            write_full_lifecycle_state(module, root)
+            plan = [
+                {"stage": "provider_data", "name": "01_provider", "argv": [root / "input.json"], "timeout": 1},
+                {"stage": "pre_bayes", "name": "02_prior", "argv": ["prior"], "timeout": 1},
+            ]
+
+            with patch.object(module, "staged_command_results", return_value=[]), patch.object(
+                module, "build_lifecycle_command_plan", return_value=plan
+            ), patch.object(
+                module,
+                "run_lifecycle_driver",
+                return_value=[{"stage": "provider_data", "name": "01_provider", "exit": 1, "timed_out": False}],
+            ):
+                rc = module.main(["--root", str(root), "--execute-driver"])
+
+            plan_payload = json.loads((root / "checks/lifecycle_command_plan.json").read_text(encoding="utf-8"))
+
+        self.assertEqual(rc, 2)
+        self.assertEqual(plan_payload["steps"][0]["argv"][0], str(root / "input.json"))
+
+    def test_execute_driver_runs_even_when_staged_results_exist(self) -> None:
+        module = load_module()
+
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp) / "root"
+            write_full_lifecycle_state(module, root)
+            plan = [
+                {"stage": "provider_data", "name": "01_provider", "argv": ["provider"], "timeout": 1},
+                {"stage": "pre_bayes", "name": "02_prior", "argv": ["prior"], "timeout": 1},
+            ]
+            driver_results = [
+                {"stage": "provider_data", "name": "01_provider", "exit": 0, "timed_out": False},
+                {"stage": "pre_bayes", "name": "02_prior", "exit": 1, "timed_out": False},
+            ]
+
+            with patch.object(module, "staged_command_results", return_value=practical_command_results()), patch.object(
+                module, "build_lifecycle_command_plan", return_value=plan
+            ), patch.object(module, "run_lifecycle_driver", return_value=driver_results) as run_driver:
+                rc = module.main(["--root", str(root), "--execute-driver"])
+
+            metrics = json.loads((root / "checks/terminal_metrics.json").read_text(encoding="utf-8"))
+
+        run_driver.assert_called_once_with(plan)
+        self.assertEqual(rc, 2)
+        self.assertEqual(metrics["command_results"], driver_results)
+        self.assertFalse((root / "summaries/same_tree_practical_closure.json").exists())
+
+    def test_failed_execute_driver_removes_stale_closure_packet(self) -> None:
+        module = load_module()
+
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp) / "root"
+            write_full_lifecycle_state(module, root)
+            stale_packet = root / "summaries/same_tree_practical_closure.json"
+            write_json(stale_packet, {"status": "pass", "stale": True})
+            plan = [{"stage": "provider_data", "name": "01_provider", "argv": ["provider"], "timeout": 1}]
+
+            with patch.object(module, "build_lifecycle_command_plan", return_value=plan), patch.object(
+                module,
+                "run_lifecycle_driver",
+                return_value=[{"stage": "provider_data", "name": "01_provider", "exit": 1, "timed_out": False}],
+            ):
+                rc = module.main(["--root", str(root), "--execute-driver"])
+
+        self.assertEqual(rc, 2)
+        self.assertFalse(stale_packet.exists())
 
 
 if __name__ == "__main__":

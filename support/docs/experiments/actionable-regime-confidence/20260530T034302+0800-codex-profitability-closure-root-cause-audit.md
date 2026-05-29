@@ -120,6 +120,29 @@ admission owners where current evidence shows a system loophole.
   ran 12 tests OK;
   `python3 -m py_compile support/scripts/objective_closure_snapshot.py support/scripts/tests/test_objective_closure_snapshot.py`
   passed.
+- 2026-05-30T04:56:00+0800: identified a practical-lifecycle driver loophole
+  in the NQ compound ChopFilter wrapper: explicit `--execute-driver` could be
+  short-circuited by pre-existing staged command results, which made the
+  wrapper summarize historical evidence instead of running the same-tree
+  lifecycle driver. Added RED test
+  `test_execute_driver_runs_even_when_staged_results_exist`, observed it fail
+  because `run_lifecycle_driver` was not called, then changed `main()` so
+  `--execute-driver` always builds and runs the lifecycle plan while default
+  read-only mode still uses staged results. Also added a regression test proving
+  a failed explicit driver run removes any stale same-tree closure packet rather
+  than returning success from a leftover file. Verification passed:
+  `python3 -m unittest support.docs.experiments.actionable-regime-confidence.scripts.test_tomac_nq_compound_trend_rrr_chopfilter_practical_lifecycle_v1 -v`
+  ran 11 tests OK;
+  `python3 -m py_compile support/docs/experiments/actionable-regime-confidence/scripts/run_tomac_nq_compound_trend_rrr_chopfilter_practical_lifecycle_v1.py support/docs/experiments/actionable-regime-confidence/scripts/test_tomac_nq_compound_trend_rrr_chopfilter_practical_lifecycle_v1.py`
+  passed;
+  `git diff --check -- support/docs/experiments/actionable-regime-confidence/scripts/run_tomac_nq_compound_trend_rrr_chopfilter_practical_lifecycle_v1.py support/docs/experiments/actionable-regime-confidence/scripts/test_tomac_nq_compound_trend_rrr_chopfilter_practical_lifecycle_v1.py`
+  passed; targeted practical-admission source check returned
+  `practical_admission_source_ok`.
+- 2026-05-30T04:56:00+0800: current compact claim audit still blocks real
+  lifecycle launch: `active_claims=1`, `fresh_active_claims_without_live_process=1`,
+  `live_factor_processes=1`, `promotion_allowed_true=0`, `trade_usable_true=0`,
+  and `same_tree_practical_closure=null`. Do not run the NQ practical lifecycle
+  driver until the fresh CC claim and EUR/ETH live runtime clear.
 
 ## Root Cause Readback
 
