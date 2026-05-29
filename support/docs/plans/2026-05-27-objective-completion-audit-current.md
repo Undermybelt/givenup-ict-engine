@@ -1721,3 +1721,68 @@ Post-commit caveat:
   release, or current-HEAD proof claim, rerun the heavy done-definition audit
   against the then-current `HEAD` and use that same-head packet in the parent
   objective snapshot.
+
+## 2026-05-29 Current Refresh - Workdoc Terminal Parsing Fix Landed, Objective Still Blocked
+
+Latest authoritative packets for this refresh:
+
+- factor audit after the workdoc terminal parsing fix:
+  `/tmp/ict-engine-goal-20260529T-current3-factor.json`
+- release audit after the workdoc terminal parsing fix:
+  `/tmp/ict-engine-goal-20260529T-current3-release.json`
+- parent objective snapshot:
+  `/tmp/ict-engine-goal-20260529T-current3-objective/objective_closure_snapshot.json`
+
+Commands:
+
+```bash
+python3 -m unittest support.scripts.tests.test_factor_claim_terminalization_audit -v
+python3 support/scripts/factor_claim_terminalization_audit.py --compact --output /tmp/ict-engine-goal-20260529T-current3-factor.json
+python3 support/scripts/release_readiness_audit.py --compact --check-remotes --output /tmp/ict-engine-goal-20260529T-current3-release.json
+python3 support/scripts/objective_closure_snapshot.py --compact --check-remotes --output-dir /tmp/ict-engine-goal-20260529T-current3-objective --timeout-seconds 300
+```
+
+Current command truth:
+
+- `HEAD=154e0565e57687b1b9fcb1991a9357e34e838612` contains the verified
+  `Fix factor claim workdoc terminal parsing` code/test slice;
+- focused factor-claim regression suite passed: 87 tests, 0 failures;
+- the fix prevents a nonterminal workdoc workflow section such as
+  `## TDD Route` with `Decision: skipped` from falsely terminalizing a live
+  active claim, while preserving terminal/final workdoc readback handling;
+- standalone factor audit briefly showed no claim terminalization blockers, but
+  the later parent snapshot saw fresh shared-worktree drift again:
+  `active_claims=2`, `live_factor_processes=3`, `promotion_allowed_true=0`,
+  `trade_usable_true=0`, and `same_tree_practical_closure=null`;
+- release audit remote readback now passed directly for both source origin and
+  release mirror, and `release_version_tag_available=pass` for `v0.1.8`;
+- release audit still exited `1` with unresolved `worktree_clean_for_release`
+  and `source_origin_matches_selected_source`; current source is ahead of
+  `origin/main` by 135;
+- parent objective snapshot exited `1` with blockers
+  `done_definition_not_completion_ready`, `factor_closure_blocked`, and
+  `release_readiness_blocked`.
+
+Loopholes found and classified:
+
+- Workdoc process-route decisions are not terminal factor evidence. The current
+  parser now requires terminal/final sections, explicit terminal fields,
+  terminal-looking status, or terminal-looking decisions before using a workdoc
+  to terminalize a claim.
+- A passing momentary factor audit is not stable closure in the shared tree.
+  Another live/fresh factor lane appeared before the parent snapshot, so factor
+  closure must be judged from the current parent packet, not the earlier
+  standalone pass.
+- Remote readback is no longer the release blocker in this refresh. The live
+  blockers are dirty selected source state and source-origin mismatch.
+
+Requirement verdict updates:
+
+- Current objective status remains `not_complete`.
+- No current evidence proves practical/live trading usefulness:
+  `promotion_allowed_true=0`, `trade_usable_true=0`, and no validated
+  same-tree practical closure packet.
+- Any future completion claim must rerun heavy done-definition proof at the
+  then-current `HEAD`, wait for or explicitly claim/terminalize live factor
+  lanes, and prove release readiness from a clean selected export with source
+  origin alignment.
