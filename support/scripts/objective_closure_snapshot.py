@@ -432,6 +432,24 @@ def _practical_closure_blocker_detail(factor_surface: dict[str, Any]) -> dict[st
     }
 
 
+def _factor_closure_blocker_detail(factor_surface: dict[str, Any]) -> dict[str, Any]:
+    action_queue = factor_surface.get("attention_action_queue")
+    return {
+        "status": factor_surface.get("status"),
+        "active_claims": factor_surface.get("active_claims"),
+        "coordination_only_active_claims": factor_surface.get("coordination_only_active_claims"),
+        "invalid_active_claims": factor_surface.get("invalid_active_claims"),
+        "live_factor_processes": factor_surface.get("live_factor_processes"),
+        "blocking_reasons": factor_surface.get("blocking_reasons", []),
+        "attention_claim_count": factor_surface.get("attention_claim_count"),
+        "attention_live_process_count": factor_surface.get("attention_live_process_count"),
+        "attention_by_owner": factor_surface.get("attention_by_owner", {}),
+        "attention_by_actionability": factor_surface.get("attention_by_actionability", {}),
+        "action_queue": action_queue if isinstance(action_queue, dict) else {},
+        "next_action": factor_surface.get("next_action"),
+    }
+
+
 def _release_surface(report: dict[str, Any]) -> dict[str, Any]:
     summary = report.get("summary", {})
     gates = report.get("gates", [])
@@ -660,6 +678,9 @@ def summarize_snapshot(
     )
     if factor_surface.get("status") != "pass":
         blockers.append("factor_closure_blocked")
+        blocker_details["factor_closure_blocked"] = _factor_closure_blocker_detail(
+            factor_surface
+        )
     practical_closure = _same_tree_practical_closure_detail(factor_surface)
     if factor_surface.get("status") == "pass" and practical_closure is None:
         blockers.append("same_tree_practical_closure_unproven")

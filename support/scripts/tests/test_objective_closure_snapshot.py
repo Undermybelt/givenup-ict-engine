@@ -839,6 +839,88 @@ class ObjectiveClosureSnapshotTest(unittest.TestCase):
             summary["prioritized_next_actions"],
         )
 
+    def test_summarize_snapshot_includes_factor_closure_blocker_details(self) -> None:
+        summary = summarize_snapshot(
+            {
+                "completion_ready": True,
+                "quickstart_surface": "pass",
+            },
+            {
+                "status": "needs_attention",
+                "active_claims": 2,
+                "coordination_only_active_claims": 1,
+                "invalid_active_claims": 0,
+                "live_factor_processes": 1,
+                "blocking_reasons": ["active_claims", "live_factor_processes"],
+                "promotion_allowed_true": 0,
+                "trade_usable_true": 0,
+                "attention_claim_count": 2,
+                "attention_live_process_count": 1,
+                "attention_by_owner": {"codex": 2},
+                "attention_by_actionability": {
+                    "live_runtime_owner": 1,
+                    "wait_only_without_live_process": 1,
+                },
+                "attention_action_queue": {
+                    "live_runtime_run_roots": [
+                        {
+                            "pid": 9126,
+                            "run_root": "ict-engine-tomac-15y",
+                            "exit_file_state": "none",
+                        }
+                    ],
+                    "externalize_wait_only_claims": [
+                        {
+                            "claim_file": "wait.claim",
+                            "stale_safe_takeover_candidate": False,
+                        }
+                    ],
+                },
+                "next_action": "wait for live factor processes to exit",
+            },
+            {
+                "status": "pass",
+                "unresolved_next_actions": {},
+            },
+            snapshot_timestamp="2026-05-27T11:00:10Z",
+        )
+
+        self.assertIn("factor_closure_blocked", summary["blockers"])
+        self.assertEqual(
+            summary["blocker_details"]["factor_closure_blocked"],
+            {
+                "status": "needs_attention",
+                "active_claims": 2,
+                "coordination_only_active_claims": 1,
+                "invalid_active_claims": 0,
+                "live_factor_processes": 1,
+                "blocking_reasons": ["active_claims", "live_factor_processes"],
+                "attention_claim_count": 2,
+                "attention_live_process_count": 1,
+                "attention_by_owner": {"codex": 2},
+                "attention_by_actionability": {
+                    "live_runtime_owner": 1,
+                    "wait_only_without_live_process": 1,
+                },
+                "action_queue": {
+                    "live_runtime_run_roots": [
+                        {
+                            "pid": 9126,
+                            "run_root": "ict-engine-tomac-15y",
+                            "exit_file_state": "none",
+                        }
+                    ],
+                    "externalize_wait_only_claims": [
+                        {
+                            "claim_file": "wait.claim",
+                            "stale_safe_takeover_candidate": False,
+                        }
+                    ],
+                },
+                "next_action": "wait for live factor processes to exit",
+            },
+        )
+
     def test_summarize_snapshot_deduplicates_wait_only_stale_factor_claim_actions(self) -> None:
         summary = summarize_snapshot(
             {
