@@ -1,0 +1,139 @@
+{
+  "schema_version": "ict-engine/source-cost-readback/v1",
+  "created_at": "2026-05-30T04:33:00+0800",
+  "agent_name": "codex-vx-eth-vix-termstructure-riskoff-contango-reversal-prep",
+  "factor_id": "vx_eth_vix_termstructure_riskoff_contango_reversal_v1",
+  "branch_path": "StressExpansion -> VixFuturesTermStructureShock -> ContangoCompressionRiskOffTransition -> FrontMonthVolatilityReversal -> AtrRiskManagedMtfContinuation -> vx_eth_vix_termstructure_riskoff_contango_reversal_v1",
+  "market": "FUTURES",
+  "product": "volatility_futures",
+  "exchange": "CFE",
+  "root_symbol": "VX / Cboe Volatility Index futures",
+  "session_scope": "ETH/full_retained_session",
+  "rth_filter_applied": false,
+  "origin_timeframe": "1m",
+  "context_timeframes": ["5m", "15m", "30m", "1h", "4h", "1d"],
+  "runtime_blocker_at_start": {
+    "compact_audit_status": "needs_attention",
+    "valid_active_claims": 2,
+    "live_factor_processes": 1,
+    "blocking_claims": [
+      "20260530T040423+0800-codex-6c-eth-boc-oil-beta-ny-stoprun-vwap-reclaim-gate1-fetch.claim",
+      "20260530T040654+0800-codex-zw-eth-crop-weather-export-termstructure-reserve.claim"
+    ],
+    "live_runtime_root": "/tmp/ict-engine-eur-eth-donchian-tsmom-volcarry-prep-20260530T005133+0800"
+  },
+  "http_readbacks": [
+    {
+      "source": "Cboe VX contract specifications",
+      "url": "https://www.cboe.com/tradable-products/vix/vix-futures/specifications",
+      "http_status": 200,
+      "local_capture": "/tmp/ict-engine-vx-eth-vix-termstructure-riskoff-contango-reversal-prep-20260530T042430+0800/source_evidence/cboe_vx_specs.html"
+    },
+    {
+      "source": "Cboe VIX futures overview",
+      "url": "https://www.cboe.com/tradable-products/vix/vix-futures",
+      "http_status": 200,
+      "local_capture": "/tmp/ict-engine-vx-eth-vix-termstructure-riskoff-contango-reversal-prep-20260530T042430+0800/source_evidence/cboe_vx_overview.html"
+    },
+    {
+      "source": "Cboe VIX term structure",
+      "url": "https://www.cboe.com/tradable-products/vix/term-structure",
+      "http_status": 200,
+      "local_capture": "/tmp/ict-engine-vx-eth-vix-termstructure-riskoff-contango-reversal-prep-20260530T042430+0800/source_evidence/cboe_vix_term_structure.html"
+    },
+    {
+      "source": "Cboe U.S. futures hours",
+      "url": "https://www.cboe.com/about/hours/us-futures",
+      "http_status": 200,
+      "local_capture": "/tmp/ict-engine-vx-eth-vix-termstructure-riskoff-contango-reversal-prep-20260530T042430+0800/source_evidence/cboe_us_futures_hours.html"
+    },
+    {
+      "source": "Cboe CFE fee schedule",
+      "url": "https://www.cboe.com/us/futures/membership/fee_schedule/",
+      "http_status": 200,
+      "local_capture": "/tmp/ict-engine-vx-eth-vix-termstructure-riskoff-contango-reversal-prep-20260530T042430+0800/source_evidence/cboe_futures_fee_schedule.html"
+    },
+    {
+      "source": "IBKR futures commissions",
+      "url": "https://www.interactivebrokers.com/en/pricing/commissions-futures.php",
+      "http_status": 200,
+      "local_capture": "/tmp/ict-engine-vx-eth-vix-termstructure-riskoff-contango-reversal-prep-20260530T042430+0800/source_evidence/ibkr_futures_commissions.html"
+    },
+    {
+      "source": "IBKR CFE fee recovery",
+      "url": "https://www.interactivebrokers.com/en/accounts/fees/CBOE.php",
+      "http_status": 200,
+      "local_capture": "/tmp/ict-engine-vx-eth-vix-termstructure-riskoff-contango-reversal-prep-20260530T042430+0800/source_evidence/ibkr_cboe_fees.html"
+    },
+    {
+      "source": "IBKR guessed CFE fee URL",
+      "url": "https://www.interactivebrokers.com/en/accounts/fees/CFE.php",
+      "http_status": 404,
+      "local_capture": "/tmp/ict-engine-vx-eth-vix-termstructure-riskoff-contango-reversal-prep-20260530T042430+0800/source_evidence/ibkr_cfe_fees.html",
+      "decision": "ignored_wrong_url_no_fee_inferred"
+    }
+  ],
+  "contract_spec": {
+    "status": "partial_verified",
+    "official_source": "Cboe VX contract specifications",
+    "contract_multiplier_usd_per_index_point": 1000,
+    "default_tick_index_points": 0.05,
+    "default_tick_value_usd": 50.0,
+    "spread_leg_or_net_increment_index_points": 0.01,
+    "spread_leg_or_net_increment_value_usd": 10.0,
+    "block_or_ecrp_minimum_increment_index_points": 0.005,
+    "regular_hours_chicago": "08:30-15:00",
+    "extended_hours_chicago": ["17:00_previous_day-08:30", "15:00-16:00"],
+    "expiration_day_note": "Expiring VX futures end earlier on final settlement date per Cboe specs/hours. Do not assume ordinary session coverage on settlement day."
+  },
+  "cost_model": {
+    "status": "cost_model_unverified",
+    "promotion_cost_verified": false,
+    "declared_assumption": "IBKR Americas USD futures, non-member/customer CFE VX futures recovery fees, no account-specific discounts, no slippage model",
+    "currency": "USD",
+    "ibkr_execution_commission_per_contract_side": 0.85,
+    "cfe_vix_exchange_fee_recovery_per_contract_side": 1.51,
+    "nfa_regulatory_fee_recovery_per_contract_side": 0.02,
+    "partial_all_in_per_contract_side": 2.38,
+    "partial_round_turn_per_contract": 4.76,
+    "cboe_cfe_customer_fee_codes": {
+      "WC_weekly_vx_customer": 1.51,
+      "XC_monthly_vx_customer": 1.51
+    },
+    "unverified_fields": [
+      "broker_side_exact_contract_symbol",
+      "actual_account_region_and_pricing_plan_applicability",
+      "routing_or_liquidity_flag_for_actual_orders",
+      "slippage_model",
+      "same_turn_nonzero_provider_or_ibkr_historical_rows",
+      "final selected VX contract month and roll rule"
+    ]
+  },
+  "hypothesis_support": {
+    "status": "source_only_not_trading_evidence",
+    "sources": [
+      "Cboe VIX futures overview HTTP 200",
+      "Cboe VIX term structure HTTP 200"
+    ]
+  },
+  "launches": {
+    "provider_status_started": false,
+    "provider_fetch_started": false,
+    "ibkr_historical_started": false,
+    "autoquant_started": false,
+    "freqtrade_started": false,
+    "paper_or_sim_started": false,
+    "live_started": false,
+    "local_backtest_started": false,
+    "pre_bayes_started": false,
+    "bbn_started": false,
+    "path_ranker_started": false,
+    "execution_tree_started": false,
+    "lifecycle_started": false
+  },
+  "decision": "terminalized_no_launch_prep_only_cost_source_reserve",
+  "promotion_allowed": false,
+  "trade_usable": false,
+  "update_goal": false,
+  "same_tree_practical_closure": null
+}
