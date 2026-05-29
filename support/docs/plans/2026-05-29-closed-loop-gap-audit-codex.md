@@ -1191,3 +1191,39 @@ training/refinement.
   readiness, or completion. Next lawful action is still to wait for live/fresh
   factor owners to terminalize, then rerun factor closure and only then refresh
   a proof-backed objective snapshot with current-head evidence.
+
+## 2026-05-29T09:55+0800 Factor Audit Shell Root Extraction Fix
+
+- Static source loophole fixed in `support/scripts/factor_claim_terminalization_audit.py`:
+  live process root extraction now resolves simple shell path assignments such
+  as `root=/tmp/ict-engine-...` before consuming `--root "$root/run"`, and
+  rejects unresolved `$root/...` tokens instead of reporting them as literal
+  run roots.
+- The parser also normalizes `ps` escaped newline text (`\\012`) before command
+  token extraction. This prevents wrapper parent processes from being reported
+  with polluted roots such as `/tmp/ict-engine-...\\012python3`.
+- RED/GREEN evidence:
+  `test_extract_run_root_resolves_simple_shell_root_assignment` and
+  `test_extract_run_root_ignores_unresolved_shell_variable_path` both failed
+  before the fix with literal `PosixPath('$root/run')`, then passed after the
+  shell-variable resolver. The live audit exposed the escaped-newline variant;
+  `test_extract_run_root_resolves_ps_escaped_shell_newline_assignment` failed
+  before the second parser pass, then passed after normalizing `\\012`.
+- Verification after implementation:
+  `python3 -m unittest support.scripts.tests.test_factor_claim_terminalization_audit -v`
+  passed `80/80`; `python3 support/scripts/check_script_manifest.py` passed;
+  `git diff --check -- support/scripts/factor_claim_terminalization_audit.py support/scripts/tests/test_factor_claim_terminalization_audit.py`
+  passed.
+- Live compact audit after the fix still exited `1` because a separate active
+  live owner remains, but the action queue no longer reports literal `$root/run`
+  or a parent root polluted by `\\012python3`. It reports one live runtime root:
+  `/tmp/ict-engine-tomac-lunch-liquidity-vacuum-vwap-magnet-reversal-20260529T093037+0800`,
+  with `active_claims=1`, `live_factor_processes=1`,
+  `promotion_allowed_true=0`, `trade_usable_true=0`, and
+  `same_tree_practical_closure=null`.
+- Full objective remains incomplete. This slice improves audit accuracy only;
+  it does not prove a practical factor, same-tree practical closure, release
+  readiness, paper/sim/live readiness, or completion. The lawful next action is
+  still to wait for the active LunchLiquidity runtime owner to terminalize or
+  become stale-safe under the documented takeover rule before refreshing closure
+  evidence.

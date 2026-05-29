@@ -1055,28 +1055,74 @@ def _looks_like_readback_command(command: str) -> bool:
 
 
 def _extract_run_root(command: str) -> Path | None:
-    assignment = re.search(r"\bRUN_ROOT=([^\s;]+)", command)
+    normalized_command = _normalize_ps_command_text(command)
+    shell_vars = _extract_shell_path_assignments(normalized_command)
+    assignment = re.search(r"\bRUN_ROOT=([^\s;]+)", normalized_command)
     if assignment:
-        return _normalize_tmp_run_root(Path(assignment.group(1).strip("'\"")))
+        path = _path_token_candidate(assignment.group(1), shell_vars=shell_vars)
+        if path:
+            return _normalize_tmp_run_root(path)
 
-    out_arg = re.search(r"--(?:out|root|run-root|run_root)\s+([^\s;]+)", command)
+    out_arg = re.search(r"--(?:out|root|run-root|run_root)\s+([^\s;]+)", normalized_command)
     if out_arg:
-        return _normalize_tmp_run_root(Path(out_arg.group(1).strip("'\"")))
+        path = _path_token_candidate(out_arg.group(1), shell_vars=shell_vars)
+        if path:
+            return _normalize_tmp_run_root(path)
 
-    state_dir_arg = re.search(r"--state-dir\s+([^\s;]+)", command)
+    state_dir_arg = re.search(r"--state-dir\s+([^\s;]+)", normalized_command)
     if state_dir_arg:
-        return _normalize_tmp_run_root(Path(state_dir_arg.group(1).strip("'\"")))
+        path = _path_token_candidate(state_dir_arg.group(1), shell_vars=shell_vars)
+        if path:
+            return _normalize_tmp_run_root(path)
 
-    output_arg = re.search(r"--output\s+([^\s;]+)", command)
+    output_arg = re.search(r"--output\s+([^\s;]+)", normalized_command)
     if output_arg:
-        run_root = _run_root_from_artifact_path(Path(output_arg.group(1).strip("'\"")))
+        path = _path_token_candidate(output_arg.group(1), shell_vars=shell_vars)
+        if not path:
+            return None
+        run_root = _run_root_from_artifact_path(path)
         if run_root:
             return run_root
 
-    tmp_match = re.search(r"(/(?:private/)?tmp/ict-engine-[^\s;'\"`]+)", command)
+    tmp_match = re.search(r"(/(?:private/)?tmp/ict-engine-[^\s;'\"`]+)", normalized_command)
     if tmp_match:
         return _normalize_tmp_run_root(Path(tmp_match.group(1)))
     return None
+
+
+def _normalize_ps_command_text(command: str) -> str:
+    return command.replace("\\012", " ")
+
+
+def _extract_shell_path_assignments(command: str) -> dict[str, str]:
+    assignments: dict[str, str] = {}
+    for match in re.finditer(r"(?:^|[\s;])([A-Za-z_][A-Za-z0-9_]*)=([^\s;]+)", command):
+        value = _strip_path_token(match.group(2))
+        if value.startswith(("/tmp/", "/private/tmp/", "~/")):
+            assignments[match.group(1)] = value
+    return assignments
+
+
+def _path_token_candidate(token: str, *, shell_vars: dict[str, str]) -> Path | None:
+    text = _strip_path_token(token)
+    variable_match = re.match(r"^\$(?:\{([A-Za-z_][A-Za-z0-9_]*)\}|([A-Za-z_][A-Za-z0-9_]*))(.*)$", text)
+    if variable_match:
+        variable_name = variable_match.group(1) or variable_match.group(2)
+        base = shell_vars.get(variable_name)
+        if not base:
+            return None
+        text = f"{base}{variable_match.group(3) or ''}"
+    if "$" in text:
+        return None
+    path = Path(text).expanduser()
+    if not path.is_absolute():
+        return None
+    return path
+
+
+def _strip_path_token(token: str) -> str:
+    text = token.strip().strip("'\"")
+    return text.rstrip("'\".,)")
 
 
 def _normalize_tmp_run_root(path: Path) -> Path:

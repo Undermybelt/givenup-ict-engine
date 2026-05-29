@@ -1933,6 +1933,35 @@ trade_usable=false
             with self.subTest(command=command):
                 self.assertEqual(_extract_run_root(command), lane_root)
 
+    def test_extract_run_root_resolves_simple_shell_root_assignment(self) -> None:
+        command = (
+            "/bin/zsh -lc root=/tmp/ict-engine-tomac-lunch-liquidity-vacuum-vwap-magnet-reversal-20260529T093037+0800\n"
+            "python3 support/docs/experiments/actionable-regime-confidence/scripts/run_tomac_index_futures_clean_aq_v1.py "
+            "--symbols NQ,ES,YM --root \"$root/run\" --timeout 1800"
+        )
+
+        self.assertEqual(
+            _extract_run_root(command),
+            Path("/tmp/ict-engine-tomac-lunch-liquidity-vacuum-vwap-magnet-reversal-20260529T093037+0800"),
+        )
+
+    def test_extract_run_root_resolves_ps_escaped_shell_newline_assignment(self) -> None:
+        command = (
+            "/bin/zsh -lc root=/tmp/ict-engine-tomac-lunch-liquidity-vacuum-vwap-magnet-reversal-20260529T093037+0800\\012"
+            "python3 support/docs/experiments/actionable-regime-confidence/scripts/run_tomac_index_futures_clean_aq_v1.py "
+            "--symbols NQ,ES,YM --root \"$root/run\" --timeout 1800"
+        )
+
+        self.assertEqual(
+            _extract_run_root(command),
+            Path("/tmp/ict-engine-tomac-lunch-liquidity-vacuum-vwap-magnet-reversal-20260529T093037+0800"),
+        )
+
+    def test_extract_run_root_ignores_unresolved_shell_variable_path(self) -> None:
+        command = "python3 run_tomac_index_futures_clean_aq_v1.py --root \"$root/run\" --timeout 1800"
+
+        self.assertIsNone(_extract_run_root(command))
+
     def test_infer_exit_file_from_provider_output_timeframe_label(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             run_root = Path(tmp) / "runs" / "20260524T213610+0800-codex-ibkr-avgo"
