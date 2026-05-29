@@ -174,6 +174,10 @@ admission owners where current evidence shows a system loophole.
   `same_tree_practical_closure=null`. The live root was the MGC Kalman VWAP
   full-ladder Gate 1 run under
   `support/docs/experiments/actionable-regime-confidence/runs/20260530T051755+0800-codex-ibkr-mgc1m-kalman-vwap-slope-reclaim-full-ladder-gate1-v1`.
+  Post-commit audit refreshed this to `active_claims=1`,
+  `fresh_active_claims_without_live_process=1`, `live_factor_processes=1`,
+  `promotion_allowed_true=0`, `trade_usable_true=0`, and
+  `same_tree_practical_closure=null`; runtime launch remains blocked.
 
 ## Root Cause Readback
 
