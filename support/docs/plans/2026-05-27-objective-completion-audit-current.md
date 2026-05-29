@@ -1712,3 +1712,12 @@ Requirement verdict updates:
   roots after they exit, then rerun factor closure; separately rerun a clean
   selected-export release audit at current `HEAD` only when remote/source-origin
   readback is stable enough to prove tag availability.
+
+Post-commit caveat:
+
+- The commit that records this section necessarily advances `HEAD`. Treat the
+  heavy done-definition proof above as evidence for its named commit only
+  (`836cbc4b46e003f0110243717c46a9c7fc1f4483`). Before any future completion,
+  release, or current-HEAD proof claim, rerun the heavy done-definition audit
+  against the then-current `HEAD` and use that same-head packet in the parent
+  objective snapshot.
