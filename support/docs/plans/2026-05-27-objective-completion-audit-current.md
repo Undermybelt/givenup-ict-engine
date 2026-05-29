@@ -1655,3 +1655,60 @@ Requirement verdict updates:
 - A truthful completion commit is still impossible: heavy done-definition proof
   is not current, factor work is active/live, no practical factor closure packet
   exists, and release remote/tag proof is incomplete.
+
+## 2026-05-29 Current Refresh - Current Heavy Done Proof Clears Done-Definition Blocker
+
+Latest authoritative packets for this refresh:
+
+- current heavy done-definition proof:
+  `/tmp/ict-engine-goal-20260529T1650-current-heavy-done.json`
+- final parent snapshot using the current done proof:
+  `/tmp/ict-engine-goal-20260529T1703-current-final-proofed-snapshot/objective_closure_snapshot.json`
+
+Commands:
+
+```bash
+python3 support/scripts/done_definition_audit.py --run-all-heavy --compact --output /tmp/ict-engine-goal-20260529T1650-current-heavy-done.json
+python3 support/scripts/objective_closure_snapshot.py --compact --check-remotes --done-definition-proof /tmp/ict-engine-goal-20260529T1650-current-heavy-done.json --release-readiness-proof /tmp/ict-engine-goal-20260529T1642-clean-export-release.json --output-dir /tmp/ict-engine-goal-20260529T1703-current-final-proofed-snapshot --timeout-seconds 300
+```
+
+Current command truth:
+
+- heavy done-definition proof is now current for `HEAD=836cbc4b46e003f0110243717c46a9c7fc1f4483`;
+- all ten enabled done-definition gates passed:
+  `completion_ready=true`, `evidence_level=full_enabled_gate_coverage`,
+  `pass_count=10`, `fail_count=0`, `skip_count=0`;
+- final parent snapshot applied the done proof with `proof_applied=true` and
+  removed `done_definition_not_completion_ready` from the objective blockers;
+- the final parent snapshot still exits `1` with blockers
+  `factor_closure_blocked` and `release_readiness_blocked`;
+- factor closure at final snapshot time:
+  `active_claims=1`, `live_factor_processes=2`, `promotion_allowed_true=0`,
+  `trade_usable_true=0`, and no `same_tree_practical_closure` packet;
+- release readiness at final snapshot time:
+  unresolved `worktree_clean_for_release` and
+  `source_origin_matches_selected_source`; the older clean release proof was
+  rejected as `proof_head_mismatch` because it was for `a696d98f`, before the
+  second tracker commit.
+
+Loopholes found and classified:
+
+- The broad objective is no longer blocked by stale done-definition proof. Any
+  future completion claim must still rerun or reuse a same-head heavy proof, but
+  as of this packet the done-definition surface itself is green.
+- Factor closure remains the practical-use blocker: live runtimes exist and no
+  same-tree practical closure packet exists, so `promotion_allowed_true=0` and
+  `trade_usable_true=0` remain the only truthful practical count.
+- Release cleanliness proof must be regenerated after every commit. A clean
+  detached audit from `a696d98f` cannot clear release readiness for
+  `836cbc4b`.
+
+Requirement verdict updates:
+
+- Current objective status remains `not_complete`, now for two live blockers:
+  factor closure and release readiness.
+- No evidence currently proves practical/live trading usefulness.
+- Next safe actions are to wait for or inspect the two live factor runtime
+  roots after they exit, then rerun factor closure; separately rerun a clean
+  selected-export release audit at current `HEAD` only when remote/source-origin
+  readback is stable enough to prove tag availability.
