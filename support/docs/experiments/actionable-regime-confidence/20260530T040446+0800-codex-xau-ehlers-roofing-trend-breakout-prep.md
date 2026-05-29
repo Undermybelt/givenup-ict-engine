@@ -106,6 +106,8 @@ for all required frames under `/Users/thrill3r/Downloads/Tomac/factor_training/c
   `/tmp/ict-engine-xau-ehlers-roofing-trend-breakout-prep-20260530T040446+0800/checks/dry_run_manifest.json`
 - Session coverage summary:
   `/tmp/ict-engine-xau-ehlers-roofing-trend-breakout-prep-20260530T040446+0800/checks/session_coverage_summary.json`
+- GC/MGC cost model packet:
+  `/tmp/ict-engine-xau-ehlers-roofing-trend-breakout-prep-20260530T040446+0800/checks/xau_gc_mgc_cost_model_packet.json`
 - Terminal metrics:
   `/tmp/ict-engine-xau-ehlers-roofing-trend-breakout-prep-20260530T040446+0800/checks/terminal_metrics.json`
 - Terminal summary:
@@ -136,6 +138,23 @@ Completed verification for this prep slice:
   flags false.
 - `checks/local_prescreen_summary.json` is intentionally absent because the
   claim guard blocked before XAU parquet data reads.
+- Later same-turn audit at 2026-05-30T04:47+0800 still reported
+  `status=needs_attention`, `active_claims=1`, and `live_factor_processes=0`,
+  so no guarded AutoQuant/local screen launch was safe.
+- A final same-turn audit at 2026-05-30T04:57+0800 still reported
+  `status=needs_attention`, now with `active_claims=2` and
+  `live_factor_processes=1` under a EUR run root, so AutoQuant/local screen
+  launch remained explicitly blocked.
+- During that wait window, the lane refreshed official IBKR/COMEX cost-model
+  evidence only. `checks/xau_gc_mgc_cost_model_packet.json` validates `GC=2.52`
+  per side / `5.04` round turn and `MGC=0.97` per side / `1.94` round turn,
+  with broker-side secdef evidence for `GC` multiplier `100`, tick `0.1`, tick
+  value `10`, and `MGC` multiplier `10`, tick `0.1`, tick value `1`. CME
+  contract-spec HTML fetches failed from this host with curl exit `35`, so they
+  are recorded but not used as verified sources.
+- Cost survival remains unverified because continuous retained `XAU` rows still
+  must map to exact `GC` or `MGC` contract months and roll rules before Gate 1,
+  downstream, paper/sim, promotion, or trade-usability claims.
 - Claim JSON validated with `python3 -m json.tool`; terminal JSON validation is
   recorded under the run-root checks directory.
 
