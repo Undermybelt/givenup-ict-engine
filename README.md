@@ -12,6 +12,8 @@
        じしˍ,)ノ   —— ict-engine answers those three.
 ```
 
+![ICT Engine closed-loop illustration](assets/readme/ict-engine-xiaohei-loop-en.png)
+
 It is **not** a black-box signal seller  ヽ(`Д´)ﾉ
 It **is** a workbench ٩(◕‿◕)۶ that answers:
 
@@ -25,6 +27,8 @@ The core CLI runs with **Rust only** ✨ Python, Auto-Quant, richer providers, a
 ---
 
 ## 🧬 The Closed-Loop Pipeline At A Glance
+
+The illustration above is the same chain as the inspectable CLI path below: provider data becomes a regime posterior, belief evidence, ranked structural paths, an execution tree, and feedback that loops back into learning.
 
 ```text
               ICT Engine closed loop ʕっ•ᴥ•ʔっ
