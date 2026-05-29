@@ -882,8 +882,7 @@ def _evidence_packet_proves_same_tree_practical_closure(evidence_path: Path) -> 
         return False
     if not _validation_counters_cover_practical_chain(parsed.get("validation_counters")):
         return False
-    policy_summary = parsed.get("policy_training_summary")
-    if not isinstance(policy_summary, dict) or not policy_summary:
+    if not _policy_training_summary_proves_practical_closure(parsed.get("policy_training_summary")):
         return False
     if not _lifecycle_tuple_proves_practical_closure(parsed):
         return False
@@ -899,6 +898,49 @@ def _lifecycle_tuple_proves_practical_closure(parsed: dict[str, Any]) -> bool:
         and _normalized_text(parsed.get("paper_admission_status")) == "ready"
         and _normalized_text(parsed.get("live_trade_status")) == "ready"
     )
+
+
+def _policy_training_summary_proves_practical_closure(value: object) -> bool:
+    if not isinstance(value, dict) or not value:
+        return False
+    lifecycle = value.get("factor_profitability_lifecycle")
+    if lifecycle is None and any(
+        key in value
+        for key in (
+            "learning_admitted_count",
+            "paper_ready_count",
+            "live_ready_count",
+            "live_trade_usable_count",
+            "promotion_allowed",
+            "trade_usable",
+        )
+    ):
+        lifecycle = value
+    if not isinstance(lifecycle, dict):
+        return False
+    required_positive_counts = (
+        "learning_admitted_count",
+        "paper_ready_count",
+        "live_ready_count",
+        "live_trade_usable_count",
+    )
+    if any(_positive_int(lifecycle.get(key)) <= 0 for key in required_positive_counts):
+        return False
+    return lifecycle.get("promotion_allowed") is True and lifecycle.get("trade_usable") is True
+
+
+def _positive_int(value: object) -> int:
+    if isinstance(value, bool):
+        return 0
+    if isinstance(value, int):
+        return value
+    if isinstance(value, float) and value.is_integer():
+        return int(value)
+    if isinstance(value, str):
+        text = value.strip()
+        if text.isdigit():
+            return int(text)
+    return 0
 
 
 def _normalized_text(value: object) -> str:
