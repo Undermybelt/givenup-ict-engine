@@ -189,6 +189,8 @@ def policy_training_summary_proves_practical_closure(value: object) -> bool:
     )
     if any(positive_int(lifecycle.get(key)) <= 0 for key in required_positive_counts):
         return False
+    if not lifecycle_status_tuple_proves_practical_closure(lifecycle):
+        return False
     return (
         lifecycle.get("promotion_allowed") is True
         and lifecycle.get("trade_usable") is True
@@ -196,6 +198,20 @@ def policy_training_summary_proves_practical_closure(value: object) -> bool:
         and normalized_text(lifecycle.get("readiness_contract"))
         == DEPLOY_READY_READINESS_CONTRACT
     )
+
+
+def lifecycle_status_tuple_proves_practical_closure(lifecycle: dict[str, Any]) -> bool:
+    expected_text = {
+        "learning_admission_status": "admitted",
+        "paper_admission_status": "ready",
+        "live_trade_status": "ready",
+    }
+    for key, expected in expected_text.items():
+        if key in lifecycle and normalized_text(lifecycle.get(key)) != expected:
+            return False
+    if "deploy_ready" in lifecycle and lifecycle.get("deploy_ready") is not True:
+        return False
+    return True
 
 
 def market_data_provenance_proves_practical_closure(value: object) -> bool:

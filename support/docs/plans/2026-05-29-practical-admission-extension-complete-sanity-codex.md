@@ -303,6 +303,44 @@ Current decision:
   and the compact factor audit surfaces a validated same-tree practical closure
   packet.
 
+## 2026-05-30T02:17+0800 Policy Lifecycle Contradiction Guard
+
+Root cause handled in this slice:
+
+- The canonical same-tree practical closure helper required a positive top-level
+  lifecycle tuple and positive policy lifecycle counts, but did not reject a
+  policy lifecycle that explicitly contradicted the top-level tuple. A packet
+  could therefore say `learning_admission_status=admitted` at top level while
+  `policy_training_summary.factor_profitability_lifecycle.learning_admission_status`
+  still said `not_evaluated`, and positive counts could mask that contradiction.
+
+Changes made:
+
+- Added a producer regression test proving that a contradictory policy lifecycle
+  status previously still emitted a pass packet.
+- Updated `support/scripts/research/same_tree_practical_closure.py` so explicit
+  lifecycle status fields inside `factor_profitability_lifecycle` must agree
+  with the required practical tuple: learning `admitted`, paper `ready`, deploy
+  ready `true`, and live trade `ready`.
+- Synced the installed runtime skill so future factor-training agents preserve
+  this stricter lifecycle-status contract.
+
+Verification:
+
+- RED: `python3 -m unittest support.scripts.research.tests.test_same_tree_practical_closure.SameTreePracticalClosureTests.test_rejects_policy_lifecycle_status_contradicting_top_level_tuple -v`
+  failed before the fix because a pass packet was emitted.
+- GREEN: `python3 -m unittest support.scripts.research.tests.test_same_tree_practical_closure -v`
+  -> `Ran 12 tests`, `OK`.
+- Consumer regression: `python3 -m unittest support.scripts.tests.test_factor_claim_terminalization_audit -v`
+  -> `Ran 94 tests`, `OK`.
+
+Current decision:
+
+- This slice closes another false-positive practical closure path; it does not
+  create a practical/live usable factor.
+- Current objective status remains incomplete until a real same-tree practical
+  closure packet exists and the active runtime/claim blockers clear.
+
 Current truth after this slice:
 
 - No `same_tree_practical_closure` packet is validated.

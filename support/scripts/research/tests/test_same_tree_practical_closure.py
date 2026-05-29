@@ -119,6 +119,19 @@ class SameTreePracticalClosureTests(unittest.TestCase):
 
         self.assertIsNone(closure.build_same_tree_practical_closure_packet(metrics))
 
+    def test_rejects_policy_lifecycle_status_contradicting_top_level_tuple(self) -> None:
+        metrics = valid_metrics()
+        metrics["policy_training_summary"]["factor_profitability_lifecycle"].update(
+            {
+                "learning_admission_status": "not_evaluated",
+                "paper_admission_status": "ready",
+                "deploy_ready": True,
+                "live_trade_status": "ready",
+            }
+        )
+
+        self.assertIsNone(closure.build_same_tree_practical_closure_packet(metrics))
+
     def test_rejects_timed_out_command_result_even_when_exit_zero(self) -> None:
         metrics = valid_metrics()
         metrics["command_results"] = [{"name": "analyze", "exit": 0, "timed_out": True}]
