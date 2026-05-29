@@ -1596,3 +1596,62 @@ Requirement verdict updates:
 - This slice is a tracking/evidence refresh only. It does not justify a
   completion claim for the broader objective and should not promote, release,
   or terminalize active fresh factor work.
+
+## 2026-05-29 Current Refresh - Clean Worktree Release Proof Rejected On Remote Gate
+
+Latest authoritative packets for this refresh:
+
+- clean detached worktree release audit:
+  `/tmp/ict-engine-goal-20260529T1642-clean-export-release.json`
+- parent snapshot with clean release proof staged:
+  `/tmp/ict-engine-goal-20260529T1642-clean-release-proof-parent/objective_closure_snapshot.json`
+
+Commands:
+
+```bash
+git worktree add --detach /Users/thrill3r/.config/aegis/worktrees/ict-engine/release-proof-20260529T1642 a696d98f3be9f3ffe849d735933ddf9bdd11d390
+git status --short --branch
+python3 support/scripts/release_readiness_audit.py --compact --check-remotes --output /tmp/ict-engine-goal-20260529T1642-clean-export-release.json
+python3 support/scripts/objective_closure_snapshot.py --compact --check-remotes --release-readiness-proof /tmp/ict-engine-goal-20260529T1642-clean-export-release.json --output-dir /tmp/ict-engine-goal-20260529T1642-clean-release-proof-parent --timeout-seconds 300
+```
+
+Current command truth:
+
+- isolated worktree path:
+  `/Users/thrill3r/.config/aegis/worktrees/ict-engine/release-proof-20260529T1642`;
+- isolated worktree `HEAD` is current committed tracker head
+  `a696d98f3be9f3ffe849d735933ddf9bdd11d390` and `git status --short --branch`
+  returned only `## HEAD (no branch)`;
+- clean release audit proved `worktree_clean_for_release=pass`,
+  `cargo_release_policy=pass`, and `release_docs_fresh_for_selected_tag=pass`;
+- the same audit still exited `1` because `remote_readback` failed on source
+  `origin`; release mirror readback passed only via the no-rewrite HTTPS
+  fallback, and `release_version_tag_available` was skipped because the remote
+  gate was unresolved;
+- parent snapshot staged the release proof but rejected it with
+  `proof_applied=false` and `proof_rejected_reason=proof_has_skipped_gates`;
+- during the parent refresh, factor occupancy drifted from one fresh factor
+  claim to active runtime work: factor closure reported `active_claims=5`,
+  `live_factor_processes=5`, `promotion_allowed_true=0`, `trade_usable_true=0`,
+  and no same-tree practical closure packet.
+
+Loopholes found and classified:
+
+- Clean export evidence is not enough when remote/tag gates are skipped. The
+  parent correctly refused to use a partial release proof to hide current dirty
+  tree noise or remote uncertainty.
+- The release blocker is now more precise: a clean committed export at current
+  `HEAD` can clear local worktree cleanliness, but release readiness still
+  requires stable source-origin readback and tag availability.
+- Factor closure is live-runtime blocked again because new external factor
+  processes started while this read-only release proof was running. Do not
+  terminalize or reuse those roots from this objective audit slice.
+
+Requirement verdict updates:
+
+- The full objective remains `not_complete` with current parent blockers
+  `done_definition_not_completion_ready`, `factor_closure_blocked`, and
+  `release_readiness_blocked`.
+- A truthful completion commit is still impossible: heavy done-definition proof
+  is not current, factor work is active/live, no practical factor closure packet
+  exists, and release remote/tag proof is incomplete.
