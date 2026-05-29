@@ -1224,6 +1224,54 @@ trade_usable=false
         )
         self.assertNotIn("terminalize or externalize active claims", summary["next_action"])
 
+    def test_summarize_does_not_cleanup_coordination_only_claims_with_live_owner(self) -> None:
+        summary = summarize(
+            [
+                {
+                    "status": "active_exact_gate1_launch_in_flight",
+                    "run_root": "/tmp/ict-engine-live-owner/run",
+                    "tmp_root": "/tmp/ict-engine-live-owner",
+                    "run_root_exists": True,
+                    "decision": "exact_aq_launch_in_progress",
+                    "active_task": "wait for terminal metrics after exact launch",
+                    "scope": "Board B live runner",
+                    "promotion_allowed": False,
+                    "trade_usable": False,
+                    "missing_identity_fields": [],
+                },
+                {
+                    "status": "active_coordination_only",
+                    "run_root": "/tmp/ict-engine-audit-only",
+                    "tmp_root": "/tmp/ict-engine-audit-only",
+                    "run_root_exists": True,
+                    "decision": "objective_not_proven_audit_in_progress",
+                    "active_task": "audit current evidence without launching factor work",
+                    "scope": "read-only objective loophole audit",
+                    "promotion_allowed": False,
+                    "trade_usable": False,
+                    "coordination_only": True,
+                    "missing_identity_fields": [],
+                },
+            ],
+            live_processes=[
+                {
+                    "pid": 12345,
+                    "ppid": 123,
+                    "elapsed": "00:12",
+                    "command_excerpt": "python run_tomac.py --root /tmp/ict-engine-live-owner/run",
+                    "run_root": "/tmp/ict-engine-live-owner/run",
+                    "exit_file": None,
+                    "exit_file_exists": False,
+                }
+            ],
+        )
+
+        self.assertEqual(summary["active_claims"], 1)
+        self.assertEqual(summary["coordination_only_active_claims"], 1)
+        self.assertEqual(summary["active_claims_without_live_process"], 0)
+        self.assertIn("wait for live factor processes to exit", summary["next_action"])
+        self.assertNotIn("terminalize or externalize active claims", summary["next_action"])
+
     def test_summarize_surfaces_stale_wait_only_claims_as_cleanup(self) -> None:
         summary = summarize(
             [

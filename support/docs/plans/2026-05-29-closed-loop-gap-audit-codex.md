@@ -1227,3 +1227,38 @@ training/refinement.
   still to wait for the active LunchLiquidity runtime owner to terminalize or
   become stale-safe under the documented takeover rule before refreshing closure
   evidence.
+
+## 2026-05-29T10:09+0800 Factor Audit Cleanup Action Narrowing
+
+- Static source loophole fixed in `support/scripts/factor_claim_terminalization_audit.py`:
+  summary `next_action` no longer lets `coordination_only` active claims create
+  the generic `terminalize or externalize active claims` instruction. That
+  instruction is now reserved for non-coordination active claims that are not
+  fresh wait targets and do not own live runtime.
+- RED/GREEN evidence:
+  `test_summarize_does_not_cleanup_coordination_only_claims_with_live_owner`
+  failed before the fix because `next_action` incorrectly included
+  `terminalize or externalize active claims` when the only non-coordination
+  active claim owned a live runtime and the other active claim was coordination
+  only. It passed after adding the missing `not coordination_only` filter.
+- Regression guard preserved:
+  `test_summarize_surfaces_stale_wait_only_claims_as_cleanup` still passes, so
+  stale-safe wait-only active claims remain cleanup/externalization targets.
+- Verification after implementation:
+  `python3 -m unittest support.scripts.tests.test_factor_claim_terminalization_audit -v`
+  passed `81/81`; `python3 support/scripts/check_script_manifest.py` passed;
+  `git diff --check -- support/scripts/factor_claim_terminalization_audit.py support/scripts/tests/test_factor_claim_terminalization_audit.py`
+  passed.
+- Live compact factor readback shifted while this slice was running. A first
+  post-fix readback reported `status=pass`, `active_claims=0`,
+  `live_factor_processes=0`, and `same_tree_practical_closure=null`. A later
+  objective snapshot at
+  `/tmp/ict-engine-closure-refresh-20260529T1008-action-queue/objective_closure_snapshot.json`
+  exited `1` after a new fresh active claim appeared:
+  `20260529T100639+0800-codex-tomac-daily-donchian-uncovered-session-complement-launch.claim`.
+  The current factor next action is now correctly `wait for fresh active claims
+  to progress, then rerun before terminalizing`.
+- Full objective remains incomplete. Current blockers from that objective
+  snapshot are `done_definition_not_completion_ready`, `factor_closure_blocked`,
+  and `release_readiness_blocked`; manual requirements remain
+  `same_tree_practical_closure_packet` and `truthful_completion_commit`.

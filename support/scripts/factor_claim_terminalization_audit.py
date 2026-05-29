@@ -648,6 +648,7 @@ def summarize(
             1
             for claim in claims
             if claim.get("status") == "active"
+            and not claim.get("coordination_only")
             and not claim["live_runtime_owner"]
             and not claim["fresh_without_live_process"]
             and not (
