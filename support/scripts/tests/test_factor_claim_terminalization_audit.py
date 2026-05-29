@@ -2516,6 +2516,47 @@ progress_report: created no-launch source/cost prep packet while fresh NQ claim 
         self.assertEqual(compact["attention_claim_count"], 0)
         self.assertEqual(compact["attention_action_queue"]["fresh_active_claims_without_live_process"], [])
 
+    def test_wrapper_prep_no_launch_claim_does_not_block_factor_closure(self) -> None:
+        with tempfile.TemporaryDirectory() as repo_tmp, tempfile.TemporaryDirectory() as claims_tmp:
+            repo_root = Path(repo_tmp)
+            claims_dir = Path(claims_tmp)
+            run_root = Path(repo_tmp) / "ict-engine-aroon-cci-wrapper-prep"
+            run_root.mkdir()
+            (run_root / "workdoc.md").write_text("# wrapper prep\n", encoding="utf-8")
+
+            (claims_dir / "wrapper-prep.claim").write_text(
+                f"""
+agent_name: codex-tomac-aroon-cci-cadence-volume-persistence-retest-training-prep
+owner: codex
+claimed_at: 2026-05-30T06:48:01+0800
+last_progress_at: 2026-05-30T06:48:01+0800
+scope: Board B TOMAC index-futures clean-AQ child wrapper/training prep for Aroon/CCI cadence lift plus volume-persistence retest, with no provider/AQ launch while fresh active claims block shared runtime.
+active_task: Add tested wrapper support and preserve launch-ready training docs without colliding with active runtime claims.
+non_goals: no launch while fresh active claims exist; no provider fetch; no IBKR historical; no AutoQuant; no Freqtrade; no paper/sim/live; no Pre-Bayes; no BBN; no CatBoost; no execution-tree; no promotion_allowed=true; no trade_usable=true; no update_goal=true.
+write_surface: {run_root / 'workdoc.md'}
+run_root: {run_root}
+tmp_root: {run_root}
+branch_path: TrendExpansion -> DirectionalPersistence -> AroonCciTrendContinuation -> CadenceLiftSymbolGuard -> VolumePersistenceRetest
+factor_id: tomac_idxfut_clean_aroon_cci_cadence_lift_volume_persistence_retest_1m_v1
+status: active_wrapper_prep_no_launch
+promotion_allowed: false
+trade_usable: false
+update_goal: false
+progress_report: created wrapper prep packet; no provider, IBKR historical, AutoQuant, Freqtrade, paper/sim/live, downstream lifecycle, or local backtest launched.
+""".strip(),
+                encoding="utf-8",
+            )
+
+            report = build_report(claims_dir=claims_dir, repo_root=repo_root)
+            compact = format_report(report, compact=True)
+
+        self.assertEqual(report["summary"]["status"], "pass")
+        self.assertEqual(report["summary"]["active_claims"], 0)
+        self.assertEqual(report["summary"]["coordination_only_active_claims"], 1)
+        self.assertEqual(report["summary"]["blocking_reasons"], [])
+        self.assertEqual(compact["attention_claim_count"], 0)
+        self.assertEqual(compact["attention_action_queue"]["fresh_active_claims_without_live_process"], [])
+
     def test_build_report_flags_active_claims_missing_board_local_identity_fields(self) -> None:
         with tempfile.TemporaryDirectory() as repo_tmp, tempfile.TemporaryDirectory() as claims_tmp:
             repo_root = Path(repo_tmp)

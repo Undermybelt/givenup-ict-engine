@@ -282,6 +282,23 @@ admission owners where current evidence shows a system loophole.
   `active_claims=0`, `live_factor_processes=0`, `blocking_reasons=[]`, while
   practical counts remain zero: `promotion_allowed_true=0`,
   `trade_usable_true=0`, and `same_tree_practical_closure=null`.
+- 2026-05-30T06:58+0800: fixed the next compact-audit coordination loop.
+  A TOMAC Aroon/CCI child wrapper-prep claim explicitly had
+  `status=active_wrapper_prep_no_launch`, false practical flags, and non-goals
+  forbidding provider fetch, IBKR historical, AutoQuant, Freqtrade, paper/sim/
+  live, Pre-Bayes, BBN, CatBoost, execution-tree, and promotion, but it was
+  still counted as `active_claims=1`. Added RED/GREEN coverage for this exact
+  wrapper/training prep no-launch shape and extended the canonical
+  coordination-only classifier. Verification passed:
+  `python3 -m unittest support.scripts.tests.test_factor_claim_terminalization_audit -v`
+  ran 101 tests OK; `python3 -m py_compile support/scripts/factor_claim_terminalization_audit.py support/scripts/tests/test_factor_claim_terminalization_audit.py`
+  passed; `git diff --check -- support/scripts/factor_claim_terminalization_audit.py support/scripts/tests/test_factor_claim_terminalization_audit.py support/docs/experiments/actionable-regime-confidence/20260530T064134+0800-codex-nq-compound-rv-stress-lifecycle-exec.md`
+  passed. Same-turn compact audit then showed the no-launch prep claim no
+  longer blocked closure (`active_claims=0`, `fresh_active_claims_without_live_process=0`),
+  but runtime launch remained blocked by a live local YM smoke process under
+  `/tmp/ict-engine-ym-minprice-smoke-20260530T0656`. Practical counts are still
+  zero: `promotion_allowed_true=0`, `trade_usable_true=0`, and
+  `same_tree_practical_closure=null`.
 
 ## Root Cause Readback
 

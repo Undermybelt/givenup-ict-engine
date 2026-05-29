@@ -583,6 +583,8 @@ def _is_coordination_only_claim(fields: dict[str, Any]) -> bool:
         or status.startswith("active_source_cost_prep_no_launch")
         or status.startswith("active_source_prep_no_launch")
         or status.startswith("active_cost_prep_no_launch")
+        or status.startswith("active_wrapper_prep_no_launch")
+        or status.startswith("active_training_prep_no_launch")
     )
     coordination_text = _purpose_is_non_runtime_coordination(text)
     if not coordination_status and not coordination_text:
@@ -609,6 +611,9 @@ def _is_coordination_only_claim(fields: dict[str, Any]) -> bool:
         "source prep",
         "cost prep",
         "no-launch source/cost prep",
+        "wrapper prep",
+        "training prep",
+        "prep packet",
     )
     if not any(marker in text for marker in purpose_markers):
         return False
@@ -639,6 +644,9 @@ def _purpose_is_non_runtime_coordination(text: str) -> bool:
         "source prep",
         "cost prep",
         "no-launch source/cost prep",
+        "wrapper prep",
+        "training prep",
+        "prep packet",
     )
     no_launch_markers = (
         "no provider",
