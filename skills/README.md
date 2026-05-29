@@ -37,6 +37,9 @@ as candidate material only; no practical flags or runtime launches are allowed
 from that work.
 `references/paper-strategy-reserve-20260530.md` is the current compact reserve
 of paper, strategy, and indicator seeds gathered for future factor candidates.
+`references/crossasset-carry-risk-reserve-20260530.md` captures lower-turnover
+cross-asset, carry, commodity term-structure, and variance-risk gate reserves
+for later owned Gate 1 slices.
 
 ## External Skill Review
 
