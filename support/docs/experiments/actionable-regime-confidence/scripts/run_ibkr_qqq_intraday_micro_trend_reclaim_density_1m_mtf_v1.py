@@ -301,11 +301,12 @@ def main() -> int:
         rec = {'label': row_label(row), 'trade_count': trades, 'raw_total_profit_pct': gross, 'win_rate_pct': safe_float(row.get('win_rate_pct'))}
         for bps in (0, 1, 2, 5):
             rec[f'{bps}bps_per_side_total_profit_pct'] = round(gross - trades * bps * 0.02, 6)
-        rec['survives_2bps_per_side'] = trades >= 6 and rec['2bps_per_side_total_profit_pct'] > 0
-        rec['survives_5bps_per_side'] = trades >= 6 and rec['5bps_per_side_total_profit_pct'] > 0
+        rec['trade_density_ok'] = trades >= 6
+        rec['survives_2bps_per_side'] = rec['2bps_per_side_total_profit_pct'] > 0
+        rec['survives_5bps_per_side'] = rec['5bps_per_side_total_profit_pct'] > 0
         cost_stress.append(rec)
     origin = [row for row in cost_stress if row['label'].endswith('/1m')]
-    origin2 = [row['label'] for row in origin if row['survives_2bps_per_side']]
+    origin2 = [row['label'] for row in origin if row['trade_density_ok'] and row['survives_2bps_per_side']]
     exact_branch_ok = bool(rank_rows) and all((row.get('branch_path') or row.get('consumer_evidence_profile', {}).get('branch_path')) == BRANCH_PATH for row in rank_rows)
     covered = sorted({row['timeframe'] for row in provider_rows if row['rows'] > 0})
     missing = sorted({row['timeframe'] for row in provider_rows if row['rows'] == 0})

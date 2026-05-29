@@ -1399,6 +1399,95 @@ class ObjectiveClosureSnapshotTest(unittest.TestCase):
         self.assertEqual(snapshot["audit_commands"]["done_definition"][0], "python3")
         self.assertEqual(snapshot["evidence_files"]["release_readiness"], "release_readiness_audit.compact.json")
 
+    def test_build_snapshot_preserves_practical_source_scanner_timeout_surface(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp)
+            audit_results = {
+                "done_definition": {
+                    "command": {"argv": ["done"], "returncode": 1},
+                    "report": {
+                        "timestamp_utc": "2026-05-29T03:00:00Z",
+                        "summary": {
+                            "status": "needs_fix",
+                            "completion_ready": False,
+                            "evidence_level": "blocked",
+                            "unresolved": ["practical_admission_source_surface"],
+                            "skipped_gates": [],
+                            "next_action": "fix practical admission source scan before completion proof",
+                        },
+                        "gates": [
+                            {"id": "quickstart_surface", "status": "pass"},
+                            {
+                                "id": "practical_admission_source_surface",
+                                "status": "fail",
+                                "details": {
+                                    "scanned_files": 120,
+                                    "violating_files": 0,
+                                    "violation_count": 0,
+                                    "tracked_violation_count": 0,
+                                    "untracked_violation_count": 0,
+                                    "scanner_error": "timeout",
+                                    "scanner_timeout_seconds": 180,
+                                    "scanner_returncode": None,
+                                    "scanner_command": ["python3", "support/scripts/research/downstream_practical_admission_source_check.py"],
+                                    "stderr": "source scan timed out",
+                                },
+                            },
+                        ],
+                    },
+                    "output_path": output_dir / "done_definition_audit.compact.json",
+                },
+                "factor_closure": {
+                    "command": {"argv": ["factor"], "returncode": 0},
+                    "report": {
+                        "generated_at": "2026-05-29T03:00:01+00:00",
+                        "summary": {
+                            "status": "needs_attention",
+                            "active_claims": 0,
+                            "invalid_active_claims": 0,
+                            "live_factor_processes": 1,
+                            "blocking_reasons": ["live_factor_processes"],
+                            "promotion_allowed_true": 0,
+                            "trade_usable_true": 0,
+                            "next_action": "wait for live factor processes to exit",
+                        },
+                        "attention_claim_count": 0,
+                        "attention_live_process_count": 1,
+                        "attention_groups": {"by_owner": {}},
+                    },
+                    "output_path": output_dir / "factor_claim_terminalization_audit.compact.json",
+                },
+                "release_readiness": {
+                    "command": {"argv": ["release"], "returncode": 1},
+                    "report": {
+                        "timestamp_utc": "2026-05-29T03:00:02Z",
+                        "summary": {
+                            "status": "needs_fix",
+                            "unresolved": ["worktree_clean_for_release"],
+                            "pass_count": 1,
+                            "fail_count": 1,
+                            "skip_count": 0,
+                        },
+                    },
+                    "output_path": output_dir / "release_readiness_audit.compact.json",
+                },
+            }
+
+            snapshot = build_snapshot(
+                audit_results,
+                run_all_heavy=False,
+                check_remotes=False,
+                output_dir=output_dir,
+            )
+
+        source_surface = snapshot["audits"]["done_definition"]["surface"]["practical_admission_source_surface"]
+        self.assertEqual(source_surface["scanner_error"], "timeout")
+        self.assertEqual(source_surface["scanner_timeout_seconds"], 180)
+        self.assertEqual(source_surface["scanner_returncode"], None)
+        self.assertEqual(source_surface["scanner_command"][1], "support/scripts/research/downstream_practical_admission_source_check.py")
+        self.assertEqual(source_surface["stderr"], "source scan timed out")
+        self.assertIn("done_definition_not_completion_ready", snapshot["summary"]["blockers"])
+
     def test_build_snapshot_applies_valid_done_definition_proof_without_hiding_other_blockers(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             output_dir = Path(tmp)

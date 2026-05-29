@@ -243,6 +243,12 @@ def _source_debt_surface(gate: dict[str, Any]) -> dict[str, Any]:
         "debt_manifest_file": details.get("debt_manifest_file"),
         "quarantine": details.get("quarantine"),
         "sample_violations": details.get("sample_violations", []),
+        "scanner_error": details.get("scanner_error"),
+        "scanner_timeout_seconds": details.get("scanner_timeout_seconds"),
+        "scanner_returncode": details.get("scanner_returncode"),
+        "scanner_command": details.get("scanner_command"),
+        "stdout": details.get("stdout"),
+        "stderr": details.get("stderr"),
     }
 
 

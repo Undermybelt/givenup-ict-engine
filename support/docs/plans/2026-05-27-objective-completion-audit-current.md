@@ -1418,3 +1418,74 @@ Requirement verdict updates:
   stages only the touched audit scripts, their tests, the quarantine manifest,
   and these tracking docs. A completion claim for the broader objective would
   still be false.
+
+## 2026-05-29 Current Refresh - Scanner Timeout Detail And Tracked Wrapper Cleanup
+
+Latest authoritative packet for this refresh:
+
+- `/tmp/ict-engine-goal-20260529T160911+0800-tracked-wrapper-clean/objective_closure_snapshot.json`
+
+Commands:
+
+```bash
+python3 support/scripts/research/downstream_practical_admission_source_check.py support/docs/experiments/actionable-regime-confidence/scripts/run_ibkr_qqq_intraday_micro_trend_reclaim_density_1m_mtf_v1.py
+python3 -m unittest support.scripts.research.tests.test_downstream_practical_admission_source_check support.scripts.tests.test_done_definition_audit support.scripts.tests.test_objective_closure_snapshot -v
+python3 support/scripts/objective_closure_snapshot.py --compact --check-remotes --output-dir /tmp/ict-engine-goal-20260529T160911+0800-tracked-wrapper-clean
+```
+
+Current command truth:
+
+- direct scanner readback for
+  `run_ibkr_qqq_intraday_micro_trend_reclaim_density_1m_mtf_v1.py` returned
+  `ok=true` with no violations;
+- focused verification passed `97/97` tests across the practical-admission
+  scanner, done-definition audit, and objective-closure snapshot suites;
+- the coordinated snapshot still exits `1` and remains `status=not_complete`;
+- done-definition now passes its light gate surface:
+  `done_definition.status=pass`, `unresolved=[]`, and the tracked
+  practical-admission source debt is cleared with
+  `tracked_violation_count=0` / `tracked_violating_files=0`;
+- done-definition is not completion proof because the current run skipped
+  heavy gates: `cargo_check_all_targets`,
+  `cargo_clippy_all_targets_deny_warnings`, `cargo_test`, and
+  `smoke_acceptance_tmp_state`;
+- untracked source debt is still visible in the parent packet:
+  practical-admission debt has `untracked_violation_count=268` across
+  `153` files, and await-launch debt has `untracked_violation_count=46`;
+- factor closure is red: `active_claims=3`, `live_factor_processes=1`,
+  `promotion_allowed_true=0`, `trade_usable_true=0`, and the parent packet
+  lists the fresh claim queue plus live runtime `pid=79642`;
+- release readiness is red on `worktree_clean_for_release` and
+  `source_origin_matches_selected_source`.
+
+Loopholes found and fixed:
+
+- A failed practical-source scanner run could previously collapse into a
+  vague done-definition failure when the scanner timed out or returned a
+  non-zero status without JSON violations. `done_definition_audit.py` now
+  preserves `scanner_error`, `scanner_timeout_seconds`, `scanner_returncode`,
+  `scanner_command`, `stdout`, and `stderr` on that gate; the parent
+  `objective_closure_snapshot.py` now lifts those details so the coordinated
+  packet can tell timeout/tooling failure from a clean source surface.
+- One tracked wrapper still encoded density inside
+  `survives_5bps_per_side`:
+  `trades >= 6 and rec['5bps_per_side_total_profit_pct'] > 0`. That field name
+  looked like pure cost-survival telemetry but also carried a density gate.
+  The wrapper now records `trade_density_ok` separately and leaves
+  `survives_2bps_per_side` / `survives_5bps_per_side` as cost-survival fields;
+  downstream allowance still requires both `trade_density_ok` and 2bps
+  survival.
+
+Requirement verdict updates:
+
+- Evidence-pack coordination/reuse improved: source-scan tooling failures are
+  now inspectable from the parent packet, and the current tracked-source
+  practical-admission failure was removed instead of quarantined.
+- The full objective remains `not_complete`: there is still no same-tree
+  practical closure packet, all practical factor counters are false, factor
+  ownership is live/fresh-claim blocked, release readiness is red, and the
+  latest done-definition proof is light-only rather than full heavy coverage.
+- A narrow commit of this audit-hardening and tracked-wrapper cleanup slice is
+  justified if it stages only the five touched source/test files plus this
+  tracking update. A completion commit for the broader objective would still be
+  false.

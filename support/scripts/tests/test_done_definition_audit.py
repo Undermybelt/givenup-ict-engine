@@ -913,6 +913,66 @@ Measured on 2026-05-22:
         self.assertEqual(gate["details"]["violating_files"], 0)
         self.assertEqual(gate["details"]["violation_count"], 0)
 
+    def test_practical_admission_source_gate_preserves_scanner_timeout_details(self) -> None:
+        import done_definition_audit
+
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            scanner = root / "support" / "scripts" / "research" / "downstream_practical_admission_source_check.py"
+            wrapper_root = root / "support" / "docs" / "experiments" / "actionable-regime-confidence" / "scripts"
+            scanner.parent.mkdir(parents=True)
+            wrapper_root.mkdir(parents=True)
+            scanner.write_text("# scanner placeholder\n", encoding="utf-8")
+            wrapper = wrapper_root / "run_good_v1.py"
+            wrapper.write_text("# good\n", encoding="utf-8")
+
+            def fake_run_command(cmd, *, cwd, timeout, env=None):
+                del cwd, env
+                self.assertIn(str(scanner), cmd)
+                return (
+                    "fail",
+                    {
+                        "command": list(map(str, cmd)),
+                        "error": "timeout",
+                        "timeout_seconds": timeout,
+                        "returncode": None,
+                        "stdout": "",
+                        "stderr": "scan timed out while parsing wrappers",
+                    },
+                )
+
+            originals = (
+                done_definition_audit.ROOT,
+                done_definition_audit.PRACTICAL_ADMISSION_SOURCE_CHECK_PATH,
+                done_definition_audit.PRACTICAL_ADMISSION_WRAPPER_ROOT,
+                done_definition_audit.run_command,
+                done_definition_audit.tracked_wrapper_file_set,
+            )
+            try:
+                done_definition_audit.ROOT = root
+                done_definition_audit.PRACTICAL_ADMISSION_SOURCE_CHECK_PATH = scanner
+                done_definition_audit.PRACTICAL_ADMISSION_WRAPPER_ROOT = wrapper_root
+                done_definition_audit.run_command = fake_run_command
+                done_definition_audit.tracked_wrapper_file_set = lambda wrapper_files, timeout_seconds: {wrapper}
+                gate = evaluate_practical_admission_source_gate(7)
+            finally:
+                (
+                    done_definition_audit.ROOT,
+                    done_definition_audit.PRACTICAL_ADMISSION_SOURCE_CHECK_PATH,
+                    done_definition_audit.PRACTICAL_ADMISSION_WRAPPER_ROOT,
+                    done_definition_audit.run_command,
+                    done_definition_audit.tracked_wrapper_file_set,
+                ) = originals
+
+        self.assertEqual(gate["id"], "practical_admission_source_surface")
+        self.assertEqual(gate["status"], "fail")
+        self.assertEqual(gate["details"]["scanner_error"], "timeout")
+        self.assertEqual(gate["details"]["scanner_timeout_seconds"], 7)
+        self.assertEqual(gate["details"]["scanner_returncode"], None)
+        self.assertIn("downstream_practical_admission_source_check.py", " ".join(gate["details"]["scanner_command"]))
+        self.assertEqual(gate["details"]["stderr"], "scan timed out while parsing wrappers")
+        self.assertEqual(gate["details"]["violation_count"], 0)
+
     def test_practical_admission_source_gate_reports_untracked_violations_without_failing_tracked_source(self) -> None:
         import done_definition_audit
 

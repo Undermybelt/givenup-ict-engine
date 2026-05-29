@@ -728,11 +728,18 @@ def evaluate_practical_admission_source_gate(timeout_seconds: int) -> dict:
         summary["debt_manifest_file"] = debt_manifest_file
         summary["quarantine"] = _read_practical_admission_debt_quarantine(summary)
     summary["scanner_returncode"] = details.get("returncode")
+    if "command" in details:
+        summary["scanner_command"] = details.get("command")
+    if "error" in details:
+        summary["scanner_error"] = details.get("error")
+    if "timeout_seconds" in details:
+        summary["scanner_timeout_seconds"] = details.get("timeout_seconds")
     summary["rule"] = (
         "all tracked downstream/gate wrappers must keep practical flags behind "
         "practical_admission_flags(..., extension_complete=...) and avoid 2bps/density fail-open gates"
     )
     if status == "fail" and summary["violation_count"] == 0:
+        summary["stdout"] = details.get("stdout", "")
         summary["stderr"] = details.get("stderr", "")
         return _gate("practical_admission_source_surface", "fail", summary)
     return _gate(
