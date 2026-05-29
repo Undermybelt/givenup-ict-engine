@@ -364,3 +364,49 @@ Current truth after this slice:
   `remote_readback` failure; origin remote readback passed.
 - The full user objective remains incomplete. This slice hardens deploy-ready
   closure semantics; it does not create a practical/live-usable factor.
+
+## 2026-05-30T00:47+0800 Practical Source Debt Quarantine Refresh
+
+Root cause handled in this slice:
+
+- Current scans reported the same untracked practical-admission wrapper debt as
+  a reviewed alternative fingerprint, but the quarantine manifest still carried
+  the older `343` violations across `177` files count. Because count/file totals
+  are part of the quarantine contract, objective closure correctly treated the
+  current `337` violations across `176` files scan as unquarantined debt.
+
+Changes made:
+
+- Refreshed `support/docs/audits/practical-admission-source-debt-quarantine.json`
+  to the current reviewed untracked debt fingerprint:
+  `9945631cb78ac92c5ec7037781c73c1e37a87eb791b03f80175ff1690b2e05f3`.
+- Kept prior reviewed fingerprints as alternatives because the shared untracked
+  wrapper residue has been drifting while tracked practical-admission violations
+  remain zero.
+- Preserved `promotion_allowed=false`, `trade_usable=false`, and
+  `update_goal=false`; this quarantine externalizes untracked scratch debt only.
+
+Verification:
+
+- `python3 support/scripts/done_definition_audit.py --compact --output /tmp/ict-engine-done-definition-quarantine-match-af850fad.json`
+  -> `status=pass`, `completion_ready=false`,
+  practical-admission source quarantine `matched=true`,
+  `tracked_violation_count=0`, `untracked_violation_count=337`,
+  `untracked_violating_files=176`.
+- `python3 support/scripts/objective_closure_snapshot.py --compact --check-remotes --output-dir /tmp/ict-engine-goal-20260530-codex-quarantine-match-after-af850fad --timeout-seconds 300`
+  -> `status=not_complete`, blocker count `3`; practical-admission debt is now
+  recorded under `quarantined_practical_admission_source_debt`, not as an active
+  blocker.
+- `git diff --check` -> pass.
+
+Current truth after this slice:
+
+- No validated `same_tree_practical_closure` packet exists.
+- Factor closure remains blocked by fresh active claims; latest objective
+  snapshot named two fresh active claims and zero live factor processes.
+- Done-definition remains `completion_ready=false` because heavy gates were
+  skipped.
+- Release readiness remains blocked by dirty selected source and source-origin
+  mismatch, though both remotes passed readback in the latest snapshot.
+- The full user objective remains incomplete. This slice only makes the current
+  untracked practical-admission debt quarantine internally consistent.
