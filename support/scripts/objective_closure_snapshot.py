@@ -15,6 +15,13 @@ from typing import Any
 
 from path_defaults import resolve_repo_root
 
+SCRIPTS_DIR = Path(__file__).resolve().parent
+RESEARCH_DIR = SCRIPTS_DIR / "research"
+if str(RESEARCH_DIR) not in sys.path:
+    sys.path.insert(0, str(RESEARCH_DIR))
+
+from same_tree_practical_closure import REQUIRED_COMMAND_RESULT_STAGES  # noqa: E402
+
 ROOT = resolve_repo_root(__file__)
 DONE_AUDIT = ROOT / "support" / "scripts" / "done_definition_audit.py"
 FACTOR_AUDIT = ROOT / "support" / "scripts" / "factor_claim_terminalization_audit.py"
@@ -428,11 +435,61 @@ def _practical_closure_blocker_detail(factor_surface: dict[str, Any]) -> dict[st
         and same_tree_practical_closure.get("evidence_packet_validated") is not True
     ):
         reason = "same_tree_practical_closure_evidence_not_validated"
-    return {
+    detail = {
         "reason": reason,
         "promotion_allowed_true": promotion_allowed,
         "trade_usable_true": trade_usable,
         "same_tree_practical_closure": same_tree_practical_closure,
+        "missing_practical_chain_stages": _missing_practical_chain_stages(
+            same_tree_practical_closure
+        ),
+        "blocking_context": _same_tree_blocking_context(factor_surface),
+    }
+    present_stages = _present_practical_chain_stages(same_tree_practical_closure)
+    if present_stages:
+        detail["present_practical_chain_stages"] = present_stages
+    return detail
+
+
+def _present_practical_chain_stages(packet: object) -> list[str]:
+    if not isinstance(packet, dict):
+        return []
+    raw_value = packet.get("validated_stage_coverage")
+    if raw_value is None:
+        raw_value = packet.get("present_practical_chain_stages")
+    if raw_value is None:
+        raw_value = packet.get("command_result_stages")
+    if not isinstance(raw_value, list):
+        return []
+    normalized = {normalized_stage for item in raw_value for normalized_stage in [_normalize_stage(item)] if normalized_stage}
+    return [stage for stage in REQUIRED_COMMAND_RESULT_STAGES if stage in normalized]
+
+
+def _missing_practical_chain_stages(packet: object) -> list[str]:
+    present = set(_present_practical_chain_stages(packet))
+    return [stage for stage in REQUIRED_COMMAND_RESULT_STAGES if stage not in present]
+
+
+def _normalize_stage(value: object) -> str | None:
+    if not isinstance(value, str):
+        return None
+    normalized = value.strip().lower().replace("-", "_").replace(" ", "_")
+    return normalized or None
+
+
+def _same_tree_blocking_context(factor_surface: dict[str, Any]) -> dict[str, Any]:
+    return {
+        "status": factor_surface.get("status"),
+        "blocking_reasons": factor_surface.get("blocking_reasons", []),
+        "active_claims": factor_surface.get("active_claims"),
+        "fresh_active_claims_without_live_process": factor_surface.get(
+            "fresh_active_claims_without_live_process"
+        ),
+        "wait_only_active_claims_without_live_process": factor_surface.get(
+            "wait_only_active_claims_without_live_process"
+        ),
+        "live_factor_processes": factor_surface.get("live_factor_processes"),
+        "stale_safe_takeover_candidates": factor_surface.get("stale_safe_takeover_candidates"),
     }
 
 
@@ -755,11 +812,13 @@ def summarize_snapshot(
             factor_surface
         )
     practical_closure = _same_tree_practical_closure_detail(factor_surface)
-    if factor_surface.get("status") == "pass" and practical_closure is None:
+    practical_closure_gap = (
+        _practical_closure_blocker_detail(factor_surface) if practical_closure is None else None
+    )
+    if practical_closure_gap is not None:
+        blocker_details["same_tree_practical_closure_unproven"] = practical_closure_gap
+    if _same_tree_gap_should_block(factor_surface) and practical_closure is None:
         blockers.append("same_tree_practical_closure_unproven")
-        blocker_details["same_tree_practical_closure_unproven"] = _practical_closure_blocker_detail(
-            factor_surface
-        )
     if release_surface.get("status") != "pass":
         blockers.append("release_readiness_blocked")
         blocker_details["release_readiness_blocked"] = _release_readiness_blocker_detail(
@@ -978,6 +1037,14 @@ def summarize_snapshot(
         "child_report_age_seconds": child_report_age_seconds,
         "prioritized_next_actions": prioritized_next_actions,
     }
+
+
+def _same_tree_gap_should_block(factor_surface: dict[str, Any]) -> bool:
+    if factor_surface.get("status") == "pass":
+        return True
+    if isinstance(factor_surface.get("same_tree_practical_closure"), dict):
+        return True
+    return "promotion_allowed_true" in factor_surface or "trade_usable_true" in factor_surface
 
 
 def build_snapshot(

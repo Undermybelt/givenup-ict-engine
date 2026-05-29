@@ -101,3 +101,44 @@ admission owners where current evidence shows a system loophole.
   `matched=true`. This does not make the untracked wrappers release-ready or
   trade-usable; it only prevents reviewed untracked residue from being treated
   as new tracked source debt.
+- 2026-05-30T04:23:46+0800: added objective-snapshot stage-gap diagnostics so
+  the closure surface does not collapse every failure into a generic missing
+  packet. `same_tree_practical_closure_unproven` now carries
+  `missing_practical_chain_stages` and claim/runtime `blocking_context`, and is
+  listed as a blocker even when `factor_closure_blocked` is also present.
+  Current snapshot:
+  `python3 support/scripts/objective_closure_snapshot.py --compact --timeout-seconds 240 --output-dir /tmp/ict-engine-goal-20260530-codex-after-stage-gap-blocker`
+  still exits nonzero with `trade_usable_true=0`, `promotion_allowed_true=0`,
+  `same_tree_practical_closure=null`, active claims blocking launch, and all
+  required practical stages missing: `provider_data`, `pre_bayes`,
+  `bbn_workflow`, `path_ranker`, `execution_tree`, `feedback_update`, and
+  `policy_training`.
+  Verification:
+  `python3 -m unittest support.scripts.tests.test_objective_closure_snapshot -v`
+  ran 45 tests OK;
+  `python3 -m unittest support.scripts.research.tests.test_same_tree_practical_closure -v`
+  ran 12 tests OK;
+  `python3 -m py_compile support/scripts/objective_closure_snapshot.py support/scripts/tests/test_objective_closure_snapshot.py`
+  passed.
+
+## Root Cause Readback
+
+The current failure is not that a hidden practical factor exists and the count
+misses it. Same-turn factor closure still reports `trade_usable_true=0`,
+`promotion_allowed_true=0`, and no validated same-tree practical closure packet.
+
+The repeated near-practical pattern has two separate causes:
+
+1. Gate1 and source/prep packets can accumulate provider, cost, or screen
+   evidence while fresh claims/runtime occupancy prevents safe downstream
+   launch.
+2. Even when a candidate is promising, the objective completion owner only
+   accepts a same-tree packet proving the full practical chain:
+   provider/data -> Pre-Bayes -> BBN/workflow -> path-ranker -> execution tree
+   -> feedback/update -> policy training. The current tree has no validated
+   packet proving any of those stages for a trade-usable factor.
+
+This slice fixes the observability failure, not the profitability target. The
+next executable repair must either resume an unblocked exact candidate through
+the full same-tree lifecycle or add a canonical promotion driver that turns a
+Gate1 survivor into that lifecycle evidence without spoofing the packet.

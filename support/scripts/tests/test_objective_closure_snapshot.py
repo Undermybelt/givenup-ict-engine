@@ -179,6 +179,24 @@ class ObjectiveClosureSnapshotTest(unittest.TestCase):
                 "promotion_allowed_true": None,
                 "trade_usable_true": None,
                 "same_tree_practical_closure": None,
+                "missing_practical_chain_stages": [
+                    "provider_data",
+                    "pre_bayes",
+                    "bbn_workflow",
+                    "path_ranker",
+                    "execution_tree",
+                    "feedback_update",
+                    "policy_training",
+                ],
+                "blocking_context": {
+                    "status": "pass",
+                    "blocking_reasons": [],
+                    "active_claims": None,
+                    "fresh_active_claims_without_live_process": None,
+                    "wait_only_active_claims_without_live_process": None,
+                    "live_factor_processes": None,
+                    "stale_safe_takeover_candidates": None,
+                },
             },
         )
         self.assertIn("same_tree_practical_closure_packet", summary["manual_requirements_remaining"])
@@ -211,6 +229,24 @@ class ObjectiveClosureSnapshotTest(unittest.TestCase):
                 "promotion_allowed_true": 1,
                 "trade_usable_true": 1,
                 "same_tree_practical_closure": None,
+                "missing_practical_chain_stages": [
+                    "provider_data",
+                    "pre_bayes",
+                    "bbn_workflow",
+                    "path_ranker",
+                    "execution_tree",
+                    "feedback_update",
+                    "policy_training",
+                ],
+                "blocking_context": {
+                    "status": "pass",
+                    "blocking_reasons": [],
+                    "active_claims": None,
+                    "fresh_active_claims_without_live_process": None,
+                    "wait_only_active_claims_without_live_process": None,
+                    "live_factor_processes": None,
+                    "stale_safe_takeover_candidates": None,
+                },
             },
         )
         self.assertIn(
@@ -252,6 +288,107 @@ class ObjectiveClosureSnapshotTest(unittest.TestCase):
         self.assertEqual(
             summary["blocker_details"]["same_tree_practical_closure_unproven"]["reason"],
             "same_tree_practical_closure_evidence_not_validated",
+        )
+
+    def test_summarize_snapshot_reports_partial_same_tree_stage_gap(self) -> None:
+        summary = summarize_snapshot(
+            {
+                "completion_ready": True,
+                "quickstart_surface": "pass",
+            },
+            {
+                "status": "needs_attention",
+                "promotion_allowed_true": 0,
+                "trade_usable_true": 0,
+                "same_tree_practical_closure": {
+                    "status": "pass",
+                    "promotion_allowed": True,
+                    "trade_usable": True,
+                    "provider_execution_feedback_chain": "pass",
+                    "evidence_packet": "checks/terminal_metrics.json",
+                    "evidence_packet_validated": False,
+                    "validated_stage_coverage": [
+                        "provider_data",
+                        "pre_bayes",
+                        "bbn_workflow",
+                    ],
+                },
+                "active_claims": 2,
+                "fresh_active_claims_without_live_process": 1,
+                "wait_only_active_claims_without_live_process": 1,
+                "live_factor_processes": 0,
+                "stale_safe_takeover_candidates": 0,
+                "blocking_reasons": ["active_claims"],
+                "next_action": "wait for fresh active claims to progress",
+            },
+            {
+                "status": "pass",
+            },
+            snapshot_timestamp="2026-05-27T11:00:10Z",
+        )
+
+        self.assertIn("same_tree_practical_closure_unproven", summary["blockers"])
+        detail = summary["blocker_details"]["same_tree_practical_closure_unproven"]
+        self.assertEqual(detail["reason"], "same_tree_practical_closure_evidence_not_validated")
+        self.assertEqual(
+            detail["present_practical_chain_stages"],
+            ["provider_data", "pre_bayes", "bbn_workflow"],
+        )
+        self.assertEqual(
+            detail["missing_practical_chain_stages"],
+            ["path_ranker", "execution_tree", "feedback_update", "policy_training"],
+        )
+        self.assertEqual(
+            detail["blocking_context"],
+            {
+                "status": "needs_attention",
+                "blocking_reasons": ["active_claims"],
+                "active_claims": 2,
+                "fresh_active_claims_without_live_process": 1,
+                "wait_only_active_claims_without_live_process": 1,
+                "live_factor_processes": 0,
+                "stale_safe_takeover_candidates": 0,
+            },
+        )
+
+    def test_summarize_snapshot_counts_same_tree_gap_when_factor_claims_block(self) -> None:
+        summary = summarize_snapshot(
+            {
+                "completion_ready": True,
+                "quickstart_surface": "pass",
+            },
+            {
+                "status": "needs_attention",
+                "promotion_allowed_true": 0,
+                "trade_usable_true": 0,
+                "same_tree_practical_closure": None,
+                "active_claims": 2,
+                "fresh_active_claims_without_live_process": 1,
+                "wait_only_active_claims_without_live_process": 1,
+                "live_factor_processes": 0,
+                "stale_safe_takeover_candidates": 0,
+                "blocking_reasons": ["active_claims"],
+                "next_action": "wait for fresh active claims to progress",
+            },
+            {
+                "status": "pass",
+            },
+            snapshot_timestamp="2026-05-27T11:00:10Z",
+        )
+
+        self.assertIn("factor_closure_blocked", summary["blockers"])
+        self.assertIn("same_tree_practical_closure_unproven", summary["blockers"])
+        self.assertEqual(
+            summary["blocker_details"]["same_tree_practical_closure_unproven"]["missing_practical_chain_stages"],
+            [
+                "provider_data",
+                "pre_bayes",
+                "bbn_workflow",
+                "path_ranker",
+                "execution_tree",
+                "feedback_update",
+                "policy_training",
+            ],
         )
 
     def test_summarize_snapshot_allows_surface_green_with_validated_practical_closure_packet(self) -> None:
@@ -1446,6 +1583,11 @@ class ObjectiveClosureSnapshotTest(unittest.TestCase):
                     "surface": "factor_closure",
                     "reason": "practical_closure_blocked",
                     "action": "wait",
+                },
+                {
+                    "surface": "factor_closure",
+                    "reason": "same_tree_practical_closure_unproven",
+                    "action": "produce or locate a validated same_tree_practical_closure packet; do not use raw promotion_allowed_true/trade_usable_true claim counters as proof",
                 },
                 {
                     "surface": "release_readiness",
