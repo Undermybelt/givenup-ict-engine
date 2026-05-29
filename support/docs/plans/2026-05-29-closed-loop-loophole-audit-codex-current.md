@@ -56,6 +56,21 @@ validation counters meeting their required ratios.
 
 Regression: `test_build_report_rejects_closure_packet_with_marker_only_evidence`.
 
+## Fixed Loophole - Objective Snapshot Closure Parity
+
+`support/scripts/objective_closure_snapshot.py` independently checked
+`same_tree_practical_closure` packet fields but did not require proof that the
+factor audit had validated the referenced evidence JSON content. A summary-level
+packet with pass markers could therefore make the snapshot surface-green if a
+caller bypassed the stricter factor-audit discovery path.
+
+Fix: `factor_claim_terminalization_audit.py` now marks discovered closure
+packets with `evidence_packet_validated=true` only after validating the
+referenced evidence JSON content, and `objective_closure_snapshot.py` requires
+that flag before treating a packet as practical closure.
+
+Regression: `test_summarize_snapshot_rejects_unvalidated_practical_closure_packet`.
+
 ## Verification
 
 - RED: the new regression failed before the implementation because
@@ -64,7 +79,8 @@ Regression: `test_build_report_rejects_closure_packet_with_marker_only_evidence`
 - `python3 -m py_compile support/scripts/factor_claim_terminalization_audit.py support/scripts/tests/test_factor_claim_terminalization_audit.py`
   passed.
 - `python3 -m unittest support.scripts.tests.test_factor_claim_terminalization_audit support.scripts.tests.test_objective_closure_snapshot -v`
-  ran `124/124 OK` after the same-tree evidence-content regression was added.
+  ran `125/125 OK` after the same-tree evidence-content and snapshot-parity
+  regressions were added.
 - `python3 -m unittest support.docs.experiments.actionable-regime-confidence.scripts.test_tomac_nq_bidir_opening_drive_exact_downstream_v1 -v`
   ran `11/11 OK`, keeping the current closure packet producer behavior aligned
   with the stricter audit consumer.
@@ -78,11 +94,19 @@ Regression: `test_build_report_rejects_closure_packet_with_marker_only_evidence`
   KST/Coppock PortfolioDensityLift prescreen root:
   `/tmp/ict-engine-tomac-kst-coppock-portfolio-density-lift-pybacktest-20260529T133157+0800`.
 - Current compact audit after the same-tree validator fix still reports
-  `status=needs_attention`, `active_claims=1`, `live_factor_processes=1`,
+  `status=needs_attention`, `active_claims=0`, `live_factor_processes=1`,
   `promotion_allowed_true=0`, `trade_usable_true=0`, and
-  `same_tree_practical_closure=null`. The live process is the Python-only
-  PortfolioDensityLift prescreen, so it is not practical closure evidence and
-  must be waited out before factor closure can be reevaluated.
+  `same_tree_practical_closure=null`. The active Python-only PortfolioDensityLift
+  prescreen terminalized fail-closed with `survivor_count=0`; the remaining
+  blocker is a live Silver Bullet RSI Sniper AQ/prep process under
+  `/tmp/ict-engine-tomac-silver-bullet-rsi-sniper-prep-20260529T134152+0800`, so
+  factor closure must still wait before reevaluation.
+- Lightweight objective snapshots after `2c1e9a4e` failed closed because
+  `done_definition_audit.py --compact` exceeded both 90s and 180s child
+  timeouts in the dirty/shared tree. A direct bounded child audit eventually
+  returned `status=needs_fix` with `unresolved=[practical_admission_source_surface]`
+  and skipped heavy gates, so there is no completion evidence from the snapshot
+  path.
 - Release readiness remains blocked by `worktree_clean_for_release`; remote
   gates were not run in the proof-aware snapshot.
 - The objective still lacks a same-tree practical closure packet proving
