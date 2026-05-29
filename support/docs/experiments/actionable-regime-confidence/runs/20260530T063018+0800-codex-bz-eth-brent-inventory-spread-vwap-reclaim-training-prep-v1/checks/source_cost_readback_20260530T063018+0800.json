@@ -1,0 +1,151 @@
+{
+  "schema_version": "ict-engine-source-cost-readback/v1",
+  "generated_at": "2026-05-30T06:30:18+0800",
+  "agent_name": "codex-bz-eth-brent-inventory-spread-vwap-reclaim-training-prep",
+  "factor_id": "bz_eth_brent_inventory_spread_vwap_reclaim_v1",
+  "branch_path": "FUTURES -> EnergyFutures -> ICE Brent Crude / BZ -> ETH/full_retained_session -> 1m execution + shifted 5m/15m/30m/1h/4h/1d context -> AtlanticCrudeInventorySpreadTransition -> BrentWtiRefineryMarginShock -> LondonSessionLiquidityFlushVwapReclaim -> AtrRiskManagedMtfContinuation -> bz_eth_brent_inventory_spread_vwap_reclaim_v1",
+  "instrument": {
+    "asset_class": "futures",
+    "symbol_root": "BZ",
+    "product": "ICE Brent Crude futures",
+    "exchange_assumption": "ICE Futures Europe or IBKR-routable Brent future; exact broker mapping not verified",
+    "currency": "USD",
+    "broker": "IBKR",
+    "pricing_plan_assumption": "tiered low-volume futures commission, not promotion evidence",
+    "fee_effective_date": "2026-05-30"
+  },
+  "session_scope": "ETH/full_retained_session",
+  "rth_filter_applied": false,
+  "origin_timeframe": "1m",
+  "context_timeframes": ["5m", "15m", "30m", "1h", "4h", "1d"],
+  "retained_session_coverage": {
+    "status": "not_validated_no_provider_rows",
+    "provider_rows": 0,
+    "ibkr_historical_rows": 0,
+    "non_rth_rows_proven": false
+  },
+  "source_readbacks": [
+    {
+      "name": "ice_brent_crude_product",
+      "url": "https://www.ice.com/products/219/Brent-Crude-Futures",
+      "http_status": 200,
+      "official_source": true,
+      "rate_verified": false,
+      "purpose": "product/spec source candidate"
+    },
+    {
+      "name": "ibkr_futures_commissions",
+      "url": "https://www.interactivebrokers.com/en/pricing/commissions-futures.php",
+      "http_status": 200,
+      "official_source": true,
+      "rate_verified": false,
+      "purpose": "generic broker commission source only"
+    },
+    {
+      "name": "eia_petroleum_weekly",
+      "url": "https://www.eia.gov/petroleum/weekly/",
+      "http_status": 200,
+      "official_source": true,
+      "rate_verified": false,
+      "purpose": "inventory regime source"
+    },
+    {
+      "name": "eia_weekly_petroleum_status_report",
+      "url": "https://www.eia.gov/petroleum/supply/weekly/",
+      "http_status": 200,
+      "official_source": true,
+      "rate_verified": false,
+      "purpose": "inventory regime source"
+    },
+    {
+      "name": "ice_fees_page",
+      "url": "https://www.ice.com/fees",
+      "http_status": 200,
+      "official_source": true,
+      "rate_verified": false,
+      "purpose": "fee schedule landing page only"
+    },
+    {
+      "name": "ice_futures_europe_fees_guess",
+      "url": "https://www.ice.com/futures-europe/fees",
+      "http_status": 404,
+      "official_source": true,
+      "rate_verified": false,
+      "purpose": "failed exact fee schedule attempt"
+    },
+    {
+      "name": "ice_futures_us_fee_schedule_pdf_guess",
+      "url": "https://www.ice.com/publicdocs/futures_us/exchange_notices/ICE_Futures_US_Fee_Schedule.pdf",
+      "http_status": 404,
+      "official_source": true,
+      "rate_verified": false,
+      "purpose": "failed sibling fee schedule attempt"
+    },
+    {
+      "name": "ice_futures_europe_fee_schedule_pdf_guess",
+      "url": "https://www.ice.com/publicdocs/futures_europe/fee_schedule/ICE_Futures_Europe_Fee_Schedule.pdf",
+      "http_status": 404,
+      "official_source": true,
+      "rate_verified": false,
+      "purpose": "failed exact fee schedule attempt"
+    }
+  ],
+  "cost_model": {
+    "status": "cost_model_unverified",
+    "promotion_cost_verified": false,
+    "known_components": [
+      "IBKR generic futures commission page HTTP 200",
+      "ICE Brent product page HTTP 200",
+      "ICE fees landing page HTTP 200"
+    ],
+    "missing_components": [
+      "IBKR exact BZ/Brent product mapping",
+      "contract multiplier",
+      "tick size",
+      "tick value",
+      "exact exchange fee recovery",
+      "clearing/regulatory fees",
+      "routing/account applicability",
+      "spread/slippage model",
+      "fee-effective date rate verification"
+    ]
+  },
+  "launch_blocker": {
+    "status": "blocked_by_fresh_active_claim",
+    "claim_file": "/tmp/ict-engine-agent-claims/board-b-factor-refinement/20260530T062401+0800-codex-nq-compound-rv-stress-lifecycle-driver.claim",
+    "live_factor_processes": 0
+  },
+  "autoquant_plan": {
+    "auto_quant_started": false,
+    "provider_fetch_started": false,
+    "ibkr_historical_started": false,
+    "paper_sim_live_started": false,
+    "downstream_lifecycle_started": false,
+    "next_command": [
+      "python3",
+      "support/docs/experiments/actionable-regime-confidence/scripts/run_tomac_index_futures_clean_aq_v1.py",
+      "--symbols",
+      "BZ",
+      "--timeframes",
+      "1m,5m,15m,30m,1h,4h,1d",
+      "--families",
+      "energy_inventory_spread_vwap_reclaim",
+      "--aq-smoke-timeframe",
+      "1m",
+      "--aq-symbol-limit",
+      "1",
+      "--root",
+      "/tmp/ict-engine-bz-eth-brent-inventory-spread-vwap-reclaim-training-launch-<stamp>/aq",
+      "--compact-root",
+      "support/docs/experiments/actionable-regime-confidence/runs/<stamp>-codex-bz-eth-brent-inventory-spread-vwap-reclaim-training-launch-v1/aq",
+      "--timeout",
+      "1800"
+    ],
+    "registry_status": "family_key_not_verified_current_tree"
+  },
+  "terminal_decision": "terminalized_no_launch_training_prep_cost_model_unverified",
+  "promotion_allowed": false,
+  "trade_usable": false,
+  "update_goal": false,
+  "same_tree_practical_closure": null
+}
