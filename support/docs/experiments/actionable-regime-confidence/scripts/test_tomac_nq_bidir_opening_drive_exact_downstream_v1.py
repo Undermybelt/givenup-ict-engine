@@ -30,6 +30,18 @@ EXPECTED_ROW_CAPS = {
 }
 
 
+def full_stage_command_results() -> list[dict]:
+    return [
+        {"stage": "provider_data", "name": "01_provider_data_materialized", "exit": 0, "timed_out": False},
+        {"stage": "pre_bayes", "name": "05_pre_bayes_status", "exit": 0, "timed_out": False},
+        {"stage": "bbn_workflow", "name": "04_workflow_status", "exit": 0, "timed_out": False},
+        {"stage": "path_ranker", "name": "07_train_ranker", "exit": 0, "timed_out": False},
+        {"stage": "execution_tree", "name": "12_analyze_after_ranker", "exit": 0, "timed_out": False},
+        {"stage": "feedback_update", "name": "08_feedback_update", "exit": 0, "timed_out": False},
+        {"stage": "policy_training", "name": "15_policy_after_ranker", "exit": 0, "timed_out": False},
+    ]
+
+
 def load_module():
     spec = importlib.util.spec_from_file_location("tomac_bidir_exact_downstream", SCRIPT)
     if spec is None or spec.loader is None:
@@ -304,6 +316,24 @@ class TomacBidirExactDownstreamTests(unittest.TestCase):
         self.assertFalse(flags["trade_usable"])
         self.assertFalse(flags["update_goal"])
 
+    def test_deploy_ready_contract_flows_from_policy_lifecycle_surface(self) -> None:
+        module = load_module()
+
+        policy = {
+            "factor_profitability_lifecycle": {
+                "deploy_ready_count": 1,
+                "funded_live_fill_required": False,
+                "readiness_contract": module.DEPLOY_READY_READINESS_CONTRACT,
+            }
+        }
+
+        self.assertTrue(module.deploy_ready_from_policy(policy))
+        self.assertFalse(module.funded_live_fill_required_from_policy(policy))
+        self.assertEqual(
+            module.readiness_contract_from_policy(policy),
+            module.DEPLOY_READY_READINESS_CONTRACT,
+        )
+
     def test_trim_csv_rows_keeps_tail_with_bounded_memory(self) -> None:
         module = load_module()
 
@@ -380,6 +410,7 @@ class TomacBidirExactDownstreamTests(unittest.TestCase):
             module.ICT = Path("/tmp/fake-ict-engine")
 
             captured: list[tuple[str, list[object], int]] = []
+            summary_commands: list[dict] = []
 
             def fake_write_strategy_library() -> Path:
                 path = module.MATERIALS / "library.json"
@@ -401,6 +432,7 @@ class TomacBidirExactDownstreamTests(unittest.TestCase):
                 return {"name": name, "exit": 0, "timed_out": False}
 
             def fake_write_summary(command_results: list[dict], data_summary: dict) -> None:
+                summary_commands.extend(command_results)
                 return None
 
             module.write_strategy_library = fake_write_strategy_library
@@ -419,6 +451,25 @@ class TomacBidirExactDownstreamTests(unittest.TestCase):
             self.assertNotIn("--data-ltf", argv)
             self.assertNotIn("--data-mtf", argv)
             self.assertNotIn("--data-htf", argv)
+        expected_stages = {
+            "01_auto_quant_results_import": "provider_data",
+            "02_auto_quant_prior_init": "pre_bayes",
+            "03_analyze_seed": "execution_tree",
+            "04_workflow_seed": "bbn_workflow",
+            "05_pre_bayes_seed": "pre_bayes",
+            "06_export_target_seed": "path_ranker",
+            "07_train_ranker": "path_ranker",
+            "08_apply_ranker": "path_ranker",
+            "09_apply_scores_to_ict": "path_ranker",
+            "10_register_trainer": "path_ranker",
+            "11_enable_runtime": "path_ranker",
+            "12_analyze_after_ranker": "execution_tree",
+            "13_workflow_after_ranker": "bbn_workflow",
+            "14_pre_bayes_after_ranker": "pre_bayes",
+            "15_policy_after_ranker": "policy_training",
+        }
+        self.assertEqual({row["name"]: row["stage"] for row in summary_commands}, expected_stages)
+        self.assertNotIn("feedback_update", {row["stage"] for row in summary_commands})
 
         module.ROOT = original_root
         module.STATE = original_state
@@ -500,7 +551,7 @@ class TomacBidirExactDownstreamTests(unittest.TestCase):
             )
 
             module.write_summary(
-                [{"name": "all", "exit": 0, "timed_out": False}],
+                full_stage_command_results(),
                 {"prepared": True},
             )
             packet_path = module.SUMMARIES / "same_tree_practical_closure.json"
@@ -582,7 +633,7 @@ class TomacBidirExactDownstreamTests(unittest.TestCase):
             )
 
             module.write_summary(
-                [{"name": "all", "exit": 0, "timed_out": False}],
+                full_stage_command_results(),
                 {"prepared": True},
             )
             stale_exists = stale_packet.exists()

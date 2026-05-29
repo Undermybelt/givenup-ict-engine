@@ -258,6 +258,51 @@ Verification:
   claims, dirty release worktree, and skipped remote release checks.
 - `git diff --check` -> pass.
 
+## 2026-05-30T02:10+0800 Explicit Command-Stage Wrapper Slice
+
+Root cause handled in this slice:
+
+- `same_tree_practical_closure.py` now requires every `command_results` row to
+  carry an explicit lifecycle `stage`, but the tracked NQ bidirectional opening
+  drive downstream wrapper still passed raw `run_cmd(...)` rows without stage
+  metadata. That was fail-closed under the canonical helper, but it left the
+  wrapper's evidence surface ambiguous and preserved the old pattern where a
+  single aggregate command row could be mistaken for full-chain evidence.
+
+Changes made:
+
+- Added `run_stage(...)` to
+  `support/docs/experiments/actionable-regime-confidence/scripts/run_tomac_nq_bidir_opening_drive_exact_downstream_v1.py`.
+- Labeled the wrapper's real command rows as `provider_data`, `pre_bayes`,
+  `bbn_workflow`, `path_ranker`, `execution_tree`, or `policy_training`.
+- Deliberately did not add a `feedback_update` row because this wrapper does
+  not execute a feedback/update command. Therefore it still cannot emit a valid
+  `same_tree_practical_closure.json` unless a future wrapper genuinely runs the
+  missing stage and the rest of the lifecycle tuple passes.
+- Updated the wrapper tests to assert stage labels are carried into
+  `write_summary(...)`, to reject hidden `feedback_update` coverage, and to use
+  explicit staged fixture rows instead of `{"name": "all"}`.
+
+Verification:
+
+- `python3 -m unittest support.docs.experiments.actionable-regime-confidence.scripts.test_tomac_nq_bidir_opening_drive_exact_downstream_v1 -v`
+  -> `Ran 12 tests`, `OK`.
+- `python3 -m unittest support.scripts.research.tests.test_same_tree_practical_closure support.scripts.tests.test_factor_claim_terminalization_audit -v`
+  -> `Ran 105 tests`, `OK`.
+- `python3 support/scripts/factor_claim_terminalization_audit.py --compact`
+  -> `status=needs_attention`, `promotion_allowed_true=0`,
+  `trade_usable_true=0`, `same_tree_practical_closure=null`, with one live XAU
+  TOMAC runtime owner still blocking new AQ/provider launches.
+
+Current decision:
+
+- This slice reduces false-positive practical closure risk; it does not produce
+  a trade-usable factor.
+- Keep `promotion_allowed=false`, `trade_usable=false`, and `update_goal=false`
+  until the missing full lifecycle stages are present in real command evidence
+  and the compact factor audit surfaces a validated same-tree practical closure
+  packet.
+
 Current truth after this slice:
 
 - No `same_tree_practical_closure` packet is validated.

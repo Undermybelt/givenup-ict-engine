@@ -21,7 +21,10 @@ RESEARCH_SCRIPTS = REPO / "support/scripts/research"
 if str(RESEARCH_SCRIPTS) not in sys.path:
     sys.path.insert(0, str(RESEARCH_SCRIPTS))
 
-from same_tree_practical_closure import write_same_tree_practical_closure_packet  # noqa: E402
+from same_tree_practical_closure import (  # noqa: E402
+    DEPLOY_READY_READINESS_CONTRACT,
+    write_same_tree_practical_closure_packet,
+)
 
 SOURCE_ENV = os.environ.get("SOURCE_RUN_ROOT", "").strip()
 if SOURCE_ENV:
@@ -106,6 +109,12 @@ def run_cmd(name: str, argv: list[object], timeout: int = 300) -> dict:
     (CMD / f"{name}.err").write_text(stderr, encoding="utf-8")
     (CHECKS / f"{name}.exit").write_text(f"{rc}\n", encoding="utf-8")
     return {"name": name, "exit": rc, "timed_out": timed_out}
+
+
+def run_stage(stage: str, name: str, argv: list[object], timeout: int = 300) -> dict:
+    result = run_cmd(name, argv, timeout)
+    result["stage"] = stage
+    return result
 
 
 def read_json(path: Path) -> dict:
@@ -320,6 +329,48 @@ def exact_branch_survived(candidate: dict, trace_output: dict, closed_loop: dict
     return BRANCH_PATH in values
 
 
+def positive_int(value: object) -> int:
+    if isinstance(value, bool):
+        return 0
+    if isinstance(value, int):
+        return value
+    if isinstance(value, float) and value.is_integer():
+        return int(value)
+    if isinstance(value, str) and value.strip().isdigit():
+        return int(value.strip())
+    return 0
+
+
+def lifecycle_surface(policy: dict) -> dict:
+    lifecycle = policy.get("factor_profitability_lifecycle")
+    return lifecycle if isinstance(lifecycle, dict) else {}
+
+
+def deploy_ready_from_policy(policy: dict) -> bool:
+    lifecycle = lifecycle_surface(policy)
+    return any(
+        value is True
+        for value in (
+            policy.get("deploy_ready"),
+            lifecycle.get("deploy_ready"),
+            positive_int(policy.get("deploy_ready_count")) > 0,
+            positive_int(lifecycle.get("deploy_ready_count")) > 0,
+        )
+    )
+
+
+def funded_live_fill_required_from_policy(policy: dict) -> object:
+    lifecycle = lifecycle_surface(policy)
+    if "funded_live_fill_required" in lifecycle:
+        return lifecycle.get("funded_live_fill_required")
+    return policy.get("funded_live_fill_required")
+
+
+def readiness_contract_from_policy(policy: dict) -> object:
+    lifecycle = lifecycle_surface(policy)
+    return lifecycle.get("readiness_contract") or policy.get("readiness_contract")
+
+
 def practical_admission_flags(
     actionable: bool,
     branch_survived: bool,
@@ -414,7 +465,10 @@ def write_summary(command_results: list[dict], data_summary: dict) -> None:
         "policy_training_summary": policy,
         "learning_admission_status": policy.get("learning_admission_status"),
         "paper_admission_status": policy.get("paper_admission_status"),
+        "deploy_ready": deploy_ready_from_policy(policy),
         "live_trade_status": policy.get("live_trade_status"),
+        "funded_live_fill_required": funded_live_fill_required_from_policy(policy),
+        "readiness_contract": readiness_contract_from_policy(policy),
         "market_data_provenance": data_summary.get("market_data_provenance"),
         **flags,
     }
@@ -461,33 +515,35 @@ def main() -> int:
     target_csv = STATE / SYMBOL / "policy_training/structural_path_ranking_target.csv"
     trainer_artifact = MODEL_DIR / "trainer_artifact.json"
     commands = [
-        run_cmd("01_auto_quant_results_import", [ICT, "auto-quant-results-import", "--symbol", SYMBOL, "--state-dir", STATE, "--library", library], 180),
-        run_cmd(
+        run_stage("provider_data", "01_auto_quant_results_import", [ICT, "auto-quant-results-import", "--symbol", SYMBOL, "--state-dir", STATE, "--library", library], 180),
+        run_stage(
+            "pre_bayes",
             "02_auto_quant_prior_init",
             [ICT, "auto-quant-prior-init", "--symbol", SYMBOL, "--state-dir", STATE, "--library", library, "--temper", "0.5", "--prior-strength", "4.0"],
             180,
         ),
-        run_cmd(
+        run_stage(
+            "execution_tree",
             "03_analyze_seed",
             [ICT, "analyze", "--symbol", SYMBOL, "--data-root", DATA_DIR, "--state-dir", STATE, "--output-format", "json"],
             300,
         ),
-        run_cmd("04_workflow_seed", [ICT, "workflow-status", "--symbol", SYMBOL, "--state-dir", STATE, "--refresh", "--output-format", "json"], 120),
-        run_cmd("05_pre_bayes_seed", [ICT, "pre-bayes-status", "--symbol", SYMBOL, "--state-dir", STATE, "--refresh", "--output-format", "json"], 120),
-        run_cmd("06_export_target_seed", [ICT, "export-structural-path-ranking-target", "--symbol", SYMBOL, "--state-dir", STATE], 120),
+        run_stage("bbn_workflow", "04_workflow_seed", [ICT, "workflow-status", "--symbol", SYMBOL, "--state-dir", STATE, "--refresh", "--output-format", "json"], 120),
+        run_stage("pre_bayes", "05_pre_bayes_seed", [ICT, "pre-bayes-status", "--symbol", SYMBOL, "--state-dir", STATE, "--refresh", "--output-format", "json"], 120),
+        run_stage("path_ranker", "06_export_target_seed", [ICT, "export-structural-path-ranking-target", "--symbol", SYMBOL, "--state-dir", STATE], 120),
     ]
     if all(row["exit"] == 0 for row in commands):
         commands.extend(
             [
-                run_cmd("07_train_ranker", trainer_cmd("--target-csv", target_csv, "--output-dir", MODEL_DIR, "--output-scores", SCORES, "--allow-direct-fallback"), 300),
-                run_cmd("08_apply_ranker", trainer_cmd("--apply", "--model-dir", MODEL_DIR, "--target-csv", target_csv, "--output-scores", SCORES, "--allow-direct-fallback"), 180),
-                run_cmd("09_apply_scores_to_ict", [ICT, "apply-structural-path-ranking-external-scores", "--symbol", SYMBOL, "--state-dir", STATE, "--scores-file", SCORES], 120),
-                run_cmd("10_register_trainer", [ICT, "register-structural-path-ranking-trainer-artifact", "--symbol", SYMBOL, "--state-dir", STATE, "--artifact-uri", trainer_artifact, "--model-family", "weighted_feature_sum_v1", "--trained-rows", "1", "--calibration-rows", "0"], 120),
-                run_cmd("11_enable_runtime", [ICT, "enable-structural-path-ranking-runtime", "--symbol", SYMBOL, "--state-dir", STATE, "--reuse-mode", "prefer_history"], 120),
-                run_cmd("12_analyze_after_ranker", [ICT, "analyze", "--symbol", SYMBOL, "--data-root", DATA_DIR, "--state-dir", STATE, "--output-format", "json"], 300),
-                run_cmd("13_workflow_after_ranker", [ICT, "workflow-status", "--symbol", SYMBOL, "--state-dir", STATE, "--refresh", "--output-format", "json"], 120),
-                run_cmd("14_pre_bayes_after_ranker", [ICT, "pre-bayes-status", "--symbol", SYMBOL, "--state-dir", STATE, "--refresh", "--output-format", "json"], 120),
-                run_cmd("15_policy_after_ranker", [ICT, "policy-training-status", "--symbol", SYMBOL, "--state-dir", STATE, "--output-format", "json"], 120),
+                run_stage("path_ranker", "07_train_ranker", trainer_cmd("--target-csv", target_csv, "--output-dir", MODEL_DIR, "--output-scores", SCORES, "--allow-direct-fallback"), 300),
+                run_stage("path_ranker", "08_apply_ranker", trainer_cmd("--apply", "--model-dir", MODEL_DIR, "--target-csv", target_csv, "--output-scores", SCORES, "--allow-direct-fallback"), 180),
+                run_stage("path_ranker", "09_apply_scores_to_ict", [ICT, "apply-structural-path-ranking-external-scores", "--symbol", SYMBOL, "--state-dir", STATE, "--scores-file", SCORES], 120),
+                run_stage("path_ranker", "10_register_trainer", [ICT, "register-structural-path-ranking-trainer-artifact", "--symbol", SYMBOL, "--state-dir", STATE, "--artifact-uri", trainer_artifact, "--model-family", "weighted_feature_sum_v1", "--trained-rows", "1", "--calibration-rows", "0"], 120),
+                run_stage("path_ranker", "11_enable_runtime", [ICT, "enable-structural-path-ranking-runtime", "--symbol", SYMBOL, "--state-dir", STATE, "--reuse-mode", "prefer_history"], 120),
+                run_stage("execution_tree", "12_analyze_after_ranker", [ICT, "analyze", "--symbol", SYMBOL, "--data-root", DATA_DIR, "--state-dir", STATE, "--output-format", "json"], 300),
+                run_stage("bbn_workflow", "13_workflow_after_ranker", [ICT, "workflow-status", "--symbol", SYMBOL, "--state-dir", STATE, "--refresh", "--output-format", "json"], 120),
+                run_stage("pre_bayes", "14_pre_bayes_after_ranker", [ICT, "pre-bayes-status", "--symbol", SYMBOL, "--state-dir", STATE, "--refresh", "--output-format", "json"], 120),
+                run_stage("policy_training", "15_policy_after_ranker", [ICT, "policy-training-status", "--symbol", SYMBOL, "--state-dir", STATE, "--output-format", "json"], 120),
             ]
         )
     write_summary(commands, data_summary)
