@@ -1,0 +1,80 @@
+{
+  "schema_version": "ict-engine-source-cost-readback/v1",
+  "created_at": "2026-05-30T04:04:53+0800",
+  "agent_name": "codex-6n-eth-rbnz-dairy-risk-reversal-vwap-reclaim-prep",
+  "factor_id": "6n_eth_rbnz_dairy_risk_reversal_vwap_reclaim_v1",
+  "canonical_branch_path": "CommodityFXRiskTransition -> RbnzDairyRiskReversal -> AsiaLondonLiquidityStopRun -> VwapReclaimAfterDairyPolicyShock -> AtrRiskManagedMtfContinuation -> 6n_eth_rbnz_dairy_risk_reversal_vwap_reclaim_v1",
+  "labels": {
+    "market": "FUTURES",
+    "product": "FXFutures",
+    "exchange": "CME",
+    "root_symbol": "6N / New Zealand Dollar futures",
+    "broker_side_symbol_status": "unverified",
+    "origin_timeframe": "1m",
+    "context_ladder": ["5m", "15m", "30m", "1h", "4h", "1d"],
+    "session_scope": "ETH/full_retained_session",
+    "rth_filter_applied": false
+  },
+  "runtime_collision": {
+    "status": "blocked_by_foreign_live_factor_process",
+    "compact_audit_status": "needs_attention",
+    "foreign_live_run_root": "/tmp/ict-engine-eur-eth-donchian-tsmom-volcarry-prep-20260530T005133+0800",
+    "foreign_live_pid_at_readback": 28252
+  },
+  "source_readbacks": [
+    {
+      "name": "interactive_brokers_us_futures_commissions",
+      "url": "https://www.interactivebrokers.com/en/pricing/commissions-futures.php",
+      "http_code": 200,
+      "local_cache": "/tmp/ict-engine-ibkr-us-futures-pricing.html",
+      "readback": [
+        "Page title: Commissions Futures | Interactive Brokers LLC",
+        "United States Futures and Futures Options (by Denomination) USD table visible",
+        "First USD tier <= 1,000: USD 0.85/contract",
+        "Page states fees to offset Exchange Fees, Regulatory Fees, and Overnight Position Fees"
+      ],
+      "classification": "official_commission_page_reachable_but_product_specific_total_cost_not_verified"
+    },
+    {
+      "name": "cme_new_zealand_dollar_contract_specs",
+      "url": "https://www.cmegroup.com/markets/fx/g10/new-zealand-dollar.contractSpecs.html",
+      "curl_exit": 35,
+      "http_code": "000",
+      "ssl_verify_result": "1",
+      "classification": "blocked_cme_tls_from_host"
+    },
+    {
+      "name": "cme_fx_markets_page",
+      "url": "https://www.cmegroup.com/markets/fx.html",
+      "curl_exit": 92,
+      "http_code": "000",
+      "classification": "blocked_from_host"
+    },
+    {
+      "name": "rbnz_ocr_decisions",
+      "url": "https://www.rbnz.govt.nz/monetary-policy/official-cash-rate-decisions",
+      "http_code": 403,
+      "classification": "official_policy_source_blocked_from_host"
+    },
+    {
+      "name": "global_dairy_trade_product_results",
+      "url": "https://www.globaldairytrade.info/en/product-results/",
+      "http_code": 200,
+      "local_cache": "/tmp/ict-engine-gdt-events.html",
+      "readback": [
+        "Title: GDT Events Results >> GlobalDairyTrade",
+        "Headings include Change in GDT Price Index, Products, and GDT Price Index over 10 years",
+        "Page describes GDT Price Index as calculated from total quantity sold in a Trading Event across products, contract periods, and sellers"
+      ],
+      "classification": "official_dairy_risk_sidecar_source_reachable_not_trade_evidence"
+    }
+  ],
+  "cost_model_status": "cost_model_unverified",
+  "contract_status": "contract_spec_unverified_due_cme_tls_block",
+  "provider_rows_status": "not_requested_runtime_blocked",
+  "gate1_status": "not_run_no_verdict",
+  "promotion_allowed": false,
+  "trade_usable": false,
+  "update_goal": false,
+  "same_tree_practical_closure": null
+}
