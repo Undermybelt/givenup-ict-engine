@@ -55,6 +55,7 @@ CANONICAL_CLOSURE_BUILDER_NAMES = frozenset((
     "build_same_tree_practical_closure_packet",
     "write_same_tree_practical_closure_packet",
 ))
+CANONICAL_CLOSURE_HELPER_PATH = Path(__file__).resolve().parent / "same_tree_practical_closure.py"
 TWO_BPS_DOWNSTREAM_PATTERNS = (
     "survivors_2",
     "survivors_2bps",
@@ -198,7 +199,12 @@ def dict_has_same_tree_practical_closure_schema(node: ast.Dict) -> bool:
 
 
 def is_canonical_same_tree_closure_source(path: Path | None) -> bool:
-    return path is not None and path.name == "same_tree_practical_closure.py"
+    if path is None:
+        return False
+    try:
+        return path.resolve() == CANONICAL_CLOSURE_HELPER_PATH.resolve()
+    except OSError:
+        return False
 
 
 def helper_names(tree: ast.AST) -> set[str]:

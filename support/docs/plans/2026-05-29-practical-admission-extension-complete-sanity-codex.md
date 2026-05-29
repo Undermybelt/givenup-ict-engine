@@ -266,3 +266,46 @@ Current truth after this slice:
   latest objective snapshot saw 3 fresh active claims.
 - The full user objective remains incomplete. This slice removes a producer /
   validator drift class; it does not produce a practical/live-usable factor.
+
+## 2026-05-30T00:40+0800 Canonical Helper Path Spoof Guard
+
+Root cause handled in this slice:
+
+- `support/scripts/research/downstream_practical_admission_source_check.py`
+  treated any file named `same_tree_practical_closure.py` as the canonical
+  closure helper. An arbitrary same-named file outside
+  `support/scripts/research/` could hand-write a
+  `same-tree-practical-closure/v1` packet and bypass the manual packet writer
+  gate.
+
+Changes made:
+
+- Added an exact canonical helper path check for
+  `support/scripts/research/same_tree_practical_closure.py`.
+- Kept non-canonical same-named helpers fail-closed as
+  `manual_same_tree_practical_closure_packet_writer`.
+- Added regression coverage for a temporary external file named
+  `same_tree_practical_closure.py` that tries to emit a pass packet manually.
+
+Verification:
+
+- RED before the fix: the new regression expected a violation but the checker
+  returned `ok=true`.
+- GREEN focused rerun:
+  `python3 -m unittest support.scripts.research.tests.test_downstream_practical_admission_source_check.DownstreamPracticalAdmissionSourceCheckTests.test_flags_same_named_closure_helper_outside_canonical_path support.scripts.research.tests.test_downstream_practical_admission_source_check.DownstreamPracticalAdmissionSourceCheckTests.test_allows_canonical_same_tree_practical_closure_builder_call -v`
+  -> `OK`.
+- Broader focused rerun:
+  `python3 -m unittest support.scripts.research.tests.test_downstream_practical_admission_source_check support.scripts.research.tests.test_same_tree_practical_closure -v`
+  -> `Ran 46 tests`, `OK`.
+- Current same-turn factor audit:
+  `python3 support/scripts/factor_claim_terminalization_audit.py --compact`
+  -> `status=needs_attention`, `active_claims=4`,
+  `live_factor_processes=0`, `promotion_allowed_true=0`,
+  `trade_usable_true=0`, `same_tree_practical_closure=null`.
+
+Current truth after this slice:
+
+- No new provider/AQ/IBKR/factor launch is safe while the four active claims
+  are fresh.
+- The full user objective remains incomplete. This slice closes another fake
+  practical-closure producer bypass; it does not create a live-usable factor.

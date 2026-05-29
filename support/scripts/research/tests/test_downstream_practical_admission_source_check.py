@@ -19,6 +19,13 @@ class DownstreamPracticalAdmissionSourceCheckTests(unittest.TestCase):
         path.write_text(source, encoding="utf-8")
         return path
 
+    def write_named_source(self, name: str, source: str) -> Path:
+        tmpdir = tempfile.TemporaryDirectory()
+        self.addCleanup(tmpdir.cleanup)
+        path = Path(tmpdir.name) / name
+        path.write_text(source, encoding="utf-8")
+        return path
+
     def test_flags_branch_local_admission_as_practical_assignment(self) -> None:
         path = self.write_source(
             """
@@ -452,6 +459,30 @@ def write_summary(metrics):
 
         self.assertTrue(report["ok"])
         self.assertEqual(report["violations"], [])
+
+    def test_flags_same_named_closure_helper_outside_canonical_path(self) -> None:
+        path = self.write_named_source(
+            "same_tree_practical_closure.py",
+            """
+def build_same_tree_practical_closure_packet(metrics, evidence_packet="checks/terminal_metrics.json"):
+    return {
+        "schema_version": "same-tree-practical-closure/v1",
+        "status": "pass",
+        "promotion_allowed": True,
+        "trade_usable": True,
+        "provider_execution_feedback_chain": "pass",
+        "evidence_packet": evidence_packet,
+    }
+""",
+        )
+
+        report = checker.check_source_file(path)
+
+        self.assertFalse(report["ok"])
+        self.assertEqual(
+            {hit["violation"] for hit in report["violations"]},
+            {"manual_same_tree_practical_closure_packet_writer"},
+        )
 
     def test_flags_local_same_tree_practical_closure_builder_spoof(self) -> None:
         path = self.write_source(
