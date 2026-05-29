@@ -2387,6 +2387,94 @@ trade_usable=false
         self.assertEqual(compact["attention_claim_count"], 0)
         self.assertEqual(compact["attention_action_queue"]["fresh_active_claims_without_live_process"], [])
 
+    def test_valid_source_cost_reserve_claim_does_not_block_factor_closure(self) -> None:
+        with tempfile.TemporaryDirectory() as repo_tmp, tempfile.TemporaryDirectory() as claims_tmp:
+            repo_root = Path(repo_tmp)
+            claims_dir = Path(claims_tmp)
+            run_root = Path(repo_tmp) / "ict-engine-6l-source-cost-reserve"
+            run_root.mkdir()
+            (run_root / "workdoc.md").write_text("# source cost reserve\n", encoding="utf-8")
+
+            (claims_dir / "source-cost-reserve.claim").write_text(
+                json.dumps(
+                    {
+                        "agent_name": "codex-6l-eth-brl-selic-terms-vwap-reclaim-reserve",
+                        "owner": "codex",
+                        "claimed_at": "2026-05-30T06:07:33+0800",
+                        "last_progress_at": "2026-05-30T06:07:33+0800",
+                        "scope": "Board B source/cost reserve packet for 6L futures ETH/full-session factor branch.",
+                        "active_task": "Capture official source/cost reserve only while fresh active Board B claims block runtime launches; no provider, IBKR historical, AutoQuant, Freqtrade, paper, sim, live, lifecycle, downstream, or local backtest launch.",
+                        "non_goals": "no provider-status; no provider fetch; no IBKR historical; no AutoQuant/Freqtrade/TOMAC launch; no paper/sim/live; no downstream lifecycle; no promotion_allowed=true; no trade_usable=true.",
+                        "write_surface": str(run_root / "workdoc.md"),
+                        "run_root": str(run_root),
+                        "tmp_root": str(run_root),
+                        "branch_path": "FUTURES -> FXFutures -> 6L -> ETH/full_retained_session -> source_cost_reserve",
+                        "factor_id": "6l_eth_brl_selic_terms_vwap_reclaim_v1",
+                        "session_scope": "ETH/full_retained_session",
+                        "rth_filter_applied": False,
+                        "coverage_evidence": "not_validated_source_only",
+                        "status": "active_source_cost_reserve",
+                        "progress_report": "created source/cost reserve packet; no provider, IBKR historical, AutoQuant, Freqtrade, paper, sim, live, lifecycle, downstream, or local backtest launched.",
+                        "promotion_allowed": False,
+                        "trade_usable": False,
+                        "update_goal": False,
+                    },
+                    indent=2,
+                ),
+                encoding="utf-8",
+            )
+
+            report = build_report(claims_dir=claims_dir, repo_root=repo_root)
+            compact = format_report(report, compact=True)
+
+        self.assertEqual(report["summary"]["status"], "pass")
+        self.assertEqual(report["summary"]["active_claims"], 0)
+        self.assertEqual(report["summary"]["coordination_only_active_claims"], 1)
+        self.assertEqual(report["summary"]["blocking_reasons"], [])
+        self.assertEqual(compact["attention_claim_count"], 0)
+        self.assertEqual(compact["attention_action_queue"]["fresh_active_claims_without_live_process"], [])
+
+    def test_generic_active_source_cost_reserve_claim_does_not_block_factor_closure(self) -> None:
+        with tempfile.TemporaryDirectory() as repo_tmp, tempfile.TemporaryDirectory() as claims_tmp:
+            repo_root = Path(repo_tmp)
+            claims_dir = Path(claims_tmp)
+            run_root = Path(repo_tmp) / "ict-engine-6l-source-cost-reserve"
+            run_root.mkdir()
+            (run_root / "workdoc.md").write_text("# source cost reserve\n", encoding="utf-8")
+
+            (claims_dir / "source-cost-reserve.claim").write_text(
+                f"""
+agent_name: codex-6l-eth-brl-selic-terms-vwap-reclaim-reserve
+owner: codex
+claimed_at: 2026-05-30T06:07:33+0800
+last_progress_at: 2026-05-30T06:07:33+0800
+scope: Board B source/cost reserve packet for 6L/CME Brazilian Real futures ETH/full-session Selic-terms VWAP reclaim factor branch.
+active_task: Capture official source/cost reserve only while fresh active Board B claims block runtime launches; terminalize same turn with no provider/AQ/IBKR historical/local backtest launch.
+non_goals: no provider-status; no provider fetch; no IBKR historical; no AutoQuant/Freqtrade/TOMAC launch; no paper/sim/live; no downstream lifecycle; no promotion_allowed=true; no trade_usable=true.
+write_surface: {run_root / 'workdoc.md'}
+run_root: {run_root}
+tmp_root: {run_root}
+branch_path: FUTURES -> FXFutures -> 6L -> ETH/full_retained_session -> source_cost_reserve
+factor_id: 6l_eth_brl_selic_terms_vwap_reclaim_v1
+status: active
+promotion_allowed: false
+trade_usable: false
+update_goal: false
+progress_report: created source/cost reserve packet; no provider, IBKR historical, AutoQuant, Freqtrade, paper, sim, live, lifecycle, downstream, or local backtest launched.
+""".strip(),
+                encoding="utf-8",
+            )
+
+            report = build_report(claims_dir=claims_dir, repo_root=repo_root)
+            compact = format_report(report, compact=True)
+
+        self.assertEqual(report["summary"]["status"], "pass")
+        self.assertEqual(report["summary"]["active_claims"], 0)
+        self.assertEqual(report["summary"]["coordination_only_active_claims"], 1)
+        self.assertEqual(report["summary"]["blocking_reasons"], [])
+        self.assertEqual(compact["attention_claim_count"], 0)
+        self.assertEqual(compact["attention_action_queue"]["fresh_active_claims_without_live_process"], [])
+
     def test_build_report_flags_active_claims_missing_board_local_identity_fields(self) -> None:
         with tempfile.TemporaryDirectory() as repo_tmp, tempfile.TemporaryDirectory() as claims_tmp:
             repo_root = Path(repo_tmp)

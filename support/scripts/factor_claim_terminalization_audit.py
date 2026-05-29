@@ -571,16 +571,21 @@ def read_claim(path: Path, root: Path) -> dict[str, Any]:
 
 def _is_coordination_only_claim(fields: dict[str, Any]) -> bool:
     status = str(fields.get("status") or "").strip().lower()
+    text = _claim_purpose_text(fields)
     coordination_status = (
         status.startswith("active_audit_only")
         or status.startswith("active_coordination_only")
         or status.startswith("active_inventory")
+        or status.startswith("active_source_cost_reserve")
+        or status.startswith("active_source_reserve")
+        or status.startswith("active_cost_reserve")
+        or status.startswith("active_knowledge_reserve")
     )
-    if not coordination_status:
+    coordination_text = _purpose_is_non_runtime_coordination(text)
+    if not coordination_status and not coordination_text:
         return False
     if fields.get("promotion_allowed") is not False or fields.get("trade_usable") is not False:
         return False
-    text = _claim_purpose_text(fields)
     purpose_markers = (
         "audit",
         "loophole",
@@ -589,6 +594,13 @@ def _is_coordination_only_claim(fields: dict[str, Any]) -> bool:
         "read-only",
         "inventory",
         "artifact scan",
+        "source/cost reserve",
+        "source-cost reserve",
+        "source reserve",
+        "cost reserve",
+        "knowledge reserve",
+        "source intake",
+        "source-intake",
     )
     if not any(marker in text for marker in purpose_markers):
         return False
@@ -603,6 +615,36 @@ def _is_coordination_only_claim(fields: dict[str, Any]) -> bool:
         "read-only claim/workdoc/artifact inspection",
     )
     return any(marker in text for marker in no_launch_markers)
+
+
+def _purpose_is_non_runtime_coordination(text: str) -> bool:
+    reserve_markers = (
+        "source/cost reserve",
+        "source-cost reserve",
+        "source reserve",
+        "cost reserve",
+        "knowledge reserve",
+        "source intake",
+        "source-intake",
+    )
+    no_launch_markers = (
+        "no provider",
+        "no provider-status",
+        "no provider fetch",
+        "no ibkr historical",
+        "no autoquant",
+        "no auto-quant",
+        "no freqtrade",
+        "no tomac launch",
+        "no paper",
+        "no sim",
+        "no live",
+        "no downstream lifecycle",
+        "no local backtest launch",
+    )
+    return any(marker in text for marker in reserve_markers) and any(
+        marker in text for marker in no_launch_markers
+    )
 
 
 def _claim_purpose_text(fields: dict[str, Any]) -> str:

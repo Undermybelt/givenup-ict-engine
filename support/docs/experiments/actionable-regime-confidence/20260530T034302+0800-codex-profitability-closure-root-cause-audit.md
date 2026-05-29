@@ -239,6 +239,33 @@ admission owners where current evidence shows a system loophole.
   `trade_usable_true=0`, and `same_tree_practical_closure=null`. Runtime remains
   blocked by fresh PA/NQ/ZR/ZT source or cost reserve claims and a new live MGC
   AQ root.
+- 2026-05-30T06:25+0800: fixed the next compact-audit ownership loophole:
+  source/cost reserve and knowledge-reserve claims are non-runtime coordination
+  work when they explicitly keep `promotion_allowed=false`,
+  `trade_usable=false`, and state no provider, IBKR historical, AutoQuant,
+  Freqtrade/TOMAC, paper/sim/live, downstream lifecycle, or local backtest
+  launch. Before this fix, a valid low-collision reserve packet such as
+  `20260530T060733+0800-codex-6l-eth-brl-selic-terms-vwap-reclaim-reserve.claim`
+  was counted as `fresh_active_claims_without_live_process`, creating the loop
+  `runtime blocked -> create reserve packet -> reserve packet blocks runtime`.
+  Added RED/GREEN coverage for both explicit `active_source_cost_reserve` and
+  generic `status: active` reserve claims, then extended the canonical
+  coordination-only classifier. Verification passed:
+  `python3 -m unittest support.scripts.tests.test_factor_claim_terminalization_audit -v`
+  ran 99 tests OK;
+  `python3 -m py_compile support/scripts/factor_claim_terminalization_audit.py support/scripts/tests/test_factor_claim_terminalization_audit.py`
+  passed. Same-turn compact claim audit now reports `status=pass`,
+  `active_claims=0`, `live_factor_processes=0`, `blocking_reasons=[]`, while
+  still reporting no practical factor: `promotion_allowed_true=0`,
+  `trade_usable_true=0`, and `same_tree_practical_closure=null`.
+  A later 2026-05-30T06:27+0800 compact audit observed fresh external state
+  drift after the fix: two new active claims appeared
+  (`20260530T062401+0800-codex-nq-compound-rv-stress-lifecycle-driver.claim`
+  and
+  `20260530T062459+0800-codex-ym-eth-stoprun-compression-reclaim-local-aq-launch.claim`),
+  so launch work is again blocked by current claim ownership. That newer
+  blocker does not reclassify reserve packets as runtime owners, and practical
+  counts remain zero.
 
 ## Root Cause Readback
 
