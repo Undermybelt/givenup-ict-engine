@@ -338,6 +338,203 @@ class ObjectiveClosureSnapshotTest(unittest.TestCase):
         )
         self.assertTrue(staged_manifest_exists)
 
+    def test_build_snapshot_blocks_on_untracked_await_launch_source_debt(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp)
+            audit_results = {
+                "done_definition": {
+                    "command": {"argv": ["done"], "returncode": 0},
+                    "report": {
+                        "timestamp_utc": "2026-05-29T00:55:00Z",
+                        "summary": {
+                            "status": "pass",
+                            "completion_ready": True,
+                            "evidence_level": "full_enabled_gate_coverage",
+                            "unresolved": [],
+                            "skipped_gates": [],
+                            "next_action": "done-definition gates have full enabled coverage",
+                        },
+                        "gates": [
+                            {"id": "quickstart_surface", "status": "pass"},
+                            {
+                                "id": "await_launch_source_surface",
+                                "status": "pass",
+                                "details": {
+                                    "tracked_violation_count": 0,
+                                    "untracked_violation_count": 2,
+                                    "untracked_violating_files": 2,
+                                    "sample_violations": [
+                                        {
+                                            "file": "support/docs/experiments/actionable-regime-confidence/scripts/run_tomac_bad_await_launch_v1.py",
+                                            "violation": "await_launch_active_claim_guard_missing",
+                                        }
+                                    ],
+                                },
+                            },
+                        ],
+                    },
+                    "output_path": output_dir / "done_definition_audit.compact.json",
+                },
+                "factor_closure": {
+                    "command": {"argv": ["factor"], "returncode": 0},
+                    "report": {
+                        "generated_at": "2026-05-29T00:55:01+00:00",
+                        "summary": {
+                            "status": "pass",
+                            "active_claims": 0,
+                            "invalid_active_claims": 0,
+                            "live_factor_processes": 0,
+                            "blocking_reasons": [],
+                            "promotion_allowed_true": 1,
+                            "trade_usable_true": 1,
+                            "next_action": "no claim terminalization blockers found",
+                        },
+                        "attention_claim_count": 0,
+                        "attention_live_process_count": 0,
+                        "attention_groups": {"by_owner": {}},
+                    },
+                    "output_path": output_dir / "factor_claim_terminalization_audit.compact.json",
+                },
+                "release_readiness": {
+                    "command": {"argv": ["release"], "returncode": 0},
+                    "report": {
+                        "timestamp_utc": "2026-05-29T00:55:02Z",
+                        "summary": {"status": "pass", "unresolved": [], "pass_count": 3, "fail_count": 0, "skip_count": 0},
+                    },
+                    "output_path": output_dir / "release_readiness_audit.compact.json",
+                },
+            }
+
+            snapshot = build_snapshot(
+                audit_results,
+                run_all_heavy=True,
+                check_remotes=True,
+                output_dir=output_dir,
+            )
+
+        summary = snapshot["summary"]
+        self.assertEqual(summary["status"], "not_complete")
+        self.assertIn("await_launch_source_debt", summary["blockers"])
+        self.assertEqual(
+            summary["blocker_details"]["await_launch_source_debt"],
+            {
+                "tracked_violation_count": 0,
+                "tracked_violating_files": None,
+                "untracked_violation_count": 2,
+                "untracked_violating_files": 2,
+                "violation_count": None,
+                "violating_files": None,
+            },
+        )
+        self.assertIn(
+            {
+                "surface": "done_definition",
+                "reason": "await_launch_source_debt",
+                "action": "retire, quarantine, or track await-launch wrappers that can launch with active/fresh claims present",
+            },
+            summary["prioritized_next_actions"],
+        )
+        self.assertEqual(
+            snapshot["audits"]["done_definition"]["surface"]["await_launch_source_surface"]["untracked_violation_count"],
+            2,
+        )
+
+    def test_build_snapshot_stages_await_launch_source_debt_manifest(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp)
+            source_manifest = output_dir / "child-await-launch-debt.json"
+            source_manifest.write_text(
+                json.dumps(
+                    {
+                        "schema_version": "await-launch-source-debt/v1",
+                        "summary": {"untracked_violation_count": 2},
+                        "untracked_violations": [{"file": "run_tomac_bad_await_launch_v1.py"}],
+                    }
+                ),
+                encoding="utf-8",
+            )
+            audit_results = {
+                "done_definition": {
+                    "command": {"argv": ["done"], "returncode": 0},
+                    "report": {
+                        "timestamp_utc": "2026-05-29T01:00:00Z",
+                        "summary": {
+                            "status": "pass",
+                            "completion_ready": True,
+                            "evidence_level": "full_enabled_gate_coverage",
+                            "unresolved": [],
+                            "skipped_gates": [],
+                            "next_action": "done-definition gates have full enabled coverage",
+                        },
+                        "gates": [
+                            {"id": "quickstart_surface", "status": "pass"},
+                            {
+                                "id": "await_launch_source_surface",
+                                "status": "pass",
+                                "details": {
+                                    "tracked_violation_count": 0,
+                                    "untracked_violation_count": 2,
+                                    "untracked_violating_files": 2,
+                                    "debt_manifest_file": str(source_manifest),
+                                    "quarantine": {
+                                        "matched": True,
+                                        "decision": "quarantined_untracked_await_launch_debt",
+                                        "manifest_file": "support/docs/audits/await-launch-source-debt-quarantine.json",
+                                    },
+                                },
+                            },
+                        ],
+                    },
+                    "output_path": output_dir / "done_definition_audit.compact.json",
+                },
+                "factor_closure": {
+                    "command": {"argv": ["factor"], "returncode": 0},
+                    "report": {
+                        "generated_at": "2026-05-29T01:00:01+00:00",
+                        "summary": {
+                            "status": "pass",
+                            "active_claims": 0,
+                            "invalid_active_claims": 0,
+                            "live_factor_processes": 0,
+                            "blocking_reasons": [],
+                            "promotion_allowed_true": 1,
+                            "trade_usable_true": 1,
+                            "next_action": "no claim terminalization blockers found",
+                        },
+                        "attention_claim_count": 0,
+                        "attention_live_process_count": 0,
+                        "attention_groups": {"by_owner": {}},
+                    },
+                    "output_path": output_dir / "factor_claim_terminalization_audit.compact.json",
+                },
+                "release_readiness": {
+                    "command": {"argv": ["release"], "returncode": 0},
+                    "report": {
+                        "timestamp_utc": "2026-05-29T01:00:02Z",
+                        "summary": {"status": "pass", "unresolved": [], "pass_count": 3, "fail_count": 0, "skip_count": 0},
+                    },
+                    "output_path": output_dir / "release_readiness_audit.compact.json",
+                },
+            }
+
+            snapshot = build_snapshot(
+                audit_results,
+                run_all_heavy=True,
+                check_remotes=True,
+                output_dir=output_dir,
+            )
+            staged_manifest_exists = (output_dir / "await_launch_source_debt_manifest.json").exists()
+
+        self.assertTrue(staged_manifest_exists)
+        self.assertEqual(
+            snapshot["evidence_files"]["await_launch_source_debt_manifest"],
+            "await_launch_source_debt_manifest.json",
+        )
+        self.assertEqual(
+            snapshot["summary"]["blocker_details"]["quarantined_await_launch_source_debt"]["debt_manifest_file"],
+            "await_launch_source_debt_manifest.json",
+        )
+
     def test_summarize_snapshot_does_not_prioritize_done_definition_when_full_coverage_passes(self) -> None:
         summary = summarize_snapshot(
             {

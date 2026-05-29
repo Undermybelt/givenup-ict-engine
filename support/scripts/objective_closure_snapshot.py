@@ -201,6 +201,7 @@ def _done_surface(report: dict[str, Any]) -> dict[str, Any]:
     gates = report.get("gates", [])
     quickstart_status = None
     practical_admission_source_surface = None
+    await_launch_source_surface = None
     if isinstance(gates, list):
         for gate in gates:
             if not isinstance(gate, dict):
@@ -208,19 +209,9 @@ def _done_surface(report: dict[str, Any]) -> dict[str, Any]:
             if gate.get("id") == "quickstart_surface":
                 quickstart_status = gate.get("status")
             elif gate.get("id") == "practical_admission_source_surface":
-                details = gate.get("details", {})
-                practical_admission_source_surface = {
-                    "status": gate.get("status"),
-                    "tracked_violation_count": details.get("tracked_violation_count"),
-                    "tracked_violating_files": details.get("tracked_violating_files"),
-                    "untracked_violation_count": details.get("untracked_violation_count"),
-                    "untracked_violating_files": details.get("untracked_violating_files"),
-                    "violation_count": details.get("violation_count"),
-                    "violating_files": details.get("violating_files"),
-                    "debt_manifest_file": details.get("debt_manifest_file"),
-                    "quarantine": details.get("quarantine"),
-                    "sample_violations": details.get("sample_violations", []),
-                }
+                practical_admission_source_surface = _source_debt_surface(gate)
+            elif gate.get("id") == "await_launch_source_surface":
+                await_launch_source_surface = _source_debt_surface(gate)
     return {
         "head": report.get("head"),
         "report_timestamp": report.get("timestamp_utc"),
@@ -229,9 +220,28 @@ def _done_surface(report: dict[str, Any]) -> dict[str, Any]:
         "evidence_level": summary.get("evidence_level"),
         "quickstart_surface": quickstart_status,
         "practical_admission_source_surface": practical_admission_source_surface,
+        "await_launch_source_surface": await_launch_source_surface,
         "unresolved": summary.get("unresolved", []),
         "skipped_gates": summary.get("skipped_gates", []),
         "next_action": summary.get("next_action"),
+    }
+
+
+def _source_debt_surface(gate: dict[str, Any]) -> dict[str, Any]:
+    details = gate.get("details", {})
+    if not isinstance(details, dict):
+        details = {}
+    return {
+        "status": gate.get("status"),
+        "tracked_violation_count": details.get("tracked_violation_count"),
+        "tracked_violating_files": details.get("tracked_violating_files"),
+        "untracked_violation_count": details.get("untracked_violation_count"),
+        "untracked_violating_files": details.get("untracked_violating_files"),
+        "violation_count": details.get("violation_count"),
+        "violating_files": details.get("violating_files"),
+        "debt_manifest_file": details.get("debt_manifest_file"),
+        "quarantine": details.get("quarantine"),
+        "sample_violations": details.get("sample_violations", []),
     }
 
 
@@ -520,6 +530,71 @@ def _apply_release_readiness_proof(
     return merged
 
 
+def _source_debt_detail(source_surface: dict[str, Any]) -> dict[str, Any]:
+    detail = {
+        "tracked_violation_count": source_surface.get("tracked_violation_count"),
+        "tracked_violating_files": source_surface.get("tracked_violating_files"),
+        "untracked_violation_count": source_surface.get("untracked_violation_count"),
+        "untracked_violating_files": source_surface.get("untracked_violating_files"),
+        "violation_count": source_surface.get("violation_count"),
+        "violating_files": source_surface.get("violating_files"),
+    }
+    debt_manifest_file = source_surface.get("debt_manifest_file")
+    if debt_manifest_file is not None:
+        detail["debt_manifest_file"] = debt_manifest_file
+    return detail
+
+
+def _add_source_debt_blocker(
+    blockers: list[str],
+    blocker_details: dict[str, Any],
+    source_surface: dict[str, Any] | None,
+    *,
+    blocker_key: str,
+    quarantined_key: str | None = None,
+) -> tuple[bool, bool]:
+    if not isinstance(source_surface, dict):
+        return False, False
+    untracked_count = source_surface.get("untracked_violation_count")
+    tracked_count = source_surface.get("tracked_violation_count")
+    has_debt = any(isinstance(value, int) and value > 0 for value in (tracked_count, untracked_count))
+    if not has_debt:
+        return False, False
+    quarantine = source_surface.get("quarantine")
+    quarantine_matched = isinstance(quarantine, dict) and quarantine.get("matched") is True
+    detail_key = quarantined_key if quarantine_matched and quarantined_key else blocker_key
+    if not quarantine_matched:
+        blockers.append(blocker_key)
+    detail = _source_debt_detail(source_surface)
+    if quarantine_matched:
+        detail["quarantine_manifest_file"] = quarantine.get("manifest_file")
+    blocker_details[detail_key] = detail
+    return True, quarantine_matched
+
+
+def _stage_source_debt_manifest(
+    source_surface: dict[str, Any] | None,
+    *,
+    output_dir: Path | None,
+    staged_name: str,
+    evidence_key: str,
+    evidence_files: dict[str, Any],
+) -> None:
+    if not output_dir or not isinstance(source_surface, dict):
+        return
+    debt_manifest_file = source_surface.get("debt_manifest_file")
+    if not isinstance(debt_manifest_file, str) or not debt_manifest_file:
+        return
+    source_path = Path(debt_manifest_file).expanduser()
+    if not source_path.exists():
+        return
+    staged_path = output_dir / staged_name
+    if source_path.resolve() != staged_path.resolve():
+        shutil.copyfile(source_path, staged_path)
+    source_surface["debt_manifest_file"] = _portable_path(staged_path, output_dir=output_dir)
+    evidence_files[evidence_key] = _portable_path(staged_path, output_dir=output_dir)
+
+
 def summarize_snapshot(
     done_surface: dict[str, Any],
     factor_surface: dict[str, Any],
@@ -534,30 +609,21 @@ def summarize_snapshot(
     if done_surface.get("quickstart_surface") != "pass":
         blockers.append("quickstart_surface_drift")
     practical_source = done_surface.get("practical_admission_source_surface")
-    if isinstance(practical_source, dict):
-        untracked_count = practical_source.get("untracked_violation_count")
-        if isinstance(untracked_count, int) and untracked_count > 0:
-            quarantine = practical_source.get("quarantine")
-            quarantine_matched = isinstance(quarantine, dict) and quarantine.get("matched") is True
-            detail_key = (
-                "quarantined_practical_admission_source_debt"
-                if quarantine_matched
-                else "practical_admission_source_debt"
-            )
-            if not quarantine_matched:
-                blockers.append("practical_admission_source_debt")
-            detail = {
-                "tracked_violation_count": practical_source.get("tracked_violation_count"),
-                "tracked_violating_files": practical_source.get("tracked_violating_files"),
-                "untracked_violation_count": practical_source.get("untracked_violation_count"),
-                "untracked_violating_files": practical_source.get("untracked_violating_files"),
-                "violation_count": practical_source.get("violation_count"),
-                "violating_files": practical_source.get("violating_files"),
-                "debt_manifest_file": practical_source.get("debt_manifest_file"),
-            }
-            if quarantine_matched:
-                detail["quarantine_manifest_file"] = quarantine.get("manifest_file")
-            blocker_details[detail_key] = detail
+    _add_source_debt_blocker(
+        blockers,
+        blocker_details,
+        practical_source,
+        blocker_key="practical_admission_source_debt",
+        quarantined_key="quarantined_practical_admission_source_debt",
+    )
+    await_launch_source = done_surface.get("await_launch_source_surface")
+    await_launch_has_debt, await_launch_quarantined = _add_source_debt_blocker(
+        blockers,
+        blocker_details,
+        await_launch_source,
+        blocker_key="await_launch_source_debt",
+        quarantined_key="quarantined_await_launch_source_debt",
+    )
     if factor_surface.get("status") != "pass":
         blockers.append("factor_closure_blocked")
     practical_closure = _same_tree_practical_closure_detail(factor_surface)
@@ -631,6 +697,14 @@ def summarize_snapshot(
                     "action": "retire, quarantine, or track unsafe untracked practical-admission wrappers before objective closure",
                 }
             )
+    if await_launch_has_debt and not await_launch_quarantined:
+        prioritized_next_actions.append(
+            {
+                "surface": "done_definition",
+                "reason": "await_launch_source_debt",
+                "action": "retire, quarantine, or track await-launch wrappers that can launch with active/fresh claims present",
+            }
+        )
     factor_next = factor_surface.get("next_action")
     if isinstance(factor_next, str) and factor_next:
         factor_queue = factor_surface.get("attention_action_queue", {})
@@ -813,20 +887,20 @@ def build_snapshot(
         name: _portable_path(spec.get("output_path"), output_dir=output_dir)
         for name, spec in audit_results.items()
     }
-    practical_source = done_surface.get("practical_admission_source_surface")
-    if output_dir and isinstance(practical_source, dict):
-        debt_manifest_file = practical_source.get("debt_manifest_file")
-        if isinstance(debt_manifest_file, str) and debt_manifest_file:
-            source_path = Path(debt_manifest_file).expanduser()
-            if source_path.exists():
-                staged_path = output_dir / "practical_admission_source_debt_manifest.json"
-                if source_path.resolve() != staged_path.resolve():
-                    shutil.copyfile(source_path, staged_path)
-                practical_source["debt_manifest_file"] = _portable_path(staged_path, output_dir=output_dir)
-                evidence_files["practical_admission_source_debt_manifest"] = _portable_path(
-                    staged_path,
-                    output_dir=output_dir,
-                )
+    _stage_source_debt_manifest(
+        done_surface.get("practical_admission_source_surface"),
+        output_dir=output_dir,
+        staged_name="practical_admission_source_debt_manifest.json",
+        evidence_key="practical_admission_source_debt_manifest",
+        evidence_files=evidence_files,
+    )
+    _stage_source_debt_manifest(
+        done_surface.get("await_launch_source_surface"),
+        output_dir=output_dir,
+        staged_name="await_launch_source_debt_manifest.json",
+        evidence_key="await_launch_source_debt_manifest",
+        evidence_files=evidence_files,
+    )
     summary = summarize_snapshot(
         done_surface,
         factor_surface,

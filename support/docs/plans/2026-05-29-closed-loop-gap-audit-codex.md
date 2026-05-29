@@ -724,3 +724,331 @@ training/refinement.
   create a practical factor, does not mark any active claim terminal, and does
   not complete the full objective. Practical flags remain
   `promotion_allowed=false`, `trade_usable=false`, and `update_goal=false`.
+
+## 2026-05-29T08:16+0800 Current-Head Objective Snapshot / Fresh Screen Blocker
+
+- Fresh routed continuation re-read `skill-router.md`, `project-router.md`, repo
+  `CLAUDE.md`/`AGENTS.md`/`AGENT.md`, and installed runtime skill
+  `software-development/ict-engi-fact-rese-muta/SKILL.md` before action.
+- Current head was `00ae7f7058a278dd7871369671545ec6c1be8577`
+  (`00ae7f70 Surface practical closure packets`).
+- Initial compact factor audit at `2026-05-29T08:12+0800` exited `0` with
+  `active_claims=0`, `live_factor_processes=0`, `promotion_allowed_true=0`,
+  `trade_usable_true=0`, and `same_tree_practical_closure=null`.
+- Proof-backed current-head snapshot command:
+  `python3 support/scripts/objective_closure_snapshot.py --compact --check-remotes --output-dir /tmp/ict-engine-closure-current-00ae7f70-20260529T081343`.
+- Snapshot artifact:
+  `/tmp/ict-engine-closure-current-00ae7f70-20260529T081343/objective_closure_snapshot.json`.
+- Exit code `1`; status `not_complete`. Blockers were
+  `done_definition_not_completion_ready`, `same_tree_practical_closure_unproven`,
+  and `release_readiness_blocked`. The done-definition child was partial because
+  heavy gates were skipped; release readiness ran remote checks but still failed
+  `worktree_clean_for_release` and `source_origin_matches_selected_source`.
+- Factor closure child in the snapshot passed coordination hygiene but still had
+  `same_tree_practical_closure=null`; manual requirements remain
+  `same_tree_practical_closure_packet` and `truthful_completion_commit`.
+- Immediately after the snapshot, a fresh top-level TOMAC screen owner appeared:
+  `/tmp/ict-engine-agent-claims/board-b-factor-refinement/20260529T081315+0800-codex-tomac-top-level-variant-screen.claim`.
+  Its workdoc is
+  `/tmp/ict-engine-tomac-top-level-variant-screen-20260529T081315+0800/workdoc.md`.
+- Follow-up compact audit exited `1` with `active_claims=1`,
+  `fresh_active_claims_without_live_process=1`, `live_factor_processes=0`, and
+  `same_tree_practical_closure=null`. Decision: do not duplicate the top-level
+  candidate-selection lane or launch provider/AQ/TOMAC work while that fresh
+  screen claim is active.
+- Heavy done-definition proof for this same head already exists at
+  `/tmp/ict-engine-done-definition-heavy-20260529-current-head-00ae7f70.json`
+  with `completion_ready=true`, `evidence_level=full_enabled_gate_coverage`,
+  `pass_count=9`, `fail_count=0`, and `skip_count=0`; it does not remove the
+  practical-closure or release-readiness blockers.
+- The screen owner terminalized selection-only at `2026-05-29T08:18+0800` and
+  selected `wpr_fractal_ict_zone_reclaim` as the next branch, but a new live WPR
+  clean-AQ owner immediately appeared. Compact audit at `2026-05-29T08:20+0800`
+  exited `1` with `active_claims=2`, `live_factor_processes=1`,
+  `promotion_allowed_true=0`, `trade_usable_true=0`, and
+  `same_tree_practical_closure=null`.
+- The live owner/root was
+  `/tmp/ict-engine-tomac-wpr-fractal-ict-zone-reclaim-20260529T081825+0800`
+  with process `run_tomac_index_futures_clean_aq_v1.py --families wpr_fractal_ict_zone_reclaim`.
+  A separate fresh WPR packet at
+  `/tmp/ict-engine-tomac-wpr-fractal-ict-zone-reclaim-20260529T081804+0800/workdoc.md`
+  remained active without a live process. Decision remains read-only until the
+  WPR owners terminalize or become stale-safe under the claim rules.
+
+## 2026-05-29T08:25+0800 Proof-Backed Snapshot / Live ICT Gate-1 Blocker
+
+- Committed verified packet producer repair as
+  `00ae7f7058a278dd7871369671545ec6c1be8577` (`Surface practical closure packets`).
+- Fresh heavy done-definition proof for that exact head:
+  `/tmp/ict-engine-done-definition-heavy-20260529-current-head-00ae7f70.json`.
+  It exited `0` with `completion_ready=true`,
+  `evidence_level=full_enabled_gate_coverage`, `pass_count=9`, `fail_count=0`,
+  and `skip_count=0`.
+- Proof-backed remote snapshot:
+  `python3 support/scripts/objective_closure_snapshot.py --compact --check-remotes --done-definition-proof /tmp/ict-engine-done-definition-heavy-20260529-current-head-00ae7f70.json --output-dir /tmp/ict-engine-closure-proof-backed-current-head-00ae7f70-20260529T0819`.
+- Snapshot artifact:
+  `/tmp/ict-engine-closure-proof-backed-current-head-00ae7f70-20260529T0819/objective_closure_snapshot.json`.
+- Snapshot exited `1`. Done-definition proof applied and remote checks ran. It
+  remained `not_complete` with blockers `factor_closure_blocked` and
+  `release_readiness_blocked`. Release readiness failed
+  `worktree_clean_for_release` and `source_origin_matches_selected_source`; no
+  remote gate was skipped.
+- During the snapshot, fresh factor owners appeared and later narrowed to the
+  current live owner:
+  `/tmp/ict-engine-agent-claims/board-b-factor-refinement/20260529T082112+0800-codex-tomac-ict-liquidity-sweep-fvg-ob-xau-ym-eur-gate1.claim`.
+- Current compact audit at `2026-05-29T08:25+0800` exited `1` with
+  `active_claims=1`, `live_factor_processes=1`, `promotion_allowed_true=0`,
+  `trade_usable_true=0`, and `same_tree_practical_closure=null`.
+- Live process: PID `31741`, local Gate 1 command
+  `run_tomac_ict_liquidity_sweep_reclaim_gate1_v1.py --symbols XAU,YM,EUR`
+  writing under
+  `/tmp/ict-engine-tomac-ict-liquidity-sweep-fvg-ob-xau-ym-eur-gate1-20260529T082112+0800`.
+- Decision: no takeover, provider, AQ, Freqtrade, broker, paper, sim, live, or
+  sibling TOMAC launch while this owner is live. Full objective remains
+  incomplete; practical flags remain false.
+- Follow-up WPR readback: the duplicate `082029` WPR claim terminalized
+  `duplicate_claim_terminalized_no_launch`, and the `081825` WPR claim
+  terminalized `terminalized_collision_aborted_invalid_partial_no_evidence`.
+  Its workdoc reports the final self-claim parser found foreign fresh active
+  claims before launch, but the shell did not abort automatically after parser
+  failure, so a `run_tomac_index_futures_clean_aq_v1.py` process briefly started
+  and was terminated before any `run/` artifacts or terminal metrics were
+  produced. Treat that root as invalid partial non-evidence.
+- Current compact audit at `2026-05-29T08:23+0800` exited `1` with one remaining
+  fresh active claim and no live process:
+  `/tmp/ict-engine-agent-claims/board-b-factor-refinement/20260529T082112+0800-codex-tomac-ict-liquidity-sweep-fvg-ob-xau-ym-eur-gate1.claim`.
+  Its workdoc is
+  `/tmp/ict-engine-tomac-ict-liquidity-sweep-fvg-ob-xau-ym-eur-gate1-20260529T082112+0800/workdoc.md`.
+  `promotion_allowed_true=0`, `trade_usable_true=0`, and
+  `same_tree_practical_closure=null`; decision remains read-only until that
+  fresh ICT FVG/OB Gate1 owner progresses, terminalizes, or becomes stale-safe.
+- Bounded final poll at `2026-05-29T08:26+0800` showed that same ICT FVG/OB claim
+  had advanced to a live local Gate 1 screen. Compact audit exited `1` with
+  `active_claims=1`, `live_factor_processes=1`, `promotion_allowed_true=0`,
+  `trade_usable_true=0`, and `same_tree_practical_closure=null`. The live root
+  is `/tmp/ict-engine-tomac-ict-liquidity-sweep-fvg-ob-xau-ym-eur-gate1-20260529T082112+0800`;
+  process table showed `run_tomac_ict_liquidity_sweep_reclaim_gate1_v1.py --symbols XAU,YM,EUR`
+  still running. Do not take over, terminalize, or launch sibling factor work
+  while this owner is live.
+
+## 2026-05-29T08:48+0800 Await-Launch Source Guard / ICT Gate1 Terminal Readback
+
+- Current live ICT FVG/OB Gate1 owner terminalized fail-closed before this
+  slice's final readback. Claim
+  `/tmp/ict-engine-agent-claims/board-b-factor-refinement/20260529T082112+0800-codex-tomac-ict-liquidity-sweep-fvg-ob-xau-ym-eur-gate1.claim`
+  now has `status=terminalized_gate1_no_5bps_survivor`,
+  `decision=terminalized_gate1_no_5bps_survivor`, `promotion_allowed=false`,
+  `trade_usable=false`, and `update_goal=false`.
+- Terminal artifacts under
+  `/tmp/ict-engine-tomac-ict-liquidity-sweep-fvg-ob-xau-ym-eur-gate1-20260529T082112+0800/gate1/`
+  show `candidates=1296`, `survivor_count=0`, all rows
+  `reject_5bps_economics`, and `positive_5bps_rows=0`. Best displayed XAU row
+  still had `net_ret_5bps=-0.6422531021930309` and
+  `pf_5bps=0.041870224202593447`; no AQ/downstream/pre-bayes/BBN/CatBoost/
+  execution-tree launch is allowed from this branch.
+- Static loophole root cause: generated `run_*await_launch_v1.py` wrappers can
+  check only `live_factor_processes` before calling child prep/launch wrappers.
+  That pattern can bypass a fresh active claim that has no live process yet,
+  matching the WPR invalid partial collision shape seen earlier in this tracker.
+- Scoped repair: `support/scripts/done_definition_audit.py` now has an
+  audit-only `await_launch_source_surface` gate. It scans
+  `run_*await_launch_v1.py` wrappers for `audit_ready` functions that reference
+  `live_factor_processes` without active/fresh claim counters, reports
+  `await_launch_active_claim_guard_missing`, preserves pass-state untracked debt
+  in compact output, and remains read-only.
+- Propagation repair: `support/scripts/objective_closure_snapshot.py` now reads
+  `await_launch_source_surface` and blocks objective closure on
+  `await_launch_source_debt` when untracked/unsafe await-launch wrappers are not
+  retired, quarantined, or tracked. Applying a valid heavy done-definition proof
+  still preserves the current lightweight source-debt surfaces.
+- Current compact done-definition readback exited `0` but is not completion-ready
+  because heavy gates were skipped. It reports tracked await-launch violations
+  `0`, untracked await-launch violations `45`, and sample files such as
+  `run_ibkr_aep_opening_drive_excursion_capacity_repair_await_launch_v1.py`,
+  `run_tomac_crabel_nr7_intraday_expansion_continuation_await_launch_v1.py`, and
+  `run_tomac_daily_atr_squeeze_breakout_await_launch_v1.py`. This is not a
+  tracked-source failure, but it is now visible objective debt.
+- Proof-backed objective snapshot with current heavy proof:
+  `/tmp/ict-engine-closure-after-await-guard-20260529T0845/objective_closure_snapshot.json`
+  exited `1`. Done-definition proof applied, practical-admission debt remained
+  quarantined, and current blockers were `await_launch_source_debt`,
+  `factor_closure_blocked`, and `release_readiness_blocked`. Factor closure had
+  already drifted to two fresh active OpeningDrive materialization claims with
+  no live process; release readiness still failed `worktree_clean_for_release`
+  and `remote_readback`.
+- Verification:
+  `python3 -m unittest support.scripts.tests.test_done_definition_audit -v`
+  passed `27/27`; `python3 -m unittest support.scripts.tests.test_objective_closure_snapshot -v`
+  passed `35/35`; `python3 support/scripts/done_definition_audit.py --compact`
+  exited `0`; `python3 support/scripts/factor_claim_terminalization_audit.py --compact`
+  exited `0` before the later OpeningDrive claim drift and then the proof-backed
+  snapshot captured the new fresh-claim blocker.
+
+## 2026-05-29T08:47+0800 ICT Gate-1 Terminalized / New Fresh Claim Blocker
+
+- Fresh routed continuation re-read `skill-router.md`, `project-router.md`, repo
+  `CLAUDE.md`/`AGENTS.md`/`AGENT.md`, and installed runtime skill
+  `software-development/ict-engi-fact-rese-muta/SKILL.md` before action.
+- Initial compact audit at `2026-05-29T08:37+0800` still showed the ICT FVG/OB
+  Gate-1 owner live: `active_claims=1`, `live_factor_processes=1`,
+  `promotion_allowed_true=0`, `trade_usable_true=0`, and
+  `same_tree_practical_closure=null`. Focused `ps` showed PIDs `31741` and
+  `31752` running the same `run_tomac_ict_liquidity_sweep_reclaim_gate1_v1.py`
+  command under the `082112` run root. Decision was read-only polling only.
+- The scanner exited by `2026-05-29T08:42+0800` and produced:
+  `/tmp/ict-engine-tomac-ict-liquidity-sweep-fvg-ob-xau-ym-eur-gate1-20260529T082112+0800/gate1/cleaning_manifest.json`,
+  `scan_results.json`, and `leaderboard.csv`.
+- Terminal readback for that root: `leaderboard_rows=1296`, all decisions were
+  `reject_5bps_economics`, `survivor_count=0`, and `positive_5bps_rows=0`.
+  Best visible row was XAU
+  `ict_ls_reclaim_s-1_a4_rv1.4_wpr20_ms5_st0.8_tg1.4_h45` with
+  `trades_5bps=623`, `net_ret_5bps=-0.6422531021930309`, and
+  `pf_5bps=0.041870224202593447`. No AQ/downstream continuation is lawful for
+  that branch.
+- The claim was terminalized externally/currently as
+  `terminalized_gate1_no_5bps_survivor` with `promotion_allowed=false`,
+  `trade_usable=false`, `update_goal=false`, and all downstream gates false.
+  Workdoc evidence is
+  `/tmp/ict-engine-tomac-ict-liquidity-sweep-fvg-ob-xau-ym-eur-gate1-20260529T082112+0800/workdoc.md`.
+- Compact claim audit at `2026-05-29T08:43+0800` then exited `0` with
+  `active_claims=0`, `live_factor_processes=0`, `promotion_allowed_true=0`,
+  `trade_usable_true=0`, and `same_tree_practical_closure=null`.
+- Proof-backed remote objective snapshot command:
+  `python3 support/scripts/objective_closure_snapshot.py --compact --check-remotes --done-definition-proof /tmp/ict-engine-done-definition-heavy-20260529-current-head-00ae7f70.json --output-dir /tmp/ict-engine-closure-proof-backed-after-factor-clear-00ae7f70-20260529T0844`.
+- Snapshot artifact:
+  `/tmp/ict-engine-closure-proof-backed-after-factor-clear-00ae7f70-20260529T0844/objective_closure_snapshot.json`.
+- Snapshot exited `1` and remained `not_complete`. Done-definition proof applied
+  for head `00ae7f7058a278dd7871369671545ec6c1be8577`; release remote checks
+  ran. Current blockers were `factor_closure_blocked` and
+  `release_readiness_blocked`. Manual requirements remain
+  `same_tree_practical_closure_packet` and `truthful_completion_commit`.
+- During or immediately after the snapshot, new fresh active claims appeared.
+  Compact audit at `2026-05-29T08:46+0800` exited `1` with `active_claims=3`,
+  `live_factor_processes=0`, `fresh_active_claims_without_live_process=3`,
+  `promotion_allowed_true=0`, `trade_usable_true=0`, and
+  `same_tree_practical_closure=null`.
+- Fresh claim blockers were:
+  `/tmp/ict-engine-agent-claims/board-b-factor-refinement/20260529T084346+0800-codex-tomac-opening-drive-exact-regime-duration-materialization.claim`,
+  `/tmp/ict-engine-agent-claims/board-b-factor-refinement/20260529T084400+0800-codex-tomac-opening-drive-exact-practical-blocker-materialization.claim`,
+  and
+  `/tmp/ict-engine-agent-claims/board-b-factor-refinement/20260529T084521+0800-codex-tomac-wpr-fractal-ict-zone-reclaim-launch.claim`.
+- The `084400` practical blocker workdoc states its target is existing
+  same-root artifact readback for
+  `tomac_nq_bidir_opening_drive_t10_w0_e900_x1245_exact_v1`, not a Gate-1
+  replay, and starts with `promotion_allowed=false`, `trade_usable=false`, and
+  `update_goal=false`.
+- Decision: no takeover, no terminalization, no provider/AQ/Freqtrade/broker/
+  paper/sim/live launch, and no sibling factor work while these claims are fresh.
+  Full objective remains incomplete; practical flags remain false until a valid
+  same-tree practical closure packet exists and release readiness is proven.
+
+## 2026-05-29T09:00+0800 OpeningDrive Fail-Closed / WPR Live Runtime Blocker
+
+- Fresh routed continuation re-read `skill-router.md`, `project-router.md`, repo
+  `CLAUDE.md`/`AGENTS.md`/`AGENT.md`, and installed runtime skill
+  `software-development/ict-engi-fact-rese-muta/SKILL.md` before action.
+- Starting compact audit at `2026-05-29T08:50+0800` reported two fresh active
+  OpeningDrive materialization claims and no live factor process. Both claims
+  were read-only because they were only minutes old.
+- The regime-duration claim
+  `/tmp/ict-engine-agent-claims/board-b-factor-refinement/20260529T084346+0800-codex-tomac-opening-drive-exact-regime-duration-materialization.claim`
+  terminalized at `2026-05-29T08:50:57+0800` as
+  `terminalized_fail_closed_learning_blocked`. Its rerun report is
+  `/tmp/ict-engine-tomac-opening-drive-exact-regime-duration-materialization-20260529T084346+0800/current_blocker_report_rerun.json`.
+- That rerun kept `decision=learning_blocked`; remaining blockers were
+  `execution_candidate_execution_observe_only` and
+  `regime_confidence_below_floor`. Current `regime_confidence=0.6222829194229538`
+  remains below `DEFAULT_REGIME_CONFIDENCE_FLOOR=0.95`; execution tree remains
+  `gate_status=observe`, branch `transition_guardrail`, and execution candidate
+  remains observe-only. No Gate1/provider/AQ/broker/paper/sim/live command was
+  launched from that claim.
+- The practical-blocker claim
+  `/tmp/ict-engine-agent-claims/board-b-factor-refinement/20260529T084400+0800-codex-tomac-opening-drive-exact-practical-blocker-materialization.claim`
+  terminalized fail-closed after readback. Its workdoc is
+  `/tmp/ict-engine-tomac-opening-drive-exact-practical-blocker-materialization-20260529T084400+0800/workdoc.md`.
+- The practical readback shows `declared_friction_expectancy_missing` is cleared
+  by existing same-root evidence (`long_run_expectancy_after_declared_friction=571.46`),
+  but the same hard blockers remain: `regime_confidence_below_floor` and
+  `execution_candidate_execution_observe_only`. Final flags stayed
+  `promotion_allowed=false`, `trade_usable=false`, and `update_goal=false`.
+- The practical blocker launched an existing-window guardrail scan under
+  `/tmp/ict-engine-tomac-opening-drive-exact-practical-blocker-materialization-20260529T084400+0800/guardrail_scan`.
+  By the final poll it had produced `scan_summary.json`, `scan.tsv`, and
+  `execution_tree_trace_01..33.json` / `analyze_01..33.json`; no positive
+  practical admission resulted from this readback.
+- Several WPR follow-up claims terminalized no-launch due to collision guards,
+  including `20260529T085251+0800-codex-tomac-wpr-fractal-ict-zone-reclaim-launch.claim`
+  and `20260529T085257+0800-codex-tomac-wpr-fractal-ict-zone-reclaim-gate1.claim`.
+  Their flags remain false.
+- Current compact audit at `2026-05-29T08:59:46+0800` exited `1` with
+  `active_claims=0`, `live_factor_processes=1`, `promotion_allowed_true=0`,
+  `trade_usable_true=0`, and `same_tree_practical_closure=null`.
+- The remaining live root is
+  `/tmp/ict-engine-tomac-wpr-fractal-ict-zone-reclaim-launch-20260529T084521+0800`.
+  Process table showed wrapper PID `45946` plus child
+  `/Users/thrill3r/Auto-Quant/.venv/bin/python run_tomac.py` PID `50514` still
+  running. `clean_aq.exit` was not present at the final poll; only partial clean
+  data under `run/clean/ES` and `run/clean/NQ` was visible.
+- Decision: no takeover, no proof-backed objective snapshot, no provider/AQ/
+  Freqtrade/broker/paper/sim/live launch, and no sibling factor work while the
+  WPR runtime is live. The full objective remains incomplete until this root
+  exits and terminal artifacts are read. Practical flags remain false.
+
+## 2026-05-29T09:02+0800 Await-Launch Debt Quarantined / Staged Snapshot
+
+- Fresh routed continuation used primary route `sd/ict-engine-maintenance-loop`,
+  read `skill-router.md`, `project-router.md`, repo `CLAUDE.md`/`AGENTS.md`/
+  `AGENT.md`, and loaded installed runtime skill
+  `software-development/ict-engine-maintenance-loop/SKILL.md` before action.
+- Source-guard slice now stages both source-debt manifests from objective
+  snapshots: `practical_admission_source_debt_manifest.json` and
+  `await_launch_source_debt_manifest.json`.
+- New quarantine manifest:
+  `support/docs/audits/await-launch-source-debt-quarantine.json` with
+  `decision=quarantined_untracked_await_launch_debt`,
+  `untracked_violation_count=45`, `untracked_violating_files=45`, and
+  fingerprint
+  `eb0979e112bc04124e52b30e91ebdf5849e3b1a3b1f624e4a61b905e05dee0a8`.
+- Proof-backed staged snapshot command:
+  `python3 support/scripts/objective_closure_snapshot.py --compact --check-remotes --done-definition-proof /tmp/ict-engine-done-definition-heavy-20260529-current-head-00ae7f70.json --output-dir /tmp/ict-engine-closure-after-await-quarantine-staged-20260529T0902`.
+- Snapshot artifact:
+  `/tmp/ict-engine-closure-after-await-quarantine-staged-20260529T0902/objective_closure_snapshot.json`.
+- Snapshot exited `1` and remained `not_complete`. Done-definition proof applied
+  for head `00ae7f7058a278dd7871369671545ec6c1be8577`; practical-admission
+  and await-launch source debts were preserved as quarantined evidence, not
+  hidden. Current blockers were `factor_closure_blocked` and
+  `release_readiness_blocked`.
+- Factor closure blocker: live WPR clean-AQ runtime under
+  `/tmp/ict-engine-tomac-wpr-fractal-ict-zone-reclaim-launch-20260529T084521+0800`,
+  with wrapper PID `45946` and AQ child `run_tomac.py` PID `50514` observed
+  before this note. No `clean_aq.exit` or terminal metrics existed at the last
+  readback.
+- Release blockers remain `worktree_clean_for_release` and
+  `source_origin_matches_selected_source`. Full objective is still incomplete;
+  no completion, promotion, release, paper/live, or practical-trading claim is
+  supported by this snapshot.
+
+## 2026-05-29T09:07+0800 WPR Runtime Cleared / Objective Still Not Complete
+
+- Fresh compact factor audit after the WPR process exited returned `status=pass`
+  with `active_claims=0`, `live_factor_processes=0`,
+  `promotion_allowed_true=0`, `trade_usable_true=0`, and
+  `same_tree_practical_closure=null`.
+- WPR runtime terminal artifacts under
+  `/tmp/ict-engine-tomac-wpr-fractal-ict-zone-reclaim-launch-20260529T084521+0800/run/`
+  are fail-closed: wrapper `clean_aq.exit=0`, child
+  `checks/run_tomac_1m.exit=-9`, gate summary `rank_rows=0`,
+  `survivors_5bps=[]`, and downstream/Pre-Bayes/BBN/CatBoost/execution-tree
+  flags all false. This is not practical-closure evidence and should not be
+  rerun unchanged.
+- Proof-backed remote snapshot command:
+  `python3 support/scripts/objective_closure_snapshot.py --compact --check-remotes --done-definition-proof /tmp/ict-engine-done-definition-heavy-20260529-current-head-00ae7f70.json --output-dir /tmp/ict-engine-closure-after-wpr-clear-await-quarantine-20260529T0906`.
+- Snapshot artifact:
+  `/tmp/ict-engine-closure-after-wpr-clear-await-quarantine-20260529T0906/objective_closure_snapshot.json`.
+- Snapshot exited `1` and remained `not_complete`. Done-definition proof applied,
+  practical-admission and await-launch source debts remained quarantined, and
+  factor coordination blockers cleared. Remaining blockers are now
+  `same_tree_practical_closure_unproven` and `release_readiness_blocked`.
+- Release readiness still fails `worktree_clean_for_release` and
+  `source_origin_matches_selected_source`. Manual requirements remain
+  `same_tree_practical_closure_packet` and `truthful_completion_commit`.

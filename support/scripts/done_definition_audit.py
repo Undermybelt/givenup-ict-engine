@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import argparse
+import ast
 import hashlib
 import json
 import os
@@ -37,6 +38,18 @@ PRACTICAL_ADMISSION_REPORT_FILES = (
     ROOT / "support" / "scripts" / "research" / "regime_root_survivor_blocker_report.py",
 )
 DEFAULT_SMOKE_STATE_PREFIX = "/tmp/ict-engine-done-definition-audit-smoke"
+AWAIT_LAUNCH_ACTIVE_CLAIM_GUARD_KEYS = frozenset(
+    (
+        "active_claims",
+        "valid_active_claims",
+        "active_claims_without_live_process",
+        "fresh_active_claims_without_live_process",
+        "fresh_wait_only_active_claims_without_live_process",
+        "wait_only_active_claims_without_live_process",
+        "blocking_reasons",
+        "attention_action_queue",
+    )
+)
 
 
 def _utc_now() -> str:
@@ -362,6 +375,119 @@ def _summarize_practical_admission_scan(reports: list[dict], *, tracked_files: s
     }
 
 
+def _string_literals(node: ast.AST) -> set[str]:
+    return {
+        child.value
+        for child in ast.walk(node)
+        if isinstance(child, ast.Constant) and isinstance(child.value, str)
+    }
+
+
+def _function_def(tree: ast.AST, name: str) -> ast.FunctionDef | None:
+    for child in ast.walk(tree):
+        if isinstance(child, ast.FunctionDef) and child.name == name:
+            return child
+    return None
+
+
+def scan_await_launch_source_file(path: Path) -> dict:
+    violations: list[dict] = []
+    try:
+        source = path.read_text(encoding="utf-8")
+    except OSError as exc:
+        return {
+            "file": str(path),
+            "ok": False,
+            "violations": [
+                {
+                    "line": 0,
+                    "column": 0,
+                    "key": "audit_ready",
+                    "value": str(exc),
+                    "violation": "await_launch_source_unreadable",
+                }
+            ],
+        }
+    try:
+        tree = ast.parse(source, filename=str(path))
+    except SyntaxError as exc:
+        return {
+            "file": str(path),
+            "ok": False,
+            "violations": [
+                {
+                    "line": exc.lineno or 0,
+                    "column": exc.offset or 0,
+                    "key": "audit_ready",
+                    "value": str(exc),
+                    "violation": "await_launch_source_syntax_error",
+                }
+            ],
+        }
+
+    audit_ready = _function_def(tree, "audit_ready")
+    if audit_ready is None:
+        violations.append(
+            {
+                "line": 0,
+                "column": 0,
+                "key": "audit_ready",
+                "value": "missing",
+                "violation": "await_launch_audit_ready_missing",
+            }
+        )
+    else:
+        literals = _string_literals(audit_ready)
+        has_live_process_guard = "live_factor_processes" in literals
+        has_active_claim_guard = bool(literals & AWAIT_LAUNCH_ACTIVE_CLAIM_GUARD_KEYS)
+        if has_live_process_guard and not has_active_claim_guard:
+            violations.append(
+                {
+                    "line": audit_ready.lineno,
+                    "column": audit_ready.col_offset,
+                    "key": "active_claims",
+                    "value": "audit_ready checks live_factor_processes without active-claim counters",
+                    "violation": "await_launch_active_claim_guard_missing",
+                }
+            )
+
+    return {"file": str(path), "ok": not violations, "violations": violations}
+
+
+def evaluate_await_launch_source_gate(timeout_seconds: int) -> dict:
+    if not PRACTICAL_ADMISSION_WRAPPER_ROOT.exists():
+        return _gate(
+            "await_launch_source_surface",
+            "pass",
+            {
+                "scanned_files": 0,
+                "violating_files": 0,
+                "violation_count": 0,
+                "tracked_violation_count": 0,
+                "untracked_violation_count": 0,
+                "rule": "no await-launch wrapper source root present",
+            },
+        )
+
+    wrapper_files = sorted(PRACTICAL_ADMISSION_WRAPPER_ROOT.glob("run_*await_launch_v1.py"))
+    reports = [scan_await_launch_source_file(path) for path in wrapper_files]
+    tracked_files = tracked_wrapper_file_set(wrapper_files, timeout_seconds)
+    summary = _summarize_practical_admission_scan(reports, tracked_files=tracked_files)
+    debt_manifest_file = write_await_launch_debt_manifest(summary)
+    if debt_manifest_file:
+        summary["debt_manifest_file"] = debt_manifest_file
+        summary["quarantine"] = _read_await_launch_debt_quarantine(summary)
+    summary["rule"] = (
+        "await-launch wrappers may wait on live_factor_processes, but must also fail closed on "
+        "active/fresh claim counters from factor_claim_terminalization_audit.py before launching child prep wrappers"
+    )
+    return _gate(
+        "await_launch_source_surface",
+        "pass" if summary["tracked_violation_count"] == 0 else "fail",
+        summary,
+    )
+
+
 def _violation_fingerprint(violations: list[dict]) -> str:
     stable_violations = [
         {
@@ -393,10 +519,37 @@ def practical_admission_debt_quarantine_path() -> Path:
     return ROOT / "support" / "docs" / "audits" / "practical-admission-source-debt-quarantine.json"
 
 
+def await_launch_debt_quarantine_path() -> Path:
+    return ROOT / "support" / "docs" / "audits" / "await-launch-source-debt-quarantine.json"
+
+
 def _read_practical_admission_debt_quarantine(summary: dict) -> dict:
+    return _read_source_debt_quarantine(
+        summary,
+        quarantine_path=practical_admission_debt_quarantine_path(),
+        schema_version="practical-admission-source-debt-quarantine/v1",
+        decision="quarantined_untracked_wrapper_debt",
+    )
+
+
+def _read_await_launch_debt_quarantine(summary: dict) -> dict:
+    return _read_source_debt_quarantine(
+        summary,
+        quarantine_path=await_launch_debt_quarantine_path(),
+        schema_version="await-launch-source-debt-quarantine/v1",
+        decision="quarantined_untracked_await_launch_debt",
+    )
+
+
+def _read_source_debt_quarantine(
+    summary: dict,
+    *,
+    quarantine_path: Path,
+    schema_version: str,
+    decision: str,
+) -> dict:
     untracked_violations = summary.get("untracked_violations", [])
     fingerprint = _violation_fingerprint(untracked_violations)
-    quarantine_path = practical_admission_debt_quarantine_path()
     base = {
         "manifest_file": _rel_path(quarantine_path),
         "matched": False,
@@ -411,7 +564,7 @@ def _read_practical_admission_debt_quarantine(summary: dict) -> dict:
     if not isinstance(manifest, dict):
         return {**base, "reason": "quarantine_manifest_must_be_object"}
     expected = {
-        "schema_version": "practical-admission-source-debt-quarantine/v1",
+        "schema_version": schema_version,
         "untracked_violation_count": summary.get("untracked_violation_count"),
         "untracked_violating_files": summary.get("untracked_violating_files"),
         "untracked_violations_sha256": fingerprint,
@@ -421,13 +574,13 @@ def _read_practical_admission_debt_quarantine(summary: dict) -> dict:
         for key, expected_value in expected.items()
         if manifest.get(key) != expected_value
     ]
-    decision = manifest.get("decision")
-    if decision != "quarantined_untracked_wrapper_debt":
+    manifest_decision = manifest.get("decision")
+    if manifest_decision != decision:
         mismatches.append("decision")
     return {
         **base,
         "matched": not mismatches,
-        "decision": decision,
+        "decision": manifest_decision,
         "mismatches": mismatches,
         "untracked_violation_count": manifest.get("untracked_violation_count"),
         "untracked_violating_files": manifest.get("untracked_violating_files"),
@@ -435,12 +588,36 @@ def _read_practical_admission_debt_quarantine(summary: dict) -> dict:
 
 
 def write_practical_admission_debt_manifest(summary: dict) -> str | None:
+    return write_source_debt_manifest(
+        summary,
+        schema_version="practical-admission-source-debt/v1",
+        output_prefix="ict-engine-practical-admission-source-debt",
+        quarantine_reader=_read_practical_admission_debt_quarantine,
+    )
+
+
+def write_await_launch_debt_manifest(summary: dict) -> str | None:
+    return write_source_debt_manifest(
+        summary,
+        schema_version="await-launch-source-debt/v1",
+        output_prefix="ict-engine-await-launch-source-debt",
+        quarantine_reader=_read_await_launch_debt_quarantine,
+    )
+
+
+def write_source_debt_manifest(
+    summary: dict,
+    *,
+    schema_version: str,
+    output_prefix: str,
+    quarantine_reader,
+) -> str | None:
     if int(summary.get("violation_count") or 0) <= 0:
         return None
     generated_at = _utc_now()
-    quarantine = _read_practical_admission_debt_quarantine(summary)
+    quarantine = quarantine_reader(summary)
     manifest = {
-        "schema_version": "practical-admission-source-debt/v1",
+        "schema_version": schema_version,
         "generated_at": generated_at,
         "timestamp_utc": generated_at,
         "scanned_files": summary.get("scanned_files"),
@@ -469,7 +646,7 @@ def write_practical_admission_debt_manifest(summary: dict) -> str | None:
         "tracked_violations": summary.get("tracked_violations", []),
         "untracked_violations": summary.get("untracked_violations", []),
     }
-    output_path = Path(tempfile.gettempdir()) / f"ict-engine-practical-admission-source-debt-{os.getpid()}.json"
+    output_path = Path(tempfile.gettempdir()) / f"{output_prefix}-{os.getpid()}.json"
     output_path.write_text(
         json.dumps(manifest, ensure_ascii=True, indent=2, sort_keys=True) + "\n",
         encoding="utf-8",
@@ -706,9 +883,10 @@ def _compact_gate(gate: dict, root: str) -> dict:
     }
     if gate.get("status") != "pass":
         compact["details"] = _compact_value(gate.get("details", {}), root)
-    elif gate.get("id") == "practical_admission_source_surface":
+    elif gate.get("id") in {"practical_admission_source_surface", "await_launch_source_surface"}:
         details = gate.get("details", {})
         if int(details.get("untracked_violation_count") or 0) > 0:
+            debt_manifest_file = details.get("debt_manifest_file")
             compact["details"] = _compact_value(
                 {
                     "tracked_violation_count": details.get("tracked_violation_count"),
@@ -717,7 +895,7 @@ def _compact_gate(gate: dict, root: str) -> dict:
                     "untracked_violating_files": details.get("untracked_violating_files"),
                     "violation_count": details.get("violation_count"),
                     "violating_files": details.get("violating_files"),
-                    "debt_manifest_file": details.get("debt_manifest_file"),
+                    **({"debt_manifest_file": debt_manifest_file} if debt_manifest_file else {}),
                     "quarantine": details.get("quarantine"),
                     "sample_violations": details.get("sample_violations", [])[:10],
                 },
@@ -845,6 +1023,11 @@ def main(argv: list[str] | None = None) -> int:
     gates.append(evaluate_script_governance())
     gates.append(
         evaluate_practical_admission_source_gate(
+            args.practical_admission_source_timeout_seconds
+        )
+    )
+    gates.append(
+        evaluate_await_launch_source_gate(
             args.practical_admission_source_timeout_seconds
         )
     )

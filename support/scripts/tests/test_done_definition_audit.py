@@ -15,6 +15,7 @@ if str(SCRIPTS_ROOT) not in sys.path:
 
 from done_definition_audit import (  # noqa: E402
     build_smoke_environment,
+    evaluate_await_launch_source_gate,
     evaluate_practical_admission_source_gate,
     evaluate_quickstart_surface,
     evaluate_main_rs_guardrail,
@@ -263,6 +264,45 @@ Measured on 2026-05-22:
         self.assertEqual(gate["details"]["tracked_violation_count"], 0)
         self.assertEqual(gate["details"]["debt_manifest_file"], "/tmp/practical-admission-source-debt.json")
 
+    def test_compact_report_keeps_passed_await_launch_untracked_debt(self) -> None:
+        report = {
+            "timestamp_utc": "2026-05-29T00:50:00Z",
+            "repo_root": str(SCRIPTS_ROOT.parents[1]),
+            "summary": {"status": "pass"},
+            "gates": [
+                {
+                    "id": "await_launch_source_surface",
+                    "status": "pass",
+                    "heavy": False,
+                    "details": {
+                        "tracked_violation_count": 0,
+                        "tracked_violating_files": 0,
+                        "untracked_violation_count": 3,
+                        "untracked_violating_files": 2,
+                        "violation_count": 3,
+                        "violating_files": 2,
+                        "sample_violations": [
+                            {
+                                "file": "support/docs/experiments/actionable-regime-confidence/scripts/run_tomac_bad_await_launch_v1.py",
+                                "violation": "await_launch_active_claim_guard_missing",
+                            }
+                        ],
+                    },
+                }
+            ],
+        }
+
+        compact = json.loads(format_report(report, compact=True))
+        gate = compact["gates"][0]
+
+        self.assertEqual(gate["status"], "pass")
+        self.assertEqual(gate["details"]["untracked_violation_count"], 3)
+        self.assertEqual(gate["details"]["tracked_violation_count"], 0)
+        self.assertEqual(
+            gate["details"]["sample_violations"][0]["violation"],
+            "await_launch_active_claim_guard_missing",
+        )
+
     def test_compact_report_keeps_selected_head_for_proof_identity(self) -> None:
         report = {
             "timestamp_utc": "2026-05-28T11:10:00Z",
@@ -351,6 +391,135 @@ Measured on 2026-05-22:
         self.assertEqual(manifest["timestamp_utc"], manifest["generated_at"])
         self.assertEqual(manifest["summary"]["untracked_violation_count"], 1)
         self.assertEqual(manifest["untracked_violations"][0]["key"], "trade_usable")
+
+    def test_await_launch_source_gate_reports_live_only_guard(self) -> None:
+        import done_definition_audit
+
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            wrapper_root = root / "support" / "docs" / "experiments" / "actionable-regime-confidence" / "scripts"
+            wrapper_root.mkdir(parents=True)
+            live_only = wrapper_root / "run_tomac_live_only_await_launch_v1.py"
+            guarded = wrapper_root / "run_tomac_guarded_await_launch_v1.py"
+            live_only.write_text(
+                "def audit_ready(payload):\n"
+                "    summary = payload.get('summary', {})\n"
+                "    live = int(summary.get('live_factor_processes', 0) or 0)\n"
+                "    if live > 0:\n"
+                "        return False, f'live_factor_processes_{live}'\n"
+                "    return True, 'ready_to_launch'\n",
+                encoding="utf-8",
+            )
+            guarded.write_text(
+                "def audit_ready(payload):\n"
+                "    summary = payload.get('summary', {})\n"
+                "    active = int(summary.get('valid_active_claims', 0) or 0)\n"
+                "    fresh = int(summary.get('fresh_active_claims_without_live_process', 0) or 0)\n"
+                "    live = int(summary.get('live_factor_processes', 0) or 0)\n"
+                "    if active > 0 or fresh > 0:\n"
+                "        return False, 'active_claims_present'\n"
+                "    if live > 0:\n"
+                "        return False, f'live_factor_processes_{live}'\n"
+                "    return True, 'ready_to_launch'\n",
+                encoding="utf-8",
+            )
+
+            originals = (
+                done_definition_audit.ROOT,
+                done_definition_audit.PRACTICAL_ADMISSION_WRAPPER_ROOT,
+                done_definition_audit.tracked_wrapper_file_set,
+            )
+            try:
+                done_definition_audit.ROOT = root
+                done_definition_audit.PRACTICAL_ADMISSION_WRAPPER_ROOT = wrapper_root
+                done_definition_audit.tracked_wrapper_file_set = lambda wrapper_files, timeout_seconds: {
+                    live_only,
+                    guarded,
+                }
+                gate = evaluate_await_launch_source_gate(30)
+            finally:
+                (
+                    done_definition_audit.ROOT,
+                    done_definition_audit.PRACTICAL_ADMISSION_WRAPPER_ROOT,
+                    done_definition_audit.tracked_wrapper_file_set,
+                ) = originals
+
+        self.assertEqual(gate["id"], "await_launch_source_surface")
+        self.assertEqual(gate["status"], "fail")
+        self.assertEqual(gate["details"]["scanned_files"], 2)
+        self.assertEqual(gate["details"]["violation_count"], 1)
+        self.assertEqual(gate["details"]["tracked_violation_count"], 1)
+        self.assertEqual(
+            gate["details"]["violations_by_type"],
+            {"await_launch_active_claim_guard_missing": 1},
+        )
+        self.assertTrue(gate["details"]["sample_violations"][0]["file"].endswith("run_tomac_live_only_await_launch_v1.py"))
+
+    def test_await_launch_source_gate_writes_debt_manifest_and_reports_quarantine_match(self) -> None:
+        import done_definition_audit
+
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            wrapper_root = root / "support" / "docs" / "experiments" / "actionable-regime-confidence" / "scripts"
+            quarantine_path = root / "support" / "docs" / "audits" / "await-launch-source-debt-quarantine.json"
+            wrapper_root.mkdir(parents=True)
+            quarantine_path.parent.mkdir(parents=True)
+            live_only = wrapper_root / "run_tomac_live_only_await_launch_v1.py"
+            live_only.write_text(
+                "def audit_ready(payload):\n"
+                "    summary = payload.get('summary', {})\n"
+                "    live = int(summary.get('live_factor_processes', 0) or 0)\n"
+                "    if live > 0:\n"
+                "        return False, f'live_factor_processes_{live}'\n"
+                "    return True, 'ready_to_launch'\n",
+                encoding="utf-8",
+            )
+            expected_violation = {
+                "file": "support/docs/experiments/actionable-regime-confidence/scripts/run_tomac_live_only_await_launch_v1.py",
+                "key": "active_claims",
+                "value": "audit_ready checks live_factor_processes without active-claim counters",
+                "violation": "await_launch_active_claim_guard_missing",
+            }
+            quarantine_path.write_text(
+                json.dumps(
+                    {
+                        "schema_version": "await-launch-source-debt-quarantine/v1",
+                        "untracked_violation_count": 1,
+                        "untracked_violating_files": 1,
+                        "untracked_violations_sha256": _violation_fingerprint([expected_violation]),
+                        "decision": "quarantined_untracked_await_launch_debt",
+                    }
+                ),
+                encoding="utf-8",
+            )
+
+            originals = (
+                done_definition_audit.ROOT,
+                done_definition_audit.PRACTICAL_ADMISSION_WRAPPER_ROOT,
+                done_definition_audit.tracked_wrapper_file_set,
+            )
+            try:
+                done_definition_audit.ROOT = root
+                done_definition_audit.PRACTICAL_ADMISSION_WRAPPER_ROOT = wrapper_root
+                done_definition_audit.tracked_wrapper_file_set = lambda wrapper_files, timeout_seconds: set()
+                gate = evaluate_await_launch_source_gate(30)
+            finally:
+                (
+                    done_definition_audit.ROOT,
+                    done_definition_audit.PRACTICAL_ADMISSION_WRAPPER_ROOT,
+                    done_definition_audit.tracked_wrapper_file_set,
+                ) = originals
+
+        manifest_path = Path(gate["details"]["debt_manifest_file"])
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+        self.assertEqual(manifest["schema_version"], "await-launch-source-debt/v1")
+        self.assertEqual(manifest["untracked_violation_count"], 1)
+        self.assertEqual(manifest["tracked_violation_count"], 0)
+        self.assertTrue(gate["details"]["quarantine"]["matched"])
+        self.assertEqual(
+            gate["details"]["quarantine"]["decision"],
+            "quarantined_untracked_await_launch_debt",
+        )
 
     def test_run_command_timeout_details_are_json_serializable(self) -> None:
         status, details = run_command(
