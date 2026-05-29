@@ -117,7 +117,7 @@ def metrics_prove_same_tree_practical_closure(metrics: dict[str, Any]) -> bool:
     return all(
         isinstance(row, dict)
         and row.get("exit") == 0
-        and row.get("timed_out") is not True
+        and row.get("timed_out") is False
         for row in command_results
     )
 

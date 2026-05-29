@@ -446,3 +446,38 @@ Current truth after this slice:
 - Fresh active claims still block new provider/AQ/lifecycle launches; this slice
   hardens a false-positive closure path and does not create a practical/live
   usable factor.
+
+## 2026-05-30T01:17+0800 Explicit Non-Timeout Command Proof Guard
+
+Root cause handled in this slice:
+
+- The previous timed-out command guard rejected `timed_out=true`, but a command
+  row with `exit == 0` and no `timed_out` field still satisfied the canonical
+  practical-closure helper. That left a weaker marker path where missing timeout
+  evidence could be mistaken for completed command evidence.
+
+Changes made:
+
+- Added producer-level and audit-consumer regression tests for command rows that
+  omit explicit non-timeout proof.
+- Updated `support/scripts/research/same_tree_practical_closure.py` so every
+  command result must have `exit == 0` and explicit `timed_out=false`.
+- Updated the runtime factor-research skill so future practical-closure work
+  requires explicit non-timeout command proof rather than merely the absence of
+  `timed_out=true`.
+
+Verification:
+
+- `python3 -m unittest support.scripts.research.tests.test_same_tree_practical_closure.SameTreePracticalClosureTests.test_rejects_command_result_without_explicit_non_timeout_proof -v`
+  -> failed before the fix, then `OK` after the fix.
+- `python3 -m unittest support.scripts.tests.test_factor_claim_terminalization_audit.FactorClaimTerminalizationAuditTest.test_build_report_rejects_closure_packet_without_explicit_non_timeout_proof -v`
+  -> failed before the fix, then `OK` after the fix.
+
+Current truth after this slice:
+
+- No validated `same_tree_practical_closure` packet exists.
+- Latest compact factor audit still reports `promotion_allowed_true=0`,
+  `trade_usable_true=0`, and `same_tree_practical_closure=null`.
+- The remaining active claim has not yet crossed the one-hour stale-takeover
+  window, so this slice only closes another false-positive practical-closure
+  path and does not create a practical/live usable factor.
