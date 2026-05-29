@@ -599,6 +599,76 @@ trade_usable=false
         self.assertIs(report["claims"][0]["promotion_allowed"], False)
         self.assertIs(report["claims"][0]["trade_usable"], False)
 
+    def test_build_report_keeps_active_workdoc_when_nonterminal_tdd_decision_present(self) -> None:
+        with tempfile.TemporaryDirectory() as repo_tmp, tempfile.TemporaryDirectory() as claims_tmp:
+            repo_root = Path(repo_tmp)
+            claims_dir = Path(claims_tmp)
+            run_root = repo_root / "support" / "docs" / "experiments" / "run-active-workdoc"
+            run_root.mkdir(parents=True)
+            workdoc = run_root / "workdoc.md"
+            workdoc.write_text(
+                """
+# Local Screen Workdoc
+
+- status: active_local_screen
+- promotion_allowed: false
+- trade_usable: false
+
+## TDD Route
+
+- Mode: auto
+- Decision: skipped
+- Reason: one-off local scanner only.
+
+## Next Gate
+
+Wait for the local screen to finish, then write terminal evidence.
+""",
+                encoding="utf-8",
+            )
+            (claims_dir / "active-workdoc.claim").write_text(
+                f"""
+agent_name=codex-active-workdoc
+owner=codex
+claimed_at=2026-05-29T16:27:31+0800
+last_progress_at=2026-05-29T16:27:31+0800
+scope=Board B local screen with active workdoc
+active_task=run local screen
+non_goals=no provider; no aq; no promotion
+write_surface={workdoc}
+run_root={run_root.relative_to(repo_root)}
+status=active_local_screen
+progress_report=local screen is running
+promotion_allowed=false
+trade_usable=false
+""",
+                encoding="utf-8",
+            )
+
+            report = build_report(
+                claims_dir=claims_dir,
+                repo_root=repo_root,
+                live_processes=[
+                    {
+                        "pid": 123,
+                        "ppid": 1,
+                        "elapsed": "00:30",
+                        "command_excerpt": "python run_range_vwap_keltner_screen.py",
+                        "run_root": str(run_root),
+                        "exit_file": None,
+                        "exit_file_exists": False,
+                    }
+                ],
+            )
+
+        self.assertEqual(report["summary"]["active_claims"], 1)
+        self.assertEqual(report["summary"]["terminalized_claims"], 0)
+        self.assertEqual(report["summary"]["active_claims_without_live_process"], 0)
+        self.assertEqual(report["claims"][0]["status"], "active")
+        self.assertTrue(report["claims"][0]["live_runtime_owner"])
+        self.assertIsNone(report["claims"][0]["decision"])
+        self.assertEqual(report["claims"][0]["summary_files"], ["workdoc.md"])
+
     def test_build_report_treats_nested_collision_guard_terminal_summary_as_terminalized(self) -> None:
         with tempfile.TemporaryDirectory() as repo_tmp, tempfile.TemporaryDirectory() as claims_tmp:
             repo_root = Path(repo_tmp)

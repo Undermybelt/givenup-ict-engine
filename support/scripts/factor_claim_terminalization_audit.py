@@ -195,6 +195,47 @@ def _summary_indicates_terminalized(summary_flags: dict[str, Any]) -> bool:
     }
 
 
+def _status_value_indicates_terminalized(value: object) -> bool:
+    normalized = str(value or "").strip().lower()
+    return normalized.startswith("terminal") or normalized in {
+        "launch_blocked_by_collision_guard",
+        "launch_finished",
+        "readback_complete",
+        "complete",
+        "completed",
+        "finished",
+    }
+
+
+def _workdoc_decision_indicates_terminalized(value: object) -> bool:
+    if not isinstance(value, str):
+        return False
+    normalized = value.strip().strip("`\"'").lower()
+    if not normalized or _decision_indicates_active(normalized):
+        return False
+    if normalized in {"skipped", "skip", "strict", "light", "auto", "off"}:
+        return False
+    return (
+        normalized.startswith("terminal")
+        or "terminalized" in normalized
+        or "fail_closed" in normalized
+        or normalized.startswith((
+            "drop_",
+            "reject_",
+            "fail_",
+            "observation_",
+            "observe_",
+            "no_launch",
+            "launch_blocked",
+            "launch_finished",
+            "readback_complete",
+            "complete",
+            "completed",
+            "finished",
+        ))
+    )
+
+
 def _decision_indicates_active(decision: object) -> bool:
     if not isinstance(decision, str):
         return False
@@ -291,16 +332,51 @@ def _load_workdoc_terminal_flags(write_surface: object, run_root: Path | None, c
     except OSError:
         return {}
     parsed_text_fields = parse_claim_text(text)
+    terminal_section_fields = parse_claim_text(_workdoc_terminal_section_text(text))
     evidence: dict[str, Any] = {"summary_files": [str(workdoc_path.relative_to(run_root))]}
-    for key in ("decision", "terminal_decision", "terminal_status", "terminalized_at", "terminal_at", "status"):
-        value = parsed_text_fields.get(key)
+    for key in ("terminal_decision", "terminal_status", "terminalized_at", "terminal_at"):
+        value = terminal_section_fields.get(key) or parsed_text_fields.get(key)
         if value not in (None, ""):
             evidence[key] = value
+    status_value = terminal_section_fields.get("status") or parsed_text_fields.get("status")
+    if status_value not in (None, "") and _status_value_indicates_terminalized(status_value):
+        evidence["status"] = status_value
+    decision_value = terminal_section_fields.get("decision") or parsed_text_fields.get("decision")
+    if decision_value not in (None, "") and _workdoc_decision_indicates_terminalized(decision_value):
+        evidence["decision"] = decision_value
     for key in ("promotion_allowed", "trade_usable"):
         value = parsed_text_fields.get(key)
         if isinstance(value, bool):
             evidence[key] = value
     return evidence
+
+
+def _workdoc_terminal_section_text(text: str) -> str:
+    sections: list[str] = []
+    current: list[str] = []
+    in_terminal_section = False
+    for raw_line in text.splitlines():
+        heading = re.match(r"\s{0,3}#{1,6}\s+(.*)", raw_line)
+        if heading:
+            if in_terminal_section and current:
+                sections.extend(current)
+                sections.append("")
+            title = heading.group(1).strip().lower()
+            in_terminal_section = any(
+                marker in title
+                for marker in (
+                    "terminal",
+                    "final decision",
+                    "final readback",
+                )
+            )
+            current = [raw_line] if in_terminal_section else []
+            continue
+        if in_terminal_section:
+            current.append(raw_line)
+    if in_terminal_section and current:
+        sections.extend(current)
+    return "\n".join(sections)
 
 
 def _merge_terminal_evidence(*sources: dict[str, Any]) -> dict[str, Any]:
