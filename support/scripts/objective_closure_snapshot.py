@@ -219,6 +219,10 @@ def _done_surface(report: dict[str, Any]) -> dict[str, Any]:
         "status": summary.get("status"),
         "completion_ready": bool(summary.get("completion_ready")),
         "evidence_level": summary.get("evidence_level"),
+        "pass_count": summary.get("pass_count"),
+        "fail_count": summary.get("fail_count"),
+        "skip_count": summary.get("skip_count"),
+        "total_gates": summary.get("total_gates"),
         "quickstart_surface": quickstart_status,
         "practical_admission_source_surface": practical_admission_source_surface,
         "await_launch_source_surface": await_launch_source_surface,
@@ -685,6 +689,34 @@ def _stage_source_debt_manifest(
     evidence_files[evidence_key] = _portable_path(staged_path, output_dir=output_dir)
 
 
+def _done_definition_blocker_detail(done_surface: dict[str, Any]) -> dict[str, Any]:
+    detail = {
+        "head": done_surface.get("head"),
+        "tracked_worktree_fingerprint": done_surface.get("tracked_worktree_fingerprint"),
+        "report_timestamp": done_surface.get("report_timestamp"),
+        "status": done_surface.get("status"),
+        "completion_ready": done_surface.get("completion_ready"),
+        "evidence_level": done_surface.get("evidence_level"),
+        "pass_count": done_surface.get("pass_count"),
+        "fail_count": done_surface.get("fail_count"),
+        "skip_count": done_surface.get("skip_count"),
+        "total_gates": done_surface.get("total_gates"),
+        "quickstart_surface": done_surface.get("quickstart_surface"),
+        "unresolved": done_surface.get("unresolved", []),
+        "skipped_gates": done_surface.get("skipped_gates", []),
+        "next_action": done_surface.get("next_action"),
+    }
+    for key in (
+        "proof_source",
+        "proof_applied",
+        "proof_rejected_reason",
+        "proof_worktree_fingerprint",
+    ):
+        if key in done_surface:
+            detail[key] = done_surface[key]
+    return detail
+
+
 def summarize_snapshot(
     done_surface: dict[str, Any],
     factor_surface: dict[str, Any],
@@ -696,6 +728,9 @@ def summarize_snapshot(
     blocker_details: dict[str, Any] = {}
     if not done_surface.get("completion_ready"):
         blockers.append("done_definition_not_completion_ready")
+        blocker_details["done_definition_not_completion_ready"] = _done_definition_blocker_detail(
+            done_surface
+        )
     if done_surface.get("quickstart_surface") != "pass":
         blockers.append("quickstart_surface_drift")
     practical_source = done_surface.get("practical_admission_source_surface")

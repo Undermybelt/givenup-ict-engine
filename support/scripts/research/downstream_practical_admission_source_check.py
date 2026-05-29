@@ -247,6 +247,23 @@ class PracticalAssignmentVisitor(ast.NodeVisitor):
             }
         )
 
+    def record_extension_complete_argument_violation(self, node: ast.Call) -> None:
+        for keyword in node.keywords:
+            if keyword.arg != "extension_complete":
+                continue
+            if is_false_literal(keyword.value):
+                return
+            self.violations.append(
+                {
+                    "line": getattr(keyword.value, "lineno", getattr(node, "lineno", 0)),
+                    "column": getattr(keyword.value, "col_offset", getattr(node, "col_offset", 0)),
+                    "key": "extension_complete",
+                    "value": expression_text(self.source, keyword.value),
+                    "violation": "extension_complete_without_validated_practical_closure_source",
+                }
+            )
+            return
+
     def visit_FunctionDef(self, node: ast.FunctionDef) -> Any:
         self.function_stack.append(node.name)
         prior_helper_result_names = self.helper_result_names
@@ -500,6 +517,8 @@ class PracticalAssignmentVisitor(ast.NodeVisitor):
                 self.visit(value_node)
 
     def visit_Call(self, node: ast.Call) -> Any:
+        if self.calls_practical_helper(node):
+            self.record_extension_complete_argument_violation(node)
         if isinstance(node.func, ast.Name) and node.func.id == "dict":
             in_helper = bool(self.function_stack and self.function_stack[-1] in self.helpers)
             for keyword in node.keywords:
@@ -547,7 +566,9 @@ class PracticalAssignmentVisitor(ast.NodeVisitor):
         )
 
     def record_pda_helper_argument_violation(self, node: ast.AST) -> None:
-        if not self.calls_practical_helper(node) or not node.args:
+        if not self.calls_practical_helper(node):
+            return
+        if not node.args:
             return
         branch_arg = node.args[0]
         taint: dict[str, Any] | None = None

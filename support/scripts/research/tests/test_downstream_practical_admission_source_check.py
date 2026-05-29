@@ -71,6 +71,123 @@ def build_metrics(pass_exec):
         self.assertTrue(report["ok"])
         self.assertEqual(report["violations"], [])
 
+    def test_flags_hardcoded_true_extension_complete_helper_call(self) -> None:
+        path = self.write_source(
+            """
+def practical_admission_flags(branch_local_admitted, extension_complete=False):
+    practical_allowed = bool(branch_local_admitted and extension_complete)
+    return {
+        "branch_local_admitted": bool(branch_local_admitted),
+        "extension_complete": bool(extension_complete),
+        "promotion_allowed": practical_allowed,
+        "trade_usable": practical_allowed,
+        "update_goal": practical_allowed,
+    }
+
+def build_metrics(pass_exec):
+    practical = practical_admission_flags(pass_exec, extension_complete=True)
+    return {
+        "branch_local_admitted": practical["branch_local_admitted"],
+        "extension_complete": practical["extension_complete"],
+        "promotion_allowed": practical["promotion_allowed"],
+        "trade_usable": practical["trade_usable"],
+        "update_goal": practical["update_goal"],
+    }
+"""
+        )
+
+        report = checker.check_source_file(path)
+
+        self.assertFalse(report["ok"])
+        self.assertEqual(
+            report["violations"][0]["violation"],
+            "extension_complete_without_validated_practical_closure_source",
+        )
+        self.assertEqual(report["violations"][0]["key"], "extension_complete")
+
+    def test_flags_metrics_extension_complete_readback_helper_call(self) -> None:
+        path = self.write_source(
+            """
+def practical_admission_flags(branch_local_admitted, extension_complete=False):
+    practical_allowed = bool(branch_local_admitted and extension_complete)
+    return {
+        "branch_local_admitted": bool(branch_local_admitted),
+        "extension_complete": bool(extension_complete),
+        "promotion_allowed": practical_allowed,
+        "trade_usable": practical_allowed,
+        "update_goal": practical_allowed,
+    }
+
+def rewrite_metrics(metrics):
+    practical = practical_admission_flags(
+        bool(metrics.get("branch_local_admitted")),
+        extension_complete=bool(metrics.get("extension_complete")),
+    )
+    metrics["promotion_allowed"] = practical["promotion_allowed"]
+    metrics["trade_usable"] = practical["trade_usable"]
+    metrics["update_goal"] = practical["update_goal"]
+    return metrics
+"""
+        )
+
+        report = checker.check_source_file(path)
+
+        self.assertFalse(report["ok"])
+        self.assertEqual(
+            report["violations"][0]["violation"],
+            "extension_complete_without_validated_practical_closure_source",
+        )
+        self.assertEqual(report["violations"][0]["key"], "extension_complete")
+
+    def test_flags_returned_true_extension_complete_helper_call(self) -> None:
+        path = self.write_source(
+            """
+def practical_admission_flags(branch_local_admitted, extension_complete=False):
+    practical_allowed = bool(branch_local_admitted and extension_complete)
+    return {
+        "branch_local_admitted": bool(branch_local_admitted),
+        "extension_complete": bool(extension_complete),
+        "promotion_allowed": practical_allowed,
+        "trade_usable": practical_allowed,
+        "update_goal": practical_allowed,
+    }
+
+def build_metrics(pass_exec):
+    return practical_admission_flags(pass_exec, extension_complete=True)
+"""
+        )
+
+        report = checker.check_source_file(path)
+
+        self.assertFalse(report["ok"])
+        self.assertEqual(
+            report["violations"][0]["violation"],
+            "extension_complete_without_validated_practical_closure_source",
+        )
+        self.assertEqual(report["violations"][0]["key"], "extension_complete")
+
+    def test_allows_unrelated_extension_complete_keyword_call(self) -> None:
+        path = self.write_source(
+            """
+def build_report(extension_complete=False):
+    return {"extension_complete": bool(extension_complete)}
+
+def build_metrics(pass_exec):
+    report = build_report(extension_complete=True)
+    return {
+        "extension_complete": report["extension_complete"],
+        "promotion_allowed": False,
+        "trade_usable": False,
+        "update_goal": False,
+    }
+"""
+        )
+
+        report = checker.check_source_file(path)
+
+        self.assertTrue(report["ok"])
+        self.assertEqual(report["violations"], [])
+
     def test_flags_practical_helper_that_ignores_extension_complete(self) -> None:
         path = self.write_source(
             """

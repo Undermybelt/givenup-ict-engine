@@ -74,6 +74,85 @@ class ObjectiveClosureSnapshotTest(unittest.TestCase):
         self.assertEqual(summary["child_report_age_seconds"], {})
         self.assertEqual(summary["prioritized_next_actions"], [])
 
+    def test_summarize_snapshot_includes_done_definition_blocker_details(self) -> None:
+        summary = summarize_snapshot(
+            {
+                "head": "abc123",
+                "tracked_worktree_fingerprint": {
+                    "sha256": "fingerprint",
+                    "status": "dirty",
+                    "tracked_status_entries": 7,
+                },
+                "report_timestamp": "2026-05-29T13:50:40Z",
+                "status": "pass",
+                "completion_ready": False,
+                "evidence_level": "partial_skipped_gates",
+                "pass_count": 12,
+                "fail_count": 0,
+                "skip_count": 4,
+                "total_gates": 16,
+                "quickstart_surface": "pass",
+                "unresolved": [],
+                "skipped_gates": [
+                    "cargo_check_all_targets",
+                    "cargo_clippy_all_targets_deny_warnings",
+                    "cargo_test",
+                    "smoke_acceptance_tmp_state",
+                ],
+                "next_action": "rerun with --run-all-heavy before treating done-definition as completion proof",
+                "proof_applied": False,
+                "proof_rejected_reason": "proof_has_skipped_gates",
+            },
+            {
+                "status": "pass",
+                "same_tree_practical_closure": {
+                    "status": "pass",
+                    "promotion_allowed": True,
+                    "trade_usable": True,
+                    "provider_execution_feedback_chain": "pass",
+                    "evidence_packet": "packet.json",
+                    "evidence_packet_validated": True,
+                },
+            },
+            {
+                "status": "pass",
+                "unresolved_next_actions": {},
+            },
+            snapshot_timestamp="2026-05-29T13:50:52Z",
+        )
+
+        self.assertIn("done_definition_not_completion_ready", summary["blockers"])
+        self.assertEqual(
+            summary["blocker_details"]["done_definition_not_completion_ready"],
+            {
+                "head": "abc123",
+                "tracked_worktree_fingerprint": {
+                    "sha256": "fingerprint",
+                    "status": "dirty",
+                    "tracked_status_entries": 7,
+                },
+                "report_timestamp": "2026-05-29T13:50:40Z",
+                "status": "pass",
+                "completion_ready": False,
+                "evidence_level": "partial_skipped_gates",
+                "pass_count": 12,
+                "fail_count": 0,
+                "skip_count": 4,
+                "total_gates": 16,
+                "quickstart_surface": "pass",
+                "unresolved": [],
+                "skipped_gates": [
+                    "cargo_check_all_targets",
+                    "cargo_clippy_all_targets_deny_warnings",
+                    "cargo_test",
+                    "smoke_acceptance_tmp_state",
+                ],
+                "next_action": "rerun with --run-all-heavy before treating done-definition as completion proof",
+                "proof_applied": False,
+                "proof_rejected_reason": "proof_has_skipped_gates",
+            },
+        )
+
     def test_summarize_snapshot_blocks_without_validated_same_tree_practical_closure_packet(self) -> None:
         summary = summarize_snapshot(
             {

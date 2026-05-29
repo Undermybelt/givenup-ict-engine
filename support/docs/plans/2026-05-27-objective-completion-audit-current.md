@@ -1876,3 +1876,62 @@ Requirement verdict updates:
   source alignment, and either retiring/tracking/fixing those wrappers or
   preserving an explicit matching quarantine while all other gates prove the
   requested end state.
+
+## 2026-05-29 Current Refresh - Extension-Complete Source Gate Tightened
+
+Latest authoritative packet for this refresh:
+
+- parent objective snapshot with remote checks:
+  `/tmp/ict-engine-goal-20260529-codex-resume-current-remote/objective_closure_snapshot.json`
+
+Commands:
+
+```bash
+python3 -m unittest support.scripts.research.tests.test_downstream_practical_admission_source_check -v
+python3 -m unittest support.scripts.tests.test_done_definition_audit -v
+python3 -m unittest support.scripts.tests.test_objective_closure_snapshot -v
+python3 support/scripts/objective_closure_snapshot.py --compact --check-remotes --output-dir /tmp/ict-engine-goal-20260529-codex-resume-current-remote --timeout-seconds 300
+```
+
+Current command truth:
+
+- `downstream_practical_admission_source_check.py` now fails closed when a
+  wrapper passes positive/local `extension_complete` into
+  `practical_admission_flags(...)`, including hardcoded `True`,
+  `bool(metrics.get("extension_complete"))`, and direct-return helper calls;
+- focused verification passed: practical-admission source checker `31/31`,
+  done-definition audit `31/31`, and objective snapshot `43/43`;
+- tracked practical-admission violations remained `0`; quarantined untracked
+  practical debt remained visible at `270` violations across `155` untracked
+  files, including the two stricter `extension_complete` findings;
+- the remote-checked parent snapshot still exited `1` with blockers
+  `done_definition_not_completion_ready`, `factor_closure_blocked`, and
+  `release_readiness_blocked`;
+- factor closure stayed non-practical: `active_claims=2`,
+  `fresh_active_claims_without_live_process=2`, `live_factor_processes=0`,
+  `promotion_allowed_true=0`, `trade_usable_true=0`, and
+  `same_tree_practical_closure=null`;
+- release remote readback passed, but release readiness still failed on
+  `worktree_clean_for_release` and `source_origin_matches_selected_source`.
+
+Loopholes found and classified:
+
+- `extension_complete` is lifecycle proof, not a wrapper-local convenience
+  argument. Any practical source that manufactures positive `extension_complete`
+  from local metrics or hardcoded truth can falsely convert branch-local
+  admission into `promotion_allowed`, `trade_usable`, or `update_goal`.
+- Returning the helper result directly is a source-shape bypass unless generic
+  calls are checked, not only assignment RHS calls. The checker now scans all
+  `practical_admission_flags(...)` call sites for unsafe positive
+  `extension_complete`.
+
+Requirement verdict updates:
+
+- Current objective status remains `not_complete`.
+- This slice raises the proof standard for practical-use wrappers but does not
+  create or prove a practical factor. Verified practical counts remain
+  `promotion_allowed_true=0` and `trade_usable_true=0`.
+- Next proof requirements are unchanged: current heavy done-definition proof,
+  no active/live factor closure blockers, a validated same-tree practical
+  closure packet, and release readiness from a clean selected source with source
+  origin alignment.
