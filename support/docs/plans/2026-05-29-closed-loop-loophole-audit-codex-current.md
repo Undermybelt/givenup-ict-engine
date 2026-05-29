@@ -38,6 +38,24 @@ checking `ps`/`rg`/`tail`/`find` readback markers, and include `ps -p` pollers.
 
 Regression: `test_live_process_classifier_ignores_ps_escaped_shell_readback_poller`.
 
+## Fixed Loophole - Same-Tree Evidence Packet Content
+
+`support/scripts/factor_claim_terminalization_audit.py` accepted a
+`same_tree_practical_closure.json` marker when it had pass flags and an
+in-run-root `evidence_packet` path, but it only verified that the evidence file
+existed. A marker-only JSON such as `{"chain":"provider_execution_feedback"}`
+could therefore be discovered as practical closure without proving the actual
+provider -> execution -> feedback chain.
+
+Fix: require the referenced evidence JSON to carry the same terminal metrics
+that the downstream producer writes for practical admission: true practical
+flags, zero command exits, branch survival, actionable candidate, branch-local
+admission, validation readiness, path-ranker use by execution tree, non-observe
+candidate status, policy-training summary, and raw/production/observation
+validation counters meeting their required ratios.
+
+Regression: `test_build_report_rejects_closure_packet_with_marker_only_evidence`.
+
 ## Verification
 
 - RED: the new regression failed before the implementation because
@@ -46,7 +64,10 @@ Regression: `test_live_process_classifier_ignores_ps_escaped_shell_readback_poll
 - `python3 -m py_compile support/scripts/factor_claim_terminalization_audit.py support/scripts/tests/test_factor_claim_terminalization_audit.py`
   passed.
 - `python3 -m unittest support.scripts.tests.test_factor_claim_terminalization_audit support.scripts.tests.test_objective_closure_snapshot -v`
-  ran `123/123 OK`.
+  ran `124/124 OK` after the same-tree evidence-content regression was added.
+- `python3 -m unittest support.docs.experiments.actionable-regime-confidence.scripts.test_tomac_nq_bidir_opening_drive_exact_downstream_v1 -v`
+  ran `11/11 OK`, keeping the current closure packet producer behavior aligned
+  with the stricter audit consumer.
 - `git diff --check -- support/scripts/factor_claim_terminalization_audit.py support/scripts/tests/test_factor_claim_terminalization_audit.py support/docs/plans/2026-05-28-factor-training-closed-loop-continuation-codex-current.md`
   returned clean.
 
@@ -56,6 +77,12 @@ Regression: `test_live_process_classifier_ignores_ps_escaped_shell_readback_poll
   the shared Board B queue. The latest current audit in this slice saw the real
   KST/Coppock PortfolioDensityLift prescreen root:
   `/tmp/ict-engine-tomac-kst-coppock-portfolio-density-lift-pybacktest-20260529T133157+0800`.
+- Current compact audit after the same-tree validator fix still reports
+  `status=needs_attention`, `active_claims=1`, `live_factor_processes=1`,
+  `promotion_allowed_true=0`, `trade_usable_true=0`, and
+  `same_tree_practical_closure=null`. The live process is the Python-only
+  PortfolioDensityLift prescreen, so it is not practical closure evidence and
+  must be waited out before factor closure can be reevaluated.
 - Release readiness remains blocked by `worktree_clean_for_release`; remote
   gates were not run in the proof-aware snapshot.
 - The objective still lacks a same-tree practical closure packet proving

@@ -953,7 +953,27 @@ trade_usable=false
                 encoding="utf-8",
             )
             (summaries_dir / "evidence-packet.json").write_text(
-                '{"chain":"provider_execution_feedback"}',
+                json.dumps(
+                    {
+                        "promotion_allowed": True,
+                        "trade_usable": True,
+                        "all_command_exits_zero": True,
+                        "exact_branch_survived": True,
+                        "execution_candidate_actionable": True,
+                        "execution_candidate_status": "trade_candidate",
+                        "branch_local_admitted": True,
+                        "validation_ready": True,
+                        "path_ranker_used": True,
+                        "path_ranker_score_used_by_execution_tree": True,
+                        "validation_counters": {
+                            "raw_scored_mature": "1155/30",
+                            "production_validation": "1155/30",
+                            "observation_validation": "32/30",
+                        },
+                        "policy_training_summary": {"rows": 1},
+                        "command_results": [{"name": "all", "exit": 0, "timed_out": False}],
+                    }
+                ),
                 encoding="utf-8",
             )
             (claims_dir / "terminal-practical.claim").write_text(
@@ -986,6 +1006,48 @@ trade_usable=false
                 "run_root": "support/docs/experiments/run-a",
             },
         )
+
+    def test_build_report_rejects_closure_packet_with_marker_only_evidence(self) -> None:
+        with tempfile.TemporaryDirectory() as repo_tmp, tempfile.TemporaryDirectory() as claims_tmp:
+            repo_root = Path(repo_tmp)
+            claims_dir = Path(claims_tmp)
+            run_root = repo_root / "support" / "docs" / "experiments" / "run-a"
+            summaries_dir = run_root / "summaries"
+            checks_dir = run_root / "checks"
+            summaries_dir.mkdir(parents=True)
+            checks_dir.mkdir(parents=True)
+            (summaries_dir / "same_tree_practical_closure.json").write_text(
+                json.dumps(
+                    {
+                        "status": "pass",
+                        "promotion_allowed": True,
+                        "trade_usable": True,
+                        "provider_execution_feedback_chain": "pass",
+                        "evidence_packet": "checks/terminal_metrics.json",
+                    }
+                ),
+                encoding="utf-8",
+            )
+            (checks_dir / "terminal_metrics.json").write_text(
+                json.dumps({"chain": "provider_execution_feedback"}),
+                encoding="utf-8",
+            )
+            (claims_dir / "terminal-practical.claim").write_text(
+                f"""
+owner=codex
+status=terminalized
+run_root={run_root.relative_to(repo_root)}
+decision=practical_closure_packet_marker_only_evidence
+promotion_allowed=false
+trade_usable=false
+""",
+                encoding="utf-8",
+            )
+
+            report = build_report(claims_dir=claims_dir, repo_root=repo_root)
+
+        self.assertEqual(report["summary"]["status"], "pass")
+        self.assertIsNone(report["summary"]["same_tree_practical_closure"])
 
     def test_build_report_ignores_practical_closure_packet_with_external_evidence_path(self) -> None:
         with tempfile.TemporaryDirectory() as repo_tmp, tempfile.TemporaryDirectory() as claims_tmp:

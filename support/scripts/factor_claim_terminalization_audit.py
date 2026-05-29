@@ -769,10 +769,69 @@ def _read_valid_same_tree_practical_closure_packet(
     evidence_path = _resolve_run_root_scoped_path(evidence_packet, run_root)
     if evidence_path is None:
         return None
+    if not _evidence_packet_proves_same_tree_practical_closure(evidence_path):
+        return None
     packet = dict(parsed)
     packet["evidence_packet"] = _path_for_report(evidence_path, repo_root=repo_root)
     packet["packet_path"] = _path_for_report(packet_path, repo_root=repo_root)
     return packet
+
+
+def _evidence_packet_proves_same_tree_practical_closure(evidence_path: Path) -> bool:
+    try:
+        parsed = json.loads(evidence_path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return False
+    if not isinstance(parsed, dict):
+        return False
+    if parsed.get("promotion_allowed") is not True or parsed.get("trade_usable") is not True:
+        return False
+    if parsed.get("all_command_exits_zero") is not True:
+        return False
+    if parsed.get("exact_branch_survived") is not True:
+        return False
+    if parsed.get("execution_candidate_actionable") is not True:
+        return False
+    if parsed.get("branch_local_admitted") is not True:
+        return False
+    if parsed.get("validation_ready") is not True:
+        return False
+    if parsed.get("path_ranker_used") is not True:
+        return False
+    if parsed.get("path_ranker_score_used_by_execution_tree") is not True:
+        return False
+    candidate_status = str(parsed.get("execution_candidate_status") or "")
+    if candidate_status in {"", "no_trade", "observe", "discard"}:
+        return False
+    if not _validation_counters_cover_practical_chain(parsed.get("validation_counters")):
+        return False
+    policy_summary = parsed.get("policy_training_summary")
+    if not isinstance(policy_summary, dict) or not policy_summary:
+        return False
+    command_results = parsed.get("command_results")
+    if not isinstance(command_results, list) or not command_results:
+        return False
+    return all(isinstance(row, dict) and row.get("exit") == 0 for row in command_results)
+
+
+def _validation_counters_cover_practical_chain(value: object) -> bool:
+    if not isinstance(value, dict):
+        return False
+    for key in ("raw_scored_mature", "production_validation", "observation_validation"):
+        actual, required = _parse_ratio(value.get(key))
+        if required <= 0 or actual < required:
+            return False
+    return True
+
+
+def _parse_ratio(value: object) -> tuple[int, int]:
+    if not isinstance(value, str) or "/" not in value:
+        return (0, 0)
+    left, right = value.split("/", 1)
+    try:
+        return (int(left), int(right))
+    except ValueError:
+        return (0, 0)
 
 
 def _resolve_run_root_scoped_path(value: object, run_root: Path) -> Path | None:
