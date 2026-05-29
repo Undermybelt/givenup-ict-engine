@@ -557,6 +557,89 @@ trade_usable=false
             self.assertEqual(report["claims"][0]["status"], "terminalized")
             self.assertEqual(report["claims"][0]["decision"], "practical_lifecycle_fail_closed")
 
+    def test_build_report_links_pending_repo_run_root_terminal_metrics_by_factor_id(self) -> None:
+        with tempfile.TemporaryDirectory() as repo_tmp, tempfile.TemporaryDirectory() as claims_tmp:
+            repo_root = Path(repo_tmp)
+            claims_dir = Path(claims_tmp)
+            tmp_root = Path(repo_tmp) / "tmp" / "ict-engine-mgc-pending-wrapper"
+            tmp_root.mkdir(parents=True)
+            (tmp_root / "workdoc.md").write_text(
+                """
+# MGC Workdoc
+
+## Current State
+
+- status: `active_created`
+- promotion_allowed: false
+- trade_usable: false
+""",
+                encoding="utf-8",
+            )
+            repo_run_root = (
+                repo_root
+                / "support"
+                / "docs"
+                / "experiments"
+                / "actionable-regime-confidence"
+                / "runs"
+                / "20260530T055244+0800-codex-ibkr-mgc1m-kalman-vwap-slope-quality-hold-filter-full-ladder-gate1-v1"
+            )
+            (repo_run_root / "checks").mkdir(parents=True)
+            (repo_run_root / "summaries").mkdir(parents=True)
+            terminal_metrics = {
+                "factor_id": "ibkr_mgc1m_kalman_vwap_slope_quality_hold_filter_full_ladder_v1",
+                "branch_path": "RangeReversion -> KalmanFairValue -> VwapSlopeReclaimQualityHoldFilter",
+                "decision": "autoquant_ranked_gate1_candidate_needs_downstream_verification",
+                "promotion_allowed": False,
+                "trade_usable": False,
+                "update_goal": False,
+            }
+            (repo_run_root / "checks" / "terminal_metrics.json").write_text(
+                json.dumps(terminal_metrics),
+                encoding="utf-8",
+            )
+            (repo_run_root / "summaries" / "terminal_decision_summary.md").write_text(
+                "Decision: autoquant_ranked_gate1_candidate_needs_downstream_verification\n"
+                "promotion_allowed=false\n"
+                "trade_usable=false\n",
+                encoding="utf-8",
+            )
+            (claims_dir / "pending-wrapper.claim").write_text(
+                f"""
+agent_name=codex-mgc-eth-kalman-vwap-slope-quality-hold-filter-full-ladder
+owner=codex
+claimed_at=2026-05-30T05:43:08+0800
+last_progress_at=2026-05-30T05:55:30+0800
+scope=Board B MGC full-ladder Gate1 training lane
+active_task=terminalize from wrapper-stamped repo run root
+non_goals=no promotion
+write_surface={tmp_root / 'workdoc.md'}
+run_root={tmp_root}
+repo_tracking_doc=support/docs/experiments/actionable-regime-confidence/20260530T054308+0800-codex-mgc-training.md
+repo_run_root=pending_wrapper_launch_stamp
+factor_id=ibkr_mgc1m_kalman_vwap_slope_quality_hold_filter_full_ladder_v1
+status=active
+progress_report=wrapper launch generated a stamped repo run root
+promotion_allowed=false
+trade_usable=false
+""",
+                encoding="utf-8",
+            )
+
+            report = build_report(claims_dir=claims_dir, repo_root=repo_root)
+
+        self.assertEqual(report["summary"]["active_claims"], 0)
+        self.assertEqual(report["summary"]["terminalized_claims"], 1)
+        self.assertEqual(report["claims"][0]["status"], "terminalized")
+        self.assertEqual(
+            report["claims"][0]["decision"],
+            "autoquant_ranked_gate1_candidate_needs_downstream_verification",
+        )
+        self.assertIn(
+            "support/docs/experiments/actionable-regime-confidence/runs/20260530T055244+0800-codex-ibkr-mgc1m-kalman-vwap-slope-quality-hold-filter-full-ladder-gate1-v1/checks/terminal_metrics.json",
+            report["claims"][0]["summary_files"],
+        )
+
     def test_build_report_treats_outputs_terminal_summary_as_terminalized(self) -> None:
         with tempfile.TemporaryDirectory() as repo_tmp, tempfile.TemporaryDirectory() as claims_tmp:
             repo_root = Path(repo_tmp)

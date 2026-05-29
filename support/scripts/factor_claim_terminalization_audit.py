@@ -301,6 +301,8 @@ def _load_summary_flags(run_root: Path | None) -> dict[str, Any]:
                 for key in (
                     "promotion_allowed",
                     "trade_usable",
+                    "factor_id",
+                    "branch_path",
                     "decision",
                     "terminal_decision",
                     "terminal_status",
@@ -357,6 +359,90 @@ def _load_workdoc_terminal_flags(write_surface: object, run_root: Path | None, c
         if isinstance(value, bool):
             evidence[key] = value
     return evidence
+
+
+def _load_repo_run_terminal_flags(fields: dict[str, Any], claim_root: Path) -> dict[str, Any]:
+    repo_run_root = fields.get("repo_run_root")
+    if not isinstance(repo_run_root, str) or not repo_run_root.strip():
+        return {}
+    normalized = repo_run_root.strip().lower()
+    if normalized.startswith("pending_"):
+        return _load_pending_repo_run_terminal_flags(fields, claim_root)
+    if normalized in RUN_ROOT_SENTINELS:
+        return {}
+    run_root = Path(repo_run_root).expanduser()
+    if not run_root.is_absolute():
+        run_root = claim_root / run_root
+    return _prefix_summary_files(_load_summary_flags(run_root), run_root, claim_root)
+
+
+def _load_pending_repo_run_terminal_flags(fields: dict[str, Any], claim_root: Path) -> dict[str, Any]:
+    claim_factor_id = str(fields.get("factor_id") or "").strip()
+    claim_branch_path = _normalize_branch_path_text(fields.get("branch_path"))
+    if not claim_factor_id and not claim_branch_path:
+        return {}
+    runs_dir = claim_root / "support" / "docs" / "experiments" / "actionable-regime-confidence" / "runs"
+    if not runs_dir.exists() or not runs_dir.is_dir():
+        return {}
+    claim_time = _parse_claim_datetime(fields.get("claimed_at"))
+    matches: list[tuple[datetime | None, Path, dict[str, Any]]] = []
+    for run_root in sorted(path for path in runs_dir.iterdir() if path.is_dir()):
+        run_time = _run_root_name_datetime(run_root.name)
+        if claim_time and run_time and run_time < claim_time:
+            continue
+        summary_flags = _load_summary_flags(run_root)
+        if not _summary_indicates_terminalized(summary_flags):
+            continue
+        if not _terminal_evidence_matches_claim(summary_flags, claim_factor_id, claim_branch_path):
+            continue
+        matches.append((run_time, run_root, summary_flags))
+    if not matches:
+        return {}
+    matches.sort(key=lambda item: item[0] or datetime.min.replace(tzinfo=timezone.utc), reverse=True)
+    _, run_root, summary_flags = matches[0]
+    return _prefix_summary_files(summary_flags, run_root, claim_root)
+
+
+def _terminal_evidence_matches_claim(
+    summary_flags: dict[str, Any],
+    claim_factor_id: str,
+    claim_branch_path: str,
+) -> bool:
+    evidence_factor_id = str(summary_flags.get("factor_id") or "").strip()
+    if claim_factor_id and evidence_factor_id and claim_factor_id == evidence_factor_id:
+        return True
+    evidence_branch_path = _normalize_branch_path_text(summary_flags.get("branch_path"))
+    return bool(claim_branch_path and evidence_branch_path and claim_branch_path == evidence_branch_path)
+
+
+def _run_root_name_datetime(name: str) -> datetime | None:
+    match = re.match(r"^(\d{8}T\d{6})(Z|[+-]\d{4})?", name)
+    if not match:
+        return None
+    timestamp = match.group(1)
+    timezone_text = match.group(2) or "+0000"
+    if timezone_text == "Z":
+        timezone_text = "+0000"
+    try:
+        return datetime.strptime(f"{timestamp}{timezone_text}", "%Y%m%dT%H%M%S%z")
+    except ValueError:
+        return None
+
+
+def _prefix_summary_files(evidence: dict[str, Any], source_root: Path, report_root: Path) -> dict[str, Any]:
+    if not evidence:
+        return {}
+    prefixed = dict(evidence)
+    summary_files: list[str] = []
+    for rel_path in evidence.get("summary_files", []):
+        path = source_root / str(rel_path)
+        try:
+            summary_files.append(str(path.relative_to(report_root)))
+        except ValueError:
+            summary_files.append(str(path))
+    if summary_files:
+        prefixed["summary_files"] = summary_files
+    return prefixed
 
 
 def _workdoc_terminal_section_text(text: str) -> str:
@@ -428,6 +514,7 @@ def read_claim(path: Path, root: Path) -> dict[str, Any]:
     summary_flags = _merge_terminal_evidence(
         _load_summary_flags(run_root),
         _load_workdoc_terminal_flags(fields.get("write_surface"), run_root, claim_root),
+        _load_repo_run_terminal_flags(fields, claim_root),
     )
     promotion_allowed = fields.get("promotion_allowed")
     trade_usable = fields.get("trade_usable")

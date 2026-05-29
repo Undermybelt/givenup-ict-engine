@@ -214,6 +214,31 @@ admission owners where current evidence shows a system loophole.
   `promotion_allowed_true=0`, `trade_usable_true=0`, and
   `same_tree_practical_closure=null`; launches remain blocked by fresh HO source
   reserve and MGC full-ladder training claims.
+- 2026-05-30T06:04+0800: fixed a wrapper-stamped repo-run attribution loophole
+  in the compact claim audit. The MGC quality-hold-filter claim kept
+  `repo_run_root=pending_wrapper_launch_stamp` and a `/tmp` workdoc status of
+  `active_created`, while the launched wrapper wrote terminal metrics under a
+  stamped repo run root:
+  `support/docs/experiments/actionable-regime-confidence/runs/20260530T055244+0800-codex-ibkr-mgc1m-kalman-vwap-slope-quality-hold-filter-full-ladder-gate1-v1/checks/terminal_metrics.json`.
+  That terminal packet found one exact 1m cost-positive Gate 1 row,
+  `ibkr-mgc-kalman-vwap-slope-quality-hold-filter-qhold-strict-1m-full-ladder-v1`,
+  with `trade_count=4`, `5bps_per_side_total_profit_pct=0.01`, and
+  `actual_ibkr_total_profit_pct=0.39298`, but it still correctly kept
+  `promotion_allowed=false`, `trade_usable=false`, and `update_goal=false`
+  because the full same-tree practical lifecycle was not proven. Added RED test
+  `test_build_report_links_pending_repo_run_root_terminal_metrics_by_factor_id`,
+  observed it fail with `active_claims=1`, then changed the audit to resolve
+  pending `repo_run_root` sentinels to later repo run roots with matching
+  terminal `factor_id` or normalized `branch_path`. Verification passed:
+  `python3 -m unittest support.scripts.tests.test_factor_claim_terminalization_audit -v`
+  ran 97 tests OK;
+  `python3 -m py_compile support/scripts/factor_claim_terminalization_audit.py support/scripts/tests/test_factor_claim_terminalization_audit.py`
+  passed; `git diff --check -- support/scripts/factor_claim_terminalization_audit.py support/scripts/tests/test_factor_claim_terminalization_audit.py`
+  passed. Same-turn compact audit no longer lists the prior MGC claim as active,
+  but still reports no practical factor: `promotion_allowed_true=0`,
+  `trade_usable_true=0`, and `same_tree_practical_closure=null`. Runtime remains
+  blocked by fresh PA/NQ/ZR/ZT source or cost reserve claims and a new live MGC
+  AQ root.
 
 ## Root Cause Readback
 
