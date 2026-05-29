@@ -1066,6 +1066,8 @@ def _is_live_factor_command(command: str) -> bool:
         return False
     if _is_await_launch_wrapper(command):
         return False
+    if _is_no_launch_tomac_prep_wrapper(command):
+        return False
     if _is_tomac_diagnostic_script(command):
         return False
     if _is_ibkr_provider_status_probe(command):
@@ -1124,6 +1126,14 @@ def _is_tomac_prep_wrapper_launch(command: str) -> bool:
     return bool(
         re.search(r"(?:^|\s)\S*run_tomac_[^\s/]*_prep_v\d+\.py\b", normalized)
         and re.search(r"(?:^|\s)--launch(?:\s|$)", normalized)
+    )
+
+
+def _is_no_launch_tomac_prep_wrapper(command: str) -> bool:
+    normalized = " ".join(command.split())
+    return bool(
+        re.search(r"(?:^|\s)\S*run_tomac_[^\s/]*_prep_v\d+\.py\b", normalized)
+        and not re.search(r"(?:^|\s)--launch(?:\s|$)", normalized)
     )
 
 

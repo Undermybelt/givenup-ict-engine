@@ -2694,6 +2694,17 @@ trade_usable=false
             Path("/tmp/ict-engine-tomac-nq-strict-ote-density-repair-fullwindow-20260525T130328+0800"),
         )
 
+    def test_live_process_classifier_ignores_no_launch_tomac_prep_wrapper(self) -> None:
+        command = (
+            "python3 support/docs/experiments/actionable-regime-confidence/scripts/"
+            "run_tomac_m2k_es_riskon_rotation_vwap_adx_prep_v1.py "
+            "--root /tmp/ict-engine-m2k-es-riskon-rotation-vwap-adx-prep-20260530T050126+0800 "
+            "--compact-root support/docs/experiments/actionable-regime-confidence/runs/"
+            "20260530T050126+0800-codex-m2k-es-riskon-rotation-vwap-adx-prep-v1"
+        )
+
+        self.assertFalse(_is_live_factor_command(command))
+
     def test_live_process_classifier_detects_tmp_lane_python_backtest_script(self) -> None:
         command = (
             "/opt/homebrew/Cellar/python@3.13/3.13.12_1/Frameworks/Python.framework/Versions/3.13/"

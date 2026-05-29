@@ -178,6 +178,22 @@ admission owners where current evidence shows a system loophole.
   `fresh_active_claims_without_live_process=1`, `live_factor_processes=1`,
   `promotion_allowed_true=0`, `trade_usable_true=0`, and
   `same_tree_practical_closure=null`; runtime launch remains blocked.
+- 2026-05-30T05:40+0800: verified and retained the compact-audit live-process
+  classifier fix for no-launch TOMAC prep wrappers. A `run_tomac_*_prep_v*.py`
+  wrapper without `--launch` is prep/readback state, not a live factor runtime;
+  counting it as live occupancy can falsely block the next safe launch window.
+  Added regression coverage for the no-launch shape while preserving live
+  detection for launched prep wrappers and child TOMAC/backtest/provider
+  commands. Verification passed:
+  `python3 -m unittest support.scripts.tests.test_factor_claim_terminalization_audit -v`
+  ran 95 tests OK;
+  `python3 -m py_compile support/scripts/factor_claim_terminalization_audit.py support/scripts/tests/test_factor_claim_terminalization_audit.py`
+  passed;
+  `git diff --check -- support/scripts/factor_claim_terminalization_audit.py support/scripts/tests/test_factor_claim_terminalization_audit.py`
+  passed. Current compact claim audit still reports no practical factor:
+  `promotion_allowed_true=0`, `trade_usable_true=0`, and
+  `same_tree_practical_closure=null`. New launches remain blocked by fresh
+  non-live active claims rather than live runtime occupancy.
 
 ## Root Cause Readback
 
