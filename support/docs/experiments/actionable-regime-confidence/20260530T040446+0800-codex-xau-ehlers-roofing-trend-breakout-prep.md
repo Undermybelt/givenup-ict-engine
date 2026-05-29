@@ -155,6 +155,35 @@ Completed verification for this prep slice:
 - Cost survival remains unverified because continuous retained `XAU` rows still
   must map to exact `GC` or `MGC` contract months and roll rules before Gate 1,
   downstream, paper/sim, promotion, or trade-usability claims.
+- Follow-up non-colliding mapping prep at 2026-05-30T05:19+0800 ran under a
+  separate `/tmp` claim while a foreign EUR/6E local screen remained live. It
+  launched no provider, AQ, local screen, paper, sim, live, or downstream path.
+  Artifacts:
+  `/tmp/ict-engine-xau-continuous-contract-mapping-prep-20260530T050546+0800/checks/xau_highest_volume_outright_gc_selection_summary.json`,
+  `/tmp/ict-engine-xau-continuous-contract-mapping-prep-20260530T050546+0800/checks/xau_symbology_roll_segments.json`,
+  and
+  `/tmp/ict-engine-xau-continuous-contract-mapping-prep-20260530T050546+0800/checks/xau_raw_front_contract_match_summary.json`.
+- Mapping prep found that retained XAU parquet cache files preserve only
+  `datetime/open/high/low/close/volume`, not `symbol`, `instrument_id`, contract
+  month, or roll adjustment. The raw Databento-style source and symbology are
+  therefore required for cost attribution.
+- The XAU symbology source is all `GC` root (`1,077,103` symbology rows,
+  `7,018` raw symbols), so this lane maps to full-size COMEX `GC`, not `MGC`.
+  The MGC cost reference remains comparison-only for this XAU runner.
+- A naive `symbology.csv` date -> instrument_id rule is not usable for this
+  runner's roll/cost proof: it selected only `125,051` rows, included spread
+  symbols such as `GCG2-GCH2`, and covered only `2021-07-12` to `2023-06-09`.
+- The runner-compatible raw selection rule is highest-volume positive outright
+  `GC` per timestamp, rejecting symbols containing `-`. That selected
+  `1,769,524` rows from `5,333,532` raw rows, dropped `1,976,135`
+  spread/non-outright rows and `1,587,873` duplicate timestamp rows by volume,
+  selected `55` GC contracts/instrument ids, and selected `0` MGC rows.
+- Cost-model implication: ordinary IBKR cost reference for this lane is the GC
+  packet (`2.52` USD per side / `5.04` USD round turn per contract before
+  separate spread/slippage). Cost survival still remains unverified because the
+  runner-compatible selection has `15,861` timestamp-level contract changes,
+  which is a volume-leader selection rule, not a stable contract-month roll
+  policy. Promotion, trade usability, and update-goal flags remain false.
 - Claim JSON validated with `python3 -m json.tool`; terminal JSON validation is
   recorded under the run-root checks directory.
 
