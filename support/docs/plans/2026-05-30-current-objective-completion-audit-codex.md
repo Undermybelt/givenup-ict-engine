@@ -5,8 +5,8 @@
 - repo: `/Users/thrill3r/projects-ict-engine/ict-engine`
 - branch: `main`
 - status: `active / not complete`
-- current_head: `bbcb360aa3dd70ec7df1cbd757111c2991c9ab68`
-- observed_head_drift: `cb9b0cc0 -> adf73f89 -> df45e44e -> 939f6d88 -> 7d1ce460 -> e444e6f -> 3ce57b3b -> 30d0dd1 -> 71c9655 -> 19a569d -> fd59751 -> bbcb360`
+- current_head: `cd680e40b13cace05aee55bd9b8283b80cfd06fd`
+- observed_head_drift: `cb9b0cc0 -> adf73f89 -> df45e44e -> 939f6d88 -> 7d1ce460 -> e444e6f -> 3ce57b3b -> 30d0dd1 -> 71c9655 -> 19a569d -> fd59751 -> bbcb360 -> 8b815184 -> 9fa4879e -> 1a2c43a3 -> cd680e40`
 - completion_claim: `false`
 - promotion_allowed: `false`
 - trade_usable: `false`
@@ -53,20 +53,19 @@ python3 support/scripts/objective_closure_snapshot.py \
   --compact \
   --check-remotes \
   --timeout-seconds 300 \
-  --output-dir /tmp/ict-engine-goal-20260530-current-fd59751-after-practical-quarantine
+  --output-dir /tmp/ict-engine-goal-20260530-current-cd680e40-snapshot
 ```
 
-The output directory name reflects the HEAD observed before the command began;
-the child audits inside the packet observed `bbcb360aa3dd70ec7df1cbd757111c2991c9ab68`.
+The child audits inside the packet observed `cd680e40b13cace05aee55bd9b8283b80cfd06fd`.
 
 Evidence packet:
 
-- `/tmp/ict-engine-goal-20260530-current-fd59751-after-practical-quarantine/objective_closure_snapshot.json`
-- `/tmp/ict-engine-goal-20260530-current-fd59751-after-practical-quarantine/done_definition_audit.compact.json`
-- `/tmp/ict-engine-goal-20260530-current-fd59751-after-practical-quarantine/factor_claim_terminalization_audit.compact.json`
-- `/tmp/ict-engine-goal-20260530-current-fd59751-after-practical-quarantine/release_readiness_audit.compact.json`
-- `/tmp/ict-engine-goal-20260530-current-fd59751-after-practical-quarantine/practical_admission_source_debt_manifest.json`
-- `/tmp/ict-engine-goal-20260530-current-fd59751-after-practical-quarantine/await_launch_source_debt_manifest.json`
+- `/tmp/ict-engine-goal-20260530-current-cd680e40-snapshot/objective_closure_snapshot.json`
+- `/tmp/ict-engine-goal-20260530-current-cd680e40-snapshot/done_definition_audit.compact.json`
+- `/tmp/ict-engine-goal-20260530-current-cd680e40-snapshot/factor_claim_terminalization_audit.compact.json`
+- `/tmp/ict-engine-goal-20260530-current-cd680e40-snapshot/release_readiness_audit.compact.json`
+- `/tmp/ict-engine-goal-20260530-current-cd680e40-snapshot/practical_admission_source_debt_manifest.json`
+- `/tmp/ict-engine-goal-20260530-current-cd680e40-snapshot/await_launch_source_debt_manifest.json`
 
 Snapshot result:
 
@@ -81,12 +80,14 @@ Snapshot result:
 Current factor-closure child surface is not clear and still not practical:
 
 - `status=needs_attention`
-- `active_claims=1`
-- `coordination_only_active_claims=6`
+- `active_claims=2`
+- `coordination_only_active_claims=7`
 - `live_factor_processes=0`
-- `fresh_active_claims_without_live_process=1`
+- `fresh_active_claims_without_live_process=2`
 - `wait_only_active_claims_without_live_process=0`
-- blocker claim: `20260530T062401+0800-codex-nq-compound-rv-stress-lifecycle-driver.claim`
+- blocker claims:
+  - `20260530T064134+0800-codex-nq-compound-rv-stress-lifecycle-exec.claim`
+  - `20260530T064148+0800-codex-mgc-eth-asia-stoprun-vwap-compression-reclaim-full-ladder-training.claim`
 - `promotion_allowed_true=0`
 - `trade_usable_true=0`
 - `same_tree_practical_closure=null`
@@ -105,7 +106,7 @@ Current source-debt readback:
 Current release-readiness child surface:
 
 - unresolved: `worktree_clean_for_release`, `source_origin_matches_selected_source`
-- current remote checks ran; `origin_status=pass_via_fallback`, `release_mirror_status=pass_via_fallback`
+- current remote checks ran; `origin_status=pass`, `release_mirror_status=pass`
 
 Historical clean proof attempt at `adf73f89`:
 
@@ -128,14 +129,14 @@ Historical clean proof attempt at `adf73f89`:
 | ID | Loophole | Current Evidence | Fix / Closure Path | Status |
 |---|---|---|---|---|
 | L1 | A light child done-definition audit can look green while heavy gates are skipped. | Current snapshot has `pass_count=6`, `skip_count=4`, `completion_ready=false`; historical clean proof at `adf73f89` had no skipped gates but failed `cargo_test` by timeout. | Freeze a selected same-head proof tree, diagnose or bound `cargo test` timeout, rerun clean heavy done-definition, and reuse it only if proof identity matches current child audit. | open |
-| L2 | Practical factor closure can be mistaken for clear occupancy. | Current claim/runtime surface is blocked by one fresh active claim; `same_tree_practical_closure=null` and practical flags are zero. | Wait for the fresh claim to progress or become stale-safe, then rerun before terminalizing. Produce or locate a valid same-tree practical closure packet covering all seven required stages. Do not use raw claim counters as proof. | open |
+| L2 | Practical factor closure can be mistaken for clear occupancy. | Current claim/runtime surface is blocked by two fresh active claims; `same_tree_practical_closure=null` and practical flags are zero. | Wait for the fresh claims to progress or become stale-safe, then rerun before terminalizing. Produce or locate a valid same-tree practical closure packet covering all seven required stages. Do not use raw claim counters as proof. | open |
 | L3 | Release evidence can be polluted by the shared dirty worktree or source-origin drift. | Current release child fails `worktree_clean_for_release` and `source_origin_matches_selected_source`; historical clean proof showed dirty-tree can be cleared from a detached tree but is now stale. | Build release proof from a clean selected source/export and preserve unresolved source-origin blockers. | open |
 | L4 | Release proof can hide source-origin drift if remote/tag checks are skipped. | Current snapshots used `--check-remotes`; parent rejected stale proof by `proof_head_mismatch`. | Keep `--check-remotes` mandatory for completion/release snapshots and require same-head proof identity. | guarded |
 | L5 | Source-debt samples can hide the full cleanup surface. | Latest snapshot stages full practical and await-launch debt manifests; current untracked practical debt is `335` violations across `175` files and now matches the reviewed quarantine. | Keep full manifests in evidence packets; if the fingerprint drifts again, update quarantine only after reviewing/retiring/tracking the complete new violation set. | guarded |
 | L6 | Quarantined untracked wrappers can be confused with release-safe source. | Latest parent snapshot preserves the untracked practical debt as quarantined detail and no longer lists it as an objective blocker. | Release from clean selected source/export only; never publish dirty shared worktree; do not count untracked quarantine as release, trade, or completion evidence. | guarded |
 | L7 | Prep packets, Python-only screens, sparse 5bps positives, or demos can be mislabeled as practical. | Current practical counts are zero; no same-tree practical closure packet exists. | Keep practical gate tied to lifecycle tuple and full same-root command evidence. | guarded / open until a real packet exists |
 | L8 | A truthful completion commit could accidentally stage unrelated agent work. | Current shared worktree has unrelated dirty tracked files. | Stage only the coherent verified slice; prove `git diff --cached --name-only` before any commit. | open |
-| L9 | Proofs can go stale while other slices commit to `main`. | `adf73f89` clean proofs were rejected by the parent packet after `main` moved; observed drift reached `7d1ce460`. | For any completion attempt, freeze the selected head and stop treating moving `main` as the proof target until the selected proof packet, final snapshot, and commit decision all name the same head. | open |
+| L9 | Proofs can go stale while other slices commit to `main`. | `adf73f89` clean proofs were rejected by the parent packet after `main` moved; observed drift reached `cd680e40`. | For any completion attempt, freeze the selected head and stop treating moving `main` as the proof target until the selected proof packet, final snapshot, and commit decision all name the same head. | open |
 
 ## Current Decision
 
@@ -224,3 +225,15 @@ blocker set without letting proof identity drift:
   `factor_closure_blocked`, `same_tree_practical_closure_unproven`, and
   `release_readiness_blocked`. Factor closure now has one fresh active claim
   without live process: `20260530T062401+0800-codex-nq-compound-rv-stress-lifecycle-driver.claim`.
+- 2026-05-30T06:47+0800: Reran compact factor audit and parent objective
+  snapshot after shared HEAD advanced to `cd680e40`. The old TOMAC AQ process
+  was gone and no live factor/runtime process was visible, but factor closure
+  still blocked on two fresh active claims without live process:
+  `20260530T064134+0800-codex-nq-compound-rv-stress-lifecycle-exec.claim` and
+  `20260530T064148+0800-codex-mgc-eth-asia-stoprun-vwap-compression-reclaim-full-ladder-training.claim`.
+  Parent snapshot stayed `not_complete` with blockers
+  `done_definition_not_completion_ready`, `factor_closure_blocked`,
+  `same_tree_practical_closure_unproven`, and `release_readiness_blocked`.
+  Practical-admission and await-launch source debt remained quarantined with
+  tracked violations `0`, untracked practical `335` / `175`, and untracked
+  await-launch `46` / `46`.
