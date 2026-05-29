@@ -29,6 +29,7 @@ Scope:
 | `macro-regime-context` | Convert macro liquidity and cross-asset stress into structured regime evidence. | Day1Global macro/sentiment framework and financial-services rates context, sanitized to structured evidence only. |
 | `options-dealer-context` | Convert options chain, IV, skew, gamma walls, and 0DTE pressure into structured evidence for regime and execution tree features. | financial-services option-vol-analysis workflow, adapted to `ict-engine` fail-closed provider policy. |
 | `market-structure-context` | Convert ICT/SMC structural observations such as BOS, CHoCH, order blocks, fair value gaps, premium/discount, and liquidity sweeps into structured evidence. | OpenMobius-skill structural taxonomy and freshness discipline, sanitized to provider-backed evidence only. |
+| `factor-source-intake` | Use blocked/waiting windows for interruptible paper, repository, strategy, and indicator intake that produces codeable regime-rooted candidates without launching shared runtime work. | ict-engine Board B factor-training contract plus public source-intake discipline. |
 
 ## External Skill Review
 

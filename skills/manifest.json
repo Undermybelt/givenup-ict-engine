@@ -74,6 +74,20 @@
       "source_review": [
         "MobiusQuant/OpenMobius-skill"
       ]
+    },
+    {
+      "id": "factor-source-intake",
+      "path": "skills/factor-source-intake/SKILL.md",
+      "purpose": "Interruptible paper, repository, strategy, and indicator intake for future regime-rooted factor candidates while Board B runtime or claims block new launches.",
+      "runtime_mapping": [
+        "Factor-training workdocs",
+        "Auto-Quant candidate material metadata",
+        "Gate 1 prescreen planning"
+      ],
+      "source_review": [
+        "ict-engine Board B factor-training contract",
+        "public paper/repository/source intake workflow"
+      ]
     }
   ],
   "excluded_raw_sources": [
