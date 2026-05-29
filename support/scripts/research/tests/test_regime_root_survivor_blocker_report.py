@@ -827,7 +827,8 @@ class RegimeRootSurvivorBlockerReportTests(unittest.TestCase):
 
             built = report.build_report(gate1_path, candidate_path, tree_path)
 
-        self.assertFalse(built["downstream"]["pda_hybrid_alignment"])
+        self.assertNotIn("pda_hybrid_alignment", built["downstream"])
+        self.assertNotIn("transition_hazard", built["downstream"])
         self.assertNotIn("pda_hybrid_alignment_not_true", built["blockers"])
         self.assertNotIn(
             "pre_bayes_conflict:pda_sequence_family_disagreement",
@@ -844,6 +845,8 @@ class RegimeRootSurvivorBlockerReportTests(unittest.TestCase):
 
         rendered = report.render_markdown(built)
 
+        self.assertNotIn("pda_hybrid_alignment", rendered)
+        self.assertNotIn("transition_hazard", rendered)
         self.assertIn("live_trade_status: `ready`", rendered)
         self.assertIn("extension_complete: `False`", rendered)
         self.assertIn("promotion_allowed: `False`", rendered)

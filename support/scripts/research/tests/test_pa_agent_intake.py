@@ -45,6 +45,18 @@ class PaAgentIntakeTests(unittest.TestCase):
             bundle["personal_profile"]["strict_gate_policy"]["execution_readiness_min"],
             0.45,
         )
+        self.assertNotIn(
+            "transition_hazard_lt",
+            bundle["personal_profile"]["strict_gate_policy"],
+        )
+        self.assertNotIn(
+            "pda_hybrid_alignment",
+            bundle["personal_profile"]["strict_gate_policy"],
+        )
+        self.assertNotIn(
+            "transition_hazard",
+            bundle["candidate_pack_template"]["filter_belief_execution_mapping"]["belief_targets"],
+        )
 
     def test_opt_in_pa_agent_root_extracts_cycle_enum_and_prompt_inventory(self) -> None:
         with TemporaryDirectory() as tmpdir:

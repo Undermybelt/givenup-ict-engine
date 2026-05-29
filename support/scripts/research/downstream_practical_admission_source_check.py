@@ -44,6 +44,13 @@ TRANSITION_HARD_GATE_PATTERNS = (
     "hybrid_transition_hazard < 0.60",
     "transition_hazard_gte_0.60",
 )
+RETIRED_PRACTICAL_GATE_KEYS = frozenset((
+    "pda_hybrid_alignment",
+    "pda_hybrid_alignment_true",
+    "pda_required",
+    "transition_hazard_lt",
+    "transition_hazard_required",
+))
 TWO_BPS_DOWNSTREAM_PATTERNS = (
     "survivors_2",
     "survivors_2bps",
@@ -155,6 +162,16 @@ def contains_learning_source(node: ast.AST) -> bool:
             if child.value in LEARNING_KEYS:
                 return True
     return False
+
+
+def is_retired_practical_gate_key(key: str | None) -> bool:
+    if key is None:
+        return False
+    return key in RETIRED_PRACTICAL_GATE_KEYS or key.endswith("_transition_hazard_lt")
+
+
+def is_allowed_retired_gate_telemetry(key: str, value_node: ast.AST) -> bool:
+    return key in {"pda_required", "transition_hazard_required"} and is_false_literal(value_node)
 
 
 def helper_names(tree: ast.AST) -> set[str]:
@@ -469,6 +486,16 @@ class PracticalAssignmentVisitor(ast.NodeVisitor):
             if key_node is None:
                 continue
             key = string_key(key_node)
+            if is_retired_practical_gate_key(key) and not is_allowed_retired_gate_telemetry(key, value_node):
+                self.violations.append(
+                    {
+                        "line": getattr(value_node, "lineno", getattr(node, "lineno", 0)),
+                        "column": getattr(value_node, "col_offset", getattr(node, "col_offset", 0)),
+                        "key": key,
+                        "value": expression_text(self.source, value_node),
+                        "violation": "retired_field_used_as_practical_gate_template",
+                    }
+                )
             if key not in PRACTICAL_KEYS:
                 if key == "survives_5bps_per_side" and contains_5bps_density_floor(self.source, value_node):
                     self.violations.append(
@@ -523,6 +550,20 @@ class PracticalAssignmentVisitor(ast.NodeVisitor):
             in_helper = bool(self.function_stack and self.function_stack[-1] in self.helpers)
             for keyword in node.keywords:
                 key = keyword.arg
+                if (
+                    key is not None
+                    and is_retired_practical_gate_key(key)
+                    and not is_allowed_retired_gate_telemetry(key, keyword.value)
+                ):
+                    self.violations.append(
+                        {
+                            "line": getattr(keyword.value, "lineno", getattr(node, "lineno", 0)),
+                            "column": getattr(keyword.value, "col_offset", getattr(node, "col_offset", 0)),
+                            "key": key,
+                            "value": expression_text(self.source, keyword.value),
+                            "violation": "retired_field_used_as_practical_gate_template",
+                        }
+                    )
                 if key is None or key not in PRACTICAL_KEYS:
                     continue
                 value_node = keyword.value

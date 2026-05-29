@@ -779,12 +779,6 @@ fn apply_same_root_execution_tree_admission_to_structural_candidate(
     if let Some(readiness) = trace.pointer("/output/execution_readiness") {
         map.insert("execution_readiness".to_string(), readiness.clone());
     }
-    if let Some(transition_hazard) = trace.pointer("/output/hybrid_transition_hazard") {
-        map.insert("transition_hazard".to_string(), transition_hazard.clone());
-    }
-    if let Some(alignment) = trace.pointer("/output/pda_hybrid_alignment") {
-        map.insert("pda_hybrid_alignment".to_string(), alignment.clone());
-    }
     map.insert(
         "execution_tree_closed_loop_branch_admission".to_string(),
         admission.clone(),
@@ -965,12 +959,6 @@ fn execution_candidate_value_from_same_root_execution_tree_trace(
     });
     if let Some(readiness) = trace.pointer("/output/execution_readiness") {
         candidate["execution_readiness"] = readiness.clone();
-    }
-    if let Some(transition_hazard) = trace.pointer("/output/hybrid_transition_hazard") {
-        candidate["transition_hazard"] = transition_hazard.clone();
-    }
-    if let Some(alignment) = trace.pointer("/output/pda_hybrid_alignment") {
-        candidate["pda_hybrid_alignment"] = alignment.clone();
     }
     apply_persisted_analyze_execution_candidate_veto(&mut candidate, snapshot);
     apply_same_root_execution_tree_admission_to_structural_candidate(
@@ -7188,6 +7176,8 @@ mod tests {
         assert_eq!(value["execution_gate_status"], "execution_ready");
         assert_eq!(value["actionable"], true);
         assert_eq!(value["ready"], true);
+        assert!(value.get("transition_hazard").is_none());
+        assert!(value.get("pda_hybrid_alignment").is_none());
         assert_eq!(value["review_status"], "promote_latest");
         assert_eq!(
             value["review_reason"],
@@ -7291,6 +7281,77 @@ mod tests {
             "duplicate_execution_candidate_context"
         );
         assert_eq!(value["persisted_execution_candidate_veto_overridden"], true);
+    }
+
+    #[test]
+    fn same_root_trace_admission_does_not_surface_retired_telemetry_as_candidate_gate() {
+        let temp = tempfile::tempdir().unwrap();
+        let symbol = "NQ";
+        let symbol_dir = temp.path().join(symbol);
+        let path_id = "RangeReversion -> TelemetryRetirementCheck -> nq_5m";
+        std::fs::create_dir_all(&symbol_dir).unwrap();
+        std::fs::write(
+            symbol_dir.join("execution_tree_trace.json"),
+            serde_json::to_vec_pretty(&serde_json::json!({
+                "output": {
+                    "execution_readiness": 0.71,
+                    "gate_status": "ready",
+                    "branch": "fill_viable",
+                    "hybrid_transition_hazard": 0.99,
+                    "pda_hybrid_alignment": false,
+                    "path_ranker_score_visible_to_execution_tree": true,
+                    "path_ranker_score_used_by_execution_tree": true,
+                    "ranker_validation_ready": true
+                },
+                "closed_loop_branch_admission": {
+                    "status": "admitted",
+                    "ready": true,
+                    "actionable": true,
+                    "candidate_status": "execution_ready",
+                    "execution_gate_status": "execution_ready",
+                    "execution_tree_gate_status": "ready",
+                    "execution_tree_branch": "fill_viable",
+                    "path_id": path_id,
+                    "path_label": path_id,
+                    "pre_bayes_gate_status": "pass_neutralized",
+                    "review_status": "promote_latest",
+                    "source_phase": "execution-tree-trace",
+                    "learning_admission_status": "admitted",
+                    "paper_admission_status": "ready",
+                    "live_trade_status": "ready",
+                    "promotion_allowed": true,
+                    "trade_usable": true,
+                    "update_goal": true
+                }
+            }))
+            .unwrap(),
+        )
+        .unwrap();
+        let snapshot = WorkflowSnapshot {
+            symbol: symbol.to_string(),
+            ..WorkflowSnapshot::default()
+        };
+
+        let value = build_workflow_status_phase_value_with_structural_prior_state_and_state_dir(
+            &snapshot,
+            &[],
+            &sample_provider_agent_surface(),
+            &[],
+            &StructuralPriorLearningState::default(),
+            Some(temp.path().to_str().unwrap()),
+            "execution-candidate",
+        )
+        .unwrap();
+
+        assert_eq!(value["candidate_status"], "execution_ready");
+        assert_eq!(value["actionable"], true);
+        assert_eq!(value["ready"], true);
+        assert!(value.get("transition_hazard").is_none());
+        assert!(value.get("pda_hybrid_alignment").is_none());
+        assert_eq!(
+            value["execution_tree_closed_loop_branch_admission"]["trade_usable"],
+            true
+        );
     }
 
     #[test]

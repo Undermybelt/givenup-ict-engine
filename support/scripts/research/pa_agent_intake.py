@@ -22,8 +22,6 @@ DEFAULT_PERSONAL_PROFILE: dict[str, Any] = {
         "after_realistic_costs": True,
         "min_trade_density": "sufficient_for_daily_1_to_3",
         "aq_to_downstream_direction_consistent": True,
-        "transition_hazard_lt": 0.60,
-        "pda_hybrid_alignment": True,
         "execution_readiness_min": 0.45,
     },
     "promotion_policy": "never_promote_pa_agent_alone",
@@ -290,7 +288,7 @@ def _candidate_pack_template(profile: dict[str, Any]) -> dict[str, Any]:
         "regime_role": "weak prior and trace audit only",
         "filter_belief_execution_mapping": {
             "pre_bayes_targets": ["filtered_regime_label", "factor_uncertainty", "trace_consistency"],
-            "belief_targets": ["regime_posterior_prior", "transition_hazard", "pa_trace_conflict"],
+            "belief_targets": ["regime_posterior_prior", "pa_trace_conflict"],
             "path_ranking_targets": ["regime_profit_branch_path", "trace_density", "historical_outcome_alignment"],
             "execution_tree_targets": ["execution_readiness", "no_trade_guard", "invalidation_level"],
             "feedback_update_learning_fields": ["realized_outcome", "regime_profit_branch_path", "trace_node_id", "bar_range"],

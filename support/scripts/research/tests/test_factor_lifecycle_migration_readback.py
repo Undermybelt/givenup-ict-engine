@@ -152,6 +152,57 @@ class FactorLifecycleMigrationReadbackTests(unittest.TestCase):
         self.assertIn("checks/execution_readback.json", result["evidence_paths"])
         self.assertEqual(result["blockers"], [])
 
+    def test_ignores_retired_transition_telemetry_when_reading_lifecycle(self) -> None:
+        with tempfile.TemporaryDirectory() as tmpdir:
+            run_root = Path(tmpdir)
+            summaries = run_root / "summaries"
+            checks = run_root / "checks"
+            summaries.mkdir()
+            checks.mkdir()
+            (summaries / "terminal_decision_summary.md").write_text(
+                "\n".join(
+                    [
+                        "decision=old_candidate",
+                        "regime_confidence=0.96",
+                        "leakage_check=pass",
+                    ]
+                ),
+                encoding="utf-8",
+            )
+            self._write_csv(
+                summaries / "rank_rows_cost_stress.csv",
+                ["package_id", "trade_count", "net_after_5bps_per_side_pct"],
+                [
+                    {
+                        "package_id": "old_candidate_v1",
+                        "trade_count": "40",
+                        "net_after_5bps_per_side_pct": "0.72",
+                    }
+                ],
+            )
+            (checks / "terminal_metrics.json").write_text(
+                json.dumps(
+                    {
+                        "validation": {
+                            "raw_scored_mature": 40,
+                            "production": 40,
+                            "observation": 40,
+                        },
+                        "execution_readiness": 0.72,
+                        "transition_hazard": 0.99,
+                        "hybrid_transition_hazard": 0.99,
+                    }
+                ),
+                encoding="utf-8",
+            )
+
+            result = readback.build_migration_readback(run_root)
+
+        self.assertEqual(result["learning_admission_status"], "admitted")
+        self.assertEqual(result["paper_admission_status"], "ready")
+        self.assertEqual(result["live_trade_status"], "ready")
+        self.assertNotIn("transition_hazard", result)
+
     def test_raw_profit_fallback_blocks_learning_without_practical_flags(self) -> None:
         with tempfile.TemporaryDirectory() as tmpdir:
             run_root = Path(tmpdir)

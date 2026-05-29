@@ -151,6 +151,26 @@ Required behavior:
   alias fix, quarantined untracked practical-admission debt became `260`
   violations across `145` files with fingerprint
   `c2c70a41ab24da8ad9a621e0d130bc8e0ef0773b67e39eb497bdfbe35b7a9145`.
+- 2026-05-29T23:35 +0800: Root-cause review of the repeated "near practical but
+  not trade usable" failure identified another leak class: retired telemetry
+  fields such as `transition_hazard` / `hybrid_transition_hazard` and
+  `pda_hybrid_alignment` were still being surfaced or templated as if they were
+  practical gates in some readback/intake paths. The current fix removes those
+  fields from execution-candidate and blocker-report practical surfaces, keeps
+  PA intake from encoding them as strict gates, and extends the practical source
+  checker to flag retired PDA/transition-hazard policy templates. Focused
+  verification passed:
+  `python3 -m unittest support.scripts.research.tests.test_downstream_practical_admission_source_check support.scripts.research.tests.test_pa_agent_intake support.scripts.research.tests.test_factor_lifecycle_migration_readback support.scripts.research.tests.test_regime_root_survivor_blocker_report -v`
+  -> `Ran 64 tests`, `OK`; consumer regressions
+  `python3 -m unittest support.scripts.tests.test_done_definition_audit support.scripts.tests.test_objective_closure_snapshot -v`
+  -> `Ran 74 tests`, `OK`; `cargo test same_root_trace_admission_does_not_surface_retired_telemetry_as_candidate_gate -- --nocapture`
+  -> `1 passed`. `git diff --check` passed. `python3 support/scripts/done_definition_audit.py --compact`
+  still reported tracked practical-admission violations `0`, but the reviewed
+  untracked practical-admission quarantine increased to `343` violations across
+  `177` files with fingerprint
+  `dfbbed2f538d37a573e872caeffc4b13ba31af8707b110e0c4c662433cab8669` because
+  the scanner now catches more unsafe retired-field templates. This is not
+  completion evidence; it is exposed untracked debt.
 
 ## Current Remaining Gaps
 
@@ -163,7 +183,7 @@ Required behavior:
   and
   `20260529T224555+0800-codex-nq-compound-rrr-chopfilter-practical-validation.claim`.
 - The practical-admission source debt is quarantined as untracked unsafe wrapper
-  debt only. Latest reviewed quarantine is `260` violations across `145`
+  debt only. Latest reviewed quarantine is `343` violations across `177`
   untracked files. It is not release-ready or trade-usable evidence.
 - Heavy done-definition gates have not been run for this current `HEAD`.
 - Remote release checks have now run and passed readback, but release readiness
@@ -179,6 +199,9 @@ Required behavior:
   aliases to literal `False` are safe unless reassigned, so the checker no
   longer inflates practical source debt for wrappers that only emit false
   practical flags.
+- This slice also blocks stale retired PDA/transition policy templates from
+  re-entering practical admission while preserving explicit false telemetry
+  markers as observation-only fields.
 - This slice does not close the full user objective. Keep
   `promotion_allowed=false`, `trade_usable=false`, and `update_goal=false` until
   a same-tree practical closure packet, current heavy done-definition proof,

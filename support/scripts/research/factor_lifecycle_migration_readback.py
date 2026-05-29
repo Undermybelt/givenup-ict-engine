@@ -262,10 +262,6 @@ def _terminal_metrics_values(metrics: dict[str, Any]) -> dict[str, Any]:
             metrics.get("readiness"),
             metrics.get("execution_candidate_readiness"),
         ),
-        "transition_hazard": _first_present(
-            metrics.get("transition_hazard"),
-            metrics.get("hybrid_transition_hazard"),
-        ),
         "regime_confidence": metrics.get("regime_confidence"),
         "leakage_check": metrics.get("leakage_check"),
     }

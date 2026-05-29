@@ -362,8 +362,6 @@ def build_metrics(all_ok, exact_branch_survived, actionable, hazard, pda, readin
     pass_exec = all_ok and exact_branch_survived and actionable and readiness >= 0.45
     practical = practical_admission_flags(pass_exec)
     return {
-        "pda_hybrid_alignment": pda,
-        "transition_hazard": hazard,
         "pda_required": False,
         "transition_hazard_required": False,
         "branch_local_admitted": practical["branch_local_admitted"],
@@ -371,6 +369,50 @@ def build_metrics(all_ok, exact_branch_survived, actionable, hazard, pda, readin
         "trade_usable": practical["trade_usable"],
         "update_goal": practical["update_goal"],
     }
+"""
+        )
+
+        report = checker.check_source_file(path)
+
+        self.assertTrue(report["ok"])
+        self.assertEqual(report["violations"], [])
+
+    def test_flags_retired_pda_or_transition_policy_templates(self) -> None:
+        path = self.write_source(
+            """
+DEFAULT_PERSONAL_PROFILE = {
+    "strict_gate_policy": {
+        "transition_hazard_lt": 0.60,
+        "pda_hybrid_alignment": True,
+        "execution_readiness_min": 0.45,
+    }
+}
+"""
+        )
+
+        report = checker.check_source_file(path)
+
+        self.assertFalse(report["ok"])
+        self.assertEqual(
+            sorted(hit["key"] for hit in report["violations"]),
+            ["pda_hybrid_alignment", "transition_hazard_lt"],
+        )
+        self.assertEqual(
+            {hit["violation"] for hit in report["violations"]},
+            {"retired_field_used_as_practical_gate_template"},
+        )
+
+    def test_allows_false_retired_gate_telemetry_in_dict_call(self) -> None:
+        path = self.write_source(
+            """
+def build_metrics():
+    return dict(
+        pda_required=False,
+        transition_hazard_required=False,
+        promotion_allowed=False,
+        trade_usable=False,
+        update_goal=False,
+    )
 """
         )
 
