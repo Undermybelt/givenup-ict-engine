@@ -28,6 +28,24 @@ SAME_TREE_PRACTICAL_CLOSURE_CANDIDATES = (
     "checks/same_tree_practical_closure.json",
     "same_tree_practical_closure.json",
 )
+PRACTICAL_CLOSURE_ALLOWED_MARKET_DATA_SOURCE_CLASSES = {
+    "roll_adjusted_clean_feather",
+    "verified_provider_historical",
+    "ibkr_historical_verified",
+    "paper_execution_feedback",
+    "live_execution_feedback",
+    "paper_trade_feedback",
+    "live_trade_feedback",
+    "broker_execution_feedback",
+}
+PRACTICAL_CLOSURE_DISALLOWED_MARKET_DATA_SOURCE_CLASSES = {
+    "raw_contract_stitching",
+    "raw_csv_stitching",
+    "raw_local_csv_stitching",
+    "raw_databento_contract_stitching",
+    "tomac_raw_csv",
+    "raw_local_csv",
+}
 LIVE_FACTOR_PROCESS_MARKERS = (
     "run_tomac",
     "run_local_nq_csv_regime_rooted",
@@ -886,6 +904,8 @@ def _evidence_packet_proves_same_tree_practical_closure(evidence_path: Path) -> 
         return False
     if not _lifecycle_tuple_proves_practical_closure(parsed):
         return False
+    if not _market_data_provenance_proves_practical_closure(parsed.get("market_data_provenance")):
+        return False
     command_results = parsed.get("command_results")
     if not isinstance(command_results, list) or not command_results:
         return False
@@ -929,6 +949,52 @@ def _policy_training_summary_proves_practical_closure(value: object) -> bool:
     return lifecycle.get("promotion_allowed") is True and lifecycle.get("trade_usable") is True
 
 
+def _market_data_provenance_proves_practical_closure(value: object) -> bool:
+    if not isinstance(value, dict):
+        return False
+    if _normalized_text(value.get("status")) != "pass":
+        return False
+    source_class = _normalized_key(value.get("source_class") or value.get("provenance_class"))
+    if source_class in PRACTICAL_CLOSURE_DISALLOWED_MARKET_DATA_SOURCE_CLASSES:
+        return False
+    if source_class not in PRACTICAL_CLOSURE_ALLOWED_MARKET_DATA_SOURCE_CLASSES:
+        return False
+    for key in ("raw_contract_stitching", "raw_csv_stitching", "raw_local_csv_stitching"):
+        if value.get(key) is True:
+            return False
+    if not _return_sanity_proves_practical_closure(value.get("return_sanity")):
+        return False
+    return True
+
+
+def _return_sanity_proves_practical_closure(value: object) -> bool:
+    if not isinstance(value, dict):
+        return False
+    if _normalized_text(value.get("status")) != "pass":
+        return False
+    if _positive_int(value.get("extreme_abs_gross_gt_10pct_count")) > 0:
+        return False
+    if _positive_int(value.get("parse_bad_rows")) > 0:
+        return False
+    max_abs_gross_return_pct = _optional_float(value.get("max_abs_gross_return_pct"))
+    if max_abs_gross_return_pct is not None and max_abs_gross_return_pct > 10.0:
+        return False
+    return True
+
+
+def _optional_float(value: object) -> float | None:
+    if isinstance(value, bool) or value is None:
+        return None
+    if isinstance(value, (int, float)):
+        return float(value)
+    if isinstance(value, str):
+        try:
+            return float(value.strip())
+        except ValueError:
+            return None
+    return None
+
+
 def _positive_int(value: object) -> int:
     if isinstance(value, bool):
         return 0
@@ -945,6 +1011,10 @@ def _positive_int(value: object) -> int:
 
 def _normalized_text(value: object) -> str:
     return str(value or "").strip().lower()
+
+
+def _normalized_key(value: object) -> str:
+    return _normalized_text(value).replace("-", "_").replace(" ", "_")
 
 
 def _validation_counters_cover_practical_chain(value: object) -> bool:
