@@ -20,7 +20,10 @@ class MimCostWindowFeedbackBuilderTests(unittest.TestCase):
                 "event_ts": "2026-05-21T13:59:00+00:00",
                 "symbol": "TEST",
                 "provider": "retained-real",
-                "branch_path": "TrendExpansion -> IntradayMomentumCostWindow -> mim_cost_window_regime_filter -> test_mim_v1",
+                "branch_path": (
+                    "TrendExpansion -> IntradayMomentumCostWindow -> mim_cost_window_regime_filter -> "
+                    "test_mim_v1 -> meta_gate_overlay"
+                ),
                 "main_regime": "TrendExpansion",
                 "sub_regime": "IntradayMomentumCostWindow",
                 "profit_factor": "test_mim_v1",
@@ -65,7 +68,19 @@ class MimCostWindowFeedbackBuilderTests(unittest.TestCase):
         self.assertEqual(first["main_regime"], "TrendExpansion")
         self.assertEqual(first["sub_regime"], "IntradayMomentumCostWindow")
         self.assertEqual(first["sub_sub_regime_or_profit_factor"], "mim_cost_window_regime_filter")
-        self.assertEqual(first["profit_factor"], "test_mim_v1")
+        self.assertEqual(first["profit_factor"], "test_mim_v1 -> meta_gate_overlay")
+        self.assertEqual(
+            first["branch_path_segments"],
+            [
+                "TrendExpansion",
+                "IntradayMomentumCostWindow",
+                "mim_cost_window_regime_filter",
+                "test_mim_v1",
+                "meta_gate_overlay",
+            ],
+        )
+        self.assertEqual(first["branch_path_depth"], 5)
+        self.assertEqual(first["branch_path_leaf"], "meta_gate_overlay")
         self.assertEqual(first["structural_feedback"]["path_id"], events[0]["branch_path"])
         self.assertEqual(first["structural_feedback"]["exit_reason"], "triple_barrier_profit_take")
         self.assertEqual(first["factors_used"][0]["category"], "regime_profit_branch_path")

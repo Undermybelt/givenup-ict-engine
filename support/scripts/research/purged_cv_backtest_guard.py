@@ -27,6 +27,17 @@ def _realized_r(row: dict[str, Any]) -> float:
     return float(row.get("gross_R", 0.0)) - float(row.get("cost_R", 0.0))
 
 
+def _time_bounds(row: dict[str, Any], embargo_bars: int) -> tuple[str, int, int]:
+    pair = str(row.get("pair", ""))
+    if "open_ts_ms" in row or "close_ts_ms" in row:
+        start = int(row.get("open_ts_ms", row.get("close_ts_ms", 0)))
+        end = int(row.get("close_ts_ms", start))
+        return pair, start, end
+    start = int(row.get("entry_index", 0))
+    end = int(row.get("exit_index", start)) + embargo_bars
+    return pair, start, end
+
+
 def _sharpe(values: list[float]) -> float:
     if len(values) < 2:
         return 0.0
@@ -37,18 +48,20 @@ def _sharpe(values: list[float]) -> float:
 
 
 def _overlaps(left: dict[str, Any], right: dict[str, Any], embargo_bars: int) -> bool:
-    left_start = int(left.get("entry_index", 0))
-    left_end = int(left.get("exit_index", left_start)) + embargo_bars
-    right_start = int(right.get("entry_index", 0))
-    right_end = int(right.get("exit_index", right_start)) + embargo_bars
+    left_pair, left_start, left_end = _time_bounds(left, embargo_bars)
+    right_pair, right_start, right_end = _time_bounds(right, embargo_bars)
+    if left_pair and right_pair and left_pair != right_pair:
+        return False
     return left_start <= right_end and right_start <= left_end
 
 
 def _has_overlapping_labels(labels: list[dict[str, Any]], embargo_bars: int) -> bool:
-    ordered = sorted(labels, key=lambda row: int(row.get("entry_index", 0)))
+    ordered = sorted(labels, key=lambda row: _time_bounds(row, embargo_bars)[1])
     for index, current in enumerate(ordered):
+        _, current_start, current_end = _time_bounds(current, embargo_bars)
         for other in ordered[index + 1:]:
-            if int(other.get("entry_index", 0)) > int(current.get("exit_index", current.get("entry_index", 0))) + embargo_bars:
+            _, other_start, _ = _time_bounds(other, embargo_bars)
+            if other_start > current_end:
                 break
             if _overlaps(current, other, embargo_bars):
                 return True
@@ -56,7 +69,7 @@ def _has_overlapping_labels(labels: list[dict[str, Any]], embargo_bars: int) -> 
 
 
 def _folds(labels: list[dict[str, Any]], fold_count: int) -> list[list[dict[str, Any]]]:
-    ordered = sorted(labels, key=lambda row: int(row.get("entry_index", 0)))
+    ordered = sorted(labels, key=lambda row: _time_bounds(row, 0)[1])
     if fold_count <= 0:
         return []
     out: list[list[dict[str, Any]]] = []

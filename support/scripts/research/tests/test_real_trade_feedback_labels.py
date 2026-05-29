@@ -174,6 +174,56 @@ class RealTradeFeedbackLabelsTests(unittest.TestCase):
         self.assertAlmostEqual(labels[0]["exit_price"], 103.0)
         self.assertAlmostEqual(labels[0]["gross_return"], (103.0 - 101.0) / 101.0)
 
+    def test_build_labels_from_trade_wire_without_candles_uses_timeframe_alignment(self) -> None:
+        trade_wire = [
+            {
+                "trade_id": "trade-long",
+                "open_ts_ms": _ts_ms("2026-05-15T10:00:00Z"),
+                "close_ts_ms": _ts_ms("2026-05-15T10:15:00Z"),
+                "direction": "Bull",
+                "open_rate": 100.0,
+                "close_rate": 102.0,
+                "min_rate": 99.0,
+                "max_rate": 103.0,
+                "profit_ratio": 0.02,
+                "realized_outcome": "win",
+                "regime_profit_branch_path": "SessionRhythm -> TimeOfDaySeasonality -> BalancedAdaptiveSlotPortfolio -> factor_v1",
+            },
+            {
+                "trade_id": "trade-short",
+                "open_ts_ms": _ts_ms("2026-05-15T10:05:00Z"),
+                "close_ts_ms": _ts_ms("2026-05-15T10:20:00Z"),
+                "direction": "Bear",
+                "open_rate": 200.0,
+                "close_rate": 202.0,
+                "min_rate": 198.0,
+                "max_rate": 203.0,
+                "profit_ratio": -0.01,
+                "realized_outcome": "loss",
+                "regime_profit_branch_path": "SessionRhythm -> TimeOfDaySeasonality -> BalancedAdaptiveSlotPortfolio -> factor_v1",
+            },
+        ]
+
+        labels = builder.build_labels_from_trade_wire(
+            trade_wire=trade_wire,
+            sl_mult=0.01,
+            timeframe_ms=5 * 60 * 1000,
+            cost_bps=5.0,
+        )
+
+        self.assertEqual([label["trade_id"] for label in labels], ["trade-long", "trade-short"])
+        self.assertEqual(labels[0]["entry_index"], 0)
+        self.assertEqual(labels[0]["exit_index"], 3)
+        self.assertEqual(labels[1]["entry_index"], 1)
+        self.assertEqual(labels[1]["exit_index"], 4)
+        self.assertEqual(labels[0]["meta_label"], 1)
+        self.assertEqual(labels[1]["meta_label"], 0)
+        self.assertAlmostEqual(labels[0]["mfe"], 0.03)
+        self.assertAlmostEqual(labels[0]["mae"], -0.01)
+        self.assertAlmostEqual(labels[1]["mfe"], 0.01)
+        self.assertAlmostEqual(labels[1]["mae"], -0.015)
+        self.assertAlmostEqual(labels[0]["realized_R"], (0.02 - 0.0005) / 0.01)
+
 
 if __name__ == "__main__":
     unittest.main()

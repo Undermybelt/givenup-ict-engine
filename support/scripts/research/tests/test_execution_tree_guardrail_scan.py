@@ -171,6 +171,134 @@ class ExecutionTreeGuardrailScanTests(unittest.TestCase):
             self.assertIn("0.100000", tsv)
             self.assertIn("0.250000", tsv)
 
+    def test_run_scan_supports_clean_root_window_directories(self) -> None:
+        with TemporaryDirectory() as tmpdir:
+            tmp = Path(tmpdir)
+            windows = tmp / "windows"
+            state = tmp / "state"
+            output = tmp / "scan"
+            clean_root = windows / "obs_01_clean_root"
+            clean_root.mkdir(parents=True)
+            (clean_root / "cleaned-1m").mkdir()
+            (clean_root / "cleaned-1m" / "nq.continuous-1m.json").write_text("{}", encoding="utf-8")
+
+            calls: list[list[str]] = []
+
+            class Result:
+                returncode = 0
+                stderr = ""
+                stdout = json.dumps(
+                    {
+                        "execution_triage": {
+                            "gate_status": "blocked",
+                            "branch": "block_crowded",
+                            "execution_bias": "skip",
+                            "decision_hint": "execution_blocked_regardless_of_prediction",
+                        }
+                    }
+                )
+
+            def fake_runner(command: list[str], **_: object) -> Result:
+                calls.append(command)
+                trace_dir = state / "NQ"
+                trace_dir.mkdir(parents=True, exist_ok=True)
+                (trace_dir / "execution_tree_trace.json").write_text(
+                    json.dumps(
+                        {
+                            "output": {
+                                "gate_status": "blocked",
+                                "branch": "block_crowded",
+                                "execution_bias": "skip",
+                                "path_ranker_score_visible_to_execution_tree": True,
+                                "path_ranker_score_used_by_execution_tree": False,
+                                "ranker_validation_ready": True,
+                                "split_reason_lineage": [
+                                    "execution_readiness=0.3967  gate_status=blocked",
+                                    "hybrid_transition_hazard=0.6249",
+                                    "duration_remaining_expected_bars=1.111",
+                                ],
+                            }
+                        }
+                    ),
+                    encoding="utf-8",
+                )
+                return Result()
+
+            summary = scan.run_scan(
+                ict_engine_bin=Path("/fake/ict-engine"),
+                windows_dir=windows,
+                state_dir=state,
+                symbol="NQ",
+                output_dir=output,
+                runner=fake_runner,
+            )
+
+            self.assertEqual(summary["windows_scanned"], 1)
+            self.assertIn("--data-root", calls[0])
+            self.assertIn(str(clean_root), calls[0])
+            self.assertNotIn("--data-ltf", calls[0])
+            self.assertTrue((output / "execution_tree_trace_01.json").exists())
+            tsv = (output / "scan.tsv").read_text(encoding="utf-8")
+            self.assertIn("0.396700", tsv)
+            self.assertIn("0.624900", tsv)
+
+    def test_run_scan_records_failed_windows_without_discarding_valid_rows(self) -> None:
+        with TemporaryDirectory() as tmpdir:
+            tmp = Path(tmpdir)
+            windows = tmp / "windows"
+            state = tmp / "state"
+            output = tmp / "scan"
+            windows.mkdir()
+            (windows / "nq_15m_obs_01.json").write_text("{}", encoding="utf-8")
+            (windows / "nq_15m_obs_02.json").write_text("{}", encoding="utf-8")
+
+            calls: list[list[str]] = []
+
+            class Result:
+                def __init__(self, returncode: int, stdout: str = "{}", stderr: str = "") -> None:
+                    self.returncode = returncode
+                    self.stdout = stdout
+                    self.stderr = stderr
+
+            def fake_runner(command: list[str], **_: object) -> Result:
+                calls.append(command)
+                if len(calls) == 2:
+                    return Result(1, stderr="insufficient bars")
+                trace_dir = state / "NQ"
+                trace_dir.mkdir(parents=True, exist_ok=True)
+                (trace_dir / "execution_tree_trace.json").write_text(
+                    json.dumps(
+                        {
+                            "output": {
+                                "gate_status": "blocked",
+                                "branch": "block_crowded",
+                                "split_reason_lineage": [
+                                    "execution_readiness=0.3000  gate_status=blocked",
+                                    "hybrid_transition_hazard=0.7000",
+                                ],
+                            }
+                        }
+                    ),
+                    encoding="utf-8",
+                )
+                return Result(0)
+
+            summary = scan.run_scan(
+                ict_engine_bin=Path("/fake/ict-engine"),
+                windows_dir=windows,
+                state_dir=state,
+                symbol="NQ",
+                output_dir=output,
+                runner=fake_runner,
+            )
+
+            self.assertEqual(summary["windows_scanned"], 1)
+            self.assertEqual(summary["failed_window_count"], 1)
+            self.assertEqual(summary["failed_windows"][0]["window"], "02")
+            self.assertIn("insufficient bars", summary["failed_windows"][0]["stderr"])
+            self.assertTrue((output / "scan.tsv").exists())
+            self.assertTrue((output / "analyze_02.stderr.txt").exists())
+
 
 if __name__ == "__main__":
     unittest.main()

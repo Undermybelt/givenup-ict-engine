@@ -11,7 +11,7 @@ from collections import Counter
 from pathlib import Path
 from typing import Any, Callable, Iterable
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from path_defaults import resolve_binary_path  # noqa: E402
 
 
@@ -290,9 +290,42 @@ def summarize_window(
 
 def _window_id(path: Path) -> str:
     match = re.search(r"obs_(\d+)", path.stem)
+    if not match:
+        match = re.search(r"obs_(\d+)", path.name)
     if match:
         return match.group(1)
     return path.stem
+
+
+def _window_inputs(windows_dir: Path) -> list[Path]:
+    flat = sorted(windows_dir.glob("*_obs_*.json"))
+    clean_roots = sorted(path for path in windows_dir.glob("obs_*_clean_root") if path.is_dir())
+    return flat + clean_roots
+
+
+def _analyze_command(
+    *,
+    ict_engine_bin: Path,
+    symbol: str,
+    state_dir: Path,
+    window_path: Path,
+) -> list[str]:
+    command = [str(ict_engine_bin), "analyze", "--symbol", symbol]
+    if window_path.is_dir():
+        command.extend(["--data-root", str(window_path)])
+    else:
+        command.extend(
+            [
+                "--data-htf",
+                str(window_path),
+                "--data-mtf",
+                str(window_path),
+                "--data-ltf",
+                str(window_path),
+            ]
+        )
+    command.extend(["--state-dir", str(state_dir), "--agent"])
+    return command
 
 
 def _json_loads(text: str) -> dict[str, Any]:
@@ -360,34 +393,32 @@ def run_scan(
 ) -> dict[str, Any]:
     output_dir.mkdir(parents=True, exist_ok=True)
     rows: list[dict[str, str]] = []
-    window_paths = sorted(windows_dir.glob("*_obs_*.json"))
+    failed_windows: list[dict[str, Any]] = []
+    window_paths = _window_inputs(windows_dir)
     for window_path in window_paths:
         window = _window_id(window_path)
-        command = [
-            str(ict_engine_bin),
-            "analyze",
-            "--symbol",
-            symbol,
-            "--data-htf",
-            str(window_path),
-            "--data-mtf",
-            str(window_path),
-            "--data-ltf",
-            str(window_path),
-            "--state-dir",
-            str(state_dir),
-            "--agent",
-        ]
+        command = _analyze_command(
+            ict_engine_bin=ict_engine_bin,
+            symbol=symbol,
+            state_dir=state_dir,
+            window_path=window_path,
+        )
         result = runner(command, cwd=str(Path.cwd()), text=True, capture_output=True)
         analyze_path = output_dir / f"analyze_{window}.json"
         analyze_path.write_text(result.stdout, encoding="utf-8")
         if result.returncode != 0:
             stderr_path = output_dir / f"analyze_{window}.stderr.txt"
             stderr_path.write_text(result.stderr, encoding="utf-8")
-            raise RuntimeError(
-                f"ict-engine analyze failed for window {window} with code {result.returncode}; "
-                f"stderr saved to {stderr_path}"
+            failed_windows.append(
+                {
+                    "window": window,
+                    "path": str(window_path),
+                    "exit": result.returncode,
+                    "stderr_path": str(stderr_path),
+                    "stderr": result.stderr.strip()[:500],
+                }
             )
+            continue
 
         trace_path = state_dir / symbol / "execution_tree_trace.json"
         if not trace_path.exists():
@@ -415,6 +446,8 @@ def run_scan(
         "branch_counts": dict(sorted(branch_counts.items())),
         "decision_hint_counts": dict(sorted(hint_counts.items())),
         "metric_summary": metric_summary(rows),
+        "failed_window_count": len(failed_windows),
+        "failed_windows": failed_windows,
     }
     (output_dir / "scan_summary.json").write_text(
         json.dumps(summary, indent=2, sort_keys=True) + "\n", encoding="utf-8"

@@ -143,6 +143,91 @@ def _trade_float(trade: dict[str, Any], key: str) -> float | None:
         return None
 
 
+def build_labels_from_trade_wire(
+    *,
+    trade_wire: list[dict[str, Any]],
+    sl_mult: float,
+    timeframe_ms: int,
+    cost_bps: float = 0.0,
+) -> list[dict[str, Any]]:
+    if sl_mult <= 0:
+        raise ValueError("sl_mult must be positive")
+    if timeframe_ms <= 0:
+        raise ValueError("timeframe_ms must be positive")
+
+    ordered = sorted(trade_wire, key=lambda row: int(row["open_ts_ms"]))
+    if not ordered:
+        return []
+
+    cost_return = cost_bps / 10_000.0
+    base_ts_ms = min(int(row["open_ts_ms"]) for row in ordered)
+    labels: list[dict[str, Any]] = []
+
+    for trade in ordered:
+        open_ts_ms = int(trade["open_ts_ms"])
+        close_ts_ms = int(trade["close_ts_ms"])
+        if close_ts_ms < open_ts_ms:
+            raise ValueError(f"trade {trade.get('trade_id', '<unknown>')} closes before it opens")
+
+        side = _direction_to_side(str(trade["direction"]))
+        entry_price = _trade_float(trade, "open_rate")
+        exit_price = _trade_float(trade, "close_rate")
+        if entry_price is None or exit_price is None:
+            raise ValueError("trade wire labels require open_rate and close_rate")
+
+        min_rate = _trade_float(trade, "min_rate")
+        max_rate = _trade_float(trade, "max_rate")
+        if min_rate is not None and max_rate is not None:
+            returns = [
+                _directional_return(side, entry_price, max_rate),
+                _directional_return(side, entry_price, min_rate),
+            ]
+            mfe = max(returns)
+            mae = min(returns)
+        else:
+            proxy_return = _directional_return(side, entry_price, exit_price)
+            mfe = max(0.0, proxy_return)
+            mae = min(0.0, proxy_return)
+
+        gross_return = _trade_float(trade, "profit_ratio")
+        if gross_return is None:
+            gross_return = _directional_return(side, entry_price, exit_price)
+        net_return = gross_return - cost_return if gross_return >= 0.0 else gross_return - cost_return
+        entry_index = int((open_ts_ms - base_ts_ms) // timeframe_ms)
+        exit_index = int((close_ts_ms - base_ts_ms) // timeframe_ms)
+        label = {
+            "trade_id": trade.get("trade_id", ""),
+            "entry_index": entry_index,
+            "exit_index": exit_index,
+            "entry_timestamp": trade.get("open_date", open_ts_ms),
+            "exit_timestamp": trade.get("close_date", close_ts_ms),
+            "side": side,
+            "entry_price": entry_price,
+            "exit_price": exit_price,
+            "barrier_hit": trade.get("exit_reason", "real_trade"),
+            "proxy_gross_return": _directional_return(side, entry_price, exit_price),
+            "gross_return": gross_return,
+            "net_return": net_return,
+            "realized_R": net_return / sl_mult,
+            "mfe": mfe,
+            "mae": mae,
+            "time_to_hit": max(0, exit_index - entry_index),
+            "meta_label": 1 if net_return > 0.0 else 0,
+            "realized_outcome": trade.get("realized_outcome", ""),
+            "wire_pnl": trade.get("pnl", 0.0),
+            "regime_profit_branch_path": trade.get("regime_profit_branch_path", ""),
+            "main_regime": trade.get("main_regime", ""),
+            "sub_regime": trade.get("sub_regime", ""),
+            "sub_sub_regime_or_profit_factor": trade.get("sub_sub_regime_or_profit_factor", ""),
+            "profit_factor": trade.get("profit_factor", ""),
+        }
+        regime_confidence = _regime_confidence(trade)
+        if regime_confidence is not None:
+            label["regime_confidence"] = regime_confidence
+        labels.append(label)
+    return labels
+
+
 def build_labels(
     *,
     candles: list[dict[str, Any]],

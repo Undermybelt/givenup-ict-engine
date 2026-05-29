@@ -30,6 +30,7 @@ def build_feedback_rows(
         resonance = event.get("mtf_trend_resonance")
         if not isinstance(resonance, dict):
             resonance = {"enabled": False, "aligned_timeframes": [], "resonance_score": 0.0}
+        branch_metadata = _branch_metadata(parts)
         row = {
             "schema_version": "1.0",
             "symbol": symbol,
@@ -78,6 +79,7 @@ def build_feedback_rows(
             "sub_regime": parts[1] if len(parts) > 1 else str(event.get("sub_regime") or ""),
             "sub_sub_regime_or_profit_factor": parts[2] if len(parts) > 2 else "",
             "profit_factor": " -> ".join(parts[3:]) if len(parts) > 3 else str(event.get("profit_factor") or factor_id),
+            **branch_metadata,
             "mtf_trend_resonance": resonance,
             "feedback_source": "retained_real_event_label_simulation",
             "broker_fill_evidence": False,
@@ -169,6 +171,14 @@ def _parse_ts(value: str) -> datetime:
 
 def _branch_parts(branch_path: str) -> list[str]:
     return [part.strip() for part in branch_path.split("->") if part.strip()]
+
+
+def _branch_metadata(parts: list[str]) -> dict[str, object]:
+    return {
+        "branch_path_segments": parts,
+        "branch_path_depth": len(parts),
+        "branch_path_leaf": parts[-1] if parts else "",
+    }
 
 
 def _regime_alias(regime: str) -> str:
