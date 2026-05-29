@@ -1,0 +1,67 @@
+{
+  "schema_version": "transfer-score/v1",
+  "strategy_name": "options_oi_anomaly_directional_pressure_inquiry",
+  "candidate_id": "options_oi_anomaly_directional_pressure_inquiry_v1",
+  "covered_market_count": 0,
+  "covered_markets": [],
+  "markets_without_trade_counts": [
+    "US listed equity options",
+    "Index ETF options",
+    "Crypto listed options"
+  ],
+  "status": "fail_closed_inquiry_ready_missing_time_aligned_oi_history",
+  "overall_transfer_score": 0.0,
+  "average_sharpe": null,
+  "average_trade_count": 0.0,
+  "timeframe": "options_chain_snapshot_time_aligned_to_underlying",
+  "market_evidence": {
+    "US listed equity options": {
+      "status": "provider_history_required",
+      "source_row_count": 0,
+      "normalized_row_count": 0,
+      "time_aligned_oi_snapshots": 0,
+      "realized_outcome_rows": 0,
+      "trade_count": 0,
+      "minimum_next_gate": "fetch_or_import_historical_or_repeated_OI_snapshots_before_AQ"
+    },
+    "Index ETF options": {
+      "status": "provider_history_required",
+      "source_row_count": 0,
+      "normalized_row_count": 0,
+      "time_aligned_oi_snapshots": 0,
+      "realized_outcome_rows": 0,
+      "trade_count": 0,
+      "minimum_next_gate": "repeat SPY/QQQ/DIA/IWM snapshots or import dated OI history"
+    },
+    "Crypto listed options": {
+      "status": "provider_specific_history_required",
+      "source_row_count": 0,
+      "normalized_row_count": 0,
+      "time_aligned_oi_snapshots": 0,
+      "realized_outcome_rows": 0,
+      "trade_count": 0,
+      "minimum_next_gate": "use a provider with dated options OI series rather than a fixed snapshot"
+    }
+  },
+  "branch_path_contract": {
+    "main_regime": "TrendExpansion",
+    "sub_regime": "OptionsFlowImbalance",
+    "sub_sub_regime_or_profit_factor": "oi_anomaly_directional_pressure",
+    "profit_factor": "options_oi_anomaly_directional_pressure_inquiry_v1",
+    "regime_profit_branch_path": "TrendExpansion -> OptionsFlowImbalance -> oi_anomaly_directional_pressure -> options_oi_anomaly_directional_pressure_inquiry_v1"
+  },
+  "timeframe_ladder_contract": {
+    "origin": "underlying 1m if provider history exists",
+    "context": [
+      "5m",
+      "15m",
+      "30m",
+      "1h",
+      "4h",
+      "1d"
+    ],
+    "rule": "other timeframes are context/confirmation for the exact lane, not proof that rescues a failed 1m origin"
+  },
+  "evidence_source": "user_hypothesis_options_open_interest_anomaly_2026-05-23",
+  "fail_closed_reason": "Open interest anomalies are plausible source-backed candidate signals, but snapshot OI is not backtestable as intraday knowledge unless timestamped OI changes, quote/trade context, and realized outcomes are joined without lookahead. Keep this as an inquiry surface until provider-backed history exists."
+}

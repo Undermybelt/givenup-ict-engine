@@ -1,0 +1,143 @@
+{
+  "schema_version": "factor-eval-grid-summary/v1",
+  "factor_name": "options_open_interest_anomaly",
+  "candidate_id": "options_oi_anomaly_directional_pressure_inquiry_v1",
+  "selected_strategy": "options_oi_anomaly_directional_pressure_inquiry",
+  "timeframe": "options_chain_snapshot_time_aligned_to_underlying",
+  "candidate_status": "active",
+  "promotion_state": "observation_only",
+  "breadth_matrix": {
+    "US listed equity options": {
+      "status": "inquiry_ready_provider_history_required",
+      "trade_count": 0,
+      "trade_density_label": "missing_time_aligned_oi_history_and_outcomes",
+      "evidence_source": "user_hypothesis_options_open_interest_anomaly_2026-05-23",
+      "win_rate_pct": null,
+      "expectancy_r": null,
+      "required_next_input": "IBKR/Hubble/OCC-compatible option OI snapshots with timestamps, prior OI, volume, IV/Greeks when available, and joined underlying 1m/5m/15m/30m/1h/4h/1d bars"
+    },
+    "Index ETF options": {
+      "status": "inquiry_ready_provider_history_required",
+      "trade_count": 0,
+      "trade_density_label": "missing_repeated_snapshots_and_realized_outcomes",
+      "evidence_source": "existing options_dealer_context packets are snapshot/proxy evidence only",
+      "win_rate_pct": null,
+      "expectancy_r": null,
+      "required_next_input": "repeated SPY/QQQ/DIA/IWM option-chain snapshots or historical OI series, joined without lookahead"
+    },
+    "Crypto listed options": {
+      "status": "provider_specific_observation_possible_not_us_equity_default",
+      "trade_count": 0,
+      "trade_density_label": "requires_provider_specific_oi_series",
+      "evidence_source": "prior Bybit/Deribit-style gamma/OI snapshot rules",
+      "win_rate_pct": null,
+      "expectancy_r": null,
+      "required_next_input": "time-aligned listed-options OI series, not a fixed gamma/OI snapshot"
+    }
+  },
+  "trade_density_summary": {
+    "aggregate_trade_count": 0,
+    "aggregate_label": "observation_only_missing_time_aligned_oi_outcomes",
+    "covered_market_count": 0
+  },
+  "aggregate_metrics": {
+    "sharpe": null,
+    "win_rate_pct": null,
+    "profit_factor": null,
+    "total_profit_pct": null,
+    "max_drawdown_pct": null,
+    "trade_count": 0,
+    "expectancy_r": null
+  },
+  "per_regime_statistics": {
+    "trend": {
+      "win_rate": null,
+      "trade_count": 0,
+      "expectancy": null,
+      "sample_window": null,
+      "instrument_coverage": [],
+      "confidence": 0.0,
+      "fail_closed_reason": "no_time_aligned_oi_history_or_outcome_rows"
+    },
+    "range": {
+      "win_rate": null,
+      "trade_count": 0,
+      "expectancy": null,
+      "sample_window": null,
+      "instrument_coverage": [],
+      "confidence": 0.0,
+      "fail_closed_reason": "snapshot_oi_may_be_pin_or_hedge_context_only"
+    },
+    "transition": {
+      "win_rate": null,
+      "trade_count": 0,
+      "expectancy": null,
+      "sample_window": null,
+      "instrument_coverage": [],
+      "confidence": 0.0,
+      "fail_closed_reason": "directional_pressure_unproven_without_forward_outcomes"
+    },
+    "stress": {
+      "win_rate": null,
+      "trade_count": 0,
+      "expectancy": null,
+      "sample_window": null,
+      "instrument_coverage": [],
+      "confidence": 0.0,
+      "fail_closed_reason": "wide_spreads_and_event_risk_require_explicit_cost_model"
+    },
+    "other": {
+      "win_rate": null,
+      "trade_count": 0,
+      "expectancy": null,
+      "sample_window": null,
+      "instrument_coverage": [],
+      "confidence": 0.0,
+      "fail_closed_reason": "not_scored"
+    }
+  },
+  "field_mapping": {
+    "Structure": [
+      "contract_oi_delta_zscore",
+      "expiry_dte_bucket",
+      "delta_moneyness_bucket"
+    ],
+    "Technicals": [
+      "volume_oi_ratio",
+      "iv_shift_filter",
+      "gamma_oi_optional",
+      "underlying_reaction_window"
+    ],
+    "SMT": [],
+    "Regime posterior evidence": [
+      "OptionsFlowImbalance",
+      "directional_pressure_hypothesis",
+      "time_alignment_guard"
+    ],
+    "Execution tree": [
+      "flow_direction_matches_underlying_candidate",
+      "transition_hazard",
+      "pda_hybrid_alignment",
+      "execution_readiness",
+      "real_cost_density"
+    ],
+    "Feedback/update learning fields": [
+      "snapshot_timestamp_utc",
+      "option_contract",
+      "open_interest_delta",
+      "volume_oi_ratio",
+      "iv_shift",
+      "realized_forward_return_or_option_pnl"
+    ]
+  },
+  "gate_status": {
+    "pre_bayes_allowed": false,
+    "bbn_allowed": false,
+    "catboost_allowed": false,
+    "execution_tree_allowed": false,
+    "promotion_allowed": false,
+    "trade_usable": false,
+    "update_goal": false,
+    "reason": "candidate_intake_only_until_provider_backed_time_aligned_oi_history_realized_outcomes_and_cost_density_exist"
+  }
+}
