@@ -84,3 +84,20 @@ admission owners where current evidence shows a system loophole.
   `software-development/ict-engi-fact-rese-muta/SKILL.md` with the durable rule:
   cost-survival fields must not include sample size, density, cadence, or
   validation readiness; those must be separate gates.
+- 2026-05-30T03:56:05+0800: post-commit objective snapshot on `355ce143`
+  showed `done_definition.returncode=0`, `factor_closure.returncode=0`,
+  `tracked_violation_count=0`, `active_claims=0`, and
+  `live_factor_processes=0`. Remaining blockers were
+  `same_tree_practical_closure_unproven`, heavy/remote release proof, and a
+  stale practical-admission untracked-debt quarantine fingerprint.
+- 2026-05-30T03:59:20+0800: refreshed
+  `support/docs/audits/practical-admission-source-debt-quarantine.json` to the
+  current reviewed untracked-debt fingerprint: `335` violations across `175`
+  untracked files, sha256
+  `a63ffa0e460234419a0635dc14ae154d60f4e3325f7266f1dbb4cf18d9760aa4`.
+  Verification:
+  `python3 support/scripts/done_definition_audit.py --compact --output /tmp/ict-engine-done-definition-after-quarantine-refresh-355ce143.json`
+  returned `status=pass`, `tracked_violation_count=0`, and quarantine
+  `matched=true`. This does not make the untracked wrappers release-ready or
+  trade-usable; it only prevents reviewed untracked residue from being treated
+  as new tracked source debt.
