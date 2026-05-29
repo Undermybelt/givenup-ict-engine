@@ -1,0 +1,135 @@
+{
+  "schema_version": "source-cost-readback/v1",
+  "generated_at": "2026-05-30T06:58:19+0800",
+  "agent_name": "codex-ews-eth-singapore-etf-policyflow-vwap-reclaim-reserve",
+  "factor_id": "ews_eth_singapore_etf_policyflow_vwap_reclaim_v1",
+  "instrument": {
+    "symbol": "EWS",
+    "instrument_class": "us_listed_etf",
+    "issuer": "iShares",
+    "product_name": "iShares MSCI Singapore ETF",
+    "currency": "USD",
+    "session_scope": "ETH/full_retained_session",
+    "rth_filter_applied": false,
+    "retained_session_coverage": "not_evaluated_source_only"
+  },
+  "duplicate_search": {
+    "searched_keywords": [
+      "EWS",
+      "Singapore ETF",
+      "iShares MSCI Singapore",
+      "singapore ETF",
+      "SGD equity",
+      "ews_eth",
+      "singapore vwap"
+    ],
+    "existing_same_lane_found": false,
+    "nearby_lanes_avoided": [
+      "active TOMAC Aroon/CCI cadence-volume persistence retest",
+      "MGC Asia-stoprun lane",
+      "NQ compound RV-stress lane",
+      "EWW/MXN Mexico lanes",
+      "6J/JPY lanes",
+      "FESX/FDAX Eurex lanes",
+      "KRE/XLF financial ETF lanes",
+      "India ETF lane",
+      "uranium ETF lane",
+      "solar ETF lane"
+    ]
+  },
+  "audit_context": {
+    "status": "needs_attention",
+    "active_claims": 1,
+    "fresh_wait_only_active_claims_without_live_process": 1,
+    "live_factor_processes": 0,
+    "promotion_allowed_true": 0,
+    "trade_usable_true": 0,
+    "same_tree_practical_closure": null,
+    "blocking_claims": [
+      "20260530T064801+0800-codex-tomac-aroon-cci-cadence-volume-persistence-retest-training-prep.claim"
+    ]
+  },
+  "source_readbacks": [
+    {
+      "name": "ishares_ews_product_page",
+      "url": "https://www.ishares.com/us/products/239678/ishares-msci-singapore-etf",
+      "http_code": 200,
+      "official_source": true,
+      "rate_verified": false,
+      "evidence": {
+        "title": "iShares MSCI Singapore ETF | EWS",
+        "adobe_ticker": "ews",
+        "product_ticker": "ews"
+      }
+    },
+    {
+      "name": "ibkr_us_stocks_etfs_commissions",
+      "url": "https://www.interactivebrokers.com/en/pricing/commissions-stocks.php",
+      "http_code": 200,
+      "content_type": "text/html; charset=UTF-8",
+      "size_download": 169576,
+      "official_source": true,
+      "rate_verified": false,
+      "limitation": "generic stocks/ETFs commission page only; exact EWS account/pricing/routing/regulatory tuple not verified"
+    },
+    {
+      "name": "sec_fee_page",
+      "url": "https://www.sec.gov/divisions/marketreg/sec-fees",
+      "http_code": 403,
+      "content_type": "text/html",
+      "size_download": 1925,
+      "official_source": true,
+      "rate_verified": false,
+      "limitation": "blocked from this host"
+    },
+    {
+      "name": "finra_rule_1301",
+      "url": "https://www.finra.org/rules-guidance/rulebooks/finra-rules/1301",
+      "http_code": 404,
+      "content_type": "text/html; charset=UTF-8",
+      "size_download": 80383,
+      "official_source": true,
+      "rate_verified": false,
+      "limitation": "guessed FINRA TAF rule URL did not resolve"
+    }
+  ],
+  "cost_model": {
+    "status": "cost_model_unverified",
+    "promotion_cost_verified": false,
+    "broker": "IBKR candidate",
+    "pricing_plan": "unverified",
+    "venue_routing": "unverified",
+    "currency": "USD",
+    "unit_convention": "unverified",
+    "fee_effective_date": "unverified",
+    "missing_fields": [
+      "exact IBKR contract mapping",
+      "primary exchange / routing assumption",
+      "account region and pricing plan",
+      "SEC fee rate",
+      "FINRA TAF rate",
+      "exchange/local fees if applicable",
+      "borrow/financing if held beyond intraday",
+      "spread/slippage model",
+      "retained-session provider rows"
+    ]
+  },
+  "launches": {
+    "provider_status_started": false,
+    "provider_fetch_started": false,
+    "ibkr_historical_started": false,
+    "autoquant_started": false,
+    "freqtrade_started": false,
+    "tomac_started": false,
+    "local_backtest_started": false,
+    "paper_sim_live_started": false,
+    "downstream_lifecycle_started": false
+  },
+  "decision": {
+    "status": "terminalized_no_launch_source_cost_reserve_cost_model_unverified",
+    "promotion_allowed": false,
+    "trade_usable": false,
+    "update_goal": false,
+    "same_tree_practical_closure": null
+  }
+}

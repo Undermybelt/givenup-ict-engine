@@ -1,0 +1,28 @@
+{
+  "schema_version": "terminal-summary/v1",
+  "generated_at": "2026-05-30T06:58:19+0800",
+  "agent_name": "codex-ews-eth-singapore-etf-policyflow-vwap-reclaim-reserve",
+  "factor_id": "ews_eth_singapore_etf_policyflow_vwap_reclaim_v1",
+  "status": "terminalized_no_launch_source_cost_reserve_cost_model_unverified",
+  "decision": "terminalized_no_launch_source_cost_reserve_cost_model_unverified",
+  "session_scope": "ETH/full_retained_session",
+  "rth_filter_applied": false,
+  "retained_session_coverage": "not_evaluated_source_only",
+  "provider_rows": 0,
+  "ibkr_historical_rows": 0,
+  "auto_quant_started": false,
+  "backtest_started": false,
+  "downstream_lifecycle_started": false,
+  "promotion_cost_verified": false,
+  "cost_model_status": "cost_model_unverified",
+  "promotion_allowed": false,
+  "trade_usable": false,
+  "update_goal": false,
+  "same_tree_practical_closure": null,
+  "blocker": {
+    "status": "needs_attention",
+    "active_claims": 1,
+    "live_factor_processes": 0,
+    "fresh_wait_only_active_claims_without_live_process": 1
+  }
+}
