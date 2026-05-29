@@ -214,6 +214,7 @@ def _done_surface(report: dict[str, Any]) -> dict[str, Any]:
                 await_launch_source_surface = _source_debt_surface(gate)
     return {
         "head": report.get("head"),
+        "tracked_worktree_fingerprint": report.get("tracked_worktree_fingerprint"),
         "report_timestamp": report.get("timestamp_utc"),
         "status": summary.get("status"),
         "completion_ready": bool(summary.get("completion_ready")),
@@ -272,6 +273,17 @@ def _done_definition_proof_status(
     if proof_head != current_head:
         surface["proof_rejected_reason"] = "proof_head_mismatch"
         return surface
+    proof_fingerprint = surface.get("tracked_worktree_fingerprint")
+    current_fingerprint = current_done_surface.get("tracked_worktree_fingerprint")
+    if current_fingerprint is not None and proof_fingerprint is None:
+        surface["proof_rejected_reason"] = "proof_worktree_fingerprint_missing"
+        surface["tracked_worktree_fingerprint"] = current_fingerprint
+        return surface
+    if proof_fingerprint is not None and current_fingerprint is not None and proof_fingerprint != current_fingerprint:
+        surface["proof_rejected_reason"] = "proof_worktree_fingerprint_mismatch"
+        surface["proof_worktree_fingerprint"] = proof_fingerprint
+        surface["tracked_worktree_fingerprint"] = current_fingerprint
+        return surface
     if not surface.get("completion_ready"):
         surface["proof_rejected_reason"] = "proof_not_completion_ready"
         return surface
@@ -300,12 +312,19 @@ def _apply_done_definition_proof(
             "next_action",
             "proof_source",
             "proof_applied",
+            "tracked_worktree_fingerprint",
         ):
             if key in proof_status:
                 merged[key] = proof_status[key]
         return merged
     merged = dict(done_surface)
-    for key in ("proof_source", "proof_applied", "proof_rejected_reason"):
+    for key in (
+        "proof_source",
+        "proof_applied",
+        "proof_rejected_reason",
+        "proof_worktree_fingerprint",
+        "tracked_worktree_fingerprint",
+    ):
         if key in proof_status:
             merged[key] = proof_status[key]
     return merged

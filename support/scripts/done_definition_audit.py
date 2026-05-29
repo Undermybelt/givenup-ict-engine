@@ -236,6 +236,28 @@ def git_head(root: Path) -> str | None:
     return head or None
 
 
+def tracked_worktree_fingerprint(root: Path) -> dict:
+    status, details = run_command(
+        ["git", "status", "--porcelain=v1", "--untracked-files=no"],
+        cwd=root,
+        timeout=30,
+    )
+    if status != "pass":
+        return {
+            "status": "unavailable",
+            "error": details.get("stderr") or details.get("stdout") or "git status failed",
+        }
+    entries = [line for line in str(details.get("stdout") or "").splitlines() if line]
+    payload = "\n".join(entries) + ("\n" if entries else "")
+    status_counts = Counter(line[:2] for line in entries)
+    return {
+        "status": "dirty" if entries else "clean",
+        "tracked_status_entries": len(entries),
+        "sha256": hashlib.sha256(payload.encode("utf-8")).hexdigest(),
+        "status_counts": dict(sorted(status_counts.items())),
+    }
+
+
 def evaluate_help_audit_policy(timeout_seconds: int) -> dict:
     if not HELP_AUDIT_PATH.exists():
         return _gate(
@@ -913,6 +935,7 @@ def format_report(report: dict, *, compact: bool = False) -> str:
     compact_report = {
         "timestamp_utc": report.get("timestamp_utc"),
         "head": report.get("head"),
+        "tracked_worktree_fingerprint": report.get("tracked_worktree_fingerprint"),
         "summary": report.get("summary"),
         "gate_count": len(gates),
         "gates": [_compact_gate(gate, root) for gate in gates],
@@ -1039,6 +1062,7 @@ def main(argv: list[str] | None = None) -> int:
         "timestamp_utc": _utc_now(),
         "repo_root": str(ROOT),
         "head": git_head(ROOT),
+        "tracked_worktree_fingerprint": tracked_worktree_fingerprint(ROOT),
         "summary": summary,
         "gates": gates,
     }

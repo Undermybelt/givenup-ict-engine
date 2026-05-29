@@ -1052,3 +1052,142 @@ training/refinement.
 - Release readiness still fails `worktree_clean_for_release` and
   `source_origin_matches_selected_source`. Manual requirements remain
   `same_tree_practical_closure_packet` and `truthful_completion_commit`.
+
+## 2026-05-29T09:11+0800 Proof-Backed Snapshot / Duplicate Camarilla Fresh Claims
+
+- Fresh routed continuation re-read `skill-router.md`, `project-router.md`, repo
+  `CLAUDE.md`/`AGENTS.md`/`AGENT.md`, and installed runtime skill
+  `software-development/ict-engi-fact-rese-muta/SKILL.md` before action.
+- Compact claim audit at `2026-05-29T09:07:56+0800` returned `status=pass` with
+  `active_claims=0`, `live_factor_processes=0`, `promotion_allowed_true=0`,
+  `trade_usable_true=0`, and `same_tree_practical_closure=null`. Focused
+  process poll showed no TOMAC/AQ/provider/IBKR runtime except the audit/poll
+  commands themselves.
+- Proof-backed remote snapshot command:
+  `python3 support/scripts/objective_closure_snapshot.py --compact --check-remotes --done-definition-proof /tmp/ict-engine-done-definition-heavy-20260529-current-head-00ae7f70.json --output-dir /tmp/ict-engine-closure-proof-backed-after-wpr-clear-00ae7f70-20260529T0904`.
+- Snapshot artifact:
+  `/tmp/ict-engine-closure-proof-backed-after-wpr-clear-00ae7f70-20260529T0904/objective_closure_snapshot.json`.
+- Snapshot exited `1` and remained `not_complete`. Done-definition proof applied
+  for head `00ae7f7058a278dd7871369671545ec6c1be8577`; quarantined
+  practical-admission and await-launch debt matched their manifests. Current
+  blockers were `factor_closure_blocked` and `release_readiness_blocked`.
+- The snapshot's factor closure child saw a new fresh active Camarilla claim
+  without live runtime:
+  `/tmp/ict-engine-agent-claims/board-b-factor-refinement/20260529T090705+0800-codex-tomac-camarilla-r3-s3-reclaim-gate1.claim`.
+  It targets `tomac_idxfut_clean_camarilla_r3_s3_reclaim_1m_v1` under
+  `/tmp/ict-engine-tomac-camarilla-r3-s3-reclaim-gate1-20260529T090705+0800`,
+  with `promotion_allowed=false`, `trade_usable=false`, and `update_goal=false`.
+- A second same-branch fresh active claim appeared immediately after:
+  `/tmp/ict-engine-agent-claims/board-b-factor-refinement/20260529T090744+0800-codex-tomac-camarilla-r3-s3-reclaim-gate1.claim`,
+  under `/tmp/ict-engine-tomac-camarilla-r3-s3-reclaim-gate1-20260529T090744+0800`,
+  also `promotion_allowed=false`, `trade_usable=false`, and `update_goal=false`.
+- Both workdocs describe the same branch and planned command: clean-AQ Gate 1
+  for `camarilla_r3_s3_reclaim` across `ES,NQ,YM` with `1m` origin plus
+  `1m/5m/15m/30m/1h/4h/1d` context, strict 5bps/cost/density gates, and no
+  provider/broker/paper/sim/live command.
+- Current compact audit at `2026-05-29T09:10:16+0800` exited `1` with
+  `active_claims=2`, `live_factor_processes=0`,
+  `fresh_active_claims_without_live_process=2`, `promotion_allowed_true=0`,
+  `trade_usable_true=0`, and `same_tree_practical_closure=null`.
+- The two final guard artifacts agree the branch is blocked by fresh active
+  claims and did not launch:
+  `/tmp/ict-engine-tomac-camarilla-r3-s3-reclaim-gate1-20260529T090705+0800/checks/final_launch_guard_audit_compact.json`
+  and
+  `/tmp/ict-engine-tomac-camarilla-r3-s3-reclaim-gate1-20260529T090744+0800/checks/final_guard_audit_compact.json`.
+- Release readiness still fails `worktree_clean_for_release` and
+  `source_origin_matches_selected_source`. Manual requirements remain
+  `same_tree_practical_closure_packet` and `truthful_completion_commit`.
+- Decision: no takeover, terminalization, provider, AQ, Freqtrade, broker,
+  paper, sim, live, or sibling factor launch while the duplicate Camarilla
+  claims are fresh. Full objective remains incomplete; no practical-trading or
+  closed-loop completion claim is supported.
+
+## 2026-05-29T09:13+0800 Superseding Poll / Camarilla Runtime Live
+
+- Superseding current audit after the previous note: compact audit at
+  `2026-05-29T09:12:05+0800` exited `1` with `active_claims=3`,
+  `live_factor_processes=1`, `fresh_active_claims_without_live_process=2`,
+  `promotion_allowed_true=0`, `trade_usable_true=0`, and
+  `same_tree_practical_closure=null`.
+- Live runtime owner is now the `090705` Camarilla root:
+  `/tmp/ict-engine-tomac-camarilla-r3-s3-reclaim-gate1-20260529T090705+0800`.
+  Process table showed wrapper PID `59550` and child PID `59561` running
+  `run_tomac_index_futures_clean_aq_v1.py --families camarilla_r3_s3_reclaim`
+  with `--symbols ES,NQ,YM`, `--timeframes 1m,5m,15m,30m,1h,4h,1d`, and
+  `--timeout 1800`.
+- That root has started clean data writes under
+  `/tmp/ict-engine-tomac-camarilla-r3-s3-reclaim-gate1-20260529T090705+0800/run/clean/ES/`.
+  At this poll there was no `clean_aq.exit`, no terminal `run/summaries/`, and
+  no validated Gate-1/practical closure artifact yet.
+- The duplicate `090744` Camarilla claim remains fresh active without live
+  runtime, and a separate fresh active candidate-selection claim appeared:
+  `/tmp/ict-engine-agent-claims/board-b-factor-refinement/20260529T091004+0800-codex-tomac-practical-continuation.claim`.
+  Its workdoc is
+  `/tmp/ict-engine-tomac-practical-continuation-20260529T091004+0800/workdoc.md`,
+  status `active_candidate_selection`, decision `pending_candidate_selection`,
+  and all practical flags false.
+- New guard artifact for the live-root state:
+  `/tmp/ict-engine-tomac-camarilla-r3-s3-reclaim-gate1-20260529T090705+0800/checks/final_own_root_audit_compact.json`.
+- Decision: no takeover, terminalization, proof-backed closure snapshot,
+  provider/AQ/Freqtrade sibling launch, broker, paper, sim, or live action while
+  this Camarilla runtime and fresh claims are active. Next lawful action is
+  polling until the live root exits, then reading `clean_aq.exit`, `summary.json`,
+  `autoquant_clean_1m_gate.json`, and the owning claim/workdoc before any
+  terminalization or further closure snapshot.
+
+## 2026-05-29T09:36+0800 Done-Definition Proof Fingerprint Guard
+
+- Static loophole fixed: done-definition proof reuse no longer keys only on the
+  selected source `head`. `done_definition_audit.py` now emits a top-level
+  `tracked_worktree_fingerprint` derived from tracked `git status --porcelain`
+  output, and compact output preserves it for proof packets.
+- `objective_closure_snapshot.py` now carries that fingerprint in the
+  done-definition surface. When the current light child audit reports a
+  fingerprint, a heavy proof with the same `head` but a missing or different
+  fingerprint is rejected with `proof_worktree_fingerprint_missing` or
+  `proof_worktree_fingerprint_mismatch` instead of clearing
+  `done_definition_not_completion_ready`.
+- RED/GREEN evidence:
+  `test_build_snapshot_rejects_done_definition_proof_without_fingerprint_when_current_has_one`
+  failed before the proof gate fix because `proof_applied=True`, then passed
+  after the fail-closed guard. The earlier dirty-fingerprint mismatch regression
+  also passes.
+- Focused verification after the implementation:
+  `python3 -m unittest support.scripts.tests.test_done_definition_audit -v`
+  passed `28/28`; `python3 -m unittest support.scripts.tests.test_objective_closure_snapshot -v`
+  passed `38/38`; `python3 support/scripts/check_script_manifest.py` passed;
+  `git diff --check -- support/scripts/done_definition_audit.py support/scripts/objective_closure_snapshot.py support/scripts/tests/test_done_definition_audit.py support/scripts/tests/test_objective_closure_snapshot.py`
+  passed.
+- Live compact done-definition readback wrote
+  `/tmp/ict-engine-done-definition-light-fingerprint-current-1938ce55.json` and
+  exited `0`. It reports head
+  `1938ce5543289c4dfa6bbd2a572a7cf7119260e9`,
+  `completion_ready=false`, `evidence_level=partial_skipped_gates`, and
+  `tracked_worktree_fingerprint.sha256=b0708f1f526bfdc6cc7e6324ce69f74e759d3114731a70d558fdab5e3a54cedc`
+  with `tracked_status_entries=48`. The incomplete status is expected because
+  this was a light audit with heavy gates skipped.
+- A real proof-backed objective snapshot attempt at
+  `/tmp/ict-engine-closure-proof-fingerprint-guard-20260529T093100+0800/objective_closure_snapshot.json`
+  exited `2` with `snapshot_failed`, `failed_audit=done_definition`, and
+  `error=missing_json_output` after the child done-definition audit timed out at
+  the default 90-second lightweight timeout. This artifact is timeout evidence,
+  not a proof-status readback.
+- Runtime skill wording was updated in
+  `/Users/thrill3r/.hermes/skills/software-development/ict-engine-maintenance-loop/SKILL.md`
+  so future coordinated snapshots require matching `tracked_worktree_fingerprint`
+  when the live child audit reports one. This file is outside the ict-engine
+  repo commit slice.
+- Current factor-closure readback at `2026-05-29T09:35:22+0800` exited `1` with
+  `status=needs_attention`, `active_claims=3`, `live_factor_processes=1`,
+  `fresh_active_claims_without_live_process=2`, `promotion_allowed_true=0`,
+  `trade_usable_true=0`, and `same_tree_practical_closure=null`.
+- Live runtime owner is now
+  `/tmp/ict-engine-tomac-wpr-fractal-ict-zone-reclaim-es-only-20260529T092902+0800`
+  with process PID `76959`. Fresh active claims without live runtime are
+  `20260529T093037+0800-codex-tomac-lunch-liquidity-vacuum-vwap-magnet-reversal.claim`
+  and `20260529T093251+0800-codex-tomac-midnight-open-macd-launch.claim`.
+- Full objective remains incomplete. This slice does not prove a practical
+  factor, same-tree practical closure, release readiness, paper/sim/live
+  readiness, or completion. Next lawful action is still to wait for live/fresh
+  factor owners to terminalize, then rerun factor closure and only then refresh
+  a proof-backed objective snapshot with current-head evidence.

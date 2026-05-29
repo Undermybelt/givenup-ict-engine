@@ -308,6 +308,11 @@ Measured on 2026-05-22:
             "timestamp_utc": "2026-05-28T11:10:00Z",
             "repo_root": str(SCRIPTS_ROOT.parents[1]),
             "head": "selected-source-head",
+            "tracked_worktree_fingerprint": {
+                "status": "dirty",
+                "tracked_status_entries": 2,
+                "sha256": "abc123",
+            },
             "summary": {"status": "pass"},
             "gates": [{"id": "a", "status": "pass", "details": {}}],
         }
@@ -315,6 +320,10 @@ Measured on 2026-05-22:
         parsed = json.loads(format_report(report, compact=True))
 
         self.assertEqual(parsed["head"], "selected-source-head")
+        self.assertEqual(
+            parsed["tracked_worktree_fingerprint"],
+            {"status": "dirty", "tracked_status_entries": 2, "sha256": "abc123"},
+        )
 
     def test_practical_admission_source_gate_writes_debt_manifest(self) -> None:
         import done_definition_audit
