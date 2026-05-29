@@ -8,7 +8,7 @@
 
 **Tech Stack:** Rust application modules under `src/application/*`, existing structural path ranking artifacts, Python research/support scripts under `support/scripts/research/*`, current CLI surfaces (`factor-candidate-packs`, `factor-candidate-admission-targets`, `policy-training-status`, `workflow-status`), and existing unit/integration tests.
 
-**Baseline / Authority Refs:** `AGENT.md`; `support/docs/plans/2026-05-24-board-b-current.md`; `support/docs/plans/2026-05-12-board-a-regime-state-current.md`; `support/docs/plans/2026-05-12-factor-candidate-ingestion-instructions.md`; `support/docs/plans/2026-05-18-gate-rigidity-audit-todo.md`; `src/application/orchestration/factor_candidate.rs`; `src/application/orchestration/execution_tree.rs`; `src/domain/execution/gates.rs`; `support/scripts/research/regime_root_survivor_blocker_report.py`; `support/scripts/research/downstream_practical_admission_source_check.py`.
+**Baseline / Authority Refs:** `AGENT.md`; `support/docs/plans/2026-05-25-board-b-current.md`; `support/docs/plans/2026-05-12-board-a-regime-state-current.md`; `support/docs/plans/2026-05-12-factor-candidate-ingestion-instructions.md`; `support/docs/plans/2026-05-18-gate-rigidity-audit-todo.md`; `src/application/orchestration/factor_candidate.rs`; `src/application/orchestration/execution_tree.rs`; `src/domain/execution/gates.rs`; `support/scripts/research/regime_root_survivor_blocker_report.py`; `support/scripts/research/downstream_practical_admission_source_check.py`.
 
 **Compatibility Boundary:** Public/default CLI remains zero-config and non-trading. Existing `promotion_allowed`, `trade_usable`, and `update_goal` fields must stay false unless the live-trade plane passes. Docs remain non-runtime. Regime-rooted branch grammar stays `main_regime -> sub_regime -> ... -> profit_factor`; market/product/provider/symbol/timeframe remain provenance labels only. Board A regime-confidence ownership is unchanged.
 
@@ -183,7 +183,7 @@ Create this canonical schema in Rust and mirror it in Python artifact builders:
 - Modify: `support/scripts/research/downstream_practical_admission_source_check.py`
   - Allows learning-admission flags but keeps `promotion_allowed`, `trade_usable`, and `update_goal` guarded by live admission.
 - Modify docs in this commit slice:
-  - `support/docs/plans/2026-05-24-board-b-current.md`
+  - `support/docs/plans/2026-05-25-board-b-current.md`
   - `support/docs/plans/2026-05-12-factor-candidate-ingestion-instructions.md`
 
 ## Task 0: Preflight Consumer Map And Baseline Guardrails
@@ -1261,7 +1261,7 @@ git commit -m "feat: surface profitability lifecycle in status commands"
 ## Task 8: Update Board B Runtime Contract Docs
 
 **Files:**
-- Modify: `support/docs/plans/2026-05-24-board-b-current.md`
+- Modify: `support/docs/plans/2026-05-25-board-b-current.md`
 - Modify: `support/docs/plans/2026-05-12-factor-candidate-ingestion-instructions.md`
 
 **Why this task exists:**
@@ -1269,11 +1269,11 @@ git commit -m "feat: surface profitability lifecycle in status commands"
 
 **Impact / Compatibility:**
 - Docs remain instruction/authority, not runtime input.
-- Historical terminal rows are not rewritten; the active May 24 board and
+- Historical terminal rows are not rewritten; the active May 25 board and
   ingestion guide carry the supersession rule for this slice.
 
 **Verification:**
-- `rg -n "5bps|density|promotion_allowed|trade_usable|learning_admission|live_trade" support/docs/plans/2026-05-24-board-b-current.md support/docs/plans/2026-05-12-factor-candidate-ingestion-instructions.md support/docs/plans/2026-05-25-regime-conditioned-profitability-gate-rebuild-plan.md`
+- `rg -n "5bps|density|promotion_allowed|trade_usable|learning_admission|live_trade" support/docs/plans/2026-05-25-board-b-current.md support/docs/plans/2026-05-12-factor-candidate-ingestion-instructions.md support/docs/plans/2026-05-25-regime-conditioned-profitability-gate-rebuild-plan.md`
 
 - [x] **Step 1: Edit Gate Model in Board B current**
 
@@ -1305,7 +1305,7 @@ candidate evidence
 - [x] **Step 3: Record diversity matrix supersession boundary**
 
 Do not stage the large shared May 20 matrix in this slice. Instead, keep this
-plan and the May 24 active board explicit that older rows using the old hard
+plan and the May 25 active board explicit that older rows using the old hard
 promotion model are superseded:
 
 ```text
@@ -1317,7 +1317,7 @@ Rows before 2026-05-25 used the old hard 5bps/density/downstream promotion model
 Run:
 
 ```bash
-rg -n "learning_admission|live_trade|5bps|execution_readiness >= 0.65|transition_hazard < 0.60|pda_hybrid_alignment=true|PDA alignment" support/docs/plans/2026-05-24-board-b-current.md support/docs/plans/2026-05-12-factor-candidate-ingestion-instructions.md support/docs/plans/2026-05-25-regime-conditioned-profitability-gate-rebuild-plan.md
+rg -n "learning_admission|live_trade|5bps|execution_readiness >= 0.65|transition_hazard < 0.60|pda_hybrid_alignment=true|PDA alignment" support/docs/plans/2026-05-25-board-b-current.md support/docs/plans/2026-05-12-factor-candidate-ingestion-instructions.md support/docs/plans/2026-05-25-regime-conditioned-profitability-gate-rebuild-plan.md
 ```
 
 Expected: new lifecycle language present; any remaining hard thresholds, including fixed 5bps, validation density, transition hazard, PDA alignment, and execution readiness, are explicitly scoped to paper/live and are not learning-admission blockers.
@@ -1325,7 +1325,7 @@ Expected: new lifecycle language present; any remaining hard thresholds, includi
 - [x] **Step 5: Commit**
 
 ```bash
-git add support/docs/plans/2026-05-24-board-b-current.md support/docs/plans/2026-05-12-factor-candidate-ingestion-instructions.md support/docs/plans/2026-05-25-regime-conditioned-profitability-gate-rebuild-plan.md
+git add support/docs/plans/2026-05-25-board-b-current.md support/docs/plans/2026-05-12-factor-candidate-ingestion-instructions.md support/docs/plans/2026-05-25-regime-conditioned-profitability-gate-rebuild-plan.md
 git commit -m "docs: redefine Board B gates around profitability lifecycle"
 ```
 

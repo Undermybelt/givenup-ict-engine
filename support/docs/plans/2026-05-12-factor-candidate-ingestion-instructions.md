@@ -15,7 +15,7 @@ Source logs retained for targeted lookup only:
 Current compact authorities:
 
 - `support/docs/plans/2026-05-12-board-a-regime-state-current.md`
-- `support/docs/plans/2026-05-24-board-b-current.md`
+- `support/docs/plans/2026-05-25-board-b-current.md`
 - `support/docs/plans/2026-05-12-board-ab-cleanup-retention-plan.md`
 
 ## Operating Contract

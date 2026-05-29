@@ -200,22 +200,42 @@ TimesFM is an optional forecast bridge (`src/python_bridge/timesfm.rs` and
 - Read and update
   `support/docs/plans/2026-05-12-hotplug-personal-data-release-handoff-todo.md` during
   this release/closed-loop lane.
-- For Board A/B regime-confidence or profitability-factor work, start from the
-  compact current-state docs, not the oversized historical logs:
+- For any Board, Board A, Board B, Board AB, current-board, coverage-matrix,
+  ledger, or board-like markdown/doc, treat it as archive/reference material
+  only. Boards are not active state, not enabled workflow surfaces, not live
+  entrypoints, not lock tables, not task queues, not candidate-selection sources,
+  and not execution authority.
+- For regime-confidence or profitability-factor work, the only valid active
+  entry chain is:
+  1. create or identify the repo-local handoff/plan/workdoc for the current slice;
+  2. create the factor-local `/tmp` workdoc under the claimed run root;
+  3. create or refresh the `/tmp` claim;
+  4. drive decisions from run-root artifacts and same-turn command truth.
+  Board documents such as
   `support/docs/plans/2026-05-12-board-a-regime-state-current.md`,
-  `support/docs/plans/2026-05-23-board-b-current.md`, and
-  `support/docs/plans/2026-05-12-board-ab-cleanup-retention-plan.md`. Open the old
-  May 10 append-only logs only for targeted evidence lookup by heading, root id,
-  or exact artifact reference.
-- Do not append routine coordination/readback rows to the old May 10 Board A/B
-  logs. New status belongs in the compact current-state docs; detailed evidence
-  belongs in compact run-root packets under `support/docs/experiments/.../materials`,
-  `summaries`, and `checks`.
-- For Board A/B high-concurrency work, do not use repo markdown as a lock table
-  or scratchpad. Start claims belong outside the repo, for example under
-  `/tmp/ict-engine-agent-claims/board-a/` or `/tmp/ict-engine-agent-claims/board-b/`.
-  The compact current-state docs should receive only terminal decisions with
-  evidence paths.
+  `support/docs/plans/2026-05-25-board-b-current.md`, and
+  `support/docs/plans/2026-05-12-board-ab-cleanup-retention-plan.md` are
+ 资料留档 only. Read them only after the new local doc and `/tmp` workdoc exist,
+  and only for targeted evidence lookup by heading, root id, or exact artifact
+  reference.
+- Do not append routine coordination/readback rows to old Board logs or use any
+  shared board/current-state doc as a live entrypoint. New slice-local status
+  belongs in the newly created repo-local doc and factor-local `/tmp` workdoc;
+  detailed evidence belongs in compact run-root packets under
+  `support/docs/experiments/.../materials`, `summaries`, and `checks`.
+- For high-concurrency work, do not use repo markdown boards as lock tables or
+  scratchpads. Start claims belong outside the repo, for example under
+  `/tmp/ict-engine-agent-claims/...`. Shared board docs, if updated at all,
+  should receive only terminal archival decisions with evidence paths after the
+  local doc, `/tmp` workdoc, claim, and run-root artifacts already exist.
+- Distinguish ownership from runtime occupancy. Ownership is per-factor and must
+  be represented by a dedicated local doc, factor-local `/tmp` workdoc, and
+  `/tmp` claim for that exact branch. `live_factor_processes` or "runtime
+  occupancy" does not mean agents should share one markdown board; it means one
+  or more provider/Auto-Quant/runtime processes are already writing under other
+  run roots, so a new launch would collide even if every agent has a separate
+  doc. Solve ownership with per-factor docs and claims; solve runtime occupancy
+  by waiting for the foreign process roots to exit or terminalize.
 - Docs are not runtime inputs. Rust, Python, shell, provider, Auto-Quant,
   training, and workflow code must not import, parse, grep, or depend on
   `support/docs/plans/*.md`. Promote any needed rule into typed config, command flags,

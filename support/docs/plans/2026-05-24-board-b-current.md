@@ -1,22 +1,37 @@
-# Board B Current
+# Board B Current - Superseded
+
+Superseded: `2026-05-25 12:05 +0800`
+
+Do not use this file as the active Board B entrypoint. The current workboard is:
+
+`support/docs/plans/2026-05-25-board-b-current.md`
+
+Reason: this May 24 board remained useful as historical context, but the live
+claim surface became noisy enough that keeping it as the first stop can mislead
+new agents into stale lane selection, invalid claim debt, or repeated
+zero-trade/low-density loops. Start from the May 25 board, then return here only
+for exact references named by that board. The archived content below may still
+describe itself as current; ignore that language after the supersession marker.
+
+# Board B Current - Archived Body
 
 Updated: `2026-05-24 23:53 +0800`
 
-Purpose: latest dated entrypoint for Board B regime-rooted
-profitability-factor work. This file is the navigation and boundary contract
-only. It is not a terminal evidence sink, lock table, scratchpad, runtime
-input, or historical ledger.
+Purpose: archived May 24 navigation context for Board B regime-rooted
+profitability-factor work. This file is no longer an entrypoint. Use
+`support/docs/plans/2026-05-25-board-b-current.md` first, then return here only
+for exact references named by that board.
 
 ## Latest-Board Rule
 
-This is the active Board B entrypoint by filename date and updated date. Any
-agent that opens an older Board B file first must stop here before reading or
-appending to that older file.
+This file is superseded. Any agent that opens this file for Board B work must
+stop and go to `support/docs/plans/2026-05-25-board-b-current.md` before reading
+or appending to any Board B historical file.
 
 Older Board B files are sinks or archives only:
 
-- `support/docs/plans/2026-05-23-board-b-current.md` is superseded by this
-  latest dated entrypoint.
+- `support/docs/plans/2026-05-23-board-b-current.md` is superseded by the
+  May 25 workboard.
 - `support/docs/plans/2026-05-17-board-b-factor-refinement-small-cycle-current.md`
   is the terminal-decision ledger.
 - `support/docs/plans/2026-05-12-board-b-profit-factor-current.md` is historical
@@ -25,14 +40,15 @@ Older Board B files are sinks or archives only:
 Hard May 17 rule: do not use
 `support/docs/plans/2026-05-17-board-b-factor-refinement-small-cycle-current.md`
 as an entrypoint, candidate lookup source, broad grep corpus, or lane-selection
-board. Reach it only through this May 24 board, and only for an exact heading,
-factor id, run root, or evidence path already identified by this board or a
+board. Reach it only through the May 25 board, and only for an exact heading,
+factor id, run root, or evidence path already identified by that board or a
 tracked lifecycle artifact.
 
 ## Start Here
 
-For Board B work, read this file first, then use the referenced artifact surface
-for the actual task:
+For Board B work, do not start from this file. Read
+`support/docs/plans/2026-05-25-board-b-current.md` first, then use this archived
+reference list only when the May 25 board names an exact target:
 
 - Candidate ingestion rules:
   `support/docs/plans/2026-05-12-factor-candidate-ingestion-instructions.md`.
@@ -85,12 +101,15 @@ Each active claim must state, at minimum:
 
 - `agent_name`
 - `owner`
+- `claimed_at`
+- `last_progress_at`
 - `scope`
 - `active_task`
 - `non_goals`
 - `write_surface`
 - `run_root` or `tmp_root`
 - `status`
+- `progress_report` or `latest_report`
 
 An unnamed or vague claim is not valid ownership. An agent that cannot state
 exactly what it is doing must stop instead of continuing, repairing, rerunning,
@@ -98,14 +117,36 @@ or summarizing a lane. Claims such as "continue", "audit", "help", "repair",
 or "readback" are insufficient unless they identify the exact factor/root,
 artifact root, gate, and write surface.
 
+Every claim and every durable work artifact must carry timestamps. `claimed_at`
+records when ownership started. `last_progress_at` must be updated whenever the
+agent produces a meaningful result, blocker readback, command exit, metric file,
+or terminal decision. `progress_report`/`latest_report` must point to the latest
+human-readable or JSON report under the lane root so another agent can reconstruct
+what happened without reading chat history.
+
 Start claims belong outside the repo:
 
 - `/tmp/ict-engine-agent-claims/board-b/`
 - `/tmp/ict-engine-agent-claims/board-b-factor-refinement/`
 
 If a lane is already claimed, active, done, or blocked, do not continue, repair,
-re-run, summarize, or "help" that lane. Pick a new axis or stop with a compact
-duplicate/blocker note.
+re-run, summarize, or "help" that lane while the owning work is still live. Pick
+a new axis or stop with a compact duplicate/blocker note.
+
+Stale active claims may be taken over when both conditions are true:
+
+- no matching live process is visible for the lane (`run_ibkr_*`,
+  `fetch_external.py`, Auto-Quant/freqtrade, TOMAC scan/postscan, IBKR
+  `provider-status`, or another command writing under the claimed root); and
+- `last_progress_at` is more than one hour old, or the claim has no
+  `last_progress_at` and the latest report/terminal artifact is more than one
+  hour old or missing.
+
+A takeover must append a timestamped takeover report to the original claim with
+`takeover_agent_name`, `takeover_reason`, `takeover_run_root`,
+`last_progress_at`, `latest_report`, `decision`, and the invariant
+`promotion_allowed=false`, `trade_usable=false`, `update_goal=false` unless the
+full live-usability gate actually passes.
 
 A new Board B lane must differ by at least one real ownership axis: factor,
 root regime, symbol or instrument set, provider/window, artifact root, or gate.
