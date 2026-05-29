@@ -865,6 +865,23 @@ def evaluate_heavy_checks(args: argparse.Namespace) -> list[dict]:
     return gates
 
 
+def _heavy_checks_requested(args: argparse.Namespace) -> bool:
+    return any(
+        (
+            args.run_all_heavy,
+            args.run_cargo_check,
+            args.run_cargo_clippy,
+            args.run_cargo_test,
+            args.run_smoke,
+            _env_flag("ICT_ENGINE_DONE_DEFINITION_RUN_HEAVY"),
+            _env_flag("ICT_ENGINE_DONE_DEFINITION_RUN_CARGO_CHECK"),
+            _env_flag("ICT_ENGINE_DONE_DEFINITION_RUN_CARGO_CLIPPY"),
+            _env_flag("ICT_ENGINE_DONE_DEFINITION_RUN_CARGO_TEST"),
+            _env_flag("ICT_ENGINE_DONE_DEFINITION_RUN_SMOKE"),
+        )
+    )
+
+
 def summarize(gates: list[dict]) -> dict:
     pass_count = sum(1 for gate in gates if gate["status"] == "pass")
     fail_count = sum(1 for gate in gates if gate["status"] == "fail")
@@ -1073,8 +1090,14 @@ def main(argv: list[str] | None = None) -> int:
             args.practical_admission_source_timeout_seconds
         )
     )
-    gates.append(evaluate_help_audit_policy(args.help_audit_timeout_seconds))
-    gates.extend(evaluate_heavy_checks(args))
+    if _heavy_checks_requested(args):
+        heavy_gates = evaluate_heavy_checks(args)
+        help_gate = evaluate_help_audit_policy(args.help_audit_timeout_seconds)
+    else:
+        help_gate = evaluate_help_audit_policy(args.help_audit_timeout_seconds)
+        heavy_gates = evaluate_heavy_checks(args)
+    gates.append(help_gate)
+    gates.extend(heavy_gates)
 
     summary = summarize(gates)
     report = {

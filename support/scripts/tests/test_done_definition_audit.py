@@ -2,6 +2,8 @@
 from __future__ import annotations
 
 import sys
+import contextlib
+import io
 import tempfile
 import time
 import unittest
@@ -698,6 +700,66 @@ Measured on 2026-05-22:
         self.assertEqual(gate["status"], "pass")
         self.assertEqual(captured["timeout"], 600)
         self.assertEqual(captured["env_timeout"], "600")
+
+    def test_main_warms_heavy_checks_before_help_audit_for_heavy_run(self) -> None:
+        import done_definition_audit
+
+        events: list[str] = []
+
+        def pass_gate(gate_id: str, *, heavy: bool = False) -> dict:
+            return {"id": gate_id, "status": "pass", "heavy": heavy, "details": {}}
+
+        def fake_heavy_checks(args) -> list[dict]:
+            self.assertTrue(args.run_all_heavy)
+            events.append("heavy")
+            return [pass_gate("cargo_test", heavy=True)]
+
+        def fake_help_audit(timeout_seconds: int) -> dict:
+            self.assertEqual(timeout_seconds, 180)
+            events.append("help")
+            return pass_gate("help_audit_none_output_policy")
+
+        originals = (
+            done_definition_audit.evaluate_quickstart_surface,
+            done_definition_audit.evaluate_script_governance,
+            done_definition_audit.evaluate_practical_admission_source_gate,
+            done_definition_audit.evaluate_await_launch_source_gate,
+            done_definition_audit.evaluate_help_audit_policy,
+            done_definition_audit.evaluate_heavy_checks,
+            done_definition_audit.git_head,
+            done_definition_audit.tracked_worktree_fingerprint,
+        )
+        try:
+            done_definition_audit.evaluate_quickstart_surface = lambda: pass_gate("quickstart_surface")
+            done_definition_audit.evaluate_script_governance = lambda: pass_gate("script_governance_surface")
+            done_definition_audit.evaluate_practical_admission_source_gate = lambda timeout: pass_gate("practical_admission_source_surface")
+            done_definition_audit.evaluate_await_launch_source_gate = lambda timeout: pass_gate("await_launch_source_surface")
+            done_definition_audit.evaluate_help_audit_policy = fake_help_audit
+            done_definition_audit.evaluate_heavy_checks = fake_heavy_checks
+            done_definition_audit.git_head = lambda root: "HEAD"
+            done_definition_audit.tracked_worktree_fingerprint = lambda root: {"status": "clean"}
+            output = io.StringIO()
+            with contextlib.redirect_stdout(output):
+                rc = done_definition_audit.main(["--run-all-heavy", "--compact"])
+        finally:
+            (
+                done_definition_audit.evaluate_quickstart_surface,
+                done_definition_audit.evaluate_script_governance,
+                done_definition_audit.evaluate_practical_admission_source_gate,
+                done_definition_audit.evaluate_await_launch_source_gate,
+                done_definition_audit.evaluate_help_audit_policy,
+                done_definition_audit.evaluate_heavy_checks,
+                done_definition_audit.git_head,
+                done_definition_audit.tracked_worktree_fingerprint,
+            ) = originals
+
+        self.assertEqual(rc, 0)
+        self.assertEqual(events, ["heavy", "help"])
+        gate_ids = [gate["id"] for gate in json.loads(output.getvalue())["gates"]]
+        self.assertLess(
+            gate_ids.index("help_audit_none_output_policy"),
+            gate_ids.index("cargo_test"),
+        )
 
     def test_practical_admission_source_gate_fails_on_unsafe_wrapper_scan(self) -> None:
         import done_definition_audit
