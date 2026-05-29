@@ -1001,6 +1001,7 @@ trade_usable=false
                 "trade_usable": True,
                 "provider_execution_feedback_chain": "pass",
                 "evidence_packet": "support/docs/experiments/run-a/summaries/evidence-packet.json",
+                "evidence_packet_validated": True,
                 "packet_path": "support/docs/experiments/run-a/summaries/same_tree_practical_closure.json",
                 "claim_file": "terminal-practical.claim",
                 "run_root": "support/docs/experiments/run-a",

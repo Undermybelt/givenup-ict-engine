@@ -773,6 +773,7 @@ def _read_valid_same_tree_practical_closure_packet(
         return None
     packet = dict(parsed)
     packet["evidence_packet"] = _path_for_report(evidence_path, repo_root=repo_root)
+    packet["evidence_packet_validated"] = True
     packet["packet_path"] = _path_for_report(packet_path, repo_root=repo_root)
     return packet
 

@@ -395,6 +395,8 @@ def _same_tree_practical_closure_detail(factor_surface: dict[str, Any]) -> dict[
     evidence_packet = packet.get("evidence_packet")
     if not isinstance(evidence_packet, str) or not evidence_packet.strip():
         return None
+    if packet.get("evidence_packet_validated") is not True:
+        return None
     return packet
 
 
@@ -405,15 +407,22 @@ def _practical_closure_blocker_detail(factor_surface: dict[str, Any]) -> dict[st
         isinstance(value, int) and value > 0
         for value in (promotion_allowed, trade_usable)
     )
+    same_tree_practical_closure = factor_surface.get("same_tree_practical_closure")
+    reason = (
+        "raw_factor_claim_flags_are_not_validated_practical_closure"
+        if raw_flags_positive
+        else "validated_same_tree_practical_closure_packet_missing"
+    )
+    if (
+        isinstance(same_tree_practical_closure, dict)
+        and same_tree_practical_closure.get("evidence_packet_validated") is not True
+    ):
+        reason = "same_tree_practical_closure_evidence_not_validated"
     return {
-        "reason": (
-            "raw_factor_claim_flags_are_not_validated_practical_closure"
-            if raw_flags_positive
-            else "validated_same_tree_practical_closure_packet_missing"
-        ),
+        "reason": reason,
         "promotion_allowed_true": promotion_allowed,
         "trade_usable_true": trade_usable,
-        "same_tree_practical_closure": factor_surface.get("same_tree_practical_closure"),
+        "same_tree_practical_closure": same_tree_practical_closure,
     }
 
 

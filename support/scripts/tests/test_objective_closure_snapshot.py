@@ -143,6 +143,38 @@ class ObjectiveClosureSnapshotTest(unittest.TestCase):
             summary["prioritized_next_actions"],
         )
 
+    def test_summarize_snapshot_rejects_unvalidated_practical_closure_packet(self) -> None:
+        summary = summarize_snapshot(
+            {
+                "completion_ready": True,
+                "quickstart_surface": "pass",
+            },
+            {
+                "status": "pass",
+                "promotion_allowed_true": 0,
+                "trade_usable_true": 0,
+                "same_tree_practical_closure": {
+                    "status": "pass",
+                    "promotion_allowed": True,
+                    "trade_usable": True,
+                    "provider_execution_feedback_chain": "pass",
+                    "evidence_packet": "checks/terminal_metrics.json",
+                },
+            },
+            {
+                "status": "pass",
+            },
+            snapshot_timestamp="2026-05-27T11:00:10Z",
+        )
+
+        self.assertEqual(summary["status"], "not_complete")
+        self.assertFalse(summary["surface_green"])
+        self.assertIn("same_tree_practical_closure_unproven", summary["blockers"])
+        self.assertEqual(
+            summary["blocker_details"]["same_tree_practical_closure_unproven"]["reason"],
+            "same_tree_practical_closure_evidence_not_validated",
+        )
+
     def test_summarize_snapshot_allows_surface_green_with_validated_practical_closure_packet(self) -> None:
         summary = summarize_snapshot(
             {
@@ -159,6 +191,7 @@ class ObjectiveClosureSnapshotTest(unittest.TestCase):
                     "trade_usable": True,
                     "provider_execution_feedback_chain": "pass",
                     "evidence_packet": "same_tree_practical_closure.json",
+                    "evidence_packet_validated": True,
                 },
             },
             {
