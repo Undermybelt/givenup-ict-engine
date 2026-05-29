@@ -184,6 +184,22 @@
     "test_command": "python3 -m unittest support.scripts.research.tests.test_downstream_practical_admission_source_check -v"
   },
   {
+    "name": "tomac_strategy_inventory",
+    "stability": "read_only_utility",
+    "entrypoint": "support/scripts/research/tomac_strategy_inventory.py",
+    "safe_default": true,
+    "requires_data": true,
+    "test_command": "python3 -m unittest support.scripts.research.tests.test_tomac_strategy_inventory -v"
+  },
+  {
+    "name": "tomac_factor_coverage_matrix",
+    "stability": "read_only_utility",
+    "entrypoint": "support/scripts/research/tomac_factor_coverage_matrix.py",
+    "safe_default": true,
+    "requires_data": true,
+    "test_command": "python3 -m unittest support.scripts.research.tests.test_tomac_factor_coverage_matrix -v"
+  },
+  {
     "name": "pandas_path_ranker_trainer",
     "stability": "active_bridge",
     "entrypoint": "support/scripts/auto_quant_external/pandas_path_ranker_trainer.py",

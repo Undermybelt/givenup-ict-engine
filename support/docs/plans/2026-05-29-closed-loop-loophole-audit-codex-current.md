@@ -71,6 +71,43 @@ that flag before treating a packet as practical closure.
 
 Regression: `test_summarize_snapshot_rejects_unvalidated_practical_closure_packet`.
 
+## Dirty-Residue Packaging Decision - TOMAC Inventory/Coverage
+
+Other agents left many untracked TOMAC scripts, top-level generated factor-name
+files, and modified one-off IBKR/MGC Gate 1 wrappers in the shared worktree.
+Those surfaces are not product-ready by themselves: several are loose launch
+wrappers, local-provider scripts, repo-root scratch files, or Board docs with
+large unrelated append-only edits.
+
+Reusable slice selected for commit: add read-only TOMAC source organization
+helpers under `support/scripts/research/` instead of committing the loose
+training residue:
+
+- `tomac_strategy_inventory.py` inventories a TOMAC source tree into structured
+  family/symbol/timeframe/indicator/class/branch-hint rows.
+- `tomac_factor_coverage_matrix.py` combines those rows with Board B `/tmp`
+  claims to distinguish active claimed families from available-for-rotation
+  families.
+- `support/scripts/SCRIPTS.md` and `support/scripts/script_manifest.json`
+  classify both helpers as read-only utilities and explicitly mark them as
+  coordination/residue-cleanup evidence, not practical trading proof.
+
+Current read-only evidence written outside the repo:
+
+- `/tmp/ict-engine-tomac-strategy-inventory-20260529.json`:
+  `total_files=49`, `branch_count=30`.
+- `/tmp/ict-engine-tomac-factor-coverage-20260529.json` and `.csv`:
+  `family_count=22`, `active_claimed=3`, `available_for_rotation=19`.
+
+Decision: do not commit the modified MGC wrapper scripts, repo-root scratch
+factor-name files, or broad Board doc edits in this slice. They either need
+conversion into manifest-backed candidate packs or terminal evidence packets,
+or should remain unstaged residue.
+
+Release/publish decision: no release. Current factor audit still reports live
+factor/runtime occupancy plus zero practical factors, and the worktree remains
+dirty, so this is an internal maintenance commit only.
+
 ## Verification
 
 - RED: the new regression failed before the implementation because
@@ -85,6 +122,16 @@ Regression: `test_summarize_snapshot_rejects_unvalidated_practical_closure_packe
   ran `11/11 OK`, keeping the current closure packet producer behavior aligned
   with the stricter audit consumer.
 - `git diff --check -- support/scripts/factor_claim_terminalization_audit.py support/scripts/tests/test_factor_claim_terminalization_audit.py support/docs/plans/2026-05-28-factor-training-closed-loop-continuation-codex-current.md`
+  returned clean.
+- `python3 -m unittest support.scripts.research.tests.test_tomac_strategy_inventory support.scripts.research.tests.test_tomac_factor_coverage_matrix -v`
+  ran `30/30 OK` for the residue-inventory helpers.
+- `python3 support/scripts/check_script_manifest.py` returned
+  `script_manifest status=pass entries=31 required_public_entries=4 safe_required_public_entries=4`.
+- `python3 support/scripts/ci/check_docs_runtime_isolation.py` returned
+  `docs runtime isolation ok`.
+- `python3 -m py_compile support/scripts/research/tomac_strategy_inventory.py support/scripts/research/tomac_factor_coverage_matrix.py support/scripts/research/tests/test_tomac_strategy_inventory.py support/scripts/research/tests/test_tomac_factor_coverage_matrix.py`
+  passed.
+- `git diff --check -- support/scripts/research/tomac_strategy_inventory.py support/scripts/research/tomac_factor_coverage_matrix.py support/scripts/research/tests/test_tomac_strategy_inventory.py support/scripts/research/tests/test_tomac_factor_coverage_matrix.py support/scripts/SCRIPTS.md support/scripts/script_manifest.json`
   returned clean.
 
 ## Current Blockers
@@ -112,6 +159,10 @@ Regression: `test_summarize_snapshot_rejects_unvalidated_practical_closure_packe
 - The objective still lacks a same-tree practical closure packet proving
   provider/training admission -> Pre-Bayes -> BBN -> path-ranker consumption ->
   execution tree -> feedback/live-use.
+- Same-turn compact audit on 2026-05-29T06:41Z reported
+  `active_claims=2`, `fresh_active_claims_without_live_process=1`,
+  `live_factor_processes=3`, `promotion_allowed_true=0`,
+  `trade_usable_true=0`, and `same_tree_practical_closure=null`.
 
 ## Next Steps
 
