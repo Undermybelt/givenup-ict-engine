@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import subprocess
 import sys
 from datetime import datetime
 from pathlib import Path
@@ -40,16 +41,32 @@ BRANCH_PATH = (
 )
 
 STATE = ROOT / "state"
+CMD = ROOT / "command-output"
 CHECKS = ROOT / "checks"
 SUMMARIES = ROOT / "summaries"
+MATERIALS = ROOT / "materials"
+MODEL_DIR = ROOT / "path_ranker_model"
+DATA_DIR = ROOT / "data/provider/normalized"
+SCORES = ROOT / "path_ranker_scores.csv"
+
+ICT = REPO / ".local-artifacts/cargo-target/debug/ict-engine"
+if not ICT.exists():
+    ICT = REPO / "target/debug/ict-engine"
+TRAINER = REPO / "support/scripts/auto_quant_external/pandas_path_ranker_trainer.py"
+PY_RUNNER = Path("python3")
 
 
 def configure_paths(root: Path) -> None:
-    global ROOT, STATE, CHECKS, SUMMARIES
+    global ROOT, STATE, CMD, CHECKS, SUMMARIES, MATERIALS, MODEL_DIR, DATA_DIR, SCORES
     ROOT = Path(root)
     STATE = ROOT / "state"
+    CMD = ROOT / "command-output"
     CHECKS = ROOT / "checks"
     SUMMARIES = ROOT / "summaries"
+    MATERIALS = ROOT / "materials"
+    MODEL_DIR = ROOT / "path_ranker_model"
+    DATA_DIR = ROOT / "data/provider/normalized"
+    SCORES = ROOT / "path_ranker_scores.csv"
 
 
 def read_json(path: Path) -> dict:
@@ -62,7 +79,51 @@ def read_json(path: Path) -> dict:
 
 def write_json(path: Path, payload: dict) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    path.write_text(json.dumps(json_safe(payload), indent=2, sort_keys=True) + "\n", encoding="utf-8")
+
+
+def json_safe(value: object) -> object:
+    if isinstance(value, Path):
+        return str(value)
+    if isinstance(value, list):
+        return [json_safe(item) for item in value]
+    if isinstance(value, tuple):
+        return [json_safe(item) for item in value]
+    if isinstance(value, dict):
+        return {str(key): json_safe(item) for key, item in value.items()}
+    return value
+
+
+def run_cmd(name: str, argv: list[object], timeout: int = 300) -> dict:
+    CMD.mkdir(parents=True, exist_ok=True)
+    CHECKS.mkdir(parents=True, exist_ok=True)
+    argv_s = [str(item) for item in argv]
+    (CMD / f"{name}.cmd").write_text(" ".join(argv_s) + "\n", encoding="utf-8")
+    try:
+        proc = subprocess.run(argv_s, cwd=REPO, text=True, capture_output=True, timeout=timeout)
+        stdout = proc.stdout
+        stderr = proc.stderr
+        rc = proc.returncode
+        timed_out = False
+    except subprocess.TimeoutExpired as exc:
+        stdout = exc.stdout or ""
+        stderr = (exc.stderr or "") + f"\nTIMEOUT after {timeout}s\n"
+        rc = 124
+        timed_out = True
+    if isinstance(stdout, bytes):
+        stdout = stdout.decode("utf-8", errors="replace")
+    if isinstance(stderr, bytes):
+        stderr = stderr.decode("utf-8", errors="replace")
+    (CMD / f"{name}.out").write_text(stdout, encoding="utf-8")
+    (CMD / f"{name}.err").write_text(stderr, encoding="utf-8")
+    (CHECKS / f"{name}.exit").write_text(f"{rc}\n", encoding="utf-8")
+    return {"name": name, "exit": rc, "timed_out": timed_out}
+
+
+def run_stage(stage: str, name: str, argv: list[object], timeout: int = 300) -> dict:
+    result = run_cmd(name, argv, timeout)
+    result["stage"] = stage
+    return result
 
 
 def command_results_cover_practical_stages(value: object) -> bool:
@@ -239,6 +300,201 @@ def readiness_contract_from_policy(policy: dict) -> object:
     return lifecycle.get("readiness_contract") or policy.get("readiness_contract")
 
 
+def trainer_cmd(*extra: object) -> list[object]:
+    return [PY_RUNNER, TRAINER, *extra]
+
+
+def command_step(stage: str, name: str, argv: list[object], timeout: int) -> dict[str, object]:
+    return {"stage": stage, "name": name, "argv": [str(item) for item in argv], "timeout": timeout}
+
+
+def resolve_data_root(value: str) -> Path:
+    return Path(value) if value else DATA_DIR
+
+
+def build_lifecycle_command_plan(
+    *,
+    strategy_library: Path,
+    data_root: Path,
+    feedback_file: Path,
+) -> list[dict[str, object]]:
+    target_csv = STATE / SYMBOL / "policy_training/structural_path_ranking_target.csv"
+    trainer_artifact = MODEL_DIR / "trainer_artifact.json"
+    return [
+        command_step(
+            "provider_data",
+            "01_auto_quant_results_import",
+            [
+                ICT,
+                "auto-quant-results-import",
+                "--symbol",
+                SYMBOL,
+                "--state-dir",
+                STATE,
+                "--library",
+                strategy_library,
+            ],
+            180,
+        ),
+        command_step(
+            "pre_bayes",
+            "02_auto_quant_prior_init",
+            [
+                ICT,
+                "auto-quant-prior-init",
+                "--symbol",
+                SYMBOL,
+                "--state-dir",
+                STATE,
+                "--library",
+                strategy_library,
+                "--temper",
+                "0.5",
+                "--prior-strength",
+                "4.0",
+            ],
+            180,
+        ),
+        command_step(
+            "execution_tree",
+            "03_analyze_seed",
+            [ICT, "analyze", "--symbol", SYMBOL, "--data-root", data_root, "--state-dir", STATE, "--output-format", "json"],
+            300,
+        ),
+        command_step(
+            "bbn_workflow",
+            "04_workflow_seed",
+            [ICT, "workflow-status", "--symbol", SYMBOL, "--state-dir", STATE, "--refresh", "--output-format", "json"],
+            120,
+        ),
+        command_step(
+            "pre_bayes",
+            "05_pre_bayes_seed",
+            [ICT, "pre-bayes-status", "--symbol", SYMBOL, "--state-dir", STATE, "--refresh", "--output-format", "json"],
+            120,
+        ),
+        command_step(
+            "path_ranker",
+            "06_export_target_seed",
+            [ICT, "export-structural-path-ranking-target", "--symbol", SYMBOL, "--state-dir", STATE],
+            120,
+        ),
+        command_step(
+            "feedback_update",
+            "08_feedback_update",
+            [
+                ICT,
+                "auto-quant-ingest-real-trades",
+                "--symbol",
+                SYMBOL,
+                "--state-dir",
+                STATE,
+                "--trades",
+                feedback_file,
+                "--source",
+                "retained_real_event_label_simulation_child_gate_filtered",
+            ],
+            300,
+        ),
+        command_step(
+            "path_ranker",
+            "09_export_target_after_feedback",
+            [ICT, "export-structural-path-ranking-target", "--symbol", SYMBOL, "--state-dir", STATE],
+            120,
+        ),
+        command_step(
+            "policy_training",
+            "10_policy_after_feedback",
+            [ICT, "policy-training-status", "--symbol", SYMBOL, "--state-dir", STATE, "--output-format", "json"],
+            120,
+        ),
+        command_step(
+            "path_ranker",
+            "11_train_ranker",
+            trainer_cmd("--target-csv", target_csv, "--output-dir", MODEL_DIR, "--output-scores", SCORES, "--allow-direct-fallback"),
+            300,
+        ),
+        command_step(
+            "path_ranker",
+            "12_apply_ranker",
+            trainer_cmd("--apply", "--model-dir", MODEL_DIR, "--target-csv", target_csv, "--output-scores", SCORES, "--allow-direct-fallback"),
+            180,
+        ),
+        command_step(
+            "path_ranker",
+            "13_apply_scores_to_ict",
+            [ICT, "apply-structural-path-ranking-external-scores", "--symbol", SYMBOL, "--state-dir", STATE, "--scores-file", SCORES],
+            120,
+        ),
+        command_step(
+            "path_ranker",
+            "14_register_trainer",
+            [
+                ICT,
+                "register-structural-path-ranking-trainer-artifact",
+                "--symbol",
+                SYMBOL,
+                "--state-dir",
+                STATE,
+                "--artifact-uri",
+                trainer_artifact,
+                "--model-family",
+                "weighted_feature_sum_v1",
+                "--trained-rows",
+                "1",
+                "--calibration-rows",
+                "0",
+            ],
+            120,
+        ),
+        command_step(
+            "path_ranker",
+            "15_enable_runtime",
+            [ICT, "enable-structural-path-ranking-runtime", "--symbol", SYMBOL, "--state-dir", STATE, "--reuse-mode", "prefer_history"],
+            120,
+        ),
+        command_step(
+            "execution_tree",
+            "16_analyze_after_ranker",
+            [ICT, "analyze", "--symbol", SYMBOL, "--data-root", data_root, "--state-dir", STATE, "--output-format", "json"],
+            300,
+        ),
+        command_step(
+            "bbn_workflow",
+            "17_workflow_after_ranker",
+            [ICT, "workflow-status", "--symbol", SYMBOL, "--state-dir", STATE, "--refresh", "--output-format", "json"],
+            120,
+        ),
+        command_step(
+            "pre_bayes",
+            "18_pre_bayes_after_ranker",
+            [ICT, "pre-bayes-status", "--symbol", SYMBOL, "--state-dir", STATE, "--refresh", "--output-format", "json"],
+            120,
+        ),
+        command_step(
+            "policy_training",
+            "19_policy_after_ranker",
+            [ICT, "policy-training-status", "--symbol", SYMBOL, "--state-dir", STATE, "--output-format", "json"],
+            120,
+        ),
+    ]
+
+
+def run_lifecycle_driver(plan: list[dict[str, object]]) -> list[dict]:
+    results: list[dict] = []
+    for step in plan:
+        result = run_stage(
+            str(step["stage"]),
+            str(step["name"]),
+            list(step["argv"]),
+            int(step.get("timeout") or 300),
+        )
+        results.append(result)
+        if result.get("exit") != 0 or result.get("timed_out") is True:
+            break
+    return results
+
+
 def validation_counters(trace_output: dict) -> dict[str, str]:
     counters: dict[str, str] = {}
     for line in trace_output.get("split_reason_lineage") or []:
@@ -393,6 +649,16 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     )
     parser.add_argument("--root", default=str(ROOT))
     parser.add_argument("--materialization-root", default=str(DEFAULT_MATERIALIZATION_ROOT))
+    parser.add_argument("--execute-driver", action="store_true")
+    parser.add_argument(
+        "--strategy-library",
+        default=str(DEFAULT_MATERIALIZATION_ROOT / "materials/tomac_nq_compound_rv_stress_gate_strategy_library.json"),
+    )
+    parser.add_argument("--data-root", default="")
+    parser.add_argument(
+        "--feedback-file",
+        default=str(DEFAULT_MATERIALIZATION_ROOT / "feedback/tomac_nq_compound_rv_stress_gate_simulated_feedback.jsonl"),
+    )
     parser.add_argument(
         "--source-packet",
         default="",
@@ -408,10 +674,20 @@ def main(argv: list[str] | None = None) -> int:
     source_packet_path = Path(args.source_packet) if args.source_packet else None
     source_packet = read_json(source_packet_path) if source_packet_path else None
     configure_paths(root)
-    for directory in (STATE, CHECKS, SUMMARIES):
+    for directory in (STATE, CMD, CHECKS, SUMMARIES, MATERIALS, MODEL_DIR, DATA_DIR):
         directory.mkdir(parents=True, exist_ok=True)
+    if args.execute_driver:
+        plan = build_lifecycle_command_plan(
+            strategy_library=Path(args.strategy_library),
+            data_root=resolve_data_root(args.data_root),
+            feedback_file=Path(args.feedback_file),
+        )
+        write_json(CHECKS / "lifecycle_command_plan.json", {"steps": plan})
+        command_results = run_lifecycle_driver(plan)
+    else:
+        command_results = staged_command_results(materialization_root)
     metrics = write_summary(
-        staged_command_results(materialization_root),
+        command_results,
         market_data_provenance(materialization_root),
         materialization_root,
         source_packet,

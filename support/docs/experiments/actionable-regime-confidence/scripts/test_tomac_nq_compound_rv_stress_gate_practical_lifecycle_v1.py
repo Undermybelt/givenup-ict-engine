@@ -364,6 +364,29 @@ class NqCompoundRvStressPracticalLifecycleTests(unittest.TestCase):
         self.assertFalse(metrics["promotion_allowed"])
         self.assertFalse(metrics["trade_usable"])
 
+    def test_execute_driver_plan_is_json_safe_and_uses_configured_root_data_dir(self) -> None:
+        module = load_module()
+
+        with tempfile.TemporaryDirectory() as tmp:
+            tmp_path = Path(tmp)
+            root = tmp_path / "root"
+            module.configure_paths(root)
+
+            plan = module.build_lifecycle_command_plan(
+                strategy_library=tmp_path / "strategy.json",
+                data_root=module.resolve_data_root(""),
+                feedback_file=tmp_path / "feedback.jsonl",
+            )
+            payload = {"steps": plan}
+
+            json.dumps(payload)
+            analyze_steps = [step for step in plan if step["name"] in {"03_analyze_seed", "16_analyze_after_ranker"}]
+
+        self.assertEqual(len(analyze_steps), 2)
+        for step in analyze_steps:
+            argv = step["argv"]
+            self.assertIn(str(root / "data/provider/normalized"), argv)
+
 
 if __name__ == "__main__":
     unittest.main()
