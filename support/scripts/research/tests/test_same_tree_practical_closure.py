@@ -36,15 +36,21 @@ def valid_metrics() -> dict:
             "factor_profitability_lifecycle": {
                 "learning_admitted_count": 1,
                 "paper_ready_count": 1,
+                "deploy_ready_count": 1,
                 "live_ready_count": 1,
                 "live_trade_usable_count": 1,
+                "funded_live_fill_required": False,
+                "readiness_contract": closure.DEPLOY_READY_READINESS_CONTRACT,
                 "promotion_allowed": True,
                 "trade_usable": True,
             }
         },
         "learning_admission_status": "admitted",
         "paper_admission_status": "ready",
+        "deploy_ready": True,
         "live_trade_status": "ready",
+        "funded_live_fill_required": False,
+        "readiness_contract": closure.DEPLOY_READY_READINESS_CONTRACT,
         "market_data_provenance": {
             "status": "pass",
             "source_class": "roll_adjusted_clean_feather",
@@ -69,11 +75,31 @@ class SameTreePracticalClosureTests(unittest.TestCase):
         self.assertEqual(packet["status"], "pass")
         self.assertTrue(packet["promotion_allowed"])
         self.assertTrue(packet["trade_usable"])
+        self.assertTrue(packet["deploy_ready"])
+        self.assertFalse(packet["funded_live_fill_required"])
+        self.assertEqual(packet["readiness_contract"], closure.DEPLOY_READY_READINESS_CONTRACT)
         self.assertEqual(packet["provider_execution_feedback_chain"], "pass")
 
     def test_rejects_missing_lifecycle_tuple(self) -> None:
         metrics = valid_metrics()
         metrics["paper_admission_status"] = "not_evaluated"
+
+        self.assertIsNone(closure.build_same_tree_practical_closure_packet(metrics))
+
+    def test_rejects_funded_live_fill_requirement_semantic_drift(self) -> None:
+        metrics = valid_metrics()
+        metrics["funded_live_fill_required"] = True
+        metrics["policy_training_summary"]["factor_profitability_lifecycle"][
+            "funded_live_fill_required"
+        ] = True
+
+        self.assertIsNone(closure.build_same_tree_practical_closure_packet(metrics))
+
+    def test_rejects_missing_deploy_ready_count(self) -> None:
+        metrics = valid_metrics()
+        del metrics["policy_training_summary"]["factor_profitability_lifecycle"][
+            "deploy_ready_count"
+        ]
 
         self.assertIsNone(closure.build_same_tree_practical_closure_packet(metrics))
 

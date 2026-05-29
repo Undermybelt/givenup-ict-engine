@@ -18,6 +18,7 @@ if str(RESEARCH_DIR) not in sys.path:
     sys.path.insert(0, str(RESEARCH_DIR))
 
 from same_tree_practical_closure import (  # noqa: E402
+    DEPLOY_READY_READINESS_CONTRACT,
     metrics_prove_same_tree_practical_closure,
 )
 
@@ -847,6 +848,12 @@ def _read_valid_same_tree_practical_closure_packet(
     if parsed.get("promotion_allowed") is not True:
         return None
     if parsed.get("trade_usable") is not True:
+        return None
+    if parsed.get("deploy_ready") is not True:
+        return None
+    if parsed.get("funded_live_fill_required") is not False:
+        return None
+    if parsed.get("readiness_contract") != DEPLOY_READY_READINESS_CONTRACT:
         return None
     if parsed.get("provider_execution_feedback_chain") != "pass":
         return None

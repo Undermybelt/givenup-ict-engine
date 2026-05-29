@@ -309,3 +309,58 @@ Current truth after this slice:
   are fresh.
 - The full user objective remains incomplete. This slice closes another fake
   practical-closure producer bypass; it does not create a live-usable factor.
+
+## 2026-05-30T00:36+0800 Deploy-Ready Contract Slice
+
+Root cause handled in this slice:
+
+- The canonical same-tree practical closure packet required the practical
+  lifecycle tuple, but the schema did not explicitly separate deploy-ready
+  evidence from funded live-fill evidence. That left a semantic drift path where
+  a future wrapper could either require a funded live fill before `deploy_ready`
+  or accept a packet whose practical closure depends on funded live execution
+  rather than the backtest, Auto-Quant, provider, and paper/sim execution chain.
+
+Changes made:
+
+- Added the explicit readiness contract
+  `deploy_ready_from_backtest_autoquant_provider_or_paper_sim_execution_chain_not_funded_fill`
+  in `support/scripts/research/same_tree_practical_closure.py`.
+- The canonical builder now emits `deploy_ready=true`,
+  `funded_live_fill_required=false`, and the readiness contract string.
+- The canonical validator now requires the same fields both at top level and in
+  `policy_training_summary.factor_profitability_lifecycle`, including a positive
+  `deploy_ready_count`.
+- `factor_claim_terminalization_audit.py` now rejects otherwise-positive
+  closure packets that require funded live fill.
+
+Verification:
+
+- `python3 -m unittest support.scripts.research.tests.test_same_tree_practical_closure -v`
+  -> `Ran 6 tests`, `OK`.
+- `python3 -m unittest support.scripts.tests.test_factor_claim_terminalization_audit -v`
+  -> `Ran 92 tests`, `OK`.
+- `python3 -m unittest support.scripts.research.tests.test_downstream_practical_admission_source_check -v`
+  -> `Ran 40 tests`, `OK`.
+- `python3 -m unittest support.scripts.tests.test_done_definition_audit support.scripts.tests.test_objective_closure_snapshot -v`
+  -> `Ran 74 tests`, `OK`.
+- `git diff --check` -> pass.
+- `python3 support/scripts/objective_closure_snapshot.py --compact --check-remotes --output-dir /tmp/ict-engine-goal-20260530-codex-deploy-ready-contract-current --timeout-seconds 300`
+  -> `status=not_complete`; evidence packet:
+  `/tmp/ict-engine-goal-20260530-codex-deploy-ready-contract-current/objective_closure_snapshot.json`.
+
+Current truth after this slice:
+
+- No validated `same_tree_practical_closure` packet exists.
+- Factor closure still reports `promotion_allowed_true=0`,
+  `trade_usable_true=0`, and `same_tree_practical_closure=null`.
+- Factor closure is blocked by three active claims and zero live factor
+  processes. Latest objective snapshot named two fresh wait-only claims and one
+  fresh active claim without live runtime.
+- Done-definition remains `completion_ready=false` because heavy gates were
+  skipped and current untracked practical-admission debt is not matched by the
+  reviewed quarantine.
+- Release readiness remains blocked by dirty selected source and release mirror
+  `remote_readback` failure; origin remote readback passed.
+- The full user objective remains incomplete. This slice hardens deploy-ready
+  closure semantics; it does not create a practical/live-usable factor.

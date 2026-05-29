@@ -31,6 +31,9 @@ DISALLOWED_MARKET_DATA_SOURCE_CLASSES = {
     "tomac_raw_csv",
     "raw_local_csv",
 }
+DEPLOY_READY_READINESS_CONTRACT = (
+    "deploy_ready_from_backtest_autoquant_provider_or_paper_sim_execution_chain_not_funded_fill"
+)
 
 
 def build_same_tree_practical_closure_packet(
@@ -51,6 +54,9 @@ def build_same_tree_practical_closure_packet(
         "promotion_allowed": True,
         "trade_usable": True,
         "update_goal": metrics.get("update_goal") is True,
+        "deploy_ready": True,
+        "funded_live_fill_required": False,
+        "readiness_contract": DEPLOY_READY_READINESS_CONTRACT,
         "provider_execution_feedback_chain": "pass",
         "evidence_packet": evidence_packet,
         "path_ranker_score_used_by_execution_tree": metrics.get(
@@ -116,6 +122,10 @@ def lifecycle_tuple_proves_practical_closure(metrics: dict[str, Any]) -> bool:
         normalized_text(metrics.get("learning_admission_status")) == "admitted"
         and normalized_text(metrics.get("paper_admission_status")) == "ready"
         and normalized_text(metrics.get("live_trade_status")) == "ready"
+        and metrics.get("deploy_ready") is True
+        and metrics.get("funded_live_fill_required") is False
+        and normalized_text(metrics.get("readiness_contract"))
+        == DEPLOY_READY_READINESS_CONTRACT
     )
 
 
@@ -140,12 +150,19 @@ def policy_training_summary_proves_practical_closure(value: object) -> bool:
     required_positive_counts = (
         "learning_admitted_count",
         "paper_ready_count",
+        "deploy_ready_count",
         "live_ready_count",
         "live_trade_usable_count",
     )
     if any(positive_int(lifecycle.get(key)) <= 0 for key in required_positive_counts):
         return False
-    return lifecycle.get("promotion_allowed") is True and lifecycle.get("trade_usable") is True
+    return (
+        lifecycle.get("promotion_allowed") is True
+        and lifecycle.get("trade_usable") is True
+        and lifecycle.get("funded_live_fill_required") is False
+        and normalized_text(lifecycle.get("readiness_contract"))
+        == DEPLOY_READY_READINESS_CONTRACT
+    )
 
 
 def market_data_provenance_proves_practical_closure(value: object) -> bool:
