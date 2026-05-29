@@ -571,3 +571,41 @@ Current truth after this slice:
   `remote_readback`.
 - This slice closes another false-positive practical-closure path; it does not
   create a practical/live usable factor.
+
+## 2026-05-30T01:41+0800 Explicit Command Stage Schema Guard
+
+Root cause handled in this slice:
+
+- The prior stage-coverage guard required distinct command rows, but still
+  inferred lifecycle stage coverage from command-name keywords.
+- Seven successful rows with good-looking names and no explicit stage field
+  could therefore pass the canonical same-tree practical closure validator.
+- Command names are readback labels, not structured proof of which lifecycle
+  stage ran.
+
+Changes made:
+
+- `support/scripts/research/same_tree_practical_closure.py` now requires every
+  practical closure `command_results` row to carry one explicit `stage` value
+  from this exact set: `provider_data`, `pre_bayes`, `bbn_workflow`,
+  `path_ranker`, `execution_tree`, `feedback_update`, and `policy_training`.
+- The validator still requires one row for each stage, `exit == 0`, explicit
+  `timed_out=false`, and a nonempty command name for readback.
+- Updated producer and consumer test fixtures to use explicit stage values.
+- Updated the runtime factor-research skill so future packet producers do not
+  rely on command-name inference.
+
+TDD evidence:
+
+- Added a failing regression test proving that seven command rows with names
+  covering the lifecycle but no explicit `stage` field were previously accepted.
+- After the fix, the same regression rejects the packet and the producer helper
+  suite passes.
+
+Current truth after this slice:
+
+- No validated `same_tree_practical_closure` packet exists.
+- Current compact factor audit still reports `promotion_allowed_true=0`,
+  `trade_usable_true=0`, and `same_tree_practical_closure=null`.
+- This slice closes another false-positive practical-closure path; it does not
+  create a practical/live usable factor.

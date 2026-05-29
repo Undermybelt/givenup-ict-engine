@@ -14,14 +14,18 @@ import same_tree_practical_closure as closure  # noqa: E402
 
 def practical_command_results() -> list[dict]:
     return [
-        {"name": "01_provider_data_fetch", "exit": 0, "timed_out": False},
-        {"name": "05_pre_bayes_status", "exit": 0, "timed_out": False},
-        {"name": "04_workflow_status_bbn", "exit": 0, "timed_out": False},
-        {"name": "11_train_catboost_path_ranker", "exit": 0, "timed_out": False},
-        {"name": "16_analyze_after_ranker_execution_tree", "exit": 0, "timed_out": False},
-        {"name": "08_ingest_simulated_trade_feedback", "exit": 0, "timed_out": False},
-        {"name": "19_policy_training_status", "exit": 0, "timed_out": False},
+        {"stage": "provider_data", "name": "01_provider_data_fetch", "exit": 0, "timed_out": False},
+        {"stage": "pre_bayes", "name": "05_pre_bayes_status", "exit": 0, "timed_out": False},
+        {"stage": "bbn_workflow", "name": "04_workflow_status_bbn", "exit": 0, "timed_out": False},
+        {"stage": "path_ranker", "name": "11_train_catboost_path_ranker", "exit": 0, "timed_out": False},
+        {"stage": "execution_tree", "name": "16_analyze_after_ranker_execution_tree", "exit": 0, "timed_out": False},
+        {"stage": "feedback_update", "name": "08_ingest_simulated_trade_feedback", "exit": 0, "timed_out": False},
+        {"stage": "policy_training", "name": "19_policy_training_status", "exit": 0, "timed_out": False},
     ]
+
+
+def practical_command_results_without_explicit_stages() -> list[dict]:
+    return [{key: value for key, value in row.items() if key != "stage"} for row in practical_command_results()]
 
 
 def valid_metrics() -> dict:
@@ -124,6 +128,12 @@ class SameTreePracticalClosureTests(unittest.TestCase):
     def test_rejects_command_result_without_explicit_non_timeout_proof(self) -> None:
         metrics = valid_metrics()
         metrics["command_results"] = [{"name": "analyze", "exit": 0}]
+
+        self.assertIsNone(closure.build_same_tree_practical_closure_packet(metrics))
+
+    def test_rejects_command_results_without_explicit_stage_proof(self) -> None:
+        metrics = valid_metrics()
+        metrics["command_results"] = practical_command_results_without_explicit_stages()
 
         self.assertIsNone(closure.build_same_tree_practical_closure_packet(metrics))
 

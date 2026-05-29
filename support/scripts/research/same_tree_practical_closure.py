@@ -34,14 +34,14 @@ DISALLOWED_MARKET_DATA_SOURCE_CLASSES = {
 DEPLOY_READY_READINESS_CONTRACT = (
     "deploy_ready_from_backtest_autoquant_provider_or_paper_sim_execution_chain_not_funded_fill"
 )
-REQUIRED_COMMAND_RESULT_STAGES: tuple[tuple[str, tuple[str, ...]], ...] = (
-    ("provider_data", ("provider", "fetch", "market_data", "market-data", "auto_quant_results_import")),
-    ("pre_bayes", ("pre_bayes", "pre-bayes")),
-    ("bbn_workflow", ("workflow", "bbn")),
-    ("path_ranker", ("path_ranker", "path-ranker", "catboost", "ranker")),
-    ("execution_tree", ("execution_tree", "execution-tree", "analyze_after_ranker")),
-    ("feedback_update", ("feedback", "update", "ingest_real_trade", "ingest_simulated_trade")),
-    ("policy_training", ("policy_training", "policy-training", "policy")),
+REQUIRED_COMMAND_RESULT_STAGES: tuple[str, ...] = (
+    "provider_data",
+    "pre_bayes",
+    "bbn_workflow",
+    "path_ranker",
+    "execution_tree",
+    "feedback_update",
+    "policy_training",
 )
 
 
@@ -126,28 +126,27 @@ def metrics_prove_same_tree_practical_closure(metrics: dict[str, Any]) -> bool:
 def command_results_prove_practical_closure(value: object) -> bool:
     if not isinstance(value, list) or not value:
         return False
-    unmatched_command_names: list[str] = []
+    unmatched_stages: list[str] = []
     for row in value:
         if not isinstance(row, dict):
             return False
         if row.get("exit") != 0 or row.get("timed_out") is not False:
             return False
+        stage = normalized_key(row.get("stage"))
+        if stage not in REQUIRED_COMMAND_RESULT_STAGES:
+            return False
         name = normalized_text(row.get("name"))
         if not name:
             return False
-        unmatched_command_names.append(name)
-    for _, markers in REQUIRED_COMMAND_RESULT_STAGES:
+        unmatched_stages.append(stage)
+    for required_stage in REQUIRED_COMMAND_RESULT_STAGES:
         matched_index = next(
-            (
-                index
-                for index, command_name in enumerate(unmatched_command_names)
-                if any(marker in command_name for marker in markers)
-            ),
+            (index for index, stage in enumerate(unmatched_stages) if stage == required_stage),
             None,
         )
         if matched_index is None:
             return False
-        unmatched_command_names.pop(matched_index)
+        unmatched_stages.pop(matched_index)
     return True
 
 
