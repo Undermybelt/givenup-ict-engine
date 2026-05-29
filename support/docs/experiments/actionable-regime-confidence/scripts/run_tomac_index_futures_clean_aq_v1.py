@@ -5050,7 +5050,7 @@ def classify_screen_row(row: dict[str, Any]) -> dict[str, Any]:
         scored["cost_profile_source"] = profile.source
         scored["instrument_round_trip_cost_pct"] = round(cost_pct, 6)
         scored["instrument_cost_total_profit_pct"] = round(gross - trades * cost_pct, 6)
-        scored["survives_instrument_cost"] = trades >= 30 and scored["instrument_cost_total_profit_pct"] > 0
+        scored["survives_instrument_cost"] = scored["instrument_cost_total_profit_pct"] > 0
     else:
         scored["cost_profile_id"] = "unknown"
         scored["cost_profile_source"] = "missing_futures_cost_profile"
@@ -5058,13 +5058,15 @@ def classify_screen_row(row: dict[str, Any]) -> dict[str, Any]:
         scored["instrument_cost_total_profit_pct"] = None
         scored["survives_instrument_cost"] = False
     scored["density_target_1_to_3_per_day"] = 1.0 <= scored["trades_per_day"] <= 3.0
-    scored["survives_1bps_per_side"] = trades >= 30 and scored["1bps_per_side_total_profit_pct"] > 0
-    scored["survives_2bps_per_side"] = trades >= 30 and scored["2bps_per_side_total_profit_pct"] > 0
-    scored["survives_5bps_per_side"] = trades >= 30 and scored["5bps_per_side_total_profit_pct"] > 0
+    scored["minimum_trade_sample_floor_met"] = trades >= 30
+    scored["survives_1bps_per_side"] = scored["1bps_per_side_total_profit_pct"] > 0
+    scored["survives_2bps_per_side"] = scored["2bps_per_side_total_profit_pct"] > 0
+    scored["survives_5bps_per_side"] = scored["5bps_per_side_total_profit_pct"] > 0
     scored["has_win_loss_diversity"] = wins > 0 and losses > 0
     scored["direction_consistent_local"] = scored.get("direction") in {"long", "short", "long_short"}
     scored["gate1_survivor"] = bool(
         scored["density_target_1_to_3_per_day"]
+        and scored["minimum_trade_sample_floor_met"]
         and scored["survives_5bps_per_side"]
         and scored["survives_instrument_cost"]
         and scored["has_win_loss_diversity"]

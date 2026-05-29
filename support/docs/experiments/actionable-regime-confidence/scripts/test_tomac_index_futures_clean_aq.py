@@ -2618,6 +2618,35 @@ class TomacIndexFuturesCleanAqTest(unittest.TestCase):
         self.assertFalse(row["survives_5bps_per_side"])
         self.assertFalse(row["gate1_survivor"])
 
+    def test_cost_survival_is_separate_from_trade_sample_floor(self) -> None:
+        module = self.load_module()
+
+        row = module.classify_screen_row(
+            {
+                "scope": "per_pair",
+                "symbol": "ES",
+                "pair": "ES/USD",
+                "timeframe": "5m",
+                "strategy_name": "SyntheticSparseProfitableProbe",
+                "factor_id": "synthetic_sparse_profitable_probe",
+                "branch_path": "TrendExpansion -> SyntheticSparseProfitableProbe",
+                "family": "synthetic",
+                "direction": "long",
+                "trade_count": 20,
+                "wins": 12,
+                "losses": 8,
+                "days": 10,
+                "total_profit_pct": 100.0,
+                "representative_entry_price": 5200.0,
+            }
+        )
+
+        self.assertTrue(row["survives_5bps_per_side"])
+        self.assertTrue(row["survives_instrument_cost"])
+        self.assertFalse(row["minimum_trade_sample_floor_met"])
+        self.assertTrue(row["density_target_1_to_3_per_day"])
+        self.assertFalse(row["gate1_survivor"])
+
     def test_gate_summary_does_not_promote_retired_transition_fields_as_hard_gates(self) -> None:
         module = self.load_module()
 
