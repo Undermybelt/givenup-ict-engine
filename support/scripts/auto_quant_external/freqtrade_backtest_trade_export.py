@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 import zipfile
 from pathlib import Path
 from typing import Any
@@ -20,7 +21,15 @@ def _load_backtest_payload(backtest_zip: Path) -> dict[str, Any]:
 
 
 def _branch_segments(branch_path: str) -> list[str]:
-    return [part.strip() for part in branch_path.split(" -> ") if part.strip()]
+    return [part.strip() for part in re.split(r"\s*->\s*", branch_path) if part.strip()]
+
+
+def _branch_metadata(parts: list[str]) -> dict[str, Any]:
+    return {
+        "branch_path_segments": parts,
+        "branch_path_depth": len(parts),
+        "branch_path_leaf": parts[-1] if parts else "",
+    }
 
 
 def _realized_outcome(profit_abs: float) -> str:
@@ -52,9 +61,36 @@ def export_backtest_trades(
     branch_path: str,
 ) -> dict[str, Any]:
     payload = _load_backtest_payload(backtest_zip)
+    return export_payload_trades(
+        payload=payload,
+        strategy_name=strategy_name,
+        output_jsonl=output_jsonl,
+        strategy_mutation_id=strategy_mutation_id,
+        auto_quant_run_id=auto_quant_run_id,
+        symbol=symbol,
+        provider=provider,
+        instrument=instrument,
+        timeframe=timeframe,
+        branch_path=branch_path,
+    )
+
+
+def export_payload_trades(
+    *,
+    payload: dict[str, Any],
+    strategy_name: str,
+    output_jsonl: Path,
+    strategy_mutation_id: str,
+    auto_quant_run_id: str,
+    symbol: str,
+    provider: str,
+    instrument: str,
+    timeframe: str,
+    branch_path: str,
+) -> dict[str, Any]:
     strategy_block = payload.get("strategy", {}).get(strategy_name)
     if not isinstance(strategy_block, dict):
-        raise ValueError(f"strategy {strategy_name!r} not found in {backtest_zip}")
+        raise ValueError(f"strategy {strategy_name!r} not found in payload")
     trades = strategy_block.get("trades", [])
     if not isinstance(trades, list):
         raise ValueError(f"strategy {strategy_name!r} missing trades list")
@@ -117,12 +153,14 @@ def export_backtest_trades(
                 "sub_regime": sub_regime,
                 "sub_sub_regime_or_profit_factor": sub_sub_regime,
                 "profit_factor": profit_factor,
+                **_branch_metadata(parts),
             }
         )
 
     _write_jsonl(output_jsonl, rows)
     return {
         "rows": len(rows),
+        "strategy_name": strategy_name,
         "wins": wins,
         "losses": losses,
         "breakevens": breakevens,

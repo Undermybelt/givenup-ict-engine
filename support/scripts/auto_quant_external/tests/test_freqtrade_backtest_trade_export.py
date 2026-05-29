@@ -70,6 +70,85 @@ class FreqtradeBacktestTradeExportTests(unittest.TestCase):
             self.assertAlmostEqual(row["profit_ratio"], 0.01980198019801982)
             self.assertAlmostEqual(row["profit_abs"], 22.0)
             self.assertEqual(row["entry_signal"], "dense-entry")
+            self.assertEqual(
+                row["branch_path_segments"],
+                [
+                    "TrendExpansion",
+                    "SessionLiquidity",
+                    "dense_kline_upbar_reclaim_tvr_5m",
+                    "dense_kline_upbar_reclaim_tvr_qqq_5m_v1",
+                ],
+            )
+            self.assertEqual(row["branch_path_depth"], 4)
+            self.assertEqual(
+                row["branch_path_leaf"],
+                "dense_kline_upbar_reclaim_tvr_qqq_5m_v1",
+            )
+
+    def test_export_backtest_zip_accepts_compact_branch_path_separator(self) -> None:
+        with TemporaryDirectory() as tmpdir:
+            tmp = Path(tmpdir)
+            backtest_zip = tmp / "backtest.zip"
+            output_jsonl = tmp / "trades.jsonl"
+            payload = {
+                "strategy": {
+                    "CompactBranchPathV1": {
+                        "trades": [
+                            {
+                                "pair": "QQQ/USD",
+                                "open_date": "2026-05-15 10:00:00+00:00",
+                                "close_date": "2026-05-15 10:10:00+00:00",
+                                "open_rate": 101.0,
+                                "close_rate": 103.0,
+                                "open_timestamp": 1778848800000,
+                                "close_timestamp": 1778849400000,
+                                "profit_abs": 22.0,
+                                "profit_ratio": 0.01980198019801982,
+                                "exit_reason": "roi",
+                                "enter_tag": "compact-entry",
+                                "trade_duration": 10,
+                                "is_short": False,
+                            }
+                        ]
+                    }
+                }
+            }
+            with zipfile.ZipFile(backtest_zip, "w") as zf:
+                zf.writestr("backtest-result.json", json.dumps(payload))
+
+            exporter.export_backtest_trades(
+                backtest_zip=backtest_zip,
+                strategy_name="CompactBranchPathV1",
+                output_jsonl=output_jsonl,
+                strategy_mutation_id="compact-path-v1",
+                auto_quant_run_id="run-compact",
+                symbol="COMPACT_BRANCH",
+                provider="TVR",
+                instrument="QQQ",
+                timeframe="5m",
+                branch_path="TrendExpansion->SessionLiquidity->dense_kline_upbar_reclaim_tvr_5m->dense_kline_upbar_reclaim_tvr_qqq_5m_v1",
+            )
+
+            row = json.loads(output_jsonl.read_text(encoding="utf-8").splitlines()[0])
+            self.assertEqual(
+                row["branch_path_segments"],
+                [
+                    "TrendExpansion",
+                    "SessionLiquidity",
+                    "dense_kline_upbar_reclaim_tvr_5m",
+                    "dense_kline_upbar_reclaim_tvr_qqq_5m_v1",
+                ],
+            )
+            self.assertEqual(row["main_regime"], "TrendExpansion")
+            self.assertEqual(row["sub_regime"], "SessionLiquidity")
+            self.assertEqual(
+                row["sub_sub_regime_or_profit_factor"],
+                "dense_kline_upbar_reclaim_tvr_5m",
+            )
+            self.assertEqual(
+                row["profit_factor"],
+                "dense_kline_upbar_reclaim_tvr_qqq_5m_v1",
+            )
 
 
 if __name__ == "__main__":

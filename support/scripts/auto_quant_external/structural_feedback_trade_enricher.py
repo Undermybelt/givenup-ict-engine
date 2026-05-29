@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
@@ -86,7 +87,15 @@ def _clean_text(value: Any) -> str | None:
 def _branch_segments(branch_path: str | None) -> list[str]:
     if not branch_path:
         return []
-    return [part.strip() for part in branch_path.split(" -> ") if part.strip()]
+    return [part.strip() for part in re.split(r"\s*->\s*", branch_path) if part.strip()]
+
+
+def _branch_metadata(parts: list[str]) -> dict[str, Any]:
+    return {
+        "branch_path_segments": parts,
+        "branch_path_depth": len(parts),
+        "branch_path_leaf": parts[-1] if parts else "",
+    }
 
 
 def _branch_path_from_row(row: pd.Series) -> str | None:
@@ -138,6 +147,7 @@ def _fill_branch_fields(row: dict[str, Any]) -> dict[str, Any]:
         row.setdefault("sub_sub_regime_or_profit_factor", parts[2])
     if len(parts) > 3:
         row.setdefault("profit_factor", " -> ".join(parts[3:]))
+    row.update(_branch_metadata(parts))
     return row
 
 
@@ -257,7 +267,7 @@ def build_structural_feedback_from_target_row(
         sub_sub_regime = sub_sub_regime or (branch_parts[2] if len(branch_parts) > 2 else None)
         profit_factor = profit_factor or (" -> ".join(branch_parts[3:]) if len(branch_parts) > 3 else None)
 
-    path_id = str(_first_present(row, ["path_id"], branch_path or "path:unknown"))
+    path_id = branch_path or str(_first_present(row, ["path_id"], "path:unknown"))
     branch_id = (
         f"{main_regime} -> {sub_regime}"
         if main_regime and sub_regime
@@ -330,6 +340,7 @@ def build_structural_feedback_from_target_row(
                 "sub_regime": sub_regime,
                 "sub_sub_regime_or_profit_factor": sub_sub_regime,
                 "profit_factor": profit_factor,
+                **_branch_metadata(branch_parts),
             }
         )
     return payload

@@ -15,9 +15,10 @@ import math
 import random
 from collections import Counter
 from dataclasses import dataclass
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Callable, Iterable
+from zoneinfo import ZoneInfo
 
 
 LABELS = [
@@ -191,6 +192,18 @@ BOCPD_LITE_VECTOR_FEATURES = {
     "bocpd_run_decay20",
     "bocpd_surprise_dispersion",
 }
+SESSION_PROFILE_VECTOR_FEATURES = {
+    "session_or_width_atr",
+    "session_or_breakout_atr",
+    "session_ib_width_atr",
+    "session_ib_breakout_atr",
+    "session_profile_poc_dist_atr",
+    "session_profile_value_area_width_atr",
+    "session_profile_value_area_pos",
+    "session_profile_balance_target_atr",
+    "session_profile_range_atr",
+    "session_profile_rotation_factor",
+}
 MS_REGIME_VECTOR_FEATURES = {
     "ms_regime_trend_prob",
     "ms_regime_range_prob",
@@ -247,6 +260,7 @@ FEATURE_SET_ALIASES = {
     "vol_regime": VOL_REGIME_VECTOR_FEATURES,
     "hazard": HAZARD_VECTOR_FEATURES,
     "bocpd_lite": BOCPD_LITE_VECTOR_FEATURES,
+    "session_profile": SESSION_PROFILE_VECTOR_FEATURES,
     "ms_regime": MS_REGIME_VECTOR_FEATURES,
     "cluster_bridge": CLUSTER_BRIDGE_VECTOR_FEATURES,
 }
@@ -264,6 +278,9 @@ HMM_VECTOR_FEATURES = [
     "bb_pctb_extreme",
     "premium_discount_edge",
 ]
+SESSION_PROFILE_TIMEZONE = ZoneInfo("America/New_York")
+SESSION_PROFILE_START_HOUR = 9
+SESSION_PROFILE_START_MINUTE = 30
 
 
 @dataclass(frozen=True)
@@ -2645,6 +2662,228 @@ def build_features(candles: list[Candle]) -> dict[str, list[float] | list[bool]]
     return features
 
 
+def session_anchor(timestamp: datetime) -> datetime:
+    local = timestamp.astimezone(SESSION_PROFILE_TIMEZONE)
+    anchor = local.replace(
+        hour=SESSION_PROFILE_START_HOUR,
+        minute=SESSION_PROFILE_START_MINUTE,
+        second=0,
+        microsecond=0,
+    )
+    if local < anchor:
+        anchor -= timedelta(days=1)
+    return anchor.astimezone(timezone.utc)
+
+
+def round_to_row(value: float, row_size: float) -> float:
+    if not math.isfinite(value):
+        return value
+    roundoff = 1.0 / max(row_size, 1e-12)
+    return math.ceil(float(value) * roundoff) / roundoff
+
+
+def midmax_idx(values: list[float]) -> int | None:
+    if not values:
+        return None
+    max_value = max(values)
+    indices = [idx for idx, value in enumerate(values) if value == max_value]
+    if not indices:
+        return None
+    return indices[len(indices) // 2]
+
+
+def session_profile_snapshot(
+    session_candles: list[Candle],
+    row_size: float = 0.25,
+    open_range_delta: timedelta = timedelta(minutes=10),
+    initial_balance_delta: timedelta = timedelta(hours=1),
+    value_area_pct: float = 0.70,
+) -> dict[str, object]:
+    if not session_candles:
+        return {
+            "open_range": (None, None),
+            "initial_balance": (None, None),
+            "poc_price": None,
+            "profile_range": (None, None),
+            "value_area": (None, None),
+            "balanced_target": None,
+        }
+    start = session_candles[0].timestamp
+    open_range_end = start + open_range_delta
+    initial_balance_end = start + initial_balance_delta
+    open_range_candles = [candle for candle in session_candles if candle.timestamp <= open_range_end]
+    initial_balance_candles = [candle for candle in session_candles if candle.timestamp <= initial_balance_end]
+    open_range = (
+        min(candle.low for candle in open_range_candles),
+        max(candle.high for candle in open_range_candles),
+    ) if open_range_candles else (None, None)
+    initial_balance = (
+        min(candle.low for candle in initial_balance_candles),
+        max(candle.high for candle in initial_balance_candles),
+    ) if initial_balance_candles else (None, None)
+
+    profile_map: dict[float, float] = {}
+    for candle in session_candles:
+        level = round_to_row(candle.close, row_size)
+        if not math.isfinite(level):
+            continue
+        profile_map[level] = profile_map.get(level, 0.0) + candle.volume
+    levels = sorted(profile_map)
+    if not levels:
+        return {
+            "open_range": open_range,
+            "initial_balance": initial_balance,
+            "poc_price": None,
+            "profile_range": (None, None),
+            "value_area": (None, None),
+            "balanced_target": None,
+        }
+    volumes = [profile_map[level] for level in levels]
+    total_volume = sum(volumes)
+    poc_idx = midmax_idx(volumes)
+    poc_price = levels[poc_idx] if poc_idx is not None else None
+    if poc_idx is None:
+        value_area = (None, None)
+        balanced_target = None
+    else:
+        target_volume = total_volume * value_area_pct
+        trial_volume = volumes[poc_idx]
+        min_idx = poc_idx
+        max_idx = poc_idx
+        while trial_volume <= target_volume:
+            last_min = min_idx
+            last_max = max_idx
+            next_min_idx = max(min_idx - 1, 0)
+            next_max_idx = min(max_idx + 1, len(levels) - 1)
+            low_volume = volumes[next_min_idx] if next_min_idx != last_min else None
+            high_volume = volumes[next_max_idx] if next_max_idx != last_max else None
+            if high_volume is None or (low_volume is not None and low_volume > high_volume):
+                trial_volume += low_volume or 0.0
+                min_idx = next_min_idx
+            elif low_volume is None or (high_volume is not None and low_volume <= high_volume):
+                trial_volume += high_volume or 0.0
+                max_idx = next_max_idx
+            else:
+                break
+        value_area = (levels[min_idx], levels[max_idx])
+        area_above_poc = levels[-1] - poc_price
+        area_below_poc = poc_price - levels[0]
+        balanced_target = (
+            poc_price - area_above_poc
+            if area_above_poc >= area_below_poc
+            else poc_price + area_below_poc
+        )
+    return {
+        "open_range": open_range,
+        "initial_balance": initial_balance,
+        "poc_price": poc_price,
+        "profile_range": (levels[0], levels[-1]),
+        "value_area": value_area,
+        "balanced_target": balanced_target,
+    }
+
+
+def signed_breakout(close: float, low: float | None, high: float | None) -> float:
+    if low is None or high is None:
+        return float("nan")
+    if close > high:
+        return close - high
+    if close < low:
+        return close - low
+    return 0.0
+
+
+def value_area_position(close: float, val: float | None, vah: float | None) -> float:
+    if val is None or vah is None:
+        return float("nan")
+    width = vah - val
+    if width <= 1e-12:
+        return 0.5
+    return (close - val) / width
+
+
+def session_profile_feature_vectors(
+    candles: list[Candle],
+    features: dict[str, list[float] | list[bool]],
+    row_size: float = 0.25,
+) -> dict[str, list[float]]:
+    out = {name: [] for name in SESSION_PROFILE_VECTOR_FEATURES}
+    current_anchor: datetime | None = None
+    session_window: list[Candle] = []
+    for idx, candle in enumerate(candles):
+        anchor = session_anchor(candle.timestamp)
+        if current_anchor != anchor:
+            current_anchor = anchor
+            session_window = []
+        if candle.timestamp >= anchor:
+            session_window.append(candle)
+        if not session_window:
+            for values in out.values():
+                values.append(float("nan"))
+            continue
+
+        snapshot = session_profile_snapshot(session_window, row_size=row_size)
+        atr_den = max(float(features["atr"][idx]), 1e-12)  # type: ignore[index]
+        or_low, or_high = snapshot["open_range"]  # type: ignore[assignment]
+        ib_low, ib_high = snapshot["initial_balance"]  # type: ignore[assignment]
+        profile_low, profile_high = snapshot["profile_range"]  # type: ignore[assignment]
+        val, vah = snapshot["value_area"]  # type: ignore[assignment]
+        poc_price = snapshot["poc_price"]  # type: ignore[assignment]
+        balanced_target = snapshot["balanced_target"]  # type: ignore[assignment]
+
+        or_width = (
+            (or_high - or_low)
+            if or_low is not None and or_high is not None and math.isfinite(or_low) and math.isfinite(or_high)
+            else float("nan")
+        )
+        ib_width = (
+            (ib_high - ib_low)
+            if ib_low is not None and ib_high is not None and math.isfinite(ib_low) and math.isfinite(ib_high)
+            else float("nan")
+        )
+        profile_width = (
+            (profile_high - profile_low)
+            if profile_low is not None
+            and profile_high is not None
+            and math.isfinite(profile_low)
+            and math.isfinite(profile_high)
+            else float("nan")
+        )
+        value_area_width = (
+            (vah - val)
+            if val is not None and vah is not None and math.isfinite(val) and math.isfinite(vah)
+            else float("nan")
+        )
+
+        out["session_or_width_atr"].append(or_width / atr_den if math.isfinite(or_width) else float("nan"))
+        out["session_or_breakout_atr"].append(signed_breakout(candle.close, or_low, or_high) / atr_den)
+        out["session_ib_width_atr"].append(ib_width / atr_den if math.isfinite(ib_width) else float("nan"))
+        out["session_ib_breakout_atr"].append(signed_breakout(candle.close, ib_low, ib_high) / atr_den)
+        out["session_profile_poc_dist_atr"].append(
+            (candle.close - poc_price) / atr_den
+            if poc_price is not None and math.isfinite(poc_price)
+            else float("nan")
+        )
+        out["session_profile_value_area_width_atr"].append(
+            value_area_width / atr_den if math.isfinite(value_area_width) else float("nan")
+        )
+        out["session_profile_value_area_pos"].append(value_area_position(candle.close, val, vah))
+        out["session_profile_balance_target_atr"].append(
+            (balanced_target - candle.close) / atr_den
+            if balanced_target is not None and math.isfinite(balanced_target)
+            else float("nan")
+        )
+        out["session_profile_range_atr"].append(
+            profile_width / atr_den if math.isfinite(profile_width) else float("nan")
+        )
+        out["session_profile_rotation_factor"].append(
+            profile_width / max(ib_width, row_size)
+            if math.isfinite(profile_width) and math.isfinite(ib_width)
+            else float("nan")
+        )
+    return out
+
+
 def rolling_max(values: list[float], period: int) -> list[float]:
     out = []
     for idx in range(len(values)):
@@ -2693,6 +2932,8 @@ def build_factor_functions(
 ) -> dict[str, Callable[[int], FactorPrediction]]:
     def valid(idx: int, *names: str) -> bool:
         for name in names:
+            if name not in features:
+                return False
             value = features[name][idx]  # type: ignore[index]
             if isinstance(value, float) and not math.isfinite(value):
                 return False
@@ -2833,6 +3074,60 @@ def build_factor_functions(
         slope = gap - features["ema_gap"][max(0, idx - 5)]
         if prior <= 0.15 and gap > 0.0 and slope > 0.12 and candles[idx].close > features["high_6"][idx]:
             return FactorPrediction("expansion", min(1.0, slope))
+        return pred_unknown()
+
+    def opening_drive_session_profile(idx: int) -> FactorPrediction:
+        if idx < 60 or not valid(
+            idx,
+            "session_or_breakout_atr",
+            "session_ib_breakout_atr",
+            "session_profile_poc_dist_atr",
+            "session_profile_value_area_pos",
+            "session_ib_width_atr",
+            "session_profile_rotation_factor",
+            "rel_volume20",
+            "ema_gap",
+            "rsi",
+        ):
+            return pred_unknown()
+        or_break = features["session_or_breakout_atr"][idx]
+        ib_break = features["session_ib_breakout_atr"][idx]
+        poc_dist = features["session_profile_poc_dist_atr"][idx]
+        value_pos = features["session_profile_value_area_pos"][idx]
+        ib_width = features["session_ib_width_atr"][idx]
+        rotation = features["session_profile_rotation_factor"][idx]
+        volume = features["rel_volume20"][idx]
+        ema_gap = features["ema_gap"][idx]
+        rsi_value = features["rsi"][idx]
+        accepted_up = (
+            or_break > 0.0
+            and ib_break > 0.0
+            and poc_dist > 0.0
+            and value_pos >= 0.65
+            and volume >= 0.90
+            and ema_gap > 0.0
+            and rsi_value >= 52.0
+        )
+        accepted_down = (
+            or_break < 0.0
+            and ib_break < 0.0
+            and poc_dist < 0.0
+            and value_pos <= 0.35
+            and volume >= 0.90
+            and ema_gap < 0.0
+            and rsi_value <= 48.0
+        )
+        if accepted_up or accepted_down:
+            directional_score = max(abs(or_break), abs(ib_break), abs(poc_dist))
+            auction_acceptance = min(1.5, max(0.0, value_pos) if accepted_up else max(0.0, 1.0 - value_pos))
+            score = directional_score * (0.5 + auction_acceptance / 1.5) * min(1.25, volume)
+            return FactorPrediction("trend_continuation", min(1.0, score / 3.0))
+        failed_up = or_break > 0.0 and (poc_dist < 0.0 or value_pos < 0.45)
+        failed_down = or_break < 0.0 and (poc_dist > 0.0 or value_pos > 0.55)
+        if (failed_up or failed_down) and volume >= 0.80:
+            return FactorPrediction("manipulation", min(1.0, (abs(or_break) + abs(poc_dist)) / 2.0))
+        if abs(or_break) <= 0.05 and ib_width <= 1.20 and rotation <= 1.15:
+            return FactorPrediction("compression", min(1.0, max(0.0, 1.2 - ib_width)))
         return pred_unknown()
 
     def volume_climax_regime(idx: int) -> FactorPrediction:
@@ -3041,6 +3336,7 @@ def build_factor_functions(
         "regime_trend_pullback_dense": trend_pullback_dense,
         "regime_volatility_transition_wide": volatility_transition_wide,
         "regime_transition_hazard": transition_hazard,
+        "opening_drive_session_profile_v1": opening_drive_session_profile,
         "volume_climax_regime_v1": volume_climax_regime,
         "indicator_bollinger_volume_cycle_v1": indicator_bollinger_volume_cycle,
         "indicator_adx_donchian_macd_v1": indicator_adx_donchian_macd,
@@ -3107,6 +3403,25 @@ def normalize_feature_sets(feature_sets: list[str] | None) -> list[str]:
             if value:
                 out.append(value)
     return out or ["all"]
+
+
+def wants_session_profile_features(feature_sets: list[str] | None) -> bool:
+    selected = normalize_feature_sets(feature_sets)
+    return "session_profile" in selected
+
+
+def needs_scalar_vectors_for_feature_sets(feature_sets: list[str] | None) -> bool:
+    return any(
+        [
+            wants_cluster_features(feature_sets),
+            wants_pda_sequence_features(feature_sets),
+            wants_post_state_features(feature_sets),
+            wants_hazard_features(feature_sets),
+            wants_bocpd_lite_features(feature_sets),
+            wants_ms_regime_features(feature_sets),
+            wants_kmeans_cluster_features(feature_sets),
+        ]
+    )
 
 
 def build_trained_factor_functions(
@@ -4389,13 +4704,13 @@ def main() -> int:
             ),
         )
 
-    factors = build_factor_functions(candles, features)
     extra_vectors: dict[str, list[float]] = {}
-    needs_scalar_vectors = (
-        wants_cluster_features(args.feature_set)
-        or wants_pda_sequence_features(args.feature_set)
-        or wants_post_state_features(args.feature_set)
-    )
+    if wants_session_profile_features(args.feature_set):
+        session_vectors = session_profile_feature_vectors(candles, features)
+        features.update(session_vectors)
+        extra_vectors.update(session_vectors)
+    factors = build_factor_functions(candles, features)
+    needs_scalar_vectors = needs_scalar_vectors_for_feature_sets(args.feature_set)
     scalar_vectors = scalar_feature_vectors(candles, features) if needs_scalar_vectors else None
     if wants_pda_sequence_features(args.feature_set) and scalar_vectors is not None:
         extra_vectors.update(pda_sequence_feature_vectors(scalar_vectors))
