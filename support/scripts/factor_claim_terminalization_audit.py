@@ -18,6 +18,7 @@ STALE_CLAIM_MINUTES = 60
 SUMMARY_CANDIDATES = (
     "summaries/terminal_decision_summary.md",
     "summaries/terminal_summary.json",
+    "outputs/terminal_summary.json",
     "checks/terminal_metrics.json",
     "run/summaries/terminal_summary.json",
     "run/checks/terminal_metrics.json",
@@ -956,6 +957,8 @@ def _is_live_factor_command(command: str) -> bool:
         return False
     if _is_help_only_command(command):
         return False
+    if _is_audit_coordination_command(command):
+        return False
     if _is_await_launch_wrapper(command):
         return False
     if _is_tomac_diagnostic_script(command):
@@ -971,6 +974,10 @@ def _is_live_factor_command(command: str) -> bool:
     if re.search(r"(?:^|\s)\S*tomac_[^\s/]*\.py\b", command):
         run_root = _extract_run_root(command)
         return bool(run_root and _is_board_b_run_root(run_root))
+    if re.search(r"(?:^|\s)\S*\.py\b", command):
+        run_root = _extract_run_root(command)
+        if run_root and _is_board_b_run_root(run_root):
+            return True
     return any(marker in command for marker in LIVE_FACTOR_PROCESS_MARKERS)
 
 
@@ -982,6 +989,16 @@ def _is_test_runner_command(command: str) -> bool:
 def _is_help_only_command(command: str) -> bool:
     normalized = " ".join(command.split())
     return bool(re.search(r"(?:^|\s)(?:--help|-h)(?:\s|$)", normalized))
+
+
+def _is_audit_coordination_command(command: str) -> bool:
+    normalized = " ".join(command.split())
+    return bool(
+        re.search(
+            r"(?:^|\s)\S*(?:objective_closure_snapshot|done_definition_audit|release_readiness_audit|factor_claim_terminalization_audit)\.py\b",
+            normalized,
+        )
+    )
 
 
 def _is_await_launch_wrapper(command: str) -> bool:

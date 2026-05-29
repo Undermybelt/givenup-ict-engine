@@ -499,6 +499,53 @@ trade_usable=false
                 ["terminalized", "terminalized", "terminalized"],
             )
 
+    def test_build_report_treats_outputs_terminal_summary_as_terminalized(self) -> None:
+        with tempfile.TemporaryDirectory() as repo_tmp, tempfile.TemporaryDirectory() as claims_tmp:
+            repo_root = Path(repo_tmp)
+            claims_dir = Path(claims_tmp)
+            run_root = repo_root / "support" / "docs" / "experiments" / "run-output-summary"
+            outputs_dir = run_root / "outputs"
+            outputs_dir.mkdir(parents=True)
+            (outputs_dir / "terminal_summary.json").write_text(
+                json.dumps(
+                    {
+                        "decision": "drop_python_screen_no_strict_survivor",
+                        "survivor_count": 0,
+                        "promotion_allowed": False,
+                        "trade_usable": False,
+                    }
+                ),
+                encoding="utf-8",
+            )
+            (claims_dir / "outputs-summary-active.claim").write_text(
+                f"""
+agent_name=codex-output-summary-terminal
+owner=codex
+claimed_at=2026-05-29T12:11:08+0800
+last_progress_at=2026-05-29T12:11:08+0800
+scope=Board B Python-only screen with outputs terminal summary
+active_task=read Python-only outputs terminal summary
+non_goals=no promotion
+write_surface=/tmp/example-workdoc.md
+run_root={run_root.relative_to(repo_root)}
+status=active
+progress_report=screen launched
+promotion_allowed=false
+trade_usable=false
+""",
+                encoding="utf-8",
+            )
+
+            report = build_report(claims_dir=claims_dir, repo_root=repo_root)
+
+        self.assertEqual(report["summary"]["active_claims"], 0)
+        self.assertEqual(report["summary"]["terminalized_claims"], 1)
+        self.assertEqual(report["claims"][0]["status"], "terminalized")
+        self.assertEqual(report["claims"][0]["decision"], "drop_python_screen_no_strict_survivor")
+        self.assertEqual(report["claims"][0]["summary_files"], ["outputs/terminal_summary.json"])
+        self.assertIs(report["claims"][0]["promotion_allowed"], False)
+        self.assertIs(report["claims"][0]["trade_usable"], False)
+
     def test_build_report_treats_terminal_write_surface_workdoc_as_terminalized(self) -> None:
         with tempfile.TemporaryDirectory() as repo_tmp, tempfile.TemporaryDirectory() as claims_tmp:
             repo_root = Path(repo_tmp)
@@ -1938,6 +1985,28 @@ trade_usable=false
             _extract_run_root(command),
             Path("/tmp/ict-engine-tomac-nq-strict-ote-density-repair-fullwindow-20260525T130328+0800"),
         )
+
+    def test_live_process_classifier_detects_tmp_lane_python_backtest_script(self) -> None:
+        command = (
+            "/opt/homebrew/Cellar/python@3.13/3.13.12_1/Frameworks/Python.framework/Versions/3.13/"
+            "Resources/Python.app/Contents/MacOS/Python "
+            "/tmp/ict-engine-tomac-heikin-aroon-pybacktest-20260529T114424+0800/"
+            "scripts/run_heikin_aroon_pybacktest.py"
+        )
+
+        self.assertTrue(_is_live_factor_command(command))
+        self.assertEqual(
+            _extract_run_root(command),
+            Path("/tmp/ict-engine-tomac-heikin-aroon-pybacktest-20260529T114424+0800"),
+        )
+
+    def test_live_process_classifier_ignores_objective_closure_snapshot_output_root(self) -> None:
+        command = (
+            "python3 support/scripts/objective_closure_snapshot.py --compact --check-remotes "
+            "--output-dir /tmp/ict-engine-closure-after-classifier-fix-20260529T120642"
+        )
+
+        self.assertFalse(_is_live_factor_command(command))
 
     def test_extract_run_root_from_provider_output_inside_run_root(self) -> None:
         command = (

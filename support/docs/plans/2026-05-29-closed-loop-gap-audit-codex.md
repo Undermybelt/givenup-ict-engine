@@ -1135,6 +1135,70 @@ training/refinement.
   `autoquant_clean_1m_gate.json`, and the owning claim/workdoc before any
   terminalization or further closure snapshot.
 
+## 2026-05-29T09:40+0800 Camarilla / WPR Negative Readbacks, Heavy Proof Gap
+
+- Camarilla R3/S3 Reclaim root
+  `/tmp/ict-engine-tomac-camarilla-r3-s3-reclaim-gate1-20260529T090705+0800`
+  terminalized fail-closed after the live runtime exited. Claim
+  `/tmp/ict-engine-agent-claims/board-b-factor-refinement/20260529T090705+0800-codex-tomac-camarilla-r3-s3-reclaim-gate1.claim`
+  now has `status=terminalized_aq_child_killed_no_valid_gate1`,
+  `decision=terminalized_fail_closed_no_5bps_survivor`, and all practical flags
+  false.
+- Camarilla artifacts: wrapper `clean_aq.exit=0`, child
+  `run/checks/run_tomac_1m.exit=-9`, run summary
+  `/tmp/ict-engine-tomac-camarilla-r3-s3-reclaim-gate1-20260529T090705+0800/run/summary.json`,
+  and gate summary
+  `/tmp/ict-engine-tomac-camarilla-r3-s3-reclaim-gate1-20260529T090705+0800/run/summaries/autoquant_clean_1m_gate.json`.
+  Gate readback is `rank_rows=0`, `survivors_5bps=[]`,
+  `decision=observation_no_autoquant_survivor_yet`, and downstream/Pre-Bayes/
+  BBN/CatBoost/execution-tree/promotion/trade/update flags all false.
+- Compact audit after Camarilla terminalization returned `status=pass` with
+  `active_claims=0`, `live_factor_processes=0`, `promotion_allowed_true=0`,
+  `trade_usable_true=0`, and `same_tree_practical_closure=null`.
+- Proof-backed snapshot command after Camarilla clear:
+  `python3 support/scripts/objective_closure_snapshot.py --compact --check-remotes --done-definition-proof /tmp/ict-engine-done-definition-heavy-20260529-current-head-00ae7f70.json --output-dir /tmp/ict-engine-closure-proof-backed-after-camarilla-clear-00ae7f70-20260529T0927`.
+- Snapshot artifact:
+  `/tmp/ict-engine-closure-proof-backed-after-camarilla-clear-00ae7f70-20260529T0927/objective_closure_snapshot.json`.
+- Snapshot exited `1` and remained `not_complete`. Current repo head is now
+  `1938ce5543289c4dfa6bbd2a572a7cf7119260e9` (`Audit await-launch claim guards`),
+  so the previous heavy proof for `00ae7f70` was rejected with
+  `proof_head_mismatch`. Snapshot blockers were
+  `done_definition_not_completion_ready`, `same_tree_practical_closure_unproven`,
+  and `release_readiness_blocked`; manual requirements remain
+  `same_tree_practical_closure_packet` and `truthful_completion_commit`.
+- Current-head heavy proof attempt command:
+  `python3 support/scripts/done_definition_audit.py --compact --run-all-heavy --output /tmp/ict-engine-done-definition-heavy-20260529-current-head-1938ce55.json`.
+  The tool session exited `-1` before producing the output file; `/tmp/ict-engine-done-definition-heavy-20260529-current-head-1938ce55.json`
+  does not exist, so no current-head heavy completion proof is available from
+  this attempt.
+- While that heavy proof attempt was running, a new WPR ES-only root appeared:
+  `/tmp/ict-engine-tomac-wpr-fractal-ict-zone-reclaim-es-only-20260529T092902+0800`.
+  It terminalized as a valid negative Gate-1 result, not a runtime abort. Claim
+  `/tmp/ict-engine-agent-claims/board-b-factor-refinement/20260529T092902+0800-codex-tomac-wpr-fractal-ict-zone-reclaim-es-only-gate1.claim`
+  has `status=terminalized_gate1_no_5bps_survivor`,
+  `decision=terminalized_fail_closed_no_5bps_survivor`, and all practical flags
+  false.
+- WPR ES-only artifacts: wrapper `clean_aq.exit=0`, child
+  `run/checks/run_tomac_1m.exit=0`, gate summary
+  `/tmp/ict-engine-tomac-wpr-fractal-ict-zone-reclaim-es-only-20260529T092902+0800/run/summaries/autoquant_clean_1m_gate.json`,
+  and rows
+  `/tmp/ict-engine-tomac-wpr-fractal-ict-zone-reclaim-es-only-20260529T092902+0800/run/summaries/autoquant_clean_1m_rows.csv`.
+  Gate readback is `rank_rows=2`, `survivors_5bps=[]`,
+  `decision=observation_no_autoquant_survivor_yet`, and all downstream/practical
+  flags false. The aggregate ES 1m row had `trade_count=1800`,
+  `trades_per_day=0.987925`, `raw_total_profit_pct=-24.61`,
+  `5bps_per_side_total_profit_pct=-204.61`, and `profit_factor=0.8231`.
+- Current compact audit at `2026-05-29T09:40:49+0800` still exited `1` because
+  a fresh wait-only LunchLiquidity claim remains active without live runtime:
+  `/tmp/ict-engine-agent-claims/board-b-factor-refinement/20260529T093037+0800-codex-tomac-lunch-liquidity-vacuum-vwap-magnet-reversal.claim`.
+  Its claim reports `status=active_wait_only_backend_busy`,
+  `coordination_only=true`, `wait_only=true`, and all practical flags false.
+- Decision: full objective remains incomplete. Do not claim completion, do not
+  use Camarilla or WPR as practical evidence, and do not rerun closure snapshot
+  until the fresh LunchLiquidity claim progresses, terminalizes, or becomes
+  stale-safe under the one-hour rule. A later completion pass also needs a
+  successful heavy done-definition proof for head `1938ce55` or newer.
+
 ## 2026-05-29T09:36+0800 Done-Definition Proof Fingerprint Guard
 
 - Static loophole fixed: done-definition proof reuse no longer keys only on the
@@ -1262,3 +1326,655 @@ training/refinement.
   snapshot are `done_definition_not_completion_ready`, `factor_closure_blocked`,
   and `release_readiness_blocked`; manual requirements remain
   `same_tree_practical_closure_packet` and `truthful_completion_commit`.
+
+## 2026-05-29T10:59+0800 Current Closure Readback After SuperTrend
+
+- Same-turn routing was refreshed through `sd/ict-engine-maintenance-loop` and
+  the repo contract chain before this continuation. No completion claim is
+  justified from the inherited summary alone.
+- Factor occupancy briefly cleared at `2026-05-29T10:21+0800`, then the
+  SuperTrend VWAP excursion-cap clean-AQ runtime launched under
+  `/tmp/ict-engine-tomac-supertrend-vwap-excursion-cap-20260529T101600+0800`.
+  It later terminalized with wrapper exit `0` and valid Gate-1 negative
+  artifacts:
+  `/tmp/ict-engine-tomac-supertrend-vwap-excursion-cap-20260529T101600+0800/run/summaries/terminal_summary.json`,
+  `/tmp/ict-engine-tomac-supertrend-vwap-excursion-cap-20260529T101600+0800/run/summaries/autoquant_clean_1m_gate.json`,
+  and `/tmp/ict-engine-tomac-supertrend-vwap-excursion-cap-20260529T101600+0800/run/summaries/autoquant_clean_1m_rows.csv`.
+- SuperTrend classification is fail-closed, not practical evidence:
+  `survivors_5bps=[]`, `rank_rows=6`, `decision=observation_no_autoquant_survivor_yet`,
+  and `promotion_allowed=false`, `trade_usable=false`, `update_goal=false`.
+  Aggregate 5bps results were negative for ES (`-44.97%`), NQ (`-52.38%`),
+  and YM (`-39.98%`). Do not rerun this branch unchanged as a practical lead.
+- Current-head heavy done-definition attempt
+  `/tmp/ict-engine-done-definition-heavy-20260529-current-head-00b9c85e-102128.json`
+  exited `1`. `cargo_check_all_targets`, `cargo_clippy_all_targets_deny_warnings`,
+  and `cargo_test` passed, but `smoke_acceptance_tmp_state` timed out at
+  `900` seconds during `policy_training_agent` while another heavy audit was
+  also running. This is not a valid completion proof.
+- Another heavy retry is already running externally:
+  `support/scripts/done_definition_audit.py --compact --run-all-heavy --heavy-timeout-seconds 1800 --output /tmp/ict-engine-done-definition-heavy-20260529-current-head-00b9c85e-retry1800.json`.
+  Do not start a duplicate heavy proof while this process is active.
+- Fresh factor ownership appeared after SuperTrend terminalized. Current compact
+  factor audit at `2026-05-29T10:58:44+0800` exited `1` with
+  `active_claims=2`, `live_factor_processes=0`, `promotion_allowed_true=0`,
+  and `trade_usable_true=0`. Fresh active claims are:
+  `/tmp/ict-engine-agent-claims/board-b-factor-refinement/20260529T105700+0800-codex-tomac-tod-balanced-tod-subfactor-stability-guard-launch.claim`
+  and
+  `/tmp/ict-engine-agent-claims/board-b-factor-refinement/20260529T105730+0800-codex-tomac-opening-drive-exact-materialization-launch.claim`.
+- Full objective remains incomplete. Current blockers are fresh active factor
+  claims, no valid current-head heavy done-definition proof, no proven
+  same-tree practical closure packet, and release readiness still requiring a
+  clean selected export/source-origin alignment before any release or completion
+  claim.
+
+## 2026-05-29T11:08+0800 Heavy Proof Recovered, Factor Closure Still Blocked
+
+- Heavy done-definition retry
+  `/tmp/ict-engine-done-definition-heavy-20260529-current-head-00b9c85e-retry1800.json`
+  completed with `completion_ready=true`, `evidence_level=full_enabled_gate_coverage`,
+  `pass_count=10`, `fail_count=0`, and `skip_count=0` for head
+  `00b9c85e0697edb174484a57cc17f51b4d6ce130`. The previous heavy timeout is
+  superseded for that exact tracked worktree fingerprint, but later tracked doc
+  edits changed the live fingerprint, so future completion snapshots still need
+  current-fingerprint proof or proof reuse validation.
+- Practical-admission quarantine drift was reviewed. Tracked production
+  violations remain `0`; untracked violating files remain `154`; the count
+  moved from `268` to `267` because the untracked OpeningDrive downstream
+  wrapper changed from the old `readiness >= 0.65 and hazard < 0.60` branch-local
+  admission expression to `promotion_ready` flag aliases. Quarantine manifest
+  `support/docs/audits/practical-admission-source-debt-quarantine.json` was
+  updated to fingerprint
+  `9c84db369dd124213b0b3dd18e1efd87503fec602da0e60736f805d783250ab9` with
+  `untracked_violation_count=267`.
+- Verification for the quarantine update:
+  `python3 -m json.tool support/docs/audits/practical-admission-source-debt-quarantine.json >/dev/null`
+  passed; `git diff --check -- support/docs/audits/practical-admission-source-debt-quarantine.json support/docs/plans/2026-05-29-closed-loop-gap-audit-codex.md`
+  passed; light `done_definition_audit.py --compact` showed the practical and
+  await-launch quarantines now both `matched=true` with tracked violations `0`.
+- Proof-backed objective snapshot
+  `/tmp/ict-engine-closure-proof-backed-20260529T1103-codex/objective_closure_snapshot.json`
+  exited `1`. The heavy proof applied and done-definition was green in that
+  packet, but the packet remained red with `practical_admission_source_debt`
+  before the quarantine update, `factor_closure_blocked`, and
+  `release_readiness_blocked`.
+- Post-quarantine objective snapshot
+  `/tmp/ict-engine-closure-after-quarantine-refresh-20260529T1106-codex/objective_closure_snapshot.json`
+  exited `1`. Practical source debt is now quarantined/matched, but the snapshot
+  was light and therefore reports `done_definition_not_completion_ready`; factor
+  closure is still blocked by fresh active MassIndex claim
+  `/tmp/ict-engine-agent-claims/board-b-factor-refinement/20260529T105843+0800-codex-tomac-mass-index-vortex-trend-continuation.claim`.
+  Release readiness is still red with `worktree_clean_for_release` and current
+  `remote_readback` failure.
+- Current MassIndex state at `2026-05-29T11:08+0800`: claim age about `9`
+  minutes, `status=active`, no live factor process, no terminal artifacts beyond
+  `checks/claim-json-valid.out`, and all practical flags false. It is a wait
+  target, not a takeover target.
+- Full objective remains incomplete. Next lawful step is to wait for the
+  MassIndex owner to launch/terminalize or become stale-safe, then rerun compact
+  factor closure; only after factor closure clears should a current-fingerprint
+  heavy proof/objective snapshot be used for any completion decision.
+
+## 2026-05-29T11:03+0800 Heavy Proof Retry Pass, Factor Closure Still Blocked
+
+- Current-head heavy done-definition proof was rerun directly after the earlier
+  900-second smoke timeout:
+  `/tmp/ict-engine-done-definition-heavy-20260529-current-head-00b9c85e-retry1800.json`.
+  It exited `0` at `2026-05-29T03:01:42Z` with `head=00b9c85e0697edb174484a57cc17f51b4d6ce130`,
+  `completion_ready=true`, `evidence_level=full_enabled_gate_coverage`,
+  `pass_count=10`, `fail_count=0`, and `skip_count=0`.
+- The previous timeout was narrowed to whole-script timeout under concurrent
+  heavy proof load, not a proven `policy-training-status` functional failure:
+  the targeted command
+  `cargo run --quiet -- policy-training-status --symbol DEMO --state-dir /private/tmp/ict-engine-done-definition-audit-smoke-20260529T022948177106Z-13833 --output-format agent`
+  exited `0` and wrote `/tmp/ict-engine-policy-training-targeted-repro-20260529T1048.out`.
+- SuperTrend VWAP excursion-cap terminal evidence remains negative and must not
+  be promoted. The run root
+  `/tmp/ict-engine-tomac-supertrend-vwap-excursion-cap-20260529T101600+0800`
+  produced `run/checks/run_tomac_1m.exit=0` and
+  `run/summaries/autoquant_clean_1m_gate.json` with `rank_rows=6`,
+  `survivors_5bps=[]`, `decision=observation_no_autoquant_survivor_yet`,
+  `promotion_allowed=false`, `trade_usable=false`, and `update_goal=false`.
+  Its 1m backtest was economically negative, including YM `382` trades with
+  total profit `-1.78%` and profit factor `0.8449`.
+- Latest compact factor audit at `2026-05-29T11:02:57+0800` still exited `1`:
+  `active_claims=1`, `live_factor_processes=0`, `promotion_allowed_true=0`,
+  `trade_usable_true=0`, and `same_tree_practical_closure=null`. The only
+  current fresh active factor claim is
+  `/tmp/ict-engine-agent-claims/board-b-factor-refinement/20260529T105843+0800-codex-tomac-mass-index-vortex-trend-continuation.claim`,
+  pointing at
+  `/tmp/ict-engine-tomac-mass-index-vortex-trend-continuation-20260529T105843+0800/workdoc.md`.
+- Because a fresh active claim is present and the same-tree practical closure
+  packet is still null, a proof-backed objective snapshot would be expected to
+  fail closed on factor closure. Do not run a new provider/AQ/factor lane or
+  take over the MassIndex lane until it terminalizes or becomes stale-safe under
+  the one-hour rule. Full objective remains incomplete despite the heavy proof
+  retry passing.
+
+## 2026-05-29T11:07+0800 Proof-Backed Snapshot Fail-Closed
+
+- After the tracker append, a light current-state done-definition readback wrote
+  `/tmp/ict-engine-done-definition-light-after-tracker-20260529T1105.json` with
+  tracked worktree fingerprint
+  `d4d95687cdb2b612a5ec2872f794d03a8644dcef4e55e611968009f59ab6eef8`.
+  This intentionally invalidates the earlier heavy proof fingerprint
+  `498840c915439ecf6b97f1d785a39d13220c9b02e7e15e58215b7fbfb7f10c54`
+  for completion use after this doc edit.
+- Objective snapshot was run fail-closed with the stale heavy proof staged for
+  validation:
+  `/tmp/ict-engine-closure-snapshot-20260529T1106-fail-closed/objective_closure_snapshot.json`.
+  It exited `1`, rejected the proof with
+  `proof_rejected_reason=proof_worktree_fingerprint_mismatch`, and reported
+  `completion_proven=false`, `surface_green=false`, and blockers
+  `done_definition_not_completion_ready`, `factor_closure_blocked`, and
+  `release_readiness_blocked`.
+- Snapshot manual requirements still include
+  `same_tree_practical_closure_packet` and `truthful_completion_commit`.
+  Release readiness remains blocked by `worktree_clean_for_release` and
+  `source_origin_matches_selected_source`.
+- Fresh factor claim readback at `2026-05-29T11:07:03+0800` still reports one
+  active fresh claim, age `8` minutes, no live runtime:
+  `/tmp/ict-engine-agent-claims/board-b-factor-refinement/20260529T105843+0800-codex-tomac-mass-index-vortex-trend-continuation.claim`.
+  The corresponding run root only contains `workdoc.md` and prelaunch audit
+  files, so there is no Gate-1 verdict to classify yet. It is not stale-safe;
+  do not take it over or launch a sibling lane.
+
+## 2026-05-29T11:17+0800 MassIndex Runtime Occupancy
+
+- MassIndex moved from fresh prelaunch claim to live runtime ownership. Compact
+  audit at `2026-05-29T11:17:39+0800` exited `1` with `active_claims=1`,
+  `live_factor_processes=1`, `promotion_allowed_true=0`, `trade_usable_true=0`,
+  and `same_tree_practical_closure=null`.
+- Live runtime owner: PID `67547`, command
+  `run_tomac_index_futures_clean_aq_v1.py --families mass_index_vortex_trend_continuation`,
+  root `/tmp/ict-engine-tomac-mass-index-vortex-trend-continuation-20260529T105843+0800`,
+  elapsed about `9m24s` at readback.
+- Artifact readback still has no terminal verdict: the root only showed
+  `/tmp/ict-engine-tomac-mass-index-vortex-trend-continuation-20260529T105843+0800/checks/claim-json-valid.out`.
+  No `run_tomac_1m.exit`, `autoquant_clean_1m_gate.json`, rows CSV, or
+  `terminal_summary.json` existed at that poll.
+- This is an active live owner, not a stale claim and not a takeover target.
+  Do not start another factor/runtime lane or rerun heavy closure proof while it
+  is consuming the shared AQ/backend path. Next action is to wait for terminal
+  artifacts, classify them fail-closed unless strict practical gates pass, then
+  rerun compact factor closure.
+
+## 2026-05-29T11:36+0800 MassIndex Negative, Python Scouts Occupy Runtime
+
+- MassIndex/Vortex clean-AQ produced terminal Gate-1 artifacts under
+  `/tmp/ict-engine-tomac-mass-index-vortex-trend-continuation-20260529T105843+0800/run`:
+  `checks/run_tomac_1m.exit=0`, `summaries/autoquant_clean_1m_gate.json`,
+  and `summaries/autoquant_clean_1m_rows.csv`.
+- MassIndex classification is fail-closed: `rank_rows=6`,
+  `decision=observation_no_autoquant_survivor_yet`, `survivors_5bps=[]`,
+  `promotion_allowed=false`, `trade_usable=false`, and `update_goal=false`.
+  Aggregate 5bps results were negative for ES (`-39.79%`), NQ (`-62.99%`),
+  and YM (`-27.08%`). This is not same-tree practical closure and should not be
+  rerun unchanged as a practical lead.
+- Compact factor audit after MassIndex artifacts still exited `1`: the MassIndex
+  claim remained active/stale-not-safe, and newer Python-only local screen owners
+  appeared. Latest readback reported `active_claims=3`, `live_factor_processes=3`,
+  `promotion_allowed_true=0`, `trade_usable_true=0`, and
+  `same_tree_practical_closure=null`.
+- Current live Python-only run roots are:
+  `/tmp/ict-engine-tomac-python-local-gate1-scout-20260529T112453+0800`,
+  `/tmp/ict-engine-tomac-python-index-futures-local-gate1-20260529T112638+0800`,
+  and `/tmp/ict-engine-tomac-local-nq-python-mtf-gate1-screen-20260529T112558+0800`.
+  These are local screens, not practical closure packets; keep practical flags
+  false unless later terminal evidence proves the full hard chain.
+- Current active non-terminal claims include
+  `/tmp/ict-engine-agent-claims/board-b-factor-refinement/20260529T112130+0800-codex-tomac-py-donchian-turtle-screen.claim`,
+  `/tmp/ict-engine-agent-claims/board-b-factor-refinement/20260529T112558+0800-codex-tomac-local-nq-python-mtf-gate1-screen.claim`,
+  and `/tmp/ict-engine-agent-claims/board-b-factor-refinement/20260529T112638+0800-codex-tomac-python-index-futures-local-gate1.claim`.
+- Full objective remains incomplete. Do not claim completion or run release/heavy
+  closure while these owners are active; wait for terminal artifacts, classify
+  them, then rerun compact factor closure.
+
+## 2026-05-29T11:41+0800 MassIndex Terminalized, Fresh KST Claim Blocks Closure
+
+- Same-turn routing was refreshed through `sd/ict-engi-fact-rese-muta` after
+  resume. Route files read: `~/.hermes/routing/skill-router.md`,
+  `~/.hermes/routing/project-router.md`, repo `CLAUDE.md`, `AGENTS.md`,
+  `AGENT.md`, and installed runtime skill
+  `~/.hermes/skills/software-development/ict-engi-fact-rese-muta/SKILL.md`.
+  `project-router.md` did not override the factor route.
+- Current process/audit readback moved from occupied to no live factor process.
+  Compact factor audit at `2026-05-29T11:40:00+0800` still exited `1` with
+  `active_claims=1`, `live_factor_processes=0`, `promotion_allowed_true=0`,
+  `trade_usable_true=0`, and `same_tree_practical_closure=null`.
+- The only active claim at that audit is fresh and not stale-safe:
+  `/tmp/ict-engine-agent-claims/board-b-factor-refinement/20260529T112130+0800-codex-tomac-kst-coppock-pybacktest.claim`,
+  age about `18` minutes, run root
+  `/tmp/ict-engine-tomac-kst-coppock-pybacktest-20260529T112130+0800`,
+  scope `TrendExpansion -> KstCoppockMomentum -> MtfTrendResonancePullback`.
+  It is Python-only prescreen work with `promotion_allowed=false`,
+  `trade_usable=false`, and `update_goal=false`.
+- MassIndex/Vortex was terminalized in its claim/workdoc at
+  `2026-05-29T11:40:00+0800`. Claim
+  `/tmp/ict-engine-agent-claims/board-b-factor-refinement/20260529T105843+0800-codex-tomac-mass-index-vortex-trend-continuation.claim`
+  now has `status=terminalized`,
+  `decision=terminalized_autoquant_gate1_no_5bps_density_survivor`, and all
+  practical flags false.
+- MassIndex terminal artifacts remain negative evidence only:
+  `/tmp/ict-engine-tomac-mass-index-vortex-trend-continuation-20260529T105843+0800/run/checks/run_tomac_1m.exit`
+  is `0`, gate summary
+  `/tmp/ict-engine-tomac-mass-index-vortex-trend-continuation-20260529T105843+0800/run/summaries/autoquant_clean_1m_gate.json`
+  reports `rank_rows=6`, `survivors_5bps=[]`,
+  `decision=observation_no_autoquant_survivor_yet`, and
+  `promotion_allowed=false`, `trade_usable=false`, `update_goal=false`.
+  Rows CSV shows ES/NQ/YM all fail hard 5bps: ES `-39.79%`, NQ `-62.99%`,
+  YM `-27.08%`.
+- Current tracker edits make the earlier heavy proof stale for completion use.
+  Do not claim objective completion, run release snapshot as green, or commit a
+  completion slice until the fresh KST claim clears, compact factor audit reports
+  no active/live blockers, and a fresh current-fingerprint heavy proof plus
+  objective snapshot still pass every non-factor gate.
+
+## 2026-05-29T11:44+0800 KST Terminalized, Factor Claims Clear
+
+- KST/Coppock Python-only prescreen terminalized under
+  `/tmp/ict-engine-tomac-kst-coppock-pybacktest-20260529T112130+0800`.
+  The process exited with `checks/pybacktest.exit=0`; gate summary
+  `outputs/kst_coppock_mtf_pybacktest_gate.json` reports `rank_rows=12`,
+  `survivors_5bps=[]`, `decision=pybacktest_no_5bps_survivor`,
+  `downstream_allowed=false`, `promotion_allowed=false`, `trade_usable=false`,
+  and `update_goal=false`.
+- KST rows include one sparse positive NQ quality row (`115` trades,
+  `0.073907` trades/day, raw `13.051312%`, 5bps/side `1.551312%`,
+  `profit_factor=1.99948`), but density is below the gate and
+  `gate1_survivor=false`. Density variants meet cadence only by failing hard
+  5bps, for example NQ balanced `5bps=-19.08312%`. This remains screen-only
+  incubate evidence, not a practical factor or downstream candidate.
+- Compact factor audit at `2026-05-29T11:44:04+0800` exited `0` with
+  `status=pass`, `active_claims=0`, `live_factor_processes=0`,
+  `promotion_allowed_true=0`, `trade_usable_true=0`, and
+  `same_tree_practical_closure=null`.
+- Factor-claim hygiene is clear for the moment, but full objective closure is
+  still not proven because there is no valid same-tree practical closure packet,
+  no current-fingerprint heavy proof after these tracker edits, and release
+  readiness has known dirty/source-origin/remote-readback blockers.
+
+## 2026-05-29T11:59+0800 Heavy Proof Pass, Snapshot Fails Closed On New Owners
+
+- Current-fingerprint heavy done-definition proof completed at
+  `/tmp/ict-engine-done-definition-heavy-20260529-current-head-863b351b-20260529T114615.json`.
+  It exited `0` with head `863b351bb335cb03f0f3327a4f5d6e5a76f5cc18`,
+  tracked worktree fingerprint
+  `d4d95687cdb2b612a5ec2872f794d03a8644dcef4e55e611968009f59ab6eef8`,
+  `completion_ready=true`, `evidence_level=full_enabled_gate_coverage`,
+  `pass_count=10`, `fail_count=0`, and `skip_count=0`.
+- During that proof, factor state drifted again. Fresh owners created multiple
+  active claims and a live clean-AQ runtime. Same-turn compact audit at
+  `2026-05-29T11:57:39+0800` exited `1` with `active_claims=7`,
+  `live_factor_processes=1`, `promotion_allowed_true=0`,
+  `trade_usable_true=0`, and `same_tree_practical_closure=null`.
+- Proof-backed objective snapshot with remote checks wrote
+  `/tmp/ict-engine-closure-snapshot-20260529T20260529T115738-proof863b-failclosed/objective_closure_snapshot.json`
+  and exited `1`. The heavy proof was accepted (`proof_applied=true`) and
+  done-definition stayed green, but the snapshot remained `not_complete` with
+  blockers `factor_closure_blocked` and `release_readiness_blocked`.
+- The snapshot factor blocker reported `active_claims=5`,
+  `live_factor_processes=1`, `promotion_allowed_true=0`,
+  `trade_usable_true=0`, and `same_tree_practical_closure=null`. Prioritized
+  next actions named fresh claims for Heikin/Aroon, OpeningDrive causal repair,
+  KST/Coppock density lift, liquidity-purge volume reclaim, plus the live
+  MiddayCompression failed-break VWAP-fade runtime root.
+- Release readiness in the snapshot still failed
+  `worktree_clean_for_release` and `source_origin_matches_selected_source`.
+  Manual requirements still include `same_tree_practical_closure_packet` and
+  `truthful_completion_commit`.
+- Decision: do not call the objective complete. The correct next action is
+  wait/readback for the fresh factor owners and live runtime, terminalize their
+  evidence strictly, rerun compact factor audit after active/live counts clear,
+  then rerun proof-backed objective snapshot only if the heavy proof fingerprint
+  still matches or after a fresh current-fingerprint heavy proof.
+
+## 2026-05-29T11:17+0800 MassIndex Runtime Occupancy Readback
+
+- Same-turn compact factor audit at `2026-05-29T11:17:02+0800` exited `1` with
+  `active_claims=1`, `live_factor_processes=1`, `promotion_allowed_true=0`,
+  `trade_usable_true=0`, and `same_tree_practical_closure=null`.
+- The active owner is still the MassIndex/Vortex lane:
+  `/tmp/ict-engine-agent-claims/board-b-factor-refinement/20260529T105843+0800-codex-tomac-mass-index-vortex-trend-continuation.claim`.
+  The audit classifies it as `live_runtime_owner`, not stale-safe.
+- Runtime processes observed:
+  parent PID `67547` running
+  `run_tomac_index_futures_clean_aq_v1.py --families mass_index_vortex_trend_continuation`
+  under `/tmp/ict-engine-tomac-mass-index-vortex-trend-continuation-20260529T105843+0800`,
+  and child PID `69884` running `/Users/thrill3r/Auto-Quant/.venv/bin/python run_tomac.py`.
+- No terminal `autoquant_clean_1m_gate.json`, `terminal_summary.json`, or
+  `same_tree_practical_closure.json` exists yet in the MassIndex run root.
+  Current files show data staging and AQ workspace setup only. Closure and any
+  sibling provider/AQ/factor launch remain blocked until this owner exits and
+  terminal artifacts can be classified.
+
+## 2026-05-29T11:55+0800 Current-Head Light Closure / Fresh Owner Drift
+
+- Mandatory route was refreshed before this continuation: `skill-router.md`,
+  `project-router.md`, repo `CLAUDE.md`, `AGENT.md`, `AGENTS.md`, installed
+  runtime skill
+  `~/.hermes/skills/software-development/ict-engine-maintenance-loop/SKILL.md`,
+  and Aegis long-task continuation discipline. `project-router.md` confirmed the
+  ict-engine maintenance route and did not conflict with `skill-router.md`.
+- Current repo head is `863b351bb335cb03f0f3327a4f5d6e5a76f5cc18` on `main`.
+  The older heavy proof for `00b9c85e` is therefore stale by head mismatch for
+  this current tracked fingerprint.
+- Compact factor audit at `2026-05-29T11:46:21+0800` briefly cleared with
+  `active_claims=0`, `live_factor_processes=0`, `promotion_allowed_true=0`,
+  `trade_usable_true=0`, and `same_tree_practical_closure=null`.
+- Current light done-definition audit:
+  `/tmp/ict-engine-done-definition-light-current-head-863b351b-20260529T1148.json`.
+  It exited `0` with `head=863b351bb335cb03f0f3327a4f5d6e5a76f5cc18`,
+  `completion_ready=false`, `evidence_level=partial_skipped_gates`,
+  `pass_count=6`, `fail_count=0`, and skipped heavy gates
+  `cargo_check_all_targets`, `cargo_clippy_all_targets_deny_warnings`,
+  `cargo_test`, and `smoke_acceptance_tmp_state`. Tracked worktree fingerprint
+  is `d4d95687cdb2b612a5ec2872f794d03a8644dcef4e55e611968009f59ab6eef8`.
+- Practical-admission source debt remains quarantined, not closed:
+  tracked violations `0`, untracked violating files `154`, untracked violations
+  `267`, fingerprint
+  `9c84db369dd124213b0b3dd18e1efd87503fec602da0e60736f805d783250ab9`, and
+  quarantine `matched=true`.
+- Await-launch source debt also remains quarantined, not closed: tracked
+  violations `0`, untracked violating files `45`, untracked violations `45`,
+  fingerprint
+  `eb0979e112bc04124e52b30e91ebdf5849e3b1a3b1f624e4a61b905e05dee0a8`, and
+  quarantine `matched=true`.
+- Current light remote-checked objective snapshot:
+  `/tmp/ict-engine-closure-light-current-head-863b351b-20260529T1148/objective_closure_snapshot.json`.
+  It exited `1` with `status=not_complete` and blockers
+  `done_definition_not_completion_ready`, `factor_closure_blocked`, and
+  `release_readiness_blocked`. Remote release checks ran and were not skipped;
+  release readiness still fails `worktree_clean_for_release` and
+  `source_origin_matches_selected_source`.
+- Factor state drifted during the snapshot. Compact factor audit at
+  `/tmp/ict-engine-factor-audit-current-20260529T1154.json` exited `1` with
+  `active_claims=3`, `live_factor_processes=1`,
+  `fresh_active_claims_without_live_process=2`, `promotion_allowed_true=0`,
+  `trade_usable_true=0`, and `same_tree_practical_closure=null`.
+- Current fresh active owners are:
+  `/tmp/ict-engine-agent-claims/board-b-factor-refinement/20260529T114424+0800-codex-tomac-heikin-aroon-pybacktest.claim`,
+  `/tmp/ict-engine-agent-claims/board-b-factor-refinement/20260529T114517+0800-codex-tomac-midday-compression-failed-break-vwap-fade.claim`,
+  and
+  `/tmp/ict-engine-agent-claims/board-b-factor-refinement/20260529T114648+0800-codex-tomac-openingdrive-causal-repair-scan.claim`.
+  All have explicit `promotion_allowed=false` and `trade_usable=false`.
+- Live owner PID `93279` is running
+  `run_tomac_index_futures_clean_aq_v1.py --families midday_compression_failed_break_vwap_fade`
+  under
+  `/tmp/ict-engine-tomac-midday-compression-failed-break-vwap-fade-20260529T114517+0800/run`.
+  This is fresh live clean-AQ work, not stale-safe takeover material.
+- Current safe action is read-only polling and terminal artifact classification
+  after the owners exit. Do not launch provider/AQ/TOMAC/factor-research work,
+  do not claim same-tree practical closure, and do not commit a completion slice
+  while these owners are active/fresh.
+
+## 2026-05-29T11:58+0800 Latest Factor Claim Drift
+
+- Final compact factor poll for this slice:
+  `/tmp/ict-engine-factor-audit-current-20260529T1158.json`.
+- It exited `1` with `status=needs_attention`, `active_claims=6`,
+  `valid_active_claims=6`, `live_factor_processes=1`,
+  `fresh_active_claims_without_live_process=5`, `promotion_allowed_true=0`,
+  `trade_usable_true=0`, and `same_tree_practical_closure=null`.
+- The live owner remains PID `93279` under
+  `/tmp/ict-engine-tomac-midday-compression-failed-break-vwap-fade-20260529T114517+0800`,
+  still with no `.exit` file at the poll.
+- Fresh non-live owners at the poll:
+  `20260529T114424+0800-codex-tomac-heikin-aroon-pybacktest.claim`,
+  `20260529T114648+0800-codex-tomac-openingdrive-causal-repair-scan.claim`,
+  `20260529T114910+0800-codex-tomac-kst-coppock-density-lift-cost-guard.claim`,
+  `20260529T115025+0800-codex-tomac-ssl-channel-mtf-pybacktest.claim`, and
+  `20260529T115320+0800-codex-tomac-python-ote-fvg-ob-reclaim.claim`.
+  All have explicit `promotion_allowed=false` and `trade_usable=false`.
+- This latest poll supersedes the transient `11:46` clear window. Current
+  objective closure remains blocked by fresh/live factor ownership, missing
+  validated same-tree practical closure, no fresh current-head heavy proof, and
+  release readiness source/worktree blockers. No completion commit is valid.
+
+## 2026-05-29T12:03+0800 Live-Process Classifier Repair
+
+- Fresh routed continuation re-read `skill-router.md`, `project-router.md`, repo
+  `CLAUDE.md`/`AGENT.md`/`AGENTS.md`, installed runtime skill
+  `software-development/ict-engine-maintenance-loop/SKILL.md`, and Aegis
+  long-task/TDD/debugging discipline before action.
+- Current readback exposed a concrete audit loophole: PID `97208` was running
+  `/tmp/ict-engine-tomac-heikin-aroon-pybacktest-20260529T114424+0800/scripts/run_heikin_aroon_pybacktest.py`,
+  but the compact factor audit counted only the Midday clean-AQ runtime as a
+  live factor process. Similar Python-only prescreen scripts can be real Board B
+  runtime owners even when they are not named `run_tomac`, `run_ibkr_*`, or
+  `fetch_external.py`.
+- TDD repair in `support/scripts/factor_claim_terminalization_audit.py`: generic
+  `.py` commands that expose a Board B `/tmp/ict-engine-*` run root are now
+  classified as live factor processes, after existing readback/help/unittest/
+  await-launch/diagnostic exclusions have already filtered safe probes.
+- Regression added in
+  `support/scripts/tests/test_factor_claim_terminalization_audit.py`:
+  `test_live_process_classifier_detects_tmp_lane_python_backtest_script`.
+  RED proof failed before the patch because `_is_live_factor_command(...)`
+  returned `False`; GREEN proof passed after the classifier fix.
+- Full verification passed:
+  `python3 -m unittest support.scripts.tests.test_factor_claim_terminalization_audit -v`
+  ran `82/82` tests successfully after correcting an initial regression that
+  prematurely bypassed existing public-provider wrapper marker detection.
+- Real post-fix compact audit:
+  `/tmp/ict-engine-factor-audit-after-classifier-fix-v2-20260529T120302.json`.
+  It exited `1` with `status=needs_attention`, `active_claims=3`,
+  `live_factor_processes=3`, `fresh_active_claims_without_live_process=0`,
+  `promotion_allowed_true=0`, `trade_usable_true=0`, and
+  `same_tree_practical_closure=null`.
+- Post-fix live owners were Heikin/Aroon Python prescreen, MiddayCompression
+  clean-AQ, and KST/Coppock density-lift Python prescreen. All active claims
+  still have explicit `promotion_allowed=false` and `trade_usable=false`.
+- Active Hermes skill wording was updated in
+  `~/.hermes/skills/software-development/ict-engine-maintenance-loop/SKILL.md`
+  and `~/.hermes/skills/software-development/ict-engi-fact-rese-muta/SKILL.md`
+  so future agents classify generic Python scripts under Board B `/tmp` lane
+  roots as live runtime occupancy while still excluding help/unittest/search/
+  diagnostic probes.
+- This repair closes a false-clear risk in evidence coordination. It does not
+  produce a practical factor, does not create a same-tree practical closure
+  packet, and does not make the full objective complete. Current closure remains
+  blocked by live factor owners plus release/source readiness constraints.
+
+## 2026-05-29T12:09+0800 Current Factor Closure Still Blocked
+
+- Fresh compact factor audit artifact:
+  `/tmp/ict-engine-factor-audit-current-20260529T1209.json` with exit file
+  `/tmp/ict-engine-factor-audit-current-20260529T1209.json.exit`.
+- It exited `1` with `status=needs_attention`, `active_claims=3`,
+  `valid_active_claims=3`, `live_factor_processes=2`,
+  `fresh_active_claims_without_live_process=1`, `promotion_allowed_true=0`,
+  `trade_usable_true=0`, and `same_tree_practical_closure=null`.
+- Live owners remain:
+  `/tmp/ict-engine-tomac-midday-compression-failed-break-vwap-fade-20260529T114517+0800`
+  with child PID `7520` running `/Users/thrill3r/Auto-Quant/.venv/bin/python run_tomac.py`,
+  and
+  `/tmp/ict-engine-tomac-heikin-aroon-pybacktest-20260529T114424+0800`
+  with PID `97208` running `scripts/run_heikin_aroon_pybacktest.py`. Neither
+  run root has an exit file or terminal summary at this checkpoint.
+- Fresh non-live active claim is
+  `/tmp/ict-engine-agent-claims/board-b-factor-refinement/20260529T120550+0800-codex-tomac-demarker-vwap-reversal-pybacktest.claim`.
+  It is explicitly Python-only retained-data prescreen work with
+  `promotion_allowed=false`, `trade_usable=false`, and `update_goal=false`.
+  Its workdoc terminal decision is still pending and no gate/summary artifact
+  exists yet under
+  `/tmp/ict-engine-tomac-demarker-vwap-reversal-pybacktest-20260529T120550+0800`.
+- KST/Coppock density-lift and Bollinger/CMF/OBV/VWAP Python screens have
+  terminal artifacts but are not practical evidence. KST summary
+  `/tmp/ict-engine-tomac-kst-coppock-density-lift-cost-guard-20260529T114910+0800/outputs/terminal_summary.json`
+  reports `status=terminalized_pybacktest_no_strict_survivor`,
+  `survivor_count=0`, best 5bps/side `+11.171887%`, `116` trades, and only
+  `0.07455` trades/day, so density fails. Bollinger summary
+  `/tmp/ict-engine-tomac-bollinger-cmf-obv-vwap-breakout-pybacktest-20260529T120012+0800/outputs/terminal_summary.json`
+  reports `status=terminalized_pybacktest_no_gate1_survivor`,
+  `survivor_count=0`, best 5bps/side `-37.946512%`. Both keep
+  `promotion_allowed=false`, `trade_usable=false`, and `update_goal=false`.
+- Current closure decision: still not complete. Do not run or trust a green
+  objective snapshot until live/fresh factor claims clear and a valid
+  `same_tree_practical_closure.json` appears. If tracker edits change the
+  tracked fingerprint, rerun the heavy done-definition proof before any renewed
+  proof-backed closure snapshot.
+
+## 2026-05-29T12:12+0800 Post-Repair Drift: DeMarker Became Live
+
+- The classifier repair/checkpoint slice changed `HEAD`, so previous
+  heavy-proof fingerprints are stale for any future completion claim.
+- Immediate post-commit compact audit still exits `1` with
+  `status=needs_attention`, `active_claims=3`, `valid_active_claims=3`,
+  `live_factor_processes=3`, `promotion_allowed_true=0`,
+  `trade_usable_true=0`, and `same_tree_practical_closure=null`.
+- Live roots are now MiddayCompression clean-AQ, Heikin/Aroon Python prescreen,
+  and DeMarker/VWAP Python prescreen. DeMarker moved from fresh non-live claim
+  to live owner PID `15534` under
+  `/tmp/ict-engine-tomac-demarker-vwap-reversal-pybacktest-20260529T120550+0800`.
+- Current action remains read-only polling and terminal-artifact classification.
+  No new claim, launch, closure snapshot, or completion commit is valid while
+  these live owners remain and no same-tree practical closure packet exists.
+
+## 2026-05-29T12:17+0800 Fresh Continuation Readback
+
+- Fresh routing for this continuation used `sd/ict-engine-maintenance-loop` and
+  re-read `skill-router.md`, `project-router.md`, repo `CLAUDE.md`, `AGENT.md`,
+  `AGENTS.md`, and installed runtime skill
+  `software-development/ict-engine-maintenance-loop/SKILL.md` before current
+  evidence work.
+- Current repo readback: branch `main`, `HEAD`
+  `cd431c219a0ed5ef374a7f8aaffe93784839f8e5`. The worktree is still broadly
+  dirty with unrelated tracked and untracked Board B/factor artifacts; preserve
+  unrelated work and stage exact paths only.
+- Compact factor audit artifact:
+  `/tmp/ict-engine-factor-audit-current-20260529T1217-codex.json` with exit file
+  `/tmp/ict-engine-factor-audit-current-20260529T1217-codex.json.exit`.
+- It exited `1` with `status=needs_attention`, `active_claims=3`,
+  `valid_active_claims=3`, `live_factor_processes=2`,
+  `fresh_active_claims_without_live_process=1`, `promotion_allowed_true=0`,
+  `trade_usable_true=0`, and `same_tree_practical_closure=null`.
+- Live owners at this poll are Fisher/VWAP/RVOL pullback Python prescreen PID
+  `20039` under
+  `/tmp/ict-engine-tomac-fisher-vwap-rvol-pullback-pybacktest-20260529T121108+0800`
+  and TSI/MFI/VWAP reclaim Python prescreen PID `19742` under
+  `/tmp/ict-engine-tomac-tsi-mfi-vwap-reclaim-pybacktest-20260529T121305+0800`.
+  Both active claims explicitly keep `promotion_allowed=false` and
+  `trade_usable=false`.
+- Fresh non-live active owner is
+  `20260529T114424+0800-codex-tomac-heikin-aroon-pybacktest.claim`, age about
+  `32` minutes at the poll, also with `promotion_allowed=false` and
+  `trade_usable=false`. It is not stale-safe for takeover or terminalization.
+- MiddayCompression clean-AQ no longer had a matching live process at the
+  earlier `12:15` poll; shallow artifacts showed `run/checks/run_tomac_1m.exit`,
+  `run/summary.json`, and command output files, but its claim was still fresh at
+  that point. Do not claim closure from it unless a later stale-safe or owner
+  terminalized readback is available.
+- Current decision remains red: no objective snapshot, heavy proof, release
+  proof, or completion commit is valid while fresh/live factor ownership remains
+  and no valid `same_tree_practical_closure.json` has appeared.
+
+## 2026-05-29T12:15+0800 DeMarker Terminalized, Two Live Owners Remain
+
+- DeMarker/VWAP Python prescreen terminalized under
+  `/tmp/ict-engine-tomac-demarker-vwap-reversal-pybacktest-20260529T120550+0800`.
+  Terminal summary
+  `/tmp/ict-engine-tomac-demarker-vwap-reversal-pybacktest-20260529T120550+0800/summaries/terminal_summary.json`
+  reports `status=terminalized_pybacktest_no_5bps_density_survivor`,
+  `decision=pybacktest_no_5bps_density_survivor`, `rank_rows=17`,
+  `survivor_count=0`, best symbol `ES`, best variant
+  `short_buyside_reversal`, raw `+0.886493%`, and 5bps/side `-3.013507%`.
+  `promotion_allowed=false`, `trade_usable=false`, and `update_goal=false`.
+- Fresh compact audit at `2026-05-29T12:13:41+0800` still exits `1` with
+  `status=needs_attention`, `active_claims=2`, `valid_active_claims=2`,
+  `live_factor_processes=2`, `promotion_allowed_true=0`,
+  `trade_usable_true=0`, and `same_tree_practical_closure=null`.
+- Remaining live owners are MiddayCompression clean-AQ
+  `/tmp/ict-engine-tomac-midday-compression-failed-break-vwap-fade-20260529T114517+0800`
+  with child PID `7520`, and Heikin/Aroon Python prescreen
+  `/tmp/ict-engine-tomac-heikin-aroon-pybacktest-20260529T114424+0800`
+  with PID `97208`. Neither has terminal artifacts yet at this checkpoint.
+
+## 2026-05-29T12:19+0800 Claim-Audit Clean, No Practical Closure
+
+- Heikin/Aroon terminalized under
+  `/tmp/ict-engine-tomac-heikin-aroon-pybacktest-20260529T114424+0800`.
+  Summary
+  `/tmp/ict-engine-tomac-heikin-aroon-pybacktest-20260529T114424+0800/outputs/terminal_summary.json`
+  reports `status=terminalized_pybacktest_no_5bps_density_survivor`,
+  `survivor_count=0`, best symbol `YM`, best variant `quality`, raw
+  `+2.608516%`, 5bps/side `-194.191484%`, and all practical flags false.
+- MiddayCompression clean-AQ terminalized under
+  `/tmp/ict-engine-tomac-midday-compression-failed-break-vwap-fade-20260529T114517+0800`.
+  `run/checks/run_tomac_1m.exit=0`; gate summary
+  `run/summaries/autoquant_clean_1m_gate.json` reports `rank_rows=6`,
+  `decision=observation_no_autoquant_survivor_yet`, `survivors_5bps=[]`,
+  `downstream_allowed=false`, `promotion_allowed=false`,
+  `trade_usable=false`, and `update_goal=false`.
+- Fisher/VWAP/RVOL and TSI/MFI/VWAP Python screens also terminalized negative.
+  Fisher `outputs/terminal_summary.json` reports
+  `decision=drop_python_screen_no_strict_survivor`, `rank_rows=24`, and
+  `survivor_count=0`; TSI `summaries/terminal_summary.json` reports
+  `status=terminalized_pybacktest_no_gate1_survivor`, `rank_rows=15`,
+  `best_trade_count=0`, `survivor_count=0`. Both keep all practical flags false.
+- Audit loophole repaired: `support/scripts/factor_claim_terminalization_audit.py`
+  now treats `outputs/terminal_summary.json` as a terminal summary source, with
+  regression coverage in
+  `support/scripts/tests/test_factor_claim_terminalization_audit.py`. This fixed
+  the false-active Fisher claim after its output summary landed.
+- Corrected compact factor audit artifact:
+  `/tmp/ict-engine-factor-audit-current-20260529T1219.json`, exit file
+  `/tmp/ict-engine-factor-audit-current-20260529T1219.json.exit`. It exits `0`
+  with `status=pass`, `active_claims=0`, `valid_active_claims=0`,
+  `live_factor_processes=0`, `promotion_allowed_true=0`,
+  `trade_usable_true=0`, and `same_tree_practical_closure=null`.
+- Current decision: claim hygiene is clean, but objective closure is still not
+  complete. There is no validated same-tree practical closure packet and no
+  trade-usable/promotable factor. Since this repair changed `HEAD`, any future
+  completion attempt requires a fresh current-head heavy proof before a renewed
+  objective snapshot.
+
+## 2026-05-29T12:23+0800 New ValueArea/VPOC Live Owner Blocks Closure
+
+- After the corrected 12:19 audit cleared active/live blockers, a new claim and
+  clean-AQ launch started:
+  `/tmp/ict-engine-agent-claims/board-b-factor-refinement/20260529T121952+0800-codex-tomac-value-area-vpoc-htf-trend-mss-launch.claim`.
+- Scope is `RangeTransition -> MarketProfileValueAreaAcceptance ->
+  VpocReclaimContinuation -> HtfTrendResonanceMssFilter ->
+  tomac_nq_value_area_vpoc_htf_trend_mss_1m_v1` under
+  `/tmp/ict-engine-tomac-value-area-vpoc-htf-trend-mss-launch-20260529T121952+0800`.
+- Process readback at `12:23+0800` shows parent PID `26680` running
+  `run_tomac_value_area_vpoc_htf_trend_mss_prep_v1.py --launch` and child PID
+  `26704` running `run_tomac_index_futures_clean_aq_v1.py --families
+  value_area_vpoc_htf_trend_mss_filter`. The run root has only
+  `checks/build_coverage.exit` and `summaries/terminal_summary.json` so far.
+- Current terminal summary is prep-only: `status=prep_only_contract_ready`,
+  `coverage_exit=0`, `launch_requested=true`, `aq_executed=false`,
+  `target_row_count=0`, and no practical flags. The live child means this is
+  not final terminal evidence yet.
+- Compact factor audit at `2026-05-29T12:23:36+0800` exits `1` with
+  `status=needs_attention`, `active_claims=1`, `valid_active_claims=1`,
+  `live_factor_processes=1`, `promotion_allowed_true=0`,
+  `trade_usable_true=0`, and `same_tree_practical_closure=null`.
+- Current action: wait/read-only poll this live owner until it exits, then
+  classify its terminal artifacts. Do not run a closure snapshot or launch a
+  sibling provider/AQ lane while this owner remains live.
+
+## 2026-05-29T12:31+0800 Latest Audit: Claim Flood Still Blocks Closure
+
+- Latest saved compact audit:
+  `/tmp/ict-engine-factor-audit-current-20260529T1230.json`, exit file
+  `/tmp/ict-engine-factor-audit-current-20260529T1230.json.exit`.
+- It exits `1` with `status=needs_attention`, `active_claims=7`,
+  `valid_active_claims=6`, `invalid_active_claims=1`,
+  `live_factor_processes=1`, `promotion_allowed_true=0`,
+  `trade_usable_true=0`, and `same_tree_practical_closure=null`.
+- The live owner remains ValueArea/VPOC HTF Trend MSS under
+  `/tmp/ict-engine-tomac-value-area-vpoc-htf-trend-mss-launch-20260529T121952+0800`.
+  Process table also shows the AQ child PID `31008` running
+  `/Users/thrill3r/Auto-Quant/.venv/bin/python run_tomac.py` under parent PID
+  `26704`, so the `prep_only_contract_ready` summary is not terminal evidence.
+- Fresh non-live claims at this audit are VolumeFlowValueAcceptance,
+  RMI/ADX/VWAP range expansion, KAMA/McGinley efficiency pullback,
+  LunchLiquidityVacuum VwapMagnet, TRIX/PPO/VWAP volume continuation, and
+  KAMA/Schaff pullback. LunchLiquidityVacuum is invalid active claim debt: it
+  lacks `agent_name`, timestamps, scope, active task, non-goals, write surface,
+  and report pointer fields.
+- Current decision remains unchanged: no objective completion, no closure
+  snapshot, and no sibling launch while these active/live owners exist. Even
+  when ownership clears, promotion still requires a valid same-tree practical
+  closure packet; current practical counts remain zero.
