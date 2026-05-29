@@ -1507,3 +1507,92 @@ Post-commit heavy proof:
   and `trade_usable_true=0`;
 - release readiness remains red on `worktree_clean_for_release` and
   `source_origin_matches_selected_source`.
+
+## 2026-05-29 Current Refresh - Stale Proof Rejection And Fresh Factor-Lane Wait
+
+Latest authoritative packets for this refresh:
+
+- factor audit compact packet:
+  `/tmp/ict-engine-goal-20260529T-current-factor.json`
+- factor audit full packet:
+  `/tmp/ict-engine-goal-20260529T-current-factor-full.json`
+- first release readiness recheck:
+  `/tmp/ict-engine-goal-20260529T-current-release.json`
+- proofed parent snapshot with stale proof rejection:
+  `/tmp/ict-engine-goal-20260529T-current-proofed-snapshot/objective_closure_snapshot.json`
+- release readiness recheck after parent snapshot:
+  `/tmp/ict-engine-goal-20260529T-current-release-recheck.json`
+
+Commands:
+
+```bash
+git status --short --branch
+python3 support/scripts/factor_claim_terminalization_audit.py --compact --output /tmp/ict-engine-goal-20260529T-current-factor.json
+python3 support/scripts/factor_claim_terminalization_audit.py --output /tmp/ict-engine-goal-20260529T-current-factor-full.json
+python3 support/scripts/release_readiness_audit.py --compact --check-remotes --output /tmp/ict-engine-goal-20260529T-current-release.json
+python3 support/scripts/objective_closure_snapshot.py --compact --check-remotes --done-definition-proof /tmp/ict-engine-goal-20260529T161630+0800-postcommit-heavy-done.json --output-dir /tmp/ict-engine-goal-20260529T-current-proofed-snapshot --timeout-seconds 300
+python3 support/scripts/release_readiness_audit.py --compact --check-remotes --output /tmp/ict-engine-goal-20260529T-current-release-recheck.json
+```
+
+Current command truth:
+
+- live repo state remains a shared dirty tree on `main`, currently ahead of
+  `origin/main`; release export cannot be claimed from this worktree;
+- the previous heavy done-definition proof is stale for current `HEAD`:
+  proof head `efec153cc638ab14dc1b6590e1840b58900376dc` versus current
+  snapshot head `6e77adf40661a3cab14d410be5f87507d889c5e3`;
+- the parent snapshot rejected the proof with
+  `proof_applied=false` and `proof_rejected_reason=proof_head_mismatch`, so
+  current done-definition completion evidence is light-only again:
+  `completion_ready=false`, `evidence_level=partial_skipped_gates`, skipped
+  heavy gates are cargo check, clippy, cargo test, and smoke acceptance;
+- factor closure remains red but narrower than the earlier post-commit packet:
+  current compact parent packet reports `active_claims=1`,
+  `coordination_only_active_claims=3`, `live_factor_processes=0`,
+  `promotion_allowed_true=0`, `trade_usable_true=0`, and no
+  `same_tree_practical_closure` packet;
+- the only real fresh factor-lane blocker in the current parent packet is
+  `20260529T155611+0800-codex-tomac-ote-fvg-ob-session-directional-bias-launch.claim`;
+- that run root is still not terminal: its read-only inspected
+  `/tmp/ict-engine-tomac-ote-fvg-ob-session-directional-bias-prep-20260529T155611+0800/summaries/terminal_summary.json`
+  says `status=launch_in_progress`, `launch_requested=true`,
+  `scan_executed=false`, and `target_row_count=0`; no
+  `checks/terminal_metrics.json` or `same_tree_practical_closure.json` exists;
+- the newer local screen claim
+  `20260529T162948+0800-codex-tomac-opening-compression-mtf-rvol-screen.claim`
+  terminalized false-positive screen evidence during the refresh with
+  `decision=drop_python_screen_no_robust_5bps_survivor`,
+  `promotion_allowed=false`, and `trade_usable=false`;
+- release readiness remains red. The first release audit had both remotes
+  readable but failed `worktree_clean_for_release` and
+  `source_origin_matches_selected_source`; the parent snapshot and immediate
+  recheck then failed `remote_readback` for both origin and release mirror, so
+  remote readback is currently environment-flaky and not release proof.
+
+Loopholes found and classified:
+
+- Stale heavy done-definition proof reuse is correctly fail-closed by the
+  parent snapshot. No code change is needed for this behavior in this slice;
+  the current blocker is evidence freshness, not snapshot logic.
+- Coordination-only claims stay visible but no longer explain practical factor
+  blockage once the current full packet is read. The live practical blocker is
+  the single fresh OTE/FVG/OB launch claim, not the audit/inventory claims.
+- The OTE/FVG/OB claim is under the fresh-claim wait window and lacks terminal
+  metrics. Terminalizing it now would be a collision/ownership violation; the
+  correct next action is to wait for owner progress or inspect again after
+  stale-safe timeout.
+- Release readiness cannot be recovered by docs-only proof because the current
+  tree is dirty and remote readback is not stable. A clean selected export plus
+  stable `--check-remotes` readback is still required.
+
+Requirement verdict updates:
+
+- The full objective remains `not_complete` with blockers
+  `done_definition_not_completion_ready`, `factor_closure_blocked`, and
+  `release_readiness_blocked` in the latest parent packet.
+- There is still no current evidence of a practical/live-usable factor:
+  `promotion_allowed_true=0`, `trade_usable_true=0`, and no validated
+  same-tree practical closure packet.
+- This slice is a tracking/evidence refresh only. It does not justify a
+  completion claim for the broader objective and should not promote, release,
+  or terminalize active fresh factor work.
