@@ -410,3 +410,39 @@ Current truth after this slice:
   mismatch, though both remotes passed readback in the latest snapshot.
 - The full user objective remains incomplete. This slice only makes the current
   untracked practical-admission debt quarantine internally consistent.
+
+## 2026-05-30T01:00+0800 Timed-Out Command Result Closure Guard
+
+Root cause handled in this slice:
+
+- `same_tree_practical_closure` required `all_command_exits_zero=true`, but the
+  canonical per-command proof only checked `exit == 0`. A command row such as
+  `{\"exit\": 0, \"timed_out\": true}` could therefore satisfy the practical
+  closure helper even though the underlying command did not complete cleanly.
+
+Changes made:
+
+- Added a regression test proving that a timed-out command result is rejected
+  even when the recorded exit code is zero.
+- Updated `support/scripts/research/same_tree_practical_closure.py` so every
+  command result must have `exit == 0` and must not report `timed_out=true`.
+- Updated the runtime factor-research skill so future practical-closure work
+  treats timed-out command rows as failed evidence, not as zero-exit proof.
+
+Verification:
+
+- `python3 -m unittest support.scripts.research.tests.test_same_tree_practical_closure.SameTreePracticalClosureTests.test_rejects_timed_out_command_result_even_when_exit_zero -v`
+  -> `OK`.
+- `python3 -m unittest support.scripts.research.tests.test_same_tree_practical_closure support.scripts.tests.test_factor_claim_terminalization_audit -v`
+  -> `Ran 99 tests`, `OK`.
+- `python3 -m py_compile support/scripts/research/same_tree_practical_closure.py`
+  -> pass.
+
+Current truth after this slice:
+
+- No validated `same_tree_practical_closure` packet exists.
+- Latest compact factor audit still reports `promotion_allowed_true=0`,
+  `trade_usable_true=0`, and `same_tree_practical_closure=null`.
+- Fresh active claims still block new provider/AQ/lifecycle launches; this slice
+  hardens a false-positive closure path and does not create a practical/live
+  usable factor.
