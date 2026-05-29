@@ -1,6 +1,6 @@
 {
   "schema_version": "practical-admission-source-debt-quarantine/v1",
-  "generated_at": "2026-05-29T19:56:05Z",
+  "generated_at": "2026-05-29T22:30:14Z",
   "decision": "quarantined_untracked_wrapper_debt",
   "scope": "Untracked support/docs/experiments/actionable-regime-confidence/scripts/run_*.py practical-admission violations present in the shared worktree on 2026-05-29.",
   "rationale": "The tracked source gate has zero practical-admission wrapper violations. The remaining debt is untracked wrapper residue from concurrent factor work; it must stay visible and excluded from completion/release claims until the files are either removed, tracked and fixed, or otherwise retired.",
@@ -13,10 +13,11 @@
     "c2c70a41ab24da8ad9a621e0d130bc8e0ef0773b67e39eb497bdfbe35b7a9145",
     "04c03db26c33cf3e98b58d46acc9743585b903d1456156967d575f536c4512dc",
     "351b65a08b2b1dff0b4c81a237a301af49a7d3c5d1c0a93365fa938d066da2e6",
-    "f9f9828c248ed5f7e8fe745479c0c02cb04a928addca4e2aeff17106ab6355a2"
+    "f9f9828c248ed5f7e8fe745479c0c02cb04a928addca4e2aeff17106ab6355a2",
+    "1fa4ce7f889e95d223165b09ee8d94c4319cdd5591d7e5fb770eb9f2b9dbd9b0"
   ],
-  "source_packet": "/tmp/ict-engine-goal-20260530-codex-post-355ce143/objective_closure_snapshot.json",
-  "reviewed_drift": "The 2026-05-29T19:56Z objective-closure snapshot on head 355ce1431252fecd81291563caaef4dbc6a19931 reports 335 violations across 175 untracked files, with tracked practical-admission violations still zero after the cost-survival/density separation fix. Earlier reviewed scans saw 337 violations across 176 untracked files and related same-signature fingerprints while the shared worktree was changing; those fingerprints remain reviewed alternatives. The remaining debt is untracked wrapper residue only; this is not release, promotion, trade-use, or objective-completion evidence.",
+  "source_packet": "/tmp/ict-engine-goal-20260530-current-fd59751-after-practical-quarantine/done_definition_audit.compact.json",
+  "reviewed_drift": "The 2026-05-29T22:30Z done-definition child audit in /tmp/ict-engine-goal-20260530-current-fd59751-after-practical-quarantine on head bbcb360aa3dd70ec7df1cbd757111c2991c9ab68 reports 335 violations across 175 untracked files, with tracked practical-admission violations still zero and this primary quarantine fingerprint matched. Earlier same-primary readbacks on heads fd59751ce4a4dc6ee9621e511128aaeb7854fa61, 19a569d3418a9fd3727b7f3479872e7e0529d515, 71c9655a9004e0dd3cdf0d3179aa730d93858ca1, and 3ce57b3b7ed187dcb6349662b5a6f8d1db3b659d reported the same 335/175 primary fingerprint. A transient 2026-05-29T21:43Z snapshot on head e444e6f3811d8abea9f0c2e0726fb63a3f57d9fd saw 341 violations across 176 untracked files; comparison showed the only additive drift was 6 stable signatures in support/docs/experiments/actionable-regime-confidence/scripts/run_tomac_nq_compound_rv_stress_gate_practical_lifecycle_v1.py. That wrapper was then committed and later touched by fd59751, but current scans still match the reviewed primary fingerprint. The remaining debt is untracked wrapper residue only; this is not release, promotion, trade-use, or objective-completion evidence.",
   "promotion_allowed": false,
   "trade_usable": false,
   "update_goal": false,
