@@ -450,6 +450,43 @@ def _factor_closure_blocker_detail(factor_surface: dict[str, Any]) -> dict[str, 
     }
 
 
+def _compact_remote_details(remote_details: object) -> dict[str, Any] | None:
+    if not isinstance(remote_details, dict):
+        return None
+    compact: dict[str, Any] = {}
+    for key in (
+        "enabled",
+        "failed_sides",
+        "origin_status",
+        "release_mirror_status",
+        "next_action",
+    ):
+        if key in remote_details:
+            compact[key] = remote_details[key]
+    return compact or None
+
+
+def _release_readiness_blocker_detail(release_surface: dict[str, Any]) -> dict[str, Any]:
+    detail = {
+        "head": release_surface.get("head"),
+        "report_timestamp": release_surface.get("report_timestamp"),
+        "status": release_surface.get("status"),
+        "unresolved": release_surface.get("unresolved", []),
+        "pass_count": release_surface.get("pass_count"),
+        "fail_count": release_surface.get("fail_count"),
+        "skip_count": release_surface.get("skip_count"),
+        "skipped_remote_gates": release_surface.get("skipped_remote_gates", []),
+        "unresolved_next_actions": release_surface.get("unresolved_next_actions", {}),
+    }
+    remote_details = release_surface.get("remote_details")
+    if isinstance(remote_details, dict):
+        detail["remote_details"] = remote_details
+    for key in ("proof_source", "proof_applied", "proof_rejected_reason"):
+        if key in release_surface:
+            detail[key] = release_surface[key]
+    return detail
+
+
 def _release_surface(report: dict[str, Any]) -> dict[str, Any]:
     summary = report.get("summary", {})
     gates = report.get("gates", [])
@@ -490,6 +527,7 @@ def _release_surface(report: dict[str, Any]) -> dict[str, Any]:
             for gate_id in summary.get("unresolved", [])
             if gate_id in unresolved_next_actions
         },
+        "remote_details": _compact_remote_details(report.get("remote_details")),
     }
 
 
@@ -689,6 +727,9 @@ def summarize_snapshot(
         )
     if release_surface.get("status") != "pass":
         blockers.append("release_readiness_blocked")
+        blocker_details["release_readiness_blocked"] = _release_readiness_blocker_detail(
+            release_surface
+        )
     skipped_remote_gates = release_surface.get("skipped_remote_gates")
     if isinstance(skipped_remote_gates, list) and skipped_remote_gates:
         blockers.append("release_remote_checks_not_run")

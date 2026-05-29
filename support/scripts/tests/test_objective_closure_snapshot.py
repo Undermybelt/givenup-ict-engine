@@ -921,6 +921,73 @@ class ObjectiveClosureSnapshotTest(unittest.TestCase):
             },
         )
 
+    def test_summarize_snapshot_includes_release_readiness_blocker_details(self) -> None:
+        summary = summarize_snapshot(
+            {
+                "completion_ready": True,
+                "quickstart_surface": "pass",
+            },
+            {
+                "status": "pass",
+                "same_tree_practical_closure": {
+                    "status": "pass",
+                    "promotion_allowed": True,
+                    "trade_usable": True,
+                    "provider_execution_feedback_chain": "pass",
+                    "evidence_packet": "packet.json",
+                    "evidence_packet_validated": True,
+                },
+            },
+            {
+                "head": "abc123",
+                "report_timestamp": "2026-05-29T13:23:46Z",
+                "status": "needs_fix",
+                "unresolved": ["worktree_clean_for_release", "remote_readback"],
+                "pass_count": 2,
+                "fail_count": 2,
+                "skip_count": 1,
+                "skipped_remote_gates": [],
+                "unresolved_next_actions": {
+                    "worktree_clean_for_release": "commit or exclude a narrow source slice",
+                    "remote_readback": "restore release mirror git/network/auth readback",
+                },
+                "remote_details": {
+                    "enabled": True,
+                    "failed_sides": ["release_mirror"],
+                    "origin_status": "pass",
+                    "release_mirror_status": "fail",
+                    "next_action": "restore release mirror git/network/auth readback",
+                },
+            },
+            snapshot_timestamp="2026-05-29T13:23:50Z",
+        )
+
+        self.assertIn("release_readiness_blocked", summary["blockers"])
+        self.assertEqual(
+            summary["blocker_details"]["release_readiness_blocked"],
+            {
+                "head": "abc123",
+                "report_timestamp": "2026-05-29T13:23:46Z",
+                "status": "needs_fix",
+                "unresolved": ["worktree_clean_for_release", "remote_readback"],
+                "pass_count": 2,
+                "fail_count": 2,
+                "skip_count": 1,
+                "skipped_remote_gates": [],
+                "unresolved_next_actions": {
+                    "worktree_clean_for_release": "commit or exclude a narrow source slice",
+                    "remote_readback": "restore release mirror git/network/auth readback",
+                },
+                "remote_details": {
+                    "enabled": True,
+                    "failed_sides": ["release_mirror"],
+                    "origin_status": "pass",
+                    "release_mirror_status": "fail",
+                    "next_action": "restore release mirror git/network/auth readback",
+                },
+            },
+        )
+
     def test_summarize_snapshot_deduplicates_wait_only_stale_factor_claim_actions(self) -> None:
         summary = summarize_snapshot(
             {

@@ -516,3 +516,86 @@ dirty, so this is an internal maintenance commit only.
   fresh factor-closure owners.
 - Do not launch provider, IBKR, Auto-Quant, TOMAC, paper/sim, live runtime, or
   sibling factor work from this audit-only claim.
+
+## 2026-05-29T21:43+0800 Release-Readiness Blocker Detail Fix
+
+- Current HEAD for this slice:
+  `4f62aa4d2d2d2144dad6c49a5f6203ea6b68a0d4`
+  (`Require data provenance for practical closure`).
+- Current factor claim readback:
+  `/tmp/ict-engine-factor-closure-after-provenance-commit-20260529T2130+0800.json`.
+  It reports `status=pass`, `active_claims=0`, `live_factor_processes=0`,
+  `promotion_allowed_true=0`, `trade_usable_true=0`, and
+  `same_tree_practical_closure=null`.
+- Current objective snapshot:
+  `/tmp/ict-engine-objective-closure-after-blocker-detail-commit-20260529T2124+0800/objective_closure_snapshot.json`.
+  It remains `not_complete` with blockers
+  `done_definition_not_completion_ready`,
+  `same_tree_practical_closure_unproven`, and `release_readiness_blocked`.
+- Current done-definition readback:
+  `/tmp/ict-engine-done-definition-after-provenance-commit-20260529T2138+0800.json`.
+  It reports `status=pass` but `completion_ready=false` because heavy gates
+  were skipped: `cargo_check_all_targets`,
+  `cargo_clippy_all_targets_deny_warnings`, `cargo_test`, and
+  `smoke_acceptance_tmp_state`.
+- Current release-readiness readback:
+  `/tmp/ict-engine-release-readiness-after-provenance-commit-20260529T2138+0800.json`.
+  It reports `status=needs_fix`, unresolved
+  `worktree_clean_for_release` and `remote_readback`. The release mirror side
+  failed; the fallback HTTPS probe also failed with `LibreSSL SSL_connect:
+  SSL_ERROR_SYSCALL`.
+- Root cause: parent objective snapshots named `release_readiness_blocked`, but
+  `summary.blocker_details` did not preserve the release child detail. A reader
+  had to open the child release audit to learn unresolved gates, next actions,
+  and origin vs release-mirror remote status.
+- RED:
+  `python3 -m unittest support.scripts.tests.test_objective_closure_snapshot.ObjectiveClosureSnapshotTest.test_summarize_snapshot_includes_release_readiness_blocker_details -v`
+  failed before implementation with `KeyError: 'release_readiness_blocked'`.
+- Fix: `support/scripts/objective_closure_snapshot.py` now adds compact
+  `summary.blocker_details.release_readiness_blocked` with release head,
+  report timestamp, status, unresolved gates, pass/fail/skip counts,
+  skipped remote gates, unresolved next actions, proof metadata when present,
+  and compact remote readback status.
+- GREEN focused:
+  `python3 -m unittest support.scripts.tests.test_objective_closure_snapshot.ObjectiveClosureSnapshotTest.test_summarize_snapshot_includes_release_readiness_blocker_details -v`
+  passed.
+- Live verification after the fix:
+  `/tmp/ict-engine-objective-closure-after-release-detail-20260529T2148+0800/objective_closure_snapshot.json`.
+  The command exited `1`, as expected for a fail-closed incomplete objective.
+  It reports `status=not_complete` with blockers
+  `done_definition_not_completion_ready`, `factor_closure_blocked`, and
+  `release_readiness_blocked`.
+- The live parent `release_readiness_blocked` detail now reports
+  `head=4f62aa4d2d2d2144dad6c49a5f6203ea6b68a0d4`, `status=needs_fix`,
+  unresolved `worktree_clean_for_release` and
+  `source_origin_matches_selected_source`, `pass_count=3`, `fail_count=2`,
+  `skip_count=0`, and compact remote status `origin_status=pass`,
+  `release_mirror_status=pass`.
+- Superseding factor-closure state from the same live snapshot: a new fresh
+  active claim
+  `20260529T213117+0800-codex-nq-compound-trend-rrr-chopfilter-cont.claim`
+  appeared, so factor closure is again blocked by `active_claims=1`,
+  `live_factor_processes=0`, `promotion_allowed_true=0`,
+  `trade_usable_true=0`, and `same_tree_practical_closure=null`.
+- Full focused regression after the fix:
+  `python3 -m unittest support.scripts.tests.test_objective_closure_snapshot -v`
+  ran `42/42 OK`.
+- Compile and whitespace checks:
+  `python3 -m py_compile support/scripts/objective_closure_snapshot.py support/scripts/tests/test_objective_closure_snapshot.py`
+  passed, and
+  `git diff --check -- support/scripts/objective_closure_snapshot.py support/scripts/tests/test_objective_closure_snapshot.py support/docs/plans/2026-05-29-closed-loop-loophole-audit-codex-current.md`
+  returned clean.
+- Runtime skill sync: updated
+  `/Users/thrill3r/.hermes/skills/software-development/ict-engine-maintenance-loop/SKILL.md`
+  so parent objective packets that name `release_readiness_blocked` preserve
+  compact reusable blocker detail.
+
+## 2026-05-29T21:43+0800 Decision
+
+- Commit only the parent release-readiness blocker-detail fix, its regression,
+  and this tracking update after full focused verification.
+- Do not mark the full objective complete. Current evidence still has no
+  validated `same_tree_practical_closure` packet, no practical `trade_usable`
+  factor, partial done-definition proof, and release readiness blockers.
+- Do not launch provider, IBKR, Auto-Quant, TOMAC, paper/sim, live runtime, or
+  sibling factor work from this audit-only claim.
