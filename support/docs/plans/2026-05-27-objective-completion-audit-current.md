@@ -1489,3 +1489,21 @@ Requirement verdict updates:
   justified if it stages only the five touched source/test files plus this
   tracking update. A completion commit for the broader objective would still be
   false.
+
+Post-commit heavy proof:
+
+- commit landed: `29c4773a` (`Preserve objective scanner failure details`),
+  current `HEAD=efec153cc638ab14dc1b6590e1840b58900376dc`;
+- `/tmp/ict-engine-goal-20260529T161630+0800-postcommit-heavy-done.json`
+  passed all enabled done-definition gates:
+  `completion_ready=true`, `evidence_level=full_enabled_gate_coverage`,
+  `pass_count=10`, `fail_count=0`, `skip_count=0`;
+- `/tmp/ict-engine-goal-20260529T1624+0800-postcommit-proofed-snapshot/objective_closure_snapshot.json`
+  applied that proof and removed the done-definition blocker, but still exits
+  `1` with parent blockers `factor_closure_blocked` and
+  `release_readiness_blocked`;
+- factor closure remains red in that proofed packet:
+  `active_claims=2`, `live_factor_processes=0`, `promotion_allowed_true=0`,
+  and `trade_usable_true=0`;
+- release readiness remains red on `worktree_clean_for_release` and
+  `source_origin_matches_selected_source`.
