@@ -1,0 +1,109 @@
+{
+  "schema_version": "source-cost-readback/v1",
+  "generated_at": "2026-05-30T04:44:47+0800",
+  "agent_name": "codex-met-microether-basis-unwind-vwap-reclaim-reserve",
+  "factor_id": "met_microether_basis_unwind_vwap_reclaim_reserve_v1",
+  "branch_path": "TrendExpansion -> CryptoFuturesBasis -> MicroEtherSpotFuturesBasisUnwind -> VwapReclaimContinuation -> AtrRiskManagedMtfContinuation -> met_microether_basis_unwind_vwap_reclaim_reserve_v1",
+  "session_scope": "ETH/full_retained_session",
+  "session_scope_note": "ETH here means extended/full retained tradable session; product is CME Micro Ether futures.",
+  "rth_filter_applied": false,
+  "claim": "/tmp/ict-engine-agent-claims/board-b-factor-refinement/20260530T044447+0800-codex-met-microether-basis-unwind-vwap-reclaim-reserve.claim",
+  "tmp_workdoc": "/tmp/ict-engine-met-microether-basis-unwind-vwap-reclaim-reserve-20260530T044447+0800/workdoc.md",
+  "source_evidence": {
+    "ibkr_futures_commissions": {
+      "url": "https://www.interactivebrokers.com/en/pricing/commissions-futures.php",
+      "http_status": 200,
+      "capture_path": "/tmp/ict-engine-met-microether-basis-unwind-vwap-reclaim-reserve-20260530T044447+0800/source_evidence/ibkr_futures_commissions_20260530T044447+0800.html",
+      "readback": {
+        "section": "CME Ethereum Micro Futures and Futures Options (MET)",
+        "monthly_volume_le_1000_commission_usd_per_contract_tiered": 0.20,
+        "monthly_volume_le_1000_commission_usd_per_contract_fixed": 0.20,
+        "offset_fee_types_listed": [
+          "Exchange Fees",
+          "Regulatory Fees",
+          "Overnight Position Fees"
+        ]
+      }
+    },
+    "ibkr_cme_fee_recovery": {
+      "url": "https://www.interactivebrokers.com/en/accounts/fees/CME.php",
+      "http_status": 200,
+      "capture_path": "/tmp/ict-engine-met-microether-basis-unwind-vwap-reclaim-reserve-20260530T044447+0800/source_evidence/ibkr_cme_fee_20260530T044447+0800.html",
+      "readback": {
+        "exchange_fee_recovery_product": "Micro Ether Futures MET",
+        "exchange_fee_recovery_currency": "USD",
+        "exchange_fee_recovery_usd": 0.10,
+        "regulatory_fee_recovery_product_group": "All Products",
+        "regulatory_fee_recovery_currency": "USD",
+        "regulatory_fee_recovery_usd": 0.02,
+        "regulatory_fee_note": "Regulatory fees are assessed by the National Futures Association (NFA)."
+      }
+    },
+    "cme_official_specs": {
+      "status": "blocked_tls_eof",
+      "attempted_urls": [
+        "https://www.cmegroup.com/markets/cryptocurrencies/ether/micro-ether.contractSpecs.html",
+        "https://www.cmegroup.com/markets/cryptocurrencies/ether/micro-ether.html",
+        "https://www.cmegroup.com/CmeWS/mvc/ProductSlate/V1/List?query=MET",
+        "https://www.cmegroup.com/CmeWS/mvc/ProductSlate/V1/List?query=Micro%20Ether"
+      ],
+      "curl_exit": 35,
+      "python_urllib_error": "[SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol",
+      "fields_not_verified": [
+        "contract_unit",
+        "tick_size",
+        "tick_value",
+        "trading_hours",
+        "expiry",
+        "settlement",
+        "official_cme_product_code"
+      ]
+    }
+  },
+  "cost_model": {
+    "status": "cost_model_unverified",
+    "instrument_class": "futures",
+    "product_root": "MET",
+    "exchange": "CME Globex",
+    "broker": "IBKR",
+    "pricing_plan": "IBKR futures commission schedule, MET crypto futures section",
+    "currency": "USD",
+    "fee_effective_readback_date": "2026-05-30T04:44:47+0800",
+    "partial_commission_usd_per_contract_side_assumption": 0.20,
+    "partial_exchange_fee_recovery_usd_per_contract_side_assumption": 0.10,
+    "partial_regulatory_fee_recovery_usd_per_contract_side_assumption": 0.02,
+    "partial_total_usd_per_contract_side_assumption": 0.32,
+    "partial_round_turn_usd_per_contract_assumption": 0.64,
+    "unverified_fields": [
+      "CME contract unit",
+      "CME tick size",
+      "CME tick value",
+      "CME trading hours",
+      "exact broker contract month",
+      "roll rule",
+      "slippage model"
+    ]
+  },
+  "runtime_launches": {
+    "provider_fetch_started": false,
+    "ibkr_historical_started": false,
+    "auto_quant_started": false,
+    "freqtrade_started": false,
+    "paper_or_sim_started": false,
+    "lifecycle_started": false
+  },
+  "gates": {
+    "provider_rows": 0,
+    "ibkr_historical_rows": 0,
+    "pre_bayes_allowed": false,
+    "bbn_allowed": false,
+    "catboost_allowed": false,
+    "execution_tree_allowed": false,
+    "feedback_update_allowed": false,
+    "policy_training_allowed": false,
+    "promotion_allowed": false,
+    "trade_usable": false,
+    "update_goal": false
+  },
+  "terminal_decision": "terminalized_no_launch_prep_only_cost_source_reserve"
+}
