@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "catalog": "ict-engine-agent-skills",
-  "review_date": "2026-05-27",
+  "review_date": "2026-05-30",
   "runtime_consumed_by_ict_engine": false,
   "description": "Optional repo-local agent skills for provider choice and structured evidence preparation. These files are not runtime inputs.",
   "provider_policy": {
@@ -84,9 +84,16 @@
         "Auto-Quant candidate material metadata",
         "Gate 1 prescreen planning"
       ],
+      "references": [
+        "skills/factor-source-intake/references/waiting-window-factor-research.md",
+        "skills/factor-source-intake/references/paper-strategy-reserve-20260530.md",
+        "skills/factor-source-intake/references/crossasset-carry-risk-reserve-20260530.md"
+      ],
       "source_review": [
         "ict-engine Board B factor-training contract",
-        "public paper/repository/source intake workflow"
+        "public paper/repository/source intake workflow",
+        "2026-05-30 paper strategy reserve",
+        "2026-05-30 cross-asset carry risk reserve"
       ]
     }
   ],

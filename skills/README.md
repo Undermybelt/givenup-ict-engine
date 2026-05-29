@@ -31,6 +31,13 @@ Scope:
 | `market-structure-context` | Convert ICT/SMC structural observations such as BOS, CHoCH, order blocks, fair value gaps, premium/discount, and liquidity sweeps into structured evidence. | OpenMobius-skill structural taxonomy and freshness discipline, sanitized to provider-backed evidence only. |
 | `factor-source-intake` | Use blocked/waiting windows for interruptible paper, repository, strategy, and indicator intake that produces codeable regime-rooted candidates without launching shared runtime work. | ict-engine Board B factor-training contract plus public source-intake discipline. |
 
+`factor-source-intake` includes `references/waiting-window-factor-research.md`
+for productive claim/runtime waiting windows. It keeps all source-intake output
+as candidate material only; no practical flags or runtime launches are allowed
+from that work.
+`references/paper-strategy-reserve-20260530.md` is the current compact reserve
+of paper, strategy, and indicator seeds gathered for future factor candidates.
+
 ## External Skill Review
 
 | Source | Verdict | Reason |

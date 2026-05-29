@@ -38,6 +38,13 @@ Allowed while blocked:
 - Write a compact intake packet or append to the lane workdoc.
 - Mark each candidate as `idea_only`, `paper_only`, `repo_source_only`,
   `python_prescreen_ready`, or `blocked_by_runtime`.
+- When the user asks to build knowledge reserves while waiting, use the
+  waiting-window pattern in `references/waiting-window-factor-research.md`.
+
+Good waiting work is deliberately interruptible. Keep each source note small
+enough that another agent can stop after any item and still retain value:
+one source, one candidate, one duplicate check, one next command. Prefer
+adding to a candidate queue over starting a runtime process.
 
 Not allowed while blocked:
 
@@ -67,6 +74,35 @@ next_command_when_clear:
 promotion_allowed: false
 trade_usable: false
 ```
+
+## Candidate Scoring
+
+Use this quick score before spending runtime on a candidate:
+
+| Field | Good sign | Reject or defer |
+|---|---|---|
+| Data fit | retained/provider data covers origin plus context ladder | short window, missing HTF, raw stitched source |
+| Cost fit | hold time and payoff can clear real costs | 1m churn or unknown fee model |
+| Density | likely one trade per 3 sessions to 3/session | sparse hero trade or overtrading |
+| Branch novelty | materially different from terminalized roots | same root with renamed params |
+| Closure path | can feed AQ/provider/paper/lifecycle readbacks | Python-only or marker-only |
+
+If any reject/defer column is hit, record the blocker and keep
+`promotion_allowed=false` / `trade_usable=false`.
+
+## Useful Starting References
+
+- `references/waiting-window-factor-research.md` for current source-backed
+  candidate families and packet shape to use while runtime is occupied.
+- `references/paper-strategy-reserve-20260530.md` for paper/strategy/indicator
+  seeds gathered during claim-runtime waits, with first Gate 1 shapes and
+  fail-closed notes.
+- `references/crossasset-carry-risk-reserve-20260530.md` for lower-turnover
+  cross-asset carry, commodity term-structure, and variance-risk stress-gate
+  reserves gathered during fresh-claim waits.
+- Installed Hermes reference
+  `ict-engi-fact-rese-muta/references/paper-repo-alpha-intake-to-auto-quant.md`
+  for the source-backed intake to Auto-Quant rule.
 
 ## Promotion Rule
 
