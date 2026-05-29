@@ -136,35 +136,62 @@ def first_present(*values: object) -> object:
     return None
 
 
-def practical_evidence_fields(materialization_root: Path | None) -> dict:
+def first_non_missing_status(default: dict, *values: object) -> object:
+    for value in values:
+        if not isinstance(value, dict):
+            if value is not None:
+                return value
+            continue
+        status = normalized_text(value.get("status"))
+        if status and not status.startswith("missing_"):
+            return value
+    return default
+
+
+def practical_evidence_fields(materialization_root: Path | None, source_packet: dict | None = None) -> dict:
+    packet = source_packet if isinstance(source_packet, dict) else {}
     if materialization_root is None:
         return {
-            "session_scope": None,
-            "rth_filter_applied": None,
-            "retained_session_coverage": {"status": "missing_explicit_retained_session_coverage"},
-            "promotion_cost_verified": False,
-            "cost_model": {"status": "missing_explicit_verified_cost_model"},
+            "session_scope": packet.get("session_scope"),
+            "rth_filter_applied": packet.get("rth_filter_applied"),
+            "retained_session_coverage": first_non_missing_status(
+                {"status": "missing_explicit_retained_session_coverage"},
+                packet.get("retained_session_coverage"),
+            ),
+            "promotion_cost_verified": packet.get("promotion_cost_verified") is True,
+            "cost_model": first_non_missing_status(
+                {"status": "missing_explicit_verified_cost_model"},
+                packet.get("cost_model"),
+            ),
         }
     material = terminal_metrics(materialization_root)
     child, _child_path = child_rescore_metrics(materialization_root)
     return {
-        "session_scope": first_present(material.get("session_scope"), child.get("session_scope")),
-        "rth_filter_applied": first_present(material.get("rth_filter_applied"), child.get("rth_filter_applied")),
-        "retained_session_coverage": first_present(
+        "session_scope": first_present(material.get("session_scope"), child.get("session_scope"), packet.get("session_scope")),
+        "rth_filter_applied": first_present(
+            material.get("rth_filter_applied"),
+            child.get("rth_filter_applied"),
+            packet.get("rth_filter_applied"),
+        ),
+        "retained_session_coverage": first_non_missing_status(
+            {"status": "missing_explicit_retained_session_coverage"},
             material.get("retained_session_coverage"),
             child.get("retained_session_coverage"),
-            {"status": "missing_explicit_retained_session_coverage"},
+            packet.get("retained_session_coverage"),
         ),
-        "promotion_cost_verified": first_present(
-            material.get("promotion_cost_verified"),
-            child.get("promotion_cost_verified"),
-            False,
-        )
-        is True,
-        "cost_model": first_present(
+        "promotion_cost_verified": any(
+            value is True
+            for value in (
+                material.get("promotion_cost_verified"),
+                child.get("promotion_cost_verified"),
+                packet.get("promotion_cost_verified"),
+            )
+        ),
+        "cost_model": first_non_missing_status(
+            {"status": "missing_explicit_verified_cost_model"},
             material.get("cost_model"),
             child.get("cost_model"),
-            {"status": "missing_explicit_verified_cost_model"},
+            packet.get("cost_model"),
         ),
     }
 
@@ -262,7 +289,13 @@ def materialization_summary(materialization_root: Path) -> dict:
     return read_json(materialization_root / "checks" / "terminal_metrics.json")
 
 
-def write_summary(command_results: list[dict], data_summary: dict, materialization_root: Path | None = None) -> dict:
+def write_summary(
+    command_results: list[dict],
+    data_summary: dict,
+    materialization_root: Path | None = None,
+    source_packet: dict | None = None,
+    source_packet_path: Path | None = None,
+) -> dict:
     workflow = read_json(STATE / SYMBOL / "workflow_snapshot.json")
     candidate = read_json(STATE / SYMBOL / "execution_candidate.json")
     trace = read_json(STATE / SYMBOL / "execution_tree_trace.json")
@@ -277,7 +310,7 @@ def write_summary(command_results: list[dict], data_summary: dict, materializati
         row.get("exit") == 0 and row.get("timed_out") is False for row in command_results
     )
     material = materialization_summary(materialization_root) if materialization_root else {}
-    evidence_fields = practical_evidence_fields(materialization_root)
+    evidence_fields = practical_evidence_fields(materialization_root, source_packet)
     metrics = {
         "schema_version": "tomac-nq-compound-rv-stress-practical-lifecycle-terminal/v1",
         "status": "practical_lifecycle_evaluating",
@@ -287,6 +320,7 @@ def write_summary(command_results: list[dict], data_summary: dict, materializati
         "parent_factor_id": PARENT_FACTOR_ID,
         "branch_path": BRANCH_PATH,
         "materialization_root": str(materialization_root) if materialization_root else None,
+        "source_cost_coverage_packet": str(source_packet_path) if source_packet_path else None,
         "materialization_status": material.get("status"),
         "feedback_rows": material.get("feedback_rows"),
         "best_gate": material.get("best_gate"),
@@ -359,6 +393,11 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     )
     parser.add_argument("--root", default=str(ROOT))
     parser.add_argument("--materialization-root", default=str(DEFAULT_MATERIALIZATION_ROOT))
+    parser.add_argument(
+        "--source-packet",
+        default="",
+        help="Optional JSON packet with retained-session coverage and verified NQ futures cost-model readbacks.",
+    )
     return parser.parse_args(argv)
 
 
@@ -366,6 +405,8 @@ def main(argv: list[str] | None = None) -> int:
     args = parse_args(argv)
     root = Path(args.root)
     materialization_root = Path(args.materialization_root)
+    source_packet_path = Path(args.source_packet) if args.source_packet else None
+    source_packet = read_json(source_packet_path) if source_packet_path else None
     configure_paths(root)
     for directory in (STATE, CHECKS, SUMMARIES):
         directory.mkdir(parents=True, exist_ok=True)
@@ -373,6 +414,8 @@ def main(argv: list[str] | None = None) -> int:
         staged_command_results(materialization_root),
         market_data_provenance(materialization_root),
         materialization_root,
+        source_packet,
+        source_packet_path,
     )
     print(json.dumps({"status": metrics["status"], "feedback_rows": metrics.get("feedback_rows")}, sort_keys=True))
     return 0 if (SUMMARIES / "same_tree_practical_closure.json").exists() else 2

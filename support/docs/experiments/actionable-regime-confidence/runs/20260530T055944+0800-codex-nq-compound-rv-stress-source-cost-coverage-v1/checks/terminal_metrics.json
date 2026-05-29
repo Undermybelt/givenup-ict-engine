@@ -1,0 +1,143 @@
+{
+  "all_command_exits_zero": false,
+  "best_gate": "30m_abs_ret16_max",
+  "best_threshold": 0.04174409724,
+  "branch_local_admitted": false,
+  "branch_path": "US index futures -> NQ -> ETH/full_retained_session -> 1m parent execution + shifted 5m/15m/30m/1h/4h/1d context -> HtfTrendRegime -> ChopFilter(ER>=0.35,n40) -> MomentumResonance -> CompoundTrendRrrBreadth -> FixedRrrBracket -> RealizedVolatilityStressGate(30m_abs_ret16_max <= 0.04174409724) -> PracticalLifecycleContinuation",
+  "command_results": [],
+  "cost_model": {
+    "all_in_per_contract_per_side": 2.25,
+    "all_in_round_turn_per_contract": 4.5,
+    "broker": "IBKR",
+    "clearing_fee_per_contract_per_side": 0.0,
+    "commission_per_contract_per_side": 0.85,
+    "contract_multiplier": 20.0,
+    "contract_name": "E-mini NASDAQ 100",
+    "contract_symbol": "NQ",
+    "currency": "USD",
+    "exchange": "CME",
+    "exchange_fee_per_contract_per_side": 1.38,
+    "fee_effective_date": "2026-05-30",
+    "instrument_class": "futures",
+    "other_fee_per_contract_per_side": 0.0,
+    "pricing_plan": "US futures tiered low-volume non-member",
+    "regulatory_fee_per_contract_per_side": 0.02,
+    "slippage_model": "separate explicit stress; not included in IBKR commission/exchange/regulatory all-in cost",
+    "source_refs": {
+      "ibkr_cme_exchange_fee": {
+        "http_status": 200,
+        "rate_verified": true,
+        "same_turn_readback": "official_source_http_200 rate_verified CME E-mini Equity Futures row includes NQ with exchange fee recovery USD 1.38",
+        "url": "https://www.interactivebrokers.com/en/accounts/fees/CME.php"
+      },
+      "ibkr_cme_regulatory_fee": {
+        "http_status": 200,
+        "rate_verified": true,
+        "same_turn_readback": "official_source_http_200 rate_verified CME Regulatory Fee Recovery Charge All Products USD 0.02 and NFA assessment note",
+        "url": "https://www.interactivebrokers.com/en/accounts/fees/CME.php"
+      },
+      "ibkr_nq_contract_details": {
+        "http_status": 200,
+        "rate_verified": true,
+        "same_turn_readback": "official_source_http_200 rate_verified contract-details returned listed NQ futures conids from underlying conid 11004958",
+        "url": "https://www.interactivebrokers.com/webrest/search/contract-details"
+      },
+      "ibkr_nq_product_search": {
+        "http_status": 200,
+        "rate_verified": true,
+        "same_turn_readback": "official_source_http_200 rate_verified product search returned E-mini NASDAQ 100 - CME, symbol NQ, FUT months present",
+        "url": "https://www.interactivebrokers.com/portal.proxy/v1/mkt/iserver/secdef/search?symbol=NQ"
+      },
+      "ibkr_nq_secdef": {
+        "http_status": 200,
+        "rate_verified": true,
+        "same_turn_readback": "official_source_http_200 rate_verified secdef rows show assetClass FUT, ticker NQ, listingExchange CME, currency USD, multiplier 20.0, tick increment 0.25",
+        "url": "https://www.interactivebrokers.com/portal.proxy/v1/mkt/trsrv/secdef?conids=750150196,563947726,770561204,793356228,815824270,654503325,866514788,586139864,711280076,861451224,840227400,861451229"
+      },
+      "ibkr_us_futures_commission": {
+        "http_status": 200,
+        "rate_verified": true,
+        "same_turn_readback": "official_source_http_200 rate_verified low-volume US futures tier row USD 0.85/contract; ES example confirms 0.85 + 1.38 + 0.00 + 0.02 = 2.25",
+        "url": "https://www.interactivebrokers.com/en/pricing/commissions-futures.php"
+      }
+    },
+    "status": "verified",
+    "tick_size": 0.25,
+    "tick_value_usd": 5.0,
+    "unit_convention": "per_contract_per_side",
+    "venue_routing": "CME Globex direct electronic futures"
+  },
+  "deploy_ready": false,
+  "exact_branch_survived": false,
+  "execution_candidate_actionable": false,
+  "execution_candidate_status": "",
+  "factor_id": "nq_compound_trend_rrr_chopfilter_rv_stress_gate_rescore_v1",
+  "feedback_rows": 535,
+  "funded_live_fill_required": null,
+  "learning_admission_status": null,
+  "live_trade_status": null,
+  "market_data_provenance": {
+    "materialization_root": "/tmp/ict-engine-nq-compound-rv-stress-feedback-materialization-20260530T043351+0800",
+    "return_sanity": {
+      "extreme_abs_gross_gt_10pct_count": 0,
+      "max_abs_gross_return_pct": 7.781268,
+      "median_abs_gross_return_pct": 1.471219,
+      "parse_bad_rows": 0,
+      "status": "pass"
+    },
+    "source": "/Users/thrill3r/Auto-Quant/user_data/data/NQ_USD-{1m,5m,15m,1h,4h,1d}.feather",
+    "source_class": "roll_adjusted_clean_feather",
+    "source_payload": "/tmp/ict-engine-nq-compound-rv-stress-gate-rescore-20260530T042109+0800/checks/terminal_metrics.json",
+    "status": "pass"
+  },
+  "materialization_root": "/tmp/ict-engine-nq-compound-rv-stress-feedback-materialization-20260530T043351+0800",
+  "materialization_status": "child_gate_simulated_feedback_materialized_fail_closed",
+  "paper_admission_status": null,
+  "parent_factor_id": "nq_compound_trend_rrr_chopfilter_v1",
+  "path_ranker_score_used_by_execution_tree": null,
+  "path_ranker_score_visible_to_execution_tree": null,
+  "path_ranker_used": false,
+  "policy_training_summary": {},
+  "promotion_allowed": false,
+  "promotion_cost_verified": true,
+  "readiness_contract": null,
+  "retained_session_coverage": {
+    "evidence": "Local retained NQ 1m feather includes 1275583 rows outside 09:30-16:00 America/New_York, including CME Globex Sunday evening rows.",
+    "first_utc": "2021-01-03 23:00:00+00:00",
+    "has_non_rth_rows": true,
+    "last_utc": "2025-12-31 21:59:00+00:00",
+    "non_rth_rows": 1275583,
+    "regular_session_window": "09:30-16:00 America/New_York",
+    "row_count": 1770523,
+    "row_coverage_evidence": "NQ_USD-1m.feather row_count=1770523 valid_timestamp_rows=1770523 rth_rows=494940 non_rth_rows=1275583 first_utc=2021-01-03 23:00:00+00:00 last_utc=2025-12-31 21:59:00+00:00 sample_non_rth_ny=2021-01-03 18:00:00-05:00",
+    "rth_rows": 494940,
+    "sample_non_rth_ny": [
+      "2021-01-03 18:00:00-05:00",
+      "2021-01-03 18:01:00-05:00",
+      "2021-01-03 18:02:00-05:00",
+      "2021-01-03 18:03:00-05:00",
+      "2021-01-03 18:04:00-05:00"
+    ],
+    "sample_rth_ny": [
+      "2021-01-04 09:30:00-05:00",
+      "2021-01-04 09:31:00-05:00",
+      "2021-01-04 09:32:00-05:00",
+      "2021-01-04 09:33:00-05:00",
+      "2021-01-04 09:34:00-05:00"
+    ],
+    "source_path": "/Users/thrill3r/Auto-Quant/user_data/data/NQ_USD-1m.feather",
+    "status": "pass",
+    "valid_timestamp_rows": 1770523
+  },
+  "rth_filter_applied": false,
+  "run_root": "/tmp/ict-engine-nq-compound-rv-stress-source-cost-coverage-20260530T055944+0800/lifecycle_readback",
+  "schema_version": "tomac-nq-compound-rv-stress-practical-lifecycle-terminal/v1",
+  "session_scope": "ETH/full_retained_session",
+  "source_cost_coverage_packet": "/tmp/ict-engine-nq-compound-rv-stress-source-cost-coverage-20260530T055944+0800/checks/source_cost_coverage_packet.json",
+  "status": "practical_lifecycle_fail_closed",
+  "symbol": "TOMAC_NQ_COMPOUND_RV_STRESS_GATE_PRACTICAL_LIFECYCLE_V1",
+  "trade_usable": false,
+  "update_goal": false,
+  "validation_counters": {},
+  "validation_ready": false
+}

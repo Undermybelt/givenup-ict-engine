@@ -1,0 +1,20 @@
+{
+  "status": "source_cost_coverage_verified_no_launch",
+  "factor_id": "nq_compound_trend_rrr_chopfilter_rv_stress_gate_rescore_v1",
+  "session_scope": "ETH/full_retained_session",
+  "rth_filter_applied": false,
+  "retained_session_coverage_status": "pass",
+  "non_rth_rows": 1275583,
+  "promotion_cost_verified": true,
+  "cost_model_status": "verified",
+  "all_in_per_contract_per_side": 2.25,
+  "all_in_round_turn_per_contract": 4.5,
+  "provider_fetch_started": false,
+  "auto_quant_started": false,
+  "paper_or_sim_started": false,
+  "live_started": false,
+  "promotion_allowed": false,
+  "trade_usable": false,
+  "update_goal": false,
+  "source_cost_coverage_packet": "/tmp/ict-engine-nq-compound-rv-stress-source-cost-coverage-20260530T055944+0800/checks/source_cost_coverage_packet.json"
+}

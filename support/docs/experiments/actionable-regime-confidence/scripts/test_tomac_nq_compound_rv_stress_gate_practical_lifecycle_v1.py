@@ -328,6 +328,42 @@ class NqCompoundRvStressPracticalLifecycleTests(unittest.TestCase):
         self.assertEqual(provenance["return_sanity"]["status"], "pass")
         self.assertIn("child_rescore", provenance["source_payload"])
 
+    def test_source_packet_supplies_session_coverage_and_cost_model(self) -> None:
+        module = load_module()
+
+        with tempfile.TemporaryDirectory() as tmp:
+            tmp_path = Path(tmp)
+            root = tmp_path / "root"
+            material = tmp_path / "material"
+            source_packet_path = tmp_path / "source_packet.json"
+            source_packet = {
+                "session_scope": "ETH/full_retained_session",
+                "rth_filter_applied": False,
+                "retained_session_coverage": explicit_retained_session_coverage(),
+                "promotion_cost_verified": True,
+                "cost_model": explicit_verified_cost_model(),
+            }
+            write_json(source_packet_path, source_packet)
+            write_materialization(material)
+
+            module.configure_paths(root)
+            metrics = module.write_summary(
+                module.staged_command_results(material),
+                module.market_data_provenance(material),
+                material,
+                source_packet,
+                source_packet_path,
+            )
+
+        self.assertEqual(metrics["status"], "practical_lifecycle_fail_closed")
+        self.assertEqual(metrics["source_cost_coverage_packet"], str(source_packet_path))
+        self.assertEqual(metrics["retained_session_coverage"]["status"], "pass")
+        self.assertTrue(metrics["retained_session_coverage"]["has_non_rth_rows"])
+        self.assertTrue(metrics["promotion_cost_verified"])
+        self.assertEqual(metrics["cost_model"]["status"], "verified")
+        self.assertFalse(metrics["promotion_allowed"])
+        self.assertFalse(metrics["trade_usable"])
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -1,0 +1,120 @@
+{
+  "schema_version": "nq-compound-rv-stress-source-cost-coverage/v1",
+  "status": "source_cost_coverage_verified_no_launch",
+  "created_at": "2026-05-30T05:59:44+0800",
+  "agent_name": "codex-nq-compound-rv-stress-source-cost-coverage",
+  "factor_id": "nq_compound_trend_rrr_chopfilter_rv_stress_gate_rescore_v1",
+  "parent_factor_id": "nq_compound_trend_rrr_chopfilter_v1",
+  "branch_path": "US index futures -> NQ -> ETH/full_retained_session -> 1m parent execution + shifted 5m/15m/30m/1h/4h/1d context -> HtfTrendRegime -> ChopFilter(ER>=0.35,n40) -> MomentumResonance -> CompoundTrendRrrBreadth -> FixedRrrBracket -> RealizedVolatilityStressGate(30m_abs_ret16_max <= 0.04174409724) -> SourceCostCoveragePacket",
+  "session_scope": "ETH/full_retained_session",
+  "rth_filter_applied": false,
+  "retained_session_coverage": {
+    "status": "pass",
+    "has_non_rth_rows": true,
+    "regular_session_window": "09:30-16:00 America/New_York",
+    "row_coverage_evidence": "NQ_USD-1m.feather row_count=1770523 valid_timestamp_rows=1770523 rth_rows=494940 non_rth_rows=1275583 first_utc=2021-01-03 23:00:00+00:00 last_utc=2025-12-31 21:59:00+00:00 sample_non_rth_ny=2021-01-03 18:00:00-05:00",
+    "evidence": "Local retained NQ 1m feather includes 1275583 rows outside 09:30-16:00 America/New_York, including CME Globex Sunday evening rows.",
+    "source_path": "/Users/thrill3r/Auto-Quant/user_data/data/NQ_USD-1m.feather",
+    "row_count": 1770523,
+    "valid_timestamp_rows": 1770523,
+    "rth_rows": 494940,
+    "non_rth_rows": 1275583,
+    "first_utc": "2021-01-03 23:00:00+00:00",
+    "last_utc": "2025-12-31 21:59:00+00:00",
+    "sample_non_rth_ny": [
+      "2021-01-03 18:00:00-05:00",
+      "2021-01-03 18:01:00-05:00",
+      "2021-01-03 18:02:00-05:00",
+      "2021-01-03 18:03:00-05:00",
+      "2021-01-03 18:04:00-05:00"
+    ],
+    "sample_rth_ny": [
+      "2021-01-04 09:30:00-05:00",
+      "2021-01-04 09:31:00-05:00",
+      "2021-01-04 09:32:00-05:00",
+      "2021-01-04 09:33:00-05:00",
+      "2021-01-04 09:34:00-05:00"
+    ]
+  },
+  "promotion_cost_verified": true,
+  "cost_model": {
+    "status": "verified",
+    "instrument_class": "futures",
+    "contract_symbol": "NQ",
+    "contract_name": "E-mini NASDAQ 100",
+    "broker": "IBKR",
+    "pricing_plan": "US futures tiered low-volume non-member",
+    "venue_routing": "CME Globex direct electronic futures",
+    "exchange": "CME",
+    "currency": "USD",
+    "unit_convention": "per_contract_per_side",
+    "fee_effective_date": "2026-05-30",
+    "contract_multiplier": 20.0,
+    "tick_size": 0.25,
+    "tick_value_usd": 5.0,
+    "commission_per_contract_per_side": 0.85,
+    "exchange_fee_per_contract_per_side": 1.38,
+    "clearing_fee_per_contract_per_side": 0.0,
+    "regulatory_fee_per_contract_per_side": 0.02,
+    "other_fee_per_contract_per_side": 0.0,
+    "all_in_per_contract_per_side": 2.25,
+    "all_in_round_turn_per_contract": 4.5,
+    "slippage_model": "separate explicit stress; not included in IBKR commission/exchange/regulatory all-in cost",
+    "source_refs": {
+      "ibkr_us_futures_commission": {
+        "url": "https://www.interactivebrokers.com/en/pricing/commissions-futures.php",
+        "http_status": 200,
+        "rate_verified": true,
+        "same_turn_readback": "official_source_http_200 rate_verified low-volume US futures tier row USD 0.85/contract; ES example confirms 0.85 + 1.38 + 0.00 + 0.02 = 2.25"
+      },
+      "ibkr_cme_exchange_fee": {
+        "url": "https://www.interactivebrokers.com/en/accounts/fees/CME.php",
+        "http_status": 200,
+        "rate_verified": true,
+        "same_turn_readback": "official_source_http_200 rate_verified CME E-mini Equity Futures row includes NQ with exchange fee recovery USD 1.38"
+      },
+      "ibkr_cme_regulatory_fee": {
+        "url": "https://www.interactivebrokers.com/en/accounts/fees/CME.php",
+        "http_status": 200,
+        "rate_verified": true,
+        "same_turn_readback": "official_source_http_200 rate_verified CME Regulatory Fee Recovery Charge All Products USD 0.02 and NFA assessment note"
+      },
+      "ibkr_nq_product_search": {
+        "url": "https://www.interactivebrokers.com/portal.proxy/v1/mkt/iserver/secdef/search?symbol=NQ",
+        "http_status": 200,
+        "rate_verified": true,
+        "same_turn_readback": "official_source_http_200 rate_verified product search returned E-mini NASDAQ 100 - CME, symbol NQ, FUT months present"
+      },
+      "ibkr_nq_contract_details": {
+        "url": "https://www.interactivebrokers.com/webrest/search/contract-details",
+        "http_status": 200,
+        "rate_verified": true,
+        "same_turn_readback": "official_source_http_200 rate_verified contract-details returned listed NQ futures conids from underlying conid 11004958"
+      },
+      "ibkr_nq_secdef": {
+        "url": "https://www.interactivebrokers.com/portal.proxy/v1/mkt/trsrv/secdef?conids=750150196,563947726,770561204,793356228,815824270,654503325,866514788,586139864,711280076,861451224,840227400,861451229",
+        "http_status": 200,
+        "rate_verified": true,
+        "same_turn_readback": "official_source_http_200 rate_verified secdef rows show assetClass FUT, ticker NQ, listingExchange CME, currency USD, multiplier 20.0, tick increment 0.25"
+      }
+    }
+  },
+  "provider_fetch_started": false,
+  "ibkr_historical_fetch_started": false,
+  "auto_quant_started": false,
+  "freqtrade_started": false,
+  "paper_or_sim_started": false,
+  "live_started": false,
+  "lifecycle_started": false,
+  "promotion_allowed": false,
+  "trade_usable": false,
+  "update_goal": false,
+  "remaining_practical_blockers": [
+    "staged lifecycle command rows for provider_data/pre_bayes/bbn_workflow/path_ranker/execution_tree/feedback_update/policy_training",
+    "exact branch survival in execution candidate and execution tree",
+    "execution_candidate_actionable true with non-observe candidate status",
+    "validation counters for raw_scored_mature, production_validation, and observation_validation",
+    "policy lifecycle tuple with learning/paper/deploy/live/live_trade_usable counts",
+    "canonical same_tree_practical_closure packet"
+  ]
+}
