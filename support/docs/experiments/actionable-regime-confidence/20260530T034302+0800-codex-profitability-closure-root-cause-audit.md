@@ -194,6 +194,26 @@ admission owners where current evidence shows a system loophole.
   `promotion_allowed_true=0`, `trade_usable_true=0`, and
   `same_tree_practical_closure=null`. New launches remain blocked by fresh
   non-live active claims rather than live runtime occupancy.
+- 2026-05-30T05:50+0800: fixed another compact-audit terminalization loophole.
+  The NQ compound RV-stress provenance repair root already had
+  `summaries/terminal_summary.json` and `checks/terminal_metrics.json` with
+  `status=practical_lifecycle_fail_closed`, `promotion_allowed=false`, and
+  `trade_usable=false`, but the claim stayed active because terminal-summary
+  status parsing only recognized a small allowlist. Added a RED regression test
+  for active claims backed by fail-closed terminal summaries, then changed the
+  canonical terminal-status helper to treat non-active `*fail_closed*` terminal
+  statuses as terminalized while preserving explicit `active_*`, `staged_*`,
+  and `verified_*` claim states. Verification passed:
+  `python3 -m unittest support.scripts.tests.test_factor_claim_terminalization_audit -v`
+  ran 96 tests OK;
+  `python3 -m py_compile support/scripts/factor_claim_terminalization_audit.py support/scripts/tests/test_factor_claim_terminalization_audit.py`
+  passed;
+  `git diff --check -- support/scripts/factor_claim_terminalization_audit.py support/scripts/tests/test_factor_claim_terminalization_audit.py`
+  passed. Current compact audit no longer lists the NQ provenance-repair claim
+  as active. It still reports no practical factor:
+  `promotion_allowed_true=0`, `trade_usable_true=0`, and
+  `same_tree_practical_closure=null`; launches remain blocked by fresh HO source
+  reserve and MGC full-ladder training claims.
 
 ## Root Cause Readback
 

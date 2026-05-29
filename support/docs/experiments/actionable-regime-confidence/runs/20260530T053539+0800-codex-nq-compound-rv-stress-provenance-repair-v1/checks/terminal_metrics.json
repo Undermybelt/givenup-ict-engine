@@ -1,0 +1,58 @@
+{
+  "all_command_exits_zero": false,
+  "best_gate": "30m_abs_ret16_max",
+  "best_threshold": 0.04174409724,
+  "branch_local_admitted": false,
+  "branch_path": "US index futures -> NQ -> ETH/full_retained_session -> 1m parent execution + shifted 5m/15m/30m/1h/4h/1d context -> HtfTrendRegime -> ChopFilter(ER>=0.35,n40) -> MomentumResonance -> CompoundTrendRrrBreadth -> FixedRrrBracket -> RealizedVolatilityStressGate(30m_abs_ret16_max <= 0.04174409724) -> PracticalLifecycleContinuation",
+  "command_results": [],
+  "cost_model": {
+    "status": "missing_explicit_verified_cost_model"
+  },
+  "deploy_ready": false,
+  "exact_branch_survived": false,
+  "execution_candidate_actionable": false,
+  "execution_candidate_status": "",
+  "factor_id": "nq_compound_trend_rrr_chopfilter_rv_stress_gate_rescore_v1",
+  "feedback_rows": 535,
+  "funded_live_fill_required": null,
+  "learning_admission_status": null,
+  "live_trade_status": null,
+  "market_data_provenance": {
+    "materialization_root": "/tmp/ict-engine-nq-compound-rv-stress-feedback-materialization-20260530T043351+0800",
+    "return_sanity": {
+      "extreme_abs_gross_gt_10pct_count": 0,
+      "max_abs_gross_return_pct": 7.781268,
+      "median_abs_gross_return_pct": 1.471219,
+      "parse_bad_rows": 0,
+      "status": "pass"
+    },
+    "source": "/Users/thrill3r/Auto-Quant/user_data/data/NQ_USD-{1m,5m,15m,1h,4h,1d}.feather",
+    "source_class": "roll_adjusted_clean_feather",
+    "source_payload": "/tmp/ict-engine-nq-compound-rv-stress-gate-rescore-20260530T042109+0800/checks/terminal_metrics.json",
+    "status": "pass"
+  },
+  "materialization_root": "/tmp/ict-engine-nq-compound-rv-stress-feedback-materialization-20260530T043351+0800",
+  "materialization_status": "child_gate_simulated_feedback_materialized_fail_closed",
+  "paper_admission_status": null,
+  "parent_factor_id": "nq_compound_trend_rrr_chopfilter_v1",
+  "path_ranker_score_used_by_execution_tree": null,
+  "path_ranker_score_visible_to_execution_tree": null,
+  "path_ranker_used": false,
+  "policy_training_summary": {},
+  "promotion_allowed": false,
+  "promotion_cost_verified": false,
+  "readiness_contract": null,
+  "retained_session_coverage": {
+    "status": "missing_explicit_retained_session_coverage"
+  },
+  "rth_filter_applied": false,
+  "run_root": "/tmp/ict-engine-nq-compound-rv-stress-provenance-repair-20260530T053539+0800",
+  "schema_version": "tomac-nq-compound-rv-stress-practical-lifecycle-terminal/v1",
+  "session_scope": "ETH/full_retained_session",
+  "status": "practical_lifecycle_fail_closed",
+  "symbol": "TOMAC_NQ_COMPOUND_RV_STRESS_GATE_PRACTICAL_LIFECYCLE_V1",
+  "trade_usable": false,
+  "update_goal": false,
+  "validation_counters": {},
+  "validation_ready": false
+}

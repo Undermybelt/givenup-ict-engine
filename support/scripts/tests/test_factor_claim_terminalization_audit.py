@@ -512,6 +512,51 @@ trade_usable=false
                 ["terminalized", "terminalized", "terminalized"],
             )
 
+    def test_build_report_treats_fail_closed_terminal_summary_status_as_terminalized(self) -> None:
+        with tempfile.TemporaryDirectory() as repo_tmp, tempfile.TemporaryDirectory() as claims_tmp:
+            repo_root = Path(repo_tmp)
+            claims_dir = Path(claims_tmp)
+            run_root = repo_root / "support" / "docs" / "experiments" / "run-practical-fail-closed"
+            summaries_dir = run_root / "summaries"
+            checks_dir = run_root / "checks"
+            summaries_dir.mkdir(parents=True)
+            checks_dir.mkdir(parents=True)
+            fail_closed_summary = {
+                "status": "practical_lifecycle_fail_closed",
+                "promotion_allowed": False,
+                "trade_usable": False,
+                "update_goal": False,
+                "same_tree_practical_closure": None,
+            }
+            (summaries_dir / "terminal_summary.json").write_text(json.dumps(fail_closed_summary), encoding="utf-8")
+            (checks_dir / "terminal_metrics.json").write_text(json.dumps(fail_closed_summary), encoding="utf-8")
+
+            (claims_dir / "active-practical-fail-closed.claim").write_text(
+                f"""
+agent_name=codex-practical-lifecycle-repair
+owner=codex
+claimed_at=2026-05-30T05:35:39+0800
+last_progress_at=2026-05-30T05:36:00+0800
+scope=Board B practical lifecycle provenance repair
+active_task=repair fail-closed practical lifecycle readback
+non_goals=no promotion
+write_surface=/tmp/example-workdoc.md
+run_root={run_root.relative_to(repo_root)}
+status=active_provenance_repair
+progress_report=baseline red reproducer
+promotion_allowed=false
+trade_usable=false
+""",
+                encoding="utf-8",
+            )
+
+            report = build_report(claims_dir=claims_dir, repo_root=repo_root)
+
+            self.assertEqual(report["summary"]["terminalized_claims"], 1)
+            self.assertEqual(report["summary"]["active_claims"], 0)
+            self.assertEqual(report["claims"][0]["status"], "terminalized")
+            self.assertEqual(report["claims"][0]["decision"], "practical_lifecycle_fail_closed")
+
     def test_build_report_treats_outputs_terminal_summary_as_terminalized(self) -> None:
         with tempfile.TemporaryDirectory() as repo_tmp, tempfile.TemporaryDirectory() as claims_tmp:
             repo_root = Path(repo_tmp)

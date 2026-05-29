@@ -194,20 +194,18 @@ def _summary_indicates_terminalized(summary_flags: dict[str, Any]) -> bool:
         or summary_flags.get("decision")
     ):
         return True
-    status = str(summary_flags.get("status", "")).strip().lower()
-    return status.startswith("terminal") or status in {
-        "launch_blocked_by_collision_guard",
-        "launch_finished",
-        "readback_complete",
-        "complete",
-        "completed",
-        "finished",
-    }
+    return _terminal_status_text(summary_flags.get("status"))
 
 
 def _status_value_indicates_terminalized(value: object) -> bool:
+    return _terminal_status_text(value)
+
+
+def _terminal_status_text(value: object) -> bool:
     normalized = str(value or "").strip().lower()
-    return normalized.startswith("terminal") or normalized in {
+    if normalized.startswith(("active", "staged", "verified")):
+        return False
+    return normalized.startswith("terminal") or "fail_closed" in normalized or normalized in {
         "launch_blocked_by_collision_guard",
         "launch_finished",
         "readback_complete",
