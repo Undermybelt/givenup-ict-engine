@@ -1,0 +1,127 @@
+{
+  "schema_version": "source-cost-readback/v1",
+  "generated_at": "2026-05-30T06:07:51+0800",
+  "agent_name": "codex-zo-eth-oats-crop-progress-vwap-reclaim-reserve",
+  "factor_id": "zo_eth_oats_crop_progress_vwap_reclaim_v1",
+  "branch_path": "FUTURES -> Agriculture -> CBOT Oats / ZO -> ETH/full_retained_session -> 1m execution + shifted 5m/15m/30m/1h/4h/1d context -> CropProgressSupplyShock -> ThinAgMarketLiquidityFlush -> OatsSessionVwapReclaim -> AtrRiskManagedContinuation -> zo_eth_oats_crop_progress_vwap_reclaim_v1",
+  "session_scope": "ETH/full_retained_session",
+  "rth_filter_applied": false,
+  "claim": "/tmp/ict-engine-agent-claims/board-b-factor-refinement/20260530T060751+0800-codex-zo-eth-oats-crop-progress-vwap-reclaim-reserve.claim",
+  "tmp_workdoc": "/tmp/ict-engine-zo-eth-oats-crop-progress-vwap-reclaim-reserve-20260530T060751+0800/workdoc.md",
+  "source_evidence": {
+    "ibkr_futures_commissions": {
+      "url": "https://www.interactivebrokers.com/en/pricing/commissions-futures.php",
+      "http_status": 200,
+      "capture_path": "/tmp/ict-engine-zo-eth-oats-crop-progress-vwap-reclaim-reserve-20260530T060751+0800/source_evidence/ibkr_futures_commissions_20260530T060751+0800.html",
+      "readback": {
+        "section": "United States futures and futures options by denomination",
+        "commission_row_scope": "USD-denominated futures, not product-specific ZO row",
+        "monthly_volume_le_1000_commission_usd_per_contract_tiered": 0.85,
+        "monthly_volume_le_1000_commission_usd_per_contract_fixed": 0.85,
+        "offset_fee_types_listed": [
+          "Exchange Fees",
+          "Regulatory Fees",
+          "Overnight Position Fees"
+        ]
+      }
+    },
+    "ibkr_cbot_fee_recovery": {
+      "url": "https://www.interactivebrokers.com/en/accounts/fees/CBOT.php",
+      "http_status": 200,
+      "capture_path": "/tmp/ict-engine-zo-eth-oats-crop-progress-vwap-reclaim-reserve-20260530T060751+0800/source_evidence/ibkr_cbot_fee_20260530T060751+0800.html",
+      "readback": {
+        "exchange_fee_recovery_product_group": "Ags-Electronic Futures",
+        "exchange_fee_recovery_codes": [
+          "ZC",
+          "ZL",
+          "ZM",
+          "ZO",
+          "ZR",
+          "ZS",
+          "ZW",
+          "KE"
+        ],
+        "exchange_fee_recovery_currency": "USD",
+        "exchange_fee_recovery_usd": 2.15,
+        "regulatory_fee_recovery_currency": "USD",
+        "regulatory_fee_recovery_usd": 0.02,
+        "regulatory_fee_note": "Regulatory fees are assessed by the National Futures Association (NFA)."
+      }
+    },
+    "usda_nass_oats": {
+      "url": "https://www.nass.usda.gov/Statistics_by_Subject/result.php?sector=CROPS&group=FIELD%20CROPS&comm=OATS",
+      "http_status": 200,
+      "capture_path": "/tmp/ict-engine-zo-eth-oats-crop-progress-vwap-reclaim-reserve-20260530T060751+0800/source_evidence/usda_nass_oats_20260530T060751+0800.html",
+      "readback": {
+        "source_scope": "Oats acreage, yield, production, stocks, prices, crop values, and county maps",
+        "is_tradable_factor_data": false
+      }
+    },
+    "cme_official_specs": {
+      "status": "blocked_tls_eof",
+      "attempted_urls": [
+        "https://www.cmegroup.com/markets/agriculture/grains/oats.contractSpecs.html",
+        "https://www.cmegroup.com/markets/agriculture/grains/oats.html"
+      ],
+      "curl_exit": 35,
+      "http_status": 0,
+      "fields_not_verified": [
+        "contract_unit",
+        "tick_size",
+        "tick_value",
+        "trading_hours",
+        "expiry",
+        "settlement",
+        "official_cme_product_code"
+      ]
+    }
+  },
+  "cost_model": {
+    "status": "cost_model_unverified",
+    "instrument_class": "futures",
+    "product_root": "ZO",
+    "exchange": "CBOT",
+    "broker": "IBKR",
+    "pricing_plan": "IBKR US futures by-denomination commission schedule plus CBOT fee recovery page",
+    "currency": "USD",
+    "fee_effective_readback_date": "2026-05-30T06:07:51+0800",
+    "partial_commission_usd_per_contract_side_assumption": 0.85,
+    "partial_exchange_fee_recovery_usd_per_contract_side_assumption": 2.15,
+    "partial_regulatory_fee_recovery_usd_per_contract_side_assumption": 0.02,
+    "partial_total_usd_per_contract_side_assumption": 3.02,
+    "partial_round_turn_usd_per_contract_assumption": 6.04,
+    "unverified_fields": [
+      "CME/CBOT contract unit",
+      "CME/CBOT tick size",
+      "CME/CBOT tick value",
+      "CME/CBOT trading hours",
+      "exact broker contract month",
+      "retained-session row coverage",
+      "roll rule",
+      "slippage model",
+      "product-specific IBKR execution commission row"
+    ]
+  },
+  "runtime_launches": {
+    "provider_fetch_started": false,
+    "ibkr_historical_started": false,
+    "auto_quant_started": false,
+    "freqtrade_started": false,
+    "paper_or_sim_started": false,
+    "lifecycle_started": false
+  },
+  "gates": {
+    "provider_rows": 0,
+    "ibkr_historical_rows": 0,
+    "pre_bayes_allowed": false,
+    "bbn_allowed": false,
+    "catboost_allowed": false,
+    "execution_tree_allowed": false,
+    "feedback_update_allowed": false,
+    "policy_training_allowed": false,
+    "promotion_allowed": false,
+    "trade_usable": false,
+    "update_goal": false
+  },
+  "terminal_decision": "terminalized_no_launch_prep_only_cost_source_reserve"
+}
