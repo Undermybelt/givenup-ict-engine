@@ -1058,18 +1058,19 @@ def _is_ibkr_provider_status_probe(command: str) -> bool:
 
 
 def _looks_like_readback_command(command: str) -> bool:
-    if re.match(r"^(?:\S*/)?(?:rg|grep|egrep|fgrep)\s", command.strip()):
+    normalized = _normalize_ps_command_text(command)
+    if re.match(r"^(?:\S*/)?(?:rg|grep|egrep|fgrep)\s", normalized.strip()):
         return True
-    if ("ps -axo" in command or "ps auxww" in command) and (
-        "| rg" in command or " rg " in command or "| grep" in command
+    if ("ps -axo" in normalized or "ps auxww" in normalized or "ps -p" in normalized) and (
+        "| rg" in normalized or " rg " in normalized or "| grep" in normalized
     ):
         return True
-    if re.search(r"(?:^|\s|['\"])(?:\S*/)?sed\s+-n\s+", command):
+    if re.search(r"(?:^|\s|['\"])(?:\S*/)?sed\s+-n\s+", normalized):
         return True
     readback_markers = ("ps -axo", "ps auxww", " rg ", " tail -n", " find ")
-    if not any(marker in command for marker in readback_markers):
+    if not any(marker in normalized for marker in readback_markers):
         return False
-    return "python" not in command and "auto-quant-agent-material" not in command
+    return "python" not in normalized and "auto-quant-agent-material" not in normalized
 
 
 def _extract_run_root(command: str) -> Path | None:

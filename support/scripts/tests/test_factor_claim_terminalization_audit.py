@@ -1667,6 +1667,19 @@ trade_usable=false
 
         self.assertFalse(_is_live_factor_command(command))
 
+    def test_live_process_classifier_ignores_ps_escaped_shell_readback_poller(self) -> None:
+        command = (
+            "/bin/zsh -c -l setopt NO_EXTENDED_GLOB NO_BARE_GLOB_QUAL 2>/dev/null || true && "
+            "eval 'sleep 100; cd /Users/example/Auto-Quant\\012"
+            "RUN_ROOT=$(cat /tmp/ict-engine-claude-lane-root.txt); "
+            "PID=$(cat /tmp/ict-engine-claude-tomac-5bps-pid.txt)\\012"
+            "ps -p $PID >/dev/null 2>&1 && echo STILL RUNNING || echo done\\012"
+            "rg -A12 '\"'\"'STRATEGY SUMMARY'\"'\"' \"$RUN_ROOT/checks/run_tomac_nq_5bps.out\" 2>/dev/null | head -20\\012"
+            "tail -6 \"$RUN_ROOT/checks/run_tomac_nq_5bps.err\" 2>/dev/null'"
+        )
+
+        self.assertFalse(_is_live_factor_command(command))
+
     def test_live_process_classifier_ignores_sed_readback_of_factor_wrappers(self) -> None:
         command = (
             "/bin/zsh -lc sed -n '1,260p' "
