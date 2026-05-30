@@ -25,18 +25,6 @@ DEFAULT_SCAN_ROOTS = (
 EXCLUDED_PARTS = frozenset(("__pycache__", "runs", "paper2code"))
 EXCLUDED_NAMES = frozenset((
     "fixed_bps_cost_model_source_check.py",
-    # Existing legacy/readback helpers parse old bps artifacts; new tools must
-    # avoid fixed-bps cost authority without relying on filename skips.
-    "factor_lifecycle_migration_readback.py",
-    "factor_signal_diagnostics.py",
-    "futures_real_cost_rescue_audit.py",
-    "labeling_triple_barrier.py",
-    "mim_cost_window_feedback_builder.py",
-    "real_trade_feedback_labels.py",
-    "regime_root_metrics_contract_check.py",
-    "regime_root_survivor_blocker_report.py",
-    "simulated_feedback_admission_guard.py",
-    "tomac_tod_balanced_trade_label_sidecar.py",
 ))
 FIXED_BPS_ARG_NAMES = frozenset((
     "cost_bps",
@@ -507,7 +495,7 @@ def git_tracked_paths(repo_root: Path, paths: Sequence[Path], *, include_tests: 
     tracked: list[Path] = []
     for line in proc.stdout.splitlines():
         path = repo_root / line
-        if not should_skip(path, include_tests=include_tests):
+        if path.exists() and not should_skip(path, include_tests=include_tests):
             tracked.append(path)
     return sorted(set(tracked))
 

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import sys
+import subprocess
 import tempfile
 import unittest
 from pathlib import Path
@@ -169,6 +170,22 @@ def signal(row, min_abs_1h_slope_bps=3.0, reclaim_bps_min=8.0):
         self.assertFalse(report["ok"])
         self.assertEqual(report["checked_files"], 2)
         self.assertEqual(report["violating_files"], 1)
+
+    def test_git_tracked_paths_skips_deleted_index_entries(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            repo = Path(tmp)
+            (repo / "support/scripts/research").mkdir(parents=True)
+            deleted = repo / "support/scripts/research/deleted_fixed_bps.py"
+            kept = repo / "support/scripts/research/kept_signal.py"
+            deleted.write_text("cost_bps = 5\n", encoding="utf-8")
+            kept.write_text("slope_bps = 2\n", encoding="utf-8")
+            subprocess.run(["git", "init"], cwd=repo, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            subprocess.run(["git", "add", "support/scripts/research"], cwd=repo, check=True)
+            deleted.unlink()
+
+            paths = checker.git_tracked_paths(repo, [Path("support/scripts/research")])
+
+            self.assertEqual(paths, [kept])
 
     def test_checker_source_is_skipped_so_it_can_list_forbidden_tokens(self) -> None:
         path = self.write_source("cost_bps = 5\n", name="fixed_bps_cost_model_source_check.py")
