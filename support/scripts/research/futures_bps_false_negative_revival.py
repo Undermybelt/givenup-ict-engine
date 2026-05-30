@@ -64,7 +64,7 @@ GROSS_PCT_KEYS = (
     "profit_pct",
     "best_raw_total_profit_pct",
 )
-STRESS_5BPS_PCT_KEYS = (
+LEGACY_WALL_NET_PCT_KEYS = (
     "5bps_per_side_total_profit_pct",
     "net5bps_total_ret_pct",
     "net_5bps_total_pct",
@@ -116,7 +116,7 @@ DEFAULT_REPRESENTATIVE_PRICE = {
     "M6E": 1.08,
     "BRE": 1.08,
 }
-DEFAULT_STRESS_TELEMETRY_BPS_PER_SIDE = 5.0
+DEFAULT_LEGACY_WALL_BASIS_POINTS_PER_SIDE = 5.0
 
 
 def _safe_float(value: Any) -> float | None:
@@ -216,14 +216,14 @@ def trade_count_for_row(row: dict[str, Any]) -> int | None:
     return None
 
 
-def gross_pct_for_row(row: dict[str, Any], *, stress_bps_per_side: float) -> float | None:
+def gross_pct_for_row(row: dict[str, Any], *, legacy_wall_basis_points_per_side: float) -> float | None:
     gross = _first_number(row, GROSS_PCT_KEYS)
     if gross is not None:
         return gross
-    stress_net = _first_number(row, STRESS_5BPS_PCT_KEYS)
+    stress_net = _first_number(row, LEGACY_WALL_NET_PCT_KEYS)
     trades = trade_count_for_row(row)
     if stress_net is not None and trades is not None:
-        return stress_net + trades * round_turn_stress_pct(stress_bps_per_side)
+        return stress_net + trades * legacy_wall_round_turn_pct(legacy_wall_basis_points_per_side)
     return None
 
 
@@ -234,8 +234,8 @@ def representative_price_for_root(row: dict[str, Any], root: str) -> float:
     return DEFAULT_REPRESENTATIVE_PRICE[root]
 
 
-def round_turn_stress_pct(bps_per_side: float) -> float:
-    return float(bps_per_side) * 2.0 * 0.01
+def legacy_wall_round_turn_pct(legacy_wall_basis_points_per_side: float) -> float:
+    return float(legacy_wall_basis_points_per_side) * 2.0 * 0.01
 
 
 def _cost_status_verified(profile: cost_model.FuturesCostProfile | None) -> bool:
@@ -246,13 +246,13 @@ def classify_row(
     row: dict[str, Any],
     *,
     source_file: Path,
-    stress_bps_per_side: float = DEFAULT_STRESS_TELEMETRY_BPS_PER_SIDE,
+    legacy_wall_basis_points_per_side: float = DEFAULT_LEGACY_WALL_BASIS_POINTS_PER_SIDE,
 ) -> dict[str, Any] | None:
     root = futures_root_for_row(row)
     if root is None:
         return None
     trades = trade_count_for_row(row)
-    gross_pct = gross_pct_for_row(row, stress_bps_per_side=stress_bps_per_side)
+    gross_pct = gross_pct_for_row(row, legacy_wall_basis_points_per_side=legacy_wall_basis_points_per_side)
     label = _row_label(row, source_file)
     profile = cost_model.futures_cost_profile(root)
     if trades is None or trades <= 0 or gross_pct is None:
@@ -285,21 +285,21 @@ def classify_row(
     representative_price = representative_price_for_root(row, root)
     fee_pct = profile.round_trip_fee_pct(representative_price)
     all_in_pct = profile.round_trip_cost_pct(representative_price)
-    stress_pct = round_turn_stress_pct(stress_bps_per_side)
-    stress_total_pct = gross_pct - trades * stress_pct
+    legacy_wall_pct = legacy_wall_round_turn_pct(legacy_wall_basis_points_per_side)
+    legacy_wall_total_pct = gross_pct - trades * legacy_wall_pct
     fee_only_total_pct = gross_pct - trades * fee_pct
     all_in_total_pct = gross_pct - trades * all_in_pct
     gross_edge_bps = gross_pct / trades * 100.0
     all_in_bps = all_in_pct * 100.0
-    stress_bps_round_turn = stress_pct * 100.0
+    legacy_wall_round_turn_bps = legacy_wall_pct * 100.0
 
     if gross_pct <= 0:
         classification = "gross_negative_not_cost_rescuable"
     elif all_in_total_pct <= 0:
         classification = "zero_edge_churn_not_rescued_by_realistic_cost"
-    elif stress_total_pct <= 0:
+    elif legacy_wall_total_pct <= 0:
         classification = "bps_stress_false_negative_recheck"
-    elif gross_edge_bps >= stress_bps_round_turn and trades <= 800:
+    elif gross_edge_bps >= legacy_wall_round_turn_bps and trades <= 800:
         classification = "large_move_low_turnover_cost_negligible"
     else:
         classification = "realistic_cost_survivor"
@@ -313,15 +313,15 @@ def classify_row(
         "representative_price": representative_price,
         "gross_total_profit_pct": round(gross_pct, 6),
         "gross_edge_bps_per_trade": round(gross_edge_bps, 6),
-        f"stress_{stress_bps_per_side:g}bps_side_total_profit_pct": round(stress_total_pct, 6),
+        "legacy_wall_total_profit_pct": round(legacy_wall_total_pct, 6),
         "instrument_fee_only_total_profit_pct": round(fee_only_total_pct, 6),
         "instrument_all_in_total_profit_pct": round(all_in_total_pct, 6),
         "instrument_fee_only_bps_per_trade": round(fee_pct * 100.0, 6),
         "instrument_all_in_bps_per_trade": round(all_in_bps, 6),
-        "stress_round_turn_bps_per_trade": round(stress_bps_round_turn, 6),
+        "legacy_wall_round_turn_basis_points_per_trade": round(legacy_wall_round_turn_bps, 6),
         "cost_profile_id": profile.profile_id,
         "cost_model_status": profile.status,
-        "cost_stress_role": "telemetry_not_futures_hard_gate",
+        "legacy_wall_role": "historical_fixed_bps_wall_not_futures_cost_authority",
         "promotion_allowed": False,
         "trade_usable": False,
         "update_goal": False,
@@ -330,7 +330,7 @@ def classify_row(
 
 def _looks_like_candidate_row(row: dict[str, Any]) -> bool:
     has_trade = any(key in row for key in TRADE_COUNT_KEYS)
-    has_economics = any(key in row for key in (*GROSS_PCT_KEYS, *STRESS_5BPS_PCT_KEYS))
+    has_economics = any(key in row for key in (*GROSS_PCT_KEYS, *LEGACY_WALL_NET_PCT_KEYS))
     return has_trade and has_economics and futures_root_for_row(row) is not None
 
 
@@ -396,7 +396,7 @@ def artifact_files(paths: list[Path], *, max_files: int | None = None) -> list[P
 def audit_files(
     files: list[Path],
     *,
-    stress_bps_per_side: float = DEFAULT_STRESS_TELEMETRY_BPS_PER_SIDE,
+    legacy_wall_basis_points_per_side: float = DEFAULT_LEGACY_WALL_BASIS_POINTS_PER_SIDE,
 ) -> dict[str, Any]:
     rows: list[dict[str, Any]] = []
     read_errors: list[dict[str, str]] = []
@@ -417,7 +417,11 @@ def audit_files(
                 continue
             candidate_rows = list(iter_rows(payload))
         for row in candidate_rows:
-            classified = classify_row(row, source_file=path, stress_bps_per_side=stress_bps_per_side)
+            classified = classify_row(
+                row,
+                source_file=path,
+                legacy_wall_basis_points_per_side=legacy_wall_basis_points_per_side,
+            )
             if classified is None:
                 continue
             key = (
@@ -478,7 +482,7 @@ def write_csv(path: Path, rows: list[dict[str, Any]]) -> None:
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("paths", nargs="+", type=Path, help="JSON files or directories to scan")
-    parser.add_argument("--stress-bps-per-side", type=float, default=DEFAULT_STRESS_TELEMETRY_BPS_PER_SIDE)
+    parser.add_argument("--legacy-wall-basis-points-per-side", type=float, default=DEFAULT_LEGACY_WALL_BASIS_POINTS_PER_SIDE)
     parser.add_argument("--max-files", type=int, default=None)
     parser.add_argument("--output-json", type=Path)
     parser.add_argument("--output-csv", type=Path)
@@ -486,7 +490,7 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
 
     files = artifact_files(args.paths, max_files=args.max_files)
-    report = audit_files(files, stress_bps_per_side=args.stress_bps_per_side)
+    report = audit_files(files, legacy_wall_basis_points_per_side=args.legacy_wall_basis_points_per_side)
     text = json.dumps(report, ensure_ascii=False, indent=2 if args.pretty else None) + "\n"
     if args.output_json:
         args.output_json.parent.mkdir(parents=True, exist_ok=True)

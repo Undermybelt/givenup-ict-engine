@@ -33,7 +33,7 @@ class FuturesBpsFalseNegativeRevivalTests(unittest.TestCase):
 
         self.assertEqual(classified["classification"], "bps_stress_false_negative_recheck")
         self.assertGreater(classified["instrument_all_in_total_profit_pct"], 0.0)
-        self.assertLess(classified["stress_5bps_side_total_profit_pct"], 0.0)
+        self.assertLess(classified["legacy_wall_total_profit_pct"], 0.0)
         self.assertFalse(classified["promotion_allowed"])
         self.assertFalse(classified["trade_usable"])
 
@@ -65,7 +65,7 @@ class FuturesBpsFalseNegativeRevivalTests(unittest.TestCase):
         classified = self.classify(row)
 
         self.assertEqual(classified["classification"], "large_move_low_turnover_cost_negligible")
-        self.assertGreater(classified["stress_5bps_side_total_profit_pct"], 0.0)
+        self.assertGreater(classified["legacy_wall_total_profit_pct"], 0.0)
 
     def test_unverified_root_is_not_rehabilitated(self) -> None:
         row = {

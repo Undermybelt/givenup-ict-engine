@@ -38,7 +38,7 @@ class FuturesRealCostRescueAuditTests(unittest.TestCase):
         assert row is not None
         self.assertEqual(row.rescue_class, "rescued_for_exact_aq")
         self.assertTrue(row.survives_instrument_cost)
-        self.assertFalse(row.survives_5bps_stress)
+        self.assertFalse(row.survives_legacy_fixed_cost)
 
     def test_reprice_replay_needed_when_old_artifact_has_no_instrument_cost(self) -> None:
         row = audit.normalize_row(
@@ -62,7 +62,7 @@ class FuturesRealCostRescueAuditTests(unittest.TestCase):
         assert row is not None
         self.assertEqual(row.rescue_class, "needs_reprice_replay")
         self.assertIsNone(row.instrument_cost_total_pct)
-        self.assertFalse(row.survives_5bps_stress)
+        self.assertFalse(row.survives_legacy_fixed_cost)
 
     def test_fee_positive_density_failed_rows_are_blocked_not_exact_rescued(self) -> None:
         row = audit.normalize_row(
@@ -88,7 +88,7 @@ class FuturesRealCostRescueAuditTests(unittest.TestCase):
         assert row is not None
         self.assertEqual(row.rescue_class, "fee_cleared_but_blocked_non_cost")
         self.assertTrue(row.survives_instrument_cost)
-        self.assertFalse(row.survives_5bps_stress)
+        self.assertFalse(row.survives_legacy_fixed_cost)
         self.assertIn("density_floor_not_met", row.reason_codes)
 
     def test_density_floor_met_alias_allows_ledger_rescue(self) -> None:
@@ -297,9 +297,9 @@ class FuturesRealCostRescueAuditTests(unittest.TestCase):
 
             report = audit.build_report([source])
 
-        self.assertEqual(report["class_counts"], {"already_survives_5bps_stress": 1})
-        self.assertEqual(report["already_survives_5bps_stress_count"], 1)
-        self.assertEqual(report["already_survives_5bps_stress"][0]["factor_id"], "tomac_es_not_fee_false_negative_v1")
+        self.assertEqual(report["class_counts"], {"already_survives_legacy_fixed_cost": 1})
+        self.assertEqual(report["already_survives_legacy_fixed_cost_count"], 1)
+        self.assertEqual(report["already_survives_legacy_fixed_cost"][0]["factor_id"], "tomac_es_not_fee_false_negative_v1")
 
     def test_build_report_dedupes_strict_rescues_and_writes_outputs(self) -> None:
         with tempfile.TemporaryDirectory() as tmpdir:

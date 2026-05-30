@@ -25,10 +25,10 @@ DEFAULT_SCAN_ROOTS = (
 EXCLUDED_PARTS = frozenset(("__pycache__", "runs", "paper2code"))
 EXCLUDED_NAMES = frozenset((
     "fixed_bps_cost_model_source_check.py",
-    # Legacy/readback and diagnostic-stress helpers are allowed to parse old bps fields.
+    # Existing legacy/readback helpers parse old bps artifacts; new tools must
+    # avoid fixed-bps cost authority without relying on filename skips.
     "factor_lifecycle_migration_readback.py",
     "factor_signal_diagnostics.py",
-    "futures_bps_false_negative_revival.py",
     "futures_real_cost_rescue_audit.py",
     "labeling_triple_barrier.py",
     "mim_cost_window_feedback_builder.py",
@@ -152,33 +152,37 @@ def is_docstring_node(node: ast.AST, parents: dict[ast.AST, ast.AST]) -> bool:
     return False
 
 
-def fixed_bps_name(name: str, *, allow_diagnostic_stress: bool = False) -> bool:
+def fixed_bps_name(
+    name: str,
+    *,
+    relax_diagnostic_terms: bool = False,
+) -> bool:
     if name in FIXED_BPS_ARG_NAMES:
         return True
     lowered = name.lower()
     if "diagnostic_stress" in lowered:
-        return not allow_diagnostic_stress
-    if "legacy_stress" in lowered:
-        return False
+        return not relax_diagnostic_terms
     if "bps" in lowered and any(token in lowered for token in ("cost", "fee", "friction", "stress")):
-        if "real_cost" in lowered and "5bps" in lowered:
-            return False
         return True
     return False
 
 
-def fixed_bps_field(text: str) -> bool:
+def fixed_bps_field(
+    text: str,
+    *,
+    relax_diagnostic_terms: bool = False,
+) -> bool:
     lowered = text.lower()
-    if lowered == "cost_stress_role" or "diagnostic_stress" in lowered:
+    if lowered == "cost_stress_role":
         return False
-    if "5bps_stress" in lowered or "bps_stress" in lowered:
+    if relax_diagnostic_terms and "diagnostic_stress" in lowered:
         return False
     return any(token in lowered for token in COST_FIELD_TOKENS)
 
 
-def fixed_cost_option(text: str) -> bool:
+def fixed_cost_option(text: str, *, relax_diagnostic_terms: bool = False) -> bool:
     lowered = text.lower().replace("_", "-")
-    if "diagnostic-stress" in lowered:
+    if relax_diagnostic_terms and "diagnostic-stress" in lowered:
         return False
     return any(fragment.replace("_", "-") in lowered for fragment in FIXED_BPS_OPTION_FRAGMENTS)
 
@@ -216,25 +220,47 @@ def target_names(target: ast.AST) -> list[str]:
     return names
 
 
-def contains_fixed_bps_reference(node: ast.AST | None, *, allow_diagnostic_stress: bool = False) -> bool:
+def contains_fixed_bps_reference(
+    node: ast.AST | None,
+    *,
+    relax_diagnostic_terms: bool = False,
+    allow_legacy_stress_readback: bool = False,
+) -> bool:
     if node is None:
         return False
     for child in ast.walk(node):
-        if isinstance(child, ast.Name) and fixed_bps_name(child.id, allow_diagnostic_stress=allow_diagnostic_stress):
+        if isinstance(child, ast.Name) and fixed_bps_name(
+            child.id,
+            relax_diagnostic_terms=relax_diagnostic_terms,
+            allow_legacy_stress_readback=allow_legacy_stress_readback,
+        ):
             return True
-        if isinstance(child, ast.Attribute) and fixed_bps_name(child.attr, allow_diagnostic_stress=allow_diagnostic_stress):
+        if isinstance(child, ast.Attribute) and fixed_bps_name(
+            child.attr,
+            relax_diagnostic_terms=relax_diagnostic_terms,
+            allow_legacy_stress_readback=allow_legacy_stress_readback,
+        ):
             return True
     return False
 
 
-def contains_bps_formula(node: ast.AST, *, allow_diagnostic_stress: bool = False) -> bool:
+def contains_bps_formula(
+    node: ast.AST,
+    *,
+    relax_diagnostic_terms: bool = False,
+    allow_legacy_stress_readback: bool = False,
+) -> bool:
     saw_fixed_bps_name = False
     saw_plain_bps_name = False
     saw_cost_scale = False
     saw_cost_literal = False
     for child in ast.walk(node):
         if isinstance(child, ast.Name):
-            if fixed_bps_name(child.id, allow_diagnostic_stress=allow_diagnostic_stress):
+            if fixed_bps_name(
+                child.id,
+                relax_diagnostic_terms=relax_diagnostic_terms,
+                allow_legacy_stress_readback=allow_legacy_stress_readback,
+            ):
                 saw_fixed_bps_name = True
             elif child.id == "bps":
                 saw_plain_bps_name = True
@@ -274,6 +300,8 @@ def target_cost_field_keys(target: ast.AST) -> list[str]:
 
 
 def fixed_bps_field_assignment_is_readback_only(source: str, target: ast.AST, value: ast.AST | None) -> bool:
+    if not source_allows_legacy_stress_readback(source):
+        return False
     target_text = expression_text(source, target).lower()
     value_text = expression_text(source, value).lower() if value is not None else ""
     if not target_text.startswith("values["):
@@ -283,6 +311,22 @@ def fixed_bps_field_assignment_is_readback_only(source: str, target: ast.AST, va
 
 def source_allows_diagnostic_stress(source: str) -> bool:
     return "diagnostic_stress_not_commission_or_promotion_authority" in source
+
+
+def source_allows_legacy_stress_readback(source: str) -> bool:
+    lowered = source.lower()
+    if "telemetry_not_futures_hard_gate" in lowered:
+        return True
+    return all(
+        token in lowered
+        for token in (
+            "read-only",
+            "does not promote",
+            "legacy",
+            "5bps/side",
+            "instrument-cost",
+        )
+    )
 
 
 def iter_numeric_sequence(node: ast.AST) -> list[float] | None:
@@ -312,57 +356,100 @@ def is_argparse_add_argument(node: ast.Call) -> bool:
 
 def check_tree(source: str, tree: ast.AST) -> list[Violation]:
     parents = {child: parent for parent in ast.walk(tree) for child in ast.iter_child_nodes(parent)}
-    allow_diagnostic_stress = source_allows_diagnostic_stress(source)
+    relax_diagnostic_terms = source_allows_diagnostic_stress(source)
+    allow_legacy_stress_readback = source_allows_legacy_stress_readback(source)
     hits: list[Violation] = []
 
     for node in ast.walk(tree):
         if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
             for arg in [*node.args.args, *node.args.kwonlyargs]:
-                if fixed_bps_name(arg.arg, allow_diagnostic_stress=allow_diagnostic_stress):
+                if fixed_bps_name(
+                    arg.arg,
+                    relax_diagnostic_terms=relax_diagnostic_terms,
+                    allow_legacy_stress_readback=allow_legacy_stress_readback,
+                ):
                     add_hit(hits, source, arg, "fixed_bps_cost_argument", "function argument names a fixed-bps fee/cost model")
             defaults = list(node.args.defaults) + list(node.args.kw_defaults)
             default_args = [*node.args.args[-len(node.args.defaults):], *node.args.kwonlyargs] if node.args.defaults else [*node.args.kwonlyargs]
             for arg, default in zip(default_args, defaults):
-                if default is not None and fixed_bps_name(arg.arg, allow_diagnostic_stress=allow_diagnostic_stress) and is_numeric_literal(default):
+                if default is not None and fixed_bps_name(
+                    arg.arg,
+                    relax_diagnostic_terms=relax_diagnostic_terms,
+                    allow_legacy_stress_readback=allow_legacy_stress_readback,
+                ) and is_numeric_literal(default):
                     add_hit(hits, source, default, "fixed_bps_cost_argument_default", "fixed-bps fee/cost default")
 
         if isinstance(node, ast.Call) and is_argparse_add_argument(node):
             option_strings = [string_value(arg) for arg in node.args]
-            if any(option and fixed_cost_option(option) for option in option_strings):
+            if any(
+                option and fixed_cost_option(
+                    option,
+                    relax_diagnostic_terms=relax_diagnostic_terms,
+                    allow_legacy_stress_readback=allow_legacy_stress_readback,
+                )
+                for option in option_strings
+            ):
                 add_hit(hits, source, node, "fixed_bps_cost_argument", "CLI exposes fixed-bps fee/cost option")
             for keyword in node.keywords:
                 if keyword.arg == "default" and is_numeric_literal(keyword.value):
-                    if any(option and fixed_cost_option(option) for option in option_strings):
+                    if any(
+                        option and fixed_cost_option(
+                            option,
+                            relax_diagnostic_terms=relax_diagnostic_terms,
+                            allow_legacy_stress_readback=allow_legacy_stress_readback,
+                        )
+                        for option in option_strings
+                    ):
                         add_hit(hits, source, keyword.value, "fixed_bps_cost_argument_default", "CLI fixed-bps fee/cost option has numeric default")
 
         if isinstance(node, (ast.Assign, ast.AnnAssign)):
             value = node.value if isinstance(node, ast.AnnAssign) else node.value
             for target in assignment_targets(node):
                 for key in target_cost_field_keys(target):
-                    if fixed_bps_field(key) and not fixed_bps_field_assignment_is_readback_only(source, target, value):
+                    if fixed_bps_field(
+                        key,
+                        relax_diagnostic_terms=relax_diagnostic_terms,
+                        allow_legacy_stress_readback=allow_legacy_stress_readback,
+                    ) and not fixed_bps_field_assignment_is_readback_only(source, target, value):
                         add_hit(hits, source, target, "fixed_bps_cost_field", "assignment writes a fixed-bps fee/cost field")
                 for name in target_names(target):
                     lowered = name.lower()
-                    if fixed_bps_name(name, allow_diagnostic_stress=allow_diagnostic_stress):
+                    if fixed_bps_name(
+                        name,
+                        relax_diagnostic_terms=relax_diagnostic_terms,
+                        allow_legacy_stress_readback=allow_legacy_stress_readback,
+                    ):
                         if not assignment_is_readback_only(name, value):
                             add_hit(hits, source, target, "fixed_bps_cost_assignment", "variable names a fixed-bps fee/cost model")
                     if lowered in {"fee", "cost", "round_trip_cost", "round_turn_cost", "round_trip_fee"}:
                         value_num = numeric_value(value)
                         if value_num in FIXED_FRACTION_LITERALS:
                             add_hit(hits, source, node, "fixed_fraction_fee_literal", "fee/cost literal looks like hard-coded bps in return space")
-                    if contains_fixed_bps_reference(value, allow_diagnostic_stress=allow_diagnostic_stress) and not assignment_is_readback_only(name, value):
+                    if contains_fixed_bps_reference(
+                        value,
+                        relax_diagnostic_terms=relax_diagnostic_terms,
+                        allow_legacy_stress_readback=allow_legacy_stress_readback,
+                    ) and not assignment_is_readback_only(name, value):
                         add_hit(hits, source, node, "fixed_bps_cost_reference", "assignment derives from fixed-bps fee/cost reference")
 
         if isinstance(node, ast.For) and is_fixed_bps_ladder(node):
             add_hit(hits, source, node, "fixed_bps_cost_ladder", "fixed bps ladder is not a verified instrument cost model")
 
-        if isinstance(node, ast.BinOp) and contains_bps_formula(node, allow_diagnostic_stress=allow_diagnostic_stress):
+        if isinstance(node, ast.BinOp) and contains_bps_formula(
+            node,
+            relax_diagnostic_terms=relax_diagnostic_terms,
+            allow_legacy_stress_readback=allow_legacy_stress_readback,
+        ):
             add_hit(hits, source, node, "fixed_bps_cost_formula", "formula subtracts a variable bps ladder in return/percent space")
 
         if isinstance(node, ast.Dict):
             for key_node, value_node in zip(node.keys, node.values):
                 key = string_value(key_node)
-                if key is not None and fixed_bps_field(key):
+                if key is not None and fixed_bps_field(
+                    key,
+                    relax_diagnostic_terms=relax_diagnostic_terms,
+                    allow_legacy_stress_readback=allow_legacy_stress_readback,
+                ):
                     add_hit(hits, source, key_node, "fixed_bps_cost_field", "dict emits a fixed-bps fee/cost field")
                 if key is not None and key.lower() in COST_LITERAL_KEYS:
                     value_num = numeric_value(value_node)

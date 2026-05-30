@@ -178,13 +178,68 @@ def signal(row, min_abs_1h_slope_bps=3.0, reclaim_bps_min=8.0):
         self.assertTrue(report["ok"])
         self.assertEqual(report["checked_files"], 0)
 
-    def test_legacy_revival_tool_is_skipped_so_it_can_parse_old_bps_fields(self) -> None:
+    def test_legacy_revival_tool_is_not_whitelisted(self) -> None:
         path = self.write_source("stress_bps_per_side = 5\n", name="futures_bps_false_negative_revival.py")
 
         report = checker.check_paths(checker.discover_paths([path]))
 
-        self.assertTrue(report["ok"])
-        self.assertEqual(report["checked_files"], 0)
+        self.assertFalse(report["ok"])
+        self.assertEqual(report["checked_files"], 1)
+        self.assertEqual(report["violating_files"], 1)
+
+    def test_allows_explicit_legacy_stress_readback_tool_without_filename_whitelist(self) -> None:
+        path = self.write_source(
+            '''
+"""Read-only legacy 5bps/side stress rehearing.
+
+This helper does not promote anything; it rechecks legacy rows against the
+verified per-contract instrument-cost model.
+"""
+
+def classify(row, stress_bps_per_side=5.0):
+    stress_5bps_total_pct = row.get("5bps_per_side_total_profit_pct")
+    return stress_5bps_total_pct, stress_bps_per_side
+''',
+            name="legacy_rehear.py",
+        )
+
+        report = checker.check_source_file(path)
+
+        self.assertTrue(report["ok"], report["violations"])
+
+    def test_allows_role_marked_futures_stress_telemetry(self) -> None:
+        path = self.write_source(
+            '''
+def build(row, stress_bps_per_side=5.0):
+    return {
+        "stress_5bps_total_profit_pct": row.get("5bps_per_side_total_profit_pct"),
+        "cost_stress_role": "telemetry_not_futures_hard_gate",
+        "stress_bps_per_side": stress_bps_per_side,
+    }
+''',
+            name="stress_telemetry.py",
+        )
+
+        report = checker.check_source_file(path)
+
+        self.assertTrue(report["ok"], report["violations"])
+
+    def test_flags_values_assignment_of_legacy_fixed_bps_cost_fields(self) -> None:
+        path = self.write_source(
+            '''
+def parse(row):
+    values = {}
+    values["5bps_per_side_total_profit_pct"] = row.get("5bps_per_side_total_profit_pct")
+    values["configured_fee_5bps_total_profit_pct"] = row.get("configured_fee_5bps_total_profit_pct")
+    return values
+''',
+            name="legacy_values_emit.py",
+        )
+
+        report = checker.check_source_file(path)
+
+        self.assertFalse(report["ok"])
+        self.assertIn("fixed_bps_cost_field", {hit["violation"] for hit in report["violations"]})
 
 
 if __name__ == "__main__":

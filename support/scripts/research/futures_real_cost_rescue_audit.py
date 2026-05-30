@@ -4,7 +4,7 @@
 This helper is deliberately read-only. It does not promote a strategy, launch
 AutoQuant, or mark anything trade usable. Its job is narrower: normalize legacy
 Gate-1 rows into a small rescue queue so futures candidates killed only by a
-blanket ``5bps/side`` stress can be replayed with the verified per-contract
+blanket ``fixed-cost`` stress can be replayed with the verified per-contract
 instrument-cost model.
 """
 
@@ -31,7 +31,7 @@ class RescueRow:
     source_table: str
     source_index: int
     instrument_cost_total_pct: float | None
-    stress_5bps_total_pct: float | None
+    legacy_fixed_cost_total_pct: float | None
     gross_total_pct: float | None
     profit_factor: float | None
     win_rate: float | None
@@ -39,7 +39,7 @@ class RescueRow:
     positive_years: int | None
     years: int | None
     survives_instrument_cost: bool
-    survives_5bps_stress: bool
+    survives_legacy_fixed_cost: bool
     session_scope: str | None
     rth_filter_applied: bool | None
     eth_full_retained_session_evidence: bool
@@ -81,10 +81,10 @@ def normalize_row(row: dict[str, Any], source_path: str, source_table: str, sour
         "real_cost_total_profit_pct",
         "current_fee_total_profit_pct",
     )
-    stress_5bps_total_pct = _first_float(
+    legacy_fixed_cost_total_pct = _first_float(
         row,
         "5bps_per_side_total_profit_pct",
-        "stress_5bps_total_pct",
+        "legacy_fixed_cost_total_pct",
         "net_after_5bps_side_pct",
         "net_after_5bps_per_side_pct",
         "legacy_5bps_total_profit_pct",
@@ -102,10 +102,10 @@ def normalize_row(row: dict[str, Any], source_path: str, source_table: str, sour
         survives_instrument_cost = instrument_cost_total_pct > 0.0
     else:
         survives_instrument_cost = _truthy(row.get("survives_instrument_cost"))
-    if stress_5bps_total_pct is not None:
-        survives_5bps_stress = stress_5bps_total_pct > 0.0
+    if legacy_fixed_cost_total_pct is not None:
+        survives_legacy_fixed_cost = legacy_fixed_cost_total_pct > 0.0
     else:
-        survives_5bps_stress = _truthy(row.get("survives_5bps_per_side")) or _truthy(
+        survives_legacy_fixed_cost = _truthy(row.get("survives_5bps_per_side")) or _truthy(
             row.get("survives_5bps_density")
         )
 
@@ -119,9 +119,9 @@ def normalize_row(row: dict[str, Any], source_path: str, source_table: str, sour
     year_coverage_ok = _year_coverage_ok(positive_years, years, row)
     reason_codes = _reason_codes(
         instrument_cost_total_pct=instrument_cost_total_pct,
-        stress_5bps_total_pct=stress_5bps_total_pct,
+        legacy_fixed_cost_total_pct=legacy_fixed_cost_total_pct,
         survives_instrument_cost=survives_instrument_cost,
-        survives_5bps_stress=survives_5bps_stress,
+        survives_legacy_fixed_cost=survives_legacy_fixed_cost,
         trade_count=trade_count,
         eth_evidence=eth_evidence,
         rth_filter_applied=rth_filter_applied,
@@ -133,9 +133,9 @@ def normalize_row(row: dict[str, Any], source_path: str, source_table: str, sour
     rescue_class = _classify_rescue(
         gross_total_pct=gross_total_pct,
         instrument_cost_total_pct=instrument_cost_total_pct,
-        stress_5bps_total_pct=stress_5bps_total_pct,
+        legacy_fixed_cost_total_pct=legacy_fixed_cost_total_pct,
         survives_instrument_cost=survives_instrument_cost,
-        survives_5bps_stress=survives_5bps_stress,
+        survives_legacy_fixed_cost=survives_legacy_fixed_cost,
         trade_count=trade_count,
         eth_evidence=eth_evidence,
         rth_filter_applied=rth_filter_applied,
@@ -156,7 +156,7 @@ def normalize_row(row: dict[str, Any], source_path: str, source_table: str, sour
         source_table=source_table,
         source_index=source_index,
         instrument_cost_total_pct=instrument_cost_total_pct,
-        stress_5bps_total_pct=stress_5bps_total_pct,
+        legacy_fixed_cost_total_pct=legacy_fixed_cost_total_pct,
         gross_total_pct=gross_total_pct,
         profit_factor=_first_float(row, "instrument_cost_profit_factor", "profit_factor", "pf"),
         win_rate=_first_float(row, "win_rate", "win_rate_pct"),
@@ -164,7 +164,7 @@ def normalize_row(row: dict[str, Any], source_path: str, source_table: str, sour
         positive_years=positive_years,
         years=years,
         survives_instrument_cost=survives_instrument_cost,
-        survives_5bps_stress=survives_5bps_stress,
+        survives_legacy_fixed_cost=survives_legacy_fixed_cost,
         session_scope=session_scope,
         rth_filter_applied=rth_filter_applied,
         eth_full_retained_session_evidence=eth_evidence,
@@ -187,14 +187,14 @@ def build_report(
     fee_cleared_but_blocked = [row for row in rows if row.rescue_class == "fee_cleared_but_blocked_non_cost"]
     replay = [row for row in rows if row.rescue_class == "needs_reprice_replay"]
     eth_replay = [row for row in rows if row.rescue_class == "needs_eth_full_session_replay"]
-    already_stress_alive = [row for row in rows if row.rescue_class == "already_survives_5bps_stress"]
+    already_stress_alive = [row for row in rows if row.rescue_class == "already_survives_legacy_fixed_cost"]
     not_rescued = [row for row in rows if row.rescue_class.startswith("not_rescued")]
     known_classes = {
         "rescued_for_exact_aq",
         "fee_cleared_but_blocked_non_cost",
         "needs_reprice_replay",
         "needs_eth_full_session_replay",
-        "already_survives_5bps_stress",
+        "already_survives_legacy_fixed_cost",
     }
     other = [row for row in rows if row.rescue_class not in known_classes and not row.rescue_class.startswith("not_rescued")]
     class_counts: dict[str, int] = {}
@@ -210,14 +210,14 @@ def build_report(
         "fee_cleared_but_blocked_count": len(fee_cleared_but_blocked),
         "needs_reprice_replay_count": len(replay),
         "needs_eth_full_session_replay_count": len(eth_replay),
-        "already_survives_5bps_stress_count": len(already_stress_alive),
+        "already_survives_legacy_fixed_cost_count": len(already_stress_alive),
         "not_rescued_count": len(not_rescued),
         "other_class_count": len(other),
         "rescued_for_exact_aq": [asdict(row) for row in rescued],
         "fee_cleared_but_blocked": [asdict(row) for row in fee_cleared_but_blocked],
         "needs_reprice_replay": [asdict(row) for row in replay],
         "needs_eth_full_session_replay": [asdict(row) for row in eth_replay],
-        "already_survives_5bps_stress": [asdict(row) for row in already_stress_alive],
+        "already_survives_legacy_fixed_cost": [asdict(row) for row in already_stress_alive],
         "not_rescued": [asdict(row) for row in not_rescued],
         "other_classes": [asdict(row) for row in other],
         "promotion_allowed": False,
@@ -236,9 +236,9 @@ def _classify_rescue(
     *,
     gross_total_pct: float | None,
     instrument_cost_total_pct: float | None,
-    stress_5bps_total_pct: float | None,
+    legacy_fixed_cost_total_pct: float | None,
     survives_instrument_cost: bool,
-    survives_5bps_stress: bool,
+    survives_legacy_fixed_cost: bool,
     trade_count: int,
     eth_evidence: bool,
     rth_filter_applied: bool | None,
@@ -251,17 +251,17 @@ def _classify_rescue(
     if instrument_cost_total_pct is not None:
         if not survives_instrument_cost:
             return "not_rescued_cost_negative"
-        if stress_5bps_total_pct is None:
+        if legacy_fixed_cost_total_pct is None:
             return "not_rescued_no_cost_wall_evidence"
-        if survives_5bps_stress:
-            return "already_survives_5bps_stress"
+        if survives_legacy_fixed_cost:
+            return "already_survives_legacy_fixed_cost"
         if not eth_evidence or rth_filter_applied is not False:
             return "needs_eth_full_session_replay"
         if not sample_floor or not density_ok or not year_coverage_ok:
             return "fee_cleared_but_blocked_non_cost"
         return "rescued_for_exact_aq"
 
-    legacy_failed = stress_5bps_total_pct is not None and stress_5bps_total_pct <= 0.0
+    legacy_failed = legacy_fixed_cost_total_pct is not None and legacy_fixed_cost_total_pct <= 0.0
     gross_positive = gross_total_pct is None or gross_total_pct > 0.0
     if legacy_failed and gross_positive:
         return "needs_reprice_replay"
@@ -282,9 +282,9 @@ def _year_coverage_ok(positive_years: int | None, years: int | None, row: dict[s
 def _reason_codes(
     *,
     instrument_cost_total_pct: float | None,
-    stress_5bps_total_pct: float | None,
+    legacy_fixed_cost_total_pct: float | None,
     survives_instrument_cost: bool,
-    survives_5bps_stress: bool,
+    survives_legacy_fixed_cost: bool,
     trade_count: int,
     eth_evidence: bool,
     rth_filter_applied: bool | None,
@@ -299,10 +299,10 @@ def _reason_codes(
         reasons.append("missing_instrument_cost_net")
     elif not survives_instrument_cost:
         reasons.append("survives_instrument_cost_false")
-    if stress_5bps_total_pct is not None and stress_5bps_total_pct <= 0.0 and survives_instrument_cost:
-        reasons.append("old_5bps_false_negative_real_cost_positive")
-    if survives_5bps_stress:
-        reasons.append("already_survives_5bps_stress")
+    if legacy_fixed_cost_total_pct is not None and legacy_fixed_cost_total_pct <= 0.0 and survives_instrument_cost:
+        reasons.append("old_fixed_cost_false_negative_real_cost_positive")
+    if survives_legacy_fixed_cost:
+        reasons.append("already_survives_legacy_fixed_cost")
     if not eth_evidence:
         reasons.append("eth_full_retained_session_unverified")
     if rth_filter_applied is not False:
@@ -366,7 +366,7 @@ def _looks_like_candidate_row(value: dict[str, Any]) -> bool:
             "package_id",
             "trade_count",
             "5bps_per_side_total_profit_pct",
-            "stress_5bps_total_pct",
+            "legacy_fixed_cost_total_pct",
             "instrument_cost_total_profit_pct",
             "instrument_cost_total_ret_pct",
             "instrument_cost_total_pct",
@@ -510,7 +510,7 @@ def main(argv: list[str] | None = None) -> int:
                     "fee_cleared_but_blocked_count": report["fee_cleared_but_blocked_count"],
                     "needs_reprice_replay_count": report["needs_reprice_replay_count"],
                     "needs_eth_full_session_replay_count": report["needs_eth_full_session_replay_count"],
-                    "already_survives_5bps_stress_count": report["already_survives_5bps_stress_count"],
+                    "already_survives_legacy_fixed_cost_count": report["already_survives_legacy_fixed_cost_count"],
                     "promotion_allowed": False,
                     "trade_usable": False,
                     "update_goal": False,
