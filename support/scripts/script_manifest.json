@@ -160,6 +160,14 @@
     "test_command": "python3 -m unittest support.scripts.research.tests.test_regime_branch_grammar_check -v"
   },
   {
+    "name": "instrument_cost_model",
+    "stability": "read_only_utility",
+    "entrypoint": "support/scripts/research/instrument_cost_model.py",
+    "safe_default": true,
+    "requires_data": false,
+    "test_command": "python3 -m unittest support.scripts.research.tests.test_instrument_cost_model -v"
+  },
+  {
     "name": "regime_root_survivor_blocker_report",
     "stability": "read_only_utility",
     "entrypoint": "support/scripts/research/regime_root_survivor_blocker_report.py",

@@ -27,6 +27,14 @@ AQ_REPO = Path("/Users/thrill3r/Auto-Quant")
 AQ_PY = AQ_REPO / ".venv/bin/python"
 if not AQ_PY.exists():
     AQ_PY = Path("python3")
+RESEARCH_SCRIPT_DIR = REPO / "support/scripts/research"
+if str(RESEARCH_SCRIPT_DIR) not in sys.path:
+    sys.path.insert(0, str(RESEARCH_SCRIPT_DIR))
+from instrument_cost_model import (  # noqa: E402
+    futures_cost_profile,
+    normalize_futures_root,
+    product_label_for_symbol,
+)
 
 STAMP = datetime.now(ZoneInfo("Asia/Shanghai")).strftime("%Y%m%dT%H%M%S+0800")
 DEFAULT_ROOT = Path("/tmp") / f"ict-engine-tomac-index-futures-clean-aq-{STAMP}"
@@ -126,144 +134,6 @@ class GeneratedStrategySpec:
     branch_path: str
     family: str
     direction: str
-
-
-@dataclass(frozen=True)
-class FuturesCostProfile:
-    profile_id: str
-    root_symbol: str
-    exchange: str
-    tick_size: float
-    tick_value: float
-    commission_per_contract_side: float = 1.00
-    exchange_fees_per_contract_side: float = 1.40
-    regulatory_fees_per_contract_side: float = 0.02
-    assumed_spread_ticks: float = 1.0
-    assumed_slippage_ticks_per_side: float = 1.0
-    source: str = "ict_engine_default_assumption_v1"
-
-    @property
-    def point_value(self) -> float:
-        return self.tick_value / self.tick_size
-
-    def round_trip_fee_cash(self) -> float:
-        return 2.0 * (
-            self.commission_per_contract_side
-            + self.exchange_fees_per_contract_side
-            + self.regulatory_fees_per_contract_side
-        )
-
-    def round_trip_cost_cash(self) -> float:
-        return self.round_trip_fee_cash() + (
-            self.assumed_spread_ticks + 2.0 * self.assumed_slippage_ticks_per_side
-        ) * self.tick_value
-
-    def round_trip_fee_points(self) -> float:
-        return self.round_trip_fee_cash() / self.point_value
-
-    def round_trip_cost_points(self) -> float:
-        return self.round_trip_cost_cash() / self.point_value
-
-    def round_trip_fee_pct(self, representative_price: float) -> float:
-        if representative_price <= 0:
-            raise ValueError("representative_price must be positive")
-        return self.round_trip_fee_points() / representative_price * 100.0
-
-    def round_trip_cost_pct(self, representative_price: float) -> float:
-        if representative_price <= 0:
-            raise ValueError("representative_price must be positive")
-        return self.round_trip_cost_points() / representative_price * 100.0
-
-
-FUTURES_COST_PROFILES: dict[str, FuturesCostProfile] = {
-    "ES": FuturesCostProfile(
-        "CME_ES_IBKR_verified_20260530_v1",
-        "ES",
-        "CME",
-        0.25,
-        12.5,
-        0.85,
-        1.38,
-        0.02,
-        source="IBKR futures commission and CME fee recovery verified 2026-05-30",
-    ),
-    "MES": FuturesCostProfile("CME_MES_default_v1", "MES", "CME", 0.25, 1.25, 0.39, 0.35),
-    "NQ": FuturesCostProfile(
-        "CME_NQ_IBKR_verified_20260530_v1",
-        "NQ",
-        "CME",
-        0.25,
-        5.0,
-        0.85,
-        1.38,
-        0.02,
-        source="IBKR futures commission and CME fee recovery verified 2026-05-30",
-    ),
-    "MNQ": FuturesCostProfile("CME_MNQ_default_v1", "MNQ", "CME", 0.25, 0.5, 0.39, 0.35),
-    "YM": FuturesCostProfile(
-        "CBOT_YM_IBKR_verified_20260530_v1",
-        "YM",
-        "CBOT",
-        1.0,
-        5.0,
-        0.85,
-        1.38,
-        0.02,
-        source="IBKR futures commission and CBOT YM fee recovery verified 2026-05-30",
-    ),
-    "MYM": FuturesCostProfile("CBOT_MYM_default_v1", "MYM", "CBOT", 1.0, 0.5, 0.39, 0.35),
-    "RTY": FuturesCostProfile("CME_RTY_default_v1", "RTY", "CME", 0.1, 5.0),
-    "M2K": FuturesCostProfile("CME_M2K_default_v1", "M2K", "CME", 0.1, 0.5, 0.39, 0.35),
-    "GC": FuturesCostProfile("COMEX_GC_default_v1", "GC", "COMEX", 0.1, 10.0, 1.00, 1.50),
-    "XAU": FuturesCostProfile("COMEX_XAU_default_v1", "XAU", "COMEX", 0.1, 10.0, 1.00, 1.50),
-    "MGC": FuturesCostProfile("COMEX_MGC_default_v1", "MGC", "COMEX", 0.1, 1.0, 0.39, 0.35),
-    "SI": FuturesCostProfile("COMEX_SI_default_v1", "SI", "COMEX", 0.005, 25.0, 1.00, 1.50),
-    "SIL": FuturesCostProfile("COMEX_SIL_default_v1", "SIL", "COMEX", 0.005, 5.0, 0.39, 0.35),
-    "CL": FuturesCostProfile("NYMEX_CL_default_v1", "CL", "NYMEX", 0.01, 10.0, 1.00, 1.50),
-    "MCL": FuturesCostProfile("NYMEX_MCL_default_v1", "MCL", "NYMEX", 0.01, 1.0, 0.39, 0.35),
-    "NG": FuturesCostProfile("NYMEX_NG_default_v1", "NG", "NYMEX", 0.001, 10.0, 1.00, 1.50),
-    "ZN": FuturesCostProfile("CBOT_ZN_default_v1", "ZN", "CBOT", 0.015625, 15.625, 1.00, 0.90),
-    "ZB": FuturesCostProfile("CBOT_ZB_default_v1", "ZB", "CBOT", 0.03125, 31.25, 1.00, 0.90),
-    "ZF": FuturesCostProfile("CBOT_ZF_default_v1", "ZF", "CBOT", 0.0078125, 7.8125, 1.00, 0.90),
-    "6E": FuturesCostProfile("CME_6E_default_v1", "6E", "CME", 0.00005, 6.25, 1.00, 1.60),
-    "M6E": FuturesCostProfile("CME_M6E_default_v1", "M6E", "CME", 0.00005, 1.25, 0.39, 0.35),
-    "ZC": FuturesCostProfile("CBOT_ZC_default_v1", "ZC", "CBOT", 0.25, 12.5),
-    "ZS": FuturesCostProfile("CBOT_ZS_default_v1", "ZS", "CBOT", 0.25, 12.5),
-    "ZW": FuturesCostProfile("CBOT_ZW_default_v1", "ZW", "CBOT", 0.25, 12.5),
-}
-
-
-def normalize_futures_root(symbol: str) -> str:
-    upper = str(symbol).upper().strip()
-    for root in (
-        "MES", "MNQ", "MYM", "M2K", "MGC", "MCL", "M6E", "RTY", "SIL", "XAU", "ES",
-        "NQ", "YM", "GC", "SI", "CL", "NG", "ZN", "ZB", "ZF", "6E", "ZC", "ZS", "ZW",
-    ):
-        if upper.startswith(root):
-            return root
-    letters = "".join(ch for ch in upper if ch.isalpha())
-    return letters
-
-
-def futures_cost_profile(symbol: str) -> FuturesCostProfile | None:
-    return FUTURES_COST_PROFILES.get(normalize_futures_root(symbol))
-
-
-def product_label_for_symbol(symbol: str) -> str:
-    root = normalize_futures_root(symbol)
-    if root in {"ES", "MES", "NQ", "MNQ", "YM", "MYM", "RTY", "M2K"}:
-        return "equity_index"
-    if root in {"6E", "M6E"}:
-        return "fx_futures"
-    if root in {"GC", "MGC", "SI", "SIL", "XAU"}:
-        return "precious_metals_futures"
-    if root in {"CL", "MCL", "NG"}:
-        return "energy_futures"
-    if root in {"ZN", "ZB", "ZF"}:
-        return "rates_futures"
-    if root in {"ZC", "ZS", "ZW"}:
-        return "agri_futures"
-    return "futures_other"
 
 
 def source_universe() -> list[TomacSource]:
@@ -5190,6 +5060,10 @@ def classify_screen_row(row: dict[str, Any]) -> dict[str, Any]:
         fee_pct = profile.round_trip_fee_pct(representative_price)
         scored["cost_profile_id"] = profile.profile_id
         scored["cost_profile_source"] = profile.source
+        scored["cost_model_status"] = profile.status
+        scored["cost_model_verified_for_promotion"] = profile.verified_for_promotion
+        scored["promotion_cost_verified"] = profile.verified_for_promotion
+        scored["cost_model_blocker"] = "none" if profile.verified_for_promotion else "cost_model_unverified"
         scored["instrument_fee_only_round_trip_cash"] = round(profile.round_trip_fee_cash(), 6)
         scored["instrument_all_in_round_trip_cash"] = round(profile.round_trip_cost_cash(), 6)
         scored["instrument_fee_only_round_trip_pct"] = round(fee_pct, 6)
@@ -5204,6 +5078,10 @@ def classify_screen_row(row: dict[str, Any]) -> dict[str, Any]:
     else:
         scored["cost_profile_id"] = "unknown"
         scored["cost_profile_source"] = "missing_futures_cost_profile"
+        scored["cost_model_status"] = "cost_model_unverified"
+        scored["cost_model_verified_for_promotion"] = False
+        scored["promotion_cost_verified"] = False
+        scored["cost_model_blocker"] = "cost_model_unverified"
         scored["instrument_fee_only_round_trip_cash"] = None
         scored["instrument_all_in_round_trip_cash"] = None
         scored["instrument_fee_only_round_trip_pct"] = None
@@ -5236,6 +5114,7 @@ def classify_screen_row(row: dict[str, Any]) -> dict[str, Any]:
     scored["gate1_survivor"] = bool(
         scored["density_target_1_to_3_per_day"]
         and scored["minimum_trade_sample_floor_met"]
+        and scored["cost_model_verified_for_promotion"]
         and scored["survives_instrument_cost"]
         and scored["has_win_loss_diversity"]
         and scored["direction_consistent_local"]

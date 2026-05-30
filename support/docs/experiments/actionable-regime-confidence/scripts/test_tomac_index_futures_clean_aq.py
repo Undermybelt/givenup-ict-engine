@@ -2530,6 +2530,17 @@ class TomacIndexFuturesCleanAqTest(unittest.TestCase):
                 )
                 self.assertIn("IBKR", profile.source)
 
+    def test_wrapper_uses_shared_verified_micro_futures_cost_profile(self) -> None:
+        module = self.load_module()
+
+        profile = module.futures_cost_profile("MNQ")
+
+        self.assertIsNotNone(profile)
+        self.assertEqual(profile.profile_id, "CME_MNQ_IBKR_verified_20260530_v1")
+        self.assertEqual(profile.root_symbol, "MNQ")
+        self.assertAlmostEqual(profile.all_in_per_contract_per_side, 0.62)
+        self.assertTrue(profile.verified_for_promotion)
+
     def test_nq_realistic_contract_cost_wall_is_sub_bps_not_10bps_stress(self) -> None:
         module = self.load_module()
 
@@ -2715,6 +2726,36 @@ class TomacIndexFuturesCleanAqTest(unittest.TestCase):
         self.assertFalse(row["survives_5bps_per_side"])
         self.assertEqual(row["cost_stress_5bps_role"], "telemetry_not_futures_hard_gate")
         self.assertTrue(row["gate1_survivor"])
+
+    def test_gate1_survivor_blocks_unverified_default_futures_cost_profile(self) -> None:
+        module = self.load_module()
+
+        row = module.classify_screen_row(
+            {
+                "scope": "per_pair",
+                "symbol": "RTY",
+                "pair": "RTY/USD",
+                "timeframe": "5m",
+                "strategy_name": "SyntheticUnverifiedDefaultCostProfile",
+                "factor_id": "synthetic_unverified_default_cost_profile",
+                "branch_path": "TrendExpansion -> SyntheticUnverifiedDefaultCostProfile",
+                "family": "synthetic",
+                "direction": "long",
+                "trade_count": 120,
+                "wins": 70,
+                "losses": 50,
+                "days": 60,
+                "total_profit_pct": 20.0,
+                "representative_entry_price": 2100.0,
+            }
+        )
+
+        self.assertEqual(row["cost_profile_id"], "CME_RTY_default_v1")
+        self.assertEqual(row["cost_model_status"], "default_assumption_unverified")
+        self.assertFalse(row["cost_model_verified_for_promotion"])
+        self.assertTrue(row["survives_instrument_cost"])
+        self.assertEqual(row["cost_model_blocker"], "cost_model_unverified")
+        self.assertFalse(row["gate1_survivor"])
 
     def test_cost_survival_is_separate_from_trade_sample_floor(self) -> None:
         module = self.load_module()
