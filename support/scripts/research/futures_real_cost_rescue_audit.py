@@ -36,6 +36,8 @@ class RescueRow:
     profit_factor: float | None
     win_rate: float | None
     avg_net_bps: float | None
+    positive_years: int | None
+    years: int | None
     survives_instrument_cost: bool
     survives_5bps_stress: bool
     session_scope: str | None
@@ -43,6 +45,7 @@ class RescueRow:
     eth_full_retained_session_evidence: bool
     minimum_trade_sample_floor_met: bool
     density_target_1_to_3_per_day: bool
+    reason_codes: list[str]
     rescue_class: str
     promotion_allowed: bool = False
     trade_usable: bool = False
@@ -110,7 +113,22 @@ def normalize_row(row: dict[str, Any], source_path: str, source_table: str, sour
     rth_filter_applied = _boolish(row.get("rth_filter_applied"))
     eth_evidence = _truthy(row.get("eth_full_retained_session_evidence")) or _session_scope_is_eth(session_scope)
     sample_floor = _truthy(row.get("minimum_trade_sample_floor_met")) or trade_count >= 30
-    density_ok = _truthy(row.get("density_target_1_to_3_per_day"))
+    density_ok = _truthy(row.get("density_target_1_to_3_per_day")) or _truthy(row.get("density_floor_met"))
+    positive_years = _intish(_first_present(row, "positive_years", "positive_year_count"))
+    years = _intish(_first_present(row, "years", "year_count", "total_years"))
+    year_coverage_ok = _year_coverage_ok(positive_years, years, row)
+    reason_codes = _reason_codes(
+        instrument_cost_total_pct=instrument_cost_total_pct,
+        stress_5bps_total_pct=stress_5bps_total_pct,
+        survives_instrument_cost=survives_instrument_cost,
+        survives_5bps_stress=survives_5bps_stress,
+        trade_count=trade_count,
+        eth_evidence=eth_evidence,
+        rth_filter_applied=rth_filter_applied,
+        sample_floor=sample_floor,
+        density_ok=density_ok,
+        year_coverage_ok=year_coverage_ok,
+    )
 
     rescue_class = _classify_rescue(
         gross_total_pct=gross_total_pct,
@@ -123,6 +141,7 @@ def normalize_row(row: dict[str, Any], source_path: str, source_table: str, sour
         rth_filter_applied=rth_filter_applied,
         sample_floor=sample_floor,
         density_ok=density_ok,
+        year_coverage_ok=year_coverage_ok,
     )
 
     return RescueRow(
@@ -142,6 +161,8 @@ def normalize_row(row: dict[str, Any], source_path: str, source_table: str, sour
         profit_factor=_first_float(row, "instrument_cost_profit_factor", "profit_factor", "pf"),
         win_rate=_first_float(row, "win_rate", "win_rate_pct"),
         avg_net_bps=_first_float(row, "avg_net_bps", "average_net_bps", "avg_trade_net_bps"),
+        positive_years=positive_years,
+        years=years,
         survives_instrument_cost=survives_instrument_cost,
         survives_5bps_stress=survives_5bps_stress,
         session_scope=session_scope,
@@ -149,6 +170,7 @@ def normalize_row(row: dict[str, Any], source_path: str, source_table: str, sour
         eth_full_retained_session_evidence=eth_evidence,
         minimum_trade_sample_floor_met=sample_floor,
         density_target_1_to_3_per_day=density_ok,
+        reason_codes=reason_codes,
         rescue_class=rescue_class,
     )
 
@@ -162,12 +184,14 @@ def build_report(
     """Build and optionally write a compact real-cost rescue report."""
     rows = _dedupe_best(_iter_normalized_rows(sources))
     rescued = [row for row in rows if row.rescue_class == "rescued_for_exact_aq"]
+    fee_cleared_but_blocked = [row for row in rows if row.rescue_class == "fee_cleared_but_blocked_non_cost"]
     replay = [row for row in rows if row.rescue_class == "needs_reprice_replay"]
     eth_replay = [row for row in rows if row.rescue_class == "needs_eth_full_session_replay"]
     already_stress_alive = [row for row in rows if row.rescue_class == "already_survives_5bps_stress"]
     not_rescued = [row for row in rows if row.rescue_class.startswith("not_rescued")]
     known_classes = {
         "rescued_for_exact_aq",
+        "fee_cleared_but_blocked_non_cost",
         "needs_reprice_replay",
         "needs_eth_full_session_replay",
         "already_survives_5bps_stress",
@@ -183,12 +207,14 @@ def build_report(
         "row_count": len(rows),
         "class_counts": dict(sorted(class_counts.items())),
         "strict_rescue_count": len(rescued),
+        "fee_cleared_but_blocked_count": len(fee_cleared_but_blocked),
         "needs_reprice_replay_count": len(replay),
         "needs_eth_full_session_replay_count": len(eth_replay),
         "already_survives_5bps_stress_count": len(already_stress_alive),
         "not_rescued_count": len(not_rescued),
         "other_class_count": len(other),
         "rescued_for_exact_aq": [asdict(row) for row in rescued],
+        "fee_cleared_but_blocked": [asdict(row) for row in fee_cleared_but_blocked],
         "needs_reprice_replay": [asdict(row) for row in replay],
         "needs_eth_full_session_replay": [asdict(row) for row in eth_replay],
         "already_survives_5bps_stress": [asdict(row) for row in already_stress_alive],
@@ -218,6 +244,7 @@ def _classify_rescue(
     rth_filter_applied: bool | None,
     sample_floor: bool,
     density_ok: bool,
+    year_coverage_ok: bool,
 ) -> str:
     if trade_count <= 0:
         return "not_rescued_zero_trades"
@@ -228,6 +255,8 @@ def _classify_rescue(
             return "already_survives_5bps_stress"
         if not eth_evidence or rth_filter_applied is not False:
             return "needs_eth_full_session_replay"
+        if not sample_floor or not density_ok or not year_coverage_ok:
+            return "fee_cleared_but_blocked_non_cost"
         return "rescued_for_exact_aq"
 
     legacy_failed = stress_5bps_total_pct is not None and stress_5bps_total_pct <= 0.0
@@ -235,6 +264,54 @@ def _classify_rescue(
     if legacy_failed and gross_positive:
         return "needs_reprice_replay"
     return "not_rescued_no_cost_wall_evidence"
+
+
+def _year_coverage_ok(positive_years: int | None, years: int | None, row: dict[str, Any]) -> bool:
+    explicit = _boolish(_first_present(row, "year_coverage_ok", "positive_year_coverage_met", "year_stability_met"))
+    if explicit is not None:
+        return explicit
+    if positive_years is None or years is None:
+        return True
+    if years >= 5:
+        return positive_years >= 3
+    return positive_years >= max(1, years - 1)
+
+
+def _reason_codes(
+    *,
+    instrument_cost_total_pct: float | None,
+    stress_5bps_total_pct: float | None,
+    survives_instrument_cost: bool,
+    survives_5bps_stress: bool,
+    trade_count: int,
+    eth_evidence: bool,
+    rth_filter_applied: bool | None,
+    sample_floor: bool,
+    density_ok: bool,
+    year_coverage_ok: bool,
+) -> list[str]:
+    reasons: list[str] = []
+    if trade_count <= 0:
+        reasons.append("zero_trades")
+    if instrument_cost_total_pct is None:
+        reasons.append("missing_instrument_cost_net")
+    elif not survives_instrument_cost:
+        reasons.append("survives_instrument_cost_false")
+    if stress_5bps_total_pct is not None and stress_5bps_total_pct <= 0.0 and survives_instrument_cost:
+        reasons.append("old_5bps_false_negative_real_cost_positive")
+    if survives_5bps_stress:
+        reasons.append("already_survives_5bps_stress")
+    if not eth_evidence:
+        reasons.append("eth_full_retained_session_unverified")
+    if rth_filter_applied is not False:
+        reasons.append("rth_filter_not_false")
+    if not sample_floor:
+        reasons.append("sample_floor_not_met")
+    if not density_ok:
+        reasons.append("density_floor_not_met")
+    if not year_coverage_ok:
+        reasons.append("positive_year_coverage_too_weak_or_missing")
+    return reasons
 
 
 def _iter_normalized_rows(sources: Iterable[Path]) -> list[RescueRow]:
@@ -323,9 +400,10 @@ def _row_score(row: RescueRow) -> tuple[int, float, int]:
 def _rescue_rank(rescue_class: str) -> int:
     order = {
         "rescued_for_exact_aq": 0,
-        "needs_reprice_replay": 1,
-        "needs_eth_full_session_replay": 2,
-        "not_rescued_cost_negative": 3,
+        "fee_cleared_but_blocked_non_cost": 1,
+        "needs_reprice_replay": 2,
+        "needs_eth_full_session_replay": 3,
+        "not_rescued_cost_negative": 4,
     }
     return order.get(rescue_class, 9)
 
@@ -427,6 +505,7 @@ def main(argv: list[str] | None = None) -> int:
                     "row_count": report["row_count"],
                     "class_counts": report["class_counts"],
                     "strict_rescue_count": report["strict_rescue_count"],
+                    "fee_cleared_but_blocked_count": report["fee_cleared_but_blocked_count"],
                     "needs_reprice_replay_count": report["needs_reprice_replay_count"],
                     "needs_eth_full_session_replay_count": report["needs_eth_full_session_replay_count"],
                     "already_survives_5bps_stress_count": report["already_survives_5bps_stress_count"],

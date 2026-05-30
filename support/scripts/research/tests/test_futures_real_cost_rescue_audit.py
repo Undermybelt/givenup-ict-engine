@@ -64,6 +64,132 @@ class FuturesRealCostRescueAuditTests(unittest.TestCase):
         self.assertIsNone(row.instrument_cost_total_pct)
         self.assertFalse(row.survives_5bps_stress)
 
+    def test_fee_positive_density_failed_rows_are_blocked_not_exact_rescued(self) -> None:
+        row = audit.normalize_row(
+            {
+                "factor_id": "tomac_nq_sparse_real_cost_positive_v1",
+                "symbol": "NQ",
+                "timeframe": "1h",
+                "trade_count": 275,
+                "instrument_cost_total_ret_pct": 14.22,
+                "5bps_per_side_total_profit_pct": -11.52,
+                "session_scope": "ETH/full_retained_session",
+                "rth_filter_applied": False,
+                "eth_full_retained_session_evidence": True,
+                "minimum_trade_sample_floor_met": True,
+                "density_target_1_to_3_per_day": False,
+            },
+            "artifact.json",
+            "top_rows",
+            2,
+        )
+
+        self.assertIsNotNone(row)
+        assert row is not None
+        self.assertEqual(row.rescue_class, "fee_cleared_but_blocked_non_cost")
+        self.assertTrue(row.survives_instrument_cost)
+        self.assertFalse(row.survives_5bps_stress)
+        self.assertIn("density_floor_not_met", row.reason_codes)
+
+    def test_density_floor_met_alias_allows_ledger_rescue(self) -> None:
+        row = audit.normalize_row(
+            {
+                "factor_id": "tomac_nq_ledger_density_alias_v1",
+                "symbol": "NQ",
+                "timeframe": "30m",
+                "trade_count": 462,
+                "instrument_cost_total_ret_pct": 13.01,
+                "5bps_per_side_total_profit_pct": -30.26,
+                "session_scope": "ETH/full_retained_session",
+                "rth_filter_applied": "False",
+                "eth_full_retained_session_evidence": "True",
+                "minimum_trade_sample_floor_met": "True",
+                "density_floor_met": "True",
+                "positive_years": "4",
+                "years": "5",
+            },
+            "ledger.csv",
+            "csv",
+            0,
+        )
+
+        self.assertIsNotNone(row)
+        assert row is not None
+        self.assertEqual(row.rescue_class, "rescued_for_exact_aq")
+
+    def test_fee_positive_weak_year_coverage_is_blocked_not_exact_rescued(self) -> None:
+        row = audit.normalize_row(
+            {
+                "factor_id": "tomac_nq_weak_years_v1",
+                "symbol": "NQ",
+                "timeframe": "30m",
+                "trade_count": 428,
+                "instrument_cost_total_ret_pct": 8.51,
+                "5bps_per_side_total_profit_pct": -31.63,
+                "session_scope": "ETH/full_retained_session",
+                "rth_filter_applied": "False",
+                "eth_full_retained_session_evidence": "True",
+                "minimum_trade_sample_floor_met": "True",
+                "density_floor_met": "True",
+                "positive_years": "2",
+                "years": "5",
+            },
+            "blocked.csv",
+            "csv",
+            1,
+        )
+
+        self.assertIsNotNone(row)
+        assert row is not None
+        self.assertEqual(row.rescue_class, "fee_cleared_but_blocked_non_cost")
+        self.assertIn("positive_year_coverage_too_weak_or_missing", row.reason_codes)
+
+    def test_report_separates_fee_cleared_blocked_rows_from_exact_rescue_queue(self) -> None:
+        with tempfile.TemporaryDirectory() as tmpdir:
+            source = Path(tmpdir) / "screen_rows.csv"
+            with source.open("w", newline="", encoding="utf-8") as handle:
+                writer = csv.DictWriter(
+                    handle,
+                    fieldnames=[
+                        "symbol",
+                        "factor_id",
+                        "trade_count",
+                        "instrument_cost_total_ret_pct",
+                        "5bps_per_side_total_profit_pct",
+                        "session_scope",
+                        "rth_filter_applied",
+                        "eth_full_retained_session_evidence",
+                        "minimum_trade_sample_floor_met",
+                        "density_target_1_to_3_per_day",
+                    ],
+                )
+                writer.writeheader()
+                writer.writerow(
+                    {
+                        "symbol": "NQ",
+                        "factor_id": "tomac_nq_fee_cleared_sparse_v1",
+                        "trade_count": "252",
+                        "instrument_cost_total_ret_pct": "20.116386",
+                        "5bps_per_side_total_profit_pct": "-3.538685",
+                        "session_scope": "ETH/full_retained_session",
+                        "rth_filter_applied": "False",
+                        "eth_full_retained_session_evidence": "True",
+                        "minimum_trade_sample_floor_met": "True",
+                        "density_target_1_to_3_per_day": "False",
+                    }
+                )
+
+            report = audit.build_report([source])
+
+        self.assertEqual(report["strict_rescue_count"], 0)
+        self.assertEqual(report["fee_cleared_but_blocked_count"], 1)
+        self.assertEqual(report["class_counts"], {"fee_cleared_but_blocked_non_cost": 1})
+        self.assertEqual(report["other_class_count"], 0)
+        self.assertEqual(
+            report["fee_cleared_but_blocked"][0]["factor_id"],
+            "tomac_nq_fee_cleared_sparse_v1",
+        )
+
     def test_cost_negative_rows_are_not_rescued(self) -> None:
         row = audit.normalize_row(
             {
