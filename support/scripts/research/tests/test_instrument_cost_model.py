@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import math
 import sys
+import tempfile
 import unittest
 from pathlib import Path
 
@@ -31,23 +32,14 @@ class FuturesGeometryTests(unittest.TestCase):
 
 
 class RealCostConversionTests(unittest.TestCase):
-    def test_nq_real_cost_is_far_below_5bps_stress(self) -> None:
-        # The whole point: the real NQ round-turn fee is ~0.001% of notional, not 0.1%.
+    def test_nq_real_cost_uses_contract_notional(self) -> None:
+        # The whole point: NQ commission is a per-contract dollar amount converted by notional.
         real = icm.real_fee_round_turn_fraction("NQ", 20000.0)
         # round-turn fee fraction = 4.50 / (price * multiplier) = 4.50 / (20000 * 20) = 1.125e-5
-        # i.e. ~0.11 bps round-turn of notional (not the flat 10 bps the old code subtracted).
         self.assertAlmostEqual(real, 4.50 / (20000.0 * 20.0))
         self.assertAlmostEqual(real, 1.125e-5, places=10)
-
-        stress = icm.stress_round_turn_fraction()  # legacy 5 bps/side telemetry -> 10 bps round turn = 1e-3.
-        self.assertAlmostEqual(stress, 1e-3)
-
-        # The flat 5bps/side stress over-charges NQ by ~89x at px 20000 (and ~67x at px 15000,
-        # which is exactly the "~67x" the user observed: 10bps round-turn vs ~0.15bps real).
-        self.assertGreater(stress / real, 80.0)
-        real_15k = icm.real_fee_round_turn_fraction("NQ", 15000.0)
-        self.assertAlmostEqual(stress / real_15k, 1e-3 / (4.50 / (15000.0 * 20.0)))
-        self.assertAlmostEqual(stress / real_15k, 66.6667, places=3)
+        self.assertFalse(hasattr(icm, "stress_round_turn_fraction"))
+        self.assertFalse(hasattr(icm, "net_after_stress_bps"))
 
     def test_per_side_bps_order_of_magnitude(self) -> None:
         # Sanity vs the skill's MGC ~0.21 bps/side observation: NQ should be sub-bp per side.
@@ -62,15 +54,11 @@ class RealCostConversionTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             icm.futures_cost_profile("NQ").round_trip_fee_pct(0.0)
 
-    def test_net_after_real_fee_and_stress_math(self) -> None:
+    def test_net_after_real_fee_math(self) -> None:
         gross = 0.05  # 5% gross over 100 trades
         net_real = icm.net_after_real_fee(gross, 100, "NQ", 20000.0)
-        net_stress = icm.net_after_stress_bps(gross, 100, 5.0)
         self.assertAlmostEqual(net_real, 0.05 - 100 * 1.125e-5)  # 0.048875
-        self.assertAlmostEqual(net_stress, 0.05 - 100 * 1e-3)  # = -0.05
-        # Real cost barely dents gross (loses ~0.0011 on 0.05); the 5bps stress flips it negative.
         self.assertGreater(net_real, 0.0488)
-        self.assertLess(net_stress, 0.0)
 
 
 class VerifiedSeedAndFailClosedTests(unittest.TestCase):
@@ -105,7 +93,7 @@ class VerifiedSeedAndFailClosedTests(unittest.TestCase):
 
 
 class CostPacketTests(unittest.TestCase):
-    def test_packet_separates_real_from_stress(self) -> None:
+    def test_packet_reports_real_verified_cost_only(self) -> None:
         packet = icm.cost_model_packet("NQ", 20000.0)
         self.assertEqual(packet["cost_model_status"], icm.STATUS_VERIFIED)
         self.assertEqual(packet["status"], icm.STATUS_VERIFIED)
@@ -116,10 +104,14 @@ class CostPacketTests(unittest.TestCase):
         self.assertIn("IBKR", packet["venue_routing"])
         self.assertAlmostEqual(packet["contract_multiplier"], 20.0)
         self.assertAlmostEqual(packet["all_in_round_turn_per_contract"], 4.50)
-        # Stress telemetry must be present, labeled, and clearly separate from the real cost.
-        self.assertEqual(packet["legacy_stress_bps_per_side"], 5.0)
-        self.assertEqual(packet["legacy_stress_role"], "telemetry_not_futures_commission_model_not_candidate_gate")
-        self.assertGreater(packet["legacy_stress_round_turn_pct"], packet["real_fee_round_turn_pct"] * 50)
+        self.assertNotIn("legacy_stress_bps_per_side", packet)
+        self.assertNotIn("legacy_stress_round_turn_pct", packet)
+        self.assertNotIn("legacy_stress_role", packet)
+
+    def test_fixed_bps_stress_api_is_not_exposed(self) -> None:
+        self.assertFalse(hasattr(icm, "GATE1_STRESS_BPS_PER_SIDE"))
+        self.assertFalse(hasattr(icm, "STRESS_TELEMETRY_BPS_PER_SIDE"))
+        self.assertFalse(hasattr(icm, "stress_telemetry_packet"))
 
     def test_unknown_symbol_packet_is_unverified(self) -> None:
         packet = icm.cost_model_packet("WHEATBERRY", 100.0)
@@ -130,6 +122,78 @@ class CostPacketTests(unittest.TestCase):
         self.assertEqual(instructions["symbol_root"], "NQ")
         self.assertIn("interactivebrokers.com", instructions["ibkr_main_pricing"])
         self.assertIn("CME", instructions["ibkr_exchange_fee_pages"])
+
+
+class RankRowCostSummaryTests(unittest.TestCase):
+    def test_representative_price_from_ohlcv_csv_uses_median_close(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "ohlcv.csv"
+            path.write_text("timestamp,close\n1,2300\n2,2310\n3,2320\n", encoding="utf-8")
+
+            self.assertAlmostEqual(icm.representative_price_from_ohlcv_csv(path), 2310.0)
+
+    def test_representative_price_from_provider_rows_uses_first_existing_path(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            missing = Path(tmp) / "missing.csv"
+            path = Path(tmp) / "ohlcv.csv"
+            path.write_text("timestamp,close\n1,2290\n2,2300\n", encoding="utf-8")
+
+            price = icm.representative_price_from_provider_rows([
+                {"path": str(missing)},
+                {"path": str(path)},
+            ])
+
+            self.assertAlmostEqual(price, 2295.0)
+
+    def test_rank_rows_real_fee_summary_uses_verified_instrument_cost_only(self) -> None:
+        rows = [
+            {"package_id": "pkg-mgc-dense", "trade_count": 10, "total_profit_pct": 1.0, "win_rate_pct": 60, "branch_path": "B"},
+            {"package_id": "pkg-mgc-flat", "trade_count": 0, "total_profit_pct": 0.0, "win_rate_pct": 0, "branch_path": "B"},
+        ]
+
+        summary = icm.rank_rows_real_fee_summary(
+            rows,
+            symbol="MGC",
+            representative_price=2300.0,
+            label_fn=lambda row: str(row["package_id"]),
+        )
+
+        self.assertTrue(summary["promotion_cost_verified"])
+        self.assertEqual(summary["cost_model"]["cost_model_status"], icm.STATUS_VERIFIED)
+        self.assertEqual(summary["survivors"], ["pkg-mgc-dense"])
+        first = summary["rows"][0]
+        self.assertEqual(first["label"], "pkg-mgc-dense")
+        self.assertIn("instrument_cost_total_profit_pct", first)
+        self.assertIn("survives_instrument_cost", first)
+        self.assertNotIn("5bps_per_side_total_profit_pct", first)
+        expected = 1.0 - 10 * icm.futures_cost_profile("MGC").round_trip_fee_pct(2300.0)
+        self.assertAlmostEqual(first["instrument_cost_total_profit_pct"], round(expected, 6))
+
+    def test_rank_rows_real_fee_output_helpers_have_no_fixed_bps_columns(self) -> None:
+        rows = [
+            {"package_id": "pkg-mgc-dense", "trade_count": 10, "total_profit_pct": 1.0, "win_rate_pct": 60, "branch_path": "B"},
+        ]
+        summary = icm.rank_rows_real_fee_summary(rows, symbol="MGC", representative_price=2300.0)
+
+        self.assertNotIn("5bps", " ".join(icm.REAL_FEE_RANK_FIELDS))
+        lines = icm.real_fee_rank_table_lines(
+            decision="observe",
+            title="Rows",
+            rows=summary["rows"],
+            branch_ok=True,
+            survivors=summary["survivors"],
+            downstream=True,
+        )
+        joined = "\n".join(lines)
+        self.assertIn("instrument cost", joined)
+        self.assertNotIn("5bps", joined)
+
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "rank_rows.csv"
+            icm.write_real_fee_rank_rows_csv(path, summary["rows"])
+            header = path.read_text(encoding="utf-8").splitlines()[0]
+            self.assertIn("instrument_cost_total_profit_pct", header)
+            self.assertNotIn("5bps", header)
 
 
 if __name__ == "__main__":

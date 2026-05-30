@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 from pathlib import Path
 from typing import Any
 
@@ -221,13 +222,32 @@ def row_survives_5bps(row: dict[str, Any]) -> bool:
 def known_futures_root(value: Any) -> bool:
     if not isinstance(value, str):
         return False
-    compact = value.upper().strip()
-    if not compact:
+    return futures_root_token_present(value)
+
+
+def futures_root_token_present(value: Any) -> bool:
+    if not isinstance(value, str):
         return False
-    alnum = "".join(ch for ch in compact if ch.isalnum())
+    text = value.upper().strip()
+    if not text:
+        return False
+    tokens = [token for token in re.split(r"[^A-Z0-9]+", text) if token]
+    compact = "".join(ch for ch in text if ch.isalnum())
+    if compact:
+        tokens.append(compact)
     for root in sorted(FUTURES_ROOTS, key=len, reverse=True):
-        if alnum.startswith(root):
-            return True
+        for token in tokens:
+            if token == root:
+                return True
+            if not token.startswith(root):
+                continue
+            suffix = token[len(root):]
+            if not suffix:
+                return True
+            if suffix.startswith("USD") or suffix[0].isdigit():
+                return True
+            if suffix[0] in "FGHJKMNQUVXZ" and suffix[1:].isdigit():
+                return True
     return False
 
 
@@ -324,6 +344,55 @@ def row_is_futures_instrument_cost(row: dict[str, Any], payload: dict[str, Any])
     )
 
 
+def row_is_futures_context(row: dict[str, Any], payload: dict[str, Any]) -> bool:
+    class_values = [
+        row.get("asset_class"),
+        row.get("instrument_class"),
+        row.get("security_type"),
+        row.get("sec_type"),
+        row.get("product_type"),
+        row.get("product"),
+        row.get("category"),
+    ]
+    if any(
+        isinstance(value, str) and ("future" in value.lower() or value.strip().upper() == "FUT")
+        for value in class_values
+    ):
+        return True
+    if any(known_futures_root(row.get(key)) for key in ("symbol", "contract", "root")):
+        return True
+    profile_id = row.get("cost_profile_id")
+    if isinstance(profile_id, str) and any(
+        token in profile_id.upper() for token in ("CME", "CBOT", "COMEX", "NYMEX", "FUT")
+    ):
+        return True
+    role = str(row.get("cost_stress_5bps_role") or payload.get("cost_stress_5bps_role") or "").lower()
+    row_text = " ".join(
+        str(row.get(key) or "")
+        for key in ("label", "package_id", "strategy_id", "factor_id", "symbol", "contract", "root")
+    )
+    if "telemetry_not_futures_hard_gate" in role and futures_root_token_present(row_text):
+        return True
+    if "tomac" in row_text.lower() and futures_root_token_present(row_text):
+        return True
+    label = row_label(row)
+    return futures_root_token_present(label) and any(separator in label for separator in ("/", "_", "-"))
+
+
+def label_is_futures_5bps_stress(label: Any, payload: dict[str, Any]) -> bool:
+    if not isinstance(label, str) or not label:
+        return False
+    for row in cost_rows(payload):
+        if row_label(row) == label and row_is_futures_context(row, payload):
+            return True
+    role = str(payload.get("cost_stress_5bps_role") or "").lower()
+    if "telemetry_not_futures_hard_gate" in role and futures_root_token_present(label):
+        return True
+    if "tomac" in label.lower() and futures_root_token_present(label):
+        return True
+    return futures_root_token_present(label) and any(separator in label for separator in ("/", "_", "-"))
+
+
 def row_survives_instrument_cost(row: dict[str, Any]) -> bool:
     if row.get("survives_instrument_cost") is True:
         return True
@@ -335,7 +404,9 @@ def row_survives_instrument_cost(row: dict[str, Any]) -> bool:
 
 
 def row_survives_real_cost(row: dict[str, Any], payload: dict[str, Any]) -> bool:
-    return row_survives_5bps(row) or (row_is_futures_instrument_cost(row, payload) and row_survives_instrument_cost(row))
+    if row_is_futures_context(row, payload):
+        return row_is_futures_instrument_cost(row, payload) and row_survives_instrument_cost(row)
+    return row_survives_5bps(row)
 
 
 def exact_5bps_survivors(payload: dict[str, Any]) -> list[str]:
@@ -373,7 +444,11 @@ def exact_instrument_cost_survivors(payload: dict[str, Any]) -> list[str]:
 
 
 def exact_real_cost_survivors(payload: dict[str, Any]) -> list[str]:
-    return sorted(set(exact_5bps_survivors(payload) + exact_instrument_cost_survivors(payload)))
+    non_futures_bps_survivors = [
+        label for label in exact_5bps_survivors(payload)
+        if not label_is_futures_5bps_stress(label, payload)
+    ]
+    return sorted(set(non_futures_bps_survivors + exact_instrument_cost_survivors(payload)))
 
 
 def positive_5bps_rows_without_trade_count(payload: dict[str, Any]) -> list[str]:
@@ -540,7 +615,7 @@ def check_payload(
     gates_open = downstream_gates_open(payload)
     exact_5bps = exact_5bps_survivors(payload)
     exact_instrument_cost = exact_instrument_cost_survivors(payload)
-    exact_real_cost = sorted(set(exact_5bps + exact_instrument_cost))
+    exact_real_cost = exact_real_cost_survivors(payload)
     five_bps_without_trade_count = positive_5bps_rows_without_trade_count(payload)
     two_bps_survivors = survivor_values(payload, TWO_BPS_SURVIVOR_KEYS)
     five_bps_survivors = survivor_values(payload, FIVE_BPS_SURVIVOR_KEYS)

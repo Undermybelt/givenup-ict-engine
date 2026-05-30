@@ -6,11 +6,12 @@ Why this module exists
 Before this file there was *no* shared cost model. Every factor-screening script
 hard-coded its own fee. Two bad patterns were copied around:
 
-  1. ``cost_bps = 5`` / ``fee = 0.0005`` / ``net = gross - 2 * fee`` in *return space*
+  1. ``cost_bps`` / ``fee`` / ``net = gross - 2 * fee`` in *return space*
      (e.g. the frozen ``trend_fixed_rrr_bracket_v1.py`` and the ``tomac_nq`` screens).
-     This subtracts a flat 10bps round-turn **regardless of instrument, price, or
+     This subtracts a flat round-turn bps charge **regardless of instrument, price, or
      contract multiplier**. For an index future like NQ the *real* IBKR round-turn
-     cost is ~0.1bps of notional, so the flat 10bps over-charges by ~60-90x.
+     cost is a small price-dependent fraction of notional, so the flat bps charge can
+     over- or under-charge by large factors.
   2. Each ``run_ibkr_*_gate1`` script defining its *own* per-contract cost dict,
      so the verified numbers drifted between copies.
 
@@ -24,11 +25,10 @@ Contract (from the ``ict-engi-fact-rese-muta`` skill, references
   * Never hard-code a fee. The real commission model is product-specific per-contract
     cost (broker execution + exchange fee recovery + regulatory + clearing), converted
     to return space using the contract multiplier and the traded price.
-  * ``bps/notional`` is valid ONLY as the actual commission model (some equities) or as
-    an explicitly-labeled stress/slippage scenario, never as a stand-in for a futures
-    commission. ``5bps/side`` here is legacy stress telemetry only, exposed as an
-    explicit, named parameter (``LEGACY_STRESS_BPS_PER_SIDE``), NOT a commission or
-    candidate gate.
+  * ``bps/notional`` is valid ONLY when it is the verified fee model for that exact
+    instrument/venue/date. Fixed bps stress ladders are not futures commission models
+    and must not be hard-coded into candidate selection, Gate-1 admission,
+    promotion, or practical-readiness evidence.
   * Fail closed: an unknown or unverified instrument is ``cost_model_unverified`` and must
     block ``promotion_allowed`` / ``trade_usable`` until refreshed from an official source.
 
@@ -41,35 +41,12 @@ The seed is a dated starting point, not eternal truth. That is why each row carr
 
 from __future__ import annotations
 
+import csv
+import statistics
+from collections.abc import Callable, Iterable
 from dataclasses import dataclass
+from pathlib import Path
 from typing import Optional
-
-
-# --------------------------------------------------------------------------------------
-# Legacy stress telemetry (NOT a commission model or candidate gate)
-# --------------------------------------------------------------------------------------
-# Legacy 5bps/side stress telemetry. It is not a futures commission model and must not
-# decide factor-candidate admission; real verified instrument cost is the only cost gate.
-LEGACY_STRESS_BPS_PER_SIDE: float = 5.0
-
-
-def stress_round_turn_fraction(bps_per_side: float = LEGACY_STRESS_BPS_PER_SIDE) -> float:
-    """Round-turn cost as a return-space fraction for an explicit per-side bps stress.
-
-    ``bps_per_side`` is an explicitly chosen stress level (default = legacy 5bps/side
-    telemetry). Round turn = 2 sides. 1 bps = 1e-4. This is intentionally
-    instrument-agnostic because it is a *stress*, not a commission model or gate.
-    """
-    return 2.0 * float(bps_per_side) * 1e-4
-
-
-def net_after_stress_bps(
-    gross_return_fraction: float,
-    trades: int,
-    bps_per_side: float = LEGACY_STRESS_BPS_PER_SIDE,
-) -> float:
-    """Aggregate net return after applying explicit per-side bps *telemetry* to N trades."""
-    return float(gross_return_fraction) - int(trades) * stress_round_turn_fraction(bps_per_side)
 
 
 # --------------------------------------------------------------------------------------
@@ -78,7 +55,6 @@ def net_after_stress_bps(
 STATUS_VERIFIED = "verified_ibkr_broker_side"
 STATUS_DEFAULT = "default_assumption_unverified"
 STATUS_UNVERIFIED = "cost_model_unverified"
-
 
 @dataclass(frozen=True)
 class FuturesCostProfile:
@@ -326,6 +302,151 @@ def net_after_real_fee(gross_return_fraction: float, trades: int, symbol: str, p
     return float(gross_return_fraction) - int(trades) * real_fee_round_turn_fraction(symbol, price)
 
 
+def safe_float(value: object, default: float = 0.0) -> float:
+    """Best-effort numeric conversion for rank/readback rows."""
+    try:
+        if value is None:
+            return default
+        return float(str(value))
+    except Exception:
+        return default
+
+
+def representative_price_from_ohlcv_csv(path: str | Path, close_column: str = "close") -> float:
+    """Return the median positive close from an OHLCV CSV, or raise if unavailable."""
+    prices: list[float] = []
+    with Path(path).open(newline="", encoding="utf-8") as handle:
+        for row in csv.DictReader(handle):
+            value = safe_float(row.get(close_column), default=0.0)
+            if value > 0:
+                prices.append(value)
+    if not prices:
+        raise ValueError(f"no positive {close_column!r} values in {path}")
+    return float(statistics.median(prices))
+
+
+def representative_price_from_provider_rows(rows: Iterable[dict], close_column: str = "close") -> float:
+    """Return a representative price from the first existing provider-row CSV path."""
+    for row in rows:
+        path_text = row.get("path") if isinstance(row, dict) else None
+        if not path_text:
+            continue
+        path = Path(str(path_text))
+        if path.exists():
+            return representative_price_from_ohlcv_csv(path, close_column=close_column)
+    raise ValueError("no existing provider row path with OHLCV close data")
+
+
+REAL_FEE_RANK_FIELDS = [
+    "label",
+    "status",
+    "trade_count",
+    "win_rate_pct",
+    "raw_total_profit_pct",
+    "instrument_cost_total_profit_pct",
+    "survives_instrument_cost",
+    "real_fee_round_turn_pct",
+    "cost_model_status",
+    "cost_profile_id",
+    "branch_path",
+]
+
+
+def rank_rows_real_fee_summary(
+    rows: Iterable[dict],
+    *,
+    symbol: str,
+    representative_price: float,
+    label_fn: Callable[[dict], str] | None = None,
+    branch_path_key: str = "branch_path",
+) -> dict:
+    """Summarize Auto-Quant rank rows after verified real per-contract commission.
+
+    The returned row fields are deliberately real-cost-only. Fixed bps stress ladders
+    are not emitted here, so callers cannot accidentally promote them as Gate evidence.
+    """
+    profile = assert_verified_for_promotion(symbol)
+    cost_model = cost_model_packet(symbol, representative_price)
+    fee_pct = profile.round_trip_fee_pct(representative_price)
+    summarized_rows: list[dict] = []
+    survivors: list[str] = []
+    for row in rows:
+        trades = int(safe_float(row.get("trade_count"), default=0.0))
+        gross = safe_float(row.get("total_profit_pct"), default=0.0)
+        label = label_fn(row) if label_fn is not None else str(row.get("label") or row.get("package_id") or "")
+        net = round(gross - trades * fee_pct, 6)
+        survives = trades > 0 and net > 0.0
+        record = {
+            "label": label,
+            "status": row.get("status"),
+            "trade_count": trades,
+            "win_rate_pct": safe_float(row.get("win_rate_pct"), default=0.0),
+            "raw_total_profit_pct": gross,
+            "instrument_cost_total_profit_pct": net,
+            "survives_instrument_cost": survives,
+            "real_fee_round_turn_pct": fee_pct,
+            "cost_profile_id": profile.profile_id,
+            "cost_model_status": profile.status,
+            "sharpe": safe_float(row.get("sharpe"), default=0.0),
+            "branch_path": row.get(branch_path_key),
+        }
+        summarized_rows.append(record)
+        if survives:
+            survivors.append(label)
+    return {
+        "rows": summarized_rows,
+        "survivors": survivors,
+        "cost_model": cost_model,
+        "promotion_cost_verified": profile.verified_for_promotion,
+        "representative_price": representative_price,
+    }
+
+
+def real_fee_rank_table_lines(
+    *,
+    decision: str,
+    title: str,
+    rows: Iterable[dict],
+    branch_ok: bool,
+    survivors: list[str],
+    downstream: bool,
+) -> list[str]:
+    """Markdown terminal summary for real instrument-cost rank rows."""
+    lines = [
+        "# Terminal Decision Summary",
+        "",
+        f"Decision: `{decision}`",
+        "",
+        title,
+        "",
+        "| label | trades | win_rate | raw | instrument cost |",
+        "|---|---:|---:|---:|---:|",
+    ]
+    for row in rows:
+        lines.append(
+            f"| `{row.get('label', '')}` | {int(row.get('trade_count') or 0)} | "
+            f"{safe_float(row.get('win_rate_pct')):.4f}% | "
+            f"{safe_float(row.get('raw_total_profit_pct')):.2f}% | "
+            f"{safe_float(row.get('instrument_cost_total_profit_pct')):.2f}% |"
+        )
+    lines += [
+        "",
+        f"- `branch_fields_preserved={branch_ok}`",
+        f"- `exact_1m_survivors_instrument_cost={survivors}`",
+        f"- `downstream_allowed={downstream}`",
+        "",
+    ]
+    return lines
+
+
+def write_real_fee_rank_rows_csv(path: str | Path, rows: Iterable[dict]) -> None:
+    """Write canonical real instrument-cost rank rows."""
+    with Path(path).open("w", newline="", encoding="utf-8") as handle:
+        writer = csv.DictWriter(handle, fieldnames=REAL_FEE_RANK_FIELDS)
+        writer.writeheader()
+        writer.writerows([{key: row.get(key, "") for key in REAL_FEE_RANK_FIELDS} for row in rows])
+
+
 def assert_verified_for_promotion(symbol: str) -> FuturesCostProfile:
     """Return the profile only if verified broker-side; else raise (fail closed for promotion)."""
     profile = futures_cost_profile(symbol)
@@ -341,8 +462,9 @@ def assert_verified_for_promotion(symbol: str) -> FuturesCostProfile:
 def cost_model_packet(symbol: str, representative_price: Optional[float] = None) -> dict:
     """Build the cost-model reporting packet the skill requires in workdocs / terminal metrics.
 
-    Includes both the real verified cost and explicit legacy 5bps stress telemetry so a
-    reader can never again mistake the stress for the commission or a candidate gate.
+    Includes only the verified real cost model. Fixed bps stress ladders are intentionally
+    excluded from this canonical packet so callers cannot mistake them for commission or
+    Gate-1 evidence.
     """
     profile = futures_cost_profile(symbol)
     if profile is None:
@@ -350,11 +472,10 @@ def cost_model_packet(symbol: str, representative_price: Optional[float] = None)
             "cost_model_status": STATUS_UNVERIFIED,
             "symbol": symbol,
             "reason": "no cost profile for root; refresh from official source before any cost-survival claim",
-            "legacy_stress_bps_per_side": LEGACY_STRESS_BPS_PER_SIDE,
-            "legacy_stress_role": "telemetry_not_futures_commission_model_not_candidate_gate",
+            "status": STATUS_UNVERIFIED,
         }
     packet = {
-        # Canonical status aliases. Downstream practical-closure consumers accept
+        # Canonical status aliases.  Downstream practical-closure consumers accept
         # `status`, while Gate 1 packets historically emitted `cost_model_status`.
         "status": profile.status,
         "cost_model_status": profile.status,
@@ -382,10 +503,6 @@ def cost_model_packet(symbol: str, representative_price: Optional[float] = None)
         "regulatory_fee_per_contract_per_side": profile.regulatory_fees_per_contract_side,
         "all_in_per_contract_per_side": profile.all_in_per_contract_per_side,
         "all_in_round_turn_per_contract": profile.all_in_round_turn_per_contract,
-        # Explicitly-labeled legacy stress telemetry. NOT the commission model or a gate.
-        "legacy_stress_bps_per_side": LEGACY_STRESS_BPS_PER_SIDE,
-        "legacy_stress_round_turn_pct": stress_round_turn_fraction() * 100.0,
-        "legacy_stress_role": "telemetry_not_futures_commission_model_not_candidate_gate",
         "slippage_note": "assumed_slippage_spread_ticks are a separate explicit model, not broker fees",
     }
     if representative_price is None or representative_price <= 0:
