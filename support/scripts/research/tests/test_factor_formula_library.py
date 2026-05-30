@@ -47,7 +47,7 @@ class FactorFormulaLibraryTests(unittest.TestCase):
         self.assertGreaterEqual(seed["default_params"]["min_mtf_aligned"], 2)
         self.assertTrue(seed["hotplug_ready"])
 
-    def test_cost_aware_triple_barrier_meta_gate_seed_targets_current_5bps_bottleneck(self) -> None:
+    def test_cost_aware_triple_barrier_meta_gate_seed_requires_verified_instrument_cost(self) -> None:
         result = library.build_formula_library(families=["cost_aware_event_labeling"])
         self.assertEqual(result["seed_count"], 1)
         seed = result["seeds"][0]
@@ -56,11 +56,15 @@ class FactorFormulaLibraryTests(unittest.TestCase):
         self.assertEqual(seed["allowed_regimes"], ["TrendExpansion"])
         self.assertIn("primary_side", seed["required_fields"])
         self.assertIn("target_volatility", seed["required_fields"])
-        self.assertIn("transaction_cost_bps_per_side", seed["required_fields"])
+        self.assertIn("instrument_cost_model", seed["required_fields"])
         self.assertGreaterEqual(seed["default_params"]["min_ret_bps"], 10.0)
-        self.assertEqual(seed["default_params"]["cost_bps_per_side"], 5.0)
-        self.assertIn("exact_root_positive_5bps_per_side", seed["default_params"]["promotion_requires"])
+        self.assertEqual(seed["default_params"]["cost_model_status"], "cost_model_unverified")
+        self.assertFalse(seed["default_params"]["promotion_cost_verified"])
+        self.assertIn("verified_instrument_cost_model", seed["default_params"]["promotion_requires"])
         self.assertIn("meta_label_probability_gate", seed["expression"])
+        self.assertIn("verified_instrument_cost_edge_floor", seed["expression"])
+        self.assertNotIn("round_trip_cost_bps", seed["expression"])
+        self.assertNotIn("slippage_buffer_bps", seed["expression"])
         self.assertIn("FinMLKit", seed["source"])
         self.assertTrue(seed["hotplug_ready"])
 
@@ -76,9 +80,18 @@ class FactorFormulaLibraryTests(unittest.TestCase):
         self.assertEqual(seed["default_params"]["context_timeframes"], ["5m", "15m", "30m", "1h", "4h", "1d"])
         self.assertGreaterEqual(seed["default_params"]["min_mtf_aligned"], 3)
         self.assertIn("TrendExpansion -> MTFTrendContinuationOrPullback", seed["default_params"]["branch_path_template"])
-        self.assertIn("exact_root_positive_5bps_per_side", seed["default_params"]["promotion_requires"])
+        self.assertEqual(seed["default_params"]["cost_model_status"], "cost_model_unverified")
+        self.assertFalse(seed["default_params"]["promotion_cost_verified"])
+        self.assertIn("verified_instrument_cost_model", seed["default_params"]["promotion_requires"])
         self.assertIn("triple_barrier_meta_label_only_after_primary_event_survives_cost", seed["overlay_policy"])
         self.assertEqual(seed["artifact_policy"], "provider_rows_required_no_simulated_promotion")
+
+    def test_formula_library_source_has_no_fixed_bps_cost_authority(self) -> None:
+        import fixed_bps_cost_model_source_check as checker
+
+        report = checker.check_source_file(SCRIPT_ROOT / "factor_formula_library.py")
+
+        self.assertTrue(report["ok"], report["violations"])
 
     def test_family_filter_returns_only_requested_factor_family(self) -> None:
         result = library.build_formula_library(families=["mean_reversion"])

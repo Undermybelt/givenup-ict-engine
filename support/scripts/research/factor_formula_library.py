@@ -107,7 +107,7 @@ BASE_SEEDS: list[dict[str, Any]] = [
             "keltner_mid",
             "mtf_trend_resonance",
             "volatility_state",
-            "cost_bps_per_side",
+            "instrument_cost_model",
         ],
         "default_params": {
             "candidate_policy": "trend_following_only",
@@ -128,10 +128,12 @@ BASE_SEEDS: list[dict[str, Any]] = [
             "atr_excursion_min_bps": 18.0,
             "keltner_atr_mult": 1.5,
             "allowed_volatility_states": ["expanding", "controlled_high_vol"],
-            "cost_bps_per_side": [0, 1, 2, 5],
+            "cost_model_status": "cost_model_unverified",
+            "promotion_cost_verified": False,
             "promotion_requires": [
                 "real_provider_or_retained_real_rows",
-                "exact_root_positive_5bps_per_side",
+                "verified_instrument_cost_model",
+                "survives_instrument_cost",
                 "positive_trade_count",
                 "same_root_downstream",
                 "provider_parity",
@@ -187,7 +189,14 @@ BASE_SEEDS: list[dict[str, Any]] = [
             "rvol_min": 0.60,
             "momentum_prob_min": 0.58,
             "entropy_max": 0.92,
-            "cost_bps_per_side": [0, 1, 2, 5],
+            "cost_model_status": "cost_model_unverified",
+            "promotion_cost_verified": False,
+            "promotion_requires": [
+                "real_provider_or_retained_real_rows",
+                "verified_instrument_cost_model",
+                "survives_instrument_cost",
+                "positive_trade_count",
+            ],
         },
         "allowed_regimes": ["TrendExpansion"],
         "mutation_hints": {
@@ -214,7 +223,8 @@ BASE_SEEDS: list[dict[str, Any]] = [
             "primary_side * meta_label_probability_gate("
             "triple_barrier_label, p_hat, p_min) * "
             "event_return_capacity_bps >= "
-            "round_trip_cost_bps + slippage_buffer_bps + edge_buffer_bps"
+            "verified_instrument_cost_edge_floor("
+            "instrument_cost_model, instrument_cost_buffer_model)"
         ),
         "required_fields": [
             "open",
@@ -225,8 +235,8 @@ BASE_SEEDS: list[dict[str, Any]] = [
             "primary_side",
             "target_volatility",
             "event_return_capacity_bps",
-            "transaction_cost_bps_per_side",
-            "slippage_buffer_bps",
+            "instrument_cost_model",
+            "instrument_cost_buffer_model",
             "meta_label_probability",
             "triple_barrier_label",
             "vertical_barrier_bars",
@@ -239,10 +249,9 @@ BASE_SEEDS: list[dict[str, Any]] = [
             ),
             "base_timeframe": "1m",
             "context_timeframes": ["5m", "15m", "30m", "1h", "4h", "1d"],
-            "cost_bps_per_side": 5.0,
-            "round_trip_cost_bps": 10.0,
-            "slippage_buffer_bps": 2.0,
-            "edge_buffer_bps": 2.0,
+            "cost_model_status": "cost_model_unverified",
+            "promotion_cost_verified": False,
+            "instrument_cost_buffer_model": "unverified_fail_closed",
             "min_ret_bps": 14.0,
             "horizontal_barriers": [1.5, 1.5],
             "vertical_barrier_bars": 30,
@@ -251,7 +260,8 @@ BASE_SEEDS: list[dict[str, Any]] = [
             "max_trade_gap_days": 3.0,
             "promotion_requires": [
                 "real_provider_or_retained_real_rows",
-                "exact_root_positive_5bps_per_side",
+                "verified_instrument_cost_model",
+                "survives_instrument_cost",
                 "positive_trade_count",
                 "same_root_downstream",
                 "provider_parity",
@@ -265,7 +275,6 @@ BASE_SEEDS: list[dict[str, Any]] = [
             "horizontal_barriers": [[1.0, 1.5], [1.5, 1.5], [1.5, 2.0]],
             "vertical_barrier_bars": [15, 30, 60],
             "p_min": [0.55, 0.58, 0.62, 0.66],
-            "slippage_buffer_bps": [1.0, 2.0, 4.0],
         },
         "helper_module": "support.scripts.research.mim_cost_window_gate_report",
         "overlay_policy": "use_as_admission_gate_before_pre_bayes_bbn_catboost_execution_tree",
