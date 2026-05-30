@@ -109,6 +109,9 @@ class CandidateSpec:
     trailing_offset: float
     child_profit_factor: str | None = None
     extra_profit_factors: tuple[str, ...] = ()
+    factor_id_by_timeframe: tuple[tuple[str, str], ...] = ()
+    allowed_symbols: tuple[str, ...] = ()
+    allowed_timeframes: tuple[str, ...] = ()
 
     @property
     def branch_path(self) -> str:
@@ -119,10 +122,20 @@ class CandidateSpec:
         return " -> ".join(segments)
 
     def factor_id(self, timeframe: str) -> str:
+        for item_timeframe, factor_id in self.factor_id_by_timeframe:
+            if item_timeframe == timeframe:
+                return factor_id
         return f"tomac_idxfut_clean_{self.key}_{timeframe}_v1"
 
     def branch_path_with_factor(self, timeframe: str) -> str:
         return f"{self.branch_path} -> {self.factor_id(timeframe)}"
+
+    def supports(self, *, symbol: str, timeframe: str) -> bool:
+        if self.allowed_symbols and symbol.upper() not in self.allowed_symbols:
+            return False
+        if self.allowed_timeframes and timeframe not in self.allowed_timeframes:
+            return False
+        return True
 
 
 @dataclass(frozen=True)
@@ -549,6 +562,28 @@ def candidate_specs(families: list[str] | None = None) -> list[CandidateSpec]:
             stoploss=-0.0058,
             trailing_positive=0.0016,
             trailing_offset=0.0048,
+        ),
+        CandidateSpec(
+            key="hurst_efficiency_density_repair",
+            class_prefix="HurstEfficiencyDensityRepair",
+            main_regime="TrendExpansion",
+            sub_regime="HurstEfficiencyPersistence",
+            profit_factor="CompressionPause",
+            child_profit_factor="ReaccelerationBreakout",
+            extra_profit_factors=("DensityRepair",),
+            direction="long",
+            roi=0.0088,
+            stoploss=-0.0068,
+            trailing_positive=0.0020,
+            trailing_offset=0.0058,
+            factor_id_by_timeframe=(
+                (
+                    "5m",
+                    "tomac_idxfut_clean_hurst_efficiency_density_repair_v1",
+                ),
+            ),
+            allowed_symbols=("NQ",),
+            allowed_timeframes=("5m",),
         ),
         CandidateSpec(
             key="value_area_vpoc_htf_trend_mss_filter",
@@ -1499,6 +1534,8 @@ def generated_strategy_specs(
     generated: list[GeneratedStrategySpec] = []
     for symbol in symbols:
         for spec in candidate_specs(families=families):
+            if not spec.supports(symbol=symbol, timeframe=timeframe):
+                continue
             generated.append(
                 GeneratedStrategySpec(
                     class_name=strategy_class_name(spec, symbol=symbol, timeframe=timeframe),
@@ -1560,7 +1597,10 @@ def strategy_source(spec: CandidateSpec, *, symbol: str, timeframe: str) -> str:
         "value_area_vpoc_htf_trend_mss_filter",
     }
     startup_candle_count = 420 if spec.key == "value_area_vpoc_htf_trend_mss_filter" else (
-        320 if spec.key == "wpr_adx_hurst_profile_mss_reclaim" else 220
+        320 if spec.key in {
+            "wpr_adx_hurst_profile_mss_reclaim",
+            "hurst_efficiency_density_repair",
+        } else 220
     )
     return textwrap.dedent(
         f"""
@@ -1895,6 +1935,54 @@ def strategy_source(spec: CandidateSpec, *, symbol: str, timeframe: str) -> str:
                     dataframe["profile_poc_dist_atr"] = (
                         (dataframe["close"] - dataframe["profile_poc96"]).abs() / profile_atr
                     )
+                if "{spec.key}" == "hurst_efficiency_density_repair":
+                    def _hurst_rs_proxy(series: pd.Series) -> float:
+                        values = series.to_numpy(dtype=float)
+                        if len(values) < 32 or np.isnan(values).any():
+                            return np.nan
+                        demeaned = values - values.mean()
+                        sigma = demeaned.std()
+                        if sigma <= 1e-12:
+                            return np.nan
+                        cumulative = np.cumsum(demeaned)
+                        spread = cumulative.max() - cumulative.min()
+                        if spread <= 1e-12:
+                            return np.nan
+                        return float(np.log(spread / sigma) / np.log(len(values)))
+
+                    hurst_net_move = (dataframe["close"] - dataframe["close"].shift(64)).abs()
+                    hurst_path_move = dataframe["close"].diff().abs().rolling(64, min_periods=21).sum()
+                    dataframe["hurst_efficiency_ratio"] = hurst_net_move / hurst_path_move.replace(0, np.nan)
+                    dataframe["hurst_efficiency_ratio_shifted"] = dataframe["hurst_efficiency_ratio"].shift(1)
+                    dataframe["hurst_proxy"] = dataframe["close"].rolling(64, min_periods=64).apply(
+                        _hurst_rs_proxy,
+                        raw=False,
+                    )
+                    dataframe["hurst_proxy_shifted"] = dataframe["hurst_proxy"].shift(1)
+                    dataframe["hurst_compression_range_atr"] = (
+                        dataframe["bar_range_atr"].shift(1).rolling(8, min_periods=3).mean()
+                    )
+                    dataframe["hurst_compression_reference_atr"] = (
+                        dataframe["bar_range_atr"].shift(1).rolling(55, min_periods=21).quantile(0.42).shift(1)
+                    )
+                    dataframe["hurst_compression_pause"] = dataframe["hurst_compression_range_atr"].le(
+                        dataframe["hurst_compression_reference_atr"]
+                    )
+                    dataframe["hurst_reacceleration_bps"] = (
+                        (dataframe["ema21"].shift(1) / dataframe["ema21"].shift(7).replace(0, np.nan)) - 1.0
+                    ) * 10000.0
+                    hurst_context_path = dataframe["ema20_15m"].diff().abs().rolling(8, min_periods=3).sum()
+                    hurst_context_net = (dataframe["ema20_15m"] - dataframe["ema20_15m"].shift(8)).abs()
+                    dataframe["hurst_context_efficiency_ratio"] = (
+                        hurst_context_net / hurst_context_path.replace(0, np.nan)
+                    )
+                    dataframe["hurst_context_efficiency_ratio_shifted"] = dataframe[
+                        "hurst_context_efficiency_ratio"
+                    ].shift(1)
+                    dataframe["hurst_context_trend_shifted"] = (
+                        (dataframe["ema20_15m"] > dataframe["ema50_15m"])
+                        & (dataframe["slope_15m"] > -dataframe["atr14"] * 0.05)
+                    ).shift(1).fillna(False)
                 if "{spec.key}" == "value_area_vpoc_htf_trend_mss_filter":
                     def _round_to_row(value: float, row_size: float) -> float:
                         if not np.isfinite(value):
@@ -3331,6 +3419,45 @@ def strategy_source(spec: CandidateSpec, *, symbol: str, timeframe: str) -> str:
                         & profile_short.fillna(False)
                         & structure_short.fillna(False)
                     )
+                elif "{spec.key}" == "hurst_efficiency_density_repair":
+                    hurst_density_repair_trend_long = (
+                        (dataframe["ema21"] > dataframe["ema55"])
+                        & (dataframe["ema55"] > dataframe["ema144"] - dataframe["atr14"] * 0.12)
+                        & dataframe["hurst_reacceleration_bps"].gt(0.10)
+                    )
+                    hurst_efficiency_persistence = (
+                        dataframe["hurst_efficiency_ratio_shifted"].ge(0.20)
+                        & dataframe["hurst_proxy_shifted"].between(0.42, 0.82)
+                        & dataframe["hurst_context_efficiency_ratio_shifted"].ge(0.25)
+                        & dataframe["hurst_context_trend_shifted"].fillna(False)
+                    )
+                    hurst_density_repair_reclaim_long = (
+                        dataframe["hurst_compression_pause"].fillna(False)
+                        & (dataframe["low"].shift(1) <= dataframe["ema21"].shift(1))
+                        & (dataframe["close"] > dataframe["ema21"])
+                        & (dataframe["close"] > dataframe["close"].shift(1))
+                    )
+                    dataframe["hurst_density_repair_microbreak_long"] = (
+                        dataframe["hurst_compression_pause"].fillna(False)
+                        & (dataframe["close"] > dataframe["high"].rolling(4, min_periods=2).max().shift(1))
+                        & (dataframe["low"].shift(1) <= dataframe["ema21"].shift(1))
+                    )
+                    friction_aware_window = (
+                        dataframe["atr14"].between(dataframe["atr_ma50"] * 0.45, dataframe["atr_ma50"] * 2.25)
+                        & dataframe["bar_range_atr"].between(0.08, 2.65)
+                        & dataframe["body_atr"].between(0.02, 1.95)
+                        & dataframe["rvol96"].between(0.22, 4.60)
+                    )
+                    raw = (
+                        hurst_density_repair_trend_long.fillna(False)
+                        & hurst_efficiency_persistence.fillna(False)
+                        & (
+                            hurst_density_repair_reclaim_long.fillna(False)
+                            | dataframe["hurst_density_repair_microbreak_long"].fillna(False)
+                        )
+                        & friction_aware_window.fillna(False)
+                        & dataframe["rsi14"].between(38, 78)
+                    )
                 elif "{spec.key}" == "value_area_vpoc_htf_trend_mss_filter":
                     killzone_window = (
                         dataframe["minute_of_day_ny"].between(9 * 60 + 35, 11 * 60 + 30)
@@ -4706,6 +4833,17 @@ def strategy_source(spec: CandidateSpec, *, symbol: str, timeframe: str) -> str:
                     )
                     raw = end_of_day | mean_target_long.fillna(False)
                     short_raw = end_of_day | mean_target_short.fillna(False)
+                elif "{spec.key}" == "hurst_efficiency_density_repair":
+                    end_of_day = dataframe["minute_of_day_ny"].ge(16 * 60)
+                    hurst_density_repair_failure_long = (
+                        dataframe["hurst_efficiency_ratio_shifted"].lt(0.13)
+                        | dataframe["hurst_reacceleration_bps"].lt(-0.14)
+                        | dataframe["close"].lt(dataframe["session_vwap"] - dataframe["atr14"] * 0.42)
+                        | dataframe["close"].lt(dataframe["ema55"])
+                        | dataframe["rsi14"].gt(82)
+                        | (dataframe["slope_15m"] < -dataframe["atr14"] * 0.17)
+                    )
+                    raw = end_of_day | hurst_density_repair_failure_long.fillna(False)
                 elif "{spec.key}" == "value_area_vpoc_htf_trend_mss_filter":
                     end_of_day = dataframe["minute_of_day_ny"].ge(15 * 60 + 45)
                     vpoc_loss_long = (

@@ -1947,6 +1947,53 @@ class TomacIndexFuturesCleanAqTest(unittest.TestCase):
             ("ReferenceHurstProfileRangeCompressionRelease",),
         )
 
+    def test_candidate_specs_can_select_hurst_efficiency_density_repair_exact_nq5m_only(self) -> None:
+        module = self.load_module()
+
+        specs = module.candidate_specs(families=["hurst_efficiency_density_repair"])
+
+        self.assertEqual([spec.key for spec in specs], ["hurst_efficiency_density_repair"])
+        self.assertEqual(specs[0].class_prefix, "HurstEfficiencyDensityRepair")
+        self.assertEqual(specs[0].main_regime, "TrendExpansion")
+        self.assertEqual(specs[0].sub_regime, "HurstEfficiencyPersistence")
+        self.assertEqual(specs[0].profit_factor, "CompressionPause")
+        self.assertEqual(specs[0].child_profit_factor, "ReaccelerationBreakout")
+        self.assertEqual(specs[0].extra_profit_factors, ("DensityRepair",))
+        self.assertEqual(specs[0].direction, "long")
+        self.assertEqual(specs[0].factor_id("5m"), "tomac_idxfut_clean_hurst_efficiency_density_repair_v1")
+        self.assertEqual(
+            module.generated_strategy_specs(
+                ["NQ", "YM"],
+                "5m",
+                families=["hurst_efficiency_density_repair"],
+            )[0].symbol,
+            "NQ",
+        )
+        self.assertEqual(
+            module.generated_strategy_specs(
+                ["NQ"],
+                "15m",
+                families=["hurst_efficiency_density_repair"],
+            ),
+            [],
+        )
+
+    def test_hurst_efficiency_density_repair_source_uses_shifted_state_and_context(self) -> None:
+        module = self.load_module()
+        spec = module.candidate_specs(families=["hurst_efficiency_density_repair"])[0]
+
+        source = module.strategy_source(spec, symbol="NQ", timeframe="5m")
+
+        self.assertIn("factor_id: tomac_idxfut_clean_hurst_efficiency_density_repair_v1", source)
+        self.assertIn("HurstEfficiencyPersistence", source)
+        self.assertIn("hurst_efficiency_ratio_shifted", source)
+        self.assertIn("hurst_proxy_shifted", source)
+        self.assertIn("hurst_context_efficiency_ratio_shifted", source)
+        self.assertIn("hurst_density_repair_microbreak_long", source)
+        self.assertIn("entry_raw.shift(1)", source)
+        self.assertIn("exit_raw.shift(1)", source)
+        self.assertNotIn("shift(-", source)
+
     def test_candidate_specs_can_select_regression_channel_r2_slope_breadth_family(self) -> None:
         module = self.load_module()
 
