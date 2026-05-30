@@ -1,0 +1,386 @@
+{
+  "autoquant_launched": false,
+  "created_at": "2026-05-31T05:24:23+0800",
+  "decision": "local_gate1_candidate_needs_collision_free_exact_aq",
+  "downstream_lifecycle_started": false,
+  "factor_family": "hurst_efficiency_density_repair",
+  "freqtrade_backtest_launched": false,
+  "ibkr_historical_started": false,
+  "local_gate1_candidate_count": 2,
+  "paper_or_live_started": false,
+  "parent_root": "/tmp/ict-engine-hurst-efficiency-trend-reacceleration-filter-local-screen-20260530T204009+0800",
+  "promotion_allowed": false,
+  "provider_fetch_started": false,
+  "row_count": 6,
+  "rth_filter_applied": false,
+  "schema_version": "hurst-efficiency-density-repair-local-screen/v1",
+  "session_scope": "ETH/full_retained_session",
+  "spec_count": 6,
+  "status": "terminalized_local_screen_complete_no_backend_launch",
+  "survives_instrument_cost_count": 5,
+  "symbol": "NQ",
+  "top_rows": [
+    {
+      "branch_path": "TrendExpansion -> HurstEfficiencyPersistence -> CompressionPause -> ReaccelerationBreakout -> DensityRepair -> tomac_idxfut_clean_hurst_efficiency_density_repair_v1",
+      "context_timeframe": "15m",
+      "cost_model_status": "verified_ibkr_broker_side",
+      "cost_profile_id": "CME_NQ_IBKR_verified_20260530_v1",
+      "density_target_0_2_per_day_met": true,
+      "eth_full_retained_session_evidence": true,
+      "factor_id": "tomac_idxfut_clean_hurst_efficiency_density_repair_v1",
+      "instrument_cost_total_profit_pct": 13.552642,
+      "local_gate1_candidate": true,
+      "minimum_trade_sample_floor_met": true,
+      "mode": "microbreak",
+      "outside_rth_rows": 152279,
+      "profit_factor": 1.27514,
+      "promotion_allowed": false,
+      "promotion_cost_verified": true,
+      "raw_total_profit_pct": 14.413753,
+      "real_fee_round_turn_pct": 0.00146199,
+      "rows": 264204,
+      "rth_filter_applied": false,
+      "session_scope": "ETH/full_retained_session",
+      "sessions": 1555,
+      "split_all_years_positive": true,
+      "split_years": {
+        "all_years_positive": true,
+        "positive_year_count": 5,
+        "year_count": 5,
+        "years": {
+          "2021": {
+            "raw_total_profit_pct": 0.697906,
+            "trade_count": 118
+          },
+          "2022": {
+            "raw_total_profit_pct": 5.284635,
+            "trade_count": 102
+          },
+          "2023": {
+            "raw_total_profit_pct": 1.446077,
+            "trade_count": 121
+          },
+          "2024": {
+            "raw_total_profit_pct": 3.764472,
+            "trade_count": 131
+          },
+          "2025": {
+            "raw_total_profit_pct": 3.220663,
+            "trade_count": 117
+          }
+        }
+      },
+      "survives_instrument_cost": true,
+      "symbol": "NQ",
+      "timeframe": "5m",
+      "trade_count": 589,
+      "trade_usable": false,
+      "trades_per_day": 0.378778,
+      "update_goal": false,
+      "variant": "nq5m_microbreak_fast",
+      "win_rate_pct": 54.3294
+    },
+    {
+      "branch_path": "TrendExpansion -> HurstEfficiencyPersistence -> CompressionPause -> ReaccelerationBreakout -> DensityRepair -> tomac_idxfut_clean_hurst_efficiency_density_repair_v1",
+      "context_timeframe": "15m",
+      "cost_model_status": "verified_ibkr_broker_side",
+      "cost_profile_id": "CME_NQ_IBKR_verified_20260530_v1",
+      "density_target_0_2_per_day_met": true,
+      "eth_full_retained_session_evidence": true,
+      "factor_id": "tomac_idxfut_clean_hurst_efficiency_density_repair_v1",
+      "instrument_cost_total_profit_pct": 11.989821,
+      "local_gate1_candidate": true,
+      "minimum_trade_sample_floor_met": true,
+      "mode": "ema_reclaim",
+      "outside_rth_rows": 152279,
+      "profit_factor": 1.43916,
+      "promotion_allowed": false,
+      "promotion_cost_verified": true,
+      "raw_total_profit_pct": 12.476664,
+      "real_fee_round_turn_pct": 0.00146199,
+      "rows": 264204,
+      "rth_filter_applied": false,
+      "session_scope": "ETH/full_retained_session",
+      "sessions": 1555,
+      "split_all_years_positive": true,
+      "split_years": {
+        "all_years_positive": true,
+        "positive_year_count": 5,
+        "year_count": 5,
+        "years": {
+          "2021": {
+            "raw_total_profit_pct": 2.179771,
+            "trade_count": 71
+          },
+          "2022": {
+            "raw_total_profit_pct": 2.933818,
+            "trade_count": 59
+          },
+          "2023": {
+            "raw_total_profit_pct": 1.573585,
+            "trade_count": 56
+          },
+          "2024": {
+            "raw_total_profit_pct": 2.865082,
+            "trade_count": 85
+          },
+          "2025": {
+            "raw_total_profit_pct": 2.924408,
+            "trade_count": 62
+          }
+        }
+      },
+      "survives_instrument_cost": true,
+      "symbol": "NQ",
+      "timeframe": "5m",
+      "trade_count": 333,
+      "trade_usable": false,
+      "trades_per_day": 0.214148,
+      "update_goal": false,
+      "variant": "nq5m_reclaim_fast",
+      "win_rate_pct": 56.4565
+    },
+    {
+      "branch_path": "TrendExpansion -> HurstEfficiencyPersistence -> CompressionPause -> ReaccelerationBreakout -> DensityRepair -> tomac_idxfut_clean_hurst_efficiency_density_repair_v1",
+      "context_timeframe": "30m",
+      "cost_model_status": "verified_ibkr_broker_side",
+      "cost_profile_id": "CME_NQ_IBKR_verified_20260530_v1",
+      "density_target_0_2_per_day_met": false,
+      "eth_full_retained_session_evidence": true,
+      "factor_id": "tomac_idxfut_clean_hurst_efficiency_density_repair_v1",
+      "instrument_cost_total_profit_pct": 9.190059,
+      "local_gate1_candidate": false,
+      "minimum_trade_sample_floor_met": true,
+      "mode": "ema_reclaim",
+      "outside_rth_rows": 65685,
+      "profit_factor": 1.507047,
+      "promotion_allowed": false,
+      "promotion_cost_verified": true,
+      "raw_total_profit_pct": 9.454146,
+      "real_fee_round_turn_pct": 0.00145905,
+      "rows": 103495,
+      "rth_filter_applied": false,
+      "session_scope": "ETH/full_retained_session",
+      "sessions": 1555,
+      "split_all_years_positive": false,
+      "split_years": {
+        "all_years_positive": false,
+        "positive_year_count": 3,
+        "year_count": 5,
+        "years": {
+          "2021": {
+            "raw_total_profit_pct": 5.761852,
+            "trade_count": 41
+          },
+          "2022": {
+            "raw_total_profit_pct": 5.418782,
+            "trade_count": 22
+          },
+          "2023": {
+            "raw_total_profit_pct": 1.435238,
+            "trade_count": 42
+          },
+          "2024": {
+            "raw_total_profit_pct": -2.233977,
+            "trade_count": 50
+          },
+          "2025": {
+            "raw_total_profit_pct": -0.927748,
+            "trade_count": 26
+          }
+        }
+      },
+      "survives_instrument_cost": true,
+      "symbol": "NQ",
+      "timeframe": "15m",
+      "trade_count": 181,
+      "trade_usable": false,
+      "trades_per_day": 0.116399,
+      "update_goal": false,
+      "variant": "nq15m_reclaim_context",
+      "win_rate_pct": 52.4862
+    },
+    {
+      "branch_path": "TrendExpansion -> HurstEfficiencyPersistence -> CompressionPause -> ReaccelerationBreakout -> DensityRepair -> tomac_idxfut_clean_hurst_efficiency_density_repair_v1",
+      "context_timeframe": "30m",
+      "cost_model_status": "verified_ibkr_broker_side",
+      "cost_profile_id": "CME_NQ_IBKR_verified_20260530_v1",
+      "density_target_0_2_per_day_met": false,
+      "eth_full_retained_session_evidence": true,
+      "factor_id": "tomac_idxfut_clean_hurst_efficiency_density_repair_v1",
+      "instrument_cost_total_profit_pct": 8.025482,
+      "local_gate1_candidate": false,
+      "minimum_trade_sample_floor_met": true,
+      "mode": "microbreak",
+      "outside_rth_rows": 152279,
+      "profit_factor": 1.843215,
+      "promotion_allowed": false,
+      "promotion_cost_verified": true,
+      "raw_total_profit_pct": 8.199459,
+      "real_fee_round_turn_pct": 0.00146199,
+      "rows": 264204,
+      "rth_filter_applied": false,
+      "session_scope": "ETH/full_retained_session",
+      "sessions": 1555,
+      "split_all_years_positive": true,
+      "split_years": {
+        "all_years_positive": true,
+        "positive_year_count": 5,
+        "year_count": 5,
+        "years": {
+          "2021": {
+            "raw_total_profit_pct": 2.30684,
+            "trade_count": 27
+          },
+          "2022": {
+            "raw_total_profit_pct": 0.285694,
+            "trade_count": 15
+          },
+          "2023": {
+            "raw_total_profit_pct": 0.656756,
+            "trade_count": 32
+          },
+          "2024": {
+            "raw_total_profit_pct": 1.497848,
+            "trade_count": 28
+          },
+          "2025": {
+            "raw_total_profit_pct": 3.452322,
+            "trade_count": 17
+          }
+        }
+      },
+      "survives_instrument_cost": true,
+      "symbol": "NQ",
+      "timeframe": "5m",
+      "trade_count": 119,
+      "trade_usable": false,
+      "trades_per_day": 0.076527,
+      "update_goal": false,
+      "variant": "nq5m_microbreak_balanced",
+      "win_rate_pct": 63.0252
+    },
+    {
+      "branch_path": "TrendExpansion -> HurstEfficiencyPersistence -> CompressionPause -> ReaccelerationBreakout -> DensityRepair -> tomac_idxfut_clean_hurst_efficiency_density_repair_v1",
+      "context_timeframe": "30m",
+      "cost_model_status": "verified_ibkr_broker_side",
+      "cost_profile_id": "CME_NQ_IBKR_verified_20260530_v1",
+      "density_target_0_2_per_day_met": false,
+      "eth_full_retained_session_evidence": true,
+      "factor_id": "tomac_idxfut_clean_hurst_efficiency_density_repair_v1",
+      "instrument_cost_total_profit_pct": 5.373142,
+      "local_gate1_candidate": false,
+      "minimum_trade_sample_floor_met": true,
+      "mode": "ema_reclaim",
+      "outside_rth_rows": 152279,
+      "profit_factor": 1.940009,
+      "promotion_allowed": false,
+      "promotion_cost_verified": true,
+      "raw_total_profit_pct": 5.509106,
+      "real_fee_round_turn_pct": 0.00146199,
+      "rows": 264204,
+      "rth_filter_applied": false,
+      "session_scope": "ETH/full_retained_session",
+      "sessions": 1555,
+      "split_all_years_positive": true,
+      "split_years": {
+        "all_years_positive": true,
+        "positive_year_count": 5,
+        "year_count": 5,
+        "years": {
+          "2021": {
+            "raw_total_profit_pct": 1.853883,
+            "trade_count": 21
+          },
+          "2022": {
+            "raw_total_profit_pct": 1.800336,
+            "trade_count": 12
+          },
+          "2023": {
+            "raw_total_profit_pct": 0.098478,
+            "trade_count": 25
+          },
+          "2024": {
+            "raw_total_profit_pct": 0.994672,
+            "trade_count": 24
+          },
+          "2025": {
+            "raw_total_profit_pct": 0.761737,
+            "trade_count": 11
+          }
+        }
+      },
+      "survives_instrument_cost": true,
+      "symbol": "NQ",
+      "timeframe": "5m",
+      "trade_count": 93,
+      "trade_usable": false,
+      "trades_per_day": 0.059807,
+      "update_goal": false,
+      "variant": "nq5m_reclaim_balanced",
+      "win_rate_pct": 66.6667
+    },
+    {
+      "branch_path": "TrendExpansion -> HurstEfficiencyPersistence -> CompressionPause -> ReaccelerationBreakout -> DensityRepair -> tomac_idxfut_clean_hurst_efficiency_density_repair_v1",
+      "context_timeframe": "1h",
+      "cost_model_status": "verified_ibkr_broker_side",
+      "cost_profile_id": "CME_NQ_IBKR_verified_20260530_v1",
+      "density_target_0_2_per_day_met": false,
+      "eth_full_retained_session_evidence": true,
+      "factor_id": "tomac_idxfut_clean_hurst_efficiency_density_repair_v1",
+      "instrument_cost_total_profit_pct": -4.314654,
+      "local_gate1_candidate": false,
+      "minimum_trade_sample_floor_met": true,
+      "mode": "microbreak",
+      "outside_rth_rows": 65685,
+      "profit_factor": 0.65896,
+      "promotion_allowed": false,
+      "promotion_cost_verified": true,
+      "raw_total_profit_pct": -4.18188,
+      "real_fee_round_turn_pct": 0.00145905,
+      "rows": 103495,
+      "rth_filter_applied": false,
+      "session_scope": "ETH/full_retained_session",
+      "sessions": 1555,
+      "split_all_years_positive": false,
+      "split_years": {
+        "all_years_positive": false,
+        "positive_year_count": 2,
+        "year_count": 5,
+        "years": {
+          "2021": {
+            "raw_total_profit_pct": 0.049352,
+            "trade_count": 22
+          },
+          "2022": {
+            "raw_total_profit_pct": -1.661045,
+            "trade_count": 5
+          },
+          "2023": {
+            "raw_total_profit_pct": 1.236076,
+            "trade_count": 19
+          },
+          "2024": {
+            "raw_total_profit_pct": -2.58839,
+            "trade_count": 33
+          },
+          "2025": {
+            "raw_total_profit_pct": -1.217873,
+            "trade_count": 12
+          }
+        }
+      },
+      "survives_instrument_cost": false,
+      "symbol": "NQ",
+      "timeframe": "15m",
+      "trade_count": 91,
+      "trade_usable": false,
+      "trades_per_day": 0.058521,
+      "update_goal": false,
+      "variant": "nq15m_microbreak_context",
+      "win_rate_pct": 46.1538
+    }
+  ],
+  "trade_usable": false,
+  "update_goal": false
+}
