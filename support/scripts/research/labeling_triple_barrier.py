@@ -38,7 +38,7 @@ def triple_barrier_labels(
     pt_mult: float,
     sl_mult: float,
     max_holding_bars: int,
-    cost_bps: float = 0.0,
+    round_trip_cost_fraction: float = 0.0,
 ) -> list[dict[str, Any]]:
     """Label non-zero `side` rows with conservative triple-barrier outcomes.
 
@@ -50,9 +50,10 @@ def triple_barrier_labels(
         raise ValueError("pt_mult and sl_mult must be positive")
     if max_holding_bars < 1:
         raise ValueError("max_holding_bars must be >= 1")
+    if round_trip_cost_fraction < 0:
+        raise ValueError("round_trip_cost_fraction must be >= 0")
 
     labels: list[dict[str, Any]] = []
-    cost_return = cost_bps / 10_000.0
 
     for entry_index, row in enumerate(rows):
         side = _side(row)
@@ -91,7 +92,7 @@ def triple_barrier_labels(
                 break
 
         gross_return = _directional_return(side, entry, exit_price)
-        net_return = gross_return - cost_return
+        net_return = gross_return - round_trip_cost_fraction
         realized_r = net_return / sl_mult
         labels.append(
             {
@@ -134,7 +135,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--pt-mult", type=float, default=0.02)
     parser.add_argument("--sl-mult", type=float, default=0.01)
     parser.add_argument("--max-holding-bars", type=int, default=16)
-    parser.add_argument("--cost-bps", type=float, default=0.0)
+    parser.add_argument("--round-trip-cost-fraction", type=float, default=0.0)
     return parser.parse_args(argv)
 
 
@@ -145,7 +146,7 @@ def main(argv: list[str] | None = None) -> int:
         pt_mult=args.pt_mult,
         sl_mult=args.sl_mult,
         max_holding_bars=args.max_holding_bars,
-        cost_bps=args.cost_bps,
+        round_trip_cost_fraction=args.round_trip_cost_fraction,
     )
     _write_jsonl(Path(args.output_jsonl), labels)
     print(json.dumps({"ok": True, "labels": len(labels), "output": args.output_jsonl}, indent=2))

@@ -208,7 +208,7 @@ class RealTradeFeedbackLabelsTests(unittest.TestCase):
             trade_wire=trade_wire,
             sl_mult=0.01,
             timeframe_ms=5 * 60 * 1000,
-            cost_bps=5.0,
+            round_trip_cost_fraction=0.0005,
         )
 
         self.assertEqual([label["trade_id"] for label in labels], ["trade-long", "trade-short"])

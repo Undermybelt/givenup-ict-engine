@@ -12,8 +12,10 @@ def build_feedback_rows(
     *,
     factor_id: str,
     close_after_minutes: int = 30,
-    cost_bps_per_side: float = 5.0,
+    round_trip_cost_fraction: float = 0.0,
 ) -> list[dict[str, object]]:
+    if round_trip_cost_fraction < 0:
+        raise ValueError("round_trip_cost_fraction must be >= 0")
     rows: list[dict[str, object]] = []
     for index, event in enumerate(events, start=1):
         side = int(event.get("side") or 0)
@@ -25,7 +27,10 @@ def build_feedback_rows(
         parts = _branch_parts(branch_path)
         event_ts = _parse_ts(str(event.get("event_ts") or ""))
         label = int(event.get("triple_barrier_label") or 0)
-        outcome, exit_reason, pnl = _outcome_from_label(label, cost_bps_per_side=cost_bps_per_side)
+        outcome, exit_reason, pnl = _outcome_from_label(
+            label,
+            round_trip_cost_fraction=round_trip_cost_fraction,
+        )
         symbol = str(event.get("symbol") or "")
         resonance = event.get("mtf_trend_resonance")
         if not isinstance(resonance, dict):
@@ -84,7 +89,8 @@ def build_feedback_rows(
             "feedback_source": "retained_real_event_label_simulation",
             "broker_fill_evidence": False,
             "provider": event.get("provider") or "",
-            "cost_bps_per_side": cost_bps_per_side,
+            "declared_round_trip_cost_fraction": round_trip_cost_fraction,
+            "declared_cost_role": "caller_supplied_fraction_not_fixed_bps_gate_authority",
             "promotion_allowed": False,
             "trade_usable": False,
             "downstream_allowed": False,
@@ -117,14 +123,14 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--summary-json", required=True, type=Path)
     parser.add_argument("--factor-id", required=True)
     parser.add_argument("--close-after-minutes", type=int, default=30)
-    parser.add_argument("--cost-bps-per-side", type=float, default=5.0)
+    parser.add_argument("--round-trip-cost-fraction", type=float, default=0.0)
     args = parser.parse_args(argv)
     events = _read_jsonl(args.events_jsonl)
     rows = build_feedback_rows(
         events,
         factor_id=args.factor_id,
         close_after_minutes=args.close_after_minutes,
-        cost_bps_per_side=args.cost_bps_per_side,
+        round_trip_cost_fraction=args.round_trip_cost_fraction,
     )
     _write_jsonl(args.output_jsonl, rows)
     args.summary_json.parent.mkdir(parents=True, exist_ok=True)
@@ -148,8 +154,8 @@ def _write_jsonl(path: Path, rows: list[dict[str, object]]) -> None:
             handle.write(json.dumps(row, sort_keys=True) + "\n")
 
 
-def _outcome_from_label(label: int, *, cost_bps_per_side: float) -> tuple[str, str, float]:
-    cost = cost_bps_per_side / 10_000.0
+def _outcome_from_label(label: int, *, round_trip_cost_fraction: float) -> tuple[str, str, float]:
+    cost = round_trip_cost_fraction
     if label > 0:
         return "win", "triple_barrier_profit_take", max(0.0001, 0.006 - cost)
     if label < 0:

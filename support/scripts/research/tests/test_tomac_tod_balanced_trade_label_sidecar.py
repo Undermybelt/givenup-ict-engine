@@ -87,7 +87,7 @@ class TomacTodBalancedTradeLabelSidecarTests(unittest.TestCase):
             factor_id="factor",
             branch_path="root",
             sl_mult=0.01,
-            cost_bps_side=5.0,
+            round_trip_cost_fraction=0.001,
         )
 
         self.assertEqual(len(labels), 2)
@@ -158,7 +158,7 @@ class TomacTodBalancedTradeLabelSidecarTests(unittest.TestCase):
                 exact_root=root,
                 output_dir=Path(tmpdir) / "out",
                 sl_mult=0.01,
-                cost_bps_side=5.0,
+                round_trip_cost_fraction=0.001,
                 nb_trials=1,
                 periods_per_year=252,
                 embargo_bars=1,
@@ -265,7 +265,7 @@ class TomacTodBalancedTradeLabelSidecarTests(unittest.TestCase):
                 exact_root=root,
                 output_dir=base / "out",
                 sl_mult=0.01,
-                cost_bps_side=5.0,
+                round_trip_cost_fraction=0.001,
                 nb_trials=1,
                 periods_per_year=252,
                 embargo_bars=1,

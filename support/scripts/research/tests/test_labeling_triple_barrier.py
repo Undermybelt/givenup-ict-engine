@@ -24,7 +24,7 @@ class TripleBarrierLabelingTests(unittest.TestCase):
             pt_mult=0.02,
             sl_mult=0.01,
             max_holding_bars=2,
-            cost_bps=0.0,
+            round_trip_cost_fraction=0.0,
         )
 
         self.assertEqual(len(labels), 1)
@@ -47,7 +47,7 @@ class TripleBarrierLabelingTests(unittest.TestCase):
             pt_mult=0.02,
             sl_mult=0.01,
             max_holding_bars=1,
-            cost_bps=10.0,
+            round_trip_cost_fraction=0.001,
         )
 
         event = labels[0]

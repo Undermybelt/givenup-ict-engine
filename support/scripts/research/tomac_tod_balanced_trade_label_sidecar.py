@@ -18,7 +18,7 @@ SIGNAL_FILE = "aq_workspace/user_data/tod_portfolio_signals.feather"
 TERMINAL_METRICS_FILE = "checks/terminal_metrics.json"
 PAIR_DATA_DIR = "aq_workspace/user_data/data/futures"
 DEFAULT_SL_MULT = 0.01
-DEFAULT_COST_BPS_SIDE = 5.0
+DEFAULT_ROUND_TRIP_COST_FRACTION = 0.0
 PROVIDER_PARITY_PROBE_FILE = "checks/provider_parity_probe.json"
 DOWNSTREAM_ROOT_GLOB = "downstream-exact-tomac-tod-balanced*"
 DOWNSTREAM_TERMINAL_METRICS_FILE = "checks/terminal_metrics.json"
@@ -127,10 +127,10 @@ def _build_admission_summary(
 ) -> dict[str, Any]:
     summary: dict[str, Any] = {
         "trade_count": trade_count,
-        "exact_5bps_survivors": [
+        "exact_instrument_cost_survivors": [
             {
                 "trade_count": trade_count,
-                "profit_pct_5bps": terminal_row.get("5bps_per_side_total_profit_pct"),
+                "instrument_cost_total_profit_pct": terminal_row.get("instrument_cost_total_profit_pct"),
                 "gate1_survivor": terminal_row.get("gate1_survivor"),
             }
         ],
@@ -225,11 +225,12 @@ def build_trade_labels(
     factor_id: str,
     branch_path: str,
     sl_mult: float,
-    cost_bps_side: float,
+    round_trip_cost_fraction: float,
 ) -> tuple[list[dict[str, Any]], dict[str, Any]]:
     if sl_mult <= 0:
         raise ValueError("sl_mult must be positive")
-    round_trip_cost = (cost_bps_side * 2.0) / 10_000.0
+    if round_trip_cost_fraction < 0:
+        raise ValueError("round_trip_cost_fraction must be >= 0")
     index_lookup = {pair: _timestamp_index(frame) for pair, frame in price_frames.items()}
     open_positions: dict[str, OpenTrade] = {}
     labels: list[dict[str, Any]] = []
@@ -254,7 +255,7 @@ def build_trade_labels(
 
         if open_trade and ((open_trade.side == 1 and exit_long) or (open_trade.side == -1 and exit_short)):
             gross_return = open_trade.side * ((price - open_trade.entry_price) / open_trade.entry_price)
-            net_return = gross_return - round_trip_cost
+            net_return = gross_return - round_trip_cost_fraction
             mfe, mae = _path_mfe_mae(
                 frame=frame,
                 entry_index=open_trade.entry_index,
@@ -285,8 +286,10 @@ def build_trade_labels(
                     "gross_return": round(gross_return, 6),
                     "net_return": round(net_return, 6),
                     "realized_R": round(net_return / sl_mult, 6),
-                    "cost_R": round(round_trip_cost / sl_mult, 6),
-                    "slippage_R": round(round_trip_cost / sl_mult, 6),
+                    "cost_R": round(round_trip_cost_fraction / sl_mult, 6),
+                    "declared_round_trip_cost_fraction": round_trip_cost_fraction,
+                    "declared_cost_role": "caller_supplied_fraction_not_fixed_bps_gate_authority",
+                    "slippage_R": round(round_trip_cost_fraction / sl_mult, 6),
                     "mfe": mfe,
                     "mae": mae,
                     "time_to_hit": candle_index - open_trade.entry_index,
@@ -340,7 +343,7 @@ def run_sidecar(
     exact_root: Path,
     output_dir: Path,
     sl_mult: float,
-    cost_bps_side: float,
+    round_trip_cost_fraction: float,
     nb_trials: int,
     periods_per_year: int,
     embargo_bars: int,
@@ -358,7 +361,7 @@ def run_sidecar(
         factor_id=factor_id,
         branch_path=branch_path,
         sl_mult=sl_mult,
-        cost_bps_side=cost_bps_side,
+        round_trip_cost_fraction=round_trip_cost_fraction,
     )
 
     output_dir.mkdir(parents=True, exist_ok=True)
@@ -424,8 +427,8 @@ def run_sidecar(
         "factor_id": factor_id,
         "branch_path": branch_path,
         "sl_mult": sl_mult,
-        "cost_bps_side": cost_bps_side,
-        "round_trip_cost_bps": cost_bps_side * 2.0,
+        "round_trip_cost_fraction": round_trip_cost_fraction,
+        "declared_cost_role": "caller_supplied_fraction_not_fixed_bps_gate_authority",
         "label_count": len(labels),
         "terminal_trade_count": int(terminal_row.get("trade_count") or terminal_metrics.get("trade_count", 0) or 0),
         "trade_count_parity": len(labels)
@@ -455,7 +458,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--exact-root", required=True)
     parser.add_argument("--output-dir", required=True)
     parser.add_argument("--sl-mult", type=float, default=DEFAULT_SL_MULT)
-    parser.add_argument("--cost-bps-side", type=float, default=DEFAULT_COST_BPS_SIDE)
+    parser.add_argument("--round-trip-cost-fraction", type=float, default=DEFAULT_ROUND_TRIP_COST_FRACTION)
     parser.add_argument("--nb-trials", type=int, default=1)
     parser.add_argument("--periods-per-year", type=int, default=252)
     parser.add_argument("--embargo-bars", type=int, default=1)
@@ -469,7 +472,7 @@ def main(argv: list[str] | None = None) -> int:
         exact_root=Path(args.exact_root).resolve(),
         output_dir=Path(args.output_dir).resolve(),
         sl_mult=args.sl_mult,
-        cost_bps_side=args.cost_bps_side,
+        round_trip_cost_fraction=args.round_trip_cost_fraction,
         nb_trials=args.nb_trials,
         periods_per_year=args.periods_per_year,
         embargo_bars=args.embargo_bars,

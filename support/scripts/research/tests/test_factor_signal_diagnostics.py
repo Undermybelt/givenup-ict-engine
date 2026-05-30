@@ -16,7 +16,7 @@ class FactorSignalDiagnosticsTests(unittest.TestCase):
     def test_demo_report_is_zero_config_and_not_trade_usable(self) -> None:
         rows = diag._read_rows(None, demo=True)
 
-        report = diag.build_diagnostics(rows, cost_bps_side=1.0)
+        report = diag.build_diagnostics(rows, round_trip_cost_fraction=0.0002)
 
         self.assertEqual(report["schema_version"], "ict-engine-factor-signal-diagnostics/v1")
         self.assertEqual(report["rows"], 40)
@@ -55,7 +55,7 @@ class FactorSignalDiagnosticsTests(unittest.TestCase):
             "thresholds": {"min_n": 30, "min_root_delta_bps": 3.0},
         }
 
-        report = diag.build_diagnostics(rows, cost_bps_side=1.0, profile=profile)
+        report = diag.build_diagnostics(rows, round_trip_cost_fraction=0.0002, profile=profile)
 
         best = report["best_bucket"]
         self.assertEqual(best["regime"], "Transition")
@@ -83,7 +83,7 @@ class FactorSignalDiagnosticsTests(unittest.TestCase):
             )
 
             rows = diag._read_rank_rows_csv(str(csv_path))
-            report = diag.build_diagnostics(rows, cost_bps_side=0.0)
+            report = diag.build_diagnostics(rows, round_trip_cost_fraction=0.0)
 
             self.assertEqual(len(rows), 4)
             self.assertEqual(rows[0].horizon, "1m")
@@ -131,7 +131,7 @@ class FactorSignalDiagnosticsTests(unittest.TestCase):
             "thresholds": {"min_n": 30},
         }
 
-        report = diag.build_diagnostics(rows, cost_bps_side=0.0, profile=profile)
+        report = diag.build_diagnostics(rows, round_trip_cost_fraction=0.0, profile=profile)
         ladder = report["timeframe_ladder_summary"]
 
         self.assertEqual(ladder["covered_timeframes"], ["1m", "5m"])

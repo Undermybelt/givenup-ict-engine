@@ -55,7 +55,7 @@ class MimCostWindowFeedbackBuilderTests(unittest.TestCase):
             events,
             factor_id="test_mim_v1",
             close_after_minutes=30,
-            cost_bps_per_side=5.0,
+            round_trip_cost_fraction=0.001,
         )
 
         self.assertEqual(len(rows), 2)

@@ -15,7 +15,7 @@ DEFAULT_THRESHOLDS = {
     "min_n": 30,
     "min_abs_t_stat": 2.0,
     "min_abs_ic_spearman": 0.03,
-    "min_cost_stressed_mean_return_bps": 0.0,
+    "min_mean_return_after_cost_bps": 0.0,
     "min_root_delta_bps": 0.0,
 }
 
@@ -252,22 +252,22 @@ def _through_origin_beta_t(xs: list[float], ys: list[float]) -> tuple[float | No
     return beta, beta / se
 
 
-def _signed_returns_bps(rows: Iterable[DiagnosticRow], cost_bps_side: float) -> list[float]:
-    round_trip_cost = 2.0 * cost_bps_side
+def _signed_returns_bps(rows: Iterable[DiagnosticRow], round_trip_cost_fraction: float) -> list[float]:
+    declared_return_adjustment_units = round_trip_cost_fraction * 10_000.0
     out = []
     for row in rows:
         if abs(row.signal) <= 0.0:
             continue
         direction = 1.0 if row.signal > 0.0 else -1.0
-        out.append(direction * row.forward_return * 10_000.0 - round_trip_cost)
+        out.append(direction * row.forward_return * 10_000.0 - declared_return_adjustment_units)
     return out
 
 
-def _metrics_for(rows: list[DiagnosticRow], cost_bps_side: float) -> dict[str, Any]:
+def _metrics_for(rows: list[DiagnosticRow], round_trip_cost_fraction: float) -> dict[str, Any]:
     xs = [row.signal for row in rows]
     ys = [row.forward_return for row in rows]
     beta, t_stat = _through_origin_beta_t(xs, ys)
-    signed_bps = _signed_returns_bps(rows, cost_bps_side)
+    signed_bps = _signed_returns_bps(rows, round_trip_cost_fraction)
     return {
         "n": len(rows),
         "asset_count": len({row.asset for row in rows}),
@@ -286,7 +286,7 @@ def _passes(metrics: dict[str, Any], thresholds: dict[str, Any], root_delta_bps:
         abs(metrics.get("t_stat") or 0.0) >= float(thresholds["min_abs_t_stat"]),
         abs(metrics.get("ic_spearman") or 0.0) >= float(thresholds["min_abs_ic_spearman"]),
         (metrics.get("mean_signed_return_bps_after_cost") or -math.inf)
-        > float(thresholds["min_cost_stressed_mean_return_bps"]),
+        > float(thresholds["min_mean_return_after_cost_bps"]),
     ]
     if root_delta_bps is not None:
         checks.append(root_delta_bps > float(thresholds["min_root_delta_bps"]))
@@ -347,9 +347,11 @@ def _timeframe_ladder_summary(
 def build_diagnostics(
     rows: list[DiagnosticRow],
     *,
-    cost_bps_side: float = 1.0,
+    round_trip_cost_fraction: float = 0.0,
     profile: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
+    if round_trip_cost_fraction < 0:
+        raise ValueError("round_trip_cost_fraction must be >= 0")
     profile = profile or {}
     thresholds = {**DEFAULT_THRESHOLDS, **(profile.get("thresholds") or {})}
     root_regime = profile.get("root_regime")
@@ -361,12 +363,12 @@ def build_diagnostics(
 
     buckets = []
     for (horizon, regime), bucket_rows in sorted(by_key.items()):
-        metrics = _metrics_for(bucket_rows, cost_bps_side)
+        metrics = _metrics_for(bucket_rows, round_trip_cost_fraction)
         outside_rows = [row for row in rows if row.horizon == horizon and row.regime != regime]
         outside_mean = None
         root_delta_bps = None
         if outside_rows:
-            outside_metrics = _metrics_for(outside_rows, cost_bps_side)
+            outside_metrics = _metrics_for(outside_rows, round_trip_cost_fraction)
             outside_mean = outside_metrics["mean_signed_return_bps_after_cost"]
             if metrics["mean_signed_return_bps_after_cost"] is not None and outside_mean is not None:
                 root_delta_bps = metrics["mean_signed_return_bps_after_cost"] - outside_mean
@@ -397,7 +399,8 @@ def build_diagnostics(
         "hotplug_profile_used": bool(profile),
         "root_regime": root_regime,
         "regime_profit_branch_path": branch_path,
-        "cost_bps_side": cost_bps_side,
+        "round_trip_cost_fraction": round_trip_cost_fraction,
+        "declared_cost_role": "caller_supplied_fraction_not_fixed_bps_gate_authority",
         "thresholds": thresholds,
         "rows": len(rows),
         "bucket_count": len(buckets),
@@ -416,7 +419,7 @@ def _compact_line(report: dict[str, Any]) -> str:
         f"factor_signal_diagnostics rows={report['rows']} buckets={report['bucket_count']} "
         f"best={best.get('regime','none')}/{best.get('horizon','none')} "
         f"n={best.get('n',0)} t={best.get('t_stat')} ic_s={best.get('ic_spearman')} "
-        f"cost_bps={best.get('mean_signed_return_bps_after_cost')} "
+        f"mean_signed_return_bps_after_cost={best.get('mean_signed_return_bps_after_cost')} "
         f"diagnostic_candidate_passed_gate={str(report['diagnostic_candidate_passed_gate']).lower()} "
         "requires_downstream_live_gates=true"
     )
@@ -429,7 +432,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--real-trades-jsonl", help="Optional real/simulated trade JSONL input")
     parser.add_argument("--profile", help="Optional hotplug profile JSON")
     parser.add_argument("--demo", action="store_true", help="Run bundled zero-config demo rows")
-    parser.add_argument("--cost-bps-side", type=float, default=1.0)
+    parser.add_argument("--round-trip-cost-fraction", type=float, default=0.0)
     parser.add_argument("--output", help="Optional JSON report path; stdout remains compact unless --json")
     parser.add_argument("--json", action="store_true", help="Print full JSON report")
     parser.add_argument("--compact", action="store_true", help="Print one token-friendly line")
@@ -445,7 +448,7 @@ def main(argv: list[str] | None = None) -> int:
         rows = _read_real_trades_jsonl(args.real_trades_jsonl)
     else:
         rows = _read_rows(args.input, args.demo)
-    report = build_diagnostics(rows, cost_bps_side=args.cost_bps_side, profile=profile)
+    report = build_diagnostics(rows, round_trip_cost_fraction=args.round_trip_cost_fraction, profile=profile)
 
     if args.output:
         output_path = Path(args.output)

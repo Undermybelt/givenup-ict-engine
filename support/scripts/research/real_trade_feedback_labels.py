@@ -148,18 +148,19 @@ def build_labels_from_trade_wire(
     trade_wire: list[dict[str, Any]],
     sl_mult: float,
     timeframe_ms: int,
-    cost_bps: float = 0.0,
+    round_trip_cost_fraction: float = 0.0,
 ) -> list[dict[str, Any]]:
     if sl_mult <= 0:
         raise ValueError("sl_mult must be positive")
     if timeframe_ms <= 0:
         raise ValueError("timeframe_ms must be positive")
+    if round_trip_cost_fraction < 0:
+        raise ValueError("round_trip_cost_fraction must be >= 0")
 
     ordered = sorted(trade_wire, key=lambda row: int(row["open_ts_ms"]))
     if not ordered:
         return []
 
-    cost_return = cost_bps / 10_000.0
     base_ts_ms = min(int(row["open_ts_ms"]) for row in ordered)
     labels: list[dict[str, Any]] = []
 
@@ -192,7 +193,7 @@ def build_labels_from_trade_wire(
         gross_return = _trade_float(trade, "profit_ratio")
         if gross_return is None:
             gross_return = _directional_return(side, entry_price, exit_price)
-        net_return = gross_return - cost_return if gross_return >= 0.0 else gross_return - cost_return
+        net_return = gross_return - round_trip_cost_fraction
         entry_index = int((open_ts_ms - base_ts_ms) // timeframe_ms)
         exit_index = int((close_ts_ms - base_ts_ms) // timeframe_ms)
         label = {
@@ -233,17 +234,18 @@ def build_labels(
     candles: list[dict[str, Any]],
     trade_wire: list[dict[str, Any]],
     sl_mult: float,
-    cost_bps: float = 0.0,
+    round_trip_cost_fraction: float = 0.0,
     max_alignment_gap_bars: int = 3,
 ) -> list[dict[str, Any]]:
     if sl_mult <= 0:
         raise ValueError("sl_mult must be positive")
     if max_alignment_gap_bars < 0:
         raise ValueError("max_alignment_gap_bars must be >= 0")
+    if round_trip_cost_fraction < 0:
+        raise ValueError("round_trip_cost_fraction must be >= 0")
 
     candle_ts_ms = [_timestamp_ms(str(candle["timestamp"])) for candle in candles]
     max_gap_ms = _timeframe_ms(candles) * max_alignment_gap_bars
-    cost_return = cost_bps / 10_000.0
     labels: list[dict[str, Any]] = []
 
     for trade in trade_wire:
@@ -298,7 +300,7 @@ def build_labels(
             if actual_sign != 0 and proxy_magnitude <= 0.0:
                 proxy_magnitude = max(abs(mfe), abs(mae), 1e-9)
             gross_return = proxy_magnitude * actual_sign if actual_sign != 0 else proxy_gross_return
-        net_return = gross_return - cost_return if gross_return >= 0.0 else gross_return - cost_return
+        net_return = gross_return - round_trip_cost_fraction
 
         label = {
             "trade_id": trade.get("trade_id", ""),
@@ -339,7 +341,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--trade-wire-jsonl", required=True)
     parser.add_argument("--output-jsonl", required=True)
     parser.add_argument("--sl-mult", type=float, default=0.01)
-    parser.add_argument("--cost-bps", type=float, default=0.0)
+    parser.add_argument("--round-trip-cost-fraction", type=float, default=0.0)
     parser.add_argument("--max-alignment-gap-bars", type=int, default=3)
     return parser.parse_args(argv)
 
@@ -350,7 +352,7 @@ def main(argv: list[str] | None = None) -> int:
         candles=_load_candles(Path(args.candles_json)),
         trade_wire=_load_jsonl(Path(args.trade_wire_jsonl)),
         sl_mult=args.sl_mult,
-        cost_bps=args.cost_bps,
+        round_trip_cost_fraction=args.round_trip_cost_fraction,
         max_alignment_gap_bars=args.max_alignment_gap_bars,
     )
     _write_jsonl(Path(args.output_jsonl), labels)
