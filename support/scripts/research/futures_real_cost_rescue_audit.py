@@ -251,6 +251,8 @@ def _classify_rescue(
     if instrument_cost_total_pct is not None:
         if not survives_instrument_cost:
             return "not_rescued_cost_negative"
+        if stress_5bps_total_pct is None:
+            return "not_rescued_no_cost_wall_evidence"
         if survives_5bps_stress:
             return "already_survives_5bps_stress"
         if not eth_evidence or rth_filter_applied is not False:

@@ -1,0 +1,501 @@
+#!/usr/bin/env python3
+"""Find futures candidates wrongly killed by fixed bps cost stress.
+
+This is a read-only rehearing tool for historical Gate-1/AQ packets that used
+``5bps/side`` or ``10bps`` as if it were the futures commission model. It does
+not promote anything by itself. It separates three cases:
+
+* ``bps_stress_false_negative_recheck``: profitable after verified
+  per-contract all-in futures cost, but negative under the old fixed bps stress.
+* ``zero_edge_churn_not_rescued_by_realistic_cost``: positive gross, but still
+  negative after realistic futures all-in cost.
+* ``cost_model_unverified``: cannot rehear until the exact futures cost model is
+  verified.
+"""
+
+from __future__ import annotations
+
+import argparse
+import csv
+import json
+import math
+import re
+from pathlib import Path
+from typing import Any, Iterable
+
+import instrument_cost_model as cost_model
+
+
+ARTIFACT_GLOBS = (
+    "terminal_metrics.json",
+    "terminal_summary.json",
+    "terminal_gate_summary.json",
+    "*gate.json",
+    "autoquant_clean_*_rows.csv",
+    "screen_rows.csv",
+    "highfreq_*_rows.csv",
+    "*leaderboard.csv",
+)
+ROW_CONTAINER_KEYS = (
+    "rows",
+    "cost_row",
+    "cost_rows",
+    "cost_stress",
+    "cost_stress_rows",
+    "selected_gate1_row",
+    "top_by_instrument_cost",
+    "top_by_cost",
+    "top_rows",
+    "rank_rows",
+    "full_window",
+    "train_window",
+    "oos_window",
+    "raw_realistic_cost_survivors_before_session_scope",
+    "realistic_cost_survivors_before_gate1",
+    "raw_cost_stress_survivors_5bps_before_session_scope",
+)
+GROSS_PCT_KEYS = (
+    "raw_total_profit_pct",
+    "raw_total_ret_pct",
+    "total_profit_pct",
+    "gross_total_profit_pct",
+    "gross_total_pct",
+    "raw_profit_pct",
+    "profit_pct",
+    "best_raw_total_profit_pct",
+)
+STRESS_5BPS_PCT_KEYS = (
+    "5bps_per_side_total_profit_pct",
+    "net5bps_total_ret_pct",
+    "net_5bps_total_pct",
+    "net_after_5bps_side_pct",
+    "net_after_5bps_per_side_pct",
+    "cost_5bps_side_pct",
+    "five_bps_per_side_pct",
+)
+TRADE_COUNT_KEYS = (
+    "trade_count",
+    "trades",
+    "n_distinct_trades",
+    "rank_total_trade_count",
+)
+PRICE_KEYS = (
+    "representative_entry_price",
+    "representative_price",
+    "last_close",
+    "entry_price",
+    "avg_entry_price",
+    "close",
+)
+DEFAULT_REPRESENTATIVE_PRICE = {
+    "ES": 5200.0,
+    "MES": 5200.0,
+    "NQ": 15000.0,
+    "MNQ": 15000.0,
+    "YM": 39000.0,
+    "MYM": 39000.0,
+    "RTY": 2200.0,
+    "M2K": 2200.0,
+    "GC": 2300.0,
+    "MGC": 2300.0,
+    "XAU": 2300.0,
+    "SI": 30.0,
+    "SIL": 30.0,
+    "HG": 4.5,
+    "CL": 75.0,
+    "MCL": 75.0,
+    "NG": 3.0,
+    "ZN": 110.0,
+    "ZB": 120.0,
+    "ZF": 105.0,
+    "ZC": 450.0,
+    "ZS": 1200.0,
+    "ZW": 550.0,
+    "LE": 185.0,
+    "6E": 1.08,
+    "M6E": 1.08,
+    "BRE": 1.08,
+}
+DEFAULT_STRESS_TELEMETRY_BPS_PER_SIDE = 5.0
+
+
+def _safe_float(value: Any) -> float | None:
+    if isinstance(value, bool) or value is None:
+        return None
+    try:
+        parsed = float(str(value).strip().replace(",", ""))
+    except (TypeError, ValueError):
+        return None
+    if math.isnan(parsed) or math.isinf(parsed):
+        return None
+    return parsed
+
+
+def _safe_int(value: Any) -> int | None:
+    parsed = _safe_float(value)
+    if parsed is None:
+        return None
+    return int(parsed)
+
+
+def _first_number(row: dict[str, Any], keys: Iterable[str]) -> float | None:
+    for key in keys:
+        value = _safe_float(row.get(key))
+        if value is not None:
+            return value
+    return None
+
+
+def _row_label(row: dict[str, Any], path: Path) -> str:
+    for key in ("label", "factor_id", "strategy_id", "package_id", "strategy_name", "symbol", "pair"):
+        value = row.get(key)
+        if isinstance(value, str) and value.strip():
+            return value.strip()
+    return path.stem
+
+
+def _row_text(row: dict[str, Any]) -> str:
+    parts: list[str] = []
+    for key in (
+        "label",
+        "factor_id",
+        "strategy_id",
+        "package_id",
+        "strategy_name",
+        "symbol",
+        "pair",
+        "contract",
+        "root",
+        "branch_path",
+        "cost_profile_id",
+        "market_product_symbol_origin_tf",
+    ):
+        value = row.get(key)
+        if isinstance(value, str) and value:
+            parts.append(value)
+    return " ".join(parts)
+
+
+def _root_from_token_text(text: str) -> str | None:
+    upper = text.upper().strip()
+    if not upper:
+        return None
+    tokens = [token for token in re.split(r"[^A-Z0-9]+", upper) if token]
+    compact = "".join(ch for ch in upper if ch.isalnum())
+    if compact:
+        tokens.append(compact)
+    for root in sorted(cost_model.FUTURES_COST_PROFILES.keys(), key=len, reverse=True):
+        for token in tokens:
+            if token == root:
+                return root
+            if not token.startswith(root):
+                continue
+            suffix = token[len(root):]
+            if not suffix:
+                return root
+            if suffix.startswith("USD") or suffix[0].isdigit():
+                return root
+            if suffix[0] in "FGHJKMNQUVXZ" and suffix[1:].isdigit():
+                return root
+    return None
+
+
+def futures_root_for_row(row: dict[str, Any]) -> str | None:
+    for key in ("symbol", "root", "contract", "pair"):
+        value = row.get(key)
+        if isinstance(value, str) and cost_model.futures_cost_profile(value) is not None:
+            return cost_model.normalize_futures_root(value)
+    return _root_from_token_text(_row_text(row))
+
+
+def trade_count_for_row(row: dict[str, Any]) -> int | None:
+    for key in TRADE_COUNT_KEYS:
+        value = _safe_int(row.get(key))
+        if value is not None:
+            return value
+    return None
+
+
+def gross_pct_for_row(row: dict[str, Any], *, stress_bps_per_side: float) -> float | None:
+    gross = _first_number(row, GROSS_PCT_KEYS)
+    if gross is not None:
+        return gross
+    stress_net = _first_number(row, STRESS_5BPS_PCT_KEYS)
+    trades = trade_count_for_row(row)
+    if stress_net is not None and trades is not None:
+        return stress_net + trades * round_turn_stress_pct(stress_bps_per_side)
+    return None
+
+
+def representative_price_for_root(row: dict[str, Any], root: str) -> float:
+    price = _first_number(row, PRICE_KEYS)
+    if price is not None and price > 0:
+        return price
+    return DEFAULT_REPRESENTATIVE_PRICE[root]
+
+
+def round_turn_stress_pct(bps_per_side: float) -> float:
+    return float(bps_per_side) * 2.0 * 0.01
+
+
+def _cost_status_verified(profile: cost_model.FuturesCostProfile | None) -> bool:
+    return bool(profile and profile.verified_for_promotion)
+
+
+def classify_row(
+    row: dict[str, Any],
+    *,
+    source_file: Path,
+    stress_bps_per_side: float = DEFAULT_STRESS_TELEMETRY_BPS_PER_SIDE,
+) -> dict[str, Any] | None:
+    root = futures_root_for_row(row)
+    if root is None:
+        return None
+    trades = trade_count_for_row(row)
+    gross_pct = gross_pct_for_row(row, stress_bps_per_side=stress_bps_per_side)
+    label = _row_label(row, source_file)
+    profile = cost_model.futures_cost_profile(root)
+    if trades is None or trades <= 0 or gross_pct is None:
+        return {
+            "label": label,
+            "source_file": str(source_file),
+            "symbol_root": root,
+            "classification": "insufficient_trade_or_gross_data",
+            "trade_count": trades,
+            "promotion_allowed": False,
+            "trade_usable": False,
+            "update_goal": False,
+        }
+    if profile is None or not _cost_status_verified(profile):
+        return {
+            "label": label,
+            "source_file": str(source_file),
+            "symbol_root": root,
+            "classification": "cost_model_unverified",
+            "trade_count": trades,
+            "gross_total_profit_pct": round(gross_pct, 6),
+            "gross_edge_bps_per_trade": round(gross_pct / trades * 100.0, 6),
+            "cost_model_status": profile.status if profile else cost_model.STATUS_UNVERIFIED,
+            "cost_profile_id": profile.profile_id if profile else "unknown",
+            "promotion_allowed": False,
+            "trade_usable": False,
+            "update_goal": False,
+        }
+
+    representative_price = representative_price_for_root(row, root)
+    fee_pct = profile.round_trip_fee_pct(representative_price)
+    all_in_pct = profile.round_trip_cost_pct(representative_price)
+    stress_pct = round_turn_stress_pct(stress_bps_per_side)
+    stress_total_pct = gross_pct - trades * stress_pct
+    fee_only_total_pct = gross_pct - trades * fee_pct
+    all_in_total_pct = gross_pct - trades * all_in_pct
+    gross_edge_bps = gross_pct / trades * 100.0
+    all_in_bps = all_in_pct * 100.0
+    stress_bps_round_turn = stress_pct * 100.0
+
+    if gross_pct <= 0:
+        classification = "gross_negative_not_cost_rescuable"
+    elif all_in_total_pct <= 0:
+        classification = "zero_edge_churn_not_rescued_by_realistic_cost"
+    elif stress_total_pct <= 0:
+        classification = "bps_stress_false_negative_recheck"
+    elif gross_edge_bps >= stress_bps_round_turn and trades <= 800:
+        classification = "large_move_low_turnover_cost_negligible"
+    else:
+        classification = "realistic_cost_survivor"
+
+    return {
+        "label": label,
+        "source_file": str(source_file),
+        "symbol_root": root,
+        "classification": classification,
+        "trade_count": trades,
+        "representative_price": representative_price,
+        "gross_total_profit_pct": round(gross_pct, 6),
+        "gross_edge_bps_per_trade": round(gross_edge_bps, 6),
+        f"stress_{stress_bps_per_side:g}bps_side_total_profit_pct": round(stress_total_pct, 6),
+        "instrument_fee_only_total_profit_pct": round(fee_only_total_pct, 6),
+        "instrument_all_in_total_profit_pct": round(all_in_total_pct, 6),
+        "instrument_fee_only_bps_per_trade": round(fee_pct * 100.0, 6),
+        "instrument_all_in_bps_per_trade": round(all_in_bps, 6),
+        "stress_round_turn_bps_per_trade": round(stress_bps_round_turn, 6),
+        "cost_profile_id": profile.profile_id,
+        "cost_model_status": profile.status,
+        "cost_stress_role": "telemetry_not_futures_hard_gate",
+        "promotion_allowed": False,
+        "trade_usable": False,
+        "update_goal": False,
+    }
+
+
+def _looks_like_candidate_row(row: dict[str, Any]) -> bool:
+    has_trade = any(key in row for key in TRADE_COUNT_KEYS)
+    has_economics = any(key in row for key in (*GROSS_PCT_KEYS, *STRESS_5BPS_PCT_KEYS))
+    return has_trade and has_economics and futures_root_for_row(row) is not None
+
+
+def _inherit_context(row: dict[str, Any], context: dict[str, Any]) -> dict[str, Any]:
+    inherited = dict(context)
+    for key in (
+        "symbol",
+        "root",
+        "contract",
+        "pair",
+        "factor_id",
+        "strategy_id",
+        "package_id",
+        "label",
+        "strategy_name",
+        "branch_path",
+        "market_product_symbol_origin_tf",
+    ):
+        value = row.get(key)
+        if isinstance(value, str) and value.strip():
+            inherited[key] = value
+    return inherited
+
+
+def iter_rows(payload: Any, context: dict[str, Any] | None = None) -> Iterable[dict[str, Any]]:
+    context = context or {}
+    if isinstance(payload, dict):
+        row_context = _inherit_context(payload, context)
+        merged = {**row_context, **payload}
+        if _looks_like_candidate_row(merged):
+            yield merged
+        for key in ROW_CONTAINER_KEYS:
+            value = payload.get(key)
+            if isinstance(value, dict):
+                yield from iter_rows(value, row_context)
+            elif isinstance(value, list):
+                for item in value:
+                    yield from iter_rows(item, row_context)
+    elif isinstance(payload, list):
+        for item in payload:
+            yield from iter_rows(item, context)
+
+
+def artifact_files(paths: list[Path], *, max_files: int | None = None) -> list[Path]:
+    files: list[Path] = []
+    for path in paths:
+        if path.is_file():
+            files.append(path)
+            continue
+        if not path.is_dir():
+            continue
+        seen = set(files)
+        for pattern in ARTIFACT_GLOBS:
+            for found in sorted(path.rglob(pattern)):
+                if found not in seen:
+                    files.append(found)
+                    seen.add(found)
+                if max_files is not None and len(files) >= max_files:
+                    return files
+    return files[:max_files] if max_files is not None else files
+
+
+def audit_files(
+    files: list[Path],
+    *,
+    stress_bps_per_side: float = DEFAULT_STRESS_TELEMETRY_BPS_PER_SIDE,
+) -> dict[str, Any]:
+    rows: list[dict[str, Any]] = []
+    read_errors: list[dict[str, str]] = []
+    seen: set[tuple[str, str, int, float]] = set()
+    for path in files:
+        if path.suffix.lower() == ".csv":
+            try:
+                with path.open(newline="", encoding="utf-8") as handle:
+                    candidate_rows = list(csv.DictReader(handle))
+            except Exception as exc:  # noqa: BLE001 - audit should keep scanning other files.
+                read_errors.append({"file": str(path), "error": str(exc)})
+                continue
+        else:
+            try:
+                payload = json.loads(path.read_text(encoding="utf-8"))
+            except Exception as exc:  # noqa: BLE001 - audit should keep scanning other files.
+                read_errors.append({"file": str(path), "error": str(exc)})
+                continue
+            candidate_rows = list(iter_rows(payload))
+        for row in candidate_rows:
+            classified = classify_row(row, source_file=path, stress_bps_per_side=stress_bps_per_side)
+            if classified is None:
+                continue
+            key = (
+                classified["source_file"],
+                classified["label"],
+                int(classified.get("trade_count") or 0),
+                float(classified.get("gross_total_profit_pct") or 0.0),
+            )
+            if key in seen:
+                continue
+            seen.add(key)
+            rows.append(classified)
+    rows.sort(
+        key=lambda item: (
+            item["classification"] != "bps_stress_false_negative_recheck",
+            -float(item.get("instrument_all_in_total_profit_pct") or -1e12),
+            -float(item.get("gross_edge_bps_per_trade") or -1e12),
+        )
+    )
+    counts: dict[str, int] = {}
+    for row in rows:
+        counts[row["classification"]] = counts.get(row["classification"], 0) + 1
+    return {
+        "schema_version": "futures-bps-false-negative-revival/v1",
+        "artifact_files_scanned": len(files),
+        "candidate_rows_classified": len(rows),
+        "classification_counts": counts,
+        "revival_recheck_count": counts.get("bps_stress_false_negative_recheck", 0),
+        "revival_recheck_candidates": [
+            row for row in rows if row["classification"] == "bps_stress_false_negative_recheck"
+        ],
+        "zero_edge_churn_count": counts.get("zero_edge_churn_not_rescued_by_realistic_cost", 0),
+        "cost_model_unverified_count": counts.get("cost_model_unverified", 0),
+        "promotion_allowed": False,
+        "trade_usable": False,
+        "update_goal": False,
+        "rows": rows,
+        "read_errors": read_errors,
+    }
+
+
+def write_csv(path: Path, rows: list[dict[str, Any]]) -> None:
+    if not rows:
+        path.write_text("", encoding="utf-8")
+        return
+    fields: list[str] = []
+    for row in rows:
+        for key in row:
+            if key not in fields:
+                fields.append(key)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with path.open("w", newline="", encoding="utf-8") as handle:
+        writer = csv.DictWriter(handle, fieldnames=fields, extrasaction="ignore")
+        writer.writeheader()
+        writer.writerows(rows)
+
+
+def main(argv: list[str] | None = None) -> int:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("paths", nargs="+", type=Path, help="JSON files or directories to scan")
+    parser.add_argument("--stress-bps-per-side", type=float, default=DEFAULT_STRESS_TELEMETRY_BPS_PER_SIDE)
+    parser.add_argument("--max-files", type=int, default=None)
+    parser.add_argument("--output-json", type=Path)
+    parser.add_argument("--output-csv", type=Path)
+    parser.add_argument("--pretty", action="store_true")
+    args = parser.parse_args(argv)
+
+    files = artifact_files(args.paths, max_files=args.max_files)
+    report = audit_files(files, stress_bps_per_side=args.stress_bps_per_side)
+    text = json.dumps(report, ensure_ascii=False, indent=2 if args.pretty else None) + "\n"
+    if args.output_json:
+        args.output_json.parent.mkdir(parents=True, exist_ok=True)
+        args.output_json.write_text(text, encoding="utf-8")
+    if args.output_csv:
+        write_csv(args.output_csv, report["rows"])
+    print(text, end="")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

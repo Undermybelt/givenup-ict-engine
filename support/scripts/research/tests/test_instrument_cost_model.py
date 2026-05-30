@@ -169,6 +169,19 @@ class RankRowCostSummaryTests(unittest.TestCase):
         expected = 1.0 - 10 * icm.futures_cost_profile("MGC").round_trip_fee_pct(2300.0)
         self.assertAlmostEqual(first["instrument_cost_total_profit_pct"], round(expected, 6))
 
+    def test_rank_rows_fail_closed_when_instrument_cost_unverified(self) -> None:
+        rows = [
+            {"package_id": "pkg-qqq", "trade_count": 10, "total_profit_pct": 5.0, "win_rate_pct": 60, "branch_path": "B"},
+        ]
+
+        summary = icm.rank_rows_real_fee_summary(rows, symbol="QQQ", representative_price=450.0)
+
+        self.assertFalse(summary["promotion_cost_verified"])
+        self.assertEqual(summary["cost_model"]["cost_model_status"], icm.STATUS_UNVERIFIED)
+        self.assertEqual(summary["survivors"], [])
+        self.assertFalse(summary["rows"][0]["survives_instrument_cost"])
+        self.assertIsNone(summary["rows"][0]["instrument_cost_total_profit_pct"])
+
     def test_rank_rows_real_fee_output_helpers_have_no_fixed_bps_columns(self) -> None:
         rows = [
             {"package_id": "pkg-mgc-dense", "trade_count": 10, "total_profit_pct": 1.0, "win_rate_pct": 60, "branch_path": "B"},

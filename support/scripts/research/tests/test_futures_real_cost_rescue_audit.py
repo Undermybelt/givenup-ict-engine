@@ -212,6 +212,27 @@ class FuturesRealCostRescueAuditTests(unittest.TestCase):
         assert row is not None
         self.assertEqual(row.rescue_class, "not_rescued_cost_negative")
 
+    def test_real_cost_positive_without_old_cost_wall_evidence_is_not_rescued(self) -> None:
+        row = audit.normalize_row(
+            {
+                "factor_id": "tomac_nq_real_cost_positive_no_legacy_wall_v1",
+                "symbol": "NQ",
+                "trade_count": 120,
+                "instrument_cost_total_profit_pct": 3.2,
+                "session_scope": "ETH/full_retained_session",
+                "rth_filter_applied": False,
+                "minimum_trade_sample_floor_met": True,
+                "density_target_1_to_3_per_day": True,
+            },
+            "positive_without_legacy_wall.json",
+            "top_rows",
+            0,
+        )
+
+        self.assertIsNotNone(row)
+        assert row is not None
+        self.assertEqual(row.rescue_class, "not_rescued_no_cost_wall_evidence")
+
     def test_eth_replay_rows_are_reported_not_silently_dropped(self) -> None:
         with tempfile.TemporaryDirectory() as tmpdir:
             root = Path(tmpdir)

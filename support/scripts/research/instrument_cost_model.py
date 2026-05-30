@@ -365,8 +365,36 @@ def rank_rows_real_fee_summary(
     The returned row fields are deliberately real-cost-only. Fixed bps stress ladders
     are not emitted here, so callers cannot accidentally promote them as Gate evidence.
     """
-    profile = assert_verified_for_promotion(symbol)
     cost_model = cost_model_packet(symbol, representative_price)
+    profile = futures_cost_profile(symbol)
+    if profile is None or not profile.verified_for_promotion:
+        summarized_rows = []
+        for row in rows:
+            label = label_fn(row) if label_fn is not None else str(row.get("label") or row.get("package_id") or "")
+            summarized_rows.append(
+                {
+                    "label": label,
+                    "status": row.get("status"),
+                    "trade_count": int(safe_float(row.get("trade_count"), default=0.0)),
+                    "win_rate_pct": safe_float(row.get("win_rate_pct"), default=0.0),
+                    "raw_total_profit_pct": safe_float(row.get("total_profit_pct"), default=0.0),
+                    "instrument_cost_total_profit_pct": None,
+                    "survives_instrument_cost": False,
+                    "real_fee_round_turn_pct": None,
+                    "cost_profile_id": cost_model.get("cost_profile_id", "unknown"),
+                    "cost_model_status": cost_model.get("cost_model_status", STATUS_UNVERIFIED),
+                    "sharpe": safe_float(row.get("sharpe"), default=0.0),
+                    "branch_path": row.get(branch_path_key),
+                }
+            )
+        return {
+            "rows": summarized_rows,
+            "survivors": [],
+            "cost_model": cost_model,
+            "promotion_cost_verified": False,
+            "representative_price": representative_price,
+        }
+
     fee_pct = profile.round_trip_fee_pct(representative_price)
     summarized_rows: list[dict] = []
     survivors: list[str] = []
