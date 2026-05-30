@@ -198,9 +198,10 @@ class FactorLifecycleMigrationReadbackTests(unittest.TestCase):
 
             result = readback.build_migration_readback(run_root)
 
-        self.assertEqual(result["learning_admission_status"], "admitted")
-        self.assertEqual(result["paper_admission_status"], "ready")
-        self.assertEqual(result["live_trade_status"], "ready")
+        self.assertEqual(result["learning_admission_status"], "blocked")
+        self.assertEqual(result["paper_admission_status"], "blocked")
+        self.assertEqual(result["live_trade_status"], "blocked")
+        self.assertIn("legacy_fixed_cost_readback_not_cost_authority", result["blockers"])
         self.assertNotIn("transition_hazard", result)
 
     def test_raw_profit_fallback_blocks_learning_without_practical_flags(self) -> None:
@@ -301,9 +302,10 @@ class FactorLifecycleMigrationReadbackTests(unittest.TestCase):
 
             result = readback.build_migration_readback(run_root)
 
-        self.assertEqual(result["learning_admission_status"], "admitted")
-        self.assertEqual(result["paper_admission_status"], "ready")
-        self.assertEqual(result["live_trade_status"], "ready")
+        self.assertEqual(result["learning_admission_status"], "blocked")
+        self.assertEqual(result["paper_admission_status"], "blocked")
+        self.assertEqual(result["live_trade_status"], "blocked")
+        self.assertIn("legacy_fixed_cost_readback_not_cost_authority", result["blockers"])
         self.assertFalse(result["promotion_allowed"])
         self.assertFalse(result["trade_usable"])
         self.assertFalse(result["update_goal"])
@@ -368,13 +370,11 @@ class FactorLifecycleMigrationReadbackTests(unittest.TestCase):
         self.assertEqual(
             result["old_decision"], "reject_less_than_one_trade_per_3_sessions"
         )
-        self.assertEqual(result["learning_admission_status"], "admitted")
-        self.assertEqual(result["paper_admission_status"], "observe")
+        self.assertEqual(result["learning_admission_status"], "blocked")
+        self.assertEqual(result["paper_admission_status"], "blocked")
         self.assertEqual(result["live_trade_status"], "blocked")
-        self.assertEqual(
-            result["long_run_expectancy_after_declared_friction"],
-            0.019535640591735546,
-        )
+        self.assertIsNone(result["long_run_expectancy_after_declared_friction"])
+        self.assertIn("legacy_fixed_cost_readback_not_cost_authority", result["blockers"])
         self.assertIn("terminal_decision_summary.md", result["evidence_paths"])
         self.assertIn("summary.json", result["evidence_paths"])
         self.assertIn("leaderboard.csv", result["evidence_paths"])

@@ -112,6 +112,67 @@ class RealTradeFeedbackLabelsTests(unittest.TestCase):
             first = json.loads(output_jsonl.read_text(encoding="utf-8").splitlines()[0])
             self.assertEqual(first["trade_id"], "trade-1")
 
+    def test_cli_writes_accepted_ibkr_paper_feedback_jsonl(self) -> None:
+        with TemporaryDirectory() as tmpdir:
+            tmp = Path(tmpdir)
+            captures_jsonl = tmp / "ibkr_paper_captures.jsonl"
+            output_jsonl = tmp / "accepted_feedback.jsonl"
+            captures_jsonl.write_text(
+                json.dumps(
+                    {
+                        "trade_id": "rv-paper-0001",
+                        "entry_exec_id": "0000e1.1",
+                        "exit_exec_id": "0000e1.2",
+                        "order_id": 17,
+                        "client_id": 42,
+                        "perm_id": 9917,
+                        "conid": 568465095,
+                        "local_symbol": "NQM6",
+                        "sec_type": "FUT",
+                        "exchange": "CME",
+                        "currency": "USD",
+                        "side": "BUY",
+                        "quantity": 1,
+                        "open_ts_ms": _ts_ms("2026-05-15T10:00:00Z"),
+                        "close_ts_ms": _ts_ms("2026-05-15T11:00:00Z"),
+                        "open_rate": 18800.25,
+                        "close_rate": 18818.75,
+                        "commission": 4.50,
+                        "commission_currency": "USD",
+                        "realized_pnl": 370.0,
+                    }
+                )
+                + "\n",
+                encoding="utf-8",
+            )
+
+            exit_code = builder.main(
+                [
+                    "--ibkr-paper-captures-jsonl",
+                    str(captures_jsonl),
+                    "--output-jsonl",
+                    str(output_jsonl),
+                    "--symbol",
+                    "TOMAC_REALIZED_VOL_FIXEDHOLD_PRACTICAL_LIFECYCLE_V1",
+                    "--strategy-name",
+                    "tomac_idxfut_clean_realized_vol_term_structure_breakout_1h_v1",
+                    "--factor-id",
+                    "tomac_idxfut_clean_realized_vol_term_structure_breakout_1h_v1",
+                    "--branch-path",
+                    "TrendExpansion -> RealizedVolTermStructure -> factor_v1",
+                    "--auto-quant-run-id",
+                    "ibkr-paper-capture-20260530",
+                    "--feedback-source",
+                    "auto_quant_real_trades:paper_execution_feedback:realized_vol_fixedhold_v1",
+                ]
+            )
+
+            self.assertEqual(exit_code, 0)
+            first = json.loads(output_jsonl.read_text(encoding="utf-8").splitlines()[0])
+            self.assertEqual(first["feedback_source"], "auto_quant_real_trades:paper_execution_feedback:realized_vol_fixedhold_v1")
+            self.assertTrue(first["broker_realized"])
+            self.assertTrue(first["broker_fill_evidence"])
+
     def test_builder_preserves_actual_outcome_sign_when_proxy_return_disagrees(self) -> None:
         candles = [
             {"timestamp": "2026-05-15T10:00:00Z", "open": 100.0, "high": 100.5, "low": 99.5, "close": 100.0},
@@ -223,6 +284,80 @@ class RealTradeFeedbackLabelsTests(unittest.TestCase):
         self.assertAlmostEqual(labels[1]["mfe"], 0.01)
         self.assertAlmostEqual(labels[1]["mae"], -0.015)
         self.assertAlmostEqual(labels[0]["realized_R"], (0.02 - 0.0005) / 0.01)
+
+    def test_build_accepted_paper_execution_feedback_requires_broker_fill_evidence(self) -> None:
+        captures = [
+            {
+                "trade_id": "rv-paper-0001",
+                "entry_exec_id": "0000e1.1",
+                "exit_exec_id": "0000e1.2",
+                "order_id": 17,
+                "client_id": 42,
+                "perm_id": 9917,
+                "conid": 568465095,
+                "local_symbol": "NQM6",
+                "sec_type": "FUT",
+                "exchange": "CME",
+                "currency": "USD",
+                "side": "BUY",
+                "quantity": 1,
+                "open_ts_ms": _ts_ms("2026-05-15T10:00:00Z"),
+                "close_ts_ms": _ts_ms("2026-05-15T11:00:00Z"),
+                "open_rate": 18800.25,
+                "close_rate": 18818.75,
+                "commission": 4.50,
+                "commission_currency": "USD",
+                "realized_pnl": 370.0,
+                "source": "ibkr_reqExecutions_execDetails_commissionReport",
+            }
+        ]
+
+        rows = builder.build_accepted_paper_execution_feedback_rows(
+            captures,
+            symbol="TOMAC_REALIZED_VOL_FIXEDHOLD_PRACTICAL_LIFECYCLE_V1",
+            strategy_name="tomac_idxfut_clean_realized_vol_term_structure_breakout_1h_v1",
+            factor_id="tomac_idxfut_clean_realized_vol_term_structure_breakout_1h_v1",
+            branch_path="TrendExpansion -> RealizedVolTermStructure -> factor_v1",
+            auto_quant_run_id="ibkr-paper-capture-20260530",
+            feedback_source="auto_quant_real_trades:paper_execution_feedback:realized_vol_fixedhold_v1",
+        )
+
+        self.assertEqual(len(rows), 1)
+        row = rows[0]
+        self.assertEqual(row["schema_version"], "1.0")
+        self.assertEqual(row["strategy_mutation_id"], "tomac_idxfut_clean_realized_vol_term_structure_breakout_1h_v1")
+        self.assertEqual(row["source"], "auto_quant_real_trades:paper_execution_feedback:realized_vol_fixedhold_v1")
+        self.assertTrue(row["broker_realized"])
+        self.assertTrue(row["broker_fill_evidence"])
+        self.assertEqual(row["direction"], "Bull")
+        self.assertEqual(row["realized_outcome"], "win")
+        self.assertEqual(row["session_scope"], "ETH/full_retained_session")
+        self.assertFalse(row["rth_filter_applied"])
+        self.assertEqual(row["broker_execution"]["entry_exec_id"], "0000e1.1")
+        self.assertEqual(row["broker_execution"]["exit_exec_id"], "0000e1.2")
+        self.assertEqual(row["broker_execution"]["commission_currency"], "USD")
+
+        with self.assertRaisesRegex(ValueError, "commission"):
+            builder.build_accepted_paper_execution_feedback_rows(
+                [{**captures[0], "commission": None}],
+                symbol="S",
+                strategy_name="strategy",
+                factor_id="factor",
+                branch_path="Branch -> factor",
+                auto_quant_run_id="run",
+                feedback_source="auto_quant_real_trades:paper_execution_feedback:test",
+            )
+
+        with self.assertRaisesRegex(ValueError, "simulated"):
+            builder.build_accepted_paper_execution_feedback_rows(
+                captures,
+                symbol="S",
+                strategy_name="strategy",
+                factor_id="factor",
+                branch_path="Branch -> factor",
+                auto_quant_run_id="run",
+                feedback_source="auto_quant_real_trades:simulated_backtest:test",
+            )
 
 
 if __name__ == "__main__":

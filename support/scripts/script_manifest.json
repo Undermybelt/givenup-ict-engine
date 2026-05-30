@@ -176,14 +176,6 @@
     "test_command": "python3 -m unittest support.scripts.research.tests.test_futures_real_cost_rescue_audit -v"
   },
   {
-    "name": "futures_bps_false_negative_revival",
-    "stability": "read_only_utility",
-    "entrypoint": "support/scripts/research/futures_bps_false_negative_revival.py",
-    "safe_default": true,
-    "requires_data": true,
-    "test_command": "python3 -m unittest support.scripts.research.tests.test_futures_bps_false_negative_revival -v"
-  },
-  {
     "name": "fixed_bps_cost_model_source_check",
     "stability": "read_only_utility",
     "entrypoint": "support/scripts/research/fixed_bps_cost_model_source_check.py",

@@ -201,7 +201,7 @@ def row_trades_per_day(row: dict[str, Any]) -> float | None:
     return None
 
 
-def row_survives_5bps(row: dict[str, Any]) -> bool:
+def row_survives_legacy_fixed_cost(row: dict[str, Any]) -> bool:
     if row.get("survives_5bps_per_side") is True:
         return True
     for key in (
@@ -379,7 +379,7 @@ def row_is_futures_context(row: dict[str, Any], payload: dict[str, Any]) -> bool
     return futures_root_token_present(label) and any(separator in label for separator in ("/", "_", "-"))
 
 
-def label_is_futures_5bps_stress(label: Any, payload: dict[str, Any]) -> bool:
+def label_is_futures_legacy_fixed_cost(label: Any, payload: dict[str, Any]) -> bool:
     if not isinstance(label, str) or not label:
         return False
     for row in cost_rows(payload):
@@ -406,17 +406,17 @@ def row_survives_instrument_cost(row: dict[str, Any]) -> bool:
 def row_survives_real_cost(row: dict[str, Any], payload: dict[str, Any]) -> bool:
     if row_is_futures_context(row, payload):
         return row_is_futures_instrument_cost(row, payload) and row_survives_instrument_cost(row)
-    return row_survives_5bps(row)
+    return False
 
 
-def exact_5bps_survivors(payload: dict[str, Any]) -> list[str]:
+def legacy_fixed_cost_survivors(payload: dict[str, Any]) -> list[str]:
     explicit = set(survivor_values(payload, FIVE_BPS_SURVIVOR_KEYS))
     survivors: list[str] = []
     for row in cost_rows(payload):
         label = row_label(row)
         trade_count = row_trade_count(row)
         has_trades = trade_count is not None and trade_count > 0
-        if row_survives_5bps(row) and has_trades:
+        if row_survives_legacy_fixed_cost(row) and has_trades:
             survivors.append(label or "cost_row")
 
     for value in explicit:
@@ -426,7 +426,7 @@ def exact_5bps_survivors(payload: dict[str, Any]) -> list[str]:
             if row_label(row) != value:
                 continue
             trade_count = row_trade_count(row)
-            if row_survives_5bps(row) and trade_count is not None and trade_count > 0:
+            if row_survives_legacy_fixed_cost(row) and trade_count is not None and trade_count > 0:
                 survivors.append(value)
                 break
     return sorted(set(survivors))
@@ -444,17 +444,13 @@ def exact_instrument_cost_survivors(payload: dict[str, Any]) -> list[str]:
 
 
 def exact_real_cost_survivors(payload: dict[str, Any]) -> list[str]:
-    non_futures_bps_survivors = [
-        label for label in exact_5bps_survivors(payload)
-        if not label_is_futures_5bps_stress(label, payload)
-    ]
-    return sorted(set(non_futures_bps_survivors + exact_instrument_cost_survivors(payload)))
+    return exact_instrument_cost_survivors(payload)
 
 
-def positive_5bps_rows_without_trade_count(payload: dict[str, Any]) -> list[str]:
+def positive_legacy_fixed_cost_rows_without_trade_count(payload: dict[str, Any]) -> list[str]:
     rows_without_trade_count: list[str] = []
     for row in cost_rows(payload):
-        if not row_survives_5bps(row):
+        if not row_survives_legacy_fixed_cost(row):
             continue
         trade_count = row_trade_count(row)
         if trade_count is None or trade_count <= 0:
@@ -613,12 +609,11 @@ def check_payload(
         tree_normalizer.extract_portability_labels(payload),
     )
     gates_open = downstream_gates_open(payload)
-    exact_5bps = exact_5bps_survivors(payload)
+    legacy_fixed_cost = legacy_fixed_cost_survivors(payload)
     exact_instrument_cost = exact_instrument_cost_survivors(payload)
     exact_real_cost = exact_real_cost_survivors(payload)
-    five_bps_without_trade_count = positive_5bps_rows_without_trade_count(payload)
-    two_bps_survivors = survivor_values(payload, TWO_BPS_SURVIVOR_KEYS)
-    five_bps_survivors = survivor_values(payload, FIVE_BPS_SURVIVOR_KEYS)
+    legacy_fixed_cost_without_trade_count = positive_legacy_fixed_cost_rows_without_trade_count(payload)
+    legacy_fixed_cost_survivor_hints = survivor_values(payload, TWO_BPS_SURVIVOR_KEYS) + survivor_values(payload, FIVE_BPS_SURVIVOR_KEYS)
 
     violations: list[str] = []
     feedback_blocking_violations: list[str] = []
@@ -631,12 +626,10 @@ def check_payload(
         feedback_blocking_violations.append("branch_path_not_canonical_regime_root")
     if gates_open and not exact_real_cost:
         feedback_blocking_violations.append("downstream_open_without_exact_real_cost_survivor")
-    if gates_open and five_bps_without_trade_count and not exact_real_cost:
-        feedback_blocking_violations.append("cost_rows_5bps_positive_without_trade_count_proof")
-    if gates_open and two_bps_survivors and not exact_real_cost:
-        feedback_blocking_violations.append("survivors_2bps_used_as_downstream_gate")
-    if gates_open and five_bps_survivors and not exact_real_cost:
-        feedback_blocking_violations.append("survivors_5bps_without_cost_row_used_as_downstream_gate")
+    if gates_open and legacy_fixed_cost_without_trade_count and not exact_real_cost:
+        feedback_blocking_violations.append("legacy_fixed_cost_positive_without_trade_count_proof")
+    if gates_open and legacy_fixed_cost_survivor_hints and not exact_real_cost:
+        feedback_blocking_violations.append("legacy_fixed_cost_survivor_used_as_downstream_gate")
     if not payload.get("branch_fields_preserved", bool(branch_path)):
         feedback_blocking_violations.append("branch_fields_not_preserved")
     feedback_blocking_violations.extend(trend_root_evidence_violations(payload, normalized, gates_open))
@@ -655,18 +648,15 @@ def check_payload(
         "feedback_admission": feedback_admission_report(gates_open, feedback_blocking_violations),
         "practical_admission": practical_admission_report(payload, practical_violations),
         "survivors": {
-            "two_bps": two_bps_survivors,
-            "five_bps": five_bps_survivors,
-            "exact_5bps": exact_5bps,
-            "exact_5bps_density": exact_5bps,
             "instrument_cost": exact_instrument_cost,
             "real_cost": exact_real_cost,
-            "five_bps_without_trade_count": five_bps_without_trade_count,
+            "legacy_fixed_cost_readback": legacy_fixed_cost,
+            "legacy_fixed_cost_without_trade_count": legacy_fixed_cost_without_trade_count,
         },
         "density_gate": {
             "min_trades_per_day": None,
             "status": "cancelled",
-            "requirement": "trade_count_gt_0_and_positive_exact_real_cost",
+            "requirement": "trade_count_gt_0_and_positive_verified_real_cost",
         },
         "min_trend_root_posterior": MIN_TREND_ROOT_POSTERIOR,
     }
@@ -687,7 +677,7 @@ def main() -> int:
         "--min-trades-per-day",
         type=float,
         default=None,
-        help="Deprecated no-op; daily density no longer blocks exact 5bps feedback admission",
+        help="Deprecated no-op; daily density no longer blocks verified real-cost feedback admission",
     )
     parser.add_argument("--pretty", action="store_true", help="Pretty-print JSON output")
     args = parser.parse_args()

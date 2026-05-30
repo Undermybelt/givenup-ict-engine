@@ -59,7 +59,7 @@ class RegimeRootSurvivorBlockerReportTests(unittest.TestCase):
             built = report.build_report(gate1_path, candidate_path, tree_path)
 
         self.assertEqual(
-            built["gate1"]["exact_5bps_survivors"],
+            built["gate1"]["legacy_fixed_cost_readback_survivors"],
             ["tomac_nq_bidir_opening_drive_t10_w0_e900_x1245_exact_v1"],
         )
         self.assertEqual(built["gate1"]["exact_real_cost_survivors"], [])
@@ -107,7 +107,7 @@ class RegimeRootSurvivorBlockerReportTests(unittest.TestCase):
             built = report.build_report(gate1_path, candidate_path, tree_path)
 
         self.assertEqual(
-            built["gate1"]["exact_5bps_survivors"],
+            built["gate1"]["legacy_fixed_cost_readback_survivors"],
             ["tomac_nq_bidir_opening_drive_t10_w0_e900_x1245_exact_v1"],
         )
         self.assertNotIn("no_real_cost_5bps_survivor", built["blockers"])
@@ -168,7 +168,7 @@ class RegimeRootSurvivorBlockerReportTests(unittest.TestCase):
                 "timeframe": "5m",
             },
         )
-        self.assertEqual(built["gate1"]["exact_5bps_survivors"], ["net-5m-v1"])
+        self.assertEqual(built["gate1"]["legacy_fixed_cost_readback_survivors"], ["net-5m-v1"])
         self.assertTrue(built["canonical_root_ok"])
         self.assertEqual(built["branch_path_violations"], [])
         self.assertNotIn("no_real_cost_5bps_survivor", built["blockers"])
@@ -235,7 +235,7 @@ class RegimeRootSurvivorBlockerReportTests(unittest.TestCase):
             built = report.build_report(gate1_path, candidate_path, tree_path)
 
         self.assertEqual(built["gate1"]["exact_cost_survivors"], ["NQ/5m/repriced"])
-        self.assertEqual(built["gate1"]["exact_5bps_survivors"], [])
+        self.assertEqual(built["gate1"]["legacy_fixed_cost_readback_survivors"], [])
         self.assertEqual(built["gate1"]["cost_gate_authority"], "instrument_cost")
         self.assertTrue(built["gate1"]["has_declared_cost_survivor"])
         self.assertNotIn("no_real_cost_5bps_survivor", built["blockers"])
@@ -350,7 +350,7 @@ class RegimeRootSurvivorBlockerReportTests(unittest.TestCase):
             built = report.build_report(gate1_path, candidate_path, tree_path)
 
         self.assertEqual(
-            built["gate1"]["exact_5bps_survivors"],
+            built["gate1"]["legacy_fixed_cost_readback_survivors"],
             ["bybit-injusdt-30m-kst-coppock-momentum-exact-v1"],
         )
         self.assertNotIn("no_real_cost_5bps_survivor", built["blockers"])
@@ -402,7 +402,7 @@ class RegimeRootSurvivorBlockerReportTests(unittest.TestCase):
 
             built = report.build_report(gate1_path, candidate_path, tree_path)
 
-        self.assertEqual(built["gate1"]["exact_5bps_survivors"], ["ETN/5m/quality"])
+        self.assertEqual(built["gate1"]["legacy_fixed_cost_readback_survivors"], ["ETN/5m/quality"])
         self.assertNotIn("no_real_cost_5bps_survivor", built["blockers"])
 
     def test_futures_instrument_cost_survivor_is_real_cost_even_when_5bps_stress_fails(self) -> None:
@@ -463,7 +463,7 @@ class RegimeRootSurvivorBlockerReportTests(unittest.TestCase):
 
             built = report.build_report(gate1_path, candidate_path, tree_path)
 
-        self.assertEqual(built["gate1"]["exact_5bps_survivors"], [])
+        self.assertEqual(built["gate1"]["legacy_fixed_cost_readback_survivors"], [])
         self.assertEqual(built["gate1"]["exact_instrument_cost_survivors"], ["NQ/5m/cost_revival"])
         self.assertEqual(built["gate1"]["exact_real_cost_survivors"], ["NQ/5m/cost_revival"])
         self.assertTrue(built["gate1"]["has_real_cost_survivor"])
@@ -523,7 +523,7 @@ class RegimeRootSurvivorBlockerReportTests(unittest.TestCase):
 
             built = report.build_report(gate1_path, candidate_path, tree_path)
 
-        self.assertEqual(built["gate1"]["exact_5bps_survivors"], ["tomac_nq_cost_wall_false_positive_v1"])
+        self.assertEqual(built["gate1"]["legacy_fixed_cost_readback_survivors"], ["tomac_nq_cost_wall_false_positive_v1"])
         self.assertEqual(built["gate1"]["exact_instrument_cost_survivors"], [])
         self.assertEqual(built["gate1"]["exact_real_cost_survivors"], [])
         self.assertEqual(built["gate1"]["cost_gate_authority"], "none")
@@ -574,7 +574,7 @@ class RegimeRootSurvivorBlockerReportTests(unittest.TestCase):
 
             built = report.build_report(gate1_path, candidate_path, tree_path)
 
-        self.assertEqual(built["gate1"]["exact_5bps_survivors"], ["tomac_nq_verified_real_cost_v1"])
+        self.assertEqual(built["gate1"]["legacy_fixed_cost_readback_survivors"], ["tomac_nq_verified_real_cost_v1"])
         self.assertEqual(built["gate1"]["exact_instrument_cost_survivors"], ["tomac_nq_verified_real_cost_v1"])
         self.assertEqual(built["gate1"]["exact_real_cost_survivors"], ["tomac_nq_verified_real_cost_v1"])
         self.assertEqual(built["gate1"]["cost_gate_authority"], "instrument_cost")
@@ -666,7 +666,7 @@ class RegimeRootSurvivorBlockerReportTests(unittest.TestCase):
             built = report.build_report(gate1_path, candidate_path, tree_path)
 
         self.assertEqual(
-            built["gate1"]["exact_5bps_survivors"],
+            built["gate1"]["legacy_fixed_cost_readback_survivors"],
             ["bybit-arbusdt-1h-keltner-atr-pullback-exact-v1"],
         )
         self.assertNotIn("no_real_cost_5bps_survivor", built["blockers"])
@@ -998,7 +998,7 @@ class RegimeRootSurvivorBlockerReportTests(unittest.TestCase):
 
             built = report.build_report(gate1_path, candidate_path, tree_path)
 
-        self.assertEqual(built["gate1"]["exact_5bps_survivors"], ["MES/dense/15m"])
+        self.assertEqual(built["gate1"]["legacy_fixed_cost_readback_survivors"], ["MES/dense/15m"])
         self.assertEqual(built["validation"]["raw_scored_mature_rows"], 12)
         self.assertEqual(built["validation"]["raw_scored_mature_shortfall_rows"], 18)
         self.assertEqual(built["validation"]["production_validation_shortfall_rows"], 18)
@@ -1070,7 +1070,7 @@ class RegimeRootSurvivorBlockerReportTests(unittest.TestCase):
             built = report.build_report(gate1_path, candidate_path, tree_path)
 
         self.assertEqual(
-            built["gate1"]["exact_5bps_survivors"],
+            built["gate1"]["legacy_fixed_cost_readback_survivors"],
             ["tomac_nq_bidir_opening_drive_t10_w0_e900_x1245_exact_v1"],
         )
         self.assertEqual(built["pre_bayes"]["long_run_expectancy_after_declared_friction"], 571.46)
@@ -1349,7 +1349,7 @@ class RegimeRootSurvivorBlockerReportTests(unittest.TestCase):
         self.assertNotIn("production_validation_below_30", built["blockers"])
         self.assertNotIn("observation_validation_below_30", built["blockers"])
         self.assertNotIn("execution_readiness_below_live_floor", built["blockers"])
-        self.assertEqual(built["decision"], "learning_admitted_live_blocked")
+        self.assertEqual(built["decision"], "learning_admitted_paper_observe")
 
 
 if __name__ == "__main__":

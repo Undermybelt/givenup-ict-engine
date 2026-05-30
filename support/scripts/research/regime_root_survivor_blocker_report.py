@@ -16,6 +16,7 @@ PRE_BAYES_ACCEPTED_GATE_STATUSES = {"pass", "pass_hard", "pass_neutralized"}
 VALIDATION_MIN_ROWS = 30
 REGIME_CONFIDENCE_FLOOR = 0.95
 LIVE_EXECUTION_READINESS_FLOOR = 0.45
+DEPLOY_READY_READINESS_CONTRACT = "deploy_ready_from_backtest_autoquant_provider_or_paper_sim_execution_chain_not_funded_fill"
 FUTURES_COST_ROW_KEYS = (
     "cost_row",
     "cost_rows",
@@ -229,7 +230,7 @@ def extract_branch_labels(metrics: dict[str, Any], survivor_hints: list[Any] | N
     return labels
 
 
-def cost_survivors_5bps(metrics: dict[str, Any]) -> list[Any]:
+def legacy_fixed_cost_survivors(metrics: dict[str, Any]) -> list[Any]:
     survivors: list[Any] = []
     for key, value in metrics.items():
         if key == "exact_survivors_5bps" or (
@@ -473,7 +474,7 @@ def row_is_futures_context(row: dict[str, Any], metrics: dict[str, Any]) -> bool
     return futures_root_token_present(label) and any(separator in label for separator in ("/", "_", "-"))
 
 
-def label_is_futures_5bps_stress(label: Any, metrics: dict[str, Any]) -> bool:
+def label_is_futures_legacy_fixed_cost(label: Any, metrics: dict[str, Any]) -> bool:
     if not isinstance(label, str) or not label:
         return False
     for row in cost_rows_from_metrics(metrics):
@@ -506,21 +507,14 @@ def cost_survivors_instrument_cost(metrics: dict[str, Any]) -> list[Any]:
     return sorted(set(survivors))
 
 
-def cost_gate_authority(exact_5bps: list[Any], exact_instrument_cost: list[Any]) -> str:
+def cost_gate_authority(exact_instrument_cost: list[Any]) -> str:
     if exact_instrument_cost:
         return "instrument_cost"
-    if exact_5bps:
-        return "5bps_per_side"
     return "none"
 
 
 def cost_survivors_real_cost(metrics: dict[str, Any]) -> list[Any]:
-    instrument_survivors = cost_survivors_instrument_cost(metrics)
-    stress_survivors = [
-        label for label in cost_survivors_5bps(metrics)
-        if not label_is_futures_5bps_stress(label, metrics)
-    ]
-    return sorted(set(stress_survivors + instrument_survivors))
+    return cost_survivors_instrument_cost(metrics)
 
 
 def validation_report(*sources: dict[str, Any]) -> dict[str, Any]:
@@ -670,7 +664,7 @@ def lifecycle_decision(report: dict[str, Any]) -> tuple[dict[str, Any], str]:
             continue
         learning_blockers.append(f"pre_bayes_conflict:{flag}")
 
-    if not gate1.get("has_real_cost_survivor", gate1["has_5bps_survivor"]):
+    if not gate1.get("has_real_cost_survivor", False):
         paper_blockers.append("no_real_cost_survivor")
     if validation.get("raw_scored_mature_shortfall_rows", 0) > 0:
         paper_blockers.append("raw_scored_mature_below_30")
@@ -724,6 +718,10 @@ def lifecycle_decision(report: dict[str, Any]) -> tuple[dict[str, Any], str]:
         },
         "live_trade": {
             "status": "ready" if live_ready else "blocked",
+            "deploy_ready": live_ready,
+            "deploy_status": "ready" if live_ready else "blocked",
+            "funded_live_fill_required": False,
+            "readiness_contract": DEPLOY_READY_READINESS_CONTRACT,
             "extension_complete": practical["extension_complete"],
             "promotion_allowed": practical["promotion_allowed"],
             "trade_usable": practical["trade_usable"],
@@ -776,11 +774,10 @@ def build_report(gate1_path: Path, execution_candidate_path: Path, execution_tre
         filter_payload = {}
     tree_output = tree.get("output") if isinstance(tree.get("output"), dict) else {}
 
-    exact_5bps = cost_survivors_5bps(gate1)
+    legacy_fixed_cost = legacy_fixed_cost_survivors(gate1)
     exact_instrument_cost = cost_survivors_instrument_cost(gate1)
     exact_real_cost = cost_survivors_real_cost(gate1)
-    exact_5bps_real_cost = [label for label in exact_5bps if label in exact_real_cost]
-    branch_label_hints = exact_real_cost or exact_5bps
+    branch_label_hints = exact_real_cost or legacy_fixed_cost
     branch_path = gate1_branch_path(gate1, filter_payload)
     normalized_branch = tree_normalizer.normalize_branch_path(
         str(branch_path or ""),
@@ -801,15 +798,14 @@ def build_report(gate1_path: Path, execution_candidate_path: Path, execution_tre
         "branch_normalization_warnings": normalized_branch["warnings"],
         "gate1": {
             "branch_fields_preserved": bool(gate1.get("branch_fields_preserved") or branch_path),
-            "has_5bps_survivor": bool(exact_5bps),
-            "exact_5bps_survivors": exact_5bps,
             "has_instrument_cost_survivor": bool(exact_instrument_cost),
             "exact_instrument_cost_survivors": exact_instrument_cost,
             "has_real_cost_survivor": bool(exact_real_cost),
             "exact_real_cost_survivors": exact_real_cost,
             "has_declared_cost_survivor": bool(exact_real_cost),
             "exact_cost_survivors": exact_real_cost,
-            "cost_gate_authority": cost_gate_authority(exact_5bps_real_cost, exact_instrument_cost),
+            "legacy_fixed_cost_readback_survivors": legacy_fixed_cost,
+            "cost_gate_authority": cost_gate_authority(exact_instrument_cost),
             "rank_total_trade_count": gate1.get("rank_total_trade_count"),
             "decision": gate1.get("decision"),
         },
@@ -894,9 +890,9 @@ def render_markdown(report: dict[str, Any]) -> str:
         "## Gate 1",
         "",
         f"- branch_fields_preserved: `{report['gate1']['branch_fields_preserved']}`",
-        f"- exact_5bps_survivors: `{','.join(report['gate1']['exact_5bps_survivors']) or 'none'}`",
         f"- exact_instrument_cost_survivors: `{','.join(report['gate1'].get('exact_instrument_cost_survivors') or []) or 'none'}`",
         f"- exact_real_cost_survivors: `{','.join(report['gate1'].get('exact_real_cost_survivors') or []) or 'none'}`",
+        f"- legacy_fixed_cost_readback_survivors: `{','.join(report['gate1'].get('legacy_fixed_cost_readback_survivors') or []) or 'none'}`",
         f"- rank_total_trade_count: `{report['gate1']['rank_total_trade_count']}`",
         "",
         "## Pre-Bayes / Execution",

@@ -15,6 +15,8 @@ LIVE_EXECUTION_READINESS_FLOOR = 0.45
 DECLARED_FRICTION_KEYS = (
     "net_after_declared_friction_pct",
     "instrument_cost_total_profit_pct",
+)
+LEGACY_FIXED_COST_READBACK_KEYS = (
     "net_after_5bps_side_pct",
     "net_after_5bps_per_side_pct",
     "5bps_per_side_total_profit_pct",
@@ -176,7 +178,7 @@ def _legacy_summary_json_values(root: Path) -> tuple[dict[str, Any], Path | None
     if "trade_count" in best:
         values.setdefault("raw_scored_mature", best["trade_count"])
     if "net_ret" in five_bps:
-        values["net_5bps"] = five_bps["net_ret"]
+        values["legacy_fixed_cost_readback_total_profit_pct"] = five_bps["net_ret"]
     if "trades" in five_bps:
         values.setdefault("raw_scored_mature", five_bps["trades"])
     return values, path
@@ -215,6 +217,21 @@ def _expectancy_after_friction(
     if declared_sources:
         return max(declared_sources), blockers
 
+    legacy_sources: list[float] = []
+    for row in rows:
+        for key in LEGACY_FIXED_COST_READBACK_KEYS:
+            parsed = _floatish(row.get(key))
+            if parsed is not None:
+                legacy_sources.append(parsed)
+    for values in (material_values, check_values):
+        for key in LEGACY_FIXED_COST_READBACK_KEYS:
+            parsed = _floatish(values.get(key))
+            if parsed is not None:
+                legacy_sources.append(parsed)
+        parsed = _floatish(values.get("legacy_fixed_cost_readback_total_profit_pct"))
+        if parsed is not None:
+            legacy_sources.append(parsed)
+
     raw_sources: list[float] = []
     for row in rows:
         for key in RAW_PROFIT_KEYS:
@@ -227,8 +244,14 @@ def _expectancy_after_friction(
             if parsed is not None:
                 raw_sources.append(parsed)
     if raw_sources:
+        if legacy_sources:
+            blockers.append("legacy_fixed_cost_readback_not_cost_authority")
         blockers.append("declared_friction_missing_raw_profit_only")
         return max(raw_sources), blockers
+
+    if legacy_sources:
+        blockers.append("legacy_fixed_cost_readback_not_cost_authority")
+        return None, blockers
 
     return None, blockers
 
@@ -287,6 +310,7 @@ def _read_material_values(materials_dir: Path) -> dict[str, Any]:
             "leakage_check",
             "long_run_expectancy_after_declared_friction",
             *DECLARED_FRICTION_KEYS,
+            *LEGACY_FIXED_COST_READBACK_KEYS,
             *RAW_PROFIT_KEYS,
         ):
             if key in payload and key not in values:

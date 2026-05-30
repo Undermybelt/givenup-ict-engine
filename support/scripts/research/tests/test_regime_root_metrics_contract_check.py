@@ -83,7 +83,7 @@ class RegimeRootMetricsContractCheckTests(unittest.TestCase):
 
         self.assertFalse(report["ok"])
         self.assertIn("downstream_open_without_exact_real_cost_survivor", report["violations"])
-        self.assertIn("survivors_2bps_used_as_downstream_gate", report["violations"])
+        self.assertIn("legacy_fixed_cost_survivor_used_as_downstream_gate", report["violations"])
 
     def test_accepts_futures_instrument_cost_survivor_when_5bps_stress_fails(self) -> None:
         metrics = {
@@ -118,7 +118,7 @@ class RegimeRootMetricsContractCheckTests(unittest.TestCase):
 
         self.assertTrue(report["ok"])
         self.assertEqual(report["violations"], [])
-        self.assertEqual(report["survivors"]["exact_5bps"], [])
+        self.assertEqual(report["survivors"]["legacy_fixed_cost_readback"], [])
         self.assertEqual(report["survivors"]["instrument_cost"], ["NQ/5m/cost_revival"])
         self.assertEqual(report["survivors"]["real_cost"], ["NQ/5m/cost_revival"])
 
@@ -193,10 +193,10 @@ class RegimeRootMetricsContractCheckTests(unittest.TestCase):
 
         self.assertFalse(report["ok"])
         self.assertIn("downstream_open_without_exact_real_cost_survivor", report["violations"])
-        self.assertEqual(report["survivors"]["exact_5bps"], ["NQ/1m/stress-only"])
+        self.assertEqual(report["survivors"]["legacy_fixed_cost_readback"], ["NQ/1m/stress-only"])
         self.assertEqual(report["survivors"]["real_cost"], [])
 
-    def test_accepts_canonical_branch_with_exact_non_futures_5bps_gate(self) -> None:
+    def test_rejects_canonical_branch_with_legacy_fixed_cost_only(self) -> None:
         metrics = {
             "branch_path": "RangeReversion -> PullbackReclaim -> factor_v1",
             "branch_fields_preserved": True,
@@ -225,9 +225,9 @@ class RegimeRootMetricsContractCheckTests(unittest.TestCase):
 
             report = checker.check_metrics_file(path)
 
-        self.assertTrue(report["ok"])
-        self.assertEqual(report["violations"], [])
-        self.assertEqual(report["decision"], "contract_ok")
+        self.assertFalse(report["ok"])
+        self.assertIn("downstream_open_without_exact_real_cost_survivor", report["violations"])
+        self.assertIn("legacy_fixed_cost_survivor_used_as_downstream_gate", report["violations"])
 
     def test_accepts_futures_downstream_with_instrument_cost_survivor_and_5bps_stress_failure(self) -> None:
         metrics = {
@@ -269,9 +269,9 @@ class RegimeRootMetricsContractCheckTests(unittest.TestCase):
         self.assertEqual(report["violations"], [])
         self.assertEqual(report["decision"], "contract_ok")
         self.assertEqual(report["survivors"]["instrument_cost"], ["NQ/5m/repriced"])
-        self.assertEqual(report["survivors"]["exact_5bps"], [])
+        self.assertEqual(report["survivors"]["legacy_fixed_cost_readback"], [])
 
-    def test_accepts_per_timeframe_exact_5bps_gate(self) -> None:
+    def test_rejects_per_timeframe_legacy_fixed_cost_gate(self) -> None:
         for timeframe in ("5m", "15m", "30m", "1h", "4h", "1d"):
             with self.subTest(timeframe=timeframe):
                 label = f"DELL/{timeframe}/dense"
@@ -301,11 +301,12 @@ class RegimeRootMetricsContractCheckTests(unittest.TestCase):
 
                     report = checker.check_metrics_file(path)
 
-                self.assertTrue(report["ok"])
-                self.assertEqual(report["violations"], [])
-                self.assertEqual(report["survivors"]["exact_5bps"], [label])
+                self.assertFalse(report["ok"])
+                self.assertIn("downstream_open_without_exact_real_cost_survivor", report["violations"])
+                self.assertIn("legacy_fixed_cost_survivor_used_as_downstream_gate", report["violations"])
+                self.assertEqual(report["survivors"]["legacy_fixed_cost_readback"], [label])
 
-    def test_accepts_single_trade_sparse_5bps_survivor_without_daily_density_floor(self) -> None:
+    def test_rejects_single_trade_sparse_legacy_fixed_cost_survivor(self) -> None:
         metrics = {
             "branch_path": "RangeReversion -> PullbackReclaim -> factor_v1",
             "branch_fields_preserved": True,
@@ -332,17 +333,18 @@ class RegimeRootMetricsContractCheckTests(unittest.TestCase):
 
             report = checker.check_metrics_file(path)
 
-        self.assertTrue(report["ok"])
-        self.assertEqual(report["violations"], [])
-        self.assertEqual(report["survivors"]["exact_5bps"], ["DELL/5m/soup_quality"])
+        self.assertFalse(report["ok"])
+        self.assertIn("downstream_open_without_exact_real_cost_survivor", report["violations"])
+        self.assertIn("legacy_fixed_cost_survivor_used_as_downstream_gate", report["violations"])
+        self.assertEqual(report["survivors"]["legacy_fixed_cost_readback"], ["DELL/5m/soup_quality"])
         self.assertEqual(report["density_gate"]["status"], "cancelled")
         self.assertIsNone(report["density_gate"]["min_trades_per_day"])
         self.assertEqual(
             report["density_gate"]["requirement"],
-            "trade_count_gt_0_and_positive_exact_real_cost",
+            "trade_count_gt_0_and_positive_verified_real_cost",
         )
 
-    def test_deprecated_min_trades_per_day_argument_does_not_block_sparse_survivor(self) -> None:
+    def test_deprecated_min_trades_per_day_argument_does_not_rescue_legacy_fixed_cost_survivor(self) -> None:
         metrics = {
             "branch_path": "RangeReversion -> PullbackReclaim -> factor_v1",
             "branch_fields_preserved": True,
@@ -369,12 +371,13 @@ class RegimeRootMetricsContractCheckTests(unittest.TestCase):
 
             report = checker.check_metrics_file(path, min_trades_per_day=1.0)
 
-        self.assertTrue(report["ok"])
-        self.assertEqual(report["violations"], [])
-        self.assertEqual(report["survivors"]["exact_5bps"], ["DELL/5m/soup_quality"])
+        self.assertFalse(report["ok"])
+        self.assertIn("downstream_open_without_exact_real_cost_survivor", report["violations"])
+        self.assertIn("legacy_fixed_cost_survivor_used_as_downstream_gate", report["violations"])
+        self.assertEqual(report["survivors"]["legacy_fixed_cost_readback"], ["DELL/5m/soup_quality"])
         self.assertEqual(report["density_gate"]["status"], "cancelled")
 
-    def test_accepts_real_exact_timeframe_density_survivor_schema(self) -> None:
+    def test_rejects_legacy_exact_timeframe_density_survivor_schema(self) -> None:
         metrics = {
             "branch_path": "RangeReversion -> PullbackReclaim -> factor_v1",
             "branch_fields_preserved": True,
@@ -405,23 +408,29 @@ class RegimeRootMetricsContractCheckTests(unittest.TestCase):
 
             report = checker.check_metrics_file(path)
 
-        self.assertTrue(report["ok"])
-        self.assertEqual(report["violations"], [])
-        self.assertEqual(report["survivors"]["five_bps"], ["DELL/5m/balanced"])
-        self.assertEqual(report["survivors"]["exact_5bps"], ["DELL/5m/balanced"])
+        self.assertFalse(report["ok"])
+        self.assertIn("downstream_open_without_exact_real_cost_survivor", report["violations"])
+        self.assertIn("legacy_fixed_cost_survivor_used_as_downstream_gate", report["violations"])
+        self.assertEqual(report["survivors"]["legacy_fixed_cost_readback"], ["DELL/5m/balanced"])
 
     def test_rejects_trend_pullback_downstream_without_root_evidence_packet(self) -> None:
         metrics = {
             "branch_path": "TrendExpansion -> PullbackReclaim -> factor_v1",
             "branch_fields_preserved": True,
-            "exact_1m_survivors_5bps": ["DELL/1m/dense"],
+            "cost_gate_authority": "instrument_cost",
+            "survivors_instrument_cost": ["NQ/1m/dense"],
             "cost_stress": [
                 {
-                    "label": "DELL/1m/dense",
+                    "label": "NQ/1m/dense",
+                    "symbol": "NQ",
+                    "asset_class": "futures",
                     "trade_count": 44,
                     "trades_per_day": 1.57,
-                    "survives_5bps_per_side": True,
-                    "net_after_5bps_side_pct": 0.41,
+                    "survives_instrument_cost": True,
+                    "instrument_cost_total_profit_pct": 0.41,
+                    "cost_profile_id": "CME_NQ_IBKR_verified_20260530_v1",
+                    "cost_model_status": "verified_ibkr_broker_side",
+                    "cost_model_verified_for_promotion": True,
                 }
             ],
             "downstream_allowed": True,
@@ -458,14 +467,20 @@ class RegimeRootMetricsContractCheckTests(unittest.TestCase):
                 "terminal_trend_loss",
                 "valid_trend_pullback_loss",
             ],
-            "exact_1m_survivors_5bps": ["DELL/1m/dense"],
+            "cost_gate_authority": "instrument_cost",
+            "survivors_instrument_cost": ["NQ/1m/dense"],
             "cost_stress": [
                 {
-                    "label": "DELL/1m/dense",
+                    "label": "NQ/1m/dense",
+                    "symbol": "NQ",
+                    "asset_class": "futures",
                     "trade_count": 44,
                     "trades_per_day": 1.57,
-                    "survives_5bps_per_side": True,
-                    "net_after_5bps_side_pct": 0.41,
+                    "survives_instrument_cost": True,
+                    "instrument_cost_total_profit_pct": 0.41,
+                    "cost_profile_id": "CME_NQ_IBKR_verified_20260530_v1",
+                    "cost_model_status": "verified_ibkr_broker_side",
+                    "cost_model_verified_for_promotion": True,
                 }
             ],
             "downstream_allowed": True,
@@ -501,7 +516,7 @@ class RegimeRootMetricsContractCheckTests(unittest.TestCase):
 
         self.assertFalse(report["ok"])
         self.assertIn("downstream_open_without_exact_real_cost_survivor", report["violations"])
-        self.assertIn("survivors_5bps_without_cost_row_used_as_downstream_gate", report["violations"])
+        self.assertIn("legacy_fixed_cost_survivor_used_as_downstream_gate", report["violations"])
 
     def test_rejects_5bps_positive_cost_rows_without_trade_count_proof(self) -> None:
         metrics = {
@@ -529,7 +544,7 @@ class RegimeRootMetricsContractCheckTests(unittest.TestCase):
 
         self.assertFalse(report["ok"])
         self.assertIn("downstream_open_without_exact_real_cost_survivor", report["violations"])
-        self.assertIn("cost_rows_5bps_positive_without_trade_count_proof", report["violations"])
+        self.assertIn("legacy_fixed_cost_positive_without_trade_count_proof", report["violations"])
 
     def test_rejects_trend_root_mss_cisd_downstream_without_evidence_packet(self) -> None:
         metrics = {
@@ -596,14 +611,20 @@ class RegimeRootMetricsContractCheckTests(unittest.TestCase):
                 "terminal_trend_loss",
                 "valid_trend_pullback_loss",
             ],
-            "exact_1m_survivors_5bps": ["DELL/1m/dense"],
+            "cost_gate_authority": "instrument_cost",
+            "survivors_instrument_cost": ["NQ/1m/dense"],
             "cost_stress": [
                 {
-                    "label": "DELL/1m/dense",
+                    "label": "NQ/1m/dense",
+                    "symbol": "NQ",
+                    "asset_class": "futures",
                     "trade_count": 44,
                     "trades_per_day": 1.57,
-                    "survives_5bps_per_side": True,
-                    "net_after_5bps_side_pct": 0.41,
+                    "survives_instrument_cost": True,
+                    "instrument_cost_total_profit_pct": 0.41,
+                    "cost_profile_id": "CME_NQ_IBKR_verified_20260530_v1",
+                    "cost_model_status": "verified_ibkr_broker_side",
+                    "cost_model_verified_for_promotion": True,
                 }
             ],
             "downstream_allowed": True,

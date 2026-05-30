@@ -435,7 +435,21 @@ class SimulatedFeedbackAdmissionGuardTests(unittest.TestCase):
             "source": "retained_real_event_label_simulation",
             "trade_count": 8,
             "provider_parity": True,
-            "exact_1m_survivors_5bps": ["1m/dense"],
+            "cost_gate_authority": "instrument_cost",
+            "survivors_instrument_cost": ["NQ/1m/dense"],
+            "cost_stress": [
+                {
+                    "label": "NQ/1m/dense",
+                    "symbol": "NQ",
+                    "asset_class": "futures",
+                    "trade_count": 8,
+                    "survives_instrument_cost": True,
+                    "instrument_cost_total_profit_pct": 0.42,
+                    "cost_profile_id": "CME_NQ_IBKR_verified_20260530_v1",
+                    "cost_model_status": "verified_ibkr_broker_side",
+                    "cost_model_verified_for_promotion": True,
+                }
+            ],
             "raw_scored_mature_rows": 30,
             "production_validation_rows": 30,
             "observation_validation_rows": 30,

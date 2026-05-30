@@ -238,10 +238,7 @@ def _cost_real_reasons(payload: dict[str, object]) -> list[str]:
             "origin_1m_survivors_5bps_density",
         ),
     ):
-        hints = _stress_5bps_survivor_hints(payload)
-        if hints and all(_label_is_futures_5bps_stress(label, payload) for label in hints):
-            return ["futures_5bps_stress_without_verified_instrument_cost"]
-        return []
+        return ["legacy_fixed_cost_survivor_without_verified_real_cost"]
     if any(_cost_row_survives_real_cost(row, payload) for row in _iter_cost_rows(payload)):
         return []
     return ["no_positive_exact_real_cost_survivor"]
@@ -318,17 +315,7 @@ def _iter_cost_rows(payload: dict[str, object]) -> list[dict[str, object]]:
 
 
 def _cost_row_survives_real_cost(row: dict[str, object], payload: dict[str, object]) -> bool:
-    if _cost_row_survives_instrument_cost(row, payload):
-        return True
-    if _row_is_futures_5bps_stress(row, payload):
-        return False
-    if _truthy(row.get("survives_5bps_per_side")):
-        return _trade_count_from_row(row) > 0
-    for key in ("net_after_5bps_side_pct", "net_after_5bps_per_side_pct", "5bps_per_side_total_profit_pct"):
-        value = row.get(key)
-        if isinstance(value, (int, float)) and value > 0 and _trade_count_from_row(row) > 0:
-            return True
-    return False
+    return _cost_row_survives_instrument_cost(row, payload)
 
 
 def _cost_row_survives_instrument_cost(row: dict[str, object], payload: dict[str, object]) -> bool:
@@ -428,7 +415,7 @@ def _futures_root_token_present(value: object) -> bool:
     return False
 
 
-def _row_is_futures_5bps_stress(row: dict[str, object], payload: dict[str, object]) -> bool:
+def _row_is_futures_legacy_fixed_cost(row: dict[str, object], payload: dict[str, object]) -> bool:
     class_values = [
         row.get("asset_class"),
         row.get("instrument_class"),
@@ -454,7 +441,7 @@ def _row_is_futures_5bps_stress(row: dict[str, object], payload: dict[str, objec
     return False
 
 
-def _stress_5bps_survivor_hints(payload: dict[str, object]) -> list[str]:
+def _legacy_fixed_cost_survivor_hints(payload: dict[str, object]) -> list[str]:
     hints: list[str] = []
     for key in (
         "exact_5bps_survivors",
@@ -470,9 +457,9 @@ def _stress_5bps_survivor_hints(payload: dict[str, object]) -> list[str]:
     return hints
 
 
-def _label_is_futures_5bps_stress(label: str, payload: dict[str, object]) -> bool:
+def _label_is_futures_legacy_fixed_cost(label: str, payload: dict[str, object]) -> bool:
     for row in _iter_cost_rows(payload):
-        if _row_label(row) == label and _row_is_futures_5bps_stress(row, payload):
+        if _row_label(row) == label and _row_is_futures_legacy_fixed_cost(row, payload):
             return True
     if "tomac" in label.lower() and _futures_root_token_present(label):
         return True
