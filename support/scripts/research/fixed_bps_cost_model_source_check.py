@@ -224,7 +224,6 @@ def contains_fixed_bps_reference(
     node: ast.AST | None,
     *,
     relax_diagnostic_terms: bool = False,
-    allow_legacy_stress_readback: bool = False,
 ) -> bool:
     if node is None:
         return False
@@ -232,13 +231,11 @@ def contains_fixed_bps_reference(
         if isinstance(child, ast.Name) and fixed_bps_name(
             child.id,
             relax_diagnostic_terms=relax_diagnostic_terms,
-            allow_legacy_stress_readback=allow_legacy_stress_readback,
         ):
             return True
         if isinstance(child, ast.Attribute) and fixed_bps_name(
             child.attr,
             relax_diagnostic_terms=relax_diagnostic_terms,
-            allow_legacy_stress_readback=allow_legacy_stress_readback,
         ):
             return True
     return False
@@ -248,7 +245,6 @@ def contains_bps_formula(
     node: ast.AST,
     *,
     relax_diagnostic_terms: bool = False,
-    allow_legacy_stress_readback: bool = False,
 ) -> bool:
     saw_fixed_bps_name = False
     saw_plain_bps_name = False
@@ -259,7 +255,6 @@ def contains_bps_formula(
             if fixed_bps_name(
                 child.id,
                 relax_diagnostic_terms=relax_diagnostic_terms,
-                allow_legacy_stress_readback=allow_legacy_stress_readback,
             ):
                 saw_fixed_bps_name = True
             elif child.id == "bps":
@@ -300,33 +295,11 @@ def target_cost_field_keys(target: ast.AST) -> list[str]:
 
 
 def fixed_bps_field_assignment_is_readback_only(source: str, target: ast.AST, value: ast.AST | None) -> bool:
-    if not source_allows_legacy_stress_readback(source):
-        return False
-    target_text = expression_text(source, target).lower()
-    value_text = expression_text(source, value).lower() if value is not None else ""
-    if not target_text.startswith("values["):
-        return False
-    return any(token in value_text for token in ("five_bps", "legacy", "stress", "5bps"))
+    return False
 
 
 def source_allows_diagnostic_stress(source: str) -> bool:
     return "diagnostic_stress_not_commission_or_promotion_authority" in source
-
-
-def source_allows_legacy_stress_readback(source: str) -> bool:
-    lowered = source.lower()
-    if "telemetry_not_futures_hard_gate" in lowered:
-        return True
-    return all(
-        token in lowered
-        for token in (
-            "read-only",
-            "does not promote",
-            "legacy",
-            "5bps/side",
-            "instrument-cost",
-        )
-    )
 
 
 def iter_numeric_sequence(node: ast.AST) -> list[float] | None:
@@ -357,7 +330,6 @@ def is_argparse_add_argument(node: ast.Call) -> bool:
 def check_tree(source: str, tree: ast.AST) -> list[Violation]:
     parents = {child: parent for parent in ast.walk(tree) for child in ast.iter_child_nodes(parent)}
     relax_diagnostic_terms = source_allows_diagnostic_stress(source)
-    allow_legacy_stress_readback = source_allows_legacy_stress_readback(source)
     hits: list[Violation] = []
 
     for node in ast.walk(tree):
@@ -366,7 +338,6 @@ def check_tree(source: str, tree: ast.AST) -> list[Violation]:
                 if fixed_bps_name(
                     arg.arg,
                     relax_diagnostic_terms=relax_diagnostic_terms,
-                    allow_legacy_stress_readback=allow_legacy_stress_readback,
                 ):
                     add_hit(hits, source, arg, "fixed_bps_cost_argument", "function argument names a fixed-bps fee/cost model")
             defaults = list(node.args.defaults) + list(node.args.kw_defaults)
@@ -375,7 +346,6 @@ def check_tree(source: str, tree: ast.AST) -> list[Violation]:
                 if default is not None and fixed_bps_name(
                     arg.arg,
                     relax_diagnostic_terms=relax_diagnostic_terms,
-                    allow_legacy_stress_readback=allow_legacy_stress_readback,
                 ) and is_numeric_literal(default):
                     add_hit(hits, source, default, "fixed_bps_cost_argument_default", "fixed-bps fee/cost default")
 
@@ -385,7 +355,6 @@ def check_tree(source: str, tree: ast.AST) -> list[Violation]:
                 option and fixed_cost_option(
                     option,
                     relax_diagnostic_terms=relax_diagnostic_terms,
-                    allow_legacy_stress_readback=allow_legacy_stress_readback,
                 )
                 for option in option_strings
             ):
@@ -396,7 +365,6 @@ def check_tree(source: str, tree: ast.AST) -> list[Violation]:
                         option and fixed_cost_option(
                             option,
                             relax_diagnostic_terms=relax_diagnostic_terms,
-                            allow_legacy_stress_readback=allow_legacy_stress_readback,
                         )
                         for option in option_strings
                     ):
@@ -409,7 +377,6 @@ def check_tree(source: str, tree: ast.AST) -> list[Violation]:
                     if fixed_bps_field(
                         key,
                         relax_diagnostic_terms=relax_diagnostic_terms,
-                        allow_legacy_stress_readback=allow_legacy_stress_readback,
                     ) and not fixed_bps_field_assignment_is_readback_only(source, target, value):
                         add_hit(hits, source, target, "fixed_bps_cost_field", "assignment writes a fixed-bps fee/cost field")
                 for name in target_names(target):
@@ -417,7 +384,6 @@ def check_tree(source: str, tree: ast.AST) -> list[Violation]:
                     if fixed_bps_name(
                         name,
                         relax_diagnostic_terms=relax_diagnostic_terms,
-                        allow_legacy_stress_readback=allow_legacy_stress_readback,
                     ):
                         if not assignment_is_readback_only(name, value):
                             add_hit(hits, source, target, "fixed_bps_cost_assignment", "variable names a fixed-bps fee/cost model")
@@ -428,7 +394,6 @@ def check_tree(source: str, tree: ast.AST) -> list[Violation]:
                     if contains_fixed_bps_reference(
                         value,
                         relax_diagnostic_terms=relax_diagnostic_terms,
-                        allow_legacy_stress_readback=allow_legacy_stress_readback,
                     ) and not assignment_is_readback_only(name, value):
                         add_hit(hits, source, node, "fixed_bps_cost_reference", "assignment derives from fixed-bps fee/cost reference")
 
@@ -438,7 +403,6 @@ def check_tree(source: str, tree: ast.AST) -> list[Violation]:
         if isinstance(node, ast.BinOp) and contains_bps_formula(
             node,
             relax_diagnostic_terms=relax_diagnostic_terms,
-            allow_legacy_stress_readback=allow_legacy_stress_readback,
         ):
             add_hit(hits, source, node, "fixed_bps_cost_formula", "formula subtracts a variable bps ladder in return/percent space")
 
@@ -448,7 +412,6 @@ def check_tree(source: str, tree: ast.AST) -> list[Violation]:
                 if key is not None and fixed_bps_field(
                     key,
                     relax_diagnostic_terms=relax_diagnostic_terms,
-                    allow_legacy_stress_readback=allow_legacy_stress_readback,
                 ):
                     add_hit(hits, source, key_node, "fixed_bps_cost_field", "dict emits a fixed-bps fee/cost field")
                 if key is not None and key.lower() in COST_LITERAL_KEYS:

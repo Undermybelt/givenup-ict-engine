@@ -187,7 +187,7 @@ def signal(row, min_abs_1h_slope_bps=3.0, reclaim_bps_min=8.0):
         self.assertEqual(report["checked_files"], 1)
         self.assertEqual(report["violating_files"], 1)
 
-    def test_allows_explicit_legacy_stress_readback_tool_without_filename_whitelist(self) -> None:
+    def test_read_only_legacy_stress_docstring_does_not_bypass_source_check(self) -> None:
         path = self.write_source(
             '''
 """Read-only legacy 5bps/side stress rehearing.
@@ -205,9 +205,12 @@ def classify(row, stress_bps_per_side=5.0):
 
         report = checker.check_source_file(path)
 
-        self.assertTrue(report["ok"], report["violations"])
+        self.assertFalse(report["ok"])
+        kinds = {hit["violation"] for hit in report["violations"]}
+        self.assertIn("fixed_bps_cost_argument", kinds)
+        self.assertIn("fixed_bps_cost_argument_default", kinds)
 
-    def test_allows_role_marked_futures_stress_telemetry(self) -> None:
+    def test_role_marker_does_not_bypass_fixed_bps_source_check(self) -> None:
         path = self.write_source(
             '''
 def build(row, stress_bps_per_side=5.0):
@@ -222,7 +225,10 @@ def build(row, stress_bps_per_side=5.0):
 
         report = checker.check_source_file(path)
 
-        self.assertTrue(report["ok"], report["violations"])
+        self.assertFalse(report["ok"])
+        kinds = {hit["violation"] for hit in report["violations"]}
+        self.assertIn("fixed_bps_cost_argument", kinds)
+        self.assertIn("fixed_bps_cost_argument_default", kinds)
 
     def test_flags_values_assignment_of_legacy_fixed_bps_cost_fields(self) -> None:
         path = self.write_source(
