@@ -1,0 +1,16 @@
+{
+  "schema_version": "terminal-summary/v1",
+  "created_at": "2026-05-31T05:55:59+08:00",
+  "status": "terminalized_source_prep_no_launch",
+  "decision": "source_prep_only_no_launch_runtime_blocked",
+  "candidate_id": "signal_decay_half_life_admission_v1",
+  "workdoc": "/tmp/ict-engine-signal-decay-half-life-admission-source-prep-20260531T055559+0800/workdoc.md",
+  "repo_tracking_doc": "support/docs/experiments/actionable-regime-confidence/20260531T055559+0800-codex-signal-decay-half-life-admission-source-prep.md",
+  "claim": "/tmp/ict-engine-agent-claims/board-b-factor-refinement/20260531T055559+0800-codex-signal-decay-half-life-admission-source-prep.claim",
+  "source_readback": "support/docs/experiments/actionable-regime-confidence/runs/20260531T055559+0800-codex-signal-decay-half-life-admission-source-prep-v1/materials/source_readback.json",
+  "terminal_metrics": "support/docs/experiments/actionable-regime-confidence/runs/20260531T055559+0800-codex-signal-decay-half-life-admission-source-prep-v1/checks/terminal_metrics.json",
+  "promotion_allowed": false,
+  "trade_usable": false,
+  "update_goal": false,
+  "next_step_when_clear": "Rerun compact audit and focused ps; if clear, rescore one owned parent with existing trade rows using shifted IC/rank-IC decay by horizon before any AQ/provider launch."
+}

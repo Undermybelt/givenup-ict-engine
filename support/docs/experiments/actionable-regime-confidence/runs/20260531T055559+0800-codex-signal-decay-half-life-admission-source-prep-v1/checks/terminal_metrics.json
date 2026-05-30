@@ -1,0 +1,35 @@
+{
+  "schema_version": "terminal-metrics/v1",
+  "created_at": "2026-05-31T05:55:59+08:00",
+  "candidate_id": "signal_decay_half_life_admission_v1",
+  "factor_family": "signal_decay_half_life_admission",
+  "branch_path": "ValidationMaturity -> SignalPersistence -> InformationCoefficientDecay -> HoldingHorizonAdmission -> signal_decay_half_life_admission_v1",
+  "session_scope": "ETH/full_retained_session_required_for_future_tests",
+  "rth_filter_applied": false,
+  "decision": "source_prep_only_no_launch_runtime_blocked",
+  "current_audit": {
+    "status": "needs_attention",
+    "active_claims": 1,
+    "valid_active_claims": 1,
+    "live_factor_processes": 2,
+    "trade_usable_true": 0,
+    "promotion_allowed_true": 0,
+    "blocking_reasons": [
+      "active_claims",
+      "live_factor_processes"
+    ],
+    "live_runtime_roots": [
+      "/tmp/ict-engine-fisher-transform-trend-rejoin-local-screen-20260531T053901+0800",
+      "/tmp/ict-engine-hull-ma-slope-pullback-rejoin-local-screen-20260531T054042+0800"
+    ]
+  },
+  "source_prep": true,
+  "provider_or_aq_launched": false,
+  "local_backtest_launched": false,
+  "paper_or_live_launched": false,
+  "downstream_lifecycle_launched": false,
+  "promotion_allowed": false,
+  "trade_usable": false,
+  "update_goal": false,
+  "same_tree_practical_closure": null
+}
