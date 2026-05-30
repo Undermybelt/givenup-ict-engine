@@ -215,6 +215,31 @@ def score(trades):
 
         self.assertTrue(report["ok"], report["violations"])
 
+    def test_allows_trades_per_day_comparison_threshold_inside_non_cost_formula(self) -> None:
+        path = self.write_source(
+            """
+def density_gate(trades_per_day):
+    return trades_per_day >= 0.10
+"""
+        )
+
+        report = checker.check_source_file(path)
+
+        self.assertTrue(report["ok"], report["violations"])
+
+    def test_flags_15bps_literal_cost_formula_not_only_5bps(self) -> None:
+        path = self.write_source(
+            """
+def summarize(raw, trades):
+    return raw - trades * 0.15
+"""
+        )
+
+        report = checker.check_source_file(path)
+
+        self.assertFalse(report["ok"])
+        self.assertIn("fixed_bps_cost_formula", {hit["violation"] for hit in report["violations"]})
+
     def test_flags_named_fixed_bps_ladder_with_15bps_level(self) -> None:
         path = self.write_source(
             """

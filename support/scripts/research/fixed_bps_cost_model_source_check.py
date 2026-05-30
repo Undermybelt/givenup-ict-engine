@@ -104,7 +104,19 @@ COST_AUTHORITY_TOKENS = frozenset((
     "stress",
     "total_profit",
 ))
-PERCENT_SPACE_COST_LITERALS = frozenset((0.01, 0.02, 0.04, 0.05, 0.10, 0.1, 0.20, 0.2))
+PERCENT_SPACE_COST_LITERALS = frozenset((
+    0.01,
+    0.02,
+    0.04,
+    0.05,
+    0.10,
+    0.1,
+    0.15,
+    0.20,
+    0.2,
+    0.30,
+    0.3,
+))
 TRADE_COUNT_NAMES = frozenset(("trades", "trade_count", "n_trades", "num_trades", "distinct_trades"))
 
 
