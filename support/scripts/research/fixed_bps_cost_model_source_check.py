@@ -32,15 +32,19 @@ FIXED_BPS_ARG_NAMES = frozenset((
     "cost_bps_side",
     "fee_bps",
     "fee_bps_side",
+    "commission_bps",
+    "commission_bps_side",
     "bps_per_side",
     "LEGACY_STRESS_BPS_PER_SIDE",
 ))
 FIXED_BPS_OPTION_FRAGMENTS = (
     "cost-bps",
     "fee-bps",
+    "commission-bps",
     "bps-per-side",
     "cost_bps",
     "fee_bps",
+    "commission_bps",
     "bps_per_side",
 )
 COST_FIELD_TOKENS = frozenset((
@@ -171,7 +175,7 @@ def fixed_bps_name(
     lowered = name.lower()
     if "diagnostic_stress" in lowered:
         return not relax_diagnostic_terms
-    if "bps" in lowered and any(token in lowered for token in ("cost", "fee", "friction", "stress")):
+    if "bps" in lowered and any(token in lowered for token in ("cost", "fee", "commission", "friction", "stress")):
         return True
     return False
 
@@ -186,6 +190,8 @@ def fixed_bps_field(
         return False
     if relax_diagnostic_terms and "diagnostic_stress" in lowered:
         return False
+    if "bps_per_side" in lowered:
+        return True
     if FIXED_BPS_TEXT_RE.search(lowered) and any(token in lowered for token in COST_AUTHORITY_TOKENS):
         return True
     return any(token in lowered for token in COST_FIELD_TOKENS)

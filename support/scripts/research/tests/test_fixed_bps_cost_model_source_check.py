@@ -143,6 +143,48 @@ def build(row):
         self.assertFalse(report["ok"])
         self.assertIn("fixed_bps_cost_field", {hit["violation"] for hit in report["violations"]})
 
+    def test_flags_any_numeric_bps_cost_fields_not_only_5bps(self) -> None:
+        path = self.write_source(
+            """
+def build(row):
+    return {
+        "net_after_7bps_side_pct": row.get("net_after_7bps_side_pct"),
+        "survives_15bps_per_side": True,
+        "configured_fee_25bps_total_profit_pct": row.get("configured_fee_25bps_total_profit_pct"),
+        "top_by_50bps": [],
+    }
+"""
+        )
+
+        report = checker.check_source_file(path)
+
+        self.assertFalse(report["ok"])
+        self.assertIn("fixed_bps_cost_field", {hit["violation"] for hit in report["violations"]})
+
+    def test_flags_commission_bps_names_options_and_fields(self) -> None:
+        path = self.write_source(
+            """
+import argparse
+
+parser = argparse.ArgumentParser()
+parser.add_argument("--commission-bps", type=float, default=7.0)
+
+def summarize(gross, trades, commission_bps=7.0):
+    row = {}
+    row["commission_bps_per_side_total_profit_pct"] = gross - trades * commission_bps * 0.02
+    return row
+"""
+        )
+
+        report = checker.check_source_file(path)
+
+        self.assertFalse(report["ok"])
+        kinds = {hit["violation"] for hit in report["violations"]}
+        self.assertIn("fixed_bps_cost_argument", kinds)
+        self.assertIn("fixed_bps_cost_argument_default", kinds)
+        self.assertIn("fixed_bps_cost_field", kinds)
+        self.assertIn("fixed_bps_cost_formula", kinds)
+
     def test_checker_does_not_flag_itself(self) -> None:
         report = checker.check_source_file(SCRIPT_ROOT / "fixed_bps_cost_model_source_check.py")
 
