@@ -1,0 +1,57 @@
+{
+  "schema_version": "factor-terminal-metrics/v1",
+  "created_at": "2026-05-31T05:42:07+0800",
+  "agent_name": "codex-hurst-efficiency-density-repair-exact-aqprep-no-launch-20260531T054207+0800",
+  "factor_family": "hurst_efficiency_density_repair",
+  "target_factor_id": "tomac_idxfut_clean_hurst_efficiency_density_repair_v1",
+  "branch_path": "TrendExpansion -> HurstEfficiencyPersistence -> CompressionPause -> ReaccelerationBreakout -> DensityRepair -> tomac_idxfut_clean_hurst_efficiency_density_repair_v1",
+  "session_scope": "ETH/full_retained_session",
+  "rth_filter_applied": false,
+  "parent_repo_packet": "support/docs/experiments/actionable-regime-confidence/runs/20260531T052423+0800-codex-hurst-efficiency-density-repair-local-screen-v1",
+  "local_gate1_candidate_count": 2,
+  "survives_instrument_cost_count": 5,
+  "selected_candidate": {
+    "symbol": "NQ",
+    "timeframe": "5m",
+    "context_timeframe": "15m",
+    "variant": "nq5m_microbreak_fast",
+    "local_trade_count": 589,
+    "local_trades_per_day": 0.378778,
+    "local_profit_factor": 1.27514,
+    "local_raw_total_profit_pct": 14.413753,
+    "local_instrument_cost_total_profit_pct": 13.552642,
+    "local_years_positive": "5/5",
+    "promotion_cost_verified": true,
+    "cost_profile_id": "CME_NQ_IBKR_verified_20260530_v1",
+    "outside_rth_rows": 152279,
+    "eth_full_retained_session_evidence": true
+  },
+  "same_turn_compact_audit": {
+    "status": "needs_attention",
+    "active_claims": 2,
+    "fresh_active_claims_without_live_process": 2,
+    "live_factor_processes": 0,
+    "blocking_claims": [
+      "20260531T053342+0800-codex-polarized-fractal-efficiency-trend-acceptance-local-screen.claim",
+      "20260531T053433+0800-codex-andrews-pitchfork-median-rejoin-15m-aqlaunch.claim"
+    ]
+  },
+  "focused_ps_factor_backend_processes": 0,
+  "clean_aq_family_registration": {
+    "checked": true,
+    "registered": false,
+    "command_result": "ValueError: unknown candidate families: hurst_efficiency_density_repair"
+  },
+  "provider_fetch_started": false,
+  "ibkr_historical_started": false,
+  "autoquant_launched": false,
+  "freqtrade_backtest_launched": false,
+  "paper_or_live_execution_started": false,
+  "downstream_lifecycle_started": false,
+  "same_tree_practical_closure": null,
+  "terminal_status": "terminalized_no_launch_prep_blocked",
+  "decision": "exact_aq_deferred_fresh_claims_and_missing_clean_aq_family_registration",
+  "promotion_allowed": false,
+  "trade_usable": false,
+  "update_goal": false
+}

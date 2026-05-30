@@ -1,0 +1,17 @@
+{
+  "schema_version": "terminal-no-launch-summary/v1",
+  "created_at": "2026-05-31T05:42:07+0800",
+  "run_root": "/tmp/ict-engine-hurst-efficiency-density-repair-exact-aqprep-20260531T054207+0800",
+  "repo_run_root": "support/docs/experiments/actionable-regime-confidence/runs/20260531T054207+0800-codex-hurst-efficiency-density-repair-exact-aqprep-no-launch-v1",
+  "factor_family": "hurst_efficiency_density_repair",
+  "target_factor_id": "tomac_idxfut_clean_hurst_efficiency_density_repair_v1",
+  "decision": "exact_aq_deferred_fresh_claims_and_missing_clean_aq_family_registration",
+  "blocking_reasons": [
+    "fresh_active_claims_without_live_process=2",
+    "clean_aq_family_registration_missing"
+  ],
+  "next_action": "Add tested clean-AQ registration for hurst_efficiency_density_repair, then rerun compact audit and focused ps before exact AQ launch.",
+  "promotion_allowed": false,
+  "trade_usable": false,
+  "update_goal": false
+}

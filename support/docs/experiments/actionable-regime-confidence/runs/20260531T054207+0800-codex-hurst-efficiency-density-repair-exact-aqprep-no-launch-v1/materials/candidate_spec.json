@@ -1,0 +1,37 @@
+{
+  "schema_version": "hurst-efficiency-density-repair-exact-aqprep-candidate/v1",
+  "created_at": "2026-05-31T05:42:07+0800",
+  "factor_family": "hurst_efficiency_density_repair",
+  "target_factor_id": "tomac_idxfut_clean_hurst_efficiency_density_repair_v1",
+  "branch_path": "TrendExpansion -> HurstEfficiencyPersistence -> CompressionPause -> ReaccelerationBreakout -> DensityRepair -> tomac_idxfut_clean_hurst_efficiency_density_repair_v1",
+  "session_scope": "ETH/full_retained_session",
+  "rth_filter_applied": false,
+  "parent_repo_packet": "support/docs/experiments/actionable-regime-confidence/runs/20260531T052423+0800-codex-hurst-efficiency-density-repair-local-screen-v1",
+  "primary_candidate": {
+    "symbol": "NQ",
+    "timeframe": "5m",
+    "context_timeframe": "15m",
+    "variant": "nq5m_microbreak_fast",
+    "mode": "microbreak",
+    "local_trade_count": 589,
+    "local_trades_per_day": 0.378778,
+    "local_profit_factor": 1.27514,
+    "local_raw_total_profit_pct": 14.413753,
+    "local_instrument_cost_total_profit_pct": 13.552642,
+    "local_years_positive": "5/5",
+    "cost_model_status": "verified_ibkr_broker_side",
+    "cost_profile_id": "CME_NQ_IBKR_verified_20260530_v1",
+    "promotion_cost_verified": true,
+    "outside_rth_rows": 152279,
+    "eth_full_retained_session_evidence": true
+  },
+  "required_before_launch": [
+    "compact audit active_claims=0",
+    "compact audit live_factor_processes=0",
+    "focused ps has no factor backend owner",
+    "clean-AQ candidate_specs registers hurst_efficiency_density_repair with focused tests"
+  ],
+  "promotion_allowed": false,
+  "trade_usable": false,
+  "update_goal": false
+}
