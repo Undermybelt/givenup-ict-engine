@@ -2530,6 +2530,67 @@ class TomacIndexFuturesCleanAqTest(unittest.TestCase):
                 )
                 self.assertIn("IBKR", profile.source)
 
+    def test_nq_realistic_contract_cost_wall_is_sub_bps_not_10bps_stress(self) -> None:
+        module = self.load_module()
+
+        profile = module.futures_cost_profile("NQ")
+
+        self.assertIsNotNone(profile)
+        self.assertAlmostEqual(profile.round_trip_fee_cash(), 4.50)
+        self.assertAlmostEqual(profile.round_trip_cost_cash(), 19.50)
+        self.assertLess(profile.round_trip_cost_pct(15000.0) * 100.0, 0.70)
+
+    def test_cost_wall_buckets_distinguish_bps_false_negative_from_no_edge_churn(self) -> None:
+        module = self.load_module()
+
+        false_negative = module.classify_screen_row(
+            {
+                "scope": "per_pair",
+                "symbol": "NQ",
+                "pair": "NQ/USD",
+                "timeframe": "1m",
+                "strategy_name": "SyntheticBpsFalseNegative",
+                "factor_id": "synthetic_bps_false_negative",
+                "branch_path": "TrendExpansion -> SyntheticBpsFalseNegative",
+                "family": "synthetic",
+                "direction": "long",
+                "trade_count": 100,
+                "wins": 52,
+                "losses": 48,
+                "days": 100,
+                "total_profit_pct": 1.0,
+                "representative_entry_price": 15000.0,
+            }
+        )
+        churn = module.classify_screen_row(
+            {
+                "scope": "per_pair",
+                "symbol": "NQ",
+                "pair": "NQ/USD",
+                "timeframe": "1m",
+                "strategy_name": "SyntheticNoEdgeChurn",
+                "factor_id": "synthetic_no_edge_churn",
+                "branch_path": "MicroScalp -> SyntheticNoEdgeChurn",
+                "family": "synthetic",
+                "direction": "long",
+                "trade_count": 26304,
+                "wins": 13200,
+                "losses": 13104,
+                "days": 1260,
+                "total_profit_pct": 8.41728,
+                "representative_entry_price": 15000.0,
+            }
+        )
+
+        self.assertTrue(false_negative["survives_instrument_cost"])
+        self.assertFalse(false_negative["survives_5bps_per_side"])
+        self.assertEqual(false_negative["cost_wall_bucket"], "bps_stress_false_negative_recheck")
+        self.assertGreater(false_negative["gross_edge_bps_per_trade"], false_negative["instrument_cost_bps_per_trade"])
+
+        self.assertFalse(churn["survives_instrument_cost"])
+        self.assertEqual(churn["cost_wall_bucket"], "zero_edge_churn_not_rescued_by_realistic_cost")
+        self.assertLess(churn["gross_edge_bps_per_trade"], churn["instrument_cost_bps_per_trade"])
+
     def test_score_rows_uses_actual_backtest_span_for_density(self) -> None:
         module = self.load_module()
 
@@ -2557,6 +2618,42 @@ class TomacIndexFuturesCleanAqTest(unittest.TestCase):
 
         self.assertGreater(per_pair["trades_per_day"], 1.0)
         self.assertTrue(per_pair["density_target_1_to_3_per_day"])
+
+    def test_score_rows_recovers_freqtrade_result_table_when_timeout_precedes_machine_block(self) -> None:
+        module = self.load_module()
+
+        specs = module.generated_strategy_specs(["NQ"], "1m", families=["regression_channel_r2_slope_breadth"])
+        stdout = "\n".join(
+            [
+                "Result for strategy TomacNQRegressionChannelR2SlopeBreadthOneMinCleanV1",
+                "│ NQ/USD │    304 │         0.02 │       7547.257 │         7.55 │      0:57:00 │  148     0   156  48.7 │",
+                "│ ES/USD │      0 │          0.0 │          0.000 │          0.0 │         0:00 │    0     0     0     0 │",
+                "│  TOTAL │    304 │         0.02 │       7547.257 │         7.55 │      0:57:00 │  148     0   156  48.7 │",
+                "│ Backtesting from              │ 2021-01-04 02:40:00            │",
+                "│ Backtesting to                │ 2025-12-31 00:00:00            │",
+                "│ Total/Daily Avg Trades        │ 304 / 0.17                     │",
+                "│ Total profit %                │ 7.55%                          │",
+                "│ Sortino                       │ 0.43                           │",
+                "│ Sharpe                        │ 0.24                           │",
+                "│ Calmar                        │ 2.34                           │",
+                "│ Profit factor                 │ 1.20                           │",
+                "│ Max % of account underwater   │ 3.38%                          │",
+                "Backtested 2021-01-04 02:40:00 -> 2025-12-31 00:00:00 | Max open trades : 1",
+                "│ TomacNQRegressionChannelR2SlopeBreadthOneMinCleanV1 │    304 │         0.02 │       7547.257 │         7.55 │      0:57:00 │  148     0   156  48.7 │ 3543.122 USD  3.38% │",
+            ]
+        )
+
+        rows = module.score_rows(stdout, specs)
+        per_pair = next(row for row in rows if row["scope"] == "per_pair")
+
+        self.assertEqual(per_pair["symbol"], "NQ")
+        self.assertEqual(per_pair["trade_count"], 304)
+        self.assertAlmostEqual(per_pair["total_profit_pct"], 7.55)
+        self.assertAlmostEqual(per_pair["profit_factor"], 1.20)
+        self.assertTrue(per_pair["survives_instrument_cost"])
+        self.assertFalse(per_pair["survives_5bps_per_side"])
+        self.assertFalse(per_pair["density_target_1_to_3_per_day"])
+        self.assertFalse(per_pair["gate1_survivor"])
 
     def test_gate1_survivor_accepts_bidirectional_parent_replay_direction(self) -> None:
         module = self.load_module()
@@ -2588,7 +2685,7 @@ class TomacIndexFuturesCleanAqTest(unittest.TestCase):
         self.assertTrue(row["direction_consistent_local"])
         self.assertTrue(row["gate1_survivor"])
 
-    def test_gate1_survivor_requires_hard_5bps_cost_gate(self) -> None:
+    def test_gate1_survivor_uses_verified_futures_contract_cost_not_5bps_stress(self) -> None:
         module = self.load_module()
 
         row = module.classify_screen_row(
@@ -2616,7 +2713,8 @@ class TomacIndexFuturesCleanAqTest(unittest.TestCase):
         self.assertFalse(row["survives_1bps_per_side"])
         self.assertFalse(row["survives_2bps_per_side"])
         self.assertFalse(row["survives_5bps_per_side"])
-        self.assertFalse(row["gate1_survivor"])
+        self.assertEqual(row["cost_stress_5bps_role"], "telemetry_not_futures_hard_gate")
+        self.assertTrue(row["gate1_survivor"])
 
     def test_cost_survival_is_separate_from_trade_sample_floor(self) -> None:
         module = self.load_module()
@@ -2679,6 +2777,65 @@ class TomacIndexFuturesCleanAqTest(unittest.TestCase):
         self.assertIn("path_ranker_or_catboost_runtime_score_visible", required_next)
         self.assertIn("execution_tree_readiness_gte_0_65", required_next)
 
+    def test_gate_summary_reports_realistic_cost_survivors_without_gate1_promotion(self) -> None:
+        module = self.load_module()
+
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp) / "run"
+            compact_root = Path(tmp) / "compact"
+            stdout_path = root / "command-output/run_tomac_1m.out"
+            stdout_path.parent.mkdir(parents=True)
+            stdout_path.write_text(
+                "\n".join(
+                    [
+                        "---",
+                        "strategy:         TomacNQRegressionChannelR2SlopeBreadthOneMinCleanV1",
+                        "pairs:            NQ/USD",
+                        "sharpe:           0.2400",
+                        "sortino:          0.4300",
+                        "calmar:           2.3400",
+                        "total_profit_pct: 7.5500",
+                        "trade_count:      304",
+                        "win_rate_pct:     48.7000",
+                        "profit_factor:    1.2000",
+                        "per_pair:",
+                        "  NQ/USD: sharpe=0.24 trades=304 profit_pct=7.55 dd_pct=-3.38 wr=48.7 pf=1.20",
+                    ]
+                ),
+                encoding="utf-8",
+            )
+
+            gate = module.write_aq_gate_summary(
+                root,
+                compact_root,
+                timeframe="1m",
+                command={
+                    "name": "run_tomac_1m",
+                    "exit": 124,
+                    "timed_out": True,
+                    "stdout_path": str(stdout_path),
+                    "stderr_path": str(root / "command-output/run_tomac_1m.err"),
+                    "exit_path": str(root / "checks/run_tomac_1m.exit"),
+                },
+                specs=module.generated_strategy_specs(["NQ"], "1m", families=["regression_channel_r2_slope_breadth"]),
+                clean_bundles=[
+                    {
+                        "symbol": "NQ",
+                        "session_scope": "ETH/full_retained_session",
+                        "rth_filter_applied": False,
+                        "eth_full_retained_session_evidence": True,
+                        "eth_full_retained_coverage_status": "verified_retained_rows_outside_rth",
+                    }
+                ],
+            )
+
+        self.assertEqual(gate["decision"], "observation_realistic_cost_survivor_needs_non_cost_gate_repair")
+        self.assertFalse(gate["downstream_allowed"])
+        self.assertEqual([row["pair"] for row in gate["realistic_cost_survivors_before_gate1"]], ["NQ/USD"])
+        self.assertEqual([row["pair"] for row in gate["bps_stress_false_negative_rechecks"]], ["NQ/USD"])
+        self.assertEqual(gate["realistic_cost_survivors_before_gate1"][0]["cost_wall_bucket"], "bps_stress_false_negative_recheck")
+        self.assertFalse(gate["survivors_instrument_cost"])
+
     def test_gate_summary_blocks_downstream_without_eth_full_session_evidence(self) -> None:
         module = self.load_module()
 
@@ -2738,6 +2895,76 @@ class TomacIndexFuturesCleanAqTest(unittest.TestCase):
         self.assertFalse(gate["survivors_5bps"])
         self.assertEqual(gate["session_scope"], "ETH/full_retained_session")
         self.assertFalse(gate["eth_full_retained_session_evidence"])
+
+    def test_gate_summary_uses_instrument_cost_as_authority_and_5bps_as_stress(self) -> None:
+        module = self.load_module()
+
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp) / "run"
+            compact_root = Path(tmp) / "compact"
+            stdout_path = root / "command-output/run_tomac_5m.out"
+            stdout_path.parent.mkdir(parents=True)
+            specs = module.generated_strategy_specs(
+                ["NQ"],
+                "5m",
+                families=["opening_drive_rvol_vwap_continuation"],
+            )
+            stdout_path.write_text(
+                "\n".join(
+                    [
+                        "---",
+                        f"strategy:         {specs[0].class_name}",
+                        "pairs:            NQ/USD",
+                        "sharpe:           1.2000",
+                        "sortino:          1.8000",
+                        "calmar:           2.1000",
+                        "total_profit_pct: 18.1700",
+                        "trade_count:      1362",
+                        "win_rate_pct:     50.6610",
+                        "profit_factor:    1.1200",
+                        "per_pair:",
+                        "  NQ/USD: sharpe=1.20 trades=1362 profit_pct=18.17 dd_pct=-4.00 wr=50.7 pf=1.12",
+                    ]
+                ),
+                encoding="utf-8",
+            )
+
+            gate = module.write_aq_gate_summary(
+                root,
+                compact_root,
+                timeframe="5m",
+                command={
+                    "name": "run_tomac_5m",
+                    "exit": 0,
+                    "timed_out": False,
+                    "stdout_path": str(stdout_path),
+                    "stderr_path": str(root / "command-output/run_tomac_5m.err"),
+                    "exit_path": str(root / "checks/run_tomac_5m.exit"),
+                },
+                specs=specs,
+                clean_bundles=[
+                    {
+                        "symbol": "NQ",
+                        "session_scope": "ETH/full_retained_session",
+                        "rth_filter_applied": False,
+                        "eth_full_retained_session_evidence": True,
+                        "eth_full_retained_coverage_status": "verified_retained_rows_outside_rth",
+                    }
+                ],
+            )
+
+        self.assertEqual(gate["decision"], "gate1_autoquant_instrument_cost_density_survivor_downstream_required")
+        self.assertTrue(gate["downstream_allowed"])
+        self.assertEqual(gate["cost_gate_authority"], "instrument_cost")
+        self.assertEqual(gate["cost_stress_5bps_role"], "telemetry_not_futures_hard_gate")
+        self.assertEqual(len(gate["survivors_instrument_cost"]), 1)
+        self.assertEqual(gate["survivors_declared_cost"], gate["survivors_instrument_cost"])
+        self.assertEqual(gate["raw_survivors_before_session_scope"], gate["raw_instrument_cost_survivors_before_session_scope"])
+        survivor = gate["survivors_instrument_cost"][0]
+        self.assertTrue(survivor["survives_instrument_cost"])
+        self.assertFalse(survivor["survives_5bps_per_side"])
+        self.assertEqual(gate["survivors_5bps"], [])
+        self.assertEqual(gate["cost_stress_survivors_5bps"], [])
 
     def test_run_reuse_clean_loads_existing_bundle_without_raw_source(self) -> None:
         module = self.load_module()

@@ -139,24 +139,35 @@ class FuturesCostProfile:
     exchange_fees_per_contract_side: float = 1.40
     regulatory_fees_per_contract_side: float = 0.02
     assumed_spread_ticks: float = 1.0
-    assumed_slippage_ticks_per_side: float = 0.5
+    assumed_slippage_ticks_per_side: float = 1.0
     source: str = "ict_engine_default_assumption_v1"
 
     @property
     def point_value(self) -> float:
         return self.tick_value / self.tick_size
 
-    def round_trip_cost_points(self) -> float:
-        cash_cost = 2.0 * (
+    def round_trip_fee_cash(self) -> float:
+        return 2.0 * (
             self.commission_per_contract_side
             + self.exchange_fees_per_contract_side
             + self.regulatory_fees_per_contract_side
         )
-        return (
-            cash_cost / self.point_value
-            + self.assumed_spread_ticks * self.tick_size
-            + 2.0 * self.assumed_slippage_ticks_per_side * self.tick_size
-        )
+
+    def round_trip_cost_cash(self) -> float:
+        return self.round_trip_fee_cash() + (
+            self.assumed_spread_ticks + 2.0 * self.assumed_slippage_ticks_per_side
+        ) * self.tick_value
+
+    def round_trip_fee_points(self) -> float:
+        return self.round_trip_fee_cash() / self.point_value
+
+    def round_trip_cost_points(self) -> float:
+        return self.round_trip_cost_cash() / self.point_value
+
+    def round_trip_fee_pct(self, representative_price: float) -> float:
+        if representative_price <= 0:
+            raise ValueError("representative_price must be positive")
+        return self.round_trip_fee_points() / representative_price * 100.0
 
     def round_trip_cost_pct(self, representative_price: float) -> float:
         if representative_price <= 0:
@@ -4971,6 +4982,25 @@ def safe_float(value: object) -> float:
         return 0.0
 
 
+def safe_table_float(value: object) -> float:
+    match = re.search(r"-?\d+(?:\.\d+)?", str(value).replace(",", ""))
+    return float(match.group(0)) if match else 0.0
+
+
+def table_cells(line: str) -> list[str]:
+    if "│" not in line:
+        return []
+    return [cell.strip() for cell in line.split("│")[1:-1]]
+
+
+def backtest_days_between(start: object, end: object) -> int | None:
+    start_ts = pd.to_datetime(start, utc=True, errors="coerce")
+    end_ts = pd.to_datetime(end, utc=True, errors="coerce")
+    if pd.isna(start_ts) or pd.isna(end_ts) or end_ts < start_ts:
+        return None
+    return max(1, int(math.ceil((end_ts - start_ts).total_seconds() / 86400.0)))
+
+
 def parse_blocks(stdout: str) -> list[dict[str, Any]]:
     blocks: list[dict[str, Any]] = []
     current: dict[str, Any] = {}
@@ -5027,6 +5057,117 @@ def parse_blocks(stdout: str) -> list[dict[str, Any]]:
     return blocks
 
 
+def parse_freqtrade_result_table_blocks(stdout: str) -> list[dict[str, Any]]:
+    blocks: list[dict[str, Any]] = []
+    current: dict[str, Any] | None = None
+    per_pair: dict[str, dict[str, float]] = {}
+    in_primary_report = False
+    summary_start: str | None = None
+    summary_end: str | None = None
+
+    def flush() -> None:
+        nonlocal current, per_pair, in_primary_report, summary_start, summary_end
+        if current is not None and (per_pair or current.get("trade_count")):
+            if per_pair and not current.get("pairs"):
+                current["pairs"] = ",".join(per_pair)
+            if current.get("days") is None:
+                days = backtest_days_between(summary_start, summary_end)
+                if days is not None:
+                    current["days"] = days
+            current["per_pair"] = per_pair
+            blocks.append({key: value for key, value in current.items() if not key.startswith("_")})
+        current = None
+        per_pair = {}
+        in_primary_report = False
+        summary_start = None
+        summary_end = None
+
+    for line in stdout.splitlines():
+        stripped = line.strip()
+        result_match = re.match(r"Result for strategy\s+(\S+)", stripped)
+        if result_match:
+            flush()
+            current = {"strategy": result_match.group(1)}
+            continue
+        if current is None:
+            continue
+
+        span_match = re.search(r"Backtested\s+(.+?)\s+->\s+(.+?)\s+\|", stripped)
+        if span_match:
+            days = backtest_days_between(span_match.group(1), span_match.group(2))
+            if days is not None:
+                current["days"] = days
+
+        if "BACKTESTING REPORT" in stripped:
+            in_primary_report = True
+            continue
+        if any(
+            marker in stripped
+            for marker in (
+                "LEFT OPEN TRADES REPORT",
+                "ENTER TAG STATS",
+                "EXIT REASON STATS",
+                "MIXED TAG STATS",
+                "SUMMARY METRICS",
+                "STRATEGY SUMMARY",
+            )
+        ):
+            in_primary_report = False
+
+        cells = table_cells(line)
+        if len(cells) >= 2:
+            metric, value = cells[0], cells[1]
+            if metric == "Backtesting from":
+                summary_start = value
+            elif metric == "Backtesting to":
+                summary_end = value
+            elif metric == "Total/Daily Avg Trades":
+                current["trade_count"] = int(safe_table_float(value))
+            elif metric == "Total profit %":
+                current["total_profit_pct"] = safe_table_float(value)
+            elif metric == "Sharpe":
+                current["sharpe"] = safe_table_float(value)
+            elif metric == "Sortino":
+                current["sortino"] = safe_table_float(value)
+            elif metric == "Calmar":
+                current["calmar"] = safe_table_float(value)
+            elif metric == "Profit factor":
+                current["profit_factor"] = safe_table_float(value)
+                for pair_metrics in per_pair.values():
+                    if not pair_metrics.get("pf"):
+                        pair_metrics["pf"] = current["profit_factor"]
+            elif metric == "Max % of account underwater":
+                current["max_drawdown_pct"] = -abs(safe_table_float(value))
+
+        if len(cells) < 7:
+            continue
+
+        pair = cells[0]
+        if not (pair.endswith("/USD") or pair == "TOTAL"):
+            continue
+        win_loss = [safe_table_float(token) for token in re.findall(r"-?\d+(?:\.\d+)?", cells[6])]
+        wins = int(win_loss[0]) if len(win_loss) >= 1 else 0
+        losses = int(win_loss[2]) if len(win_loss) >= 3 else 0
+        win_rate = win_loss[3] if len(win_loss) >= 4 else 0.0
+        metrics = {
+            "trades": int(safe_table_float(cells[1])),
+            "profit_pct": safe_table_float(cells[4]),
+            "wr": win_rate,
+            "pf": safe_float(current.get("profit_factor")),
+            "wins": wins,
+            "losses": losses,
+        }
+        if pair == "TOTAL":
+            current["trade_count"] = metrics["trades"]
+            current["total_profit_pct"] = metrics["profit_pct"]
+            current["win_rate_pct"] = metrics["wr"]
+        else:
+            per_pair[pair] = metrics
+
+    flush()
+    return blocks
+
+
 def classify_screen_row(row: dict[str, Any]) -> dict[str, Any]:
     scored = dict(row)
     trades = int(safe_float(scored.get("trade_count")))
@@ -5046,28 +5187,55 @@ def classify_screen_row(row: dict[str, Any]) -> dict[str, Any]:
         representative_price = defaults.get(profile.root_symbol if profile else "", 1.0)
     if profile is not None:
         cost_pct = profile.round_trip_cost_pct(representative_price)
+        fee_pct = profile.round_trip_fee_pct(representative_price)
         scored["cost_profile_id"] = profile.profile_id
         scored["cost_profile_source"] = profile.source
+        scored["instrument_fee_only_round_trip_cash"] = round(profile.round_trip_fee_cash(), 6)
+        scored["instrument_all_in_round_trip_cash"] = round(profile.round_trip_cost_cash(), 6)
+        scored["instrument_fee_only_round_trip_pct"] = round(fee_pct, 6)
+        scored["instrument_fee_only_bps_per_trade"] = round(fee_pct * 100.0, 6)
         scored["instrument_round_trip_cost_pct"] = round(cost_pct, 6)
+        scored["instrument_cost_bps_per_trade"] = round(cost_pct * 100.0, 6)
+        scored["gross_edge_bps_per_trade"] = round(gross / trades * 100.0, 6) if trades > 0 else 0.0
+        scored["instrument_fee_only_total_profit_pct"] = round(gross - trades * fee_pct, 6)
         scored["instrument_cost_total_profit_pct"] = round(gross - trades * cost_pct, 6)
+        scored["survives_instrument_fee_only"] = scored["instrument_fee_only_total_profit_pct"] > 0
         scored["survives_instrument_cost"] = scored["instrument_cost_total_profit_pct"] > 0
     else:
         scored["cost_profile_id"] = "unknown"
         scored["cost_profile_source"] = "missing_futures_cost_profile"
+        scored["instrument_fee_only_round_trip_cash"] = None
+        scored["instrument_all_in_round_trip_cash"] = None
+        scored["instrument_fee_only_round_trip_pct"] = None
+        scored["instrument_fee_only_bps_per_trade"] = None
         scored["instrument_round_trip_cost_pct"] = None
+        scored["instrument_cost_bps_per_trade"] = None
+        scored["gross_edge_bps_per_trade"] = round(gross / trades * 100.0, 6) if trades > 0 else 0.0
+        scored["instrument_fee_only_total_profit_pct"] = None
         scored["instrument_cost_total_profit_pct"] = None
+        scored["survives_instrument_fee_only"] = False
         scored["survives_instrument_cost"] = False
     scored["density_target_1_to_3_per_day"] = 1.0 <= scored["trades_per_day"] <= 3.0
     scored["minimum_trade_sample_floor_met"] = trades >= 30
     scored["survives_1bps_per_side"] = scored["1bps_per_side_total_profit_pct"] > 0
     scored["survives_2bps_per_side"] = scored["2bps_per_side_total_profit_pct"] > 0
     scored["survives_5bps_per_side"] = scored["5bps_per_side_total_profit_pct"] > 0
+    scored["cost_stress_5bps_role"] = "telemetry_not_futures_hard_gate"
+    if gross <= 0:
+        scored["cost_wall_bucket"] = "gross_negative_not_cost_rescuable"
+    elif not scored["survives_instrument_cost"]:
+        scored["cost_wall_bucket"] = "zero_edge_churn_not_rescued_by_realistic_cost"
+    elif not scored["survives_5bps_per_side"]:
+        scored["cost_wall_bucket"] = "bps_stress_false_negative_recheck"
+    elif scored["gross_edge_bps_per_trade"] >= 10.0 and scored["trades_per_day"] <= 3.0:
+        scored["cost_wall_bucket"] = "large_move_low_turnover_cost_negligible"
+    else:
+        scored["cost_wall_bucket"] = "realistic_cost_survivor"
     scored["has_win_loss_diversity"] = wins > 0 and losses > 0
     scored["direction_consistent_local"] = scored.get("direction") in {"long", "short", "long_short"}
     scored["gate1_survivor"] = bool(
         scored["density_target_1_to_3_per_day"]
         and scored["minimum_trade_sample_floor_met"]
-        and scored["survives_5bps_per_side"]
         and scored["survives_instrument_cost"]
         and scored["has_win_loss_diversity"]
         and scored["direction_consistent_local"]
@@ -5078,7 +5246,14 @@ def classify_screen_row(row: dict[str, Any]) -> dict[str, Any]:
 def score_rows(stdout: str, specs: list[GeneratedStrategySpec]) -> list[dict[str, Any]]:
     by_class = {spec.class_name: spec for spec in specs}
     rows: list[dict[str, Any]] = []
-    for block in parse_blocks(stdout):
+    blocks = parse_blocks(stdout)
+    seen_machine_blocks = {str(block.get("strategy") or "") for block in blocks}
+    blocks.extend(
+        block
+        for block in parse_freqtrade_result_table_blocks(stdout)
+        if str(block.get("strategy") or "") not in seen_machine_blocks
+    )
+    for block in blocks:
         strategy_name = str(block.get("strategy") or "")
         spec = by_class.get(strategy_name)
         if spec is None:
@@ -5122,6 +5297,8 @@ def score_rows(stdout: str, specs: list[GeneratedStrategySpec]) -> list[dict[str
                     "family": spec.family,
                     "direction": spec.direction,
                     "trade_count": int(safe_float(metrics.get("trades"))),
+                    "wins": int(safe_float(metrics.get("wins"))),
+                    "losses": int(safe_float(metrics.get("losses"))),
                     "win_rate_pct": safe_float(metrics.get("wr")),
                     "sharpe": safe_float(metrics.get("sharpe")),
                     "profit_factor": safe_float(metrics.get("pf")),
@@ -5330,11 +5507,31 @@ def write_aq_gate_summary(
         row.update(session_scope)
     raw_survivors = [row for row in rows if row.get("scope") == "per_pair" and row.get("gate1_survivor")]
     survivors = raw_survivors if session_scope["eth_full_retained_session_evidence"] else []
+    raw_realistic_cost_survivors = [
+        row
+        for row in rows
+        if row.get("scope") == "per_pair" and row.get("survives_instrument_cost")
+    ]
+    realistic_cost_survivors = (
+        raw_realistic_cost_survivors if session_scope["eth_full_retained_session_evidence"] else []
+    )
+    bps_false_negative_rechecks = [
+        row
+        for row in realistic_cost_survivors
+        if row.get("cost_wall_bucket") == "bps_stress_false_negative_recheck"
+    ]
+    stress_survivors = [
+        row
+        for row in rows
+        if row.get("scope") == "per_pair" and row.get("survives_5bps_per_side")
+    ]
     decision = (
-        "gate1_autoquant_cost_density_survivor_downstream_required"
+        "gate1_autoquant_instrument_cost_density_survivor_downstream_required"
         if survivors
         else "blocked_session_scope_unverified_no_downstream"
         if raw_survivors and not session_scope["eth_full_retained_session_evidence"]
+        else "observation_realistic_cost_survivor_needs_non_cost_gate_repair"
+        if realistic_cost_survivors
         else "observation_no_autoquant_survivor_yet"
     )
     gate = {
@@ -5351,8 +5548,18 @@ def write_aq_gate_summary(
         "trade_usable": False,
         "update_goal": False,
         **session_scope,
-        "survivors_5bps": survivors,
+        "survivors_instrument_cost": survivors,
+        "raw_instrument_cost_survivors_before_session_scope": raw_survivors,
+        "survivors_declared_cost": survivors,
+        "realistic_cost_survivors_before_gate1": realistic_cost_survivors,
+        "raw_realistic_cost_survivors_before_session_scope": raw_realistic_cost_survivors,
+        "bps_stress_false_negative_rechecks": bps_false_negative_rechecks,
+        "survivors_5bps": stress_survivors if session_scope["eth_full_retained_session_evidence"] else [],
+        "cost_stress_survivors_5bps": stress_survivors if session_scope["eth_full_retained_session_evidence"] else [],
+        "raw_cost_stress_survivors_5bps_before_session_scope": stress_survivors,
         "raw_survivors_before_session_scope": raw_survivors,
+        "cost_gate_authority": "instrument_cost",
+        "cost_stress_5bps_role": "telemetry_not_futures_hard_gate",
         "hard_promotion_gates_required_next": {
             "direction_consistent_aq_to_execution_tree": "not_run_yet",
             "duration_readiness_confirmed": "not_run_yet",
