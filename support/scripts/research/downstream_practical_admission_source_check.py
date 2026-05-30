@@ -56,16 +56,44 @@ CANONICAL_CLOSURE_BUILDER_NAMES = frozenset((
     "write_same_tree_practical_closure_packet",
 ))
 CANONICAL_CLOSURE_HELPER_PATH = Path(__file__).resolve().parent / "same_tree_practical_closure.py"
-TWO_BPS_DOWNSTREAM_PATTERNS = (
+REAL_COST_DOWNSTREAM_PATTERNS = (
+    "survivors_instrument_cost",
+    "exact_1m_survivors_instrument_cost",
+    "exact_instrument_cost_survivors",
+    "exact_real_cost_survivors",
+    "survives_instrument_cost",
+)
+LEGACY_FIXED_BPS_DOWNSTREAM_PATTERNS = (
+    "survivors_1",
+    "survivors_1bps",
     "survivors_2",
     "survivors_2bps",
+    "survivors_5",
+    "survivors_5bps",
+    "exact_1m_survivors_1bps",
     "exact_1m_survivors_2bps",
+    "exact_1m_survivors_5bps",
+    "exact_5m_survivors_1bps",
     "exact_5m_survivors_2bps",
+    "exact_5m_survivors_5bps",
+    "exact_15m_survivors_1bps",
     "exact_15m_survivors_2bps",
+    "exact_15m_survivors_5bps",
+    "exact_30m_survivors_1bps",
     "exact_30m_survivors_2bps",
+    "exact_30m_survivors_5bps",
+    "exact_1h_survivors_1bps",
     "exact_1h_survivors_2bps",
+    "exact_1h_survivors_5bps",
+    "exact_4h_survivors_1bps",
     "exact_4h_survivors_2bps",
+    "exact_4h_survivors_5bps",
+    "exact_1d_survivors_1bps",
     "exact_1d_survivors_2bps",
+    "exact_1d_survivors_5bps",
+    "survives_1bps_per_side",
+    "survives_2bps_per_side",
+    "survives_5bps_per_side",
 )
 FIVE_BPS_DENSITY_FLOOR_PATTERNS = (
     "trades >=",
@@ -149,13 +177,21 @@ def contains_transition_hard_gate(source: str, node: ast.AST) -> bool:
     return any(pattern in text for pattern in TRANSITION_HARD_GATE_PATTERNS)
 
 
-def contains_two_bps_downstream_gate(source: str, node: ast.AST) -> bool:
+def contains_legacy_fixed_bps_downstream_gate(source: str, node: ast.AST) -> bool:
     text = expression_text(source, node)
-    return any(pattern in text for pattern in TWO_BPS_DOWNSTREAM_PATTERNS)
+    lowered = text.lower()
+    if any(pattern in lowered for pattern in REAL_COST_DOWNSTREAM_PATTERNS):
+        return False
+    return (
+        any(pattern in lowered for pattern in LEGACY_FIXED_BPS_DOWNSTREAM_PATTERNS)
+        or ("survivors_" in lowered and any(token in lowered for token in ("1bps", "2bps", "5bps")))
+        or "survives_5bps_per_side" in lowered
+        or "survives_2bps_per_side" in lowered
+    )
 
 
 def contains_5bps_density_floor(source: str, node: ast.AST) -> bool:
-    text = expression_text(source, node)
+    text = expression_text(source, node).lower()
     return any(pattern in text for pattern in FIVE_BPS_DENSITY_FLOOR_PATTERNS)
 
 
@@ -404,14 +440,14 @@ class PracticalAssignmentVisitor(ast.NodeVisitor):
                         )
         for target in node.targets:
             if isinstance(target, ast.Name) and target.id in DOWNSTREAM_ADMISSION_NAMES:
-                if contains_two_bps_downstream_gate(self.source, node.value):
+                if contains_legacy_fixed_bps_downstream_gate(self.source, node.value):
                     self.violations.append(
                         {
                             "line": getattr(node.value, "lineno", getattr(node, "lineno", 0)),
                             "column": getattr(node.value, "col_offset", getattr(node, "col_offset", 0)),
                             "key": target.id,
                             "value": expression_text(self.source, node.value),
-                            "violation": "downstream_admission_uses_2bps_survivor_gate",
+                            "violation": "downstream_admission_uses_fixed_bps_survivor_gate",
                         }
                     )
             if isinstance(target, ast.Subscript) and string_key(target.slice) == "survives_5bps_per_side":
@@ -479,7 +515,7 @@ class PracticalAssignmentVisitor(ast.NodeVisitor):
             node.value is not None
             and isinstance(node.target, ast.Name)
             and node.target.id in DOWNSTREAM_ADMISSION_NAMES
-            and contains_two_bps_downstream_gate(self.source, node.value)
+            and contains_legacy_fixed_bps_downstream_gate(self.source, node.value)
         ):
             self.violations.append(
                 {
@@ -487,7 +523,7 @@ class PracticalAssignmentVisitor(ast.NodeVisitor):
                     "column": getattr(node.value, "col_offset", getattr(node, "col_offset", 0)),
                     "key": node.target.id,
                     "value": expression_text(self.source, node.value),
-                    "violation": "downstream_admission_uses_2bps_survivor_gate",
+                    "violation": "downstream_admission_uses_fixed_bps_survivor_gate",
                 }
             )
         if (

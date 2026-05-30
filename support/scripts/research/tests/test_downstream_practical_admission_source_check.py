@@ -922,7 +922,7 @@ def build_metrics(branch_ok, survivors_2, survivors_5):
         self.assertFalse(report["ok"])
         self.assertEqual(
             report["violations"][0]["violation"],
-            "downstream_admission_uses_2bps_survivor_gate",
+            "downstream_admission_uses_fixed_bps_survivor_gate",
         )
 
     def test_flags_5bps_survival_trade_count_floor(self) -> None:
@@ -943,7 +943,26 @@ def score(row):
             "five_bps_survival_uses_trade_density_floor",
         )
 
-    def test_allows_5bps_survival_trade_count_positive_and_downstream_from_5bps(self) -> None:
+    def test_flags_dict_5bps_survival_trade_count_floor(self) -> None:
+        path = self.write_source(
+            """
+def score(row):
+    trades = int(row.get("trade_count") or 0)
+    return {
+        "survives_5bps_per_side": trades >= 6 and row["5bps_per_side_total_profit_pct"] > 0,
+    }
+"""
+        )
+
+        report = checker.check_source_file(path)
+
+        self.assertFalse(report["ok"])
+        self.assertEqual(
+            report["violations"][0]["violation"],
+            "five_bps_survival_uses_trade_density_floor",
+        )
+
+    def test_flags_downstream_admission_from_5bps_survivors(self) -> None:
         path = self.write_source(
             """
 def build_metrics(branch_ok, survivors_5):
@@ -953,6 +972,31 @@ def build_metrics(branch_ok, survivors_5):
     downstream = branch_ok and bool(survivors_5)
     return {
         "exact_1m_survivors_5bps": survivors_5,
+        "downstream_allowed": downstream,
+        "promotion_allowed": False,
+        "trade_usable": False,
+        "update_goal": False,
+    }
+"""
+        )
+
+        report = checker.check_source_file(path)
+
+        self.assertFalse(report["ok"])
+        self.assertEqual(
+            report["violations"][0]["violation"],
+            "downstream_admission_uses_fixed_bps_survivor_gate",
+        )
+
+    def test_allows_downstream_admission_from_verified_instrument_cost_survivors(self) -> None:
+        path = self.write_source(
+            """
+def build_metrics(branch_ok, survivors_instrument_cost):
+    row = {}
+    row["survives_instrument_cost"] = True
+    downstream = branch_ok and bool(survivors_instrument_cost)
+    return {
+        "exact_instrument_cost_survivors": survivors_instrument_cost,
         "downstream_allowed": downstream,
         "promotion_allowed": False,
         "trade_usable": False,
