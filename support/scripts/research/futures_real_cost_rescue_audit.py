@@ -17,6 +17,8 @@ from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Any, Iterable
 
+import instrument_cost_model as cost_model
+
 
 @dataclass(frozen=True)
 class RescueRow:
@@ -85,6 +87,7 @@ def normalize_row(row: dict[str, Any], source_path: str, source_table: str, sour
         row,
         "5bps_per_side_total_profit_pct",
         "legacy_fixed_cost_total_pct",
+        "stress_5bps_total_pct",
         "net_after_5bps_side_pct",
         "net_after_5bps_per_side_pct",
         "legacy_5bps_total_profit_pct",
@@ -96,6 +99,12 @@ def normalize_row(row: dict[str, Any], source_path: str, source_table: str, sour
         "raw_total_profit_pct",
         "0bps_per_side_total_profit_pct",
         "total_profit_pct",
+    )
+    legacy_reprice_realistic_cost_survival = _legacy_reprice_realistic_cost_survival(
+        row,
+        symbol=symbol,
+        trade_count=trade_count,
+        gross_total_pct=gross_total_pct,
     )
 
     if instrument_cost_total_pct is not None:
@@ -128,6 +137,7 @@ def normalize_row(row: dict[str, Any], source_path: str, source_table: str, sour
         sample_floor=sample_floor,
         density_ok=density_ok,
         year_coverage_ok=year_coverage_ok,
+        legacy_reprice_realistic_cost_survival=legacy_reprice_realistic_cost_survival,
     )
 
     rescue_class = _classify_rescue(
@@ -142,6 +152,7 @@ def normalize_row(row: dict[str, Any], source_path: str, source_table: str, sour
         sample_floor=sample_floor,
         density_ok=density_ok,
         year_coverage_ok=year_coverage_ok,
+        legacy_reprice_realistic_cost_survival=legacy_reprice_realistic_cost_survival,
     )
 
     return RescueRow(
@@ -245,6 +256,7 @@ def _classify_rescue(
     sample_floor: bool,
     density_ok: bool,
     year_coverage_ok: bool,
+    legacy_reprice_realistic_cost_survival: bool | None,
 ) -> str:
     if trade_count <= 0:
         return "not_rescued_zero_trades"
@@ -263,9 +275,38 @@ def _classify_rescue(
 
     legacy_failed = legacy_fixed_cost_total_pct is not None and legacy_fixed_cost_total_pct <= 0.0
     gross_positive = gross_total_pct is None or gross_total_pct > 0.0
+    if legacy_failed and gross_positive and legacy_reprice_realistic_cost_survival is False:
+        return "not_rescued_zero_edge_churn_realistic_cost_negative"
     if legacy_failed and gross_positive:
         return "needs_reprice_replay"
     return "not_rescued_no_cost_wall_evidence"
+
+
+def _legacy_reprice_realistic_cost_survival(
+    row: dict[str, Any],
+    *,
+    symbol: str | None,
+    trade_count: int,
+    gross_total_pct: float | None,
+) -> bool | None:
+    if not symbol or trade_count <= 0 or gross_total_pct is None:
+        return None
+    representative_price = _first_float(
+        row,
+        "representative_price",
+        "representative_entry_price",
+        "last_close",
+        "entry_price",
+        "avg_entry_price",
+        "close",
+    )
+    if representative_price is None or representative_price <= 0:
+        return None
+    profile = cost_model.futures_cost_profile(symbol)
+    if profile is None or not profile.verified_for_promotion:
+        return None
+    realistic_total_pct = gross_total_pct - trade_count * profile.round_trip_cost_pct(representative_price)
+    return realistic_total_pct > 0.0
 
 
 def _year_coverage_ok(positive_years: int | None, years: int | None, row: dict[str, Any]) -> bool:
@@ -291,6 +332,7 @@ def _reason_codes(
     sample_floor: bool,
     density_ok: bool,
     year_coverage_ok: bool,
+    legacy_reprice_realistic_cost_survival: bool | None,
 ) -> list[str]:
     reasons: list[str] = []
     if trade_count <= 0:
@@ -301,6 +343,8 @@ def _reason_codes(
         reasons.append("survives_instrument_cost_false")
     if legacy_fixed_cost_total_pct is not None and legacy_fixed_cost_total_pct <= 0.0 and survives_instrument_cost:
         reasons.append("old_fixed_cost_false_negative_real_cost_positive")
+    if legacy_reprice_realistic_cost_survival is False:
+        reasons.append("gross_edge_below_realistic_all_in_cost")
     if survives_legacy_fixed_cost:
         reasons.append("already_survives_legacy_fixed_cost")
     if not eth_evidence:

@@ -64,6 +64,31 @@ class FuturesRealCostRescueAuditTests(unittest.TestCase):
         self.assertIsNone(row.instrument_cost_total_pct)
         self.assertFalse(row.survives_legacy_fixed_cost)
 
+    def test_high_frequency_churn_with_tiny_gross_edge_is_not_reprice_replay(self) -> None:
+        row = audit.normalize_row(
+            {
+                "factor_id": "tomac_nq_microburst_churn_v1",
+                "symbol": "NQ",
+                "timeframe": "1m",
+                "trade_count": 26304,
+                "gross_total_profit_pct": 8.52,
+                "5bps_per_side_total_profit_pct": -2621.88,
+                "representative_price": 15000,
+                "session_scope": "ETH/full_retained_session",
+                "rth_filter_applied": "False",
+            },
+            "highfreq_rows.csv",
+            "csv",
+            0,
+        )
+
+        self.assertIsNotNone(row)
+        assert row is not None
+        self.assertEqual(row.rescue_class, "not_rescued_zero_edge_churn_realistic_cost_negative")
+        self.assertIn("gross_edge_below_realistic_all_in_cost", row.reason_codes)
+        self.assertIsNone(row.instrument_cost_total_pct)
+        self.assertFalse(row.survives_legacy_fixed_cost)
+
     def test_fee_positive_density_failed_rows_are_blocked_not_exact_rescued(self) -> None:
         row = audit.normalize_row(
             {
@@ -115,6 +140,34 @@ class FuturesRealCostRescueAuditTests(unittest.TestCase):
 
         self.assertIsNotNone(row)
         assert row is not None
+        self.assertEqual(row.rescue_class, "rescued_for_exact_aq")
+
+    def test_stress_5bps_total_pct_alias_allows_ledger_rescue(self) -> None:
+        row = audit.normalize_row(
+            {
+                "factor_id": "tomac_nq_ledger_stress_alias_v1",
+                "symbol": "NQ",
+                "timeframe": "30m",
+                "trade_count": "462.0",
+                "instrument_cost_total_pct": "13.010348",
+                "stress_5bps_total_pct": "-30.260114",
+                "session_scope": "ETH/full_retained_session",
+                "rth_filter_applied": "False",
+                "eth_full_retained_session_evidence": "True",
+                "minimum_trade_sample_floor_met": "True",
+                "density_floor_met": "True",
+                "positive_years": "4",
+                "years": "5",
+            },
+            "ledger.csv",
+            "csv",
+            0,
+        )
+
+        self.assertIsNotNone(row)
+        assert row is not None
+        self.assertEqual(row.legacy_fixed_cost_total_pct, -30.260114)
+        self.assertFalse(row.survives_legacy_fixed_cost)
         self.assertEqual(row.rescue_class, "rescued_for_exact_aq")
 
     def test_fee_positive_weak_year_coverage_is_blocked_not_exact_rescued(self) -> None:
