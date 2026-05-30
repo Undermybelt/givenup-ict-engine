@@ -150,7 +150,10 @@ def cost_model_proves_practical_closure(metrics: dict[str, Any]) -> bool:
     cost_model = metrics.get("cost_model")
     if not isinstance(cost_model, dict):
         return False
-    if not cost_model_status_proves_practical_closure(cost_model.get("status")):
+    if not any(
+        cost_model_status_proves_practical_closure(cost_model.get(key))
+        for key in ("status", "cost_model_status")
+    ):
         return False
     required_text_field_groups = (
         ("instrument_class",),
@@ -159,7 +162,7 @@ def cost_model_proves_practical_closure(metrics: dict[str, Any]) -> bool:
         ("venue_routing", "exchange"),
         ("currency",),
         ("unit_convention",),
-        ("fee_effective_date",),
+        ("fee_effective_date", "cost_model_effective_date", "effective_date"),
     )
     for keys in required_text_field_groups:
         if not any(verified_cost_model_text(cost_model.get(key)) for key in keys):

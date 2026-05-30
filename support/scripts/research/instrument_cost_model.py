@@ -354,6 +354,9 @@ def cost_model_packet(symbol: str, representative_price: Optional[float] = None)
             "legacy_stress_role": "telemetry_not_futures_commission_model_not_candidate_gate",
         }
     packet = {
+        # Canonical status aliases. Downstream practical-closure consumers accept
+        # `status`, while Gate 1 packets historically emitted `cost_model_status`.
+        "status": profile.status,
         "cost_model_status": profile.status,
         "verified_for_promotion": profile.verified_for_promotion,
         "cost_profile_id": profile.profile_id,
@@ -361,9 +364,13 @@ def cost_model_packet(symbol: str, representative_price: Optional[float] = None)
         "cost_model_source_url": profile.source_url,
         "cost_model_fetched_at": profile.fetched_at,
         "cost_model_effective_date": profile.effective_date,
+        "fee_effective_date": profile.effective_date,
         "broker": "IBKR",
         "pricing_plan": "tiered_low_volume_non_member_assumed",
         "instrument_class": "future",
+        "currency": "USD",
+        "unit_convention": "per_contract_round_turn_usd",
+        "venue_routing": f"{profile.exchange}_direct_futures_execution_via_IBKR",
         "product_label": product_label_for_symbol(symbol),
         "symbol_root": normalize_futures_root(symbol),
         "exchange": profile.exchange,

@@ -108,7 +108,12 @@ class CostPacketTests(unittest.TestCase):
     def test_packet_separates_real_from_stress(self) -> None:
         packet = icm.cost_model_packet("NQ", 20000.0)
         self.assertEqual(packet["cost_model_status"], icm.STATUS_VERIFIED)
+        self.assertEqual(packet["status"], icm.STATUS_VERIFIED)
         self.assertTrue(packet["verified_for_promotion"])
+        self.assertEqual(packet["currency"], "USD")
+        self.assertEqual(packet["fee_effective_date"], packet["cost_model_effective_date"])
+        self.assertEqual(packet["unit_convention"], "per_contract_round_turn_usd")
+        self.assertIn("IBKR", packet["venue_routing"])
         self.assertAlmostEqual(packet["contract_multiplier"], 20.0)
         self.assertAlmostEqual(packet["all_in_round_turn_per_contract"], 4.50)
         # Stress telemetry must be present, labeled, and clearly separate from the real cost.

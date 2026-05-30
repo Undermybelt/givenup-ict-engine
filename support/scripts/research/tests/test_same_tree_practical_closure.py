@@ -10,6 +10,7 @@ SCRIPT_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(SCRIPT_ROOT))
 
 import same_tree_practical_closure as closure  # noqa: E402
+import instrument_cost_model as instrument_cost  # noqa: E402
 
 
 def practical_command_results() -> list[dict]:
@@ -239,6 +240,21 @@ class SameTreePracticalClosureTests(unittest.TestCase):
         metrics = valid_metrics()
         metrics["cost_model"].pop("venue_routing")
         metrics["cost_model"]["exchange"] = "CME"
+
+        packet = closure.build_same_tree_practical_closure_packet(metrics)
+
+        self.assertIsNotNone(packet)
+
+    def test_accepts_canonical_futures_cost_packet_alias_fields(self) -> None:
+        metrics = valid_metrics()
+        cost_model = instrument_cost.cost_model_packet("NQ", 20000.0)
+        cost_model["official_source_refs"] = [
+            {
+                "url": "https://www.interactivebrokers.com/en/pricing/commissions-futures.php",
+                "same_turn_readback": "official_source_http_200_rate_verified",
+            }
+        ]
+        metrics["cost_model"] = cost_model
 
         packet = closure.build_same_tree_practical_closure_packet(metrics)
 
