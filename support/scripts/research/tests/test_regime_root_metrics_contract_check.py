@@ -82,8 +82,45 @@ class RegimeRootMetricsContractCheckTests(unittest.TestCase):
             report = checker.check_metrics_file(path)
 
         self.assertFalse(report["ok"])
-        self.assertIn("downstream_open_without_exact_5bps_survivor", report["violations"])
+        self.assertIn("downstream_open_without_exact_real_cost_survivor", report["violations"])
         self.assertIn("survivors_2bps_used_as_downstream_gate", report["violations"])
+
+    def test_accepts_futures_instrument_cost_survivor_when_5bps_stress_fails(self) -> None:
+        metrics = {
+            "branch_path": "RangeReversion -> FuturesCostRevival -> factor_v1",
+            "branch_fields_preserved": True,
+            "cost_stress": [
+                {
+                    "label": "NQ/5m/cost_revival",
+                    "symbol": "NQ",
+                    "asset_class": "futures",
+                    "trade_count": 1362,
+                    "survives_5bps_per_side": False,
+                    "5bps_per_side_total_profit_pct": -118.03,
+                    "survives_instrument_cost": True,
+                    "instrument_cost_total_profit_pct": 8.42,
+                    "cost_profile_id": "CME_NQ_IBKR_verified_20260530_v1",
+                    "cost_stress_5bps_role": "telemetry_not_futures_hard_gate",
+                }
+            ],
+            "downstream_allowed": True,
+            "pre_bayes_allowed": True,
+            "bbn_allowed": True,
+            "catboost_allowed": True,
+            "execution_tree_allowed": True,
+        }
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            path = Path(tmpdir) / "terminal_metrics.json"
+            path.write_text(json.dumps(metrics), encoding="utf-8")
+
+            report = checker.check_metrics_file(path)
+
+        self.assertTrue(report["ok"])
+        self.assertEqual(report["violations"], [])
+        self.assertEqual(report["survivors"]["exact_5bps"], [])
+        self.assertEqual(report["survivors"]["instrument_cost"], ["NQ/5m/cost_revival"])
+        self.assertEqual(report["survivors"]["real_cost"], ["NQ/5m/cost_revival"])
 
     def test_accepts_canonical_branch_with_exact_5bps_gate(self) -> None:
         metrics = {
@@ -117,6 +154,43 @@ class RegimeRootMetricsContractCheckTests(unittest.TestCase):
         self.assertTrue(report["ok"])
         self.assertEqual(report["violations"], [])
         self.assertEqual(report["decision"], "contract_ok")
+
+    def test_accepts_futures_downstream_with_instrument_cost_survivor_and_5bps_stress_failure(self) -> None:
+        metrics = {
+            "branch_path": "RangeReversion -> PullbackReclaim -> futures_factor_v1",
+            "branch_fields_preserved": True,
+            "cost_gate_authority": "instrument_cost",
+            "cost_stress_5bps_role": "telemetry_not_futures_hard_gate",
+            "survivors_instrument_cost": ["NQ/5m/repriced"],
+            "cost_stress": [
+                {
+                    "label": "NQ/5m/repriced",
+                    "trade_count": 1362,
+                    "trades_per_day": 1.08,
+                    "survives_instrument_cost": True,
+                    "instrument_cost_total_profit_pct": 1.05,
+                    "survives_5bps_per_side": False,
+                    "5bps_per_side_total_profit_pct": -118.03,
+                }
+            ],
+            "downstream_allowed": True,
+            "pre_bayes_allowed": True,
+            "bbn_allowed": True,
+            "catboost_allowed": True,
+            "execution_tree_allowed": True,
+        }
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            path = Path(tmpdir) / "terminal_metrics.json"
+            path.write_text(json.dumps(metrics), encoding="utf-8")
+
+            report = checker.check_metrics_file(path)
+
+        self.assertTrue(report["ok"])
+        self.assertEqual(report["violations"], [])
+        self.assertEqual(report["decision"], "contract_ok")
+        self.assertEqual(report["survivors"]["instrument_cost"], ["NQ/5m/repriced"])
+        self.assertEqual(report["survivors"]["exact_5bps"], [])
 
     def test_accepts_per_timeframe_exact_5bps_gate(self) -> None:
         for timeframe in ("5m", "15m", "30m", "1h", "4h", "1d"):
@@ -186,7 +260,7 @@ class RegimeRootMetricsContractCheckTests(unittest.TestCase):
         self.assertIsNone(report["density_gate"]["min_trades_per_day"])
         self.assertEqual(
             report["density_gate"]["requirement"],
-            "trade_count_gt_0_and_positive_exact_5bps",
+            "trade_count_gt_0_and_positive_exact_real_cost",
         )
 
     def test_deprecated_min_trades_per_day_argument_does_not_block_sparse_survivor(self) -> None:
@@ -347,7 +421,7 @@ class RegimeRootMetricsContractCheckTests(unittest.TestCase):
             report = checker.check_metrics_file(path)
 
         self.assertFalse(report["ok"])
-        self.assertIn("downstream_open_without_exact_5bps_survivor", report["violations"])
+        self.assertIn("downstream_open_without_exact_real_cost_survivor", report["violations"])
         self.assertIn("survivors_5bps_without_cost_row_used_as_downstream_gate", report["violations"])
 
     def test_rejects_5bps_positive_cost_rows_without_trade_count_proof(self) -> None:
@@ -375,7 +449,7 @@ class RegimeRootMetricsContractCheckTests(unittest.TestCase):
             report = checker.check_metrics_file(path)
 
         self.assertFalse(report["ok"])
-        self.assertIn("downstream_open_without_exact_5bps_survivor", report["violations"])
+        self.assertIn("downstream_open_without_exact_real_cost_survivor", report["violations"])
         self.assertIn("cost_rows_5bps_positive_without_trade_count_proof", report["violations"])
 
     def test_rejects_trend_root_mss_cisd_downstream_without_evidence_packet(self) -> None:
@@ -551,7 +625,7 @@ class RegimeRootMetricsContractCheckTests(unittest.TestCase):
             report["feedback_admission"]["blocking_violations"],
         )
         self.assertIn(
-            "downstream_open_without_exact_5bps_survivor",
+            "downstream_open_without_exact_real_cost_survivor",
             report["feedback_admission"]["blocking_violations"],
         )
 

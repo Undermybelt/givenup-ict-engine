@@ -22,6 +22,15 @@ SIMULATED_SOURCES = {
     "paper_trade_simulation",
 }
 
+FUTURES_ROOTS = {
+    "ES", "MES", "NQ", "MNQ", "YM", "MYM", "RTY", "M2K",
+    "GC", "MGC", "XAU", "SI", "SIL", "HG",
+    "CL", "MCL", "NG",
+    "ZN", "ZB", "ZF",
+    "ZC", "ZS", "ZW", "LE", "BRE",
+    "6E", "M6E",
+}
+
 
 def validate_bundle(
     rows: Iterable[dict[str, object]],
@@ -165,7 +174,7 @@ def classify_blockers(
         ),
         "mtf": _category([violation for violation in violations if ".mtf_" in violation or "missing_mtf" in violation]),
         "frequency": _category([violation for violation in violations if violation.startswith("frequency.")]),
-        "cost_5bps": _category(_cost_5bps_reasons(payload)),
+        "cost_real": _category(_cost_real_reasons(payload)),
         "trade_count": _category(_trade_count_reasons(rows, payload)),
         "provider_parity": _category(_provider_parity_reasons(payload)),
         "validation": _category(_validation_reasons(payload)),
@@ -191,7 +200,7 @@ def _next_action_keywords(categories: dict[str, dict[str, object]]) -> list[str]
                 "root": "fix_regime_root_branch_path",
                 "mtf": "require_real_mtf_trend_resonance",
                 "frequency": "repair_trade_frequency_or_window",
-                "cost_5bps": "rerun_exact_5bps_cost_stress",
+                "cost_real": "rerun_exact_real_cost_check",
                 "trade_count": "increase_positive_trade_count",
                 "provider_parity": "prove_provider_parity",
                 "validation": "repair_validation_rows",
@@ -201,12 +210,17 @@ def _next_action_keywords(categories: dict[str, dict[str, object]]) -> list[str]
     return keywords
 
 
-def _cost_5bps_reasons(payload: dict[str, object]) -> list[str]:
+def _cost_real_reasons(payload: dict[str, object]) -> list[str]:
     if not payload:
-        return ["missing_cost_5bps_summary"]
+        return ["missing_cost_real_summary"]
     if _has_list_value(
         payload,
         (
+            "exact_real_cost_survivors",
+            "survivors_real_cost",
+            "exact_instrument_cost_survivors",
+            "survivors_instrument_cost",
+            "exact_cost_survivors",
             "exact_5bps_survivors",
             "origin_survivors_5bps",
             "origin_survivors_5bps_density",
@@ -216,9 +230,9 @@ def _cost_5bps_reasons(payload: dict[str, object]) -> list[str]:
         ),
     ):
         return []
-    if any(_cost_row_survives_5bps(row) for row in _iter_cost_rows(payload)):
+    if any(_cost_row_survives_real_cost(row, payload) for row in _iter_cost_rows(payload)):
         return []
-    return ["no_positive_exact_5bps_survivor"]
+    return ["no_positive_exact_real_cost_survivor"]
 
 
 def _trade_count_reasons(rows: list[dict[str, object]], payload: dict[str, object]) -> list[str]:
@@ -291,7 +305,9 @@ def _iter_cost_rows(payload: dict[str, object]) -> list[dict[str, object]]:
     return rows
 
 
-def _cost_row_survives_5bps(row: dict[str, object]) -> bool:
+def _cost_row_survives_real_cost(row: dict[str, object], payload: dict[str, object]) -> bool:
+    if _cost_row_survives_instrument_cost(row, payload):
+        return True
     if _truthy(row.get("survives_5bps_per_side")):
         return _trade_count_from_row(row) > 0
     for key in ("net_after_5bps_side_pct", "net_after_5bps_per_side_pct", "5bps_per_side_total_profit_pct"):
@@ -299,6 +315,87 @@ def _cost_row_survives_5bps(row: dict[str, object]) -> bool:
         if isinstance(value, (int, float)) and value > 0 and _trade_count_from_row(row) > 0:
             return True
     return False
+
+
+def _cost_row_survives_instrument_cost(row: dict[str, object], payload: dict[str, object]) -> bool:
+    if not _is_futures_instrument_cost_row(row, payload):
+        return False
+    if _trade_count_from_row(row) <= 0:
+        return False
+    if _truthy(row.get("survives_instrument_cost")):
+        return True
+    for key in ("instrument_cost_total_profit_pct", "net_after_instrument_cost_pct"):
+        value = row.get(key)
+        if isinstance(value, (int, float)) and value > 0:
+            return True
+    return False
+
+
+def _is_futures_instrument_cost_row(row: dict[str, object], payload: dict[str, object]) -> bool:
+    class_values = [
+        row.get("asset_class"),
+        row.get("instrument_class"),
+        row.get("security_type"),
+        row.get("sec_type"),
+        row.get("product_type"),
+    ]
+    has_futures_class = any(
+        isinstance(value, str) and ("future" in value.lower() or value.strip().upper() == "FUT")
+        for value in class_values
+    )
+    has_futures_symbol = any(_known_futures_root(row.get(key)) for key in ("label", "symbol", "contract", "root"))
+    profile_id = row.get("cost_profile_id")
+    profile_points_to_futures = isinstance(profile_id, str) and any(
+        token in profile_id.upper() for token in ("CME", "CBOT", "COMEX", "NYMEX", "FUT")
+    )
+    verified_profile = _cost_profile_verified(profile_id)
+    declared_exact_survivor = (
+        str(payload.get("cost_gate_authority") or "").strip().lower() in {"instrument_cost", "real_cost"}
+        and _row_label(row) in _instrument_cost_survivor_hints(payload)
+    )
+    return (verified_profile or declared_exact_survivor) and (
+        has_futures_class or has_futures_symbol or profile_points_to_futures
+    )
+
+
+def _row_label(row: dict[str, object]) -> str:
+    for key in ("label", "package_id", "strategy_id", "factor_id", "symbol", "contract"):
+        value = row.get(key)
+        if isinstance(value, str) and value:
+            return value
+    return ""
+
+
+def _instrument_cost_survivor_hints(payload: dict[str, object]) -> set[str]:
+    hints: set[str] = set()
+    for key in (
+        "survivors_instrument_cost",
+        "exact_instrument_cost_survivors",
+        "survivors_real_cost",
+        "exact_real_cost_survivors",
+        "exact_cost_survivors",
+    ):
+        value = payload.get(key)
+        if isinstance(value, list):
+            hints.update(item for item in value if isinstance(item, str) and item)
+    return hints
+
+
+def _known_futures_root(value: object) -> bool:
+    if not isinstance(value, str):
+        return False
+    alnum = "".join(ch for ch in value.upper().strip() if ch.isalnum())
+    return any(alnum.startswith(root) for root in sorted(FUTURES_ROOTS, key=len, reverse=True))
+
+
+def _cost_profile_verified(value: object) -> bool:
+    if not isinstance(value, str):
+        return False
+    profile_id = value.strip().lower()
+    if not profile_id:
+        return False
+    invalid_tokens = ("unknown", "missing", "unverified", "cost_model_unverified")
+    return not any(token in profile_id for token in invalid_tokens)
 
 
 def _trade_count_from_row(row: dict[str, object]) -> float:

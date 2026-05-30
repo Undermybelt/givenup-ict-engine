@@ -62,7 +62,7 @@ class RegimeRootSurvivorBlockerReportTests(unittest.TestCase):
             built["gate1"]["exact_5bps_survivors"],
             ["tomac_nq_bidir_opening_drive_t10_w0_e900_x1245_exact_v1"],
         )
-        self.assertNotIn("no_real_cost_5bps_survivor", built["blockers"])
+        self.assertNotIn("no_real_cost_survivor", built["blockers"])
 
     def test_exact_branch_survived_terminal_metrics_counts_5bps_survivor(self) -> None:
         metrics = {
@@ -174,6 +174,67 @@ class RegimeRootSurvivorBlockerReportTests(unittest.TestCase):
         self.assertNotIn("pre_bayes_pass_neutralized", built["blockers"])
         self.assertNotEqual(built["decision"], "drop_gate1_economics")
 
+    def test_futures_instrument_cost_survivor_counts_when_5bps_stress_fails(self) -> None:
+        metrics = {
+            "branch_path": "RangeReversion -> FuturesRepricedPullback -> tomac_nq_repriced_v1",
+            "cost_gate_authority": "instrument_cost",
+            "cost_stress_5bps_role": "telemetry_not_futures_hard_gate",
+            "survivors_instrument_cost": ["NQ/5m/repriced"],
+            "cost_stress": [
+                {
+                    "label": "NQ/5m/repriced",
+                    "trade_count": 1362,
+                    "trades_per_day": 1.08,
+                    "survives_instrument_cost": True,
+                    "instrument_cost_total_profit_pct": 1.05,
+                    "survives_5bps_per_side": False,
+                    "5bps_per_side_total_profit_pct": -118.03,
+                }
+            ],
+            "regime_confidence": 0.97,
+            "rank_total_trade_count": 1362,
+            "raw_scored_mature_rows": 30,
+            "production_validation_rows": 30,
+            "observation_validation_rows": 30,
+        }
+        candidate = {
+            "candidate_status": "no_trade",
+            "actionable": False,
+            "pre_bayes_evidence_filter": {
+                "gating_status": "pass_neutralized",
+                "conflict_flags": [],
+                "evidence_assignments": {
+                    "regime_profit_branch_path": metrics["branch_path"],
+                },
+            },
+        }
+        tree = {
+            "output": {
+                "execution_readiness": 0.34,
+                "ranker_validation_ready": True,
+                "path_ranker_score_visible_to_execution_tree": True,
+                "path_ranker_score_used_by_execution_tree": False,
+            }
+        }
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            root = Path(tmpdir)
+            gate1_path = root / "gate1.json"
+            candidate_path = root / "candidate.json"
+            tree_path = root / "tree.json"
+            gate1_path.write_text(__import__("json").dumps(metrics), encoding="utf-8")
+            candidate_path.write_text(__import__("json").dumps(candidate), encoding="utf-8")
+            tree_path.write_text(__import__("json").dumps(tree), encoding="utf-8")
+
+            built = report.build_report(gate1_path, candidate_path, tree_path)
+
+        self.assertEqual(built["gate1"]["exact_cost_survivors"], ["NQ/5m/repriced"])
+        self.assertEqual(built["gate1"]["exact_5bps_survivors"], [])
+        self.assertEqual(built["gate1"]["cost_gate_authority"], "instrument_cost")
+        self.assertTrue(built["gate1"]["has_declared_cost_survivor"])
+        self.assertNotIn("no_real_cost_5bps_survivor", built["blockers"])
+        self.assertEqual(built["decision"], "learning_admitted_live_blocked")
+
     def test_single_cost_stress_dict_schema_counts_5bps_survivor(self) -> None:
         metrics = {
             "branch_path": "TrendExpansion -> CryptoKstCoppockMomentum -> bybit_injusdt_kst_coppock_momentum_30m_exact_v1",
@@ -272,6 +333,71 @@ class RegimeRootSurvivorBlockerReportTests(unittest.TestCase):
             built = report.build_report(gate1_path, candidate_path, tree_path)
 
         self.assertEqual(built["gate1"]["exact_5bps_survivors"], ["ETN/5m/quality"])
+        self.assertNotIn("no_real_cost_5bps_survivor", built["blockers"])
+
+    def test_futures_instrument_cost_survivor_is_real_cost_even_when_5bps_stress_fails(self) -> None:
+        metrics = {
+            "branch_path": "RangeReversion -> FuturesCostRevival -> factor_v1",
+            "branch_fields_preserved": True,
+            "regime_confidence": 0.97,
+            "long_run_expectancy_after_declared_friction": 8.42,
+            "leakage_check": "pass",
+            "provider_state": "ready",
+            "raw_scored_mature_rows": 30,
+            "production_validation_rows": 30,
+            "observation_validation_rows": 30,
+            "cost_stress": [
+                {
+                    "label": "NQ/5m/cost_revival",
+                    "symbol": "NQ",
+                    "asset_class": "futures",
+                    "trade_count": 1362,
+                    "survives_5bps_per_side": False,
+                    "5bps_per_side_total_profit_pct": -118.03,
+                    "survives_instrument_cost": True,
+                    "instrument_cost_total_profit_pct": 8.42,
+                    "cost_profile_id": "CME_NQ_IBKR_verified_20260530_v1",
+                    "cost_stress_5bps_role": "telemetry_not_futures_hard_gate",
+                }
+            ],
+        }
+        candidate = {
+            "candidate_status": "execution_observe_only",
+            "actionable": False,
+            "pre_bayes_evidence_filter": {
+                "gating_status": "pass_neutralized",
+                "conflict_flags": [],
+                "evidence_assignments": {
+                    "regime_profit_branch_path": metrics["branch_path"],
+                    "regime_confidence": 0.97,
+                },
+            },
+        }
+        tree = {
+            "output": {
+                "execution_readiness": 0.34,
+                "ranker_validation_ready": False,
+                "path_ranker_score_visible_to_execution_tree": True,
+                "path_ranker_score_used_by_execution_tree": False,
+            }
+        }
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            root = Path(tmpdir)
+            gate1_path = root / "gate1.json"
+            candidate_path = root / "candidate.json"
+            tree_path = root / "tree.json"
+            gate1_path.write_text(__import__("json").dumps(metrics), encoding="utf-8")
+            candidate_path.write_text(__import__("json").dumps(candidate), encoding="utf-8")
+            tree_path.write_text(__import__("json").dumps(tree), encoding="utf-8")
+
+            built = report.build_report(gate1_path, candidate_path, tree_path)
+
+        self.assertEqual(built["gate1"]["exact_5bps_survivors"], [])
+        self.assertEqual(built["gate1"]["exact_instrument_cost_survivors"], ["NQ/5m/cost_revival"])
+        self.assertEqual(built["gate1"]["exact_real_cost_survivors"], ["NQ/5m/cost_revival"])
+        self.assertTrue(built["gate1"]["has_real_cost_survivor"])
+        self.assertNotIn("no_real_cost_survivor", built["blockers"])
         self.assertNotIn("no_real_cost_5bps_survivor", built["blockers"])
 
     def test_pass_hard_pre_bayes_status_is_not_a_blocker(self) -> None:
@@ -969,7 +1095,7 @@ class RegimeRootSurvivorBlockerReportTests(unittest.TestCase):
         self.assertFalse(built["trade_usable"])
         self.assertFalse(lifecycle["live_trade"]["promotion_allowed"])
         self.assertIn(
-            "no_real_cost_5bps_survivor",
+            "no_real_cost_survivor",
             lifecycle["paper_admission"]["blockers"],
         )
 

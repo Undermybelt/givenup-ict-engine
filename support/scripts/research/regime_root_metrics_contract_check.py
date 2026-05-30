@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Validate Board B metrics against regime-root and 5bps gate contracts."""
+"""Validate Board B metrics against regime-root and real-cost gate contracts."""
 
 from __future__ import annotations
 
@@ -88,6 +88,14 @@ CISD_CONFIRMATION_KEYS = (
 )
 
 MIN_TREND_ROOT_POSTERIOR = 0.60
+FUTURES_ROOTS = {
+    "ES", "MES", "NQ", "MNQ", "YM", "MYM", "RTY", "M2K",
+    "GC", "MGC", "XAU", "SI", "SIL", "HG",
+    "CL", "MCL", "NG",
+    "ZN", "ZB", "ZF",
+    "ZC", "ZS", "ZW", "LE", "BRE",
+    "6E", "M6E",
+}
 
 TREND_ROOT_BRANCH_KEYWORDS = (
     "cisd",
@@ -210,6 +218,92 @@ def row_survives_5bps(row: dict[str, Any]) -> bool:
     return False
 
 
+def known_futures_root(value: Any) -> bool:
+    if not isinstance(value, str):
+        return False
+    compact = value.upper().strip()
+    if not compact:
+        return False
+    alnum = "".join(ch for ch in compact if ch.isalnum())
+    for root in sorted(FUTURES_ROOTS, key=len, reverse=True):
+        if alnum.startswith(root):
+            return True
+    return False
+
+
+def cost_profile_verified(value: Any) -> bool:
+    if not isinstance(value, str):
+        return False
+    profile_id = value.strip().lower()
+    if not profile_id:
+        return False
+    invalid_tokens = ("unknown", "missing", "unverified", "cost_model_unverified")
+    return not any(token in profile_id for token in invalid_tokens)
+
+
+def instrument_cost_survivor_hints(payload: dict[str, Any]) -> set[str]:
+    hints: set[str] = set()
+    for key in (
+        "survivors_instrument_cost",
+        "exact_instrument_cost_survivors",
+        "survivors_real_cost",
+        "exact_real_cost_survivors",
+        "exact_cost_survivors",
+    ):
+        for value in listify(payload.get(key)):
+            if isinstance(value, str) and value:
+                hints.add(value)
+    return hints
+
+
+def instrument_cost_authority_declared(payload: dict[str, Any]) -> bool:
+    authority = payload.get("cost_gate_authority")
+    if isinstance(authority, str) and authority.strip().lower() in {"instrument_cost", "real_cost"}:
+        return True
+    return False
+
+
+def row_is_futures_instrument_cost(row: dict[str, Any], payload: dict[str, Any]) -> bool:
+    class_values = [
+        row.get("asset_class"),
+        row.get("instrument_class"),
+        row.get("security_type"),
+        row.get("sec_type"),
+        row.get("product_type"),
+    ]
+    has_futures_class = any(
+        isinstance(value, str) and ("future" in value.lower() or value.strip().upper() == "FUT")
+        for value in class_values
+    )
+    has_futures_symbol = any(known_futures_root(row.get(key)) for key in ("label", "symbol", "contract", "root"))
+    profile_id = row.get("cost_profile_id")
+    profile_points_to_futures = isinstance(profile_id, str) and any(
+        token in profile_id.upper() for token in ("CME", "CBOT", "COMEX", "NYMEX", "FUT")
+    )
+    verified_profile = cost_profile_verified(profile_id)
+    declared_exact_survivor = (
+        instrument_cost_authority_declared(payload)
+        and row_label(row) in instrument_cost_survivor_hints(payload)
+    )
+    return (verified_profile or declared_exact_survivor) and (
+        has_futures_class or has_futures_symbol or profile_points_to_futures
+    )
+
+
+def row_survives_instrument_cost(row: dict[str, Any]) -> bool:
+    if row.get("survives_instrument_cost") is True:
+        return True
+    for key in ("instrument_cost_total_profit_pct", "net_after_instrument_cost_pct"):
+        value = numeric_value(row.get(key))
+        if value is not None:
+            return value > 0.0
+    return False
+
+
+def row_survives_real_cost(row: dict[str, Any], payload: dict[str, Any]) -> bool:
+    return row_survives_5bps(row) or (row_is_futures_instrument_cost(row, payload) and row_survives_instrument_cost(row))
+
+
 def exact_5bps_survivors(payload: dict[str, Any]) -> list[str]:
     explicit = set(survivor_values(payload, FIVE_BPS_SURVIVOR_KEYS))
     survivors: list[str] = []
@@ -231,6 +325,21 @@ def exact_5bps_survivors(payload: dict[str, Any]) -> list[str]:
                 survivors.append(value)
                 break
     return sorted(set(survivors))
+
+
+def exact_instrument_cost_survivors(payload: dict[str, Any]) -> list[str]:
+    survivors: list[str] = []
+    for row in cost_rows(payload):
+        label = row_label(row)
+        trade_count = row_trade_count(row)
+        has_trades = trade_count is not None and trade_count > 0
+        if row_is_futures_instrument_cost(row, payload) and row_survives_instrument_cost(row) and has_trades:
+            survivors.append(label or "cost_row")
+    return sorted(set(survivors))
+
+
+def exact_real_cost_survivors(payload: dict[str, Any]) -> list[str]:
+    return sorted(set(exact_5bps_survivors(payload) + exact_instrument_cost_survivors(payload)))
 
 
 def positive_5bps_rows_without_trade_count(payload: dict[str, Any]) -> list[str]:
@@ -396,6 +505,8 @@ def check_payload(
     )
     gates_open = downstream_gates_open(payload)
     exact_5bps = exact_5bps_survivors(payload)
+    exact_instrument_cost = exact_instrument_cost_survivors(payload)
+    exact_real_cost = sorted(set(exact_5bps + exact_instrument_cost))
     five_bps_without_trade_count = positive_5bps_rows_without_trade_count(payload)
     two_bps_survivors = survivor_values(payload, TWO_BPS_SURVIVOR_KEYS)
     five_bps_survivors = survivor_values(payload, FIVE_BPS_SURVIVOR_KEYS)
@@ -409,13 +520,13 @@ def check_payload(
         )
     if branch_path != normalized["canonical_branch_path"]:
         feedback_blocking_violations.append("branch_path_not_canonical_regime_root")
-    if gates_open and not exact_5bps:
-        feedback_blocking_violations.append("downstream_open_without_exact_5bps_survivor")
-    if gates_open and five_bps_without_trade_count and not exact_5bps:
+    if gates_open and not exact_real_cost:
+        feedback_blocking_violations.append("downstream_open_without_exact_real_cost_survivor")
+    if gates_open and five_bps_without_trade_count and not exact_real_cost:
         feedback_blocking_violations.append("cost_rows_5bps_positive_without_trade_count_proof")
-    if gates_open and two_bps_survivors and not exact_5bps:
+    if gates_open and two_bps_survivors and not exact_real_cost:
         feedback_blocking_violations.append("survivors_2bps_used_as_downstream_gate")
-    if gates_open and five_bps_survivors and not exact_5bps:
+    if gates_open and five_bps_survivors and not exact_real_cost:
         feedback_blocking_violations.append("survivors_5bps_without_cost_row_used_as_downstream_gate")
     if not payload.get("branch_fields_preserved", bool(branch_path)):
         feedback_blocking_violations.append("branch_fields_not_preserved")
@@ -439,12 +550,14 @@ def check_payload(
             "five_bps": five_bps_survivors,
             "exact_5bps": exact_5bps,
             "exact_5bps_density": exact_5bps,
+            "instrument_cost": exact_instrument_cost,
+            "real_cost": exact_real_cost,
             "five_bps_without_trade_count": five_bps_without_trade_count,
         },
         "density_gate": {
             "min_trades_per_day": None,
             "status": "cancelled",
-            "requirement": "trade_count_gt_0_and_positive_exact_5bps",
+            "requirement": "trade_count_gt_0_and_positive_exact_real_cost",
         },
         "min_trend_root_posterior": MIN_TREND_ROOT_POSTERIOR,
     }

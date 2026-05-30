@@ -212,14 +212,61 @@ class SimulatedFeedbackAdmissionGuardTests(unittest.TestCase):
 
         result = guard.validate_bundle(rows, summary=summary)
 
-        self.assertFalse(result["blocker_categories"]["cost_5bps"]["ok"])
+        self.assertFalse(result["blocker_categories"]["cost_real"]["ok"])
         self.assertFalse(result["blocker_categories"]["provider_parity"]["ok"])
         self.assertFalse(result["blocker_categories"]["validation"]["ok"])
         self.assertFalse(result["blocker_categories"]["execution_readiness"]["ok"])
-        self.assertIn("rerun_exact_5bps_cost_stress", result["next_action_keywords"])
+        self.assertIn("rerun_exact_real_cost_check", result["next_action_keywords"])
         self.assertIn("prove_provider_parity", result["next_action_keywords"])
         self.assertIn("repair_validation_rows", result["next_action_keywords"])
         self.assertIn("repair_execution_readiness", result["next_action_keywords"])
+
+    def test_allows_futures_instrument_cost_when_5bps_stress_fails(self) -> None:
+        rows = [
+            {
+                "trade_id": "sim-1",
+                "feedback_source": "retained_real_event_label_simulation",
+                "open_ts_ms": 1778248740000,
+                "branch_path": "TrendExpansion -> IntradayMomentumCostWindow -> futures_cost_revival -> test_v1",
+                "regime_profit_branch_path": "TrendExpansion -> IntradayMomentumCostWindow -> futures_cost_revival -> test_v1",
+                "main_regime": "TrendExpansion",
+                "mtf_trend_resonance": {
+                    "enabled": True,
+                    "aligned": True,
+                    "min_aligned": 3,
+                    "aligned_timeframes": ["5m", "15m", "30m"],
+                },
+            }
+        ]
+        summary = {
+            "source": "retained_real_event_label_simulation",
+            "trade_count": 1362,
+            "provider_parity": True,
+            "cost_stress": [
+                {
+                    "label": "NQ/5m/cost_revival",
+                    "symbol": "NQ",
+                    "asset_class": "futures",
+                    "trade_count": 1362,
+                    "survives_5bps_per_side": False,
+                    "5bps_per_side_total_profit_pct": -118.03,
+                    "survives_instrument_cost": True,
+                    "instrument_cost_total_profit_pct": 8.42,
+                    "cost_profile_id": "CME_NQ_IBKR_verified_20260530_v1",
+                    "cost_stress_5bps_role": "telemetry_not_futures_hard_gate",
+                }
+            ],
+            "raw_scored_mature_rows": 30,
+            "production_validation_rows": 30,
+            "observation_validation_rows": 30,
+            "execution_readiness": 0.45,
+            "actionable": True,
+        }
+
+        result = guard.validate_bundle(rows, summary=summary)
+
+        self.assertTrue(result["blocker_categories"]["cost_real"]["ok"])
+        self.assertNotIn("rerun_exact_real_cost_check", result["next_action_keywords"])
 
     def test_allows_downstream_prerequisite_summary_when_all_evidence_present(self) -> None:
         rows = [

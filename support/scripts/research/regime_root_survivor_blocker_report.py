@@ -16,6 +16,22 @@ PRE_BAYES_ACCEPTED_GATE_STATUSES = {"pass", "pass_hard", "pass_neutralized"}
 VALIDATION_MIN_ROWS = 30
 REGIME_CONFIDENCE_FLOOR = 0.95
 LIVE_EXECUTION_READINESS_FLOOR = 0.45
+FUTURES_COST_ROW_KEYS = (
+    "cost_row",
+    "cost_rows",
+    "cost_stress",
+    "cost_stress_rows",
+    "selected_gate1_row",
+    "rows",
+)
+FUTURES_ROOTS = {
+    "ES", "MES", "NQ", "MNQ", "YM", "MYM", "RTY", "M2K",
+    "GC", "MGC", "XAU", "SI", "SIL", "HG",
+    "CL", "MCL", "NG",
+    "ZN", "ZB", "ZF",
+    "ZC", "ZS", "ZW", "LE", "BRE",
+    "6E", "M6E",
+}
 
 
 def practical_admission_flags(branch_local_admitted: bool, extension_complete: bool = False) -> dict[str, bool]:
@@ -220,15 +236,8 @@ def cost_survivors_5bps(metrics: dict[str, Any]) -> list[Any]:
             key.startswith("exact_") and key.endswith("_survivors_5bps")
         ):
             survivors.extend(listify(value))
-    cost_rows: list[dict[str, Any]] = []
-    for key in ("cost_row", "cost_rows", "cost_stress", "cost_stress_rows", "selected_gate1_row", "rows"):
-        value = metrics.get(key)
-        if isinstance(value, dict):
-            cost_rows.append(value)
-        elif isinstance(value, list):
-            cost_rows.extend(row for row in value if isinstance(row, dict))
 
-    for cost_row in cost_rows:
+    for cost_row in cost_rows_from_metrics(metrics):
         try:
             trade_count = cost_row.get("trade_count") or 0
             net_5bps = first_present(
@@ -269,6 +278,131 @@ def cost_survivors_5bps(metrics: dict[str, Any]) -> list[Any]:
             or "exact_branch_survived"
         )
     return sorted(set(survivors))
+
+
+def cost_rows_from_metrics(metrics: dict[str, Any]) -> list[dict[str, Any]]:
+    cost_rows: list[dict[str, Any]] = []
+    for key in FUTURES_COST_ROW_KEYS:
+        value = metrics.get(key)
+        if isinstance(value, dict):
+            cost_rows.append(value)
+        elif isinstance(value, list):
+            cost_rows.extend(row for row in value if isinstance(row, dict))
+    return cost_rows
+
+
+def cost_row_label(row: dict[str, Any]) -> Any:
+    return (
+        row.get("label")
+        or row.get("package_id")
+        or row.get("strategy_id")
+        or row.get("factor_id")
+        or row.get("symbol")
+        or "cost_row"
+    )
+
+
+def known_futures_root(value: Any) -> bool:
+    if not isinstance(value, str):
+        return False
+    compact = value.upper().strip()
+    if not compact:
+        return False
+    alnum = "".join(ch for ch in compact if ch.isalnum())
+    for root in sorted(FUTURES_ROOTS, key=len, reverse=True):
+        if alnum.startswith(root):
+            return True
+    return False
+
+
+def cost_profile_verified(value: Any) -> bool:
+    if not isinstance(value, str):
+        return False
+    profile_id = value.strip().lower()
+    if not profile_id:
+        return False
+    invalid_tokens = ("unknown", "missing", "unverified", "cost_model_unverified")
+    return not any(token in profile_id for token in invalid_tokens)
+
+
+def instrument_cost_survivor_hints(metrics: dict[str, Any]) -> set[str]:
+    hints: set[str] = set()
+    for key in (
+        "survivors_instrument_cost",
+        "exact_instrument_cost_survivors",
+        "survivors_real_cost",
+        "exact_real_cost_survivors",
+        "exact_cost_survivors",
+    ):
+        for value in listify(metrics.get(key)):
+            if isinstance(value, str) and value:
+                hints.add(value)
+    return hints
+
+
+def instrument_cost_authority_declared(metrics: dict[str, Any]) -> bool:
+    authority = metrics.get("cost_gate_authority")
+    if isinstance(authority, str) and authority.strip().lower() in {"instrument_cost", "real_cost"}:
+        return True
+    return False
+
+
+def futures_instrument_cost_row(row: dict[str, Any], metrics: dict[str, Any]) -> bool:
+    class_values = [
+        row.get("asset_class"),
+        row.get("instrument_class"),
+        row.get("security_type"),
+        row.get("sec_type"),
+        row.get("product_type"),
+    ]
+    has_futures_class = any(
+        isinstance(value, str) and ("future" in value.lower() or value.strip().upper() == "FUT")
+        for value in class_values
+    )
+    has_futures_symbol = any(known_futures_root(row.get(key)) for key in ("label", "symbol", "contract", "root"))
+    profile_id = row.get("cost_profile_id")
+    profile_points_to_futures = isinstance(profile_id, str) and any(
+        token in profile_id.upper() for token in ("CME", "CBOT", "COMEX", "NYMEX", "FUT")
+    )
+    verified_profile = cost_profile_verified(profile_id)
+    declared_exact_survivor = (
+        instrument_cost_authority_declared(metrics)
+        and cost_row_label(row) in instrument_cost_survivor_hints(metrics)
+    )
+    return (verified_profile or declared_exact_survivor) and (
+        has_futures_class or has_futures_symbol or profile_points_to_futures
+    )
+
+
+def cost_survivors_instrument_cost(metrics: dict[str, Any]) -> list[Any]:
+    survivors: list[Any] = []
+    for cost_row in cost_rows_from_metrics(metrics):
+        trade_count = intish(cost_row.get("trade_count")) or 0
+        net_instrument_cost = first_present(
+            cost_row.get("instrument_cost_total_profit_pct"),
+            cost_row.get("net_after_instrument_cost_pct"),
+        )
+        survives_instrument_cost = (
+            cost_row.get("survives_instrument_cost") is True
+            or (floatish(net_instrument_cost) is not None and floatish(net_instrument_cost) > 0.0)
+        )
+        if trade_count > 0 and survives_instrument_cost and futures_instrument_cost_row(cost_row, metrics):
+            survivors.append(cost_row_label(cost_row))
+    return sorted(set(survivors))
+
+
+def cost_gate_authority(exact_5bps: list[Any], exact_instrument_cost: list[Any]) -> str:
+    if exact_instrument_cost and exact_5bps:
+        return "mixed_real_cost"
+    if exact_instrument_cost:
+        return "instrument_cost"
+    if exact_5bps:
+        return "5bps_per_side"
+    return "none"
+
+
+def cost_survivors_real_cost(metrics: dict[str, Any]) -> list[Any]:
+    return sorted(set(cost_survivors_5bps(metrics) + cost_survivors_instrument_cost(metrics)))
 
 
 def validation_report(*sources: dict[str, Any]) -> dict[str, Any]:
@@ -418,8 +552,8 @@ def lifecycle_decision(report: dict[str, Any]) -> tuple[dict[str, Any], str]:
             continue
         learning_blockers.append(f"pre_bayes_conflict:{flag}")
 
-    if not gate1["has_5bps_survivor"]:
-        paper_blockers.append("no_real_cost_5bps_survivor")
+    if not gate1.get("has_real_cost_survivor", gate1["has_5bps_survivor"]):
+        paper_blockers.append("no_real_cost_survivor")
     if validation.get("raw_scored_mature_shortfall_rows", 0) > 0:
         paper_blockers.append("raw_scored_mature_below_30")
     if validation.get("production_validation_shortfall_rows", 0) > 0:
@@ -506,7 +640,7 @@ def classify(report: dict[str, Any]) -> tuple[str, list[str], str]:
         decision = "candidate_meets_current_gate_shape"
         next_action = "run full promotion verification, including fresh provider parity and repeated readiness stability."
     elif decision == "learning_admitted_paper_observe":
-        next_action = "preserve as learning-admitted paper/sim observation and accumulate same-root validation, 5bps survivor, and forward density evidence before live promotion."
+        next_action = "preserve as learning-admitted paper/sim observation and accumulate same-root validation, real-cost survivor, and forward density evidence before live promotion."
     elif decision == "learning_admitted_live_blocked":
         next_action = "preserve as regime-conditioned learning evidence while repairing live execution readiness, validation, and ranker-consumption blockers."
     else:
@@ -525,10 +659,12 @@ def build_report(gate1_path: Path, execution_candidate_path: Path, execution_tre
     tree_output = tree.get("output") if isinstance(tree.get("output"), dict) else {}
 
     exact_5bps = cost_survivors_5bps(gate1)
+    exact_instrument_cost = cost_survivors_instrument_cost(gate1)
+    exact_real_cost = sorted(set(exact_5bps + exact_instrument_cost))
     branch_path = gate1_branch_path(gate1, filter_payload)
     normalized_branch = tree_normalizer.normalize_branch_path(
         str(branch_path or ""),
-        extract_branch_labels(gate1, exact_5bps),
+        extract_branch_labels(gate1, exact_real_cost),
     )
     report = {
         "schema_version": "regime-root-survivor-blocker-report/v1",
@@ -547,6 +683,13 @@ def build_report(gate1_path: Path, execution_candidate_path: Path, execution_tre
             "branch_fields_preserved": bool(gate1.get("branch_fields_preserved") or branch_path),
             "has_5bps_survivor": bool(exact_5bps),
             "exact_5bps_survivors": exact_5bps,
+            "has_instrument_cost_survivor": bool(exact_instrument_cost),
+            "exact_instrument_cost_survivors": exact_instrument_cost,
+            "has_real_cost_survivor": bool(exact_real_cost),
+            "exact_real_cost_survivors": exact_real_cost,
+            "has_declared_cost_survivor": bool(exact_real_cost),
+            "exact_cost_survivors": exact_real_cost,
+            "cost_gate_authority": cost_gate_authority(exact_5bps, exact_instrument_cost),
             "rank_total_trade_count": gate1.get("rank_total_trade_count"),
             "decision": gate1.get("decision"),
         },
@@ -632,6 +775,8 @@ def render_markdown(report: dict[str, Any]) -> str:
         "",
         f"- branch_fields_preserved: `{report['gate1']['branch_fields_preserved']}`",
         f"- exact_5bps_survivors: `{','.join(report['gate1']['exact_5bps_survivors']) or 'none'}`",
+        f"- exact_instrument_cost_survivors: `{','.join(report['gate1'].get('exact_instrument_cost_survivors') or []) or 'none'}`",
+        f"- exact_real_cost_survivors: `{','.join(report['gate1'].get('exact_real_cost_survivors') or []) or 'none'}`",
         f"- rank_total_trade_count: `{report['gate1']['rank_total_trade_count']}`",
         "",
         "## Pre-Bayes / Execution",
