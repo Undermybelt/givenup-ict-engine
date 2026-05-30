@@ -305,13 +305,32 @@ def cost_row_label(row: dict[str, Any]) -> Any:
 def known_futures_root(value: Any) -> bool:
     if not isinstance(value, str):
         return False
-    compact = value.upper().strip()
-    if not compact:
+    return futures_root_token_present(value)
+
+
+def futures_root_token_present(value: Any) -> bool:
+    if not isinstance(value, str):
         return False
-    alnum = "".join(ch for ch in compact if ch.isalnum())
+    text = value.upper().strip()
+    if not text:
+        return False
+    tokens = [token for token in re.split(r"[^A-Z0-9]+", text) if token]
+    compact = "".join(ch for ch in text if ch.isalnum())
+    if compact:
+        tokens.append(compact)
     for root in sorted(FUTURES_ROOTS, key=len, reverse=True):
-        if alnum.startswith(root):
-            return True
+        for token in tokens:
+            if token == root:
+                return True
+            if not token.startswith(root):
+                continue
+            suffix = token[len(root):]
+            if not suffix:
+                return True
+            if suffix.startswith("USD") or suffix[0].isdigit():
+                return True
+            if suffix[0] in "FGHJKMNQUVXZ" and suffix[1:].isdigit():
+                return True
     return False
 
 
@@ -408,6 +427,68 @@ def futures_instrument_cost_row(row: dict[str, Any], metrics: dict[str, Any]) ->
     )
 
 
+def futures_context_present(metrics: dict[str, Any]) -> bool:
+    for row in cost_rows_from_metrics(metrics):
+        if row_is_futures_context(row, metrics):
+            return True
+    for key in ("branch_path", "factor_id", "strategy_id", "package_id"):
+        value = metrics.get(key)
+        if isinstance(value, str) and "tomac" in value.lower() and futures_root_token_present(value):
+            return True
+    provider_rows = metrics.get("provider_rows")
+    if isinstance(provider_rows, list):
+        for row in provider_rows:
+            if isinstance(row, dict) and row_is_futures_context(row, metrics):
+                return True
+    labels = metrics.get("labels")
+    if isinstance(labels, dict) and row_is_futures_context(labels, metrics):
+        return True
+    return False
+
+
+def row_is_futures_context(row: dict[str, Any], metrics: dict[str, Any]) -> bool:
+    class_values = [
+        row.get("asset_class"),
+        row.get("instrument_class"),
+        row.get("security_type"),
+        row.get("sec_type"),
+        row.get("product_type"),
+        row.get("product"),
+        row.get("category"),
+    ]
+    if any(isinstance(value, str) and ("future" in value.lower() or value.strip().upper() == "FUT") for value in class_values):
+        return True
+    if any(known_futures_root(row.get(key)) for key in ("symbol", "contract", "root")):
+        return True
+    profile_id = row.get("cost_profile_id")
+    if isinstance(profile_id, str) and any(token in profile_id.upper() for token in ("CME", "CBOT", "COMEX", "NYMEX", "FUT")):
+        return True
+    role = str(first_present(row.get("cost_stress_5bps_role"), metrics.get("cost_stress_5bps_role")) or "").lower()
+    row_text = " ".join(str(row.get(key) or "") for key in ("label", "package_id", "strategy_id", "factor_id", "symbol", "contract", "root"))
+    if "telemetry_not_futures_hard_gate" in role and futures_root_token_present(row_text):
+        return True
+    if "tomac" in row_text.lower() and futures_root_token_present(row_text):
+        return True
+    label = str(cost_row_label(row) or "")
+    return futures_root_token_present(label) and any(separator in label for separator in ("/", "_", "-"))
+
+
+def label_is_futures_5bps_stress(label: Any, metrics: dict[str, Any]) -> bool:
+    if not isinstance(label, str) or not label:
+        return False
+    for row in cost_rows_from_metrics(metrics):
+        if cost_row_label(row) == label and row_is_futures_context(row, metrics):
+            return True
+    if "tomac" in label.lower() and futures_root_token_present(label):
+        return True
+    if futures_context_present(metrics) and futures_root_token_present(label):
+        return True
+    role = str(metrics.get("cost_stress_5bps_role") or "").lower()
+    if "telemetry_not_futures_hard_gate" in role and futures_root_token_present(label):
+        return True
+    return futures_root_token_present(label) and any(separator in label for separator in ("/", "_", "-"))
+
+
 def cost_survivors_instrument_cost(metrics: dict[str, Any]) -> list[Any]:
     survivors: list[Any] = []
     for cost_row in cost_rows_from_metrics(metrics):
@@ -426,8 +507,6 @@ def cost_survivors_instrument_cost(metrics: dict[str, Any]) -> list[Any]:
 
 
 def cost_gate_authority(exact_5bps: list[Any], exact_instrument_cost: list[Any]) -> str:
-    if exact_instrument_cost and exact_5bps:
-        return "mixed_real_cost"
     if exact_instrument_cost:
         return "instrument_cost"
     if exact_5bps:
@@ -436,7 +515,12 @@ def cost_gate_authority(exact_5bps: list[Any], exact_instrument_cost: list[Any])
 
 
 def cost_survivors_real_cost(metrics: dict[str, Any]) -> list[Any]:
-    return sorted(set(cost_survivors_5bps(metrics) + cost_survivors_instrument_cost(metrics)))
+    instrument_survivors = cost_survivors_instrument_cost(metrics)
+    stress_survivors = [
+        label for label in cost_survivors_5bps(metrics)
+        if not label_is_futures_5bps_stress(label, metrics)
+    ]
+    return sorted(set(stress_survivors + instrument_survivors))
 
 
 def validation_report(*sources: dict[str, Any]) -> dict[str, Any]:
@@ -694,11 +778,13 @@ def build_report(gate1_path: Path, execution_candidate_path: Path, execution_tre
 
     exact_5bps = cost_survivors_5bps(gate1)
     exact_instrument_cost = cost_survivors_instrument_cost(gate1)
-    exact_real_cost = sorted(set(exact_5bps + exact_instrument_cost))
+    exact_real_cost = cost_survivors_real_cost(gate1)
+    exact_5bps_real_cost = [label for label in exact_5bps if label in exact_real_cost]
+    branch_label_hints = exact_real_cost or exact_5bps
     branch_path = gate1_branch_path(gate1, filter_payload)
     normalized_branch = tree_normalizer.normalize_branch_path(
         str(branch_path or ""),
-        extract_branch_labels(gate1, exact_real_cost),
+        extract_branch_labels(gate1, branch_label_hints),
     )
     report = {
         "schema_version": "regime-root-survivor-blocker-report/v1",
@@ -723,7 +809,7 @@ def build_report(gate1_path: Path, execution_candidate_path: Path, execution_tre
             "exact_real_cost_survivors": exact_real_cost,
             "has_declared_cost_survivor": bool(exact_real_cost),
             "exact_cost_survivors": exact_real_cost,
-            "cost_gate_authority": cost_gate_authority(exact_5bps, exact_instrument_cost),
+            "cost_gate_authority": cost_gate_authority(exact_5bps_real_cost, exact_instrument_cost),
             "rank_total_trade_count": gate1.get("rank_total_trade_count"),
             "decision": gate1.get("decision"),
         },

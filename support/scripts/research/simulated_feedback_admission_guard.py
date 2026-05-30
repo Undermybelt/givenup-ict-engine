@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Iterable
@@ -237,6 +238,9 @@ def _cost_real_reasons(payload: dict[str, object]) -> list[str]:
             "origin_1m_survivors_5bps_density",
         ),
     ):
+        hints = _stress_5bps_survivor_hints(payload)
+        if hints and all(_label_is_futures_5bps_stress(label, payload) for label in hints):
+            return ["futures_5bps_stress_without_verified_instrument_cost"]
         return []
     if any(_cost_row_survives_real_cost(row, payload) for row in _iter_cost_rows(payload)):
         return []
@@ -316,6 +320,8 @@ def _iter_cost_rows(payload: dict[str, object]) -> list[dict[str, object]]:
 def _cost_row_survives_real_cost(row: dict[str, object], payload: dict[str, object]) -> bool:
     if _cost_row_survives_instrument_cost(row, payload):
         return True
+    if _row_is_futures_5bps_stress(row, payload):
+        return False
     if _truthy(row.get("survives_5bps_per_side")):
         return _trade_count_from_row(row) > 0
     for key in ("net_after_5bps_side_pct", "net_after_5bps_per_side_pct", "5bps_per_side_total_profit_pct"):
@@ -393,8 +399,87 @@ def _instrument_cost_survivor_hints(payload: dict[str, object]) -> set[str]:
 def _known_futures_root(value: object) -> bool:
     if not isinstance(value, str):
         return False
-    alnum = "".join(ch for ch in value.upper().strip() if ch.isalnum())
-    return any(alnum.startswith(root) for root in sorted(FUTURES_ROOTS, key=len, reverse=True))
+    return _futures_root_token_present(value)
+
+
+def _futures_root_token_present(value: object) -> bool:
+    if not isinstance(value, str):
+        return False
+    text = value.upper().strip()
+    if not text:
+        return False
+    tokens = [token for token in re.split(r"[^A-Z0-9]+", text) if token]
+    compact = "".join(ch for ch in text if ch.isalnum())
+    if compact:
+        tokens.append(compact)
+    for root in sorted(FUTURES_ROOTS, key=len, reverse=True):
+        for token in tokens:
+            if token == root:
+                return True
+            if not token.startswith(root):
+                continue
+            suffix = token[len(root):]
+            if not suffix:
+                return True
+            if suffix.startswith("USD") or suffix[0].isdigit():
+                return True
+            if suffix[0] in "FGHJKMNQUVXZ" and suffix[1:].isdigit():
+                return True
+    return False
+
+
+def _row_is_futures_5bps_stress(row: dict[str, object], payload: dict[str, object]) -> bool:
+    class_values = [
+        row.get("asset_class"),
+        row.get("instrument_class"),
+        row.get("security_type"),
+        row.get("sec_type"),
+        row.get("product_type"),
+        row.get("product"),
+        row.get("category"),
+    ]
+    if any(isinstance(value, str) and ("future" in value.lower() or value.strip().upper() == "FUT") for value in class_values):
+        return True
+    if any(_known_futures_root(row.get(key)) for key in ("symbol", "contract", "root")):
+        return True
+    profile_id = row.get("cost_profile_id")
+    if isinstance(profile_id, str) and any(token in profile_id.upper() for token in ("CME", "CBOT", "COMEX", "NYMEX", "FUT")):
+        return True
+    role = str(row.get("cost_stress_5bps_role") or payload.get("cost_stress_5bps_role") or "").lower()
+    row_text = " ".join(str(row.get(key) or "") for key in ("label", "package_id", "strategy_id", "factor_id", "symbol", "contract", "root"))
+    if "telemetry_not_futures_hard_gate" in role and _futures_root_token_present(row_text):
+        return True
+    if "tomac" in row_text.lower() and _futures_root_token_present(row_text):
+        return True
+    return False
+
+
+def _stress_5bps_survivor_hints(payload: dict[str, object]) -> list[str]:
+    hints: list[str] = []
+    for key in (
+        "exact_5bps_survivors",
+        "origin_survivors_5bps",
+        "origin_survivors_5bps_density",
+        "exact_1m_survivors_5bps",
+        "origin_1m_survivors_5bps",
+        "origin_1m_survivors_5bps_density",
+    ):
+        value = payload.get(key)
+        if isinstance(value, list):
+            hints.extend(item for item in value if isinstance(item, str) and item)
+    return hints
+
+
+def _label_is_futures_5bps_stress(label: str, payload: dict[str, object]) -> bool:
+    for row in _iter_cost_rows(payload):
+        if _row_label(row) == label and _row_is_futures_5bps_stress(row, payload):
+            return True
+    if "tomac" in label.lower() and _futures_root_token_present(label):
+        return True
+    role = str(payload.get("cost_stress_5bps_role") or "").lower()
+    if "telemetry_not_futures_hard_gate" in role and _futures_root_token_present(label):
+        return True
+    return False
 
 
 def _cost_profile_verified(value: object) -> bool:
