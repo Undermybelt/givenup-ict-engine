@@ -189,6 +189,11 @@ class RegimeRootSurvivorBlockerReportTests(unittest.TestCase):
                     "instrument_cost_total_profit_pct": 1.05,
                     "survives_5bps_per_side": False,
                     "5bps_per_side_total_profit_pct": -118.03,
+                    "symbol": "NQ",
+                    "asset_class": "futures",
+                    "cost_profile_id": "CME_NQ_IBKR_verified_20260530_v1",
+                    "cost_model_status": "verified_ibkr_broker_side",
+                    "cost_model_verified_for_promotion": True,
                 }
             ],
             "regime_confidence": 0.97,
@@ -234,6 +239,70 @@ class RegimeRootSurvivorBlockerReportTests(unittest.TestCase):
         self.assertTrue(built["gate1"]["has_declared_cost_survivor"])
         self.assertNotIn("no_real_cost_5bps_survivor", built["blockers"])
         self.assertEqual(built["decision"], "learning_admitted_live_blocked")
+
+    def test_unverified_default_futures_cost_profile_does_not_count_as_real_cost(self) -> None:
+        metrics = {
+            "branch_path": "RangeReversion -> FuturesRepricedPullback -> tomac_rty_default_cost_v1",
+            "cost_gate_authority": "instrument_cost",
+            "cost_stress_5bps_role": "telemetry_not_futures_hard_gate",
+            "survivors_instrument_cost": ["RTY/5m/default-cost"],
+            "cost_stress": [
+                {
+                    "label": "RTY/5m/default-cost",
+                    "symbol": "RTY",
+                    "asset_class": "futures",
+                    "trade_count": 1362,
+                    "trades_per_day": 1.08,
+                    "survives_instrument_cost": True,
+                    "instrument_cost_total_profit_pct": 1.05,
+                    "survives_5bps_per_side": False,
+                    "5bps_per_side_total_profit_pct": -118.03,
+                    "cost_profile_id": "CME_RTY_default_v1",
+                    "cost_model_status": "default_assumption_unverified",
+                    "cost_model_verified_for_promotion": False,
+                }
+            ],
+            "regime_confidence": 0.97,
+            "rank_total_trade_count": 1362,
+            "raw_scored_mature_rows": 30,
+            "production_validation_rows": 30,
+            "observation_validation_rows": 30,
+        }
+        candidate = {
+            "candidate_status": "no_trade",
+            "actionable": False,
+            "pre_bayes_evidence_filter": {
+                "gating_status": "pass_neutralized",
+                "conflict_flags": [],
+                "evidence_assignments": {
+                    "regime_profit_branch_path": metrics["branch_path"],
+                },
+            },
+        }
+        tree = {
+            "output": {
+                "execution_readiness": 0.34,
+                "ranker_validation_ready": True,
+                "path_ranker_score_visible_to_execution_tree": True,
+                "path_ranker_score_used_by_execution_tree": False,
+            }
+        }
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            root = Path(tmpdir)
+            gate1_path = root / "gate1.json"
+            candidate_path = root / "candidate.json"
+            tree_path = root / "tree.json"
+            gate1_path.write_text(__import__("json").dumps(metrics), encoding="utf-8")
+            candidate_path.write_text(__import__("json").dumps(candidate), encoding="utf-8")
+            tree_path.write_text(__import__("json").dumps(tree), encoding="utf-8")
+
+            built = report.build_report(gate1_path, candidate_path, tree_path)
+
+        self.assertEqual(built["gate1"]["exact_instrument_cost_survivors"], [])
+        self.assertEqual(built["gate1"]["exact_real_cost_survivors"], [])
+        self.assertEqual(built["gate1"]["cost_gate_authority"], "none")
+        self.assertIn("no_real_cost_survivor", built["blockers"])
 
     def test_single_cost_stress_dict_schema_counts_5bps_survivor(self) -> None:
         metrics = {

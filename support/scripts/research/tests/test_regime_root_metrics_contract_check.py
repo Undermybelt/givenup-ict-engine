@@ -122,6 +122,46 @@ class RegimeRootMetricsContractCheckTests(unittest.TestCase):
         self.assertEqual(report["survivors"]["instrument_cost"], ["NQ/5m/cost_revival"])
         self.assertEqual(report["survivors"]["real_cost"], ["NQ/5m/cost_revival"])
 
+    def test_rejects_unverified_default_futures_instrument_cost_survivor(self) -> None:
+        metrics = {
+            "branch_path": "RangeReversion -> FuturesCostRevival -> factor_v1",
+            "branch_fields_preserved": True,
+            "cost_gate_authority": "instrument_cost",
+            "survivors_instrument_cost": ["RTY/5m/default-cost"],
+            "cost_stress": [
+                {
+                    "label": "RTY/5m/default-cost",
+                    "symbol": "RTY",
+                    "asset_class": "futures",
+                    "trade_count": 1362,
+                    "survives_5bps_per_side": False,
+                    "5bps_per_side_total_profit_pct": -118.03,
+                    "survives_instrument_cost": True,
+                    "instrument_cost_total_profit_pct": 8.42,
+                    "cost_profile_id": "CME_RTY_default_v1",
+                    "cost_model_status": "default_assumption_unverified",
+                    "cost_model_verified_for_promotion": False,
+                    "cost_stress_5bps_role": "telemetry_not_futures_hard_gate",
+                }
+            ],
+            "downstream_allowed": True,
+            "pre_bayes_allowed": True,
+            "bbn_allowed": True,
+            "catboost_allowed": True,
+            "execution_tree_allowed": True,
+        }
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            path = Path(tmpdir) / "terminal_metrics.json"
+            path.write_text(json.dumps(metrics), encoding="utf-8")
+
+            report = checker.check_metrics_file(path)
+
+        self.assertFalse(report["ok"])
+        self.assertIn("downstream_open_without_exact_real_cost_survivor", report["violations"])
+        self.assertEqual(report["survivors"]["instrument_cost"], [])
+        self.assertEqual(report["survivors"]["real_cost"], [])
+
     def test_accepts_canonical_branch_with_exact_5bps_gate(self) -> None:
         metrics = {
             "branch_path": "RangeReversion -> PullbackReclaim -> factor_v1",
@@ -171,6 +211,11 @@ class RegimeRootMetricsContractCheckTests(unittest.TestCase):
                     "instrument_cost_total_profit_pct": 1.05,
                     "survives_5bps_per_side": False,
                     "5bps_per_side_total_profit_pct": -118.03,
+                    "symbol": "NQ",
+                    "asset_class": "futures",
+                    "cost_profile_id": "CME_NQ_IBKR_verified_20260530_v1",
+                    "cost_model_status": "verified_ibkr_broker_side",
+                    "cost_model_verified_for_promotion": True,
                 }
             ],
             "downstream_allowed": True,

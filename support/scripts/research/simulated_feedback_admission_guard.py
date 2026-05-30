@@ -221,6 +221,14 @@ def _cost_real_reasons(payload: dict[str, object]) -> list[str]:
             "exact_instrument_cost_survivors",
             "survivors_instrument_cost",
             "exact_cost_survivors",
+        ),
+    ):
+        if any(_cost_row_survives_instrument_cost(row, payload) for row in _iter_cost_rows(payload)):
+            return []
+        return ["declared_instrument_cost_survivor_without_verified_cost_row"]
+    if _has_list_value(
+        payload,
+        (
             "exact_5bps_survivors",
             "origin_survivors_5bps",
             "origin_survivors_5bps_density",
@@ -348,12 +356,13 @@ def _is_futures_instrument_cost_row(row: dict[str, object], payload: dict[str, o
     profile_points_to_futures = isinstance(profile_id, str) and any(
         token in profile_id.upper() for token in ("CME", "CBOT", "COMEX", "NYMEX", "FUT")
     )
-    verified_profile = _cost_profile_verified(profile_id)
+    verified_profile = _row_cost_model_verified(row, payload)
     declared_exact_survivor = (
         str(payload.get("cost_gate_authority") or "").strip().lower() in {"instrument_cost", "real_cost"}
         and _row_label(row) in _instrument_cost_survivor_hints(payload)
     )
-    return (verified_profile or declared_exact_survivor) and (
+    hints = _instrument_cost_survivor_hints(payload)
+    return verified_profile and (declared_exact_survivor or not hints) and (
         has_futures_class or has_futures_symbol or profile_points_to_futures
     )
 
@@ -394,8 +403,42 @@ def _cost_profile_verified(value: object) -> bool:
     profile_id = value.strip().lower()
     if not profile_id:
         return False
-    invalid_tokens = ("unknown", "missing", "unverified", "cost_model_unverified")
-    return not any(token in profile_id for token in invalid_tokens)
+    invalid_tokens = (
+        "unknown",
+        "missing",
+        "unverified",
+        "default",
+        "assumption",
+        "alias",
+        "cost_model_unverified",
+    )
+    if any(token in profile_id for token in invalid_tokens):
+        return False
+    return "verified" in profile_id
+
+
+def _cost_status_verified(value: object) -> bool:
+    if not isinstance(value, str):
+        return False
+    status = value.strip().lower()
+    if not status:
+        return False
+    invalid_tokens = ("unverified", "default", "assumption", "alias", "missing", "unknown")
+    return status.startswith("verified") and not any(token in status for token in invalid_tokens)
+
+
+def _row_cost_model_verified(row: dict[str, object], payload: dict[str, object]) -> bool:
+    explicit = row.get("cost_model_verified_for_promotion")
+    if explicit is None:
+        explicit = row.get("promotion_cost_verified")
+    if explicit is False:
+        return False
+    return bool(
+        explicit is True
+        or _cost_status_verified(row.get("cost_model_status"))
+        or _cost_profile_verified(row.get("cost_profile_id"))
+        or (_cost_status_verified(payload.get("cost_model_status")) and payload.get("promotion_cost_verified") is True)
+    )
 
 
 def _trade_count_from_row(row: dict[str, object]) -> float:

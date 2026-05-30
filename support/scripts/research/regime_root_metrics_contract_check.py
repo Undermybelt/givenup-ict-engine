@@ -237,8 +237,42 @@ def cost_profile_verified(value: Any) -> bool:
     profile_id = value.strip().lower()
     if not profile_id:
         return False
-    invalid_tokens = ("unknown", "missing", "unverified", "cost_model_unverified")
-    return not any(token in profile_id for token in invalid_tokens)
+    invalid_tokens = (
+        "unknown",
+        "missing",
+        "unverified",
+        "default",
+        "assumption",
+        "alias",
+        "cost_model_unverified",
+    )
+    if any(token in profile_id for token in invalid_tokens):
+        return False
+    return "verified" in profile_id
+
+
+def cost_status_verified(value: Any) -> bool:
+    if not isinstance(value, str):
+        return False
+    status = value.strip().lower()
+    if not status:
+        return False
+    invalid_tokens = ("unverified", "default", "assumption", "alias", "missing", "unknown")
+    return status.startswith("verified") and not any(token in status for token in invalid_tokens)
+
+
+def row_cost_model_verified(row: dict[str, Any], payload: dict[str, Any]) -> bool:
+    explicit = row.get("cost_model_verified_for_promotion")
+    if explicit is None:
+        explicit = row.get("promotion_cost_verified")
+    if explicit is False:
+        return False
+    return bool(
+        explicit is True
+        or cost_status_verified(row.get("cost_model_status"))
+        or cost_profile_verified(row.get("cost_profile_id"))
+        or (cost_status_verified(payload.get("cost_model_status")) and payload.get("promotion_cost_verified") is True)
+    )
 
 
 def instrument_cost_survivor_hints(payload: dict[str, Any]) -> set[str]:
@@ -280,12 +314,12 @@ def row_is_futures_instrument_cost(row: dict[str, Any], payload: dict[str, Any])
     profile_points_to_futures = isinstance(profile_id, str) and any(
         token in profile_id.upper() for token in ("CME", "CBOT", "COMEX", "NYMEX", "FUT")
     )
-    verified_profile = cost_profile_verified(profile_id)
+    verified_profile = row_cost_model_verified(row, payload)
     declared_exact_survivor = (
         instrument_cost_authority_declared(payload)
         and row_label(row) in instrument_cost_survivor_hints(payload)
     )
-    return (verified_profile or declared_exact_survivor) and (
+    return verified_profile and (declared_exact_survivor or not instrument_cost_survivor_hints(payload)) and (
         has_futures_class or has_futures_symbol or profile_points_to_futures
     )
 
