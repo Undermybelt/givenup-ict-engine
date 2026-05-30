@@ -161,6 +161,38 @@ def signal(row, min_abs_1h_slope_bps=3.0, reclaim_bps_min=8.0):
 
         self.assertTrue(report["ok"], report["violations"])
 
+    def test_allows_trade_count_comparison_threshold_inside_non_cost_formula(self) -> None:
+        path = self.write_source(
+            """
+def score(trades):
+    return 1.0 - float(trades >= 0.10)
+"""
+        )
+
+        report = checker.check_source_file(path)
+
+        self.assertTrue(report["ok"], report["violations"])
+
+    def test_flags_named_fixed_bps_ladder_with_15bps_level(self) -> None:
+        path = self.write_source(
+            """
+BPS_LEVELS = (0, 5, 15)
+
+def summarize(gross, trades):
+    rows = []
+    for bps in BPS_LEVELS:
+        rows.append(gross - trades * bps * 0.02)
+    return rows
+"""
+        )
+
+        report = checker.check_source_file(path)
+
+        self.assertFalse(report["ok"])
+        kinds = {hit["violation"] for hit in report["violations"]}
+        self.assertIn("fixed_bps_cost_ladder", kinds)
+        self.assertIn("fixed_bps_cost_formula", kinds)
+
     def test_cli_reports_tracked_scope_without_runs_or_paper2code(self) -> None:
         good = self.write_source("slope_bps = 2.0\n", name="signal.py")
         bad = self.write_source("cost_bps = 5\n", name="run_bad.py")

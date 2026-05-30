@@ -12,6 +12,7 @@ from __future__ import annotations
 import argparse
 import ast
 import json
+import re
 import subprocess
 from dataclasses import dataclass
 from pathlib import Path
@@ -81,6 +82,26 @@ COST_FIELD_TOKENS = frozenset((
 ))
 COST_LITERAL_KEYS = frozenset(("fee", "cost", "commission", "friction"))
 FIXED_FRACTION_LITERALS = frozenset((0.0001, 0.0002, 0.0005, 0.001, 0.002, 0.005, 0.01))
+FIXED_BPS_TEXT_RE = re.compile(r"(?i)\d+(?:\.\d+)?[_-]?bps(?:[_-]per[_-]side)?")
+COST_AUTHORITY_TOKENS = frozenset((
+    "net",
+    "survive",
+    "survivor",
+    "positive",
+    "top_by",
+    "best",
+    "pf",
+    "profit_factor",
+    "trade",
+    "fee",
+    "cost",
+    "commission",
+    "friction",
+    "stress",
+    "total_profit",
+))
+PERCENT_SPACE_COST_LITERALS = frozenset((0.01, 0.02, 0.04, 0.05, 0.10, 0.1, 0.20, 0.2))
+TRADE_COUNT_NAMES = frozenset(("trades", "trade_count", "n_trades", "num_trades", "distinct_trades"))
 
 
 @dataclass(frozen=True)
@@ -165,6 +186,8 @@ def fixed_bps_field(
         return False
     if relax_diagnostic_terms and "diagnostic_stress" in lowered:
         return False
+    if FIXED_BPS_TEXT_RE.search(lowered) and any(token in lowered for token in COST_AUTHORITY_TOKENS):
+        return True
     return any(token in lowered for token in COST_FIELD_TOKENS)
 
 
@@ -229,6 +252,16 @@ def contains_fixed_bps_reference(
     return False
 
 
+def iter_nodes_outside_comparisons(node: ast.AST) -> Iterable[ast.AST]:
+    stack = [node]
+    while stack:
+        child = stack.pop()
+        if isinstance(child, ast.Compare):
+            continue
+        yield child
+        stack.extend(ast.iter_child_nodes(child))
+
+
 def contains_bps_formula(
     node: ast.AST,
     *,
@@ -238,7 +271,10 @@ def contains_bps_formula(
     saw_plain_bps_name = False
     saw_cost_scale = False
     saw_cost_literal = False
-    for child in ast.walk(node):
+    saw_trade_count_name = False
+    saw_percent_space_literal = False
+    saw_subtract = False
+    for child in iter_nodes_outside_comparisons(node):
         if isinstance(child, ast.Name):
             if fixed_bps_name(
                 child.id,
@@ -247,12 +283,22 @@ def contains_bps_formula(
                 saw_fixed_bps_name = True
             elif child.id == "bps":
                 saw_plain_bps_name = True
+            if child.id in TRADE_COUNT_NAMES:
+                saw_trade_count_name = True
+        if isinstance(child, ast.BinOp) and isinstance(child.op, ast.Sub):
+            saw_subtract = True
         value = numeric_value(child)
         if value is not None and value in {0.02, 0.0002, 0.0001, 1e-4, 10000.0, 10_000.0}:
             saw_cost_scale = True
         if value is not None and value in {0.02, 0.0002, 0.0001, 1e-4}:
             saw_cost_literal = True
-    return (saw_fixed_bps_name and saw_cost_scale) or (saw_plain_bps_name and saw_cost_literal)
+        if value is not None and value in PERCENT_SPACE_COST_LITERALS:
+            saw_percent_space_literal = True
+    return (
+        (saw_fixed_bps_name and saw_cost_scale)
+        or (saw_plain_bps_name and saw_cost_literal)
+        or (saw_trade_count_name and saw_percent_space_literal and saw_subtract)
+    )
 
 
 def assignment_is_readback_only(target_name: str, value: ast.AST | None) -> bool:
@@ -302,13 +348,36 @@ def iter_numeric_sequence(node: ast.AST) -> list[float] | None:
     return values
 
 
-def is_fixed_bps_ladder(loop: ast.For) -> bool:
+def numeric_sequence_aliases(tree: ast.AST) -> dict[str, list[float]]:
+    aliases: dict[str, list[float]] = {}
+    for node in ast.walk(tree):
+        if not isinstance(node, (ast.Assign, ast.AnnAssign)):
+            continue
+        values = iter_numeric_sequence(node.value)
+        if values is None:
+            continue
+        for target in assignment_targets(node):
+            if isinstance(target, ast.Name):
+                aliases[target.id] = values
+    return aliases
+
+
+def fixed_bps_ladder_values(loop_iter: ast.AST, aliases: dict[str, list[float]]) -> list[float] | None:
+    values = iter_numeric_sequence(loop_iter)
+    if values is not None:
+        return values
+    if isinstance(loop_iter, ast.Name):
+        return aliases.get(loop_iter.id)
+    return None
+
+
+def is_fixed_bps_ladder(loop: ast.For, aliases: dict[str, list[float]] | None = None) -> bool:
     if not isinstance(loop.target, ast.Name) or loop.target.id != "bps":
         return False
-    values = iter_numeric_sequence(loop.iter)
+    values = fixed_bps_ladder_values(loop.iter, aliases or {})
     if values is None:
         return False
-    return len(values) >= 2 and all(value in {0.0, 1.0, 2.0, 5.0, 10.0} for value in values)
+    return len(values) >= 2 and all(0.0 <= value <= 100.0 for value in values)
 
 
 def is_argparse_add_argument(node: ast.Call) -> bool:
@@ -318,6 +387,7 @@ def is_argparse_add_argument(node: ast.Call) -> bool:
 def check_tree(source: str, tree: ast.AST) -> list[Violation]:
     parents = {child: parent for parent in ast.walk(tree) for child in ast.iter_child_nodes(parent)}
     relax_diagnostic_terms = source_allows_diagnostic_stress(source)
+    sequence_aliases = numeric_sequence_aliases(tree)
     hits: list[Violation] = []
 
     for node in ast.walk(tree):
@@ -385,7 +455,7 @@ def check_tree(source: str, tree: ast.AST) -> list[Violation]:
                     ) and not assignment_is_readback_only(name, value):
                         add_hit(hits, source, node, "fixed_bps_cost_reference", "assignment derives from fixed-bps fee/cost reference")
 
-        if isinstance(node, ast.For) and is_fixed_bps_ladder(node):
+        if isinstance(node, ast.For) and is_fixed_bps_ladder(node, sequence_aliases):
             add_hit(hits, source, node, "fixed_bps_cost_ladder", "fixed bps ladder is not a verified instrument cost model")
 
         if isinstance(node, ast.BinOp) and contains_bps_formula(
@@ -500,6 +570,23 @@ def git_tracked_paths(repo_root: Path, paths: Sequence[Path], *, include_tests: 
     return sorted(set(tracked))
 
 
+def scan_paths_for_scope(
+    repo_root: Path,
+    roots: Sequence[Path],
+    *,
+    tracked: bool = False,
+    include_tests: bool = False,
+) -> list[Path]:
+    if not tracked:
+        return discover_paths(roots, include_tests=include_tests)
+
+    # Compatibility flag, not an escape hatch: historical callers pass
+    # ``--tracked`` in verification commands, but active untracked experiment
+    # scripts in the requested roots can still become copied gate authority.
+    absolute_roots = [root if root.is_absolute() else repo_root / root for root in roots]
+    return sorted(set(git_tracked_paths(repo_root, roots, include_tests=include_tests)) | set(discover_paths(absolute_roots, include_tests=include_tests)))
+
+
 def check_paths(paths: Sequence[Path]) -> dict:
     file_reports = [check_source_file(path) for path in paths]
     violations = []
@@ -522,7 +609,7 @@ def check_paths(paths: Sequence[Path]) -> dict:
 def build_arg_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("paths", nargs="*", type=Path, help="Files or directories to scan")
-    parser.add_argument("--tracked", action="store_true", help="Scan only git-tracked files under the paths")
+    parser.add_argument("--tracked", action="store_true", help="Compatibility mode: scan git-tracked files plus active untracked files under the paths")
     parser.add_argument("--include-tests", action="store_true", help="Include test files in the scan")
     parser.add_argument("--compact", action="store_true", help="Emit compact JSON without per-file pass reports")
     return parser
@@ -532,10 +619,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     args = build_arg_parser().parse_args(argv)
     repo_root = Path.cwd()
     roots = args.paths or list(DEFAULT_SCAN_ROOTS)
-    if args.tracked:
-        paths = git_tracked_paths(repo_root, roots, include_tests=args.include_tests)
-    else:
-        paths = discover_paths(roots, include_tests=args.include_tests)
+    paths = scan_paths_for_scope(repo_root, roots, tracked=args.tracked, include_tests=args.include_tests)
     report = check_paths(paths)
     if args.compact:
         payload = {key: value for key, value in report.items() if key != "file_reports"}
