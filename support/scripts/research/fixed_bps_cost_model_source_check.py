@@ -118,6 +118,7 @@ PERCENT_SPACE_COST_LITERALS = frozenset((
     0.3,
 ))
 TRADE_COUNT_NAMES = frozenset(("trades", "trade_count", "n_trades", "num_trades", "distinct_trades"))
+BPS_FORMULA_EMPTY = (False, False, False, False, False, False, False)
 
 
 @dataclass(frozen=True)
@@ -319,6 +320,124 @@ def contains_bps_formula(
     )
 
 
+def bps_formula_own_features(
+    node: ast.AST,
+    *,
+    relax_diagnostic_terms: bool = False,
+) -> tuple[bool, bool, bool, bool, bool, bool, bool]:
+    saw_fixed_bps_name = False
+    saw_plain_bps_name = False
+    saw_cost_scale = False
+    saw_cost_literal = False
+    saw_trade_count_name = False
+    saw_percent_space_literal = False
+    saw_subtract = False
+    if isinstance(node, ast.Name):
+        if fixed_bps_name(
+            node.id,
+            relax_diagnostic_terms=relax_diagnostic_terms,
+        ):
+            saw_fixed_bps_name = True
+        elif node.id == "bps":
+            saw_plain_bps_name = True
+        if node.id in TRADE_COUNT_NAMES:
+            saw_trade_count_name = True
+    if isinstance(node, ast.BinOp) and isinstance(node.op, ast.Sub):
+        saw_subtract = True
+    value = numeric_value(node)
+    if value is not None and value in {0.02, 0.0002, 0.0001, 1e-4, 10000.0, 10_000.0}:
+        saw_cost_scale = True
+    if value is not None and value in {0.02, 0.0002, 0.0001, 1e-4}:
+        saw_cost_literal = True
+    if value is not None and value in PERCENT_SPACE_COST_LITERALS:
+        saw_percent_space_literal = True
+    return (
+        saw_fixed_bps_name,
+        saw_plain_bps_name,
+        saw_cost_scale,
+        saw_cost_literal,
+        saw_trade_count_name,
+        saw_percent_space_literal,
+        saw_subtract,
+    )
+
+
+def merge_bps_formula_features(
+    left: tuple[bool, bool, bool, bool, bool, bool, bool],
+    right: tuple[bool, bool, bool, bool, bool, bool, bool],
+) -> tuple[bool, bool, bool, bool, bool, bool, bool]:
+    return tuple(a or b for a, b in zip(left, right))  # type: ignore[return-value]
+
+
+def bps_formula_features_by_node(
+    tree: ast.AST,
+    *,
+    relax_diagnostic_terms: bool = False,
+) -> dict[int, tuple[bool, bool, bool, bool, bool, bool, bool]]:
+    cache: dict[int, tuple[bool, bool, bool, bool, bool, bool, bool]] = {}
+
+    def visit(node: ast.AST) -> tuple[bool, bool, bool, bool, bool, bool, bool]:
+        if isinstance(node, ast.Compare):
+            cache[id(node)] = BPS_FORMULA_EMPTY
+            return BPS_FORMULA_EMPTY
+        features = bps_formula_own_features(
+            node,
+            relax_diagnostic_terms=relax_diagnostic_terms,
+        )
+        for child in ast.iter_child_nodes(node):
+            features = merge_bps_formula_features(features, visit(child))
+        cache[id(node)] = features
+        return features
+
+    visit(tree)
+    return cache
+
+
+def bps_formula_features_violate(features: tuple[bool, bool, bool, bool, bool, bool, bool]) -> bool:
+    (
+        saw_fixed_bps_name,
+        saw_plain_bps_name,
+        saw_cost_scale,
+        saw_cost_literal,
+        saw_trade_count_name,
+        saw_percent_space_literal,
+        saw_subtract,
+    ) = features
+    return (
+        (saw_fixed_bps_name and saw_cost_scale)
+        or (saw_plain_bps_name and saw_cost_literal)
+        or (saw_trade_count_name and saw_percent_space_literal and saw_subtract)
+    )
+
+
+def fixed_bps_reference_by_node(
+    tree: ast.AST,
+    *,
+    relax_diagnostic_terms: bool = False,
+) -> dict[int, bool]:
+    cache: dict[int, bool] = {}
+
+    def visit(node: ast.AST) -> bool:
+        found = False
+        if isinstance(node, ast.Name) and fixed_bps_name(
+            node.id,
+            relax_diagnostic_terms=relax_diagnostic_terms,
+        ):
+            found = True
+        if isinstance(node, ast.Attribute) and fixed_bps_name(
+            node.attr,
+            relax_diagnostic_terms=relax_diagnostic_terms,
+        ):
+            found = True
+        for child in ast.iter_child_nodes(node):
+            found = found or visit(child)
+        cache[id(node)] = found
+        return found
+
+    visit(tree)
+    return cache
+
+
 def assignment_is_readback_only(target_name: str, value: ast.AST | None) -> bool:
     lowered = target_name.lower()
     if any(token in lowered for token in ("key", "keys", "field", "fields", "token", "tokens")):
@@ -406,6 +525,14 @@ def check_tree(source: str, tree: ast.AST) -> list[Violation]:
     parents = {child: parent for parent in ast.walk(tree) for child in ast.iter_child_nodes(parent)}
     relax_diagnostic_terms = source_allows_diagnostic_stress(source)
     sequence_aliases = numeric_sequence_aliases(tree)
+    fixed_ref_cache = fixed_bps_reference_by_node(
+        tree,
+        relax_diagnostic_terms=relax_diagnostic_terms,
+    )
+    bps_formula_cache = bps_formula_features_by_node(
+        tree,
+        relax_diagnostic_terms=relax_diagnostic_terms,
+    )
     hits: list[Violation] = []
 
     for node in ast.walk(tree):
@@ -467,18 +594,18 @@ def check_tree(source: str, tree: ast.AST) -> list[Violation]:
                         value_num = numeric_value(value)
                         if value_num in FIXED_FRACTION_LITERALS:
                             add_hit(hits, source, node, "fixed_fraction_fee_literal", "fee/cost literal looks like hard-coded bps in return space")
-                    if contains_fixed_bps_reference(
-                        value,
-                        relax_diagnostic_terms=relax_diagnostic_terms,
-                    ) and not assignment_is_readback_only(name, value):
+                    if (
+                        value is not None
+                        and fixed_ref_cache.get(id(value), False)
+                        and not assignment_is_readback_only(name, value)
+                    ):
                         add_hit(hits, source, node, "fixed_bps_cost_reference", "assignment derives from fixed-bps fee/cost reference")
 
         if isinstance(node, ast.For) and is_fixed_bps_ladder(node, sequence_aliases):
             add_hit(hits, source, node, "fixed_bps_cost_ladder", "fixed bps ladder is not a verified instrument cost model")
 
-        if isinstance(node, ast.BinOp) and contains_bps_formula(
-            node,
-            relax_diagnostic_terms=relax_diagnostic_terms,
+        if isinstance(node, ast.BinOp) and bps_formula_features_violate(
+            bps_formula_cache.get(id(node), BPS_FORMULA_EMPTY)
         ):
             add_hit(hits, source, node, "fixed_bps_cost_formula", "formula subtracts a variable bps ladder in return/percent space")
 
