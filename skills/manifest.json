@@ -95,6 +95,21 @@
         "2026-05-30 paper strategy reserve",
         "2026-05-30 cross-asset carry risk reserve"
       ]
+    },
+    {
+      "id": "auto-quant-handoff-harness",
+      "path": "skills/auto-quant-handoff-harness/SKILL.md",
+      "purpose": "Plan/work/review contract for isolated Auto-Quant handoff lanes before adoption review.",
+      "runtime_mapping": [
+        "Auto-Quant handoff agent_workflow payload",
+        "Auto-Quant adoption-review return packets",
+        "Lane-local Auto-Quant workspace evidence"
+      ],
+      "source_review": [
+        "Claude Code Harness plan/work/review pattern",
+        "ict-engine Auto-Quant handoff contract",
+        "local Auto-Quant workspace isolation contract"
+      ]
     }
   ],
   "excluded_raw_sources": [

@@ -68,6 +68,17 @@ pub struct AutoQuantIterationUnitContext {
         Option<crate::application::auto_quant::pda_unit_batch::AutoQuantConsumerEvidenceProfile>,
 }
 
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
+pub struct AutoQuantAgentWorkflow {
+    pub workflow_style: String,
+    pub setup_commands: Vec<String>,
+    pub environment: Vec<String>,
+    pub phases: Vec<String>,
+    pub expected_artifacts: Vec<String>,
+    pub return_to_ict_engine: Vec<String>,
+    pub constraints: Vec<String>,
+}
+
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct AutoQuantResearchHandoffPayload {
     pub artifact_id: String,
@@ -97,6 +108,8 @@ pub struct AutoQuantResearchHandoffPayload {
     pub handoff_artifact_path: String,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub iteration_unit: Option<AutoQuantIterationUnitContext>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub agent_workflow: Option<AutoQuantAgentWorkflow>,
     pub suggested_commands: Vec<String>,
     pub suggested_next_steps: Vec<String>,
     pub agent_prompt: String,
@@ -302,6 +315,113 @@ fn normalize_workspace_data_key(value: &str) -> String {
         .filter(|ch| ch.is_ascii_alphanumeric())
         .flat_map(|ch| ch.to_lowercase())
         .collect()
+}
+
+fn path_safe_fragment(value: &str) -> String {
+    let mut fragment = String::new();
+    let mut last_was_separator = false;
+    for ch in value.chars() {
+        let next = if ch.is_ascii_alphanumeric() {
+            last_was_separator = false;
+            Some(ch.to_ascii_lowercase())
+        } else if !last_was_separator {
+            last_was_separator = true;
+            Some('_')
+        } else {
+            None
+        };
+        if let Some(ch) = next {
+            fragment.push(ch);
+        }
+    }
+    fragment.trim_matches('_').to_string()
+}
+
+fn build_auto_quant_agent_workflow(
+    payload: &AutoQuantResearchHandoffPayload,
+) -> AutoQuantAgentWorkflow {
+    let lane_root = PathBuf::from(&payload.state_dir)
+        .join("auto-quant/workspaces")
+        .join(path_safe_fragment(&payload.artifact_id));
+    let user_data = lane_root.join("user_data");
+    let strategies_dir = user_data.join("strategies");
+    let results_tsv = lane_root.join("results.tsv");
+    let plan_path = lane_root.join("plan.md");
+    let review_path = lane_root.join("review.md");
+    let run_log = lane_root.join("run.log");
+
+    AutoQuantAgentWorkflow {
+        workflow_style: "plan_work_review".to_string(),
+        setup_commands: vec![
+            format!("mkdir -p {}", shell_quote(&strategies_dir.to_string_lossy())),
+            format!(
+                "cp {} {}",
+                shell_quote(&payload.workspace.config_json),
+                shell_quote(&lane_root.join("config.json").to_string_lossy())
+            ),
+            format!(
+                "printf 'commit\\tevent\\tstrategy_name\\tsharpe\\tmax_dd\\tnote\\n' > {}",
+                shell_quote(&results_tsv.to_string_lossy())
+            ),
+        ],
+        environment: vec![
+            format!(
+                "AUTO_QUANT_WORKSPACE={}",
+                lane_root.to_string_lossy()
+            ),
+            format!(
+                "AUTO_QUANT_DATA_DIR={}",
+                payload.workspace.data_dir
+            ),
+            format!(
+                "AUTO_QUANT_CONFIG={}",
+                lane_root.join("config.json").to_string_lossy()
+            ),
+            format!(
+                "AUTO_QUANT_USER_DATA={}",
+                user_data.to_string_lossy()
+            ),
+            format!(
+                "AUTO_QUANT_STRATEGIES_DIR={}",
+                strategies_dir.to_string_lossy()
+            ),
+            format!(
+                "AUTO_QUANT_RESULTS_TSV={}",
+                results_tsv.to_string_lossy()
+            ),
+        ],
+        phases: vec![
+            format!(
+                "plan: read Auto-Quant AGENTS.md, program.md, and this handoff; write {} with objective, lane scope, data paths, candidate ideas, verification commands, and stop conditions before editing strategies",
+                plan_path.to_string_lossy()
+            ),
+            "work: create or evolve at most 3 active non-underscore strategies inside the lane strategies directory; keep config, run.py, prepare.py, and shared data read-only".to_string(),
+            format!(
+                "review: run the measured Auto-Quant command with the environment above, inspect {}, update results.tsv, and write {} with keep/discard evidence before exporting anything back",
+                run_log.to_string_lossy(),
+                review_path.to_string_lossy()
+            ),
+        ],
+        expected_artifacts: vec![
+            plan_path.to_string_lossy().to_string(),
+            run_log.to_string_lossy().to_string(),
+            results_tsv.to_string_lossy().to_string(),
+            strategies_dir.join("*.py").to_string_lossy().to_string(),
+            review_path.to_string_lossy().to_string(),
+            "strategy_library.json or an ict-engine adoption bundle when a measured candidate survives review".to_string(),
+        ],
+        return_to_ict_engine: vec![
+            "run auto-quant-adoption-review against the persisted handoff artifact before any downstream adoption decision".to_string(),
+            "report measured trade_count, win_rate, profit_factor, drawdown, cost assumptions, and artifact paths; do not summarize from memory".to_string(),
+            "treat Auto-Quant success as candidate evidence only until ict-engine promotion gates explicitly pass".to_string(),
+        ],
+        constraints: vec![
+            "Do not mutate shared Auto-Quant repo-root config.json, user_data/strategies, user_data/data, or results.tsv when AUTO_QUANT_WORKSPACE is available".to_string(),
+            "Do not run Claude Code Harness plugin installers, hooks, MCP setup, or bundled binaries from this handoff".to_string(),
+            "trade_usable is not implied by Auto-Quant run success, sparse positive results, or a generated strategy file".to_string(),
+            "preserve unrelated ict-engine and Auto-Quant working tree changes".to_string(),
+        ],
+    }
 }
 
 fn requested_data_missing_notes(
@@ -599,6 +719,7 @@ pub fn build_factor_research_handoff_payload(
         data_ready: false,
         handoff_artifact_path: String::new(),
         iteration_unit: None,
+        agent_workflow: None,
         suggested_commands: Vec::new(),
         suggested_next_steps: Vec::new(),
         agent_prompt: String::new(),
@@ -645,6 +766,7 @@ pub fn build_factor_research_handoff_payload(
         payload.strategy_material_root.as_deref(),
         &payload.external_strategy_materials,
     );
+    payload.agent_workflow = Some(build_auto_quant_agent_workflow(&payload));
     if !payload.data_ready {
         payload
             .notes
@@ -736,6 +858,7 @@ pub fn build_factor_autoresearch_handoff_payload(
         data_ready: false,
         handoff_artifact_path: String::new(),
         iteration_unit: None,
+        agent_workflow: None,
         suggested_commands: Vec::new(),
         suggested_next_steps: Vec::new(),
         agent_prompt: String::new(),
@@ -782,6 +905,7 @@ pub fn build_factor_autoresearch_handoff_payload(
         payload.strategy_material_root.as_deref(),
         &payload.external_strategy_materials,
     );
+    payload.agent_workflow = Some(build_auto_quant_agent_workflow(&payload));
     if !payload.data_ready {
         payload
             .notes

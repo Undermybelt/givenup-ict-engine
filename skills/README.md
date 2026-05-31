@@ -30,6 +30,7 @@ Scope:
 | `options-dealer-context` | Convert options chain, IV, skew, gamma walls, and 0DTE pressure into structured evidence for regime and execution tree features. | financial-services option-vol-analysis workflow, adapted to `ict-engine` fail-closed provider policy. |
 | `market-structure-context` | Convert ICT/SMC structural observations such as BOS, CHoCH, order blocks, fair value gaps, premium/discount, and liquidity sweeps into structured evidence. | OpenMobius-skill structural taxonomy and freshness discipline, sanitized to provider-backed evidence only. |
 | `factor-source-intake` | Use blocked/waiting windows for interruptible paper, repository, strategy, and indicator intake that produces codeable regime-rooted candidates without launching shared runtime work. | ict-engine Board B factor-training contract plus public source-intake discipline. |
+| `auto-quant-handoff-harness` | Keep Auto-Quant handoffs lane-isolated and reviewable with plan/work/review artifacts before adoption review. | Claude Code Harness plan/work/review pattern, absorbed without plugin installers, hooks, MCP setup, or bundled binaries. |
 
 `factor-source-intake` includes `references/waiting-window-factor-research.md`
 for productive claim/runtime waiting windows. It keeps all source-intake output
@@ -40,6 +41,10 @@ of paper, strategy, and indicator seeds gathered for future factor candidates.
 `references/crossasset-carry-risk-reserve-20260530.md` captures lower-turnover
 cross-asset, carry, commodity term-structure, and variance-risk gate reserves
 for later owned Gate 1 slices.
+`auto-quant-handoff-harness` is the companion for `factor-research` and
+`factor-autoresearch` handoff payloads. It requires `agent_workflow` fields,
+lane-local `AUTO_QUANT_WORKSPACE` usage, measured review artifacts, and an
+explicit boundary that Auto-Quant success is candidate evidence only.
 
 ## External Skill Review
 

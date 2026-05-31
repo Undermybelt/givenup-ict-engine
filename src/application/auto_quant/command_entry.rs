@@ -249,6 +249,18 @@ fn render_auto_quant_handoff_human_output(
         "Workflow: {}",
         auto_quant_handoff_workflow_status_command(payload)
     ));
+    if let Some(workflow) = &payload.agent_workflow {
+        let workspace_env = workflow
+            .environment
+            .iter()
+            .find(|item| item.starts_with("AUTO_QUANT_WORKSPACE="))
+            .cloned()
+            .unwrap_or_else(|| "AUTO_QUANT_WORKSPACE=<lane-workspace>".to_string());
+        lines.push(format!(
+            "Agent workflow: plan -> work -> review | {}",
+            workspace_env
+        ));
+    }
     if !payload.notes.is_empty() {
         lines.push(format!("Notes: {}", payload.notes.join(" | ")));
     }
@@ -293,6 +305,7 @@ fn build_auto_quant_handoff_output_payload(
         "review_command": auto_quant_handoff_review_command(payload),
         "workflow_status_command": auto_quant_handoff_workflow_status_command(payload),
         "suggested_next_steps": payload.suggested_next_steps,
+        "agent_workflow": payload.agent_workflow,
         "human_output": render_auto_quant_handoff_human_output(payload),
     })
 }
@@ -1532,6 +1545,57 @@ class IbkrFutM2KExactShort1Min(IStrategy):
             output["recommended_next_step"]["action_type"],
             "run_command"
         );
+    }
+
+    #[test]
+    fn auto_quant_handoff_output_includes_harness_agent_workflow_contract() {
+        let temp = tempfile::tempdir().unwrap();
+        let state_dir = temp.path().join("state");
+        let managed_dir = state_dir.join(".deps/auto-quant");
+        std::fs::create_dir_all(managed_dir.join("user_data/strategies")).unwrap();
+        std::fs::write(managed_dir.join("program.md"), "program").unwrap();
+        std::fs::write(managed_dir.join("prepare.py"), "print('prepare')").unwrap();
+        std::fs::write(managed_dir.join("run.py"), "print('run')").unwrap();
+
+        let payload =
+            build_factor_research_handoff_payload(BuildFactorResearchHandoffPayloadInput {
+                symbol: "DEMO",
+                data: "support/examples/demo/demo-15m.json",
+                objective: "expansion_manipulation",
+                provider_profile_selector: None,
+                paired_data: None,
+                auxiliary_evidence_path: None,
+                mutation_spec_path: None,
+                strategy_material_root: None,
+                state_dir: state_dir.to_str().unwrap(),
+                dependency_status: healthy_dependency_status(
+                    managed_dir.to_string_lossy().into_owned(),
+                ),
+            });
+
+        let output = build_auto_quant_handoff_output_payload(&payload);
+        let workflow = &output["agent_workflow"];
+        let workflow_text = serde_json::to_string(workflow).unwrap();
+        let human = output["human_output"].as_str().unwrap();
+
+        assert_eq!(workflow["workflow_style"], "plan_work_review");
+        assert!(
+            workflow_text.contains("AUTO_QUANT_WORKSPACE"),
+            "{workflow_text}"
+        );
+        assert!(workflow_text.contains("plan"), "{workflow_text}");
+        assert!(workflow_text.contains("work"), "{workflow_text}");
+        assert!(workflow_text.contains("review"), "{workflow_text}");
+        assert!(
+            workflow_text.contains("Do not mutate shared Auto-Quant repo-root"),
+            "{workflow_text}"
+        );
+        assert!(
+            workflow_text.contains("trade_usable is not implied"),
+            "{workflow_text}"
+        );
+        assert!(human.contains("Agent workflow: plan -> work -> review"));
+        assert!(human.contains("AUTO_QUANT_WORKSPACE"));
     }
 
     #[test]
