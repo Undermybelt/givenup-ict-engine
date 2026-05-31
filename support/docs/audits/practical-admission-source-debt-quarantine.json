@@ -1,12 +1,12 @@
 {
   "schema_version": "practical-admission-source-debt-quarantine/v1",
-  "generated_at": "2026-05-31T03:18:01Z",
+  "generated_at": "2026-05-31T05:15:24Z",
   "decision": "quarantined_untracked_wrapper_debt",
   "scope": "Untracked support/docs/experiments/actionable-regime-confidence/scripts/run_*.py practical-admission violations present in the shared worktree on 2026-05-31.",
   "rationale": "The tracked source gate has zero practical-admission wrapper violations. The remaining debt is untracked wrapper residue from concurrent factor work; it must stay visible and excluded from completion/release claims until the files are either removed, tracked and fixed, or otherwise retired.",
-  "untracked_violation_count": 434,
-  "untracked_violating_files": 226,
-  "untracked_violations_sha256": "021b108a029f14e3eea37ee072637324c94de4c6876b2b6cfd2b71d52a67170e",
+  "untracked_violation_count": 461,
+  "untracked_violating_files": 222,
+  "untracked_violations_sha256": "d9397e66617c7515234e2436b846cd052b98940e6af73d370358c4d0e5497e44",
   "reviewed_alternative_untracked_violations_sha256": [
     "a63ffa0e460234419a0635dc14ae154d60f4e3325f7266f1dbb4cf18d9760aa4",
     "9945631cb78ac92c5ec7037781c73c1e37a87eb791b03f80175ff1690b2e05f3",
@@ -17,15 +17,15 @@
     "f9f9828c248ed5f7e8fe745479c0c02cb04a928addca4e2aeff17106ab6355a2",
     "1fa4ce7f889e95d223165b09ee8d94c4319cdd5591d7e5fb770eb9f2b9dbd9b0"
   ],
-  "source_packet": "/tmp/ict-engine-consumer-ux-evidence-audit-20260531T-current-refresh/done_definition_audit.compact.json",
-  "reviewed_drift": "The 2026-05-31T03:16Z objective closure snapshot in /tmp/ict-engine-consumer-ux-evidence-audit-20260531T-current-refresh on head 7e95b910061980f25d96b58dbc8820289cc5250d reports 434 practical-admission source violations across 226 untracked files, with tracked practical-admission violations still zero. The generated full debt manifest is /tmp/ict-engine-consumer-ux-evidence-audit-20260531T-current-refresh/practical_admission_source_debt_manifest.json and classifies the current untracked debt as: practical_flag_without_extension_complete_guard=118, retired_field_used_as_practical_gate_template=82, downstream_admission_uses_fixed_bps_survivor_gate=79, five_bps_survival_uses_trade_density_floor=79, branch_local_admission_uses_transition_hard_gate=74, extension_complete_without_validated_practical_closure_source=2. This is reviewed as shared-worktree untracked wrapper residue only; it is not release, promotion, trade-use, or objective-completion evidence. If the count, file count, or fingerprint drifts, the next snapshot must fail closed until reviewed again.",
+  "source_packet": "/tmp/ict-engine-consumer-ux-evidence-audit-20260531T-current-after-practical-quarantine-refresh-codex/done_definition_audit.compact.json",
+  "reviewed_drift": "The 2026-05-31T05:15Z objective closure snapshot in /tmp/ict-engine-consumer-ux-evidence-audit-20260531T-current-after-practical-quarantine-refresh-codex on head 6929d5b3344ecfc66cdc12bc8339c050a0fbdcfb reports 461 practical-admission source violations across 222 untracked files, with tracked practical-admission violations still zero and quarantine matched as primary. The generated full debt manifest is /tmp/ict-engine-consumer-ux-evidence-audit-20260531T-current-after-practical-quarantine-refresh-codex/practical_admission_source_debt_manifest.json and classifies the current untracked debt as: practical_flag_without_extension_complete_guard=118, branch_local_admission_uses_transition_hard_gate=105, downstream_admission_uses_fixed_bps_survivor_gate=79, five_bps_survival_uses_trade_density_floor=79, retired_field_used_as_practical_gate_template=78, extension_complete_without_validated_practical_closure_source=2. This is reviewed as shared-worktree untracked wrapper residue only; it is not release, promotion, trade-use, or objective-completion evidence. If the count, file count, or fingerprint drifts, the next snapshot must fail closed until reviewed again.",
   "reviewed_current_untracked_violations_by_type": {
-    "branch_local_admission_uses_transition_hard_gate": 74,
+    "branch_local_admission_uses_transition_hard_gate": 105,
     "downstream_admission_uses_fixed_bps_survivor_gate": 79,
     "extension_complete_without_validated_practical_closure_source": 2,
     "five_bps_survival_uses_trade_density_floor": 79,
     "practical_flag_without_extension_complete_guard": 118,
-    "retired_field_used_as_practical_gate_template": 82
+    "retired_field_used_as_practical_gate_template": 78
   },
   "promotion_allowed": false,
   "trade_usable": false,
