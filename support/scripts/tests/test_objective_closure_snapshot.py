@@ -1189,6 +1189,7 @@ class ObjectiveClosureSnapshotTest(unittest.TestCase):
                             "pid": 9126,
                             "run_root": "ict-engine-tomac-15y",
                             "exit_file_state": "none",
+                            "command_excerpt": "python run_tomac.py --root /tmp/ict-engine-tomac-15y",
                         }
                     ],
                     "externalize_wait_only_claims": [
@@ -1230,6 +1231,7 @@ class ObjectiveClosureSnapshotTest(unittest.TestCase):
                             "pid": 9126,
                             "run_root": "ict-engine-tomac-15y",
                             "exit_file_state": "none",
+                            "command_excerpt": "python run_tomac.py --root /tmp/ict-engine-tomac-15y",
                         }
                     ],
                     "externalize_wait_only_claims": [
