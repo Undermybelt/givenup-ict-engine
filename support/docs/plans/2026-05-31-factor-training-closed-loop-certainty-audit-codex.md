@@ -377,3 +377,60 @@ Decision:
 - Current practical flags remain false:
   `promotion_allowed=false`, `trade_usable=false`, `update_goal=false`,
   `same_tree_practical_closure=null`.
+
+## 2026-05-31T12:45+0800 Accepted-Feedback And Prior-Readback Gate Repair
+
+Fresh routing was repeated before this slice. Current route remains
+`sd/ict-engi-fact-rese-muta`; installed runtime skill
+`~/.hermes/skills/software-development/ict-engi-fact-rese-muta/SKILL.md` was
+used.
+
+Current-state guard:
+
+- `python3 support/scripts/factor_claim_terminalization_audit.py --compact`
+  at `2026-05-31T12:36+0800` reported `status=needs_attention`,
+  `live_factor_processes=0`, `promotion_allowed_true=0`,
+  `trade_usable_true=0`, and `same_tree_practical_closure=null`.
+- The only attention claim was a fresh Ehlers exact-AQ claim:
+  `/tmp/ict-engine-agent-claims/board-b-factor-refinement/20260531T122333+0800-codex-ehlers-autocorr-periodogram-cycle-regime-30m-exact-aq.claim`.
+- Focused `ps` still showed unrelated heavy `done_definition_audit.py` /
+  `smoke_acceptance.sh` activity. This slice did not launch provider, IBKR,
+  AQ, TOMAC, paper/live, or downstream lifecycle work.
+
+Repairs verified in current tree:
+
+- Accepted execution-feedback conversion now rejects a source such as
+  `simulated_backtest:paper_execution_feedback:*`; accepted feedback requires
+  an accepted paper/live/broker source marker plus broker fill and realized
+  evidence.
+- IBKR execution readback now records filtered-row diagnostics so rows removed
+  for missing commission reports remain visible as diagnostics, not accepted
+  broker feedback.
+- TOMAC index-futures prior-AQ readback now fails closed for practical flags:
+  legacy/prior gate practical claims are recorded only as prior-readback
+  diagnostics, while the current no-launch summary keeps `promotion_allowed`,
+  `trade_usable`, and `update_goal` false.
+
+Verification:
+
+- `python3 -m unittest support.scripts.research.tests.test_real_trade_feedback_labels -v`
+  passed: `12 tests`, `OK`.
+- `python3 -m unittest support.scripts.research.tests.test_ibkr_execution_readback -v`
+  passed: `4 tests`, `OK`.
+- `python3 support/scripts/research/downstream_practical_admission_source_check.py --tracked-run-wrappers --jobs 4 --pretty`
+  passed: all tracked wrapper entries `ok=true`, `violations=[]`.
+- `python3 -m unittest support.docs.experiments.actionable-regime-confidence.scripts.test_tomac_index_futures_clean_aq -v`
+  passed: `321 tests`, `OK`.
+- `git diff --check -- support/scripts/research/real_trade_feedback_labels.py support/scripts/research/tests/test_real_trade_feedback_labels.py support/scripts/research/ibkr_execution_readback.py support/scripts/research/tests/test_ibkr_execution_readback.py support/docs/experiments/actionable-regime-confidence/scripts/run_tomac_index_futures_clean_aq_v1.py support/docs/experiments/actionable-regime-confidence/scripts/test_tomac_index_futures_clean_aq.py`
+  produced no whitespace errors.
+
+Decision:
+
+- This is a quality-preserving gate repair, not a practical promotion.
+- The flywheel can admit more candidates into learning/calibration, but final
+  practical closure still requires same-tree closure, accepted paper/live/broker
+  execution feedback, verified real cost, and ETH/full-retained session
+  evidence.
+- Current practical flags remain false:
+  `promotion_allowed=false`, `trade_usable=false`, `update_goal=false`,
+  `same_tree_practical_closure=null`.

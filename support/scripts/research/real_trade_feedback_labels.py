@@ -109,6 +109,15 @@ def _accepted_feedback_source(value: str) -> str:
     return source
 
 
+def _is_accepted_feedback_source(value: str | None) -> bool:
+    normalized = str(value or "").strip().lower()
+    if not normalized:
+        return False
+    if any(marker in normalized for marker in SIMULATED_FEEDBACK_MARKERS):
+        return False
+    return any(marker in normalized for marker in ACCEPTED_EXECUTION_FEEDBACK_MARKERS)
+
+
 def _side_to_direction(side: object) -> str:
     normalized = str(side or "").strip().lower()
     if normalized in {"buy", "bot", "long", "bull"}:
@@ -378,10 +387,12 @@ def build_accepted_feedback_conversion_summary(
             broker_realized_rows += 1
 
     accepted_feedback_rows = len(rows)
+    accepted_source_valid = _is_accepted_feedback_source(accepted_source)
     ready = (
         accepted_feedback_rows > 0
         and not mixed_sources
         and accepted_source is not None
+        and accepted_source_valid
         and broker_fill_evidence_rows >= accepted_feedback_rows
         and broker_realized_rows >= accepted_feedback_rows
     )

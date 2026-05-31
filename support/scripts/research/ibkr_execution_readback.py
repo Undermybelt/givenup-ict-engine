@@ -162,13 +162,15 @@ def _build_execution_filter(args: argparse.Namespace, ib_async: Any) -> Any:
     )
 
 
-def _matches_row_filters(row: dict[str, Any], args: argparse.Namespace) -> bool:
+def _matches_local_row_filters(row: dict[str, Any], args: argparse.Namespace) -> bool:
     local_symbol = str(row.get("contract", {}).get("localSymbol") or "")
     if args.local_symbol and local_symbol != args.local_symbol:
         return False
-    if args.require_commission_report and not row.get("commission_report_present"):
-        return False
     return True
+
+
+def _matches_commission_filter(row: dict[str, Any], args: argparse.Namespace) -> bool:
+    return not args.require_commission_report or row.get("commission_report_present") is True
 
 
 def write_readback_packet(
@@ -178,7 +180,15 @@ def write_readback_packet(
     args: argparse.Namespace,
     selected_client_id: int | None,
     attempted_client_id_conflicts: list[tuple[int, str]],
+    raw_execution_rows_total: int | None = None,
+    rows_after_local_filters: int | None = None,
+    rows_filtered_without_commission_report: int = 0,
 ) -> dict[str, Any]:
+    raw_total = len(rows) if raw_execution_rows_total is None else raw_execution_rows_total
+    local_total = len(rows) if rows_after_local_filters is None else rows_after_local_filters
+    rows_without_commission_after_local_filters = rows_filtered_without_commission_report + sum(
+        1 for row in rows if not row.get("commission_report_present")
+    )
     packet = {
         "schema_version": "ibkr-execution-readback/v1",
         "generated_at": datetime.now(timezone.utc).isoformat(),
@@ -199,9 +209,15 @@ def write_readback_packet(
             "filter_client_id": args.filter_client_id,
             "require_commission_report": args.require_commission_report,
         },
+        "raw_execution_rows_total": raw_total,
+        "rows_after_local_filters": local_total,
+        "rows_filtered_by_local_filters": max(0, raw_total - local_total),
         "execution_rows_total": len(rows),
         "rows_with_commission_report": sum(1 for row in rows if row.get("commission_report_present")),
+        "rows_without_commission_report_after_local_filters": rows_without_commission_after_local_filters,
+        "rows_filtered_without_commission_report": rows_filtered_without_commission_report,
         "rows": rows,
+        "accepted_feedback_requirement": "round-trip paired executions with broker_fill_evidence=true and commission_report_present=true",
         "promotion_allowed": False,
         "trade_usable": False,
         "update_goal": False,
@@ -235,17 +251,23 @@ async def read_ibkr_executions(args: argparse.Namespace) -> int:
             ib.reqExecutionsAsync(_build_execution_filter(args, ib_async)),
             timeout=args.request_timeout,
         )
-        rows = [
-            row
-            for row in (fill_to_readback_row(fill) for fill in list(fills or []))
-            if _matches_row_filters(row, args)
-        ]
+        raw_rows = [fill_to_readback_row(fill) for fill in list(fills or [])]
+        local_filtered_rows = [row for row in raw_rows if _matches_local_row_filters(row, args)]
+        rows_filtered_without_commission_report = sum(
+            1
+            for row in local_filtered_rows
+            if args.require_commission_report and row.get("commission_report_present") is not True
+        )
+        rows = [row for row in local_filtered_rows if _matches_commission_filter(row, args)]
         packet = write_readback_packet(
             output=Path(args.output),
             rows=rows,
             args=args,
             selected_client_id=selected_client_id,
             attempted_client_id_conflicts=attempted_client_id_conflicts,
+            raw_execution_rows_total=len(raw_rows),
+            rows_after_local_filters=len(local_filtered_rows),
+            rows_filtered_without_commission_report=rows_filtered_without_commission_report,
         )
         print(json.dumps({"ok": True, "execution_rows_total": packet["execution_rows_total"], "output": args.output}))
         return 0

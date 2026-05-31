@@ -359,6 +359,33 @@ class RealTradeFeedbackLabelsTests(unittest.TestCase):
                 feedback_source="auto_quant_real_trades:simulated_backtest:test",
             )
 
+    def test_accepted_feedback_summary_rejects_simulated_feedback_source(self) -> None:
+        summary = builder.build_accepted_feedback_conversion_summary(
+            rows=[
+                {
+                    "source": "simulated_backtest:paper_execution_feedback:factor_v1",
+                    "broker_fill_evidence": True,
+                    "broker_realized": True,
+                }
+            ],
+            input_mode="ibkr_execution_readback",
+            input_path="/tmp/readback.json",
+            output_jsonl="/tmp/accepted.jsonl",
+            input_rows_seen=2,
+            paired_captures=1,
+            symbol="FACTOR_V1",
+            strategy_name="factor_strategy_v1",
+            factor_id="factor_v1",
+            branch_path="TrendExpansion -> Factor -> factor_v1",
+            auto_quant_run_id="paper-readback",
+            feedback_source="simulated_backtest:paper_execution_feedback:factor_v1",
+        )
+
+        self.assertEqual(summary["status"], "no_accepted_execution_feedback_rows")
+        self.assertFalse(summary["accepted_execution_feedback_ready"])
+        self.assertIsNone(summary["accepted_source"])
+        self.assertEqual(summary["terminal_decision"], "accepted_execution_feedback_missing")
+
     def test_cli_converts_ibkr_execution_readback_json_to_accepted_feedback_jsonl(self) -> None:
         with TemporaryDirectory() as tmpdir:
             tmp = Path(tmpdir)

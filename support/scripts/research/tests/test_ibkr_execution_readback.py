@@ -111,6 +111,43 @@ class IbkrExecutionReadbackTests(unittest.TestCase):
             self.assertFalse(packet["update_goal"])
             self.assertEqual(json.loads(output.read_text(encoding="utf-8"))["schema_version"], "ibkr-execution-readback/v1")
 
+    def test_write_readback_packet_records_filtered_execution_diagnostics(self) -> None:
+        with tempfile.TemporaryDirectory() as tmpdir:
+            output = Path(tmpdir) / "ibkr_execution_readback.json"
+            args = SimpleNamespace(
+                host="127.0.0.1",
+                port=4002,
+                symbol="NQ",
+                sec_type="FUT",
+                exchange="CME",
+                side="",
+                account="",
+                time="",
+                local_symbol="",
+                filter_client_id=0,
+                require_commission_report=True,
+            )
+
+            packet = readback.write_readback_packet(
+                output=output,
+                rows=[],
+                args=args,
+                selected_client_id=24,
+                attempted_client_id_conflicts=[],
+                raw_execution_rows_total=3,
+                rows_after_local_filters=2,
+                rows_filtered_without_commission_report=2,
+            )
+
+            self.assertEqual(packet["raw_execution_rows_total"], 3)
+            self.assertEqual(packet["rows_after_local_filters"], 2)
+            self.assertEqual(packet["rows_filtered_by_local_filters"], 1)
+            self.assertEqual(packet["rows_filtered_without_commission_report"], 2)
+            self.assertEqual(packet["rows_without_commission_report_after_local_filters"], 2)
+            self.assertEqual(packet["execution_rows_total"], 0)
+            self.assertFalse(packet["promotion_allowed"])
+            self.assertFalse(packet["trade_usable"])
+
 
 if __name__ == "__main__":
     unittest.main()
