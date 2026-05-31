@@ -740,6 +740,10 @@ def evaluate_practical_admission_source_gate(timeout_seconds: int) -> dict:
         if path.exists() and path.resolve().is_relative_to(ROOT.resolve())
     )
     scan_scope_files = sorted({*wrapper_files, *report_files})
+    tracked_files = tracked_wrapper_file_set(scan_scope_files, timeout_seconds)
+    untracked_wrapper_files = sorted(
+        path for path in wrapper_files if path.resolve() not in {tracked.resolve() for tracked in tracked_files}
+    )
     if not wrapper_files:
         return _gate(
             "practical_admission_source_surface",
@@ -747,18 +751,41 @@ def evaluate_practical_admission_source_gate(timeout_seconds: int) -> dict:
             {"error": f"no run_*.py wrappers found under {_rel_path(PRACTICAL_ADMISSION_WRAPPER_ROOT)}"},
         )
 
-    status, details = run_command(
-        [
-            sys.executable,
-            str(PRACTICAL_ADMISSION_SOURCE_CHECK_PATH),
-            "--tracked-run-wrappers",
-            "--jobs",
-            "4",
-            *map(str, report_files),
-        ],
-        cwd=ROOT,
-        timeout=timeout_seconds,
-    )
+    scanner_command = [
+        sys.executable,
+        str(PRACTICAL_ADMISSION_SOURCE_CHECK_PATH),
+        "--tracked-run-wrappers",
+        "--jobs",
+        "4",
+        *map(str, report_files),
+    ]
+    extra_scan_files = untracked_wrapper_files
+    files_from_path: Path | None = None
+    if extra_scan_files:
+        with tempfile.NamedTemporaryFile(
+            "w",
+            encoding="utf-8",
+            prefix="ict-engine-practical-admission-source-files-",
+            suffix=".txt",
+            delete=False,
+        ) as handle:
+            files_from_path = Path(handle.name)
+            for path in extra_scan_files:
+                handle.write(f"{path}\n")
+        scanner_command.extend(["--files-from", str(files_from_path)])
+
+    try:
+        status, details = run_command(
+            scanner_command,
+            cwd=ROOT,
+            timeout=timeout_seconds,
+        )
+    finally:
+        if files_from_path is not None:
+            try:
+                files_from_path.unlink()
+            except OSError:
+                pass
     try:
         reports = json.loads(details.get("stdout") or "[]")
     except json.JSONDecodeError as exc:
@@ -771,14 +798,28 @@ def evaluate_practical_admission_source_gate(timeout_seconds: int) -> dict:
         failed_details["error"] = "invalid_practical_admission_scan_shape"
         return _gate("practical_admission_source_surface", "fail", failed_details)
 
-    tracked_files = tracked_wrapper_file_set(scan_scope_files, timeout_seconds)
     summary = _summarize_practical_admission_scan(reports, tracked_files=tracked_files)
-    summary["scan_scope"] = "tracked_run_wrappers_plus_tracked_report_files"
+    summary["scan_scope"] = (
+        "tracked_run_wrappers_plus_tracked_report_files_plus_active_untracked_run_wrappers"
+    )
     summary["candidate_wrapper_files"] = len(wrapper_files)
+    summary["untracked_candidate_wrapper_files"] = len(untracked_wrapper_files)
     debt_manifest_file = write_practical_admission_debt_manifest(summary)
     if debt_manifest_file:
         summary["debt_manifest_file"] = debt_manifest_file
         summary["quarantine"] = _read_practical_admission_debt_quarantine(summary)
+    untracked_violation_count = int(summary.get("untracked_violation_count") or 0)
+    untracked_debt_quarantined = (
+        untracked_violation_count == 0
+        or bool((summary.get("quarantine") or {}).get("matched"))
+    )
+    summary["untracked_debt_status"] = (
+        "none"
+        if untracked_violation_count == 0
+        else "quarantined"
+        if untracked_debt_quarantined
+        else "unquarantined"
+    )
     summary["scanner_returncode"] = details.get("returncode")
     if "command" in details:
         summary["scanner_command"] = details.get("command")
@@ -788,7 +829,8 @@ def evaluate_practical_admission_source_gate(timeout_seconds: int) -> dict:
         summary["scanner_timeout_seconds"] = details.get("timeout_seconds")
     summary["rule"] = (
         "all tracked downstream/gate wrappers must keep practical flags behind "
-        "practical_admission_flags(..., extension_complete=...) and avoid 2bps/density fail-open gates"
+        "practical_admission_flags(..., extension_complete=...) and avoid 2bps/density fail-open gates; "
+        "active untracked run-wrapper debt must be explicitly quarantined before this gate can pass"
     )
     if status == "fail" and summary["violation_count"] == 0:
         summary["stdout"] = details.get("stdout", "")
@@ -796,7 +838,9 @@ def evaluate_practical_admission_source_gate(timeout_seconds: int) -> dict:
         return _gate("practical_admission_source_surface", "fail", summary)
     return _gate(
         "practical_admission_source_surface",
-        "pass" if summary["tracked_violation_count"] == 0 else "fail",
+        "pass"
+        if summary["tracked_violation_count"] == 0 and untracked_debt_quarantined
+        else "fail",
         summary,
     )
 
