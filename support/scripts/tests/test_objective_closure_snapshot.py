@@ -16,6 +16,7 @@ from objective_closure_snapshot import (  # noqa: E402
     build_audit_specs,
     build_failure_report,
     build_snapshot,
+    effective_done_child_timeout_seconds,
     effective_timeout_seconds,
     format_report,
     stage_done_definition_proof,
@@ -39,6 +40,8 @@ class ObjectiveClosureSnapshotTest(unittest.TestCase):
         self.assertIn("--run-all-heavy", specs["done_definition"]["argv"])
         self.assertIn("--check-remotes", specs["release_readiness"]["argv"])
         self.assertIn("--output", specs["done_definition"]["argv"])
+        self.assertIn("--practical-admission-source-timeout-seconds", specs["done_definition"]["argv"])
+        self.assertIn("--help-audit-timeout-seconds", specs["done_definition"]["argv"])
         self.assertIn("--portable-paths", specs["factor_closure"]["argv"])
         self.assertTrue(str(specs["factor_closure"]["output_path"]).endswith("factor_claim_terminalization_audit.compact.json"))
 
@@ -152,6 +155,55 @@ class ObjectiveClosureSnapshotTest(unittest.TestCase):
                 "proof_rejected_reason": "proof_has_skipped_gates",
             },
         )
+
+    def test_done_definition_blocker_preserves_failed_source_surface_detail(self) -> None:
+        summary = summarize_snapshot(
+            {
+                "head": "abc123",
+                "status": "needs_fix",
+                "completion_ready": False,
+                "quickstart_surface": "pass",
+                "practical_admission_source_surface": {
+                    "status": "fail",
+                    "tracked_violation_count": 0,
+                    "tracked_violating_files": 0,
+                    "untracked_violation_count": 0,
+                    "untracked_violating_files": 0,
+                    "violation_count": 0,
+                    "violating_files": 0,
+                    "scanner_error": "timeout",
+                    "scanner_timeout_seconds": 120,
+                    "scanner_command": {
+                        "argv_head": ["python3", "downstream_practical_admission_source_check.py"],
+                        "target_arg_count": 1064,
+                    },
+                },
+            },
+            {
+                "status": "pass",
+                "same_tree_practical_closure": {
+                    "status": "pass",
+                    "promotion_allowed": True,
+                    "trade_usable": True,
+                    "provider_execution_feedback_chain": "pass",
+                    "evidence_packet": "packet.json",
+                    "evidence_packet_validated": True,
+                },
+            },
+            {
+                "status": "pass",
+                "unresolved_next_actions": {},
+            },
+            snapshot_timestamp="2026-05-31T03:24:07Z",
+        )
+
+        detail = summary["blocker_details"]["done_definition_not_completion_ready"]
+        source_detail = detail["practical_admission_source_surface"]
+        self.assertEqual(source_detail["status"], "fail")
+        self.assertEqual(source_detail["scanner_error"], "timeout")
+        self.assertEqual(source_detail["scanner_timeout_seconds"], 120)
+        self.assertEqual(source_detail["scanner_command"]["target_arg_count"], 1064)
+        self.assertEqual(source_detail["tracked_violation_count"], 0)
 
     def test_summarize_snapshot_blocks_without_validated_same_tree_practical_closure_packet(self) -> None:
         summary = summarize_snapshot(
@@ -1667,9 +1719,15 @@ class ObjectiveClosureSnapshotTest(unittest.TestCase):
             self.assertFalse(marker.exists())
 
     def test_effective_timeout_seconds_defaults_higher_for_heavy_mode(self) -> None:
-        self.assertEqual(effective_timeout_seconds(None, run_all_heavy=False), 90)
+        self.assertEqual(effective_timeout_seconds(None, run_all_heavy=False), 300)
         self.assertEqual(effective_timeout_seconds(None, run_all_heavy=True), 300)
         self.assertEqual(effective_timeout_seconds(17, run_all_heavy=True), 17)
+
+    def test_effective_done_child_timeout_keeps_source_scan_inside_parent_budget(self) -> None:
+        self.assertEqual(effective_done_child_timeout_seconds(300), 240)
+        self.assertEqual(effective_done_child_timeout_seconds(180), 120)
+        self.assertEqual(effective_done_child_timeout_seconds(90), 30)
+        self.assertEqual(effective_done_child_timeout_seconds(17), 17)
 
     def test_write_report_file_persists_failure_snapshot(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:

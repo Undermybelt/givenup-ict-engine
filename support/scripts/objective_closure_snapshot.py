@@ -33,6 +33,7 @@ QUICKSTART_CHAIN = [
     "cargo run --quiet -- pre-bayes-status --symbol DEMO --state-dir /tmp/ict-engine-first-run --refresh --output-format json",
     "cargo run --quiet -- policy-training-status --symbol DEMO --state-dir /tmp/ict-engine-first-run --output-format agent",
 ]
+DEFAULT_DONE_LIGHT_CHILD_TIMEOUT_SECONDS = 240
 
 
 def _utc_now() -> str:
@@ -59,7 +60,18 @@ def _parse_iso_datetime(value: object) -> datetime | None:
 def effective_timeout_seconds(requested: int | None, *, run_all_heavy: bool) -> int:
     if requested is not None:
         return requested
-    return 300 if run_all_heavy else 90
+    return 300
+
+
+def effective_done_child_timeout_seconds(parent_timeout_seconds: int) -> int:
+    return max(
+        1,
+        min(
+            parent_timeout_seconds,
+            DEFAULT_DONE_LIGHT_CHILD_TIMEOUT_SECONDS,
+            max(30, parent_timeout_seconds - 60),
+        ),
+    )
 
 
 def run_command(argv: list[str], cwd: Path, timeout: int = 60) -> dict[str, Any]:
@@ -159,11 +171,20 @@ def build_audit_specs(
     output_dir: Path | None,
     run_all_heavy: bool,
     check_remotes: bool,
+    done_child_timeout_seconds: int = DEFAULT_DONE_LIGHT_CHILD_TIMEOUT_SECONDS,
 ) -> dict[str, dict[str, Any]]:
     specs: dict[str, dict[str, Any]] = {}
 
     done_output = output_dir / "done_definition_audit.compact.json" if output_dir else None
     done_cmd = [sys.executable, str(DONE_AUDIT), "--compact"]
+    done_cmd.extend(
+        [
+            "--practical-admission-source-timeout-seconds",
+            str(done_child_timeout_seconds),
+            "--help-audit-timeout-seconds",
+            str(done_child_timeout_seconds),
+        ]
+    )
     if run_all_heavy:
         done_cmd.append("--run-all-heavy")
     if done_output:
@@ -258,6 +279,7 @@ def _source_debt_surface(gate: dict[str, Any]) -> dict[str, Any]:
         "scanner_timeout_seconds": details.get("scanner_timeout_seconds"),
         "scanner_returncode": details.get("scanner_returncode"),
         "scanner_command": details.get("scanner_command"),
+        "command": details.get("command"),
         "stdout": details.get("stdout"),
         "stderr": details.get("stderr"),
     }
@@ -696,6 +718,24 @@ def _source_debt_detail(source_surface: dict[str, Any]) -> dict[str, Any]:
     return detail
 
 
+def _source_surface_failure_detail(source_surface: dict[str, Any]) -> dict[str, Any]:
+    detail = _source_debt_detail(source_surface)
+    for key in (
+        "status",
+        "scanner_error",
+        "scanner_timeout_seconds",
+        "scanner_returncode",
+        "scanner_command",
+        "command",
+        "stdout",
+        "stderr",
+    ):
+        value = source_surface.get(key)
+        if value not in (None, "", [], {}):
+            detail[key] = value
+    return detail
+
+
 def _add_source_debt_blocker(
     blockers: list[str],
     blocker_details: dict[str, Any],
@@ -771,6 +811,12 @@ def _done_definition_blocker_detail(done_surface: dict[str, Any]) -> dict[str, A
     ):
         if key in done_surface:
             detail[key] = done_surface[key]
+    for source_key in ("practical_admission_source_surface", "await_launch_source_surface"):
+        source_surface = done_surface.get(source_key)
+        if not isinstance(source_surface, dict):
+            continue
+        if source_surface.get("status") == "fail" or source_surface.get("scanner_error"):
+            detail[source_key] = _source_surface_failure_detail(source_surface)
     return detail
 
 
@@ -1234,7 +1280,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--timeout-seconds",
         type=int,
-        help="per-child timeout in seconds; defaults to 90, or 300 when --run-all-heavy is enabled",
+        help="per-child timeout in seconds; defaults to 300",
     )
     parser.add_argument(
         "--done-definition-proof",
@@ -1353,6 +1399,7 @@ def main() -> int:
         output_dir=output_dir,
         run_all_heavy=args.run_all_heavy,
         check_remotes=args.check_remotes,
+        done_child_timeout_seconds=effective_done_child_timeout_seconds(timeout_seconds),
     )
 
     audit_results: dict[str, dict[str, Any]] = {}

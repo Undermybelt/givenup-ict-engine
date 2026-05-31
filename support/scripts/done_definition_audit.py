@@ -38,6 +38,10 @@ PRACTICAL_ADMISSION_REPORT_FILES = (
     ROOT / "support" / "scripts" / "research" / "regime_root_survivor_blocker_report.py",
 )
 DEFAULT_SMOKE_STATE_PREFIX = "/tmp/ict-engine-done-definition-audit-smoke"
+DEFAULT_PRACTICAL_ADMISSION_SOURCE_TIMEOUT_SECONDS = 180
+COMPACT_COMMAND_ARG_LIMIT = 12
+COMPACT_COMMAND_TARGET_SAMPLE_LIMIT = 5
+COMPACT_STREAM_CHAR_LIMIT = 2000
 AWAIT_LAUNCH_ACTIVE_CLAIM_GUARD_KEYS = frozenset(
     (
         "active_claims",
@@ -268,6 +272,7 @@ def evaluate_help_audit_policy(timeout_seconds: int) -> dict:
 
     env = dict(os.environ)
     env["ICT_ENGINE_HELP_AUDIT_BUILD_TIMEOUT_SECONDS"] = str(timeout_seconds)
+    env["ICT_ENGINE_HELP_AUDIT_HELP_TIMEOUT_SECONDS"] = str(timeout_seconds)
     status, details = run_command(
         [sys.executable, str(HELP_AUDIT_PATH)],
         cwd=ROOT,
@@ -708,7 +713,7 @@ def evaluate_practical_admission_source_gate(timeout_seconds: int) -> dict:
         for path in PRACTICAL_ADMISSION_REPORT_FILES
         if path.exists() and path.resolve().is_relative_to(ROOT.resolve())
     )
-    scan_files = sorted({*wrapper_files, *report_files})
+    scan_scope_files = sorted({*wrapper_files, *report_files})
     if not wrapper_files:
         return _gate(
             "practical_admission_source_surface",
@@ -717,7 +722,14 @@ def evaluate_practical_admission_source_gate(timeout_seconds: int) -> dict:
         )
 
     status, details = run_command(
-        [sys.executable, str(PRACTICAL_ADMISSION_SOURCE_CHECK_PATH), *map(str, scan_files)],
+        [
+            sys.executable,
+            str(PRACTICAL_ADMISSION_SOURCE_CHECK_PATH),
+            "--tracked-run-wrappers",
+            "--jobs",
+            "4",
+            *map(str, report_files),
+        ],
         cwd=ROOT,
         timeout=timeout_seconds,
     )
@@ -733,8 +745,10 @@ def evaluate_practical_admission_source_gate(timeout_seconds: int) -> dict:
         failed_details["error"] = "invalid_practical_admission_scan_shape"
         return _gate("practical_admission_source_surface", "fail", failed_details)
 
-    tracked_files = tracked_wrapper_file_set(scan_files, timeout_seconds)
+    tracked_files = tracked_wrapper_file_set(scan_scope_files, timeout_seconds)
     summary = _summarize_practical_admission_scan(reports, tracked_files=tracked_files)
+    summary["scan_scope"] = "tracked_run_wrappers_plus_tracked_report_files"
+    summary["candidate_wrapper_files"] = len(wrapper_files)
     debt_manifest_file = write_practical_admission_debt_manifest(summary)
     if debt_manifest_file:
         summary["debt_manifest_file"] = debt_manifest_file
@@ -933,32 +947,84 @@ def _compact_value(value, root: str):
     return value
 
 
+def _compact_stream_text(value, root: str):
+    compact = _compact_value(value, root)
+    if not isinstance(compact, str):
+        return compact
+    if len(compact) <= COMPACT_STREAM_CHAR_LIMIT:
+        return compact
+    return {
+        "excerpt": compact[:COMPACT_STREAM_CHAR_LIMIT],
+        "omitted_char_count": len(compact) - COMPACT_STREAM_CHAR_LIMIT,
+    }
+
+
+def _compact_command(value, root: str):
+    compact = _compact_value(value, root)
+    if not isinstance(compact, list) or len(compact) <= COMPACT_COMMAND_ARG_LIMIT:
+        return compact
+    head = compact[:2]
+    targets = compact[2:]
+    sample_targets = targets[:COMPACT_COMMAND_TARGET_SAMPLE_LIMIT]
+    return {
+        "argv_head": head,
+        "arg_count": len(compact),
+        "target_arg_count": len(targets),
+        "sample_targets": sample_targets,
+        "omitted_arg_count": max(0, len(targets) - len(sample_targets)),
+    }
+
+
+def _compact_source_gate_details(details: dict, root: str) -> dict:
+    compact: dict = {}
+    scalar_keys = [
+        "error",
+        "rule",
+        "scanned_files",
+        "tracked_scanned_files",
+        "tracked_violating_files",
+        "tracked_violation_count",
+        "untracked_scanned_files",
+        "untracked_violating_files",
+        "untracked_violation_count",
+        "violating_files",
+        "violation_count",
+        "scanner_error",
+        "scanner_timeout_seconds",
+        "scanner_returncode",
+        "debt_manifest_file",
+        "violations_by_type",
+        "quarantine",
+    ]
+    for key in scalar_keys:
+        if key in details:
+            compact[key] = _compact_value(details.get(key), root)
+    if "scanner_command" in details:
+        compact["scanner_command"] = _compact_command(details.get("scanner_command"), root)
+    if "command" in details:
+        compact["command"] = _compact_command(details.get("command"), root)
+    if "stdout" in details:
+        compact["stdout"] = _compact_stream_text(details.get("stdout"), root)
+    if "stderr" in details:
+        compact["stderr"] = _compact_stream_text(details.get("stderr"), root)
+    sample_violations = details.get("sample_violations", [])
+    if sample_violations:
+        compact["sample_violations"] = _compact_value(sample_violations[:10], root)
+    return compact
+
+
 def _compact_gate(gate: dict, root: str) -> dict:
     compact = {
         "id": gate.get("id"),
         "status": gate.get("status"),
         "heavy": gate.get("heavy", False),
     }
-    if gate.get("status") != "pass":
-        compact["details"] = _compact_value(gate.get("details", {}), root)
-    elif gate.get("id") in {"practical_admission_source_surface", "await_launch_source_surface"}:
+    if gate.get("id") in {"practical_admission_source_surface", "await_launch_source_surface"}:
         details = gate.get("details", {})
-        if int(details.get("untracked_violation_count") or 0) > 0:
-            debt_manifest_file = details.get("debt_manifest_file")
-            compact["details"] = _compact_value(
-                {
-                    "tracked_violation_count": details.get("tracked_violation_count"),
-                    "tracked_violating_files": details.get("tracked_violating_files"),
-                    "untracked_violation_count": details.get("untracked_violation_count"),
-                    "untracked_violating_files": details.get("untracked_violating_files"),
-                    "violation_count": details.get("violation_count"),
-                    "violating_files": details.get("violating_files"),
-                    **({"debt_manifest_file": debt_manifest_file} if debt_manifest_file else {}),
-                    "quarantine": details.get("quarantine"),
-                    "sample_violations": details.get("sample_violations", [])[:10],
-                },
-                root,
-            )
+        if gate.get("status") != "pass" or int(details.get("untracked_violation_count") or 0) > 0:
+            compact["details"] = _compact_source_gate_details(details, root)
+    elif gate.get("status") != "pass":
+        compact["details"] = _compact_value(gate.get("details", {}), root)
     return compact
 
 
@@ -1028,7 +1094,7 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
     parser.add_argument(
         "--practical-admission-source-timeout-seconds",
         type=int,
-        default=180,
+        default=DEFAULT_PRACTICAL_ADMISSION_SOURCE_TIMEOUT_SECONDS,
         help="Timeout for downstream practical-admission wrapper source scan.",
     )
     parser.add_argument(

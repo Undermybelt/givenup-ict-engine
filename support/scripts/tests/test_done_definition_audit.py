@@ -266,6 +266,51 @@ Measured on 2026-05-22:
         self.assertEqual(gate["details"]["tracked_violation_count"], 0)
         self.assertEqual(gate["details"]["debt_manifest_file"], "/tmp/practical-admission-source-debt.json")
 
+    def test_compact_report_summarizes_failed_practical_admission_scan_command(self) -> None:
+        scanner_targets = [
+            f"support/docs/experiments/actionable-regime-confidence/scripts/run_case_{index}.py"
+            for index in range(25)
+        ]
+        report = {
+            "timestamp_utc": "2026-05-31T03:20:00Z",
+            "repo_root": str(SCRIPTS_ROOT.parents[1]),
+            "summary": {"status": "needs_fix"},
+            "gates": [
+                {
+                    "id": "practical_admission_source_surface",
+                    "status": "fail",
+                    "heavy": False,
+                    "details": {
+                        "tracked_violation_count": 0,
+                        "tracked_violating_files": 0,
+                        "untracked_violation_count": 0,
+                        "untracked_violating_files": 0,
+                        "violation_count": 0,
+                        "violating_files": 0,
+                        "scanner_error": "timeout",
+                        "scanner_timeout_seconds": 30,
+                        "scanner_returncode": None,
+                        "scanner_command": [
+                            "python3",
+                            "support/scripts/research/downstream_practical_admission_source_check.py",
+                            *scanner_targets,
+                        ],
+                        "stderr": "source scan timed out",
+                    },
+                }
+            ],
+        }
+
+        compact = json.loads(format_report(report, compact=True))
+        details = compact["gates"][0]["details"]
+
+        self.assertEqual(details["scanner_error"], "timeout")
+        self.assertEqual(details["scanner_timeout_seconds"], 30)
+        self.assertEqual(details["scanner_command"]["arg_count"], 27)
+        self.assertEqual(details["scanner_command"]["target_arg_count"], 25)
+        self.assertEqual(len(details["scanner_command"]["sample_targets"]), 5)
+        self.assertNotIn(scanner_targets[-1], json.dumps(details["scanner_command"]))
+
     def test_compact_report_keeps_passed_await_launch_untracked_debt(self) -> None:
         report = {
             "timestamp_utc": "2026-05-29T00:50:00Z",
@@ -402,6 +447,65 @@ Measured on 2026-05-22:
         self.assertEqual(manifest["timestamp_utc"], manifest["generated_at"])
         self.assertEqual(manifest["summary"]["untracked_violation_count"], 1)
         self.assertEqual(manifest["untracked_violations"][0]["key"], "trade_usable")
+
+    def test_practical_admission_source_gate_uses_tracked_wrapper_scanner_entry(self) -> None:
+        import done_definition_audit
+
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            scanner = root / "support" / "scripts" / "research" / "downstream_practical_admission_source_check.py"
+            wrapper_root = root / "support" / "docs" / "experiments" / "actionable-regime-confidence" / "scripts"
+            scanner.parent.mkdir(parents=True)
+            wrapper_root.mkdir(parents=True)
+            scanner.write_text("# scanner placeholder\n", encoding="utf-8")
+            wrapper = wrapper_root / "run_good_v1.py"
+            wrapper.write_text("# good\n", encoding="utf-8")
+            captured: dict[str, list[str]] = {}
+
+            def fake_run_command(cmd, *, cwd, timeout, env=None):
+                del cwd, timeout, env
+                if cmd[:3] == ["git", "ls-files", "--"]:
+                    return (
+                        "pass",
+                        {
+                            "returncode": 0,
+                            "stdout": "support/docs/experiments/actionable-regime-confidence/scripts/run_good_v1.py\n",
+                            "stderr": "",
+                        },
+                    )
+                captured["scan_cmd"] = list(map(str, cmd))
+                return (
+                    "pass",
+                    {
+                        "returncode": 0,
+                        "stdout": json.dumps([{"file": str(wrapper), "ok": True, "violations": []}]),
+                        "stderr": "",
+                    },
+                )
+
+            originals = (
+                done_definition_audit.ROOT,
+                done_definition_audit.PRACTICAL_ADMISSION_SOURCE_CHECK_PATH,
+                done_definition_audit.PRACTICAL_ADMISSION_WRAPPER_ROOT,
+                done_definition_audit.run_command,
+            )
+            try:
+                done_definition_audit.ROOT = root
+                done_definition_audit.PRACTICAL_ADMISSION_SOURCE_CHECK_PATH = scanner
+                done_definition_audit.PRACTICAL_ADMISSION_WRAPPER_ROOT = wrapper_root
+                done_definition_audit.run_command = fake_run_command
+                gate = evaluate_practical_admission_source_gate(30)
+            finally:
+                (
+                    done_definition_audit.ROOT,
+                    done_definition_audit.PRACTICAL_ADMISSION_SOURCE_CHECK_PATH,
+                    done_definition_audit.PRACTICAL_ADMISSION_WRAPPER_ROOT,
+                    done_definition_audit.run_command,
+                ) = originals
+
+        self.assertEqual(gate["status"], "pass")
+        self.assertIn("--tracked-run-wrappers", captured["scan_cmd"])
+        self.assertNotIn(str(wrapper), captured["scan_cmd"])
 
     def test_await_launch_source_gate_reports_live_only_guard(self) -> None:
         import done_definition_audit
@@ -667,7 +771,8 @@ Measured on 2026-05-22:
         def fake_run_command(cmd, *, cwd, timeout, env=None):
             del cmd, cwd
             captured["timeout"] = timeout
-            captured["env_timeout"] = env.get("ICT_ENGINE_HELP_AUDIT_BUILD_TIMEOUT_SECONDS")
+            captured["build_timeout"] = env.get("ICT_ENGINE_HELP_AUDIT_BUILD_TIMEOUT_SECONDS")
+            captured["help_timeout"] = env.get("ICT_ENGINE_HELP_AUDIT_HELP_TIMEOUT_SECONDS")
             return (
                 "pass",
                 {
@@ -699,7 +804,8 @@ Measured on 2026-05-22:
 
         self.assertEqual(gate["status"], "pass")
         self.assertEqual(captured["timeout"], 600)
-        self.assertEqual(captured["env_timeout"], "600")
+        self.assertEqual(captured["build_timeout"], "600")
+        self.assertEqual(captured["help_timeout"], "600")
 
     def test_main_warms_heavy_checks_before_help_audit_for_heavy_run(self) -> None:
         import done_definition_audit
@@ -785,7 +891,7 @@ Measured on 2026-05-22:
                         },
                     )
                 self.assertIn(str(scanner), cmd)
-                self.assertIn(str(wrapper_root / "run_bad_v1.py"), cmd)
+                self.assertIn("--tracked-run-wrappers", cmd)
                 return (
                     "fail",
                     {
@@ -876,7 +982,7 @@ Measured on 2026-05-22:
                     )
                 captured["scan_cmd"] = list(map(str, cmd))
                 self.assertIn(str(scanner), cmd)
-                self.assertIn(str(wrapper_root / "run_good_v1.py"), cmd)
+                self.assertIn("--tracked-run-wrappers", cmd)
                 self.assertIn(str(helper), cmd)
                 return (
                     "pass",
