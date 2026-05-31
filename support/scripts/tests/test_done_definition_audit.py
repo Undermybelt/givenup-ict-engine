@@ -18,6 +18,7 @@ if str(SCRIPTS_ROOT) not in sys.path:
 from done_definition_audit import (  # noqa: E402
     build_smoke_environment,
     evaluate_await_launch_source_gate,
+    evaluate_fixed_bps_cost_model_source_gate,
     evaluate_practical_admission_source_gate,
     evaluate_quickstart_surface,
     evaluate_main_rs_guardrail,
@@ -538,6 +539,145 @@ Measured on 2026-05-22:
         self.assertEqual(gate["status"], "pass")
         self.assertIn("--tracked-run-wrappers", captured["scan_cmd"])
         self.assertNotIn(str(wrapper), captured["scan_cmd"])
+
+    def test_fixed_bps_source_gate_passes_with_quarantined_untracked_debt(self) -> None:
+        import done_definition_audit
+
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            scanner = root / "support" / "scripts" / "research" / "fixed_bps_cost_model_source_check.py"
+            quarantine_path = root / "support" / "docs" / "audits" / "fixed-bps-cost-model-source-debt-quarantine.json"
+            scanner.parent.mkdir(parents=True)
+            quarantine_path.parent.mkdir(parents=True)
+            scanner.write_text("# scanner placeholder\n", encoding="utf-8")
+            untracked_violation = {
+                "file": str(root / "support/docs/experiments/actionable-regime-confidence/scripts/run_bad.py"),
+                "line": 10,
+                "column": 4,
+                "snippet": "cost_bps = 5",
+                "detail": "fixed bps source debt",
+                "violation": "fixed_bps_cost_assignment",
+            }
+            fingerprint = _violation_fingerprint([untracked_violation])
+            quarantine_path.write_text(
+                json.dumps(
+                    {
+                        "schema_version": "fixed-bps-cost-model-source-debt-quarantine/v1",
+                        "untracked_violation_count": 1,
+                        "untracked_violating_files": 1,
+                        "untracked_violations_sha256": fingerprint,
+                        "decision": "quarantined_untracked_fixed_bps_cost_model_debt",
+                    }
+                ),
+                encoding="utf-8",
+            )
+
+            def fake_run_command(cmd, *, cwd, timeout, env=None):
+                del cmd, cwd, timeout, env
+                return (
+                    "fail",
+                    {
+                        "returncode": 1,
+                        "stdout": json.dumps(
+                            {
+                                "checked_files": 2,
+                                "violating_files": 1,
+                                "violation_count": 1,
+                                "violations": [untracked_violation],
+                                "tracked_checked_files": 1,
+                                "tracked_violating_files": 0,
+                                "tracked_violation_count": 0,
+                                "tracked_violations": [],
+                                "untracked_checked_files": 1,
+                                "untracked_violating_files": 1,
+                                "untracked_violation_count": 1,
+                                "untracked_violations": [untracked_violation],
+                            }
+                        ),
+                        "stderr": "",
+                    },
+                )
+
+            originals = (
+                done_definition_audit.ROOT,
+                done_definition_audit.FIXED_BPS_COST_MODEL_SOURCE_CHECK_PATH,
+                done_definition_audit.run_command,
+            )
+            try:
+                done_definition_audit.ROOT = root
+                done_definition_audit.FIXED_BPS_COST_MODEL_SOURCE_CHECK_PATH = scanner
+                done_definition_audit.run_command = fake_run_command
+                gate = evaluate_fixed_bps_cost_model_source_gate(30)
+            finally:
+                (
+                    done_definition_audit.ROOT,
+                    done_definition_audit.FIXED_BPS_COST_MODEL_SOURCE_CHECK_PATH,
+                    done_definition_audit.run_command,
+                ) = originals
+
+        self.assertEqual(gate["status"], "pass")
+        self.assertEqual(gate["details"]["tracked_violation_count"], 0)
+        self.assertEqual(gate["details"]["untracked_violation_count"], 1)
+        self.assertTrue(gate["details"]["quarantine"]["matched"])
+
+    def test_fixed_bps_source_gate_fails_on_tracked_debt(self) -> None:
+        import done_definition_audit
+
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            scanner = root / "support" / "scripts" / "research" / "fixed_bps_cost_model_source_check.py"
+            scanner.parent.mkdir(parents=True)
+            scanner.write_text("# scanner placeholder\n", encoding="utf-8")
+            tracked_violation = {
+                "file": str(root / "support/scripts/research/current_authority.py"),
+                "violation": "fixed_bps_cost_assignment",
+            }
+
+            def fake_run_command(cmd, *, cwd, timeout, env=None):
+                del cmd, cwd, timeout, env
+                return (
+                    "fail",
+                    {
+                        "returncode": 1,
+                        "stdout": json.dumps(
+                            {
+                                "checked_files": 1,
+                                "violating_files": 1,
+                                "violation_count": 1,
+                                "violations": [tracked_violation],
+                                "tracked_checked_files": 1,
+                                "tracked_violating_files": 1,
+                                "tracked_violation_count": 1,
+                                "tracked_violations": [tracked_violation],
+                                "untracked_checked_files": 0,
+                                "untracked_violating_files": 0,
+                                "untracked_violation_count": 0,
+                                "untracked_violations": [],
+                            }
+                        ),
+                        "stderr": "",
+                    },
+                )
+
+            originals = (
+                done_definition_audit.ROOT,
+                done_definition_audit.FIXED_BPS_COST_MODEL_SOURCE_CHECK_PATH,
+                done_definition_audit.run_command,
+            )
+            try:
+                done_definition_audit.ROOT = root
+                done_definition_audit.FIXED_BPS_COST_MODEL_SOURCE_CHECK_PATH = scanner
+                done_definition_audit.run_command = fake_run_command
+                gate = evaluate_fixed_bps_cost_model_source_gate(30)
+            finally:
+                (
+                    done_definition_audit.ROOT,
+                    done_definition_audit.FIXED_BPS_COST_MODEL_SOURCE_CHECK_PATH,
+                    done_definition_audit.run_command,
+                ) = originals
+
+        self.assertEqual(gate["status"], "fail")
+        self.assertEqual(gate["details"]["tracked_violation_count"], 1)
 
     def test_await_launch_source_gate_reports_live_only_guard(self) -> None:
         import done_definition_audit

@@ -31,6 +31,9 @@ SMOKE_SCRIPT_PATH = ROOT / "support" / "scripts" / "smoke_acceptance.sh"
 PRACTICAL_ADMISSION_SOURCE_CHECK_PATH = (
     ROOT / "support" / "scripts" / "research" / "downstream_practical_admission_source_check.py"
 )
+FIXED_BPS_COST_MODEL_SOURCE_CHECK_PATH = (
+    ROOT / "support" / "scripts" / "research" / "fixed_bps_cost_model_source_check.py"
+)
 PRACTICAL_ADMISSION_WRAPPER_ROOT = (
     ROOT / "support" / "docs" / "experiments" / "actionable-regime-confidence" / "scripts"
 )
@@ -39,6 +42,7 @@ PRACTICAL_ADMISSION_REPORT_FILES = (
 )
 DEFAULT_SMOKE_STATE_PREFIX = "/tmp/ict-engine-done-definition-audit-smoke"
 DEFAULT_PRACTICAL_ADMISSION_SOURCE_TIMEOUT_SECONDS = 180
+DEFAULT_FIXED_BPS_COST_MODEL_SOURCE_TIMEOUT_SECONDS = 180
 COMPACT_COMMAND_ARG_LIMIT = 12
 COMPACT_COMMAND_TARGET_SAMPLE_LIMIT = 5
 COMPACT_STREAM_CHAR_LIMIT = 2000
@@ -550,6 +554,10 @@ def await_launch_debt_quarantine_path() -> Path:
     return ROOT / "support" / "docs" / "audits" / "await-launch-source-debt-quarantine.json"
 
 
+def fixed_bps_cost_model_debt_quarantine_path() -> Path:
+    return ROOT / "support" / "docs" / "audits" / "fixed-bps-cost-model-source-debt-quarantine.json"
+
+
 def _read_practical_admission_debt_quarantine(summary: dict) -> dict:
     return _read_source_debt_quarantine(
         summary,
@@ -565,6 +573,15 @@ def _read_await_launch_debt_quarantine(summary: dict) -> dict:
         quarantine_path=await_launch_debt_quarantine_path(),
         schema_version="await-launch-source-debt-quarantine/v1",
         decision="quarantined_untracked_await_launch_debt",
+    )
+
+
+def _read_fixed_bps_cost_model_debt_quarantine(summary: dict) -> dict:
+    return _read_source_debt_quarantine(
+        summary,
+        quarantine_path=fixed_bps_cost_model_debt_quarantine_path(),
+        schema_version="fixed-bps-cost-model-source-debt-quarantine/v1",
+        decision="quarantined_untracked_fixed_bps_cost_model_debt",
     )
 
 
@@ -641,6 +658,15 @@ def write_await_launch_debt_manifest(summary: dict) -> str | None:
         schema_version="await-launch-source-debt/v1",
         output_prefix="ict-engine-await-launch-source-debt",
         quarantine_reader=_read_await_launch_debt_quarantine,
+    )
+
+
+def write_fixed_bps_cost_model_debt_manifest(summary: dict) -> str | None:
+    return write_source_debt_manifest(
+        summary,
+        schema_version="fixed-bps-cost-model-source-debt/v1",
+        output_prefix="ict-engine-fixed-bps-cost-model-source-debt",
+        quarantine_reader=_read_fixed_bps_cost_model_debt_quarantine,
     )
 
 
@@ -771,6 +797,94 @@ def evaluate_practical_admission_source_gate(timeout_seconds: int) -> dict:
     return _gate(
         "practical_admission_source_surface",
         "pass" if summary["tracked_violation_count"] == 0 else "fail",
+        summary,
+    )
+
+
+def _summarize_fixed_bps_cost_model_scan(scan_report: dict) -> dict:
+    violations = list(scan_report.get("violations") or [])
+    tracked_violations = list(scan_report.get("tracked_violations") or [])
+    untracked_violations = list(scan_report.get("untracked_violations") or [])
+    if not tracked_violations and not untracked_violations and violations:
+        tracked_violations = violations
+    by_type: Counter[str] = Counter(
+        str(violation.get("violation") or "unknown") for violation in violations
+    )
+    return {
+        "scan_scope": "tracked_cost_authority_plus_active_untracked_experiment_scripts",
+        "scanned_files": scan_report.get("checked_files"),
+        "tracked_scanned_files": scan_report.get("tracked_checked_files"),
+        "untracked_scanned_files": scan_report.get("untracked_checked_files"),
+        "violating_files": scan_report.get("violating_files"),
+        "violation_count": scan_report.get("violation_count", len(violations)),
+        "tracked_violating_files": scan_report.get("tracked_violating_files"),
+        "tracked_violation_count": scan_report.get(
+            "tracked_violation_count", len(tracked_violations)
+        ),
+        "untracked_violating_files": scan_report.get("untracked_violating_files"),
+        "untracked_violation_count": scan_report.get(
+            "untracked_violation_count", len(untracked_violations)
+        ),
+        "violations_by_type": dict(sorted(by_type.items())),
+        "sample_violations": tracked_violations[:10] or untracked_violations[:10] or violations[:10],
+        "tracked_violations": tracked_violations,
+        "untracked_violations": untracked_violations,
+    }
+
+
+def evaluate_fixed_bps_cost_model_source_gate(timeout_seconds: int) -> dict:
+    if not FIXED_BPS_COST_MODEL_SOURCE_CHECK_PATH.exists():
+        return _gate(
+            "fixed_bps_cost_model_source_surface",
+            "fail",
+            {"error": f"missing file: {_rel_path(FIXED_BPS_COST_MODEL_SOURCE_CHECK_PATH)}"},
+        )
+
+    status, details = run_command(
+        [
+            sys.executable,
+            str(FIXED_BPS_COST_MODEL_SOURCE_CHECK_PATH),
+            "--tracked",
+            "--compact",
+        ],
+        cwd=ROOT,
+        timeout=timeout_seconds,
+    )
+    try:
+        scan_report = json.loads(details.get("stdout") or "{}")
+    except json.JSONDecodeError as exc:
+        failed_details = dict(details)
+        failed_details["error"] = f"invalid_fixed_bps_cost_model_scan_json: {exc}"
+        return _gate("fixed_bps_cost_model_source_surface", "fail", failed_details)
+    if not isinstance(scan_report, dict):
+        failed_details = dict(details)
+        failed_details["error"] = "invalid_fixed_bps_cost_model_scan_shape"
+        return _gate("fixed_bps_cost_model_source_surface", "fail", failed_details)
+
+    summary = _summarize_fixed_bps_cost_model_scan(scan_report)
+    debt_manifest_file = write_fixed_bps_cost_model_debt_manifest(summary)
+    if debt_manifest_file:
+        summary["debt_manifest_file"] = debt_manifest_file
+        summary["quarantine"] = _read_fixed_bps_cost_model_debt_quarantine(summary)
+    summary["scanner_returncode"] = details.get("returncode")
+    if "command" in details:
+        summary["scanner_command"] = details.get("command")
+    if "error" in details:
+        summary["scanner_error"] = details.get("error")
+    if "timeout_seconds" in details:
+        summary["scanner_timeout_seconds"] = details.get("timeout_seconds")
+    if status == "fail" and int(summary.get("violation_count") or 0) == 0:
+        summary["stdout"] = details.get("stdout", "")
+        summary["stderr"] = details.get("stderr", "")
+        return _gate("fixed_bps_cost_model_source_surface", "fail", summary)
+    summary["rule"] = (
+        "tracked/current cost authority must not emit fixed-bps transaction-cost models; "
+        "active untracked experiment-script debt is externalized by quarantine and cannot "
+        "satisfy promotion_allowed, trade_usable, or real-cost closure"
+    )
+    return _gate(
+        "fixed_bps_cost_model_source_surface",
+        "pass" if int(summary.get("tracked_violation_count") or 0) == 0 else "fail",
         summary,
     )
 
@@ -1021,7 +1135,11 @@ def _compact_gate(gate: dict, root: str) -> dict:
         "status": gate.get("status"),
         "heavy": gate.get("heavy", False),
     }
-    if gate.get("id") in {"practical_admission_source_surface", "await_launch_source_surface"}:
+    if gate.get("id") in {
+        "practical_admission_source_surface",
+        "await_launch_source_surface",
+        "fixed_bps_cost_model_source_surface",
+    }:
         details = gate.get("details", {})
         if details:
             compact["details"] = _compact_source_gate_details(details, root)
@@ -1100,6 +1218,12 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
         help="Timeout for downstream practical-admission wrapper source scan.",
     )
     parser.add_argument(
+        "--fixed-bps-source-timeout-seconds",
+        type=int,
+        default=DEFAULT_FIXED_BPS_COST_MODEL_SOURCE_TIMEOUT_SECONDS,
+        help="Timeout for fixed-bps cost-model source scan.",
+    )
+    parser.add_argument(
         "--heavy-timeout-seconds",
         type=int,
         default=900,
@@ -1158,6 +1282,7 @@ def main(argv: list[str] | None = None) -> int:
             args.practical_admission_source_timeout_seconds
         )
     )
+    gates.append(evaluate_fixed_bps_cost_model_source_gate(args.fixed_bps_source_timeout_seconds))
     if _heavy_checks_requested(args):
         heavy_gates = evaluate_heavy_checks(args)
         help_gate = evaluate_help_audit_policy(args.help_audit_timeout_seconds)

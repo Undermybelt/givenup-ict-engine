@@ -918,6 +918,60 @@ class ObjectiveClosureSnapshotTest(unittest.TestCase):
             summary["prioritized_next_actions"],
         )
 
+    def test_summarize_snapshot_treats_quarantined_fixed_bps_source_debt_as_externalized(self) -> None:
+        summary = summarize_snapshot(
+            {
+                "completion_ready": True,
+                "quickstart_surface": "pass",
+                "fixed_bps_cost_model_source_surface": {
+                    "status": "pass",
+                    "tracked_violation_count": 0,
+                    "tracked_violating_files": 0,
+                    "untracked_violation_count": 5,
+                    "untracked_violating_files": 3,
+                    "debt_manifest_file": "fixed_bps_cost_model_source_debt_manifest.json",
+                    "quarantine": {
+                        "matched": True,
+                        "decision": "quarantined_untracked_fixed_bps_cost_model_debt",
+                        "manifest_file": "support/docs/audits/fixed-bps-cost-model-source-debt-quarantine.json",
+                    },
+                },
+            },
+            {
+                "status": "pass",
+                "promotion_allowed_true": 1,
+                "trade_usable_true": 1,
+            },
+            {
+                "status": "pass",
+                "unresolved_next_actions": {},
+            },
+            snapshot_timestamp="2026-05-31T12:00:00Z",
+        )
+
+        self.assertNotIn("fixed_bps_cost_model_source_debt", summary["blockers"])
+        self.assertEqual(
+            summary["blocker_details"]["quarantined_fixed_bps_cost_model_source_debt"],
+            {
+                "tracked_violation_count": 0,
+                "tracked_violating_files": 0,
+                "untracked_violation_count": 5,
+                "untracked_violating_files": 3,
+                "violation_count": None,
+                "violating_files": None,
+                "debt_manifest_file": "fixed_bps_cost_model_source_debt_manifest.json",
+                "quarantine_manifest_file": "support/docs/audits/fixed-bps-cost-model-source-debt-quarantine.json",
+            },
+        )
+        self.assertNotIn(
+            {
+                "surface": "done_definition",
+                "reason": "fixed_bps_cost_model_source_debt",
+                "action": "retire, quarantine, or track fixed-bps cost-model source debt before objective closure",
+            },
+            summary["prioritized_next_actions"],
+        )
+
     def test_summarize_snapshot_lists_every_live_factor_runtime_action(self) -> None:
         live_roots = [
             {"pid": 1001, "run_root": "root-a"},

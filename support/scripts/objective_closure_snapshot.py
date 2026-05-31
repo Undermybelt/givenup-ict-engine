@@ -230,6 +230,7 @@ def _done_surface(report: dict[str, Any]) -> dict[str, Any]:
     quickstart_status = None
     practical_admission_source_surface = None
     await_launch_source_surface = None
+    fixed_bps_cost_model_source_surface = None
     if isinstance(gates, list):
         for gate in gates:
             if not isinstance(gate, dict):
@@ -240,6 +241,8 @@ def _done_surface(report: dict[str, Any]) -> dict[str, Any]:
                 practical_admission_source_surface = _source_debt_surface(gate)
             elif gate.get("id") == "await_launch_source_surface":
                 await_launch_source_surface = _source_debt_surface(gate)
+            elif gate.get("id") == "fixed_bps_cost_model_source_surface":
+                fixed_bps_cost_model_source_surface = _source_debt_surface(gate)
     return {
         "head": report.get("head"),
         "tracked_worktree_fingerprint": report.get("tracked_worktree_fingerprint"),
@@ -254,6 +257,7 @@ def _done_surface(report: dict[str, Any]) -> dict[str, Any]:
         "quickstart_surface": quickstart_status,
         "practical_admission_source_surface": practical_admission_source_surface,
         "await_launch_source_surface": await_launch_source_surface,
+        "fixed_bps_cost_model_source_surface": fixed_bps_cost_model_source_surface,
         "unresolved": summary.get("unresolved", []),
         "skipped_gates": summary.get("skipped_gates", []),
         "next_action": summary.get("next_action"),
@@ -817,7 +821,11 @@ def _done_definition_blocker_detail(done_surface: dict[str, Any]) -> dict[str, A
     ):
         if key in done_surface:
             detail[key] = done_surface[key]
-    for source_key in ("practical_admission_source_surface", "await_launch_source_surface"):
+    for source_key in (
+        "practical_admission_source_surface",
+        "await_launch_source_surface",
+        "fixed_bps_cost_model_source_surface",
+    ):
         source_surface = done_surface.get(source_key)
         if not isinstance(source_surface, dict):
             continue
@@ -857,6 +865,14 @@ def summarize_snapshot(
         await_launch_source,
         blocker_key="await_launch_source_debt",
         quarantined_key="quarantined_await_launch_source_debt",
+    )
+    fixed_bps_source = done_surface.get("fixed_bps_cost_model_source_surface")
+    fixed_bps_has_debt, fixed_bps_quarantined = _add_source_debt_blocker(
+        blockers,
+        blocker_details,
+        fixed_bps_source,
+        blocker_key="fixed_bps_cost_model_source_debt",
+        quarantined_key="quarantined_fixed_bps_cost_model_source_debt",
     )
     if factor_surface.get("status") != "pass":
         blockers.append("factor_closure_blocked")
@@ -945,6 +961,14 @@ def summarize_snapshot(
                 "surface": "done_definition",
                 "reason": "await_launch_source_debt",
                 "action": "retire, quarantine, or track await-launch wrappers that can launch with active/fresh claims present",
+            }
+        )
+    if fixed_bps_has_debt and not fixed_bps_quarantined:
+        prioritized_next_actions.append(
+            {
+                "surface": "done_definition",
+                "reason": "fixed_bps_cost_model_source_debt",
+                "action": "retire, quarantine, or track fixed-bps cost-model source debt before objective closure",
             }
         )
     factor_next = factor_surface.get("next_action")
@@ -1149,6 +1173,13 @@ def build_snapshot(
         output_dir=output_dir,
         staged_name="await_launch_source_debt_manifest.json",
         evidence_key="await_launch_source_debt_manifest",
+        evidence_files=evidence_files,
+    )
+    _stage_source_debt_manifest(
+        done_surface.get("fixed_bps_cost_model_source_surface"),
+        output_dir=output_dir,
+        staged_name="fixed_bps_cost_model_source_debt_manifest.json",
+        evidence_key="fixed_bps_cost_model_source_debt_manifest",
         evidence_files=evidence_files,
     )
     summary = summarize_snapshot(

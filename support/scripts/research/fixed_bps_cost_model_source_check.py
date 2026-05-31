@@ -715,6 +715,15 @@ def git_tracked_paths(repo_root: Path, paths: Sequence[Path], *, include_tests: 
     return sorted(set(tracked))
 
 
+def tracked_path_set(
+    repo_root: Path,
+    roots: Sequence[Path],
+    *,
+    include_tests: bool = False,
+) -> set[Path]:
+    return {path.resolve() for path in git_tracked_paths(repo_root, roots, include_tests=include_tests)}
+
+
 def scan_paths_for_scope(
     repo_root: Path,
     roots: Sequence[Path],
@@ -729,10 +738,56 @@ def scan_paths_for_scope(
     # ``--tracked`` in verification commands, but active untracked experiment
     # scripts in the requested roots can still become copied gate authority.
     absolute_roots = [root if root.is_absolute() else repo_root / root for root in roots]
-    return sorted(set(git_tracked_paths(repo_root, roots, include_tests=include_tests)) | set(discover_paths(absolute_roots, include_tests=include_tests)))
+    return sorted(tracked_path_set(repo_root, roots, include_tests=include_tests) | set(discover_paths(absolute_roots, include_tests=include_tests)))
 
 
-def check_paths(paths: Sequence[Path]) -> dict:
+def _path_is_tracked(path: Path, tracked_files: set[Path] | None) -> bool:
+    return tracked_files is not None and path.resolve() in tracked_files
+
+
+def _summarize_tracked_split(
+    file_reports: list[dict],
+    *,
+    tracked_files: set[Path],
+) -> dict:
+    tracked_violations: list[dict] = []
+    untracked_violations: list[dict] = []
+    tracked_checked_files = 0
+    untracked_checked_files = 0
+    tracked_violating_files: set[str] = set()
+    untracked_violating_files: set[str] = set()
+    for report in file_reports:
+        report_file = str(report.get("file") or "")
+        is_tracked = _path_is_tracked(Path(report_file), tracked_files) if report_file else False
+        if is_tracked:
+            tracked_checked_files += 1
+        else:
+            untracked_checked_files += 1
+        if not report.get("ok"):
+            if is_tracked:
+                tracked_violating_files.add(report_file)
+            else:
+                untracked_violating_files.add(report_file)
+        for hit in report.get("violations") or []:
+            item = dict(hit)
+            item["file"] = report_file
+            if is_tracked:
+                tracked_violations.append(item)
+            else:
+                untracked_violations.append(item)
+    return {
+        "tracked_checked_files": tracked_checked_files,
+        "untracked_checked_files": untracked_checked_files,
+        "tracked_violating_files": len(tracked_violating_files),
+        "untracked_violating_files": len(untracked_violating_files),
+        "tracked_violation_count": len(tracked_violations),
+        "untracked_violation_count": len(untracked_violations),
+        "tracked_violations": tracked_violations,
+        "untracked_violations": untracked_violations,
+    }
+
+
+def check_paths(paths: Sequence[Path], *, tracked_files: set[Path] | None = None) -> dict:
     file_reports = [check_source_file(path) for path in paths]
     violations = []
     for report in file_reports:
@@ -740,7 +795,7 @@ def check_paths(paths: Sequence[Path]) -> dict:
             item = dict(hit)
             item["file"] = report["file"]
             violations.append(item)
-    return {
+    report = {
         "ok": not violations,
         "decision": "pass" if not violations else "fixed_bps_cost_model_source_violation",
         "checked_files": len(file_reports),
@@ -749,6 +804,14 @@ def check_paths(paths: Sequence[Path]) -> dict:
         "violations": violations,
         "file_reports": file_reports,
     }
+    if tracked_files is not None:
+        report.update(
+            _summarize_tracked_split(
+                file_reports,
+                tracked_files=tracked_files,
+            )
+        )
+    return report
 
 
 def build_arg_parser() -> argparse.ArgumentParser:
@@ -764,8 +827,13 @@ def main(argv: Sequence[str] | None = None) -> int:
     args = build_arg_parser().parse_args(argv)
     repo_root = Path.cwd()
     roots = args.paths or list(DEFAULT_SCAN_ROOTS)
+    tracked_files = (
+        tracked_path_set(repo_root, roots, include_tests=args.include_tests)
+        if args.tracked
+        else None
+    )
     paths = scan_paths_for_scope(repo_root, roots, tracked=args.tracked, include_tests=args.include_tests)
-    report = check_paths(paths)
+    report = check_paths(paths, tracked_files=tracked_files)
     if args.compact:
         payload = {key: value for key, value in report.items() if key != "file_reports"}
     else:

@@ -286,6 +286,33 @@ def summarize(gross, trades):
 
             self.assertEqual(paths, [kept])
 
+    def test_tracked_scope_reports_untracked_fixed_bps_debt_separately(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            repo = Path(tmp)
+            root = repo / "support/docs/experiments/actionable-regime-confidence/scripts"
+            root.mkdir(parents=True)
+            tracked_good = root / "run_tracked_good.py"
+            untracked_bad = root / "run_untracked_bad.py"
+            tracked_good.write_text("slope_bps = 2.0\n", encoding="utf-8")
+            untracked_bad.write_text("cost_bps = 5\n", encoding="utf-8")
+            subprocess.run(["git", "init"], cwd=repo, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            subprocess.run(
+                ["git", "add", "support/docs/experiments/actionable-regime-confidence/scripts/run_tracked_good.py"],
+                cwd=repo,
+                check=True,
+            )
+
+            roots = [Path("support/docs/experiments/actionable-regime-confidence/scripts")]
+            tracked_files = checker.tracked_path_set(repo, roots)
+            paths = checker.scan_paths_for_scope(repo, roots, tracked=True)
+            report = checker.check_paths(paths, tracked_files=tracked_files)
+
+        self.assertFalse(report["ok"])
+        self.assertEqual(report["tracked_violation_count"], 0)
+        self.assertEqual(report["untracked_violation_count"], 1)
+        self.assertEqual(report["tracked_violating_files"], 0)
+        self.assertEqual(report["untracked_violating_files"], 1)
+
     def test_checker_source_is_skipped_so_it_can_list_forbidden_tokens(self) -> None:
         path = self.write_source("cost_bps = 5\n", name="fixed_bps_cost_model_source_check.py")
 

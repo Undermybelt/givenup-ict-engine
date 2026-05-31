@@ -57,10 +57,10 @@ audit until the evidence is strong enough or the remaining blockers are explicit
 | --- | --- | --- | --- | --- |
 | L1 | Completion may be inferred from partial green tests or backtest/AQ positives. | Focused workflow tests now reject marker-only same-tree closure and require a validated closure packet for `deploy_ready`/`trade_usable`. | Keep final practical promotion tied to validated same-tree practical closure evidence, not isolated pass rows. | fixed in code; broader scan still open |
 | L2 | Runtime docs or source may still allow branch-local admission to leak into promotion flags. | Pending source scanner. | Run practical-admission source audit and patch any fail-open surface. | open |
-| L3 | Training direction may overfit to zero-cost or fixed-bps AQ stress instead of verified instrument costs. | Pending source/doc audit. | Verify canonical cost helper and fail-closed fields are enforced. | open |
+| L3 | Training direction may overfit to zero-cost or fixed-bps AQ stress instead of verified instrument costs. | Fixed-bps source scan now separates tracked/current authority from active untracked experiment debt. Current tracked authority has zero fixed-bps cost-model violations; untracked debt is quarantined and remains non-promotional. | Keep final practical promotion tied to verified `cost_model`/instrument-cost packets; do not let quarantined untracked fixed-bps wrappers count as cost proof. | fixed for current authority; untracked debt quarantined |
 | L4 | ETH/full retained session scope may be missing from factor workdocs or terminal packets. | Pending source/doc audit. | Require session-scope evidence or keep promotion false. | open |
 | L5 | Closed-loop proof may omit accepted execution feedback while still reporting deploy/live readiness. | `policy_training_status_` tests require accepted paper/live/broker execution-feedback markers for live/trade-usable rows; simulated/backtest markers remain blocked. | Split `paper_feedback_collection_ready` from final live/trade usability; accepted execution feedback remains required for final promotion. | fixed in focused Rust surfaces |
-| L6 | Done-definition may miss Python helper/report surfaces that can emit practical flags. | Pending `done_definition_audit.py`. | Patch scanner coverage or add tests if a miss is found. | open |
+| L6 | Done-definition may miss Python helper/report surfaces that can emit practical flags. | `done_definition_audit.py --compact` now covers practical-admission source, await-launch source, and fixed-bps cost-model source surfaces without timing out in the no-heavy path. | Keep scanner coverage in done-definition and objective-closure snapshot readbacks; tracked practical leakage remains fail-closed. | fixed for current no-heavy scanner coverage |
 
 ## Verification Log
 
@@ -89,6 +89,37 @@ audit until the evidence is strong enough or the remaining blockers are explicit
   rechecking compact audit, `status=pass`, `active_claims=0`,
   `live_factor_processes=0`, `promotion_allowed_true=0`,
   `trade_usable_true=0`, and `same_tree_practical_closure=null`.
+- 2026-05-31T12:44:19+08:00: no-launch source-debt split added. The fixed-bps
+  cost-model scanner now reports tracked vs active-untracked violations. Current
+  readback:
+  `/tmp/ict-engine-factor-training-loop-audit-20260531T122038+0800/done_definition_audit.after_fixed_bps_quarantine.compact.json`
+  returned `status=pass`, `pass_count=7`, `skip_count=4`,
+  `practical_admission_source_surface.tracked_violation_count=0`,
+  `fixed_bps_cost_model_source_surface.tracked_violation_count=0`, and matched
+  quarantine for `1790` fixed-bps violations across `322` untracked experiment
+  scripts. This lowers the false global blocker for quality candidates while
+  preserving real-cost proof as a final promotion gate.
+- 2026-05-31T12:48:29+08:00: compact claim audit passed with
+  `active_claims=0`, `live_factor_processes=0`, `promotion_allowed_true=0`,
+  `trade_usable_true=0`, and `same_tree_practical_closure=null`.
+- 2026-05-31T12:52:43+08:00: objective snapshot readback staged the fixed-bps
+  debt manifest as quarantined
+  `quarantined_fixed_bps_cost_model_source_debt`, not an active source blocker.
+  The snapshot still correctly remained `not_complete` because heavy
+  done-definition gates were skipped, same-tree practical closure is absent,
+  release readiness requires a clean slice, and a transient live-runtime readback
+  was visible during the child factor audit.
+- 2026-05-31T12:53:03+08:00: final standalone compact claim audit rechecked
+  clean after the snapshot: `status=pass`, `active_claims=0`,
+  `live_factor_processes=0`, `promotion_allowed_true=0`,
+  `trade_usable_true=0`, and `same_tree_practical_closure=null`.
+- 2026-05-31T12:56:47+08:00: post-commit compact claim audit saw a foreign live
+  TOMAC wrapper under
+  `/tmp/ict-engine-tomac-tsmom-vol-scaled-low-turnover-aq-20260531T115002+0800`,
+  so runtime occupancy was `needs_attention` again. It still reported
+  `active_claims=0`, `promotion_allowed_true=0`, `trade_usable_true=0`, and
+  `same_tree_practical_closure=null`; this slice did not launch or promote a
+  factor.
 
 ## Current Remaining Blockers
 
@@ -99,11 +130,11 @@ audit until the evidence is strong enough or the remaining blockers are explicit
   `paper_feedback_collection_ready` stage. This creates productive throughput
   into feedback collection without turning paper/sim/backtest evidence into
   practical usability.
-- `done_definition_audit.py` previously timed out in the practical-admission
-  scanner path; that scanner coverage remains unresolved in this slice.
-- Broad fixed-bps debt remains outside the touched Rust core surfaces; broad
-  wrapper cleanup is still required before claiming the whole training system is
-  loophole-complete.
-- Current compact claim audit is clear, but this slice still did not produce a
-  practical factor; launching or promoting a candidate still needs a fresh claim
-  audit and the full evidence packet.
+- Broad fixed-bps debt still exists in untracked experiment scripts, but it is
+  now classified as quarantined non-authority debt rather than a tracked
+  current-path blocker. It cannot satisfy `promotion_allowed`, `trade_usable`,
+  real-cost closure, or objective completion.
+- Current post-commit compact claim audit has a foreign live runtime again, but
+  no active claims and no practical flags. Launching or promoting a candidate
+  still needs a fresh claim audit and the full evidence packet after runtime
+  occupancy clears.
