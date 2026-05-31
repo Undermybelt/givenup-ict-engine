@@ -32,6 +32,7 @@ the backtest window — used for train/test split validation.
 from __future__ import annotations
 
 from contextlib import contextmanager
+import importlib
 import sys
 import json
 from pathlib import Path
@@ -180,24 +181,46 @@ def build_backtest_args(
 
 @contextmanager
 def ohlcv_fill_missing_mode(*, fill_missing: bool):
-    """Optionally force Freqtrade's historical OHLCV loader to keep source gaps."""
+    """Optionally force Freqtrade historical OHLCV loaders to keep source gaps."""
 
     if fill_missing:
         yield
         return
     from freqtrade.data import history  # noqa: WPS433
 
-    original_load_data = history.load_data
+    patched: list[tuple[object, str, object]] = []
 
-    def load_data_without_fill(*args, **kwargs):
-        kwargs["fill_up_missing"] = False
-        return original_load_data(*args, **kwargs)
+    def force_no_fill(func):
+        def wrapper(*args, **kwargs):
+            kwargs["fill_up_missing"] = False
+            return func(*args, **kwargs)
 
-    history.load_data = load_data_without_fill
+        return wrapper
+
+    def patch_attr(module: object | None, name: str) -> None:
+        if module is None or not hasattr(module, name):
+            return
+        original = getattr(module, name)
+        patched.append((module, name, original))
+        setattr(module, name, force_no_fill(original))
+
+    def optional_module(name: str) -> object | None:
+        try:
+            return importlib.import_module(name)
+        except ImportError:
+            return None
+
+    patch_attr(history, "load_data")
+    patch_attr(history, "load_pair_history")
+    patch_attr(optional_module("freqtrade.data.history.history_utils"), "load_data")
+    patch_attr(optional_module("freqtrade.data.history.history_utils"), "load_pair_history")
+    patch_attr(optional_module("freqtrade.data.dataprovider"), "load_pair_history")
+
     try:
         yield
     finally:
-        history.load_data = original_load_data
+        for module, name, original in reversed(patched):
+            setattr(module, name, original)
 
 
 def run(

@@ -58,6 +58,13 @@ class RunTomacOneConfigTests(unittest.TestCase):
                 history = sys.modules.get("freqtrade.data.history")
                 if history is not None and hasattr(history, "load_data"):
                     history.load_data(datadir="fixture", pairs=["NQ/USD"], timeframe="15m")
+                dataprovider = sys.modules.get("freqtrade.data.dataprovider")
+                if dataprovider is not None and hasattr(dataprovider, "load_pair_history"):
+                    dataprovider.load_pair_history(
+                        pair="NQ/USD",
+                        timeframe="1h",
+                        datadir="fixture",
+                    )
 
             def start(self):
                 captured["started"] = True
@@ -68,7 +75,17 @@ class RunTomacOneConfigTests(unittest.TestCase):
         history_module.load_data = lambda **kwargs: captured.setdefault(
             "history_load_calls", []
         ).append(dict(kwargs))
+        history_module.load_pair_history = lambda **kwargs: captured.setdefault(
+            "history_load_pair_calls", []
+        ).append(dict(kwargs))
         data_module.history = history_module
+        history_utils_module = types.ModuleType("freqtrade.data.history.history_utils")
+        history_utils_module.load_data = history_module.load_data
+        history_utils_module.load_pair_history = history_module.load_pair_history
+        dataprovider_module = types.ModuleType("freqtrade.data.dataprovider")
+        dataprovider_module.load_pair_history = lambda **kwargs: captured.setdefault(
+            "dataprovider_load_pair_calls", []
+        ).append(dict(kwargs))
 
         old_modules = {
             name: sys.modules.get(name)
@@ -81,6 +98,8 @@ class RunTomacOneConfigTests(unittest.TestCase):
                 "freqtrade.optimize.backtesting",
                 "freqtrade.data",
                 "freqtrade.data.history",
+                "freqtrade.data.history.history_utils",
+                "freqtrade.data.dataprovider",
             )
         }
         sys.modules["run_tomac"] = run_tomac
@@ -91,6 +110,8 @@ class RunTomacOneConfigTests(unittest.TestCase):
         sys.modules["freqtrade.optimize.backtesting"] = backtesting_module
         sys.modules["freqtrade.data"] = data_module
         sys.modules["freqtrade.data.history"] = history_module
+        sys.modules["freqtrade.data.history.history_utils"] = history_utils_module
+        sys.modules["freqtrade.data.dataprovider"] = dataprovider_module
 
         spec = importlib.util.spec_from_file_location("run_tomac_one_under_test", SCRIPT)
         if spec is None or spec.loader is None:
@@ -244,6 +265,50 @@ class RunTomacOneConfigTests(unittest.TestCase):
         calls = captured["history_load_calls"]
         self.assertTrue(calls)
         self.assertTrue(all(call["fill_up_missing"] is False for call in calls))
+
+    def test_no_fill_missing_mode_patches_informative_dataprovider_loader(self) -> None:
+        with TemporaryDirectory() as tmpdir:
+            captured: dict[str, object] = {}
+            module, strategies, _data_dir = self.load_module(Path(tmpdir), captured)
+            (strategies / "LongNqCandidate.py").write_text(
+                "class LongNqCandidate:\n    can_short = False\n",
+                encoding="utf-8",
+            )
+
+            data_module = types.ModuleType("freqtrade.data")
+            history_module = types.ModuleType("freqtrade.data.history")
+            history_module.load_data = lambda **kwargs: captured.setdefault(
+                "history_load_calls", []
+            ).append(dict(kwargs))
+            history_module.load_pair_history = lambda **kwargs: captured.setdefault(
+                "history_load_pair_calls", []
+            ).append(dict(kwargs))
+            data_module.history = history_module
+            dataprovider_module = types.ModuleType("freqtrade.data.dataprovider")
+            dataprovider_module.load_pair_history = lambda **kwargs: captured.setdefault(
+                "dataprovider_load_pair_calls", []
+            ).append(dict(kwargs))
+            with mock.patch.dict(
+                sys.modules,
+                {
+                    "freqtrade": types.ModuleType("freqtrade"),
+                    "freqtrade.data": data_module,
+                    "freqtrade.data.history": history_module,
+                    "freqtrade.data.dataprovider": dataprovider_module,
+                },
+            ):
+                module.run(
+                    "LongNqCandidate",
+                    "15m",
+                    None,
+                    ["NQ/USD"],
+                    "20210103-20251231",
+                    fill_missing=False,
+                )
+
+        calls = captured["dataprovider_load_pair_calls"]
+        self.assertTrue(calls)
+        self.assertTrue(all(call.get("fill_up_missing") is False for call in calls))
 
 
 if __name__ == "__main__":
