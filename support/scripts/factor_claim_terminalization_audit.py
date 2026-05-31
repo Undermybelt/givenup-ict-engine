@@ -1734,7 +1734,11 @@ def _drop_stale_failed_tomac_prep_wrappers(processes: list[dict[str, Any]]) -> l
             isinstance(pid, int)
             and pid not in child_ppids
             and isinstance(run_root_text, str)
-            and _run_root_has_terminalized_loop_artifacts(Path(run_root_text))
+            and not _exit_file_predates_live_process(process)
+            and (
+                _run_root_has_terminalized_loop_artifacts(Path(run_root_text))
+                or _run_root_has_terminalized_clean_aq_artifacts(Path(run_root_text))
+            )
         ):
             continue
         if (
@@ -1763,6 +1767,45 @@ def _run_root_has_terminalized_loop_artifacts(run_root: Path) -> bool:
     if not terminal_metrics.exists() or not terminal_decision.exists():
         return False
     return any(checks_dir.glob("round_*_run_tomac.exit"))
+
+
+def _run_root_has_terminalized_clean_aq_artifacts(run_root: Path) -> bool:
+    summary_path = run_root / "summary.json"
+    if not summary_path.exists():
+        return False
+    try:
+        summary = json.loads(summary_path.read_text(encoding="utf-8", errors="replace"))
+    except (OSError, json.JSONDecodeError):
+        return False
+    if not isinstance(summary, dict):
+        return False
+    commands = summary.get("aq_commands")
+    gates = summary.get("aq_gate_summaries")
+    if not isinstance(commands, list) or not commands:
+        return False
+    if not isinstance(gates, list) or not gates:
+        return False
+    for command in commands:
+        if not isinstance(command, dict):
+            return False
+        if command.get("exit") != 0 or command.get("timed_out") is not False:
+            return False
+        name = str(command.get("name") or "").strip()
+        if name and not (run_root / "checks" / f"{name}.exit").exists():
+            return False
+    for gate in gates:
+        if not isinstance(gate, dict):
+            return False
+        if gate.get("promotion_allowed") is not False:
+            return False
+        if gate.get("trade_usable") is not False:
+            return False
+        if gate.get("update_goal") is not False:
+            return False
+        decision = str(gate.get("decision") or "").strip()
+        if not decision:
+            return False
+    return True
 
 
 def _process_rank(process: dict[str, Any]) -> int:

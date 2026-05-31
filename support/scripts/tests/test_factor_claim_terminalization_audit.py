@@ -3724,6 +3724,101 @@ trade_usable=false
 
             self.assertEqual(_drop_stale_failed_tomac_prep_wrappers([child]), [])
 
+    def test_drop_stale_failed_tomac_prep_wrappers_drops_terminalized_clean_aq_wrapper_without_descendants(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            run_root = Path(tmp) / "ict-engine-tomac-tsmom-vol-scaled-low-turnover-aq-20260531T115002+0800"
+            checks = run_root / "checks"
+            summaries = run_root / "summaries"
+            checks.mkdir(parents=True)
+            summaries.mkdir(parents=True)
+            (checks / "run_tomac_1h.exit").write_text("0\n", encoding="utf-8")
+            (summaries / "autoquant_clean_1h_gate.json").write_text(
+                json.dumps(
+                    {
+                        "decision": "observation_no_autoquant_survivor_yet",
+                        "promotion_allowed": False,
+                        "trade_usable": False,
+                        "update_goal": False,
+                    }
+                ),
+                encoding="utf-8",
+            )
+            (run_root / "summary.json").write_text(
+                json.dumps(
+                    {
+                        "aq_commands": [
+                            {"name": "run_tomac_1h", "exit": 0, "timed_out": False},
+                        ],
+                        "aq_gate_summaries": [
+                            {
+                                "decision": "observation_no_autoquant_survivor_yet",
+                                "promotion_allowed": False,
+                                "trade_usable": False,
+                                "update_goal": False,
+                            }
+                        ],
+                    }
+                ),
+                encoding="utf-8",
+            )
+            wrapper = {
+                "pid": 86048,
+                "ppid": 2745,
+                "elapsed": "09:01",
+                "run_root": str(run_root),
+                "exit_file": str(checks / "run_tomac_1h.exit"),
+                "exit_file_exists": True,
+                "command_excerpt": (
+                    "python support/docs/experiments/actionable-regime-confidence/scripts/"
+                    f"run_tomac_index_futures_clean_aq_v1.py --root {run_root} --timeout 1200"
+                ),
+            }
+
+            self.assertEqual(_drop_stale_failed_tomac_prep_wrappers([wrapper]), [])
+
+    def test_terminalized_clean_aq_root_keeps_newer_live_wrapper_process(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            run_root = Path(tmp) / "ict-engine-tomac-tsmom-vol-scaled-low-turnover-aq-20260531T115002+0800"
+            checks = run_root / "checks"
+            checks.mkdir(parents=True)
+            exit_file = checks / "run_tomac_1d.exit"
+            exit_file.write_text("0\n", encoding="utf-8")
+            stale_mtime = datetime.now(timezone.utc).timestamp() - 900
+            os.utime(exit_file, (stale_mtime, stale_mtime))
+            (run_root / "summary.json").write_text(
+                json.dumps(
+                    {
+                        "aq_commands": [
+                            {"name": "run_tomac_1d", "exit": 0, "timed_out": False},
+                        ],
+                        "aq_gate_summaries": [
+                            {
+                                "decision": "observation_no_autoquant_survivor_yet",
+                                "promotion_allowed": False,
+                                "trade_usable": False,
+                                "update_goal": False,
+                            }
+                        ],
+                    }
+                ),
+                encoding="utf-8",
+            )
+            wrapper = {
+                "pid": 98894,
+                "ppid": 2745,
+                "elapsed": "05:00",
+                "run_root": str(run_root),
+                "exit_file": str(exit_file),
+                "exit_file_exists": True,
+                "command_excerpt": (
+                    "python support/docs/experiments/actionable-regime-confidence/scripts/"
+                    f"run_tomac_index_futures_clean_aq_v1.py --root {run_root} "
+                    "--timeframes 5m,15m,30m,1h,4h,1d --aq-smoke-timeframe 30m"
+                ),
+            }
+
+            self.assertEqual(_drop_stale_failed_tomac_prep_wrappers([wrapper]), [wrapper])
+
     def test_live_process_classifier_detects_custom_tomac_scanner_and_lane_root(self) -> None:
         command = (
             "/opt/homebrew/bin/python3 /tmp/tomac_strict_trend_ote_reaction_scan.py "
