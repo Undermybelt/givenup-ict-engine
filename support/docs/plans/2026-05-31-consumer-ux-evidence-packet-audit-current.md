@@ -2454,3 +2454,277 @@ Post-commit retry evidence from another active audit:
 Decision: this is a same-count/same-file-count quarantine fingerprint drift
 refresh only. It does not change practical readiness: no same-tree practical
 closure packet exists, and no `trade_usable=true` factor is proven.
+
+## Current Runtime Reblock - 2026-05-31T13:30+0800
+
+After the quarantine commits, a new Board B runtime started and factor closure
+is no longer clear.
+
+Fresh factor audit:
+
+```bash
+python3 support/scripts/factor_claim_terminalization_audit.py --compact --portable-paths --output /tmp/ict-engine-factor-closure-current-e5889918-codex.json
+```
+
+Result:
+
+- Exit code `1`.
+- `summary.status=needs_attention`.
+- `active_claims=1`, `live_factor_processes=1`,
+  `live_factor_process_instances=2`.
+- Blocking reasons:
+  `active_claims` and `live_factor_processes`.
+- Live runtime root:
+  `/tmp/ict-engine-vhf-chop-trend-reacceleration-exact-aqprep-20260531T132517+0800`.
+- Live process:
+  pid `14772`, command
+  `run_tomac_vhf_chop_trend_reacceleration_exact_aqprep_v1.py --launch --timeout 1800`.
+- Active claim:
+  `/tmp/ict-engine-agent-claims/board-b-factor-refinement/20260531T132517+0800-codex-vhf-chop-trend-reacceleration-exact-aqprep.claim`.
+- The claim explicitly keeps `promotion_allowed=false`, `trade_usable=false`,
+  `update_goal=false`, and `same_tree_practical_closure=null`.
+- Current factor counts remain
+  `promotion_allowed_true=0`, `trade_usable_true=0`,
+  `same_tree_practical_closure=null`.
+
+Current light done-definition evidence at the current committed head:
+
+- `/tmp/ict-engine-closed-loop-certainty-audit-20260531T110523+0800/done_definition_audit_current_head_post_snapshot.json`.
+- Head:
+  `e58899184802e90ccb5c8a6222d303b212468b84`.
+- `summary.status=pass`, `fail_count=0`, `pass_count=7`, `skip_count=4`.
+- Practical-admission quarantine matched primary; fixed-bps quarantine matched
+  primary.
+- Heavy gates remain skipped, so this is not completion proof.
+
+Release readiness at current committed head:
+
+- `/tmp/ict-engine-release-readiness-current-e5889918-codex.json`.
+- `summary.status=needs_fix`.
+- Remote readback passed for origin and release mirror.
+- Remaining release blockers:
+  `worktree_clean_for_release` and `source_origin_matches_selected_source`.
+
+Decision: current objective closure is again blocked by a real live factor
+runtime, not by a smoke classifier false positive. Do not launch a sibling
+AQ/provider lane and do not claim release readiness or practical trade
+usefulness while this claim/process is active.
+
+## Continuation Readback - 2026-05-31T13:27+0800
+
+Routing was repeated before this continuation:
+
+- Route alias: `sd/ict-engine-maintenance-loop`.
+- Files read:
+  `~/.hermes/routing/skill-router.md`,
+  `~/.hermes/routing/project-router.md`, repo `AGENTS.md`, `CLAUDE.md`,
+  and `AGENT.md`.
+- Runtime skill used:
+  `~/.hermes/skills/software-development/ict-engine-maintenance-loop/SKILL.md`.
+
+Current HEAD:
+
+- `efe765e4b1976d79673f7d8fe6ab5566516103c0`
+  (`Refresh practical admission debt quarantine`).
+- Branch status was still shared/dirty with no staged files at the start of
+  this continuation.
+
+Current stable packet from the previous HEAD family:
+
+- `/tmp/ict-engine-consumer-ux-evidence-audit-20260531T-current-after-practical-quarantine-refresh-codex/objective_closure_snapshot.json`
+  exited `1` but produced a reusable not-complete packet.
+- It selected head `6929d5b3344ecfc66cdc12bc8339c050a0fbdcfb`.
+- Blockers were:
+  `done_definition_not_completion_ready`,
+  `same_tree_practical_closure_unproven`, and
+  `release_readiness_blocked`.
+- Practical-admission debt, fixed-bps cost-model debt, and await-launch debt
+  were all visible as quarantined untracked debt details, not active blockers.
+- Factor closure was clear:
+  `active_claims=0`, `live_factor_processes=0`,
+  `promotion_allowed_true=0`, `trade_usable_true=0`,
+  `same_tree_practical_closure=null`.
+- Release remote readback passed, but `worktree_clean_for_release` and
+  `source_origin_matches_selected_source` remained unresolved.
+
+Current post-commit packet attempt:
+
+- `/tmp/ict-engine-consumer-ux-evidence-audit-20260531T-post-quarantine-commit-codex/objective_closure_snapshot.json`
+  is not usable completion evidence.
+- It failed as `summary.status=snapshot_failed`,
+  `failed_audit=done_definition`, `error=missing_json_output`.
+- The child command timed out after `180s` with empty stdout/stderr:
+  `done_definition_audit.py --compact --practical-admission-source-timeout-seconds 120 --help-audit-timeout-seconds 120`.
+- No lingering process for that specific timed-out child was visible in the
+  later `pgrep`; this looks like a fail-closed timeout packet, not a current
+  orphaned scanner owner.
+
+Same-tree practical closure search:
+
+```bash
+find /tmp /private/tmp -maxdepth 4 \( -name '*same_tree_practical_closure*.json' -o -name '*same-tree-practical-closure*.json' \) -type f
+rg --files support | rg 'same_tree_practical_closure.*\.json$|same-tree-practical-closure.*\.json$'
+```
+
+Result:
+
+- No matching closure packet was found.
+- Current factor audit surfaces therefore remain authoritative:
+  `same_tree_practical_closure=null`, `promotion_allowed_true=0`,
+  `trade_usable_true=0`.
+
+In-flight heavy proof status:
+
+- A full-heavy done-definition audit was already running:
+  `/tmp/ict-engine-done-definition-heavy-20260531T-current-6929d5b-duplicate-count.json`.
+- Its process was still active at this checkpoint and had reached
+  `cargo clippy --all-targets -- -D warnings`.
+- Because current HEAD has advanced to `efe765e4`, that proof must be checked
+  for exact `head` and `tracked_worktree_fingerprint` before reuse; if it
+  records an older head or fingerprint it must remain fail-closed.
+- A duplicate full-heavy audit was briefly started in this continuation, then
+  stopped immediately after the existing in-flight audit was discovered to
+  avoid adding cargo contention.
+
+Decision: still not complete. The current evidence improved source-debt
+externalization and factor-closure readback, but the objective still lacks a
+current matching full-heavy done-definition proof, a validated same-tree
+practical closure packet, and release-ready clean/source-aligned state. No
+completion commit should be made from this state.
+
+## Practical Source Gate Enforcement - 2026-05-31T13:37+0800
+
+Remaining coherent code slice after
+`efe765e4b1976d79673f7d8fe6ab5566516103c0`:
+
+- `support/scripts/done_definition_audit.py` now scans active untracked
+  practical-admission `run_*.py` wrappers by passing them to
+  `downstream_practical_admission_source_check.py` through `--files-from`.
+- The `practical_admission_source_surface` gate now fails when untracked
+  practical-admission violations exist without a matching quarantine manifest.
+- Quarantined untracked debt may pass this source gate only when tracked
+  practical-admission violations remain zero and the quarantine matches the
+  current count/file/fingerprint contract.
+- This remains source-debt externalization only. It is not release readiness,
+  practical promotion, or `trade_usable=true` evidence.
+
+Verification:
+
+```bash
+python3 -m unittest support.scripts.tests.test_done_definition_audit -v
+python3 -m unittest support.scripts.tests.test_objective_closure_snapshot -v
+python3 support/scripts/ci/check_docs_runtime_isolation.py
+git diff --check -- support/scripts/done_definition_audit.py support/scripts/tests/test_done_definition_audit.py support/scripts/tests/test_objective_closure_snapshot.py
+```
+
+Result:
+
+- `test_done_definition_audit`: 39 tests passed.
+- `test_objective_closure_snapshot`: 48 tests passed before a later unrelated
+  local edit added an unverified descendant-process timeout test to that file.
+  Do not stage that later local edit with this slice.
+- Docs/runtime isolation: pass.
+- `git diff --check`: pass.
+
+Decision: commit only the source-gate enforcement code, its focused
+done-definition tests, and this tracking note. Leave unrelated live factor,
+objective-test, and broader profitability edits unstaged.
+
+## Resume Readback - 2026-05-31T13:27+0800
+
+Current HEAD during this resume:
+
+- `efe765e4b1976d79673f7d8fe6ab5566516103c0`
+  (`Refresh practical admission debt quarantine`).
+
+Readback commands:
+
+```bash
+git status --short --branch --untracked-files=no
+python3 support/scripts/factor_claim_terminalization_audit.py --compact --portable-paths --output /tmp/ict-engine-factor-closure-after-second-wait.json
+python3 support/scripts/factor_claim_terminalization_audit.py --compact --portable-paths --output /tmp/ict-engine-factor-closure-vhf-live-20260531T1326.json
+ps -axo pid,ppid,etime,command | rg "done_definition_audit|objective_closure_snapshot|smoke_acceptance|run_tomac_one|run_tomac_index_futures_clean_aq|cargo-clippy|cargo check|cargo test"
+```
+
+Result:
+
+- Worktree remains shared/dirty and `main` is ahead of `origin/main`.
+- `/tmp/ict-engine-factor-closure-after-second-wait.json` briefly returned
+  `summary.status=pass`, with `active_claims=0`, `live_factor_processes=0`,
+  `promotion_allowed_true=0`, `trade_usable_true=0`, and
+  `same_tree_practical_closure=null`.
+- That clear window became stale before a parent closure rerun was safe. A new
+  VHF/CHOP exact-AQ prep/launch owner appeared:
+  `/tmp/ict-engine-vhf-chop-trend-reacceleration-exact-aqprep-20260531T132517+0800`.
+- `/tmp/ict-engine-factor-closure-vhf-live-20260531T1326.json` exited `1` with
+  `summary.status=needs_attention`, `active_claims=1`,
+  `live_factor_processes=1`, `blocking_reasons=[active_claims, live_factor_processes]`,
+  `promotion_allowed_true=0`, `trade_usable_true=0`, and
+  `same_tree_practical_closure=null`.
+- The live claim file is
+  `20260531T132517+0800-codex-vhf-chop-trend-reacceleration-exact-aqprep.claim`;
+  actionability is `live_runtime_owner`.
+- The post-quarantine parent snapshot at
+  `/tmp/ict-engine-consumer-ux-evidence-audit-20260531T-post-quarantine-commit-codex/objective_closure_snapshot.json`
+  is not closure evidence. It failed with
+  `summary.status=snapshot_failed`, `failed_audit=done_definition`, and
+  `error=missing_json_output` after the done-definition child timed out.
+- A heavy done-definition audit is still running at
+  `/tmp/ict-engine-done-definition-heavy-20260531T-current-6929d5b-duplicate-count.json`;
+  its name/head lineage is stale relative to current HEAD `efe765e4`.
+
+Decision: do not run another parent objective snapshot or claim completion
+while the VHF/CHOP live owner is active. Current remaining blockers are a live
+factor owner, no validated same-tree practical closure packet, no current-head
+full-heavy completion proof, and release readiness blocked by dirty/source
+alignment state. This readback is tracking evidence only.
+
+## Objective Snapshot Timeout Cleanup - 2026-05-31T13:29+0800
+
+Root cause:
+
+- `objective_closure_snapshot.py` killed only the direct child process group
+  when a child audit timed out.
+- `done_definition_audit.py` launches nested source scanners with
+  `start_new_session=True`, so a timed-out parent snapshot could orphan nested
+  scanners such as `fixed_bps_cost_model_source_check.py` under `PPID=1`.
+
+Repair:
+
+- `support/scripts/objective_closure_snapshot.py` now collects descendant PIDs
+  before killing the direct child process group and kills descendant process
+  groups/individual PIDs as part of timeout cleanup.
+- `support/scripts/tests/test_objective_closure_snapshot.py` adds a regression
+  where the nested child starts a separate session and writes a marker if it
+  survives.
+
+Verification:
+
+```bash
+python3 -m unittest support.scripts.tests.test_objective_closure_snapshot.ObjectiveClosureSnapshotTest.test_run_command_timeout_kills_descendant_process_groups -v
+python3 -m unittest support.scripts.tests.test_objective_closure_snapshot.ObjectiveClosureSnapshotTest.test_run_command_timeout_kills_descendant_process_groups support.scripts.tests.test_objective_closure_snapshot.ObjectiveClosureSnapshotTest.test_run_command_timeout_kills_child_process_group support.scripts.tests.test_objective_closure_snapshot.ObjectiveClosureSnapshotTest.test_run_command_returns_structured_timeout_details -v
+python3 -m unittest support.scripts.tests.test_objective_closure_snapshot -v
+python3 -m py_compile support/scripts/objective_closure_snapshot.py support/scripts/tests/test_objective_closure_snapshot.py
+git diff --check -- support/scripts/objective_closure_snapshot.py support/scripts/tests/test_objective_closure_snapshot.py DEBUG.md support/docs/audits/practical-admission-source-debt-quarantine.json support/docs/plans/2026-05-31-consumer-ux-evidence-packet-audit-current.md
+```
+
+Result:
+
+- RED reproduced first: the new descendant-session regression failed because
+  the marker file existed after timeout.
+- Focused timeout tests passed after the repair.
+- Full `test_objective_closure_snapshot` passed `49/49`.
+- `py_compile` passed.
+- `git diff --check` passed for the touched objective snapshot/debug/tracking
+  paths.
+
+Current stop condition:
+
+- Do not rerun parent objective closure while a new VHF/CHOP AQ owner is live:
+  `/tmp/ict-engine-factor-closure-after-objective-timeout-fix-20260531T1322.json`
+  reports `summary.status=needs_attention`, `active_claims=1`,
+  `live_factor_processes=1`, `blocking_reasons=[active_claims, live_factor_processes]`,
+  `promotion_allowed_true=0`, `trade_usable_true=0`, and
+  `same_tree_practical_closure=null`.
+- This slice improves objective packet cleanup/cooperation only. It is not
+  completion evidence, release readiness, or practical trade-use evidence.
