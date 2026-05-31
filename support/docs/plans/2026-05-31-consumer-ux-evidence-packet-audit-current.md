@@ -1686,3 +1686,278 @@ Result:
 Decision: commit `3cff898d` is a verified classifier slice only. It is not
 completion evidence, not practical trade-use evidence, and not release
 readiness.
+
+## Current Resume Readback - 2026-05-31T12:59+0800
+
+Routing was repeated before this continuation:
+
+- Route alias: `sd/ict-engine-maintenance-loop`.
+- Files read:
+  `~/.hermes/routing/skill-router.md`,
+  `~/.hermes/routing/project-router.md`, repo `AGENTS.md`, `CLAUDE.md`,
+  and `AGENT.md`.
+- Runtime skill used:
+  `~/.hermes/skills/software-development/ict-engine-maintenance-loop/SKILL.md`.
+
+Current HEAD:
+
+- `1606cb73163a3e2cdb7a49d5f952c66bf44ab8f4`
+  (`Balance fixed-bps source debt gates`).
+- Branch status observed during the continuation:
+  `main...origin/main [ahead 276]`.
+- The shared worktree remains dirty. Do not broad-stage or commit a completion
+  slice from this state.
+
+Fresh current-head parent packet after the ETH calendar-guard AQ runtime
+terminalized fail-closed:
+
+```bash
+python3 support/scripts/objective_closure_snapshot.py --compact --check-remotes --output-dir /tmp/ict-engine-consumer-ux-evidence-audit-20260531T-after-eth-terminal-codex --timeout-seconds 180
+```
+
+Result:
+
+- Exit code `1`.
+- Packet:
+  `/tmp/ict-engine-consumer-ux-evidence-audit-20260531T-after-eth-terminal-codex/objective_closure_snapshot.json`.
+- `summary.status=not_complete`, `completion_proven=false`.
+- Blockers:
+  `done_definition_not_completion_ready`,
+  `same_tree_practical_closure_unproven`, and
+  `release_readiness_blocked`.
+- `done_definition.status=pass`, but `completion_ready=false` because heavy
+  gates were skipped in the light child:
+  `cargo_check_all_targets`, `cargo_clippy_all_targets_deny_warnings`,
+  `cargo_test`, and `smoke_acceptance_tmp_state`.
+- `factor_closure.status=pass`, `active_claims=0`,
+  `live_factor_processes=0`, `promotion_allowed_true=0`,
+  `trade_usable_true=0`, and `same_tree_practical_closure=null`.
+- Fixed-bps source debt is no longer an objective blocker in this packet:
+  tracked violations are `0`; untracked fixed-bps debt remains quarantined
+  and staged as `fixed_bps_cost_model_source_debt_manifest.json`
+  (`1790` violations across `322` untracked files).
+- Await-launch untracked debt also remains quarantined and visible
+  (`46` violations across `46` untracked files).
+- Release readiness remote readback passed for origin and release mirror, but
+  release remains blocked by `worktree_clean_for_release` and
+  `source_origin_matches_selected_source`.
+
+Heavy done-definition packet that finished in parallel:
+
+- Path:
+  `/tmp/ict-engine-done-definition-heavy-20260531T-codex-closedloop-final.json`.
+- Head:
+  `1606cb73163a3e2cdb7a49d5f952c66bf44ab8f4`.
+- Summary:
+  `completion_ready=true`, `status=pass`, `pass_count=11`,
+  `fail_count=0`, `skip_count=0`.
+- The heavy packet proves all enabled done-definition gates for its recorded
+  dirty-worktree fingerprint
+  `64d2211f7f5be61907b3f8ccb05384d5afaa921fa0e553fa223a5f9d35b3891c`.
+
+Proof-reuse attempt:
+
+```bash
+python3 support/scripts/objective_closure_snapshot.py --compact --check-remotes --done-definition-proof /tmp/ict-engine-done-definition-heavy-20260531T-codex-closedloop-final.json --output-dir /tmp/ict-engine-consumer-ux-evidence-audit-20260531T-with-heavy-proof-codex --timeout-seconds 180
+```
+
+Result:
+
+- Exit code `1`.
+- Packet:
+  `/tmp/ict-engine-consumer-ux-evidence-audit-20260531T-with-heavy-proof-codex/objective_closure_snapshot.json`.
+- The heavy proof was correctly rejected:
+  `proof_rejected_reason=proof_worktree_fingerprint_mismatch`.
+- Current light child fingerprint had drifted to
+  `b883f51339bcce1129ce34594a3a2843cfe9e306d4761c05a9f93428b2f62271`.
+- At the same time, a new live TSMOM 5m clean-AQ process appeared:
+  pid `80783`, run root
+  `/tmp/ict-engine-tomac-tsmom-vol-scaled-low-turnover-aq-20260531T115002+0800`.
+- Therefore the proof-reuse packet still blocks on:
+  `done_definition_not_completion_ready`,
+  `factor_closure_blocked`,
+  `same_tree_practical_closure_unproven`, and
+  `release_readiness_blocked`.
+
+Current process state during this checkpoint:
+
+- Still running:
+  `/tmp/ict-engine-done-definition-heavy-20260531T-post-smoke-pass.json`
+  producer, with child `cargo test`.
+- Still running:
+  TSMOM 5m clean-AQ wrapper under
+  `/tmp/ict-engine-tomac-tsmom-vol-scaled-low-turnover-aq-20260531T115002+0800`.
+- Still running:
+  a focused `cargo test -q --lib profitability_admission -- --nocapture`.
+
+Decision: still not complete. The heavy proof is valuable, but it cannot clear
+the current parent done-definition blocker after tracked-worktree fingerprint
+drift. The current safe next action is to wait for the active TSMOM 5m runtime
+and the remaining heavy proof to finish, inspect their real artifacts, then
+rerun a compact factor audit and parent objective snapshot. Do not claim
+practical trade usability: there is still no validated same-tree practical
+closure packet, and `promotion_allowed_true=0` / `trade_usable_true=0` remain
+the current factor readback.
+
+## Current-Head Refresh - 2026-05-31T04:53Z
+
+Current HEAD:
+
+- `33bf1fc8cb0dc3d0b7254ab287d7d46909f4c4c1`
+  (`Fix material prep claim classification`).
+
+Fresh factor closure:
+
+```bash
+python3 support/scripts/factor_claim_terminalization_audit.py --compact --portable-paths --output /tmp/ict-engine-factor-closure-resume-5.json
+```
+
+Result:
+
+- `summary.status=pass`.
+- `active_claims=0`, `live_factor_processes=0`,
+  `blocking_reasons=[]`.
+- `promotion_allowed_true=0`, `trade_usable_true=0`,
+  `same_tree_practical_closure=null`.
+
+Smoke-only wrapper recheck:
+
+```bash
+python3 support/scripts/done_definition_audit.py --compact --run-smoke --heavy-timeout-seconds 1200 --output /tmp/ict-engine-done-definition-smoke-only-20260531T1245.json
+```
+
+Result:
+
+- Exit code `0`.
+- `smoke_acceptance_tmp_state=pass`.
+- Because this used `--run-smoke` only, cargo check, clippy, and test were
+  skipped; it cannot serve as full done-definition completion proof.
+- The earlier full-heavy packet for `3cff898d` failed smoke with
+  `/Users/thrill3r/projects-ict-engine/ict-engine/support/scripts/smoke_acceptance.sh: line 59: engine: command not found`,
+  while a direct current smoke run also passed at
+  `/tmp/ict-engine-smoke-acceptance-20260531T044442Z/smoke-output`.
+  Current evidence points to shared-worktree/head drift during long heavy runs,
+  not a stable current smoke script failure.
+
+Fresh parent snapshot:
+
+```bash
+python3 support/scripts/objective_closure_snapshot.py --compact --check-remotes --timeout-seconds 300 --output-dir /tmp/ict-engine-consumer-ux-evidence-audit-20260531T1251-current-head
+```
+
+Result:
+
+- Exit code `1`.
+- Packet:
+  `/tmp/ict-engine-consumer-ux-evidence-audit-20260531T1251-current-head/objective_closure_snapshot.json`.
+- `summary.status=not_complete`, `completion_proven=false`.
+- `done_definition.head=33bf1fc8cb0dc3d0b7254ab287d7d46909f4c4c1`.
+- `done_definition.status=pass`, but `completion_ready=false` because heavy
+  gates are skipped in the light child:
+  `cargo_check_all_targets`, `cargo_clippy_all_targets_deny_warnings`,
+  `cargo_test`, and `smoke_acceptance_tmp_state`.
+- `factor_closure.status=pass`, with no active or live runtime blockers.
+- `release_readiness.status=needs_fix`; origin and release mirror remote
+  readback passed, but `worktree_clean_for_release` and
+  `source_origin_matches_selected_source` remain unresolved.
+- `same_tree_practical_closure=null`; missing stages remain provider/data,
+  Pre-Bayes, BBN/workflow, path-ranker, execution-tree, feedback/update, and
+  policy-training.
+- Fixed-bps debt is quarantined untracked-only:
+  `1790` violations across `322` untracked files, with no tracked violations.
+
+Decision: still not complete. The current factor side is clear, and current
+smoke can pass, but there is no same-tree practical closure packet, no
+same-head full-heavy proof, and no release-ready clean/source-aligned state. Do
+not commit completion or claim practical trade usefulness.
+
+## Demo Smoke Live-Process False Blocker - 2026-05-31T12:58+0800
+
+Loophole found in the `current-continuation-fresh` parent packet:
+
+- Packet:
+  `/tmp/ict-engine-consumer-ux-evidence-audit-20260531T-current-continuation-fresh/objective_closure_snapshot.json`.
+- It reported `factor_closure_blocked` even though the queue head was a
+  zero-config smoke child, not a profitability-factor runtime:
+  `.local-artifacts/cargo-target/debug/ict-engine workflow-status --symbol DEMO
+  --state-dir /tmp/ict-engine-done-definition-audit-smoke-20260531T044717479780Z-57656
+  --refresh --agent`.
+- Root cause: direct `ict-engine workflow-status/analyze/...` commands under
+  `/tmp/ict-engine-*` were broad enough to catch consumer smoke state dirs.
+
+Repair in the current worktree:
+
+- `factor_claim_terminalization_audit.py` now filters zero-config smoke /
+  DEMO ict-engine commands before classifying direct ict-engine Board B CLI
+  commands as live factor owners.
+- Regressions cover both:
+  `test_live_process_classifier_ignores_demo_workflow_status_smoke_child`
+  and `test_live_process_classifier_ignores_demo_analyze_smoke_state`.
+- Existing positive coverage still proves real TOMAC direct CLI children stay
+  live:
+  `test_live_process_classifier_detects_direct_ict_engine_board_b_cli_child`
+  and
+  `test_live_process_classifier_detects_auto_quant_ingest_real_trades_board_b_cli_child`.
+
+Verification:
+
+- Focused classifier tests passed:
+  `python3 -m unittest support.scripts.tests.test_factor_claim_terminalization_audit.FactorClaimTerminalizationAuditTest.test_live_process_classifier_ignores_demo_workflow_status_smoke_child support.scripts.tests.test_factor_claim_terminalization_audit.FactorClaimTerminalizationAuditTest.test_live_process_classifier_ignores_demo_analyze_smoke_state support.scripts.tests.test_factor_claim_terminalization_audit.FactorClaimTerminalizationAuditTest.test_live_process_classifier_detects_direct_ict_engine_board_b_cli_child support.scripts.tests.test_factor_claim_terminalization_audit.FactorClaimTerminalizationAuditTest.test_live_process_classifier_detects_auto_quant_ingest_real_trades_board_b_cli_child -v`.
+- Full factor-claim audit suite passed:
+  `python3 -m unittest support.scripts.tests.test_factor_claim_terminalization_audit -v`
+  (`126/126`).
+- `python3 support/scripts/check_script_manifest.py` passed.
+- `python3 support/scripts/ci/check_docs_runtime_isolation.py` passed.
+- `git diff --check -- support/scripts/factor_claim_terminalization_audit.py support/scripts/tests/test_factor_claim_terminalization_audit.py support/docs/plans/2026-05-31-consumer-ux-evidence-packet-audit-current.md`
+  passed.
+- Current compact factor closure after this filter:
+  `/tmp/ict-engine-factor-closure-after-demo-smoke-filter-20260531T-now.json`
+  returned exit `0`, `summary.status=pass`, `active_claims=0`,
+  `live_factor_processes=0`, `blocking_reasons=[]`,
+  `promotion_allowed_true=0`, `trade_usable_true=0`, and
+  `same_tree_practical_closure=null`.
+- A later same-turn rerun after a real TOMAC process started returned a real
+  blocker, not the DEMO-smoke false owner:
+  `/tmp/ict-engine-factor-closure-after-demo-smoke-filter-live-tomac-20260531T-now.json`
+  exited `1` with `live_factor_processes=1`, pid `80783`, run root
+  `/tmp/ict-engine-tomac-tsmom-vol-scaled-low-turnover-aq-20260531T115002+0800`,
+  and a command excerpt from
+  `run_tomac_index_futures_clean_aq_v1.py --root ...`.
+
+Runtime skill update:
+
+- `/Users/thrill3r/.hermes/skills/software-development/ict-engine-maintenance-loop/SKILL.md`
+  now explicitly says DEMO / zero-config smoke `ict-engine` commands are not
+  Board B live factor ownership.
+
+Decision: this removes another false objective-packet blocker and improves
+evidence packet cooperation. The full objective remains incomplete because
+same-tree practical closure is still absent, same-head full-heavy proof is not
+available, and release readiness still requires clean/source-aligned state.
+
+## Runtime Drift Recheck - 2026-05-31T04:58Z
+
+Fresh recheck after the current-head refresh:
+
+```bash
+ps -axo pid,ppid,etime,command | rg "done_definition_audit|objective_closure_snapshot|smoke_acceptance|run_tomac_one|run_tomac_index_futures_clean_aq" | rg -v rg
+python3 support/scripts/factor_claim_terminalization_audit.py --compact --portable-paths --output /tmp/ict-engine-factor-closure-resume-6.json
+```
+
+Result:
+
+- A new live TSMOM `5m` clean-AQ process appeared:
+  pid `80783`, root
+  `/tmp/ict-engine-tomac-tsmom-vol-scaled-low-turnover-aq-20260531T115002+0800`,
+  command includes `--timeframes 5m --reuse-clean --aq-smoke-timeframe 5m`.
+- A full-heavy done-definition process is also running:
+  `/tmp/ict-engine-done-definition-heavy-20260531T-post-smoke-pass.json`.
+- Factor audit returned `summary.status=needs_attention`,
+  `live_factor_processes=1`, `blocking_reasons=[live_factor_processes]`,
+  `promotion_allowed_true=0`, `trade_usable_true=0`,
+  `same_tree_practical_closure=null`.
+
+Decision: the immediately prior factor-clear snapshot is already stale for
+closure. Wait for pid `80783` and the full-heavy done-definition process to
+finish before another parent closure snapshot. Do not launch another factor
+lane or claim completion while this runtime owns the shared AQ root.

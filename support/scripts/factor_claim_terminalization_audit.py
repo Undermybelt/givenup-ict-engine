@@ -1423,10 +1423,25 @@ def _is_direct_ict_engine_board_b_cli_command(command: str) -> bool:
     )
     if not (direct_binary or cargo_cli):
         return False
+    if _is_zero_config_smoke_ict_engine_command(normalized):
+        return False
     run_root = _extract_run_root(command)
     if run_root is None:
         return False
     return _is_board_b_run_root(run_root)
+
+
+def _is_zero_config_smoke_ict_engine_command(normalized_command: str) -> bool:
+    smoke_state_markers = (
+        "ict-engine-done-definition-audit-smoke",
+        "ict-engine-smoke-acceptance",
+        "ict-engine-first-run",
+    )
+    return (
+        bool(re.search(r"(?:^|\s)--demo(?:\s|$)", normalized_command))
+        or bool(re.search(r"(?:^|\s)--symbol(?:=|\s+)DEMO(?:\s|$)", normalized_command))
+        or any(marker in normalized_command for marker in smoke_state_markers)
+    )
 
 
 def _is_board_b_run_root(run_root: Path) -> bool:
@@ -1997,6 +2012,7 @@ def _attention_action_queue(
                 "pid": process.get("pid"),
                 "run_root": process.get("run_root"),
                 "exit_file_state": process.get("exit_file_state"),
+                "command_excerpt": process.get("command_excerpt"),
             }
             for process in live_processes
         ],

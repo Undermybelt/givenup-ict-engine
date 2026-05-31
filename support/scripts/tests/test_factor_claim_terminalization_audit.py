@@ -3574,6 +3574,30 @@ trade_usable=false
             Path("/tmp/ict-engine-nq-twoleg-openingdrive-obs30-mtf-readback-followup"),
         )
 
+    def test_live_process_classifier_ignores_demo_workflow_status_smoke_child(self) -> None:
+        command = (
+            ".local-artifacts/cargo-target/debug/ict-engine workflow-status "
+            "--symbol DEMO "
+            "--state-dir /tmp/ict-engine-done-definition-audit-smoke-20260531T044717479780Z-57656 "
+            "--refresh --agent"
+        )
+
+        self.assertFalse(_is_live_factor_command(command))
+        self.assertEqual(
+            _extract_run_root(command),
+            Path("/tmp/ict-engine-done-definition-audit-smoke-20260531T044717479780Z-57656"),
+        )
+
+    def test_live_process_classifier_ignores_demo_analyze_smoke_state(self) -> None:
+        command = (
+            ".local-artifacts/cargo-target/debug/ict-engine analyze "
+            "--symbol DEMO --demo "
+            "--state-dir /tmp/ict-engine-smoke-acceptance-20260531T032327Z "
+            "--human"
+        )
+
+        self.assertFalse(_is_live_factor_command(command))
+
     def test_live_process_classifier_detects_auto_quant_ingest_real_trades_board_b_cli_child(self) -> None:
         command = (
             ".local-artifacts/cargo-target/debug/ict-engine auto-quant-ingest-real-trades "
@@ -4380,6 +4404,7 @@ class Dummy:
                         "pid": 4321,
                         "run_root": "/tmp/live-run-a",
                         "exit_file_state": "none",
+                        "command_excerpt": "python run_tomac.py",
                     }
                 ],
             },
