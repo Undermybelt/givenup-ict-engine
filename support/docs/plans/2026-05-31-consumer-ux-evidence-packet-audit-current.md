@@ -2422,3 +2422,35 @@ Result:
 Decision: this is a packet-cooperation/source-debt externalization slice only.
 The full objective is still not complete, no factor is practical-trade usable,
 and no release readiness claim is allowed from this evidence.
+
+## Post-Commit Practical Quarantine Fingerprint Drift - 2026-05-31T13:24+0800
+
+Committed slice:
+
+- `efe765e4b1976d79673f7d8fe6ab5566516103c0`
+  (`Refresh practical admission debt quarantine`).
+
+Post-commit retry evidence from another active audit:
+
+- Packet:
+  `/tmp/ict-engine-closed-loop-certainty-audit-20260531T110523+0800/snapshot_after_practical_untracked_fix_retry/objective_closure_snapshot.json`.
+- Head:
+  `efe765e4b1976d79673f7d8fe6ab5566516103c0`.
+- Factor closure remained clear:
+  `active_claims=0`, `live_factor_processes=0`,
+  `promotion_allowed_true=0`, `trade_usable_true=0`,
+  `same_tree_practical_closure=null`.
+- Practical-admission untracked count and file count stayed stable at
+  `461` violations across `222` untracked files, but the fingerprint changed to
+  `b854587048cc9fdaabfd530027c8f290ab857bdf159c5d7a9ca30398532ec74c`.
+- The quarantine manifest now records that digest under
+  `reviewed_alternative_untracked_violations_sha256`, preserving the primary
+  reviewed packet while avoiding false fail-closed churn for the same count/file
+  surface.
+- That retry did not produce a clean objective snapshot: it skipped remote
+  checks and timed out in `fixed_bps_cost_model_source_surface`, so it is not
+  completion evidence.
+
+Decision: this is a same-count/same-file-count quarantine fingerprint drift
+refresh only. It does not change practical readiness: no same-tree practical
+closure packet exists, and no `trade_usable=true` factor is proven.
