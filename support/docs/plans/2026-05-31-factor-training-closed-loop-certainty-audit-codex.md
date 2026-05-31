@@ -331,3 +331,49 @@ Current practical flags remain:
 - `trade_usable=false`
 - `update_goal=false`
 - `same_tree_practical_closure=null`
+
+## 2026-05-31T12:18+0800 Current-Tree Recheck
+
+This recheck treated the platform handoff summary as stale until current repo,
+claim, process, and source evidence was read again.
+
+Fresh current-state evidence:
+
+- `git log --oneline -6` shows the current HEAD is
+  `19771dc1 Require accepted execution feedback for policy lifecycle`, after
+  `bc1b5757 Balance factor flywheel admission gates`.
+- `python3 support/scripts/factor_claim_terminalization_audit.py --compact`
+  reported `status=needs_attention`, `live_factor_processes=1`,
+  `promotion_allowed_true=0`, `trade_usable_true=0`, and
+  `same_tree_practical_closure=null`.
+- The live runtime root is
+  `/tmp/ict-engine-tomac-tsmom-vol-scaled-low-turnover-aq-20260531T115002+0800`
+  under `run_tomac_index_futures_clean_aq_v1.py`; runtime launch remains
+  disallowed from this slice.
+- Focused process scan also showed unrelated heavy done-definition/smoke
+  commands still running. This slice did not start provider, IBKR, AQ, TOMAC,
+  paper, live, or downstream lifecycle work.
+
+Low-collision verification:
+
+- `python3 -m unittest support.scripts.research.tests.test_factor_candidate_pack.FactorCandidatePackTests.test_candidate_pack_flywheel_learning_uses_lower_floor_without_trade_promotion -v`
+  passed. This proves candidate-pack learning can admit a moderate-confidence
+  flywheel candidate without setting practical flags.
+- `python3 -m unittest support.scripts.research.tests.test_real_trade_feedback_labels.RealTradeFeedbackLabelsTests.test_ibkr_execution_readback_without_round_trip_writes_zero_rows -v`
+  passed. This proves an incomplete execution readback terminalizes as
+  `accepted_execution_feedback_missing` with false practical flags.
+- `python3 support/scripts/research/downstream_practical_admission_source_check.py --tracked-run-wrappers --jobs 4 --pretty`
+  completed with every tracked wrapper entry reporting `ok=true` and
+  `violations=[]`.
+
+Decision:
+
+- The balanced gate design is correct for the user's throughput/quality request:
+  lower-friction `learning` / calibration / paper-feedback collection stages can
+  feed the flywheel, but final `promotion_allowed`, `trade_usable`, and
+  `update_goal` remain false until same-tree practical closure, accepted
+  paper/live/broker execution feedback, verified real cost, and ETH/full-retained
+  session evidence all pass.
+- Current practical flags remain false:
+  `promotion_allowed=false`, `trade_usable=false`, `update_goal=false`,
+  `same_tree_practical_closure=null`.
