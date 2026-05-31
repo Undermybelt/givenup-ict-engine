@@ -2873,6 +2873,59 @@ progress_report: created wrapper prep packet; no provider, IBKR historical, Auto
         self.assertEqual(compact["attention_claim_count"], 0)
         self.assertEqual(compact["attention_action_queue"]["fresh_active_claims_without_live_process"], [])
 
+    def test_exact_aq_material_prep_no_launch_claim_does_not_block_factor_closure(self) -> None:
+        with tempfile.TemporaryDirectory() as repo_tmp, tempfile.TemporaryDirectory() as claims_tmp:
+            repo_root = Path(repo_tmp)
+            claims_dir = Path(claims_tmp)
+            run_root = Path(repo_tmp) / "ict-engine-realized-jump-bipower-state-filter-prep"
+            run_root.mkdir()
+            (run_root / "workdoc.md").write_text("# exact aq material prep\n", encoding="utf-8")
+
+            (claims_dir / "material-prep.claim").write_text(
+                json.dumps(
+                    {
+                        "schema_version": "board-b-factor-claim/v1",
+                        "agent_name": "codex-realized-jump-bipower-state-filter-prep",
+                        "owner": "codex",
+                        "claimed_at": "2026-05-31T12:43:04+0800",
+                        "last_progress_at": "2026-05-31T12:43:04+0800",
+                        "scope": "Board B no-launch exact-AQ material prep for realized jump bipower state filter NQ ETH/full-session independent timeframe fanout.",
+                        "active_task": "Create training doc, workdoc, claim, TDD wrapper, and no-launch exact-AQ plans for 5m/15m/30m/1h/4h/1d without launching shared AQ/runtime.",
+                        "non_goals": [
+                            "no provider fetch",
+                            "no IBKR historical fetch",
+                            "no AutoQuant/Freqtrade/TOMAC launch while fresh Ehlers claim is active",
+                            "no paper/sim/live execution",
+                            "no downstream lifecycle launch",
+                            "no promotion_allowed=true",
+                            "no trade_usable=true",
+                            "no gate lowering",
+                        ],
+                        "write_surface": str(run_root / "workdoc.md"),
+                        "run_root": str(run_root),
+                        "tmp_root": str(run_root),
+                        "status": "active_training_prep_no_launch_runtime_blocked",
+                        "progress_report": "Created repo training doc and factor-local workdoc; next work is TDD no-launch exact-AQ material prep only.",
+                        "promotion_allowed": False,
+                        "trade_usable": False,
+                        "update_goal": False,
+                        "same_tree_practical_closure": None,
+                    },
+                    indent=2,
+                ),
+                encoding="utf-8",
+            )
+
+            report = build_report(claims_dir=claims_dir, repo_root=repo_root)
+            compact = format_report(report, compact=True)
+
+        self.assertEqual(report["summary"]["status"], "pass")
+        self.assertEqual(report["summary"]["active_claims"], 0)
+        self.assertEqual(report["summary"]["coordination_only_active_claims"], 1)
+        self.assertEqual(report["summary"]["blocking_reasons"], [])
+        self.assertEqual(compact["attention_claim_count"], 0)
+        self.assertEqual(compact["attention_action_queue"]["fresh_active_claims_without_live_process"], [])
+
     def test_json_wrapper_prep_no_launch_status_does_not_require_extra_purpose_phrase(self) -> None:
         with tempfile.TemporaryDirectory() as repo_tmp, tempfile.TemporaryDirectory() as claims_tmp:
             repo_root = Path(repo_tmp)
