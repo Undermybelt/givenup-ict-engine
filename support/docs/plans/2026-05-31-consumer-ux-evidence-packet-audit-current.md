@@ -3037,3 +3037,150 @@ Decision:
 - Full objective completion is still disproven by missing same-tree practical
   closure, skipped heavy done-definition gates in the current parent packet,
   and release readiness blockers in the dirty/source-unpushed shared tree.
+
+## Post-Tracking-Commit Runtime Reblock - 2026-05-31T17:18+0800
+
+Committed tracking/quarantine slice:
+
+- `9c8883ef1514c7fd44ed5147a7d6f38521c6a455`
+  (`docs: record consumer evidence audit state`).
+- Commit included only:
+  `support/docs/audits/practical-admission-source-debt-quarantine.json` and
+  `support/docs/plans/2026-05-31-consumer-ux-evidence-packet-audit-current.md`.
+- Pre-commit checks passed:
+  `python3 -m json.tool` for the quarantine file,
+  `git diff --check` for the two committed paths, and
+  `python3 support/scripts/ci/check_docs_runtime_isolation.py`.
+
+Post-commit current-head parent snapshot:
+
+```bash
+python3 support/scripts/objective_closure_snapshot.py --compact --check-remotes --output-dir /tmp/ict-engine-consumer-ux-evidence-audit-20260531T-post-doc-commit-9c8883ef-codex --timeout-seconds 180
+```
+
+Result:
+
+- Exit code `1`; objective remains fail-closed.
+- Packet:
+  `/tmp/ict-engine-consumer-ux-evidence-audit-20260531T-post-doc-commit-9c8883ef-codex/objective_closure_snapshot.json`.
+- Current blockers:
+  `done_definition_not_completion_ready`,
+  `factor_closure_blocked`,
+  `same_tree_practical_closure_unproven`, and
+  `release_readiness_blocked`.
+- Done-definition is still light/pass only:
+  `pass_count=7`, `fail_count=0`, `skip_count=4`, `total_gates=11`.
+- Practical-admission quarantine still matches the current untracked debt:
+  `463` violations across `223` untracked files, zero tracked violations.
+- Release readiness now also has transient/current remote readback failure for
+  both origin and release mirror, in addition to dirty worktree state.
+
+Fresh factor runtime check:
+
+```bash
+ps -p 5019 -o pid,ppid,etime,stat,command
+python3 support/scripts/factor_claim_terminalization_audit.py --compact --portable-paths --output /tmp/ict-engine-factor-closure-after-post-doc-commit-20260531T1718.json
+```
+
+Result:
+
+- The process is real and still live:
+  `run_tomac_index_futures_clean_aq_v1.py --root /tmp/ict-engine-rsrs-high-low-regression-1m-clean-aq-20260531T171413+0800`.
+- It is running the
+  `rsrs_high_low_regression_trend_admission` clean-AQ family on `YM` across
+  `1m,5m,15m,30m,1h,4h,1d`, with `--aq-smoke-timeframe 1m`.
+- Compact factor audit reports:
+  `summary.status=needs_attention`, `live_factor_processes=1`,
+  `live_factor_process_instances=2`, `duplicate_live_factor_process_instances=1`,
+  `blocking_reasons=[live_factor_processes]`,
+  `promotion_allowed_true=0`, `trade_usable_true=0`,
+  `same_tree_practical_closure=null`.
+- The action queue preserves the live root and command excerpt for pid `5019`
+  and related pid `5487`.
+
+Decision:
+
+- Do not launch another AQ/provider lane while this RSRS clean-AQ root is live.
+- Do not claim practical trade usability: no validated same-tree practical
+  closure packet exists and the current factor counters remain zero.
+- The next safe action is to wait for the RSRS root to exit, inspect terminal
+  artifacts, then rerun compact factor closure and the parent objective
+  snapshot. A fresh full-heavy proof is still required before any
+  done-definition completion claim.
+
+## RSRS Runtime Terminalized Fail-Closed - 2026-05-31T17:24+0800
+
+The RSRS `1m` clean-AQ runtime from the previous section exited.
+
+Clean-AQ root:
+
+- `/tmp/ict-engine-rsrs-high-low-regression-1m-clean-aq-20260531T171413+0800`.
+- `checks/run_tomac_1m.exit=0`.
+- `summary.json` has one command row:
+  `name=run_tomac_1m`, `exit=0`, `timed_out=false`.
+- `summaries/autoquant_clean_1m_gate.json` reports:
+  `decision=observation_no_autoquant_survivor_yet`,
+  `promotion_allowed=false`, `trade_usable=false`,
+  `update_goal=false`, `downstream_allowed=false`,
+  `pre_bayes_allowed=false`, `bbn_allowed=false`,
+  `catboost_allowed=false`, `execution_tree_allowed=false`, and
+  `survivors_instrument_cost=[]`.
+
+A second RSRS exact-AQ prep/launch appeared briefly after the clean-AQ root:
+
+- Root:
+  `/tmp/ict-engine-rsrs-high-low-regression-trend-admission-exact-aqprep-20260531T172048+0800`.
+- Pids `6638` and `6659` were gone on recheck.
+- Terminal summary:
+  `summaries/terminal_summary.json`.
+- `status=exact_aq_completed_fail_closed`.
+- `target_count=1`.
+- Its only AQ row exited `0` without timeout, but the parsed trade export had
+  `trades=0`, `trades_per_day=0.0`, `profit_factor=0.0`,
+  `profit_total_pct=null`, and `max_drawdown_pct=0.0`.
+- The terminal summary keeps `promotion_allowed=false`,
+  `trade_usable=false`, `update_goal=false`, and
+  `same_tree_practical_closure=null`.
+
+Fresh compact factor closure after both RSRS roots cleared:
+
+```bash
+python3 support/scripts/factor_claim_terminalization_audit.py --compact --portable-paths --output /tmp/ict-engine-factor-closure-current-post-rsrs-transient-20260531T1724.json
+```
+
+Result:
+
+- Exit code `0`.
+- `summary.status=pass`.
+- `active_claims=0`, `live_factor_processes=0`,
+  `blocking_reasons=[]`.
+- `promotion_allowed_true=0`, `trade_usable_true=0`,
+  `same_tree_practical_closure=null`.
+
+Current parent snapshot after the RSRS clear:
+
+- Packet:
+  `/tmp/ict-engine-consumer-ux-evidence-audit-20260531T-after-rsrs-exit-codex/objective_closure_snapshot.json`.
+- Exit code `1`; objective remains fail-closed.
+- Current blockers:
+  `done_definition_not_completion_ready`,
+  `same_tree_practical_closure_unproven`, and
+  `release_readiness_blocked`.
+- Factor closure is clear in this packet:
+  `status=pass`, `active_claims=0`, `live_factor_processes=0`,
+  `promotion_allowed_true=0`, `trade_usable_true=0`,
+  `same_tree_practical_closure=null`.
+- Practical-admission, await-launch, and fixed-bps source debt remain
+  quarantined untracked debt with zero tracked violations.
+- Release remote readback passed for origin and release mirror, but release
+  still blocks on `worktree_clean_for_release` and
+  `source_origin_matches_selected_source`.
+
+Decision:
+
+- The RSRS work produced no practical survivor and no same-tree practical
+  closure packet.
+- Current runtime collision is clear again, but the full objective remains
+  incomplete until a real practical closure packet exists, a current matching
+  heavy done-definition proof exists, and release readiness is proven from a
+  clean/source-aligned export.
