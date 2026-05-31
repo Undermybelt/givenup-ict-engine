@@ -86,6 +86,8 @@ def run_command(argv: list[str], cwd: Path, timeout: int = 60) -> dict[str, Any]
     try:
         stdout, stderr = process.communicate(timeout=timeout)
     except subprocess.TimeoutExpired as exc:
+        descendant_pids = _descendant_pids(process.pid)
+        _kill_process_groups(descendant_pids)
         try:
             os.killpg(process.pid, signal.SIGKILL)
         except ProcessLookupError:
@@ -100,6 +102,7 @@ def run_command(argv: list[str], cwd: Path, timeout: int = 60) -> dict[str, Any]
             "timeout_seconds": timeout,
             "stdout": _text(stdout or exc.stdout),
             "stderr": _text(stderr or exc.stderr),
+            "killed_descendant_pids": descendant_pids,
         }
     return {
         "argv": argv,
@@ -107,6 +110,54 @@ def run_command(argv: list[str], cwd: Path, timeout: int = 60) -> dict[str, Any]
         "stdout": stdout,
         "stderr": stderr,
     }
+
+
+def _descendant_pids(root_pid: int) -> list[int]:
+    try:
+        ps = subprocess.run(
+            ["ps", "-axo", "pid=,ppid="],
+            text=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            timeout=2,
+            check=False,
+        )
+    except (OSError, subprocess.TimeoutExpired):
+        return []
+    children_by_parent: dict[int, list[int]] = {}
+    for line in ps.stdout.splitlines():
+        parts = line.split()
+        if len(parts) < 2:
+            continue
+        try:
+            pid = int(parts[0])
+            ppid = int(parts[1])
+        except ValueError:
+            continue
+        children_by_parent.setdefault(ppid, []).append(pid)
+    descendants: list[int] = []
+    stack = list(children_by_parent.get(root_pid, []))
+    while stack:
+        pid = stack.pop()
+        descendants.append(pid)
+        stack.extend(children_by_parent.get(pid, []))
+    return descendants
+
+
+def _kill_process_groups(pids: list[int]) -> None:
+    for pid in pids:
+        try:
+            os.killpg(pid, signal.SIGKILL)
+        except ProcessLookupError:
+            try:
+                os.kill(pid, signal.SIGKILL)
+            except (ProcessLookupError, PermissionError):
+                pass
+        except PermissionError:
+            try:
+                os.kill(pid, signal.SIGKILL)
+            except (ProcessLookupError, PermissionError):
+                pass
 
 
 def _text(value: object) -> str:

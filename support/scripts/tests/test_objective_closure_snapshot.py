@@ -1772,6 +1772,33 @@ class ObjectiveClosureSnapshotTest(unittest.TestCase):
             self.assertEqual(status["error"], "timeout")
             self.assertFalse(marker.exists())
 
+    def test_run_command_timeout_kills_descendant_process_groups(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            marker = Path(tmp) / "nested-session-survived.txt"
+            status = run_command(
+                [
+                    sys.executable,
+                    "-c",
+                    (
+                        "import subprocess, sys, time; "
+                        "subprocess.Popen([sys.executable, '-c', "
+                        "'import pathlib, sys, time; time.sleep(1.5); pathlib.Path(sys.argv[1]).write_text(\"alive\")', "
+                        "sys.argv[1]], start_new_session=True); "
+                        "time.sleep(5)"
+                    ),
+                    str(marker),
+                ],
+                cwd=SCRIPTS_ROOT,
+                timeout=1,
+            )
+
+            import time
+
+            time.sleep(2)
+
+            self.assertEqual(status["error"], "timeout")
+            self.assertFalse(marker.exists())
+
     def test_effective_timeout_seconds_defaults_higher_for_heavy_mode(self) -> None:
         self.assertEqual(effective_timeout_seconds(None, run_all_heavy=False), 300)
         self.assertEqual(effective_timeout_seconds(None, run_all_heavy=True), 300)
