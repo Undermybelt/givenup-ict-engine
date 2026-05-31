@@ -170,12 +170,6 @@ pub fn decide_profitability_lifecycle(
     if !input.market_data_provenance_verified {
         feedback_collection_blockers.push("market_data_provenance_unverified".to_string());
     }
-    if !input.retained_session_scope_verified {
-        feedback_collection_blockers.push("retained_session_scope_unverified".to_string());
-    }
-    if !input.promotion_cost_verified {
-        feedback_collection_blockers.push("promotion_cost_unverified".to_string());
-    }
     match input.execution_readiness {
         Some(readiness) if readiness >= LIVE_EXECUTION_READINESS_FLOOR => {}
         Some(_) => {
@@ -224,6 +218,12 @@ pub fn decide_profitability_lifecycle(
     }
     let paper_feedback_collection_ready = paper_ready && feedback_collection_blockers.is_empty();
     let mut live_blockers = feedback_collection_blockers.clone();
+    if !input.retained_session_scope_verified {
+        live_blockers.push("retained_session_scope_unverified".to_string());
+    }
+    if !input.promotion_cost_verified {
+        live_blockers.push("promotion_cost_unverified".to_string());
+    }
     if !input.accepted_execution_feedback {
         live_blockers.push("accepted_execution_feedback_missing".to_string());
     }
@@ -239,6 +239,8 @@ pub fn decide_profitability_lifecycle(
         }
     };
     let live_ready = paper_feedback_collection_ready
+        && input.retained_session_scope_verified
+        && input.promotion_cost_verified
         && input.accepted_execution_feedback
         && strict_live_regime_confidence_passed;
     let live = LiveTradeDecision {
@@ -616,6 +618,60 @@ mod tests {
             .live
             .blockers
             .contains(&"accepted_execution_feedback_missing".to_string()));
+        assert!(!decision.live.promotion_allowed);
+        assert!(!decision.live.trade_usable);
+        assert!(!decision.live.update_goal);
+    }
+
+    #[test]
+    fn lifecycle_allows_paper_feedback_collection_with_cost_session_verification_debt() {
+        let input = ProfitabilityAdmissionInput {
+            regime_confidence: Some(0.99),
+            regime_confidence_floor: 0.95,
+            long_run_expectancy_after_declared_friction: Some(0.03),
+            evidence_count: 80,
+            leakage_passed: true,
+            provider_state: ProviderEvidenceState::Ready,
+            market_data_provenance_verified: true,
+            retained_session_scope_verified: false,
+            promotion_cost_verified: false,
+            accepted_execution_feedback: true,
+            execution_readiness: Some(0.91),
+            transition_hazard: Some(0.10),
+            pda_hybrid_alignment: Some(true),
+            pre_bayes_gate_status: Some("pass_hard".to_string()),
+            execution_gate_status: Some("ready".to_string()),
+            execution_tree_gate_status: Some("ready".to_string()),
+            execution_tree_branch: Some("fill_viable".to_string()),
+            path_ranker_score_used_by_execution_tree: true,
+            ranker_validation_ready: true,
+            validation_rows: ValidationRows {
+                raw_scored_mature: 80,
+                production: 80,
+                observation: 80,
+            },
+        };
+
+        let decision = decide_profitability_lifecycle(&input);
+
+        assert_eq!(decision.learning.status, AdmissionStatus::Admitted);
+        assert_eq!(decision.paper.status, AdmissionStatus::Ready);
+        assert!(decision.live.paper_feedback_collection_ready);
+        assert!(decision.live.paper_feedback_collection_blockers.is_empty());
+        assert_eq!(decision.live.status, AdmissionStatus::Blocked);
+        assert!(decision
+            .live
+            .blockers
+            .contains(&"retained_session_scope_unverified".to_string()));
+        assert!(decision
+            .live
+            .blockers
+            .contains(&"promotion_cost_unverified".to_string()));
+        assert!(!decision
+            .live
+            .blockers
+            .contains(&"accepted_execution_feedback_missing".to_string()));
+        assert!(!decision.live.deploy_ready);
         assert!(!decision.live.promotion_allowed);
         assert!(!decision.live.trade_usable);
         assert!(!decision.live.update_goal);
