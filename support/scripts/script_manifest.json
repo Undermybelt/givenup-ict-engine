@@ -168,6 +168,14 @@
     "test_command": "python3 -m unittest support.scripts.research.tests.test_instrument_cost_model -v"
   },
   {
+    "name": "futures_bps_false_negative_revival",
+    "stability": "read_only_utility",
+    "entrypoint": "support/scripts/research/futures_bps_false_negative_revival.py",
+    "safe_default": true,
+    "requires_data": true,
+    "test_command": "python3 -m unittest support.scripts.research.tests.test_futures_bps_false_negative_revival -v"
+  },
+  {
     "name": "futures_real_cost_rescue_audit",
     "stability": "read_only_utility",
     "entrypoint": "support/scripts/research/futures_real_cost_rescue_audit.py",
@@ -182,6 +190,14 @@
     "safe_default": true,
     "requires_data": false,
     "test_command": "python3 -m unittest support.scripts.research.tests.test_fixed_bps_cost_model_source_check -v"
+  },
+  {
+    "name": "ibkr_execution_readback",
+    "stability": "read_only_utility",
+    "entrypoint": "support/scripts/research/ibkr_execution_readback.py",
+    "safe_default": true,
+    "requires_data": true,
+    "test_command": "python3 -m unittest support.scripts.research.tests.test_ibkr_execution_readback -v"
   },
   {
     "name": "regime_root_survivor_blocker_report",
@@ -254,6 +270,14 @@
     "safe_default": false,
     "requires_data": true,
     "test_command": "python3 -m py_compile support/scripts/auto_quant_external/structural_feedback_replay_harness.py"
+  },
+  {
+    "name": "tomac_parquet_to_feather",
+    "stability": "active_bridge",
+    "entrypoint": "support/scripts/auto_quant_external/tomac_parquet_to_feather.py",
+    "safe_default": false,
+    "requires_data": true,
+    "test_command": "python3 -m unittest support/scripts/auto_quant_external/tests/test_tomac_parquet_to_feather.py -v"
   },
   {
     "name": "fetch_external",

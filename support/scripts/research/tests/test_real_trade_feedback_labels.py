@@ -359,6 +359,371 @@ class RealTradeFeedbackLabelsTests(unittest.TestCase):
                 feedback_source="auto_quant_real_trades:simulated_backtest:test",
             )
 
+    def test_cli_converts_ibkr_execution_readback_json_to_accepted_feedback_jsonl(self) -> None:
+        with TemporaryDirectory() as tmpdir:
+            tmp = Path(tmpdir)
+            readback_json = tmp / "ibkr_execution_readback.json"
+            output_jsonl = tmp / "accepted_feedback.jsonl"
+            summary_json = tmp / "accepted_feedback_summary.json"
+            metrics_json = tmp / "accepted_feedback_metrics.json"
+            readback_json.write_text(
+                json.dumps(
+                    {
+                        "schema_version": "nq-compound-accepted-feedback-readback/v1",
+                        "factor_id": "nq_compound_trend_rrr_chopfilter_v1",
+                        "rows": [
+                            {
+                                "contract": {
+                                    "conId": 750150196,
+                                    "symbol": "NQ",
+                                    "secType": "FUT",
+                                    "exchange": "CME",
+                                    "currency": "USD",
+                                    "localSymbol": "NQM6",
+                                },
+                                "exec_id": "0000e2.1",
+                                "time": "2026-05-15T10:00:00Z",
+                                "side": "BOT",
+                                "shares": 1.0,
+                                "price": 18800.25,
+                                "order_id": 17,
+                                "perm_id": 9917,
+                                "client_id": 42,
+                                "commission": 2.25,
+                                "realized_pnl": 0.0,
+                                "currency": "USD",
+                                "commission_report_present": True,
+                                "broker_fill_evidence": True,
+                            },
+                            {
+                                "contract": {
+                                    "conId": 750150196,
+                                    "symbol": "NQ",
+                                    "secType": "FUT",
+                                    "exchange": "CME",
+                                    "currency": "USD",
+                                    "localSymbol": "NQM6",
+                                },
+                                "exec_id": "0000e2.2",
+                                "time": "2026-05-15T11:00:00Z",
+                                "side": "SLD",
+                                "shares": 1.0,
+                                "price": 18818.75,
+                                "order_id": 18,
+                                "perm_id": 9918,
+                                "client_id": 42,
+                                "commission": 2.25,
+                                "realized_pnl": 370.0,
+                                "currency": "USD",
+                                "commission_report_present": True,
+                                "broker_fill_evidence": True,
+                            },
+                        ],
+                    }
+                ),
+                encoding="utf-8",
+            )
+
+            exit_code = builder.main(
+                [
+                    "--ibkr-execution-readback-json",
+                    str(readback_json),
+                    "--output-jsonl",
+                    str(output_jsonl),
+                    "--summary-json",
+                    str(summary_json),
+                    "--metrics-json",
+                    str(metrics_json),
+                    "--symbol",
+                    "TOMAC_NQ_COMPOUND_TREND_RRR_CHOPFILTER_V1",
+                    "--strategy-name",
+                    "nq_compound_trend_rrr_chopfilter_v1",
+                    "--factor-id",
+                    "nq_compound_trend_rrr_chopfilter_v1",
+                    "--branch-path",
+                    "TrendExpansion -> CompoundTrendRrrBreadth -> nq_compound_trend_rrr_chopfilter_v1",
+                    "--auto-quant-run-id",
+                    "ibkr-paper-execution-readback-20260531",
+                    "--feedback-source",
+                    "auto_quant_real_trades:paper_execution_feedback:nq_compound_trend_rrr_chopfilter_v1",
+                ]
+            )
+
+            self.assertEqual(exit_code, 0)
+            rows = [json.loads(line) for line in output_jsonl.read_text(encoding="utf-8").splitlines()]
+            self.assertEqual(len(rows), 1)
+            first = rows[0]
+            self.assertEqual(first["trade_id"], "ibkr-paper-0000e2.1-0000e2.2")
+            self.assertEqual(first["direction"], "Bull")
+            self.assertEqual(first["open_ts_ms"], _ts_ms("2026-05-15T10:00:00Z"))
+            self.assertEqual(first["close_ts_ms"], _ts_ms("2026-05-15T11:00:00Z"))
+            self.assertAlmostEqual(first["open_rate"], 18800.25)
+            self.assertAlmostEqual(first["close_rate"], 18818.75)
+            self.assertAlmostEqual(first["broker_execution"]["commission"], 4.50)
+            self.assertAlmostEqual(first["broker_execution"]["realized_pnl"], 370.0)
+            self.assertEqual(first["broker_execution"]["entry_exec_id"], "0000e2.1")
+            self.assertEqual(first["broker_execution"]["exit_exec_id"], "0000e2.2")
+            self.assertTrue(first["broker_realized"])
+            self.assertTrue(first["broker_fill_evidence"])
+            self.assertFalse(first["promotion_allowed"])
+            self.assertFalse(first["trade_usable"])
+            summary = json.loads(summary_json.read_text(encoding="utf-8"))
+            metrics = json.loads(metrics_json.read_text(encoding="utf-8"))
+            self.assertEqual(summary["status"], "ready")
+            self.assertTrue(summary["accepted_execution_feedback_ready"])
+            self.assertEqual(summary["accepted_feedback_rows"], 1)
+            self.assertEqual(summary["broker_fill_evidence_rows"], 1)
+            self.assertEqual(summary["broker_realized_rows"], 1)
+            self.assertEqual(summary, metrics)
+
+    def test_ibkr_execution_readback_without_round_trip_writes_zero_rows(self) -> None:
+        with TemporaryDirectory() as tmpdir:
+            tmp = Path(tmpdir)
+            readback_json = tmp / "ibkr_execution_readback.json"
+            output_jsonl = tmp / "accepted_feedback.jsonl"
+            summary_json = tmp / "accepted_feedback_summary.json"
+            readback_json.write_text(
+                json.dumps(
+                    {
+                        "schema_version": "nq-compound-accepted-feedback-readback/v1",
+                        "factor_id": "nq_compound_trend_rrr_chopfilter_v1",
+                        "rows": [
+                            {
+                                "contract": {
+                                    "conId": 750150196,
+                                    "symbol": "NQ",
+                                    "secType": "FUT",
+                                    "exchange": "CME",
+                                    "currency": "USD",
+                                    "localSymbol": "NQM6",
+                                },
+                                "exec_id": "0000e3.1",
+                                "time": "2026-05-15T10:00:00Z",
+                                "side": "BOT",
+                                "shares": 1.0,
+                                "price": 18800.25,
+                                "order_id": 17,
+                                "perm_id": 9917,
+                                "client_id": 42,
+                                "commission": 2.25,
+                                "realized_pnl": 0.0,
+                                "currency": "USD",
+                                "commission_report_present": True,
+                                "broker_fill_evidence": True,
+                            }
+                        ],
+                    }
+                ),
+                encoding="utf-8",
+            )
+
+            exit_code = builder.main(
+                [
+                    "--ibkr-execution-readback-json",
+                    str(readback_json),
+                    "--output-jsonl",
+                    str(output_jsonl),
+                    "--summary-json",
+                    str(summary_json),
+                    "--symbol",
+                    "TOMAC_NQ_COMPOUND_TREND_RRR_CHOPFILTER_V1",
+                    "--strategy-name",
+                    "nq_compound_trend_rrr_chopfilter_v1",
+                    "--factor-id",
+                    "nq_compound_trend_rrr_chopfilter_v1",
+                    "--branch-path",
+                    "TrendExpansion -> CompoundTrendRrrBreadth -> nq_compound_trend_rrr_chopfilter_v1",
+                    "--auto-quant-run-id",
+                    "ibkr-paper-execution-readback-20260531",
+                    "--feedback-source",
+                    "auto_quant_real_trades:paper_execution_feedback:nq_compound_trend_rrr_chopfilter_v1",
+                ]
+            )
+
+            self.assertEqual(exit_code, 0)
+            self.assertEqual(output_jsonl.read_text(encoding="utf-8"), "")
+            summary = json.loads(summary_json.read_text(encoding="utf-8"))
+            self.assertEqual(summary["status"], "no_accepted_execution_feedback_rows")
+            self.assertEqual(summary["terminal_decision"], "accepted_execution_feedback_missing")
+            self.assertFalse(summary["accepted_execution_feedback_ready"])
+            self.assertFalse(summary["promotion_allowed"])
+            self.assertFalse(summary["trade_usable"])
+
+    def test_ibkr_execution_readback_without_broker_evidence_writes_zero_rows(self) -> None:
+        with TemporaryDirectory() as tmpdir:
+            tmp = Path(tmpdir)
+            readback_json = tmp / "ibkr_execution_readback.json"
+            output_jsonl = tmp / "accepted_feedback.jsonl"
+            readback_json.write_text(
+                json.dumps(
+                    {
+                        "schema_version": "ibkr-execution-readback/v1",
+                        "rows": [
+                            {
+                                "contract": {
+                                    "conId": 750150196,
+                                    "symbol": "NQ",
+                                    "secType": "FUT",
+                                    "exchange": "CME",
+                                    "currency": "USD",
+                                    "localSymbol": "NQM6",
+                                },
+                                "exec_id": "0000e4.1",
+                                "time": "2026-05-15T10:00:00Z",
+                                "side": "BOT",
+                                "shares": 1.0,
+                                "price": 18800.25,
+                                "order_id": 17,
+                                "perm_id": 9917,
+                                "client_id": 42,
+                                "commission": None,
+                                "realized_pnl": None,
+                                "currency": "",
+                                "commission_report_present": False,
+                                "broker_fill_evidence": False,
+                            },
+                            {
+                                "contract": {
+                                    "conId": 750150196,
+                                    "symbol": "NQ",
+                                    "secType": "FUT",
+                                    "exchange": "CME",
+                                    "currency": "USD",
+                                    "localSymbol": "NQM6",
+                                },
+                                "exec_id": "0000e4.2",
+                                "time": "2026-05-15T11:00:00Z",
+                                "side": "SLD",
+                                "shares": 1.0,
+                                "price": 18818.75,
+                                "order_id": 18,
+                                "perm_id": 9918,
+                                "client_id": 42,
+                                "commission": None,
+                                "realized_pnl": None,
+                                "currency": "",
+                                "commission_report_present": False,
+                                "broker_fill_evidence": False,
+                            },
+                        ],
+                    }
+                ),
+                encoding="utf-8",
+            )
+
+            exit_code = builder.main(
+                [
+                    "--ibkr-execution-readback-json",
+                    str(readback_json),
+                    "--output-jsonl",
+                    str(output_jsonl),
+                    "--symbol",
+                    "TOMAC_NQ_COMPOUND_TREND_RRR_CHOPFILTER_V1",
+                    "--strategy-name",
+                    "nq_compound_trend_rrr_chopfilter_v1",
+                    "--factor-id",
+                    "nq_compound_trend_rrr_chopfilter_v1",
+                    "--branch-path",
+                    "TrendExpansion -> CompoundTrendRrrBreadth -> nq_compound_trend_rrr_chopfilter_v1",
+                    "--auto-quant-run-id",
+                    "ibkr-paper-execution-readback-20260531",
+                    "--feedback-source",
+                    "auto_quant_real_trades:paper_execution_feedback:nq_compound_trend_rrr_chopfilter_v1",
+                ]
+            )
+
+            self.assertEqual(exit_code, 0)
+            self.assertEqual(output_jsonl.read_text(encoding="utf-8"), "")
+
+    def test_ibkr_execution_readback_requires_explicit_broker_evidence_flags(self) -> None:
+        with TemporaryDirectory() as tmpdir:
+            tmp = Path(tmpdir)
+            readback_json = tmp / "ibkr_execution_readback.json"
+            output_jsonl = tmp / "accepted_feedback.jsonl"
+            summary_json = tmp / "accepted_feedback_summary.json"
+            readback_json.write_text(
+                json.dumps(
+                    {
+                        "schema_version": "ibkr-execution-readback/v1",
+                        "rows": [
+                            {
+                                "contract": {
+                                    "conId": 750150196,
+                                    "symbol": "NQ",
+                                    "secType": "FUT",
+                                    "exchange": "CME",
+                                    "currency": "USD",
+                                    "localSymbol": "NQM6",
+                                },
+                                "exec_id": "0000e5.1",
+                                "time": "2026-05-15T10:00:00Z",
+                                "side": "BOT",
+                                "shares": 1.0,
+                                "price": 18800.25,
+                                "order_id": 17,
+                                "perm_id": 9917,
+                                "client_id": 42,
+                                "commission": 2.25,
+                                "realized_pnl": 0.0,
+                                "currency": "USD",
+                            },
+                            {
+                                "contract": {
+                                    "conId": 750150196,
+                                    "symbol": "NQ",
+                                    "secType": "FUT",
+                                    "exchange": "CME",
+                                    "currency": "USD",
+                                    "localSymbol": "NQM6",
+                                },
+                                "exec_id": "0000e5.2",
+                                "time": "2026-05-15T11:00:00Z",
+                                "side": "SLD",
+                                "shares": 1.0,
+                                "price": 18818.75,
+                                "order_id": 18,
+                                "perm_id": 9918,
+                                "client_id": 42,
+                                "commission": 2.25,
+                                "realized_pnl": 370.0,
+                                "currency": "USD",
+                            },
+                        ],
+                    }
+                ),
+                encoding="utf-8",
+            )
+
+            exit_code = builder.main(
+                [
+                    "--ibkr-execution-readback-json",
+                    str(readback_json),
+                    "--output-jsonl",
+                    str(output_jsonl),
+                    "--summary-json",
+                    str(summary_json),
+                    "--symbol",
+                    "TOMAC_NQ_COMPOUND_TREND_RRR_CHOPFILTER_V1",
+                    "--strategy-name",
+                    "nq_compound_trend_rrr_chopfilter_v1",
+                    "--factor-id",
+                    "nq_compound_trend_rrr_chopfilter_v1",
+                    "--branch-path",
+                    "TrendExpansion -> CompoundTrendRrrBreadth -> nq_compound_trend_rrr_chopfilter_v1",
+                    "--auto-quant-run-id",
+                    "ibkr-paper-execution-readback-20260531",
+                    "--feedback-source",
+                    "auto_quant_real_trades:paper_execution_feedback:nq_compound_trend_rrr_chopfilter_v1",
+                ]
+            )
+
+            self.assertEqual(exit_code, 0)
+            self.assertEqual(output_jsonl.read_text(encoding="utf-8"), "")
+            summary = json.loads(summary_json.read_text(encoding="utf-8"))
+            self.assertEqual(summary["input_rows_seen"], 2)
+            self.assertEqual(summary["paired_captures"], 0)
+            self.assertEqual(summary["status"], "no_accepted_execution_feedback_rows")
+
 
 if __name__ == "__main__":
     unittest.main()

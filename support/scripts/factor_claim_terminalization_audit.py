@@ -28,8 +28,12 @@ STALE_CLAIM_MINUTES = 60
 SUMMARY_CANDIDATES = (
     "summaries/terminal_decision_summary.md",
     "summaries/terminal_summary.json",
+    "summaries/terminal_no_launch_summary.json",
     "outputs/terminal_summary.json",
     "checks/terminal_metrics.json",
+    "aq/summaries/terminal_summary.json",
+    "aq/summaries/terminal_no_launch_summary.json",
+    "aq/checks/terminal_metrics.json",
     "run/summaries/terminal_summary.json",
     "run/checks/terminal_metrics.json",
 )
@@ -203,9 +207,13 @@ def _status_value_indicates_terminalized(value: object) -> bool:
 
 def _terminal_status_text(value: object) -> bool:
     normalized = str(value or "").strip().lower()
-    if normalized.startswith(("active", "staged", "verified")):
+    if normalized.startswith(("active", "staged", "verified", "not_", "not-", "incomplete")):
         return False
-    return normalized.startswith("terminal") or "fail_closed" in normalized or normalized in {
+    return (
+        normalized.startswith("terminal")
+        or "fail_closed" in normalized
+        or normalized.endswith(("_complete", "_completed", "_finished"))
+        or normalized in {
         "launch_blocked_by_collision_guard",
         "launch_finished",
         "readback_complete",
@@ -213,6 +221,7 @@ def _terminal_status_text(value: object) -> bool:
         "completed",
         "finished",
     }
+    )
 
 
 def _workdoc_decision_indicates_terminalized(value: object) -> bool:
@@ -287,11 +296,6 @@ def _load_summary_flags(run_root: Path | None) -> dict[str, Any]:
         except OSError:
             continue
         evidence.setdefault("summary_files", []).append(rel_path)
-        parsed_text_fields = parse_claim_text(text)
-        for key in ("decision", "terminal_decision", "terminal_status", "terminalized_at", "terminal_at", "status"):
-            value = parsed_text_fields.get(key)
-            if value not in (None, ""):
-                evidence[key] = value
         if path.suffix == ".json":
             try:
                 parsed = json.loads(text)
@@ -299,10 +303,6 @@ def _load_summary_flags(run_root: Path | None) -> dict[str, Any]:
                 parsed = None
             if isinstance(parsed, dict):
                 for key in (
-                    "promotion_allowed",
-                    "trade_usable",
-                    "factor_id",
-                    "branch_path",
                     "decision",
                     "terminal_decision",
                     "terminal_status",
@@ -310,15 +310,32 @@ def _load_summary_flags(run_root: Path | None) -> dict[str, Any]:
                     "terminal_at",
                     "status",
                 ):
+                    value = parsed.get(key)
+                    if isinstance(value, bool):
+                        evidence[key] = value
+                    elif value not in (None, ""):
+                        evidence[key] = _normalize_scalar(value)
+                for key in (
+                    "promotion_allowed",
+                    "trade_usable",
+                    "factor_id",
+                    "branch_path",
+                ):
                     value = _find_key(parsed, key)
                     if isinstance(value, bool):
                         evidence[key] = value
                     elif value not in (None, ""):
                         evidence[key] = _normalize_scalar(value)
-        for key in ("promotion_allowed", "trade_usable"):
-            value = _extract_bool(key, text)
-            if value is not None:
-                evidence[key] = value
+        else:
+            parsed_text_fields = parse_claim_text(text)
+            for key in ("decision", "terminal_decision", "terminal_status", "terminalized_at", "terminal_at", "status"):
+                value = parsed_text_fields.get(key)
+                if value not in (None, ""):
+                    evidence[key] = value
+            for key in ("promotion_allowed", "trade_usable"):
+                value = _extract_bool(key, text)
+                if value is not None:
+                    evidence[key] = value
     return evidence
 
 
@@ -361,13 +378,17 @@ def _load_workdoc_terminal_flags(write_surface: object, run_root: Path | None, c
     return evidence
 
 
-def _load_repo_run_terminal_flags(fields: dict[str, Any], claim_root: Path) -> dict[str, Any]:
+def _load_repo_run_terminal_flags(
+    fields: dict[str, Any],
+    claim_root: Path,
+    pending_repo_run_index: dict[Path, list[tuple[datetime | None, Path, dict[str, Any]]]] | None = None,
+) -> dict[str, Any]:
     repo_run_root = fields.get("repo_run_root")
     if not isinstance(repo_run_root, str) or not repo_run_root.strip():
         return {}
     normalized = repo_run_root.strip().lower()
     if normalized.startswith("pending_"):
-        return _load_pending_repo_run_terminal_flags(fields, claim_root)
+        return _load_pending_repo_run_terminal_flags(fields, claim_root, pending_repo_run_index)
     if normalized in RUN_ROOT_SENTINELS:
         return {}
     run_root = Path(repo_run_root).expanduser()
@@ -376,7 +397,11 @@ def _load_repo_run_terminal_flags(fields: dict[str, Any], claim_root: Path) -> d
     return _prefix_summary_files(_load_summary_flags(run_root), run_root, claim_root)
 
 
-def _load_pending_repo_run_terminal_flags(fields: dict[str, Any], claim_root: Path) -> dict[str, Any]:
+def _load_pending_repo_run_terminal_flags(
+    fields: dict[str, Any],
+    claim_root: Path,
+    pending_repo_run_index: dict[Path, list[tuple[datetime | None, Path, dict[str, Any]]]] | None = None,
+) -> dict[str, Any]:
     claim_factor_id = str(fields.get("factor_id") or "").strip()
     claim_branch_path = _normalize_branch_path_text(fields.get("branch_path"))
     if not claim_factor_id and not claim_branch_path:
@@ -386,12 +411,15 @@ def _load_pending_repo_run_terminal_flags(fields: dict[str, Any], claim_root: Pa
         return {}
     claim_time = _parse_claim_datetime(fields.get("claimed_at"))
     matches: list[tuple[datetime | None, Path, dict[str, Any]]] = []
-    for run_root in sorted(path for path in runs_dir.iterdir() if path.is_dir()):
-        run_time = _run_root_name_datetime(run_root.name)
+    candidates = (
+        pending_repo_run_index.get(claim_root)
+        if pending_repo_run_index is not None
+        else None
+    )
+    if candidates is None:
+        candidates = _pending_repo_run_terminal_candidates(claim_root, claim_time)
+    for run_time, run_root, summary_flags in candidates:
         if claim_time and run_time and run_time < claim_time:
-            continue
-        summary_flags = _load_summary_flags(run_root)
-        if not _summary_indicates_terminalized(summary_flags):
             continue
         if not _terminal_evidence_matches_claim(summary_flags, claim_factor_id, claim_branch_path):
             continue
@@ -401,6 +429,25 @@ def _load_pending_repo_run_terminal_flags(fields: dict[str, Any], claim_root: Pa
     matches.sort(key=lambda item: item[0] or datetime.min.replace(tzinfo=timezone.utc), reverse=True)
     _, run_root, summary_flags = matches[0]
     return _prefix_summary_files(summary_flags, run_root, claim_root)
+
+
+def _pending_repo_run_terminal_candidates(
+    claim_root: Path,
+    earliest_claim_time: datetime | None = None,
+) -> list[tuple[datetime | None, Path, dict[str, Any]]]:
+    runs_dir = claim_root / "support" / "docs" / "experiments" / "actionable-regime-confidence" / "runs"
+    if not runs_dir.exists() or not runs_dir.is_dir():
+        return []
+    candidates: list[tuple[datetime | None, Path, dict[str, Any]]] = []
+    for run_root in sorted(path for path in runs_dir.iterdir() if path.is_dir()):
+        run_time = _run_root_name_datetime(run_root.name)
+        if earliest_claim_time and run_time and run_time < earliest_claim_time:
+            continue
+        summary_flags = _load_summary_flags(run_root)
+        if not _summary_indicates_terminalized(summary_flags):
+            continue
+        candidates.append((run_time, run_root, summary_flags))
+    return candidates
 
 
 def _terminal_evidence_matches_claim(
@@ -505,16 +552,27 @@ def _find_key(value: object, target: str) -> object:
     return None
 
 
-def read_claim(path: Path, root: Path) -> dict[str, Any]:
+def read_claim(
+    path: Path,
+    root: Path,
+    pending_repo_run_index: dict[Path, list[tuple[datetime | None, Path, dict[str, Any]]]] | None = None,
+) -> dict[str, Any]:
     text = path.read_text(encoding="utf-8", errors="replace")
     fields = _parse_claim_file(path, text)
     claim_root = _claim_repo_root(fields, root)
     run_root = _resolved_run_root(fields.get("run_root"), claim_root)
     tmp_root = _resolved_run_root(fields.get("tmp_root"), claim_root)
+    artifact_roots: list[Path] = []
+    for artifact_root in (run_root, tmp_root):
+        if artifact_root is not None and artifact_root not in artifact_roots:
+            artifact_roots.append(artifact_root)
     summary_flags = _merge_terminal_evidence(
-        _load_summary_flags(run_root),
-        _load_workdoc_terminal_flags(fields.get("write_surface"), run_root, claim_root),
-        _load_repo_run_terminal_flags(fields, claim_root),
+        *(_load_summary_flags(artifact_root) for artifact_root in artifact_roots),
+        *(
+            _load_workdoc_terminal_flags(fields.get("write_surface"), artifact_root, claim_root)
+            for artifact_root in artifact_roots
+        ),
+        _load_repo_run_terminal_flags(fields, claim_root, pending_repo_run_index),
     )
     promotion_allowed = fields.get("promotion_allowed")
     trade_usable = fields.get("trade_usable")
@@ -572,6 +630,7 @@ def read_claim(path: Path, root: Path) -> dict[str, Any]:
 def _is_coordination_only_claim(fields: dict[str, Any]) -> bool:
     status = str(fields.get("status") or "").strip().lower()
     text = _claim_purpose_text(fields)
+    explicit_coordination_only = fields.get("coordination_only") is True
     coordination_status = (
         status.startswith("active_audit_only")
         or status.startswith("active_coordination_only")
@@ -585,11 +644,18 @@ def _is_coordination_only_claim(fields: dict[str, Any]) -> bool:
         or status.startswith("active_cost_prep_no_launch")
         or status.startswith("active_wrapper_prep_no_launch")
         or status.startswith("active_training_prep_no_launch")
+        or status.startswith("active_gap_audit")
+        or status.startswith("active_diagnostic_no_launch")
+        or status.startswith("active_no_launch_diagnosis")
+        or status.startswith("active_no_launch_diagnostic")
+        or (status.startswith("active_code") and "no_runtime_launch" in status)
     )
     coordination_text = _purpose_is_non_runtime_coordination(text)
-    if not coordination_status and not coordination_text:
-        return False
     if fields.get("promotion_allowed") is not False or fields.get("trade_usable") is not False:
+        return False
+    if explicit_coordination_only and _purpose_is_no_launch(text):
+        return True
+    if not coordination_status and not coordination_text:
         return False
     purpose_markers = (
         "audit",
@@ -611,27 +677,59 @@ def _is_coordination_only_claim(fields: dict[str, Any]) -> bool:
         "source prep",
         "cost prep",
         "no-launch source/cost prep",
+        "no-launch accepted",
         "wrapper prep",
         "training prep",
         "prep packet",
+        "diagnosis",
+        "diagnostic",
+        "blocker diagnosis",
+        "code-only",
+        "code gate",
+        "gate balance",
     )
     if not any(marker in text for marker in purpose_markers):
         return False
     no_launch_markers = (
-        "no provider",
-        "do not launch provider",
-        "no auto-quant",
-        "do not launch provider, ibkr, auto-quant, freqtrade, or run_tomac",
-        "no provider, ibkr, auto-quant, freqtrade, or run_tomac launch",
-        "no freqtrade",
-        "no run_tomac",
         "read-only claim/workdoc/artifact inspection",
+    )
+    return _purpose_is_no_launch(text) or any(marker in text for marker in no_launch_markers)
+
+
+def _purpose_is_no_launch(text: str) -> bool:
+    no_launch_markers = (
+        "no provider",
+        "no provider-status",
+        "no provider fetch",
+        "no ibkr historical",
+        "no autoquant",
+        "no auto-quant",
+        "no new autoquant/provider launch",
+        "no provider/aq/ibkr/freqtrade/tomac/paper/sim/live launch",
+        "no freqtrade",
+        "no tomac launch",
+        "no paper",
+        "no sim",
+        "no live",
+        "no runtime launch",
+        "without launching runtime",
+        "no downstream lifecycle",
+        "no local backtest",
+        "without launching foreign/colliding factor work",
+        "without launching shared runtime",
+        "do not launch provider",
+        "do not launch runtime",
+        "do not launch provider, ibkr, auto-quant, freqtrade, or run_tomac",
     )
     return any(marker in text for marker in no_launch_markers)
 
 
 def _purpose_is_non_runtime_coordination(text: str) -> bool:
     reserve_markers = (
+        "audit",
+        "loophole",
+        "objective",
+        "evidence review",
         "source/cost reserve",
         "source-cost reserve",
         "source reserve",
@@ -647,25 +745,14 @@ def _purpose_is_non_runtime_coordination(text: str) -> bool:
         "wrapper prep",
         "training prep",
         "prep packet",
+        "diagnosis",
+        "diagnostic",
+        "blocker diagnosis",
+        "code-only",
+        "code gate",
+        "gate balance",
     )
-    no_launch_markers = (
-        "no provider",
-        "no provider-status",
-        "no provider fetch",
-        "no ibkr historical",
-        "no autoquant",
-        "no auto-quant",
-        "no freqtrade",
-        "no tomac launch",
-        "no paper",
-        "no sim",
-        "no live",
-        "no downstream lifecycle",
-        "no local backtest launch",
-    )
-    return any(marker in text for marker in reserve_markers) and any(
-        marker in text for marker in no_launch_markers
-    )
+    return any(marker in text for marker in reserve_markers) and _purpose_is_no_launch(text)
 
 
 def _claim_purpose_text(fields: dict[str, Any]) -> str:
@@ -1128,7 +1215,29 @@ def build_report(
     now: datetime | None = None,
 ) -> dict[str, Any]:
     claim_paths = sorted(path for path in claims_dir.glob("*") if path.is_file() and _is_claim_artifact(path))
-    claims = [read_claim(path, repo_root) for path in claim_paths]
+    parsed_claim_files: list[tuple[Path, str, dict[str, Any]]] = []
+    pending_claim_root_times: dict[Path, datetime | None] = {}
+    for path in claim_paths:
+        text = path.read_text(encoding="utf-8", errors="replace")
+        fields = _parse_claim_file(path, text)
+        parsed_claim_files.append((path, text, fields))
+        repo_run_root = fields.get("repo_run_root")
+        if isinstance(repo_run_root, str) and repo_run_root.strip().lower().startswith("pending_"):
+            claim_root = _claim_repo_root(fields, repo_root)
+            claim_time = _parse_claim_datetime(fields.get("claimed_at"))
+            current = pending_claim_root_times.get(claim_root)
+            if claim_root not in pending_claim_root_times or (
+                claim_time is not None and (current is None or claim_time < current)
+            ):
+                pending_claim_root_times[claim_root] = claim_time
+    pending_repo_run_index = {
+        claim_root: _pending_repo_run_terminal_candidates(claim_root, earliest_claim_time)
+        for claim_root, earliest_claim_time in pending_claim_root_times.items()
+    }
+    claims = [
+        read_claim(path, repo_root, pending_repo_run_index=pending_repo_run_index)
+        for path, _, _ in parsed_claim_files
+    ]
     live_processes = live_processes or []
     return {
         "schema_version": "factor-claim-terminalization-audit/v1",
@@ -1208,6 +1317,8 @@ def _is_live_factor_command(command: str) -> bool:
         return False
     if _is_test_runner_command(command):
         return False
+    if _is_git_patch_command(command):
+        return False
     if _is_help_only_command(command):
         return False
     if _is_audit_coordination_command(command):
@@ -1241,6 +1352,18 @@ def _is_test_runner_command(command: str) -> bool:
     return bool(re.search(r"(?:^|\s)(?:python\d*(?:\.\d+)?|\S*/Python)\s+-m\s+unittest(?:\s|$)", normalized))
 
 
+def _is_git_patch_command(command: str) -> bool:
+    normalized = " ".join(command.split())
+    git_prefix = r"(?:^|\s)(?:\S*/)?git(?:\s+-c\s+[^\s]+)*\s+"
+    return bool(
+        re.search(
+            git_prefix
+            + r"(?:add|checkout|restore|reset)\s+(?:(?:-[^\s]*p[^\s]*)|--patch)(?:\s|$)",
+            normalized,
+        )
+    )
+
+
 def _is_help_only_command(command: str) -> bool:
     normalized = " ".join(command.split())
     return bool(re.search(r"(?:^|\s)(?:--help|-h)(?:\s|$)", normalized))
@@ -1250,7 +1373,7 @@ def _is_audit_coordination_command(command: str) -> bool:
     normalized = " ".join(command.split())
     return bool(
         re.search(
-            r"(?:^|\s)\S*(?:objective_closure_snapshot|done_definition_audit|release_readiness_audit|factor_claim_terminalization_audit)\.py\b",
+            r"(?:^|\s)\S*(?:objective_closure_snapshot|done_definition_audit|release_readiness_audit|factor_claim_terminalization_audit|downstream_practical_admission_source_check)\.py\b",
             normalized,
         )
     )
@@ -1368,7 +1491,9 @@ def _extract_run_root(command: str) -> Path | None:
 
     tmp_match = re.search(r"(/(?:private/)?tmp/ict-engine-[^\s;'\"`]+)", normalized_command)
     if tmp_match:
-        return _normalize_tmp_run_root(Path(tmp_match.group(1)))
+        path = _path_token_candidate(tmp_match.group(1), shell_vars=shell_vars)
+        if path:
+            return _normalize_tmp_run_root(path)
     return None
 
 

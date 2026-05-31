@@ -6,6 +6,7 @@ import os
 import sys
 import tempfile
 import unittest
+from unittest import mock
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -13,6 +14,7 @@ SCRIPTS_ROOT = Path(__file__).resolve().parents[1]
 if str(SCRIPTS_ROOT) not in sys.path:
     sys.path.insert(0, str(SCRIPTS_ROOT))
 
+import factor_claim_terminalization_audit as audit_module  # noqa: E402
 from factor_claim_terminalization_audit import (  # noqa: E402
     DEPLOY_READY_READINESS_CONTRACT,
     _drop_stale_failed_tomac_prep_wrappers,
@@ -36,7 +38,7 @@ def practical_command_results() -> list[dict]:
         {"stage": "bbn_workflow", "name": "04_workflow_status_bbn", "exit": 0, "timed_out": False},
         {"stage": "path_ranker", "name": "11_train_catboost_path_ranker", "exit": 0, "timed_out": False},
         {"stage": "execution_tree", "name": "16_analyze_after_ranker_execution_tree", "exit": 0, "timed_out": False},
-        {"stage": "feedback_update", "name": "08_ingest_simulated_trade_feedback", "exit": 0, "timed_out": False},
+        {"stage": "feedback_update", "name": "08_ingest_paper_execution_feedback", "exit": 0, "timed_out": False},
         {"stage": "policy_training", "name": "19_policy_training_status", "exit": 0, "timed_out": False},
     ]
 
@@ -640,6 +642,65 @@ trade_usable=false
             report["claims"][0]["summary_files"],
         )
 
+    def test_build_report_indexes_pending_repo_run_roots_once_for_many_claims(self) -> None:
+        with tempfile.TemporaryDirectory() as repo_tmp, tempfile.TemporaryDirectory() as claims_tmp:
+            repo_root = Path(repo_tmp)
+            claims_dir = Path(claims_tmp)
+            runs_dir = repo_root / "support" / "docs" / "experiments" / "actionable-regime-confidence" / "runs"
+            run_roots = [
+                runs_dir / "20260530T040000+0800-codex-before-claim-ignored",
+                runs_dir / "20260530T060000+0800-codex-pending-run-a",
+                runs_dir / "20260530T061000+0800-codex-pending-run-b",
+                runs_dir / "20260530T062000+0800-codex-pending-run-c",
+            ]
+            for run_root in run_roots:
+                run_root.mkdir(parents=True)
+            for index, factor_id in enumerate(("factor_a", "factor_b")):
+                tmp_root = repo_root / "tmp" / f"ict-engine-pending-{index}"
+                tmp_root.mkdir(parents=True)
+                (claims_dir / f"pending-{index}.claim").write_text(
+                    f"""
+agent_name=codex-pending-{index}
+owner=codex
+claimed_at=2026-05-30T05:50:00+0800
+last_progress_at=2026-05-30T05:55:00+0800
+scope=Board B pending repo run lookup
+active_task=terminalize from wrapper-stamped repo run root
+non_goals=no promotion
+write_surface={tmp_root / 'workdoc.md'}
+run_root={tmp_root}
+repo_run_root=pending_wrapper_launch_stamp
+factor_id={factor_id}
+status=active
+progress_report=wrapper launch generated a stamped repo run root
+promotion_allowed=false
+trade_usable=false
+""",
+                    encoding="utf-8",
+                )
+
+            run_root_calls: list[Path] = []
+
+            def fake_load_summary_flags(run_root: Path) -> dict[str, object]:
+                if run_root.parent == runs_dir:
+                    run_root_calls.append(run_root)
+                    if run_root.name.endswith("before-claim-ignored"):
+                        return {"decision": "old_terminal", "factor_id": "factor_a"}
+                    if run_root.name.endswith("pending-run-a"):
+                        return {"decision": "terminal_factor_a", "factor_id": "factor_a"}
+                    if run_root.name.endswith("pending-run-b"):
+                        return {"decision": "terminal_factor_b", "factor_id": "factor_b"}
+                    return {"decision": "terminal_factor_c", "factor_id": "factor_c"}
+                return {}
+
+            with mock.patch.object(audit_module, "_load_summary_flags", side_effect=fake_load_summary_flags):
+                report = build_report(claims_dir=claims_dir, repo_root=repo_root)
+
+        self.assertEqual(len(run_root_calls), len(run_roots) - 1)
+        self.assertFalse(any(path.name.endswith("before-claim-ignored") for path in run_root_calls))
+        self.assertEqual(report["summary"]["active_claims"], 0)
+        self.assertEqual(report["summary"]["terminalized_claims"], 2)
+
     def test_build_report_treats_outputs_terminal_summary_as_terminalized(self) -> None:
         with tempfile.TemporaryDirectory() as repo_tmp, tempfile.TemporaryDirectory() as claims_tmp:
             repo_root = Path(repo_tmp)
@@ -859,6 +920,156 @@ trade_usable=false
         self.assertEqual(report["claims"][0]["status"], "terminalized")
         self.assertEqual(report["claims"][0]["decision"], "launch_blocked_by_collision_guard")
         self.assertEqual(report["claims"][0]["summary_files"], ["run/summaries/terminal_summary.json"])
+        self.assertIs(report["claims"][0]["promotion_allowed"], False)
+        self.assertIs(report["claims"][0]["trade_usable"], False)
+
+    def test_build_report_treats_terminal_no_launch_summary_as_terminalized(self) -> None:
+        with tempfile.TemporaryDirectory() as repo_tmp, tempfile.TemporaryDirectory() as claims_tmp:
+            repo_root = Path(repo_tmp)
+            claims_dir = Path(claims_tmp)
+            run_root = repo_root / "support" / "docs" / "experiments" / "run-no-launch"
+            summary_dir = run_root / "summaries"
+            summary_dir.mkdir(parents=True)
+            (summary_dir / "terminal_no_launch_summary.json").write_text(
+                json.dumps(
+                    {
+                        "decision": "launch_blocked_by_foreign_claim_or_runtime",
+                        "pass": False,
+                        "foreign_active_claims": ["foreign.claim"],
+                        "promotion_allowed": False,
+                        "trade_usable": False,
+                    }
+                ),
+                encoding="utf-8",
+            )
+
+            (claims_dir / "no-launch-active.claim").write_text(
+                f"""
+agent_name=codex-no-launch-summary
+owner=codex
+claimed_at=2026-05-30T09:16:21+0800
+last_progress_at=2026-05-30T09:16:21+0800
+scope=Board B guarded no-launch wrapper
+active_task=run guarded wrapper after final audit
+non_goals=no promotion from no-launch guard
+write_surface=/tmp/example-workdoc.md
+run_root={run_root.relative_to(repo_root)}
+status=active_aq_launch
+progress_report=/tmp/example-progress.md
+promotion_allowed=false
+trade_usable=false
+""",
+                encoding="utf-8",
+            )
+
+            report = build_report(claims_dir=claims_dir, repo_root=repo_root)
+
+        self.assertEqual(report["summary"]["active_claims"], 0)
+        self.assertEqual(report["summary"]["terminalized_claims"], 1)
+        self.assertEqual(report["claims"][0]["status"], "terminalized")
+        self.assertEqual(report["claims"][0]["decision"], "launch_blocked_by_foreign_claim_or_runtime")
+        self.assertEqual(report["claims"][0]["summary_files"], ["summaries/terminal_no_launch_summary.json"])
+        self.assertIs(report["claims"][0]["promotion_allowed"], False)
+        self.assertIs(report["claims"][0]["trade_usable"], False)
+
+    def test_build_report_treats_child_aq_terminal_no_launch_summary_as_terminalized(self) -> None:
+        with tempfile.TemporaryDirectory() as repo_tmp, tempfile.TemporaryDirectory() as claims_tmp:
+            repo_root = Path(repo_tmp)
+            claims_dir = Path(claims_tmp)
+            run_root = repo_root / "tmp" / "ict-engine-prior-day-replay"
+            summary_dir = run_root / "aq" / "summaries"
+            summary_dir.mkdir(parents=True)
+            (summary_dir / "terminal_no_launch_summary.json").write_text(
+                json.dumps(
+                    {
+                        "decision": "launch_blocked_by_foreign_claim_or_runtime",
+                        "pass": False,
+                        "foreign_active_claims": ["foreign.claim"],
+                        "promotion_allowed": False,
+                        "trade_usable": False,
+                    }
+                ),
+                encoding="utf-8",
+            )
+
+            (claims_dir / "child-aq-no-launch-active.claim").write_text(
+                f"""
+agent_name=codex-child-aq-no-launch-summary
+owner=codex
+claimed_at=2026-05-30T13:07:44+0800
+last_progress_at=2026-05-30T13:07:44+0800
+scope=Board B exact replay with guarded child AQ root
+active_task=run guarded child AQ wrapper after final audit
+non_goals=no promotion from no-launch guard
+write_surface={run_root / 'workdoc.md'}
+run_root={run_root}
+status=active_exact_replay
+progress_report=/tmp/example-progress.md
+promotion_allowed=false
+trade_usable=false
+""",
+                encoding="utf-8",
+            )
+
+            report = build_report(claims_dir=claims_dir, repo_root=repo_root)
+
+        self.assertEqual(report["summary"]["active_claims"], 0)
+        self.assertEqual(report["summary"]["terminalized_claims"], 1)
+        self.assertEqual(report["claims"][0]["status"], "terminalized")
+        self.assertEqual(report["claims"][0]["decision"], "launch_blocked_by_foreign_claim_or_runtime")
+        self.assertEqual(report["claims"][0]["summary_files"], ["aq/summaries/terminal_no_launch_summary.json"])
+        self.assertIs(report["claims"][0]["promotion_allowed"], False)
+        self.assertIs(report["claims"][0]["trade_usable"], False)
+
+    def test_build_report_treats_tmp_root_terminal_metrics_as_terminalized_without_run_root(self) -> None:
+        with tempfile.TemporaryDirectory() as repo_tmp, tempfile.TemporaryDirectory() as claims_tmp:
+            repo_root = Path(repo_tmp)
+            claims_dir = Path(claims_tmp)
+            tmp_root = Path(repo_tmp) / "private-tmp" / "ict-engine-local-screen"
+            checks_dir = tmp_root / "checks"
+            checks_dir.mkdir(parents=True)
+            (tmp_root / "workdoc.md").write_text("# local screen\n", encoding="utf-8")
+            (checks_dir / "terminal_metrics.json").write_text(
+                json.dumps(
+                    {
+                        "decision": "drop_local_screen_no_crash_state_improvement",
+                        "promotion_allowed": False,
+                        "trade_usable": False,
+                        "update_goal": False,
+                        "runtime_launched": False,
+                    }
+                ),
+                encoding="utf-8",
+            )
+
+            (claims_dir / "tmp-root-active.claim").write_text(
+                f"""
+agent_name=codex-tmp-root-local-screen
+owner=codex
+claimed_at=2026-05-30T10:59:56+0800
+last_progress_at=2026-05-30T10:59:56+0800
+scope=Board B local retained-feather prescreen
+active_task=run pure pandas local rescore only
+non_goals=no provider; no AutoQuant; no paper; no promotion_allowed=true; no trade_usable=true
+write_surface={tmp_root / 'workdoc.md'}
+tmp_root={tmp_root}
+status=active_local_retained_feather_prescreen
+promotion_allowed=false
+trade_usable=false
+update_goal=false
+""",
+                encoding="utf-8",
+            )
+
+            report = build_report(claims_dir=claims_dir, repo_root=repo_root)
+
+        self.assertEqual(report["summary"]["active_claims"], 0)
+        self.assertEqual(report["summary"]["terminalized_claims"], 1)
+        self.assertEqual(report["claims"][0]["status"], "terminalized")
+        self.assertEqual(report["claims"][0]["decision"], "drop_local_screen_no_crash_state_improvement")
+        self.assertIn("checks/terminal_metrics.json", report["claims"][0]["summary_files"])
+        self.assertIsNone(report["claims"][0]["run_root"])
+        self.assertEqual(report["claims"][0]["tmp_root"], str(tmp_root))
         self.assertIs(report["claims"][0]["promotion_allowed"], False)
         self.assertIs(report["claims"][0]["trade_usable"], False)
 
@@ -1196,6 +1407,13 @@ trade_usable=false
                                 "promotion_allowed": True,
                                 "trade_usable": True,
                             }
+                        },
+                        "feedback_source": "auto_quant_real_trades:paper_execution_feedback:factor_v1",
+                        "runtime_trade_feedback_summary": {
+                            "source": "auto_quant_real_trades:paper_execution_feedback:factor_v1",
+                            "accepted_rows": 3,
+                            "broker_fill_evidence_rows": 3,
+                            "broker_realized_rows": 3,
                         },
                         "learning_admission_status": "admitted",
                         "paper_admission_status": "ready",
@@ -2345,6 +2563,55 @@ trade_usable=false
         self.assertEqual(compact["attention_claim_count"], 0)
         self.assertEqual(compact["attention_action_queue"]["fresh_active_claims_without_live_process"], [])
 
+    def test_generic_active_no_launch_audit_claim_does_not_block_factor_closure(self) -> None:
+        with tempfile.TemporaryDirectory() as repo_tmp, tempfile.TemporaryDirectory() as claims_tmp:
+            repo_root = Path(repo_tmp)
+            claims_dir = Path(claims_tmp)
+            run_root = Path(repo_tmp) / "ict-engine-closed-loop-certainty-audit"
+            run_root.mkdir()
+            (run_root / "workdoc.md").write_text("# certainty audit\n", encoding="utf-8")
+
+            (claims_dir / "certainty-audit.claim").write_text(
+                json.dumps(
+                    {
+                        "schema_version": "ict-engine-factor-claim/v1",
+                        "agent_name": "codex",
+                        "owner": "codex",
+                        "claimed_at": "2026-05-31T11:05:23+0800",
+                        "last_progress_at": "2026-05-31T11:05:23+0800",
+                        "scope": "closed_loop_factor_training_certainty_audit_no_launch",
+                        "active_task": "audit objective-completion loopholes for ict-engine factor training and practical closed-loop readiness; no provider/AQ/IBKR/paper/sim/live launch",
+                        "non_goals": [
+                            "no runtime launch while foreign claims or live factor processes exist",
+                            "no promotion_allowed=true",
+                            "no trade_usable=true",
+                            "no update_goal=true",
+                            "no takeover of other agents' factor lanes",
+                        ],
+                        "write_surface": str(run_root / "workdoc.md"),
+                        "run_root": str(run_root),
+                        "status": "active",
+                        "progress_report": "Created no-launch closed-loop certainty audit.",
+                        "promotion_allowed": False,
+                        "trade_usable": False,
+                        "update_goal": False,
+                        "same_tree_practical_closure": None,
+                    },
+                    indent=2,
+                ),
+                encoding="utf-8",
+            )
+
+            report = build_report(claims_dir=claims_dir, repo_root=repo_root)
+            compact = format_report(report, compact=True)
+
+        self.assertEqual(report["summary"]["status"], "pass")
+        self.assertEqual(report["summary"]["active_claims"], 0)
+        self.assertEqual(report["summary"]["coordination_only_active_claims"], 1)
+        self.assertEqual(report["summary"]["blocking_reasons"], [])
+        self.assertEqual(compact["attention_claim_count"], 0)
+        self.assertEqual(compact["attention_action_queue"]["fresh_active_claims_without_live_process"], [])
+
     def test_valid_inventory_claim_does_not_block_factor_closure(self) -> None:
         with tempfile.TemporaryDirectory() as repo_tmp, tempfile.TemporaryDirectory() as claims_tmp:
             repo_root = Path(repo_tmp)
@@ -2516,6 +2783,55 @@ progress_report: created no-launch source/cost prep packet while fresh NQ claim 
         self.assertEqual(compact["attention_claim_count"], 0)
         self.assertEqual(compact["attention_action_queue"]["fresh_active_claims_without_live_process"], [])
 
+    def test_explicit_coordination_only_no_launch_claim_does_not_block_factor_closure(self) -> None:
+        with tempfile.TemporaryDirectory() as repo_tmp, tempfile.TemporaryDirectory() as claims_tmp:
+            repo_root = Path(repo_tmp)
+            claims_dir = Path(claims_tmp)
+            run_root = Path(repo_tmp) / "ict-engine-second-drive-evidence"
+            run_root.mkdir()
+            (run_root / "workdoc.md").write_text("# second drive evidence\n", encoding="utf-8")
+
+            (claims_dir / "second-drive-evidence.claim").write_text(
+                json.dumps(
+                    {
+                        "schema_version": "board-b-factor-claim/v1",
+                        "agent_name": "codex-second-drive-evidence",
+                        "owner": "codex",
+                        "claimed_at": "2026-05-30T07:34:31+0800",
+                        "last_progress_at": "2026-05-30T07:34:31+0800",
+                        "scope": "Board B no-launch evidence supplement for strict-root second_drive session coverage and cost references.",
+                        "active_task": "Fill low-collision evidence gaps; do not launch provider/AQ/backtest/paper/downstream work.",
+                        "non_goals": [
+                            "No provider fetch or IBKR historical request.",
+                            "No Auto-Quant, Freqtrade, TOMAC, paper/sim/live, or downstream lifecycle command.",
+                            "No promotion_allowed=true, trade_usable=true, or update_goal=true.",
+                        ],
+                        "write_surface": str(run_root / "workdoc.md"),
+                        "run_root": str(run_root),
+                        "tmp_root": str(run_root),
+                        "status": "active",
+                        "coordination_only": True,
+                        "promotion_allowed": False,
+                        "trade_usable": False,
+                        "update_goal": False,
+                        "progress_report": "Evidence supplement started; no launch scope.",
+                    },
+                    indent=2,
+                ),
+                encoding="utf-8",
+            )
+
+            report = build_report(claims_dir=claims_dir, repo_root=repo_root)
+            compact = format_report(report, compact=True)
+
+        self.assertEqual(report["summary"]["status"], "pass")
+        self.assertEqual(report["summary"]["active_claims"], 0)
+        self.assertEqual(report["summary"]["valid_active_claims"], 0)
+        self.assertEqual(report["summary"]["coordination_only_active_claims"], 1)
+        self.assertEqual(report["summary"]["blocking_reasons"], [])
+        self.assertEqual(compact["attention_claim_count"], 0)
+        self.assertEqual(compact["attention_action_queue"]["fresh_active_claims_without_live_process"], [])
+
     def test_wrapper_prep_no_launch_claim_does_not_block_factor_closure(self) -> None:
         with tempfile.TemporaryDirectory() as repo_tmp, tempfile.TemporaryDirectory() as claims_tmp:
             repo_root = Path(repo_tmp)
@@ -2556,6 +2872,436 @@ progress_report: created wrapper prep packet; no provider, IBKR historical, Auto
         self.assertEqual(report["summary"]["blocking_reasons"], [])
         self.assertEqual(compact["attention_claim_count"], 0)
         self.assertEqual(compact["attention_action_queue"]["fresh_active_claims_without_live_process"], [])
+
+    def test_json_wrapper_prep_no_launch_status_does_not_require_extra_purpose_phrase(self) -> None:
+        with tempfile.TemporaryDirectory() as repo_tmp, tempfile.TemporaryDirectory() as claims_tmp:
+            repo_root = Path(repo_tmp)
+            claims_dir = Path(claims_tmp)
+            run_root = Path(repo_tmp) / "ict-engine-realized-vol-feedback-bridge"
+            run_root.mkdir()
+            (run_root / "workdoc.md").write_text("# feedback bridge\n", encoding="utf-8")
+
+            (claims_dir / "realized-vol-feedback-bridge.claim").write_text(
+                json.dumps(
+                    {
+                        "schema_version": "board-b-factor-claim/v1",
+                        "agent_name": "codex-realized-vol-ibkr-paper-feedback-bridge",
+                        "owner": "codex",
+                        "claimed_at": "2026-05-30T14:15:40+0800",
+                        "last_progress_at": "2026-05-30T14:15:40+0800",
+                        "scope": "No-launch accepted IBKR paper/broker execution feedback bridge for realized-vol fixed-hold practical lifecycle.",
+                        "active_task": "Add tested converter for existing IBKR paper/broker execution records into accepted paper_execution_feedback JSONL; do not launch runtime.",
+                        "non_goals": [
+                            "No provider fetch",
+                            "No IBKR historical fetch",
+                            "No AutoQuant/Freqtrade/TOMAC launch",
+                            "No paper/live/downstream lifecycle launch",
+                            "No local backtest launch",
+                            "No promotion_allowed=true, trade_usable=true, or update_goal=true",
+                        ],
+                        "write_surface": str(run_root / "workdoc.md"),
+                        "run_root": str(run_root),
+                        "tmp_root": str(run_root),
+                        "factor_id": "tomac_idxfut_clean_realized_vol_term_structure_breakout_1h_v1",
+                        "status": "active_wrapper_prep_no_launch",
+                        "promotion_allowed": False,
+                        "trade_usable": False,
+                        "update_goal": False,
+                        "progress_report": "Created no-launch bridge claim. Runtime launches are explicitly out of scope; practical flags remain false.",
+                    },
+                    indent=2,
+                ),
+                encoding="utf-8",
+            )
+
+            report = build_report(claims_dir=claims_dir, repo_root=repo_root)
+            compact = format_report(report, compact=True)
+
+        self.assertEqual(report["summary"]["status"], "pass")
+        self.assertEqual(report["summary"]["active_claims"], 0)
+        self.assertEqual(report["summary"]["coordination_only_active_claims"], 1)
+        self.assertEqual(report["summary"]["blocking_reasons"], [])
+        self.assertEqual(compact["attention_claim_count"], 0)
+        self.assertEqual(compact["attention_action_queue"]["fresh_active_claims_without_live_process"], [])
+
+    def test_no_launch_diagnosis_claim_does_not_block_factor_closure(self) -> None:
+        with tempfile.TemporaryDirectory() as repo_tmp, tempfile.TemporaryDirectory() as claims_tmp:
+            repo_root = Path(repo_tmp)
+            claims_dir = Path(claims_tmp)
+            run_root = Path(repo_tmp) / "ict-engine-nq-practical-blocker-diagnosis"
+            run_root.mkdir()
+            (run_root / "workdoc.md").write_text("# no-launch diagnosis\n", encoding="utf-8")
+
+            (claims_dir / "diagnosis.claim").write_text(
+                f"""
+agent_name: codex-nq-practical-blocker-diagnosis
+owner: codex
+claimed_at: 2026-05-30T08:43:52+0800
+last_progress_at: 2026-05-30T08:44:31+0800
+scope: Board B no-launch diagnosis for NQ practical lifecycle blockers and non-duplicate next action selection.
+active_task: Diagnose why the NQ practical lifecycle remains fail-closed; prepare a code/test repair or new candidate without launching shared runtime.
+non_goals: no provider-status; no provider fetch; no IBKR historical; no AutoQuant/Freqtrade/TOMAC launch; no paper/sim/live; no downstream lifecycle launch; no local backtest; no promotion_allowed=true; no trade_usable=true; no update_goal=true.
+write_surface: {run_root / 'workdoc.md'}
+run_root: {run_root}
+tmp_root: {run_root}
+factor_id: nq_practical_blocker_diagnosis_v1
+status: active_no_launch_diagnosis
+decision: diagnosis_in_progress_no_launch
+promotion_allowed: false
+trade_usable: false
+update_goal: false
+progress_report: created no-launch diagnosis workdoc; provider_fetch_started=false; ibkr_historical_started=false; autoquant_started=false; lifecycle_started=false.
+""".strip(),
+                encoding="utf-8",
+            )
+
+            report = build_report(claims_dir=claims_dir, repo_root=repo_root)
+            compact = format_report(report, compact=True)
+
+        self.assertEqual(report["summary"]["status"], "pass")
+        self.assertEqual(report["summary"]["active_claims"], 0)
+        self.assertEqual(report["summary"]["coordination_only_active_claims"], 1)
+        self.assertEqual(report["summary"]["blocking_reasons"], [])
+        self.assertEqual(compact["attention_claim_count"], 0)
+        self.assertEqual(compact["attention_action_queue"]["fresh_active_claims_without_live_process"], [])
+
+    def test_gap_audit_no_runtime_launch_claim_does_not_block_factor_closure(self) -> None:
+        with tempfile.TemporaryDirectory() as repo_tmp, tempfile.TemporaryDirectory() as claims_tmp:
+            repo_root = Path(repo_tmp)
+            claims_dir = Path(claims_tmp)
+            run_root = Path(repo_tmp) / "ict-engine-closed-loop-gap-audit"
+            run_root.mkdir()
+            (run_root / "workdoc.md").write_text("# gap audit\n", encoding="utf-8")
+
+            (claims_dir / "gap-audit.claim").write_text(
+                f"""
+agent_name: codex-closed-loop-gap-audit
+owner: codex
+claimed_at: 2026-05-31T11:10:28+0800
+last_progress_at: 2026-05-31T11:10:28+0800
+scope: closed-loop factor training direction gap audit and focused repair planning
+active_task: audit ict-engine profitability factor training direction, strict gates, and same-tree practical closure loopholes without launching foreign/colliding factor work
+non_goals: no provider/AQ/IBKR/Freqtrade/TOMAC/paper/sim/live launch until fresh guards clear; no takeover of active factor lanes; no gate lowering; no promotion/trade-usable claim
+write_surface: {run_root / 'workdoc.md'}
+run_root: {run_root}
+status: active_gap_audit
+promotion_allowed: false
+trade_usable: false
+update_goal: false
+same_tree_practical_closure: null
+""".strip(),
+                encoding="utf-8",
+            )
+
+            report = build_report(claims_dir=claims_dir, repo_root=repo_root)
+            compact = format_report(report, compact=True)
+
+        self.assertEqual(report["summary"]["status"], "pass")
+        self.assertEqual(report["summary"]["active_claims"], 0)
+        self.assertEqual(report["summary"]["coordination_only_active_claims"], 1)
+        self.assertEqual(report["summary"]["blocking_reasons"], [])
+        self.assertEqual(compact["attention_claim_count"], 0)
+        self.assertEqual(compact["attention_action_queue"]["fresh_active_claims_without_live_process"], [])
+
+    def test_certainty_audit_no_provider_aq_ibkr_launch_claim_does_not_block_factor_closure(self) -> None:
+        with tempfile.TemporaryDirectory() as repo_tmp, tempfile.TemporaryDirectory() as claims_tmp:
+            repo_root = Path(repo_tmp)
+            claims_dir = Path(claims_tmp)
+            run_root = Path(repo_tmp) / "ict-engine-closed-loop-certainty-audit"
+            run_root.mkdir()
+            (run_root / "workdoc.md").write_text("# certainty audit\n", encoding="utf-8")
+
+            (claims_dir / "certainty-audit.claim").write_text(
+                json.dumps(
+                    {
+                        "schema_version": "ict-engine-factor-claim/v1",
+                        "agent_name": "codex",
+                        "owner": "codex",
+                        "claimed_at": "2026-05-31T11:05:23+0800",
+                        "last_progress_at": "2026-05-31T11:05:23+0800",
+                        "scope": "closed_loop_factor_training_certainty_audit_no_launch",
+                        "active_task": "audit objective-completion loopholes for ict-engine factor training and practical closed-loop readiness; no provider/AQ/IBKR/paper/sim/live launch",
+                        "non_goals": [
+                            "no runtime launch while foreign claims or live factor processes exist",
+                            "no promotion_allowed=true",
+                            "no trade_usable=true",
+                            "no update_goal=true",
+                        ],
+                        "write_surface": str(run_root / "workdoc.md"),
+                        "run_root": str(run_root),
+                        "status": "active",
+                        "promotion_allowed": False,
+                        "trade_usable": False,
+                        "update_goal": False,
+                    },
+                    indent=2,
+                ),
+                encoding="utf-8",
+            )
+
+            report = build_report(claims_dir=claims_dir, repo_root=repo_root)
+            compact = format_report(report, compact=True)
+
+        self.assertEqual(report["summary"]["status"], "pass")
+        self.assertEqual(report["summary"]["active_claims"], 0)
+        self.assertEqual(report["summary"]["coordination_only_active_claims"], 1)
+        self.assertEqual(report["summary"]["blocking_reasons"], [])
+        self.assertEqual(compact["attention_claim_count"], 0)
+        self.assertEqual(compact["attention_action_queue"]["fresh_active_claims_without_live_process"], [])
+
+    def test_diagnostic_no_launch_claim_with_foreign_runtime_guard_does_not_block_factor_closure(self) -> None:
+        with tempfile.TemporaryDirectory() as repo_tmp, tempfile.TemporaryDirectory() as claims_tmp:
+            repo_root = Path(repo_tmp)
+            claims_dir = Path(claims_tmp)
+            run_root = Path(repo_tmp) / "ict-engine-practical-factor-rootcause-repair"
+            run_root.mkdir()
+            (run_root / "workdoc.md").write_text("# root-cause repair\n", encoding="utf-8")
+
+            (claims_dir / "rootcause-repair.claim").write_text(
+                json.dumps(
+                    {
+                        "schema_version": "board-b-factor-claim/v1",
+                        "agent_name": "codex-practical-factor-rootcause-repair",
+                        "owner": "codex",
+                        "claimed_at": "2026-05-31T11:11:14+0800",
+                        "last_progress_at": "2026-05-31T11:11:14+0800",
+                        "scope": "practical_factor_zero root cause and canonical gate repair",
+                        "active_task": "Explain why trade_usable_true is zero from current evidence and repair canonical closure/gate drift if proven.",
+                        "non_goals": [
+                            "no new AutoQuant/provider launch while foreign live_runtime_owner exists",
+                            "no gate lowering",
+                            "no simulated feedback relabeling",
+                            "no promotion_allowed=true",
+                            "no trade_usable=true",
+                        ],
+                        "write_surface": str(run_root / "workdoc.md"),
+                        "run_root": str(run_root),
+                        "status": "active_diagnostic_no_launch",
+                        "promotion_allowed": False,
+                        "trade_usable": False,
+                        "update_goal": False,
+                    },
+                    indent=2,
+                ),
+                encoding="utf-8",
+            )
+
+            report = build_report(claims_dir=claims_dir, repo_root=repo_root)
+            compact = format_report(report, compact=True)
+
+        self.assertEqual(report["summary"]["status"], "pass")
+        self.assertEqual(report["summary"]["active_claims"], 0)
+        self.assertEqual(report["summary"]["coordination_only_active_claims"], 1)
+        self.assertEqual(report["summary"]["blocking_reasons"], [])
+        self.assertEqual(compact["attention_claim_count"], 0)
+        self.assertEqual(compact["attention_action_queue"]["fresh_active_claims_without_live_process"], [])
+
+    def test_code_only_no_runtime_launch_claim_does_not_block_factor_closure(self) -> None:
+        with tempfile.TemporaryDirectory() as repo_tmp, tempfile.TemporaryDirectory() as claims_tmp:
+            repo_root = Path(repo_tmp)
+            claims_dir = Path(claims_tmp)
+            run_root = Path(repo_tmp) / "ict-engine-balanced-factor-gates"
+            run_root.mkdir()
+            (run_root / "workdoc.md").write_text("# balanced gates\n", encoding="utf-8")
+
+            (claims_dir / "balanced-factor-gates.claim").write_text(
+                """
+agent_name: codex-balanced-factor-gates
+owner: codex
+claimed_at: 20260531T113047+0800
+last_progress_at: 20260531T113047+0800
+scope: code-only balanced profitability factor gate adjustment
+active_task: separate flywheel learning admission from final live trade_usable promotion without launching runtime
+non_goals: no provider/AQ/IBKR/Freqtrade/TOMAC/paper/sim/live launch; no gate lowering for trade_usable
+write_surface: {workdoc}
+run_root: {run_root}
+status: active_code_gate_balance_no_runtime_launch
+progress_report: created code-only gate-balance workdoc and coordination claim
+promotion_allowed: false
+trade_usable: false
+update_goal: false
+same_tree_practical_closure: null
+""".strip().format(workdoc=run_root / "workdoc.md", run_root=run_root),
+                encoding="utf-8",
+            )
+
+            report = build_report(claims_dir=claims_dir, repo_root=repo_root)
+            compact = format_report(report, compact=True)
+
+        self.assertEqual(report["summary"]["status"], "pass")
+        self.assertEqual(report["summary"]["active_claims"], 0)
+        self.assertEqual(report["summary"]["coordination_only_active_claims"], 1)
+        self.assertEqual(report["summary"]["blocking_reasons"], [])
+        self.assertEqual(compact["attention_claim_count"], 0)
+        self.assertEqual(compact["attention_action_queue"]["fresh_active_claims_without_live_process"], [])
+
+    def test_explicit_coordination_only_json_claim_does_not_block_factor_closure(self) -> None:
+        with tempfile.TemporaryDirectory() as repo_tmp, tempfile.TemporaryDirectory() as claims_tmp:
+            repo_root = Path(repo_tmp)
+            claims_dir = Path(claims_tmp)
+            run_root = Path(repo_tmp) / "ict-engine-second-drive-evidence-supplement"
+            run_root.mkdir()
+            (run_root / "workdoc.md").write_text("# evidence supplement\n", encoding="utf-8")
+
+            (claims_dir / "second-drive-evidence.claim").write_text(
+                json.dumps(
+                    {
+                        "schema_version": "board-b-factor-claim/v1",
+                        "agent_name": "codex-strict-root-second-drive-cost-session-evidence",
+                        "owner": "codex",
+                        "claimed_at": "2026-05-30T07:34:31+0800",
+                        "last_progress_at": "2026-05-30T07:34:31+0800",
+                        "scope": "Board B no-launch evidence supplement for strict-root second_drive session and cost evidence.",
+                        "active_task": "Fill low-collision evidence gaps while foreign runtimes are active; do not launch provider/AQ/backtest/paper/downstream work.",
+                        "non_goals": [
+                            "No provider fetch or IBKR historical request.",
+                            "No Auto-Quant, Freqtrade, TOMAC, paper/sim/live, or downstream lifecycle command.",
+                            "No promotion_allowed=true, trade_usable=true, or update_goal=true from evidence supplementation.",
+                        ],
+                        "write_surface": str(run_root / "workdoc.md"),
+                        "run_root": str(run_root),
+                        "tmp_root": str(run_root),
+                        "factor_id": "strict_trend_root_liquidity_sweep_vwap_reclaim_second_drive",
+                        "status": "active",
+                        "coordination_only": True,
+                        "promotion_allowed": False,
+                        "trade_usable": False,
+                        "update_goal": False,
+                        "progress_report": "Evidence supplement started; no launch scope.",
+                    },
+                    indent=2,
+                ),
+                encoding="utf-8",
+            )
+
+            report = build_report(claims_dir=claims_dir, repo_root=repo_root)
+            compact = format_report(report, compact=True)
+
+        self.assertEqual(report["summary"]["status"], "pass")
+        self.assertEqual(report["summary"]["active_claims"], 0)
+        self.assertEqual(report["summary"]["coordination_only_active_claims"], 1)
+        self.assertEqual(report["summary"]["blocking_reasons"], [])
+        self.assertEqual(compact["attention_claim_count"], 0)
+        self.assertEqual(compact["attention_action_queue"]["fresh_active_claims_without_live_process"], [])
+
+    def test_terminal_summary_status_is_not_overwritten_by_nested_pass_status(self) -> None:
+        with tempfile.TemporaryDirectory() as repo_tmp, tempfile.TemporaryDirectory() as claims_tmp:
+            repo_root = Path(repo_tmp)
+            claims_dir = Path(claims_tmp)
+            run_root = Path(repo_tmp) / "ict-engine-practical-lifecycle-fail-closed"
+            (run_root / "summaries").mkdir(parents=True)
+            (run_root / "checks").mkdir(parents=True)
+            (run_root / "workdoc.md").write_text("# practical lifecycle\n", encoding="utf-8")
+            (run_root / "summaries" / "terminal_summary.json").write_text(
+                json.dumps(
+                    {
+                        "status": "practical_lifecycle_fail_closed",
+                        "promotion_allowed": False,
+                        "trade_usable": False,
+                        "factor_id": "nq_compound_trend_rrr_chopfilter_v1",
+                    },
+                    indent=2,
+                ),
+                encoding="utf-8",
+            )
+            (run_root / "checks" / "terminal_metrics.json").write_text(
+                json.dumps(
+                    {
+                        "promotion_allowed": False,
+                        "trade_usable": False,
+                        "factor_id": "nq_compound_trend_rrr_chopfilter_v1",
+                        "retained_session_coverage": {"status": "pass"},
+                        "market_data_provenance": {"status": "pass"},
+                    },
+                    indent=2,
+                ),
+                encoding="utf-8",
+            )
+            (claims_dir / "practical-lifecycle.claim").write_text(
+                json.dumps(
+                    {
+                        "agent_name": "codex-practical-lifecycle",
+                        "owner": "codex",
+                        "claimed_at": "2026-05-30T07:54:59+0800",
+                        "last_progress_at": "2026-05-30T07:54:59+0800",
+                        "scope": "Board B same-tree practical lifecycle attempt.",
+                        "active_task": "Run lifecycle stages toward canonical closure.",
+                        "non_goals": ["No trade_usable=true unless canonical closure validates."],
+                        "write_surface": str(run_root / "workdoc.md"),
+                        "run_root": str(run_root),
+                        "tmp_root": str(run_root),
+                        "status": "active",
+                        "promotion_allowed": False,
+                        "trade_usable": False,
+                        "progress_report": "Lifecycle started.",
+                    },
+                    indent=2,
+                ),
+                encoding="utf-8",
+            )
+
+            report = build_report(claims_dir=claims_dir, repo_root=repo_root)
+            compact = format_report(report, compact=True)
+
+        self.assertEqual(report["summary"]["status"], "pass")
+        self.assertEqual(report["summary"]["active_claims"], 0)
+        self.assertEqual(report["summary"]["terminalized_claims"], 1)
+        self.assertEqual(report["claims"][0]["status"], "terminalized")
+        self.assertEqual(report["claims"][0]["decision"], "practical_lifecycle_fail_closed")
+        self.assertEqual(compact["attention_claim_count"], 0)
+
+    def test_terminal_summary_completed_suffix_terminalizes_active_claim(self) -> None:
+        with tempfile.TemporaryDirectory() as repo_tmp, tempfile.TemporaryDirectory() as claims_tmp:
+            repo_root = Path(repo_tmp)
+            claims_dir = Path(claims_tmp)
+            run_root = Path(repo_tmp) / "ict-engine-vhf-chop-downstream-runtime"
+            (run_root / "summaries").mkdir(parents=True)
+            (run_root / "checks").mkdir(parents=True)
+            (run_root / "workdoc.md").write_text("# downstream runtime\n", encoding="utf-8")
+            (run_root / "summaries" / "terminal_summary.json").write_text(
+                json.dumps(
+                    {
+                        "status": "downstream_cli_chain_completed",
+                        "promotion_allowed": False,
+                        "trade_usable": False,
+                        "factor_id": "tomac_nq_15m_vhf_chop_trend_reacceleration_long_qualityreacceleration_exact_aq_v1",
+                    },
+                    indent=2,
+                ),
+                encoding="utf-8",
+            )
+            (claims_dir / "vhf-chop-downstream.claim").write_text(
+                json.dumps(
+                    {
+                        "agent_name": "codex-vhf-chop-downstream",
+                        "owner": "codex",
+                        "claimed_at": "2026-05-31T08:01:29+0800",
+                        "last_progress_at": "2026-05-31T08:01:29+0800",
+                        "scope": "Board B VHF/CHOP downstream local CLI chain.",
+                        "active_task": "Run local CLI readbacks from prepared strategy library.",
+                        "non_goals": ["No promotion_allowed=true or trade_usable=true without same-tree practical closure."],
+                        "write_surface": str(run_root / "workdoc.md"),
+                        "run_root": str(run_root),
+                        "tmp_root": str(run_root),
+                        "status": "active_downstream_runtime_cli_chain",
+                        "promotion_allowed": False,
+                        "trade_usable": False,
+                        "progress_report": "CLI chain started.",
+                    },
+                    indent=2,
+                ),
+                encoding="utf-8",
+            )
+
+            report = build_report(claims_dir=claims_dir, repo_root=repo_root)
+            compact = format_report(report, compact=True)
+
+        self.assertEqual(report["summary"]["status"], "pass")
+        self.assertEqual(report["summary"]["active_claims"], 0)
+        self.assertEqual(report["summary"]["terminalized_claims"], 1)
+        self.assertEqual(report["claims"][0]["status"], "terminalized")
+        self.assertEqual(report["claims"][0]["decision"], "downstream_cli_chain_completed")
+        self.assertEqual(compact["attention_claim_count"], 0)
 
     def test_build_report_flags_active_claims_missing_board_local_identity_fields(self) -> None:
         with tempfile.TemporaryDirectory() as repo_tmp, tempfile.TemporaryDirectory() as claims_tmp:
@@ -2691,6 +3437,24 @@ trade_usable=false
 
         self.assertFalse(_is_live_factor_command(command))
 
+    def test_live_process_classifier_ignores_git_patch_on_factor_wrapper(self) -> None:
+        command = (
+            "git add -p "
+            "support/docs/experiments/actionable-regime-confidence/scripts/"
+            "run_tomac_index_futures_clean_aq_v1.py"
+        )
+
+        self.assertFalse(_is_live_factor_command(command))
+
+    def test_live_process_classifier_ignores_git_config_patch_on_factor_wrapper(self) -> None:
+        command = (
+            "git -c diff.context=1 add -p -- "
+            "support/docs/experiments/actionable-regime-confidence/scripts/"
+            "run_tomac_index_futures_clean_aq_v1.py"
+        )
+
+        self.assertFalse(_is_live_factor_command(command))
+
     def test_live_process_classifier_detects_bybit_factor_wrappers(self) -> None:
         command = (
             "/opt/homebrew/bin/python3 "
@@ -2820,6 +3584,17 @@ trade_usable=false
             "Resources/Python.app/Contents/MacOS/Python "
             "support/scripts/research/tomac_factor_coverage_matrix.py "
             "--tomac-root support/docs/experiments/actionable-regime-confidence/runs"
+        )
+
+        self.assertFalse(_is_live_factor_command(command))
+
+    def test_live_process_classifier_ignores_practical_source_scanner_with_wrapper_args(self) -> None:
+        command = (
+            "/opt/homebrew/Cellar/python@3.13/3.13.12_1/Frameworks/Python.framework/Versions/3.13/"
+            "Resources/Python.app/Contents/MacOS/Python "
+            "support/scripts/research/downstream_practical_admission_source_check.py "
+            "support/docs/experiments/actionable-regime-confidence/scripts/run_tomac_index_futures_clean_aq_v1.py "
+            "support/docs/experiments/actionable-regime-confidence/scripts/run_yf_xli_vwap_noise_band_breakout_costaware_v2.py"
         )
 
         self.assertFalse(_is_live_factor_command(command))
@@ -3093,6 +3868,17 @@ trade_usable=false
 
     def test_extract_run_root_ignores_unresolved_shell_variable_path(self) -> None:
         command = "python3 run_tomac_index_futures_clean_aq_v1.py --root \"$root/run\" --timeout 1800"
+
+        self.assertIsNone(_extract_run_root(command))
+
+    def test_extract_run_root_ignores_unexpanded_template_tmp_path(self) -> None:
+        command = (
+            "/bin/zsh -lc STAMP=$(date '+%Y%m%dT%H%M%S+0800') "
+            "ROOT=\"/tmp/ict-engine-monthly-opening-range-nq5m-stability-filter-aq-${STAMP}\" "
+            "python3 support/docs/experiments/actionable-regime-confidence/scripts/"
+            "run_tomac_monthly_opening_range_nq5m_stability_filter_aqprep_v1.py "
+            "--root \"$ROOT\" --launch"
+        )
 
         self.assertIsNone(_extract_run_root(command))
 

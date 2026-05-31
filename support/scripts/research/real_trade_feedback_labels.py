@@ -60,6 +60,18 @@ def _write_jsonl(path: Path, rows: list[dict[str, Any]]) -> None:
             handle.write(json.dumps(row, sort_keys=False) + "\n")
 
 
+def _write_json(path: Path, payload: dict[str, Any]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+
+
+def _load_json(path: Path) -> dict[str, Any]:
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    if not isinstance(payload, dict):
+        raise ValueError("json payload must be an object")
+    return payload
+
+
 def _required_text(row: dict[str, Any], key: str) -> str:
     value = str(row.get(key) or "").strip()
     if not value:
@@ -103,6 +115,15 @@ def _side_to_direction(side: object) -> str:
         return "Bull"
     if normalized in {"sell", "sld", "short", "bear"}:
         return "Bear"
+    raise ValueError(f"unsupported IBKR side/action: {side!r}")
+
+
+def _side_is_buy(side: object) -> bool:
+    normalized = str(side or "").strip().lower()
+    if normalized in {"buy", "bot", "long", "bull"}:
+        return True
+    if normalized in {"sell", "sld", "short", "bear"}:
+        return False
     raise ValueError(f"unsupported IBKR side/action: {side!r}")
 
 
@@ -209,6 +230,189 @@ def build_accepted_paper_execution_feedback_rows(
             row.pop("profit_ratio")
         rows.append(row)
     return rows
+
+
+def _readback_row_contract(row: dict[str, Any]) -> dict[str, Any]:
+    contract = row.get("contract")
+    if not isinstance(contract, dict):
+        raise ValueError("IBKR execution readback row missing contract object")
+    return contract
+
+
+def _readback_row_symbol(row: dict[str, Any]) -> str:
+    contract = _readback_row_contract(row)
+    return str(contract.get("symbol") or "").strip()
+
+
+def _readback_row_key(row: dict[str, Any]) -> tuple[str, str, str, float]:
+    contract = _readback_row_contract(row)
+    conid = str(contract.get("conId") or "").strip()
+    local_symbol = str(contract.get("localSymbol") or "").strip()
+    symbol = str(contract.get("symbol") or "").strip()
+    quantity = _required_float(row, "shares")
+    if quantity <= 0:
+        raise ValueError("IBKR execution readback row shares must be positive")
+    return conid, local_symbol, symbol, quantity
+
+
+def _readback_row_timestamp_ms(row: dict[str, Any]) -> int:
+    value = str(row.get("time") or "").strip()
+    if not value:
+        raise ValueError("IBKR execution readback row time is required")
+    return _timestamp_ms(value)
+
+
+def _readback_row_to_capture(entry: dict[str, Any], exit_row: dict[str, Any]) -> dict[str, Any]:
+    if entry.get("broker_fill_evidence") is not True or exit_row.get("broker_fill_evidence") is not True:
+        raise ValueError("IBKR readback rows require broker fill evidence")
+    if entry.get("commission_report_present") is not True or exit_row.get("commission_report_present") is not True:
+        raise ValueError("IBKR readback rows require commissionReport evidence")
+    entry_contract = _readback_row_contract(entry)
+    exit_contract = _readback_row_contract(exit_row)
+    entry_ts_ms = _readback_row_timestamp_ms(entry)
+    exit_ts_ms = _readback_row_timestamp_ms(exit_row)
+    commission = abs(_required_float(entry, "commission")) + abs(_required_float(exit_row, "commission"))
+    realized_pnl = _required_float(exit_row, "realized_pnl")
+    return {
+        "entry_exec_id": _required_text(entry, "exec_id"),
+        "exit_exec_id": _required_text(exit_row, "exec_id"),
+        "order_id": _required_int(entry, "order_id"),
+        "client_id": _required_int(entry, "client_id"),
+        "perm_id": _required_int(entry, "perm_id"),
+        "conid": _required_int(entry_contract, "conId"),
+        "local_symbol": _required_text(entry_contract, "localSymbol"),
+        "sec_type": _required_text(entry_contract, "secType"),
+        "exchange": str(entry.get("exchange") or entry_contract.get("exchange") or exit_contract.get("exchange") or "").strip(),
+        "currency": str(entry.get("currency") or entry_contract.get("currency") or exit_contract.get("currency") or "").strip(),
+        "side": entry.get("side"),
+        "quantity": _required_float(entry, "shares"),
+        "open_ts_ms": entry_ts_ms,
+        "close_ts_ms": exit_ts_ms,
+        "open_rate": _required_float(entry, "price"),
+        "close_rate": _required_float(exit_row, "price"),
+        "commission": commission,
+        "commission_currency": _required_text(exit_row, "currency"),
+        "realized_pnl": realized_pnl,
+        "source": "ibkr_reqExecutions_readback_execDetails_commissionReport",
+    }
+
+
+def build_ibkr_readback_captures(readback: dict[str, Any], *, symbol: str | None = None) -> list[dict[str, Any]]:
+    """Pair local IBKR execution readback rows into accepted-feedback captures.
+
+    This is an offline converter for rows already captured by a read-only IBKR
+    execution audit. It deliberately ignores unpaired executions instead of
+    inventing fills or PnL.
+    """
+
+    rows = readback.get("rows")
+    if not isinstance(rows, list):
+        return []
+
+    requested_symbol = (symbol or str(readback.get("symbol") or "")).strip()
+    pending_buy: dict[tuple[str, str, str, float], list[dict[str, Any]]] = {}
+    pending_sell: dict[tuple[str, str, str, float], list[dict[str, Any]]] = {}
+    captures: list[dict[str, Any]] = []
+    eligible_rows = [
+        row
+        for row in rows
+        if isinstance(row, dict)
+        and row.get("broker_fill_evidence") is True
+        and row.get("commission_report_present") is True
+    ]
+    ordered_rows = sorted(
+        eligible_rows,
+        key=lambda row: str(row.get("time") or ""),
+    )
+    for row in ordered_rows:
+        if requested_symbol and _readback_row_symbol(row) != requested_symbol:
+            continue
+        key = _readback_row_key(row)
+        is_buy = _side_is_buy(row.get("side"))
+        if is_buy:
+            open_rows = pending_sell.setdefault(key, [])
+            if open_rows:
+                entry = open_rows.pop(0)
+                captures.append(_readback_row_to_capture(entry, row))
+            else:
+                pending_buy.setdefault(key, []).append(row)
+            continue
+        open_rows = pending_buy.setdefault(key, [])
+        if open_rows:
+            entry = open_rows.pop(0)
+            captures.append(_readback_row_to_capture(entry, row))
+        else:
+            pending_sell.setdefault(key, []).append(row)
+    return captures
+
+
+def build_accepted_feedback_conversion_summary(
+    *,
+    rows: list[dict[str, Any]],
+    input_mode: str,
+    input_path: str,
+    output_jsonl: str,
+    input_rows_seen: int,
+    paired_captures: int,
+    symbol: str,
+    strategy_name: str,
+    factor_id: str,
+    branch_path: str,
+    auto_quant_run_id: str,
+    feedback_source: str,
+) -> dict[str, Any]:
+    accepted_source: str | None = None
+    mixed_sources = False
+    broker_fill_evidence_rows = 0
+    broker_realized_rows = 0
+    for row in rows:
+        source = str(row.get("source") or row.get("feedback_source") or "").strip()
+        if source:
+            if accepted_source is None:
+                accepted_source = source
+            elif source != accepted_source:
+                mixed_sources = True
+        if row.get("broker_fill_evidence") is True:
+            broker_fill_evidence_rows += 1
+        if row.get("broker_realized") is True:
+            broker_realized_rows += 1
+
+    accepted_feedback_rows = len(rows)
+    ready = (
+        accepted_feedback_rows > 0
+        and not mixed_sources
+        and accepted_source is not None
+        and broker_fill_evidence_rows >= accepted_feedback_rows
+        and broker_realized_rows >= accepted_feedback_rows
+    )
+    status = "ready" if ready else "no_accepted_execution_feedback_rows"
+    summary = {
+        "schema_version": "accepted-execution-feedback-conversion/v1",
+        "status": status,
+        "accepted_execution_feedback_ready": ready,
+        "accepted_feedback_rows": accepted_feedback_rows,
+        "accepted_source": accepted_source if ready else None,
+        "broker_fill_evidence_rows": broker_fill_evidence_rows,
+        "broker_realized_rows": broker_realized_rows,
+        "input_mode": input_mode,
+        "input_path": input_path,
+        "input_rows_seen": input_rows_seen,
+        "paired_captures": paired_captures,
+        "output_jsonl": output_jsonl,
+        "symbol": symbol,
+        "strategy_name": strategy_name,
+        "factor_id": factor_id,
+        "branch_path": branch_path,
+        "auto_quant_run_id": auto_quant_run_id,
+        "feedback_source": feedback_source,
+        "promotion_allowed": False,
+        "trade_usable": False,
+        "update_goal": False,
+    }
+    if not ready:
+        summary["terminal_status"] = "terminalized_accepted_execution_feedback_missing"
+        summary["terminal_decision"] = "accepted_execution_feedback_missing"
+    return summary
 
 
 def _direction_to_side(direction: str) -> int:
@@ -510,7 +714,11 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--candles-json")
     parser.add_argument("--trade-wire-jsonl")
     parser.add_argument("--ibkr-paper-captures-jsonl")
+    parser.add_argument("--ibkr-execution-readback-json")
+    parser.add_argument("--ibkr-contract-symbol")
     parser.add_argument("--output-jsonl", required=True)
+    parser.add_argument("--summary-json")
+    parser.add_argument("--metrics-json")
     parser.add_argument("--sl-mult", type=float, default=0.01)
     parser.add_argument("--round-trip-cost-fraction", type=float, default=0.0)
     parser.add_argument("--max-alignment-gap-bars", type=int, default=3)
@@ -524,16 +732,20 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--rth-filter-applied", action="store_true")
     args = parser.parse_args(argv)
 
-    if args.ibkr_paper_captures_jsonl:
+    feedback_modes = [bool(args.ibkr_paper_captures_jsonl), bool(args.ibkr_execution_readback_json)]
+    if args.ibkr_paper_captures_jsonl or args.ibkr_execution_readback_json:
         missing = [
             name
             for name in ("symbol", "strategy_name", "factor_id", "branch_path", "auto_quant_run_id", "feedback_source")
             if not getattr(args, name)
         ]
         if missing:
-            parser.error("--ibkr-paper-captures-jsonl requires " + ", ".join(f"--{name.replace('_', '-')}" for name in missing))
+            mode = "--ibkr-paper-captures-jsonl" if args.ibkr_paper_captures_jsonl else "--ibkr-execution-readback-json"
+            parser.error(mode + " requires " + ", ".join(f"--{name.replace('_', '-')}" for name in missing))
         if args.candles_json or args.trade_wire_jsonl:
-            parser.error("--ibkr-paper-captures-jsonl cannot be combined with --candles-json or --trade-wire-jsonl")
+            parser.error("IBKR feedback conversion cannot be combined with --candles-json or --trade-wire-jsonl")
+        if all(feedback_modes):
+            parser.error("choose only one IBKR feedback conversion input")
     elif not (args.candles_json and args.trade_wire_jsonl):
         parser.error("label mode requires --candles-json and --trade-wire-jsonl")
 
@@ -542,9 +754,22 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
 
 def main(argv: list[str] | None = None) -> int:
     args = parse_args(argv)
-    if args.ibkr_paper_captures_jsonl:
+    if args.ibkr_paper_captures_jsonl or args.ibkr_execution_readback_json:
+        input_path = args.ibkr_execution_readback_json or args.ibkr_paper_captures_jsonl
+        input_mode = "ibkr_execution_readback" if args.ibkr_execution_readback_json else "ibkr_paper_captures"
+        if args.ibkr_execution_readback_json:
+            readback = _load_json(Path(args.ibkr_execution_readback_json))
+            raw_rows = readback.get("rows")
+            input_rows_seen = len(raw_rows) if isinstance(raw_rows, list) else 0
+            captures = build_ibkr_readback_captures(
+                readback,
+                symbol=args.ibkr_contract_symbol,
+            )
+        else:
+            captures = _load_jsonl(Path(args.ibkr_paper_captures_jsonl))
+            input_rows_seen = len(captures)
         rows = build_accepted_paper_execution_feedback_rows(
-            _load_jsonl(Path(args.ibkr_paper_captures_jsonl)),
+            captures,
             symbol=args.symbol,
             strategy_name=args.strategy_name,
             factor_id=args.factor_id,
@@ -555,7 +780,25 @@ def main(argv: list[str] | None = None) -> int:
             rth_filter_applied=args.rth_filter_applied,
         )
         _write_jsonl(Path(args.output_jsonl), rows)
-        print(json.dumps({"ok": True, "accepted_feedback_rows": len(rows), "output": args.output_jsonl}, indent=2))
+        summary = build_accepted_feedback_conversion_summary(
+            rows=rows,
+            input_mode=input_mode,
+            input_path=input_path,
+            output_jsonl=args.output_jsonl,
+            input_rows_seen=input_rows_seen,
+            paired_captures=len(captures),
+            symbol=args.symbol,
+            strategy_name=args.strategy_name,
+            factor_id=args.factor_id,
+            branch_path=args.branch_path,
+            auto_quant_run_id=args.auto_quant_run_id,
+            feedback_source=args.feedback_source,
+        )
+        if args.summary_json:
+            _write_json(Path(args.summary_json), summary)
+        if args.metrics_json:
+            _write_json(Path(args.metrics_json), summary)
+        print(json.dumps({"ok": True, **summary}, indent=2))
         return 0
 
     labels = build_labels(
