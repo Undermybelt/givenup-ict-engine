@@ -51,6 +51,11 @@ Providers (sub-commands):
                      traffic is correctly throttled against the same account
                      budget.
 
+  ibkr-contract-details
+                     Qualified IBKR contract details/secdef JSON packet for
+                     preflight identity checks. Does not request historical
+                     bars and is not promotion evidence by itself.
+
 Architectural note: this script's job is FETCH + WRITE-CANONICAL-CSV (or wide
 CSV for option chain / market list). Data cleaning, resampling, and feather
 conversion live in prepare_external.py. Two stages, two tools, no entanglement.
@@ -1630,6 +1635,88 @@ def _ibkr_classify_historical_request_error(
     )
 
 
+def _ibkr_contract_to_dict(contract: Any) -> dict[str, Any]:
+    fields = [
+        "conId",
+        "symbol",
+        "secType",
+        "exchange",
+        "primaryExchange",
+        "currency",
+        "lastTradeDateOrContractMonth",
+        "multiplier",
+        "localSymbol",
+        "tradingClass",
+        "strike",
+        "right",
+    ]
+    return {field: getattr(contract, field, None) for field in fields}
+
+
+def _ibkr_contract_detail_to_dict(detail: Any) -> dict[str, Any]:
+    fields = [
+        "marketName",
+        "minTick",
+        "orderTypes",
+        "validExchanges",
+        "priceMagnifier",
+        "underConId",
+        "longName",
+        "contractMonth",
+        "industry",
+        "category",
+        "subcategory",
+        "timeZoneId",
+        "tradingHours",
+        "liquidHours",
+        "marketRuleIds",
+        "realExpirationDate",
+        "lastTradeTime",
+        "stockType",
+        "minSize",
+        "sizeIncrement",
+        "suggestedSizeIncrement",
+    ]
+    out = {field: getattr(detail, field, None) for field in fields}
+    out["contract"] = _ibkr_contract_to_dict(getattr(detail, "contract", None))
+    return out
+
+
+def _ibkr_contract_detail_packet(
+    args: argparse.Namespace,
+    qualified_contract: Any,
+    details: list[Any],
+    *,
+    selected_client_id: int | None = None,
+) -> dict[str, Any]:
+    return {
+        "schema_version": "ibkr-contract-details/v1",
+        "created_at": datetime.now(timezone.utc).isoformat(),
+        "request": {
+            "symbol": args.symbol,
+            "sec_type": args.sec_type,
+            "exchange": args.exchange,
+            "currency": args.currency,
+            "primary_exchange": args.primary_exchange,
+            "last_trade_date": args.last_trade_date,
+            "multiplier": args.multiplier,
+            "strike": args.strike,
+            "right": args.right,
+        },
+        "selected_client_id": selected_client_id,
+        "qualified_contract": _ibkr_contract_to_dict(qualified_contract),
+        "contract_details_count": len(details),
+        "contract_details": [_ibkr_contract_detail_to_dict(detail) for detail in details],
+        "historical_fetch_launched": False,
+        "promotion_evidence": False,
+        "promotion_note": (
+            "IBKR contract details can verify contract identity/session fields, "
+            "but do not by themselves verify broker/exchange/regulatory cost model "
+            "or practical trade usability."
+        ),
+    }
+
+
 def _build_ibkr_contract(args: argparse.Namespace, ib_async_mod):
     def normalize_fut_contract_month(value: str | None) -> str:
         raw = (value or "").strip()
@@ -1662,6 +1749,75 @@ def _build_ibkr_contract(args: argparse.Namespace, ib_async_mod):
                                     currency=args.currency,
                                     multiplier=args.multiplier or "100")
     raise SystemExit(f"unsupported --sec-type {args.sec_type!r}")
+
+
+async def _ibkr_contract_details_async(args: argparse.Namespace) -> int:
+    require_ibkr_enabled, IbkrRateLimiter, connect_with_client_id_fallback, ib_async = _import_ibkr_bridge()
+    require_ibkr_enabled()
+
+    limiter = IbkrRateLimiter(redis_url=args.redis_url)
+    contract = _build_ibkr_contract(args, ib_async)
+    args.port = _resolve_ibkr_gateway_port(
+        args.host,
+        args.port,
+        purpose="ibkr-contract-details",
+    )
+
+    ib = ib_async.IB()
+    ib.RaiseRequestErrors = True
+    selected_client_id: int | None = None
+    try:
+        await limiter.wait_for_outbound_msg()
+        try:
+            selected_client_id, attempted_conflicts = await connect_with_client_id_fallback(
+                ib,
+                host=args.host,
+                port=args.port,
+                preferred_client_id=args.client_id,
+                readonly=True,
+            )
+            if attempted_conflicts:
+                print(
+                    f"  ibkr-contract-details: clientId fallback selected {selected_client_id} "
+                    f"after conflicts {[client_id for client_id, _ in attempted_conflicts]}",
+                    file=sys.stderr,
+                )
+        except (ConnectionError, OSError, RuntimeError) as exc:
+            raise SystemExit(
+                f"Cannot reach IBKR Gateway at {args.host}:{args.port} "
+                f"(clientId={args.client_id}). Is IB Gateway / TWS running "
+                f"and API enabled? Underlying error: {exc}"
+            )
+
+        await limiter.wait_for_outbound_msg()
+        qualified = await ib.qualifyContractsAsync(contract)
+        if not qualified or qualified[0] is None:
+            raise SystemExit(f"contract not resolved: {args.symbol}")
+        qualified_contract = qualified[0]
+
+        await limiter.wait_for_outbound_msg()
+        details = await ib.reqContractDetailsAsync(qualified_contract)
+        packet = _ibkr_contract_detail_packet(
+            args,
+            qualified_contract,
+            list(details or []),
+            selected_client_id=selected_client_id,
+        )
+        out = Path(args.output).resolve()
+        out.parent.mkdir(parents=True, exist_ok=True)
+        out.write_text(json.dumps(packet, indent=2) + "\n", encoding="utf-8")
+        print(
+            f"ibkr contract-details {args.symbol} ({args.sec_type}): "
+            f"{len(details or []):,} detail(s) -> {out}",
+            file=sys.stderr,
+        )
+        return 0
+    finally:
+        try:
+            if ib.isConnected():
+                ib.disconnect()
+        except Exception:
+            pass
 
 
 async def _ibkr_historical_async(args: argparse.Namespace) -> int:
@@ -1868,6 +2024,11 @@ async def _ibkr_historical_async(args: argparse.Namespace) -> int:
 def cmd_ibkr_historical(args: argparse.Namespace) -> int:
     import asyncio
     return asyncio.run(_ibkr_historical_async(args))
+
+
+def cmd_ibkr_contract_details(args: argparse.Namespace) -> int:
+    import asyncio
+    return asyncio.run(_ibkr_contract_details_async(args))
 
 
 # ---------------------------------------------------------------------------
@@ -2323,6 +2484,31 @@ def build_parser() -> argparse.ArgumentParser:
                       help="Cross-process IbkrRateLimiter coordinator")
     ibh.add_argument("--output", required=True)
 
+    ibd = sub.add_parser("ibkr-contract-details",
+                          help="Qualified contract details/secdef via local IBKR Gateway (no historical fetch)")
+    ibd.add_argument("--symbol", required=True,
+                      help="e.g. AAPL (STK), EURUSD (CASH), ES (FUT), SPX (IND)")
+    ibd.add_argument("--sec-type", default="STK",
+                      choices=["STK", "CASH", "FUT", "IND", "OPT"])
+    ibd.add_argument("--exchange", default="SMART",
+                      help="STK=SMART, CASH=IDEALPRO, FUT=CME/NYMEX/etc., IND=CBOE/NASDAQ, OPT=SMART")
+    ibd.add_argument("--currency", default="USD")
+    ibd.add_argument("--primary-exchange", default=None,
+                      help="STK only; e.g. NASDAQ, NYSE — disambiguates dual-listed tickers")
+    ibd.add_argument("--last-trade-date", default=None,
+                      help="FUT/OPT contract month/expiry, e.g. '20260619'")
+    ibd.add_argument("--strike", type=float, default=None, help="OPT strike")
+    ibd.add_argument("--right", choices=["C", "P"], default=None, help="OPT side")
+    ibd.add_argument("--multiplier", default=None, help="FUT/OPT contract multiplier")
+    ibd.add_argument("--host", default="127.0.0.1")
+    ibd.add_argument("--port", type=int, default=None,
+                      help="Explicit local IBKR API port. When omitted, probes 7497, 7496, 4002, and 4001.")
+    ibd.add_argument("--client-id", type=int, default=23,
+                      help="Bridge uses 20; historical defaults to 21; contract details defaults to 23")
+    ibd.add_argument("--redis-url", default="redis://localhost:6379",
+                      help="Cross-process IbkrRateLimiter coordinator")
+    ibd.add_argument("--output", required=True)
+
     ibb = sub.add_parser("ibkr-bulk",
                           help="Batch back-fill many (symbol, bar_size, what_to_show) "
                                "into one CSV per task — for backtest dataset construction.")
@@ -2370,6 +2556,8 @@ def main(argv: list[str] | None = None) -> int:
         return cmd_polymarket_history(args)
     if args.provider == "ibkr-historical":
         return cmd_ibkr_historical(args)
+    if args.provider == "ibkr-contract-details":
+        return cmd_ibkr_contract_details(args)
     if args.provider == "ibkr-bulk":
         return cmd_ibkr_bulk(args)
     parser.print_help()

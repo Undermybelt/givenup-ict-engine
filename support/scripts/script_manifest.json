@@ -200,6 +200,14 @@
     "test_command": "python3 -m unittest support.scripts.research.tests.test_ibkr_execution_readback -v"
   },
   {
+    "name": "ibkr_paper_roundtrip_smoke",
+    "stability": "operator_bridge",
+    "entrypoint": "support/scripts/research/ibkr_paper_roundtrip_smoke.py",
+    "safe_default": true,
+    "requires_data": true,
+    "test_command": "python3 -m unittest support.scripts.research.tests.test_ibkr_paper_roundtrip_smoke -v"
+  },
+  {
     "name": "regime_root_survivor_blocker_report",
     "stability": "read_only_utility",
     "entrypoint": "support/scripts/research/regime_root_survivor_blocker_report.py",

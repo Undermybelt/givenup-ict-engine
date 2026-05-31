@@ -1,4 +1,5 @@
 import unittest
+from types import SimpleNamespace
 
 from support.scripts.auto_quant_external import fetch_external
 
@@ -134,6 +135,78 @@ class IbkrRequestErrorClassificationTests(unittest.TestCase):
 
         self.assertEqual(classification.category, "request_error")
         self.assertTrue(classification.retryable)
+
+
+class IbkrContractDetailsTests(unittest.TestCase):
+    def test_parser_accepts_contract_details_probe_without_historical_fetch_args(self) -> None:
+        parser = fetch_external.build_parser()
+
+        args = parser.parse_args(
+            [
+                "ibkr-contract-details",
+                "--symbol",
+                "SIL",
+                "--sec-type",
+                "FUT",
+                "--exchange",
+                "COMEX",
+                "--currency",
+                "USD",
+                "--last-trade-date",
+                "202607",
+                "--multiplier",
+                "1000",
+                "--output",
+                "/tmp/sil_contract_details.json",
+            ]
+        )
+
+        self.assertEqual(args.provider, "ibkr-contract-details")
+        self.assertEqual(args.symbol, "SIL")
+        self.assertEqual(args.sec_type, "FUT")
+
+    def test_contract_detail_packet_preserves_futures_secdef_fields(self) -> None:
+        args = SimpleNamespace(
+            symbol="SIL",
+            sec_type="FUT",
+            exchange="COMEX",
+            currency="USD",
+            primary_exchange=None,
+            last_trade_date="202607",
+            multiplier="1000",
+            strike=None,
+            right=None,
+        )
+        contract = SimpleNamespace(
+            conId=12345,
+            symbol="SIL",
+            secType="FUT",
+            exchange="COMEX",
+            currency="USD",
+            lastTradeDateOrContractMonth="202607",
+            multiplier="1000",
+            localSymbol="SILN6",
+            tradingClass="SIL",
+        )
+        detail = SimpleNamespace(
+            contract=contract,
+            minTick=0.005,
+            marketRuleIds="123",
+            tradingHours="20260530:1800-1700",
+            liquidHours="20260530:1800-1700",
+            timeZoneId="America/New_York",
+        )
+
+        packet = fetch_external._ibkr_contract_detail_packet(args, contract, [detail])
+
+        self.assertEqual(packet["schema_version"], "ibkr-contract-details/v1")
+        self.assertEqual(packet["request"]["symbol"], "SIL")
+        self.assertEqual(packet["qualified_contract"]["multiplier"], "1000")
+        self.assertEqual(packet["contract_details_count"], 1)
+        self.assertEqual(packet["contract_details"][0]["minTick"], 0.005)
+        self.assertEqual(packet["contract_details"][0]["contract"]["localSymbol"], "SILN6")
+        self.assertEqual(packet["contract_details"][0]["tradingHours"], "20260530:1800-1700")
+        self.assertEqual(packet["contract_details"][0]["liquidHours"], "20260530:1800-1700")
 
 
 if __name__ == "__main__":
