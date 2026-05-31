@@ -489,6 +489,48 @@ Interpretation:
   provider/data -> Pre-Bayes -> BBN/workflow -> path-ranker -> execution-tree
   -> feedback/update -> policy-training packet, or keep completion false.
 
+## Consumer Smoke Attempt - 2026-05-31T03:56Z
+
+Command:
+
+```bash
+STATE_DIR=/tmp/ict-engine-consumer-ux-smoke-20260531T0356Z OUT_DIR=/tmp/ict-engine-consumer-ux-smoke-20260531T0356Z-out support/scripts/smoke_acceptance.sh
+```
+
+Result: incomplete, not a pass/fail proof. I stopped this smoke after it waited
+on Cargo work already running in other sessions.
+
+Evidence captured before stop:
+
+- `/tmp/ict-engine-consumer-ux-smoke-20260531T0356Z-out/provider_status.out`
+  exists and reports provider matrix readiness:
+  `entry_model:3/3 ready`, `live_runtime:3/5 ready`,
+  `local_runtime:2/2 ready`, `market_data:9/9 ready`.
+- `/tmp/ict-engine-consumer-ux-smoke-20260531T0356Z-out/workflow_empty.out`
+  exists and correctly reports `DEMO | workflow_status | no_workflow_state`
+  with the next command `ict-engine analyze --symbol DEMO --demo --state-dir
+  <local-path> --human`.
+- `provider_status.err` and `workflow_empty.err` are empty.
+- `analyze_demo.out` and `analyze_demo.err` are empty because the smoke was
+  stopped during/just after the `analyze_demo` step.
+- `/tmp/ict-engine-consumer-ux-smoke-20260531T0356Z/DEMO/workflow_snapshot.json`
+  exists, but this partial artifact is not sufficient to mark smoke passed.
+
+Concurrent blocker:
+
+- Process readback showed other sessions running heavy done-definition audits:
+  `done_definition_audit.py --compact --run-all-heavy`, with child
+  `cargo check --all-targets` / `cargo test`.
+- The smoke child `cargo run --quiet -- workflow-status --symbol DEMO ...` had
+  been waiting under the smoke script for several minutes, consistent with Cargo
+  lock contention rather than a validated consumer failure.
+
+Conclusion:
+
+- Do not count this smoke as completion evidence.
+- Rerun `support/scripts/smoke_acceptance.sh` after the concurrent heavy Cargo
+  jobs finish if the next goal turn wants to promote done-definition coverage.
+
 ## Final Current Readback - 2026-05-31T03:50Z
 
 The factor-closure surface is time-variant in this shared tree. A focused
@@ -797,3 +839,850 @@ Additional verification on the post-commit tree:
 Decision: still not complete. The committed slice improves objective packet
 readback and source-scan proof preservation, but current evidence still blocks
 full completion, release readiness, and practical trade-use claims.
+
+## Current-Head Resume Readback - 2026-05-31T04:05Z
+
+Resume routing and local readback were repeated before acting. Current git
+state changed during the readback, so the first fresh packet for
+`8daaaa8988543206aeb05d0300e5c67406823bd4` was treated as stale and a second
+packet was generated for the actual current head.
+
+Current HEAD:
+
+- `bc0f7beb85087a40d69c484db3d1785a6aa7e0a4`
+  (`Reject marker-only practical closure in workflow status`).
+- `git status --short --branch --untracked-files=no` shows
+  `main...origin/main [ahead 263]` and `52` tracked dirty entries in the
+  done-definition fingerprint.
+- `git diff --cached --name-only` is empty at this readback point; earlier
+  staged files were consumed by concurrent commits.
+
+Commands:
+
+```bash
+git status --short --branch
+git diff --cached --name-only
+python3 support/scripts/factor_claim_terminalization_audit.py --compact
+python3 support/scripts/objective_closure_snapshot.py --compact --check-remotes --output-dir /tmp/ict-engine-consumer-ux-evidence-audit-20260531T1208-current-codex
+ps -p 68325 -o pid,ppid,etime,stat,command
+```
+
+Fresh packet:
+
+- `/tmp/ict-engine-consumer-ux-evidence-audit-20260531T1208-current-codex/objective_closure_snapshot.json`
+- Exit code `1`.
+- `summary.status=not_complete`, `completion_proven=false`.
+- Packet sizes remain lightweight enough for quick reuse:
+  `objective_closure_snapshot.json` about `24K`,
+  `done_definition_audit.compact.json` about `8K`,
+  `factor_claim_terminalization_audit.compact.json` about `4K`,
+  `release_readiness_audit.compact.json` about `8K`, and
+  `await_launch_source_debt_manifest.json` about `20K`.
+
+Current blocker details:
+
+- `done_definition_not_completion_ready`: `done_definition.status=pass`, but
+  `completion_ready=false` with skipped heavy gates
+  `cargo_check_all_targets`, `cargo_clippy_all_targets_deny_warnings`,
+  `cargo_test`, and `smoke_acceptance_tmp_state`.
+- `practical_admission_source_surface.status=pass`:
+  `tracked_violation_count=0`, `untracked_violation_count=0`.
+- `await_launch_source_surface.status=pass`; known untracked await-launch debt
+  is quarantined and still staged into the packet as
+  `await_launch_source_debt_manifest.json` with `46` violations across `46`
+  untracked files.
+- `factor_closure_blocked`: `live_factor_processes=1`, pid `68325`, run root
+  `ict-engine-tomac-tsmom-vol-scaled-low-turnover-aq-20260531T115002+0800`.
+  The live command is the source-backed
+  `tsmom_vol_scaled_low_turnover_rrr` clean-AQ family over NQ
+  `1h,4h,1d`, with `--timeout 1200`.
+- `same_tree_practical_closure_unproven`: no validated packet; missing stages
+  remain provider/data, Pre-Bayes, BBN/workflow, path-ranker, execution-tree,
+  feedback/update, and policy-training.
+- `release_readiness_blocked`: remote readback now passes for origin and the
+  release mirror, but `worktree_clean_for_release` and
+  `source_origin_matches_selected_source` remain unresolved.
+
+Decision: still not complete. Do not launch another overlapping factor lane
+while pid `68325` owns the live AQ runtime, and do not claim practical or
+release readiness from this packet. The next safe action is to wait for that
+live process to finish, inspect its terminal artifacts, then rerun the compact
+factor audit and parent objective snapshot before choosing heavy-gate,
+same-tree-practical-closure, or clean-release work.
+
+## Clean-AQ Terminal Runtime Classifier Fix - 2026-05-31T04:17Z
+
+Observed loophole:
+
+- The `20260531T1208-current-codex` parent packet reported
+  `factor_closure_blocked` from pid `68325`/later pid `86048` under
+  `/tmp/ict-engine-tomac-tsmom-vol-scaled-low-turnover-aq-20260531T115002+0800`
+  even though the run root already had terminal clean-AQ evidence:
+  `checks/run_tomac_1h.exit=0`, `summary.json`, and
+  `summaries/autoquant_clean_1h_gate.json`.
+- That terminal packet was observation-only:
+  `decision=observation_no_autoquant_survivor_yet`,
+  `promotion_allowed=false`, `trade_usable=false`, `update_goal=false`,
+  `downstream_allowed=false`, `pre_bayes_allowed=false`, `bbn_allowed=false`,
+  `catboost_allowed=false`, and `execution_tree_allowed=false`.
+- Root cause: `factor_claim_terminalization_audit.py` already ignored
+  terminalized loop artifacts with `terminal_metrics.json` /
+  `terminal_decision_summary.md`, but not clean-AQ wrappers whose terminal
+  evidence lives in `summary.json` plus `aq_commands` /
+  `aq_gate_summaries`. A wrapper process could therefore briefly keep parent
+  objective packets blocked after the factor economics had already terminalized
+  as non-promotable.
+
+Fix:
+
+- `support/scripts/factor_claim_terminalization_audit.py` now treats a
+  descendant-free process as non-live when its run root has terminal clean-AQ
+  artifacts proving every AQ command exited `0` without timeout and every AQ
+  gate summary is explicitly non-promotable:
+  `promotion_allowed=false`, `trade_usable=false`, `update_goal=false`, with a
+  nonempty decision.
+- Added regression:
+  `test_drop_stale_failed_tomac_prep_wrappers_drops_terminalized_clean_aq_wrapper_without_descendants`.
+
+Verification:
+
+- RED first:
+  `python3 -m unittest support.scripts.tests.test_factor_claim_terminalization_audit.FactorClaimTerminalizationAuditTest.test_drop_stale_failed_tomac_prep_wrappers_drops_terminalized_clean_aq_wrapper_without_descendants -v`
+  failed before the source change because the terminalized clean-AQ wrapper
+  stayed in the live process list.
+- GREEN:
+  the same focused test passed after the fix.
+- Passed:
+  `python3 -m unittest support.scripts.tests.test_factor_claim_terminalization_audit -v`
+  (`121/121 OK`).
+- Passed:
+  `python3 support/scripts/check_script_manifest.py`.
+- Passed:
+  `python3 support/scripts/ci/check_docs_runtime_isolation.py`.
+- Passed:
+  `git diff --check -- support/scripts/factor_claim_terminalization_audit.py support/scripts/tests/test_factor_claim_terminalization_audit.py support/docs/plans/2026-05-31-consumer-ux-evidence-packet-audit-current.md`.
+- Direct compact factor audit after the fix:
+  `python3 support/scripts/factor_claim_terminalization_audit.py --compact`
+  reported `status=pass`, `live_factor_processes=0`,
+  `active_claims=0`, `promotion_allowed_true=0`,
+  `trade_usable_true=0`, and `same_tree_practical_closure=null`.
+
+Fresh parent packet after the fix:
+
+```bash
+python3 support/scripts/objective_closure_snapshot.py --compact --check-remotes --output-dir /tmp/ict-engine-consumer-ux-evidence-audit-20260531T-after-clean-aq-classifier-fix
+```
+
+Result:
+
+- Exit code `1`; still fail-closed, not complete.
+- Parent packet:
+  `/tmp/ict-engine-consumer-ux-evidence-audit-20260531T-after-clean-aq-classifier-fix/objective_closure_snapshot.json`.
+- `summary.status=not_complete`, `completion_proven=false`.
+- HEAD observed by the packet:
+  `19771dc16d68eaf866526efe8175e5ff3a62be65`.
+- Blockers after the classifier fix:
+  `done_definition_not_completion_ready`,
+  `same_tree_practical_closure_unproven`,
+  `release_readiness_blocked`.
+- The previous factor-closure blocker is gone in this packet:
+  `factor_closure.status=pass`, `live_factor_processes=0`,
+  `active_claims=0`, `blocking_reasons=[]`,
+  `promotion_allowed_true=0`, `trade_usable_true=0`.
+- Done-definition remains partial because the heavy gates are skipped:
+  `cargo_check_all_targets`, `cargo_clippy_all_targets_deny_warnings`,
+  `cargo_test`, and `smoke_acceptance_tmp_state`.
+- Same-tree practical closure remains unproven; the missing stages remain
+  provider/data, Pre-Bayes, BBN/workflow, path-ranker, execution-tree,
+  feedback/update, and policy-training.
+- Release readiness remains blocked. In this run, remote readback failed for
+  both origin and release mirror, and `worktree_clean_for_release` is still
+  unresolved.
+
+Decision: still not complete. This slice fixes a parent/child packet
+cooperation false blocker, but it is not heavy done-definition proof, not
+same-tree practical closure, not release readiness, and not practical trade-use
+evidence.
+
+## Continuation Readback - 2026-05-31T12:16+0800
+
+Current HEAD:
+
+- `bc0f7beb85087a40d69c484db3d1785a6aa7e0a4`
+  (`Reject marker-only practical closure in workflow status`).
+
+Current-state checks repeated in this continuation:
+
+```bash
+git status --short --branch --untracked-files=no
+python3 support/scripts/factor_claim_terminalization_audit.py --compact
+ps -axo pid,ppid,etime,command | rg -i 'run_tomac|auto.?quant|freqtrade|fetch_external|ibkr|provider-status|objective_closure_snapshot|done_definition_audit|policy-training-status|cargo (check|clippy|test)|smoke_acceptance'
+jq '{timestamp_utc, summary}' /tmp/ict-engine-consumer-ux-evidence-audit-20260531T1208-current-codex/objective_closure_snapshot.json
+```
+
+Current evidence:
+
+- The `20260531T1208-current-codex` parent packet remains current for
+  `bc0f7beb` until a newer packet is generated after runtime clears.
+  It is not completion evidence: `summary.status=not_complete`.
+- The ETH OTE AQ launch root
+  `/tmp/ict-engine-tomac-eth-trend-ote-reacceleration-exact-aqlaunch-20260531T120650+0800`
+  terminalized fail-closed:
+  `decision=exact_aq_terminal_readback_practical_lifecycle_incomplete`,
+  `status=exact_aq_completed_fail_closed`,
+  `promotion_allowed=false`, `trade_usable=false`, `update_goal=false`,
+  `same_tree_practical_closure=null`.
+- The TSMOM root
+  `/tmp/ict-engine-tomac-tsmom-vol-scaled-low-turnover-aq-20260531T115002+0800`
+  completed `1h` and `4h` AQ reads but was relaunched for `30m`; latest
+  factor audit still reported `summary.status=needs_attention`,
+  `live_factor_processes=1`, `blocking_reasons=[live_factor_processes]`,
+  and `same_tree_practical_closure=null`.
+- Two heavy done-definition audits are still running and have not produced
+  reusable JSON proof yet:
+  `/tmp/ict-engine-done-definition-heavy-20260531T-after-source-scope-commit.json`
+  and `/tmp/ict-engine-done-definition-heavy-20260531T-current-turn.json`.
+- Current full-objective blockers therefore remain:
+  `done_definition_not_completion_ready`,
+  `factor_closure_blocked`,
+  `same_tree_practical_closure_unproven`,
+  and `release_readiness_blocked`.
+
+Decision: still not complete. Do not mark `trade_usable=true`, do not claim
+release readiness, and do not commit a completion slice. The next safe action is
+still read-only: wait for the active AQ process and heavy done-definition
+audits to finish, inspect their artifacts, then rerun compact factor audit and
+the parent objective snapshot.
+
+## Factor Runtime Wait Checkpoint - 2026-05-31T04:14Z
+
+Current HEAD advanced again while this resume slice was running:
+
+- `bc1b575787bc8fde00a2c821c8de52a359363011`
+  (`Balance factor flywheel admission gates`).
+- Branch status: `main...origin/main [ahead 264]`.
+
+TSMOM low-turnover AQ root remains current runtime ownership:
+
+- Root:
+  `/tmp/ict-engine-tomac-tsmom-vol-scaled-low-turnover-aq-20260531T115002+0800`
+- Current live pid:
+  `98894`
+- Command:
+  `run_tomac_index_futures_clean_aq_v1.py --root /tmp/ict-engine-tomac-tsmom-vol-scaled-low-turnover-aq-20260531T115002+0800 --compact-root support/docs/experiments/actionable-regime-confidence/runs/20260531T115002+0800-codex-tomac-tsmom-vol-scaled-low-turnover-aq-v1 --symbols NQ --start 2021-01-01 --end 2025-12-31 --timeframes 5m,15m,30m,1h,4h,1d --families tsmom_vol_scaled_low_turnover_rrr --aq-smoke-timeframe 30m --aq-symbol-limit 1 --timeout 1200`
+
+Readbacks:
+
+- Earlier partial TSMOM gate files for `1h`, `4h`, and `1d` all reported
+  `decision=observation_no_autoquant_survivor_yet`,
+  `promotion_allowed=false`, `trade_usable=false`, `update_goal=false`,
+  `survivors_instrument_cost=[]`, `downstream_allowed=false`, and
+  `execution_tree_allowed=false`.
+- The expanded current process is still live and must own final root
+  interpretation until it exits.
+- `python3 support/scripts/factor_claim_terminalization_audit.py --compact`
+  at `2026-05-31T04:14Z` returned `status=needs_attention`,
+  `live_factor_processes=1`, `promotion_allowed_true=0`,
+  `trade_usable_true=0`, and `same_tree_practical_closure=null`.
+
+Fresh current-head parent packet:
+
+- `/tmp/ict-engine-consumer-ux-evidence-audit-20260531T1212-factor-clear-codex/objective_closure_snapshot.json`
+- It was generated for `bc1b575787bc8fde00a2c821c8de52a359363011` but was
+  not closure evidence because the expanded TSMOM process appeared during the
+  child audits.
+- `summary.status=not_complete`.
+- Blockers remained:
+  `done_definition_not_completion_ready`, `factor_closure_blocked`,
+  `same_tree_practical_closure_unproven`, and `release_readiness_blocked`.
+- Done definition was still partial with skipped heavy gates:
+  `cargo_check_all_targets`, `cargo_clippy_all_targets_deny_warnings`,
+  `cargo_test`, and `smoke_acceptance_tmp_state`.
+- Release readiness was blocked by `worktree_clean_for_release` and a
+  transient/current `remote_readback` failure for source origin while the
+  release mirror passed.
+
+Decision: still not complete. The only safe next factor-side action is to wait
+for pid `98894` to exit, then inspect the same root's latest summaries and
+rerun compact factor closure plus the parent objective snapshot. Do not commit
+this tracking update as completion evidence.
+
+## Continuation Readback - 2026-05-31T12:21+0800
+
+Routing was repeated before this continuation:
+
+- Route alias: `sd/ict-engine-maintenance-loop`.
+- Files read:
+  `~/.hermes/routing/skill-router.md`,
+  `~/.hermes/routing/project-router.md`,
+  `AGENTS.md`, `CLAUDE.md`, and `AGENT.md`.
+- Runtime skill used:
+  `~/.hermes/skills/software-development/ict-engine-maintenance-loop/SKILL.md`.
+
+Current HEAD advanced again while resuming:
+
+- `5d7b8717500ea9ef35c59db0bcec5950ac45a50b`
+  (`Record closed-loop gate balance recheck`).
+- Branch status:
+  `main...origin/main [ahead 266]`.
+- The worktree remains shared and dirty; preserve unrelated tracked and
+  untracked files.
+
+Fresh readbacks:
+
+```bash
+git status --short --branch
+ps -axo pid,etime,command | rg "run_tomac|Auto-Quant|factor-research|done_definition_audit|smoke_acceptance" | rg -v rg
+python3 support/scripts/factor_claim_terminalization_audit.py --compact --portable-paths --output /tmp/ict-engine-factor-closure-resume.json
+python3 support/scripts/objective_closure_snapshot.py --compact --check-remotes --output-dir /tmp/ict-engine-consumer-ux-evidence-audit-resume
+python3 support/scripts/factor_claim_terminalization_audit.py --compact --portable-paths --output /tmp/ict-engine-factor-closure-resume-2.json
+```
+
+Evidence:
+
+- `/tmp/ict-engine-consumer-ux-evidence-audit-resume/objective_closure_snapshot.json`
+  exited `1` with `summary.status=not_complete`, but it was for intermediate
+  head `19771dc16d68eaf866526efe8175e5ff3a62be65`; it is now stale for
+  current-head completion because HEAD advanced to `5d7b8717`.
+- That stale parent packet still usefully confirms the same closure blockers:
+  `done_definition_not_completion_ready`,
+  `same_tree_practical_closure_unproven`, and `release_readiness_blocked`.
+- Latest factor audit:
+  `/tmp/ict-engine-factor-closure-resume-2.json`.
+- Latest factor audit status:
+  `summary.status=needs_attention`,
+  `active_claims=1`, `fresh_active_claims_without_live_process=1`,
+  `live_factor_processes=1`, `promotion_allowed_true=0`,
+  `trade_usable_true=0`, and `same_tree_practical_closure=null`.
+- Fresh active claim:
+  `/tmp/ict-engine-agent-claims/board-b-factor-refinement/20260531T121851+0800-codex-ehlers-autocorr-periodogram-cycle-regime-30m-exact-aq.claim`.
+  It claims
+  `/tmp/ict-engine-ehlers-autocorr-periodogram-cycle-regime-exact-aq-20260531T121851+0800`
+  with `promotion_allowed=false`, `trade_usable=false`,
+  `update_goal=false`, and `same_tree_practical_closure=null`.
+- Live TSMOM process remains under
+  `/tmp/ict-engine-tomac-tsmom-vol-scaled-low-turnover-aq-20260531T115002+0800`.
+  Latest observed pid was `11741`, running the same clean-AQ wrapper with
+  `--reuse-clean --aq-smoke-timeframe 15m`.
+- The TSMOM root has terminal fail-closed summaries for `1h`, `4h`, `1d`,
+  and `30m`; `15m` was active at this checkpoint. Existing summaries keep
+  `promotion_allowed=false`, `trade_usable=false`, `update_goal=false`, and
+  `decision=observation_no_autoquant_survivor_yet`.
+- Heavy done-definition audits and smoke commands were still visible in `ps`;
+  do not treat skipped heavy gates as completion proof until their current
+  artifacts are inspected and matched to the current head/fingerprint.
+
+Decision: still not complete. Do not launch another AQ/provider lane. Do not
+claim practical trade usability, release readiness, or objective completion.
+The next safe action is to wait for the active AQ process and fresh Ehlers
+claim to terminalize or become stale-safe, inspect their real artifacts, rerun
+compact factor closure and a current-head objective snapshot, and only then
+choose a narrow verified repair or commit slice.
+
+## Current-Head Objective Snapshot - 2026-05-31T12:24+0800
+
+Current-head parent packet:
+
+- `/tmp/ict-engine-consumer-ux-evidence-audit-20260531T1224-current/objective_closure_snapshot.json`
+- Exit code `1`.
+- Head:
+  `5d7b8717500ea9ef35c59db0bcec5950ac45a50b`
+  (`Record closed-loop gate balance recheck`).
+- `summary.status=not_complete`, `completion_proven=false`.
+- Blockers:
+  `done_definition_not_completion_ready`,
+  `same_tree_practical_closure_unproven`, and
+  `release_readiness_blocked`.
+
+Done-definition child:
+
+- `status=pass`, but `completion_ready=false`.
+- `evidence_level=partial_skipped_gates`.
+- `pass_count=6`, `fail_count=0`, `skip_count=4`, `total_gates=10`.
+- Skipped heavy gates:
+  `cargo_check_all_targets`, `cargo_clippy_all_targets_deny_warnings`,
+  `cargo_test`, and `smoke_acceptance_tmp_state`.
+- Tracked worktree fingerprint:
+  `f74b0a541d8ef15d8dbe88cc915bf5f518f7321287cf41972aed20b87909c65e`,
+  `status=dirty`, `tracked_status_entries=52`.
+
+Factor closure child:
+
+- `status=pass`.
+- `active_claims=0`, `live_factor_processes=0`,
+  `blocking_reasons=[]`.
+- `promotion_allowed_true=0`, `trade_usable_true=0`,
+  `same_tree_practical_closure=null`.
+- This clears runtime collision as of the packet timestamp, but does not prove
+  practical usefulness.
+
+Runtime/artifact follow-up:
+
+- `ps` after the snapshot showed no `run_tomac_index_futures_clean_aq_v1.py`
+  process.
+- The TSMOM root now has exit/gate artifacts for `1h`, `4h`, `1d`, `30m`,
+  and `15m`; all observed gate summaries keep
+  `promotion_allowed=false`, `trade_usable=false`, `update_goal=false`, and
+  `decision=observation_no_autoquant_survivor_yet`.
+- The same TSMOM root also wrote
+  `/tmp/ict-engine-tomac-tsmom-vol-scaled-low-turnover-aq-20260531T115002+0800/summaries/terminal_no_launch_summary.json`
+  from a later collision-guard rerun blocked by a foreign Kalman prep claim.
+  It is not promotion or trade evidence.
+- The Ehlers exact-AQ claim terminalized as
+  `terminalized_no_launch_collision_guard`; no provider/AQ runtime launched,
+  `promotion_allowed=false`, `trade_usable=false`, `update_goal=false`.
+- The Kalman residual snapback claim terminalized as
+  `terminalized_prepared_no_launch_exact_aqprep`; it produced prep materials
+  only, with no provider/AQ/IBKR/paper/downstream launch.
+
+Release-readiness child:
+
+- `status=needs_fix`.
+- Remote readback passed for origin and release mirror.
+- Unresolved:
+  `worktree_clean_for_release` and `source_origin_matches_selected_source`.
+
+Concurrent no-launch audit claim:
+
+- `/tmp/ict-engine-agent-claims/board-b-factor-refinement/20260531T122038+0800-codex-factor-training-loop-audit-cont.claim`
+  is fresh and scoped to scanner coverage, practical-admission source checks,
+  and fixed-bps/real-cost gate debt.
+- Do not duplicate that audit-code lane unless it terminalizes or becomes
+  stale-safe.
+
+Decision: still not complete. The next safe non-colliding action is to monitor
+the running heavy done-definition audits and smoke commands, inspect any
+completed heavy packet against the current head/fingerprint, then rerun
+`objective_closure_snapshot.py` with a valid proof only if the proof matches
+the live child contract. Practical usefulness still requires a canonical
+same-tree practical closure packet; none exists in the current factor audit.
+
+## Live-Process Classifier Repair - 2026-05-31T04:20Z
+
+Loophole found while waiting on the TSMOM root:
+
+- `ps` showed a live
+  `run_tomac_index_futures_clean_aq_v1.py --root /tmp/ict-engine-tomac-tsmom-vol-scaled-low-turnover-aq-20260531T115002+0800`
+  process.
+- The compact factor audit simultaneously reported
+  `live_factor_processes=0` and `status=pass`.
+- Root cause: the current working diff added clean-AQ terminal artifact
+  suppression in `_drop_stale_failed_tomac_prep_wrappers`. That suppression
+  dropped a process whenever the root already had terminal clean-AQ artifacts,
+  even when the inferred exit file predated the current process and therefore
+  belonged to an earlier run on the same root.
+
+Fix:
+
+- `_drop_stale_failed_tomac_prep_wrappers` now keeps a process when
+  `_exit_file_predates_live_process(process)` is true.
+- Regression added:
+  `test_terminalized_clean_aq_root_keeps_newer_live_wrapper_process`.
+- Existing stale-wrapper behavior remains covered by
+  `test_drop_stale_failed_tomac_prep_wrappers_drops_terminalized_clean_aq_wrapper_without_descendants`.
+
+Verification:
+
+- Red before fix:
+  `python3 -m unittest support.scripts.tests.test_factor_claim_terminalization_audit.FactorClaimTerminalizationAuditTest.test_terminalized_clean_aq_root_keeps_newer_live_wrapper_process -v`
+  failed because the live wrapper was dropped.
+- Passed after fix:
+  `python3 -m unittest support.scripts.tests.test_factor_claim_terminalization_audit.FactorClaimTerminalizationAuditTest.test_terminalized_clean_aq_root_keeps_newer_live_wrapper_process support.scripts.tests.test_factor_claim_terminalization_audit.FactorClaimTerminalizationAuditTest.test_drop_stale_failed_tomac_prep_wrappers_drops_terminalized_clean_aq_wrapper_without_descendants -v`.
+- Passed full classifier suite:
+  `python3 -m unittest support.scripts.tests.test_factor_claim_terminalization_audit -v`
+  (`122/122`).
+- Live compact audit after the fix no longer hid the runtime. It returned
+  `status=needs_attention`, `live_factor_processes=1`, queue head pid `11741`,
+  run root
+  `/tmp/ict-engine-tomac-tsmom-vol-scaled-low-turnover-aq-20260531T115002+0800`,
+  `promotion_allowed_true=0`, `trade_usable_true=0`, and
+  `same_tree_practical_closure=null`.
+
+Decision: coherent classifier/evidence-loop repair, but the full objective is
+still not complete. Current factor closure is intentionally blocked by the live
+TSMOM runtime, same-tree practical closure is still absent, and release/done
+definition gates still need separate current proof.
+
+## Post-Classifier-Commit Parent Readback - 2026-05-31T04:24Z
+
+Committed narrow classifier repair:
+
+- Commit: `b48b12eb90dbb051339c703fc1dbb4e983059dde`
+  (`Fix clean AQ live process classification`).
+- Staged files were only:
+  `support/scripts/factor_claim_terminalization_audit.py` and
+  `support/scripts/tests/test_factor_claim_terminalization_audit.py`.
+- The tracking doc was not staged because it contains concurrent continuation
+  edits and should not be committed wholesale as part of the classifier slice.
+
+Verification before commit:
+
+- Passed:
+  `python3 -m unittest support.scripts.tests.test_factor_claim_terminalization_audit -v`
+  (`122/122`).
+- Passed:
+  `python3 support/scripts/check_script_manifest.py`.
+- Passed:
+  `python3 support/scripts/ci/check_docs_runtime_isolation.py`.
+- Passed:
+  `git diff --check -- support/scripts/factor_claim_terminalization_audit.py support/scripts/tests/test_factor_claim_terminalization_audit.py support/docs/plans/2026-05-31-consumer-ux-evidence-packet-audit-current.md`.
+
+Fresh parent packet after commit:
+
+```bash
+python3 support/scripts/objective_closure_snapshot.py --compact --check-remotes --output-dir /tmp/ict-engine-consumer-ux-evidence-audit-20260531T1225-post-classifier-commit-codex
+```
+
+Result:
+
+- Exit code `1`.
+- Packet:
+  `/tmp/ict-engine-consumer-ux-evidence-audit-20260531T1225-post-classifier-commit-codex/objective_closure_snapshot.json`.
+- `summary.status=not_complete`, `completion_proven=false`.
+- `factor_closure.status=pass`, `active_claims=0`,
+  `live_factor_processes=0`, `blocking_reasons=[]`,
+  `promotion_allowed_true=0`, `trade_usable_true=0`,
+  `same_tree_practical_closure=null`.
+- Remaining blockers:
+  `done_definition_not_completion_ready`,
+  `same_tree_practical_closure_unproven`, and
+  `release_readiness_blocked`.
+- Done definition remains `partial_skipped_gates` with skipped heavy gates
+  `cargo_check_all_targets`, `cargo_clippy_all_targets_deny_warnings`,
+  `cargo_test`, and `smoke_acceptance_tmp_state`.
+- Practical closure is still missing the full provider/data, Pre-Bayes,
+  BBN/workflow, path-ranker, execution-tree, feedback/update, and
+  policy-training chain.
+- Release readiness remains blocked by `worktree_clean_for_release` and
+  `source_origin_matches_selected_source`; origin and release mirror remote
+  readback passed in this packet.
+
+Decision: classifier slice is committed and verified. Full objective remains
+not complete; do not claim practical trading usefulness or release readiness.
+
+## Latest Current-Head Packet - 2026-05-31T04:30Z
+
+Current HEAD advanced after the classifier commit:
+
+- `a74576265a7f06b332155c95aae497df93b6dded`
+  (`docs: record balanced factor gate flywheel slice`).
+
+Fresh parent packet:
+
+```bash
+python3 support/scripts/objective_closure_snapshot.py --compact --check-remotes --output-dir /tmp/ict-engine-consumer-ux-evidence-audit-20260531T1229-latest-codex
+```
+
+Result:
+
+- Exit code `1`.
+- Packet:
+  `/tmp/ict-engine-consumer-ux-evidence-audit-20260531T1229-latest-codex/objective_closure_snapshot.json`.
+- `summary.status=not_complete`, `completion_proven=false`.
+- Current blockers:
+  `done_definition_not_completion_ready`,
+  `practical_admission_source_debt`,
+  `factor_closure_blocked`,
+  `same_tree_practical_closure_unproven`, and
+  `release_readiness_blocked`.
+- Done-definition status regressed from partial pass to `needs_fix` because
+  `practical_admission_source_surface.status=fail`.
+- New tracked practical-admission source debt:
+  `3` violations in
+  `support/docs/experiments/actionable-regime-confidence/scripts/run_tomac_index_futures_clean_aq_v1.py`
+  at the `promotion_allowed`, `trade_usable`, and `update_goal` reads. The
+  scanner reports `practical_flag_without_extension_complete_guard`.
+- Factor closure is blocked by a fresh active claim without a live process:
+  `20260531T122333+0800-codex-ehlers-autocorr-periodogram-cycle-regime-30m-exact-aq.claim`,
+  age about `5` minutes at packet time, `promotion_allowed_true=0`,
+  `trade_usable_true=0`, `same_tree_practical_closure=null`.
+- Release readiness is blocked by `worktree_clean_for_release` and
+  `remote_readback`; both origin and release mirror remote checks failed in
+  this packet.
+
+Decision: still not complete. The classifier commit is valid, but the current
+head has a new practical-source debt surface plus a fresh active claim. Next
+safe actions are to inspect/fix the tracked practical-flag guard violation,
+wait for or verify the fresh Ehlers claim, then rerun compact factor closure and
+the parent objective snapshot.
+
+## Classifier Recheck - 2026-05-31T04:18Z
+
+Current HEAD advanced again:
+
+- `19771dc1169342c9ed7a45990e20f574ab715e8d`
+  (`Require accepted execution feedback for policy lifecycle`).
+- Branch status: `main...origin/main [ahead 265]`.
+
+The transient concern that compact factor audit might miss an active clean-AQ
+wrapper was rechecked against the live pid:
+
+```bash
+ps -p 98894 -o pid,ppid,etime,stat,command
+python3 support/scripts/factor_claim_terminalization_audit.py --compact --output /tmp/ict-engine-factor-audit-repro-20260531T1218.json
+jq '{summary, live: .attention_live_processes}' /tmp/ict-engine-factor-audit-repro-20260531T1218.json
+```
+
+Result:
+
+- The live process was still present:
+  `run_tomac_index_futures_clean_aq_v1.py --root /tmp/ict-engine-tomac-tsmom-vol-scaled-low-turnover-aq-20260531T115002+0800 ... --aq-smoke-timeframe 30m --timeout 1200`.
+- The focused repro correctly returned exit `1`,
+  `summary.status=needs_attention`,
+  `live_factor_processes=1`,
+  `blocking_reasons=[live_factor_processes]`,
+  and `same_tree_practical_closure=null`.
+- Therefore the current actionable blocker remains real runtime occupancy, not
+  a reproduced classifier miss.
+
+Heavy proof status:
+
+- Both current heavy done-definition audits are still running and have not
+  written reusable JSON proof:
+  `/tmp/ict-engine-done-definition-heavy-20260531T-after-source-scope-commit.json`
+  and `/tmp/ict-engine-done-definition-heavy-20260531T-current-turn.json`.
+
+Decision: still not complete. Next action remains read-only wait and then
+rerun compact factor audit plus parent objective snapshot after pid `98894` and
+the heavy audits exit.
+
+## Readback Poller Classifier Fix - 2026-05-31T12:33+0800
+
+Current repo state advanced again during this slice:
+
+- HEAD: `5d7b8717500ea9ef35c59db0bcec5950ac45a50b`
+  (`Record closed-loop gate balance recheck`).
+- Branch status observed: `main...origin/main [ahead 269]`.
+- Shared worktree remains dirty; stage only the explicit classifier slice paths.
+
+Symptom:
+
+- A compact factor audit briefly surfaced `live_factor_processes=1` for a
+  shell readback poller whose command shape was `sleep; ps -p ...; ps -axo ...
+  | awk ...; for f in .../*.exit; python3 - <<'PY' ...`.
+- That command only inspected a TOMAC root and exit files; it was not a
+  provider/AQ/factor writer.
+
+Root cause:
+
+- `_looks_like_readback_command()` intentionally avoided suppressing commands
+  containing `python` so live Python wrappers would not be hidden.
+- That guard was too broad for readback pollers that use `python3 - <<...` or
+  similar inline Python only to parse local files. The final fallback marker
+  check then saw `run_tomac` in the exit-file path and counted the shell as a
+  live factor process.
+
+Fix:
+
+- Added `_has_python_script_invocation()` so readback suppression remains
+  disabled for real Python `.py` script invocations, but still applies to
+  shell-only readback pollers using inline Python.
+- Regression added:
+  `test_live_process_classifier_ignores_ps_awk_exit_file_readback_poller`.
+
+TDD evidence:
+
+- RED before production fix:
+  `python3 -m unittest support.scripts.tests.test_factor_claim_terminalization_audit.FactorClaimTerminalizationAuditTest.test_live_process_classifier_ignores_ps_awk_exit_file_readback_poller -v`
+  failed with `AssertionError: True is not false`.
+- Focused GREEN after fix:
+  `python3 -m unittest support.scripts.tests.test_factor_claim_terminalization_audit.FactorClaimTerminalizationAuditTest.test_live_process_classifier_ignores_ps_awk_exit_file_readback_poller support.scripts.tests.test_factor_claim_terminalization_audit.FactorClaimTerminalizationAuditTest.test_live_process_classifier_ignores_ps_escaped_shell_readback_poller support.scripts.tests.test_factor_claim_terminalization_audit.FactorClaimTerminalizationAuditTest.test_live_process_classifier_detects_custom_tomac_scanner_and_lane_root support.scripts.tests.test_factor_claim_terminalization_audit.FactorClaimTerminalizationAuditTest.test_live_process_classifier_detects_custom_tomac_postscan_and_lane_root -v`
+  passed.
+- Full classifier suite:
+  `python3 -m unittest support.scripts.tests.test_factor_claim_terminalization_audit -v`
+  passed (`123/123`).
+- Script inventory:
+  `python3 support/scripts/check_script_manifest.py` passed.
+- Docs/runtime isolation:
+  `python3 support/scripts/ci/check_docs_runtime_isolation.py` passed.
+- Whitespace:
+  `git diff --check -- support/scripts/factor_claim_terminalization_audit.py support/scripts/tests/test_factor_claim_terminalization_audit.py support/docs/plans/2026-05-31-consumer-ux-evidence-packet-audit-current.md`
+  passed.
+
+Current compact factor audit after the fix:
+
+```bash
+python3 support/scripts/factor_claim_terminalization_audit.py --compact --output /tmp/ict-engine-factor-closure-after-ps-awk-readback-fix-20260531T0428Z.json
+```
+
+Result:
+
+- Exit code `1` because factor closure is still blocked.
+- `summary.status=needs_attention`.
+- `live_factor_processes=0`; the readback-poller false live owner is gone.
+- `active_claims=1`, `fresh_active_claims_without_live_process=1`.
+- Blocking claim:
+  `/tmp/ict-engine-agent-claims/board-b-factor-refinement/20260531T122333+0800-codex-ehlers-autocorr-periodogram-cycle-regime-30m-exact-aq.claim`.
+- Claim age was about `8` minutes at audit time, with
+  `promotion_allowed=false`, `trade_usable=false`, and
+  `same_tree_practical_closure=null`.
+
+Heavy done-definition status:
+
+- Older heavy packet exists but is stale-head and failing:
+  `/tmp/ict-engine-done-definition-heavy-20260531T-after-source-scope-commit.json`.
+  It selected head `4126d761f94d7d68228c5bda4f90534db907ac45`,
+  `completion_ready=false`, `status=needs_fix`, and unresolved
+  `smoke_acceptance_tmp_state`.
+- Newer isolated heavy audit is still running:
+  `/tmp/ict-engine-done-definition-heavy-20260531T-codex-closedloop-reverify-isolated.json`.
+  Do not start another heavy audit until this exits or becomes stale.
+
+Decision: this is a coherent live-process/readback classifier repair, but the
+full objective is still not complete. Current blockers remain a fresh active
+Ehlers claim without live process, stale or in-flight done-definition proof,
+same-tree practical closure missing, and release readiness blocked by dirty
+worktree/remote readback. The active `ict-engine-maintenance-loop` skill already
+warned that command-introspection and TOMAC diagnostic probes must not count as
+live factor owners; the runtime skill was tightened in the later 04:31Z
+readback section to name ps/awk pollers and exit-file Python-heredoc readbacks
+explicitly.
+
+## Readback Poller Classifier Repair - 2026-05-31T04:31Z
+
+Current head during repair:
+
+- `a74576265a7f06b332155c95aae497df93b6dded`
+  (`docs: record balanced factor gate flywheel slice`).
+
+Bug:
+
+- A shell readback poller that combined `ps -p`, `ps -axo | awk`, exit-file
+  `cat`, and a Python heredoc reading `checks/run_tomac_*.exit` was still
+  classified as a live factor process because the command mentioned
+  `/tmp/ict-engine-.../run_tomac_1h.exit`.
+
+Fix:
+
+- `support/scripts/factor_claim_terminalization_audit.py` now treats ps/readback
+  shells as non-live unless they invoke a real Python factor runtime script.
+- Regression added:
+  `test_live_process_classifier_ignores_ps_awk_exit_file_readback_poller`.
+
+Verification:
+
+- RED:
+  `python3 -m unittest support.scripts.tests.test_factor_claim_terminalization_audit.FactorClaimTerminalizationAuditTest.test_live_process_classifier_ignores_ps_awk_exit_file_readback_poller support.scripts.tests.test_factor_claim_terminalization_audit.FactorClaimTerminalizationAuditTest.test_terminalized_clean_aq_root_keeps_newer_live_wrapper_process -v`
+  initially failed on the readback-poller test.
+- GREEN focused:
+  same command passed after the classifier fix.
+- GREEN full suite:
+  `python3 -m unittest support.scripts.tests.test_factor_claim_terminalization_audit -v`
+  passed `123/123`.
+- Live compact audit:
+  `python3 support/scripts/factor_claim_terminalization_audit.py --compact --output /tmp/ict-engine-factor-audit-readback-poller-fix-20260531T1229.json`
+  exited nonzero only because factor closure still needs attention. The packet
+  reported `live_factor_processes=0`, `active_claims=1`,
+  `fresh_active_claims_without_live_process=1`, `promotion_allowed_true=0`,
+  `trade_usable_true=0`, and `same_tree_practical_closure=null`.
+
+Skill update:
+
+- Runtime maintenance skill updated at
+  `/Users/thrill3r/.hermes/skills/software-development/ict-engine-maintenance-loop/SKILL.md`
+  to include ps/awk process pollers and exit-file cat/Python-heredoc readbacks
+  as non-live command-introspection probes.
+
+## Post-Commit Classifier Readback - 2026-05-31T12:41+0800
+
+The classifier code/test slice was committed while this continuation was
+waiting on the heavy done-definition process:
+
+- Commit: `3cff898db8b943588cc9d9044c7f31b79d145f81`
+  (`Fix readback poller live-process classification`).
+- Files in that commit:
+  `support/scripts/factor_claim_terminalization_audit.py` and
+  `support/scripts/tests/test_factor_claim_terminalization_audit.py`.
+
+Heavy done-definition packet that was running in parallel completed:
+
+- Path:
+  `/tmp/ict-engine-done-definition-heavy-20260531T-codex-closedloop-reverify-isolated.json`.
+- Selected head:
+  `3cff898db8b943588cc9d9044c7f31b79d145f81`.
+- `summary.status=needs_fix`, `completion_ready=false`,
+  `evidence_level=failing_gates`.
+- Gate counts:
+  `pass_count=9`, `fail_count=1`, `skip_count=0`, `total_gates=10`.
+- Unresolved gate:
+  `smoke_acceptance_tmp_state`.
+- Tracked worktree fingerprint:
+  `sha256=d3f0606777a144930616cfcbee14d496368fbca10fbda67be72305c3218f0e2f`,
+  `status=dirty`, `tracked_status_entries=55`.
+
+Current factor closure after the classifier commit:
+
+```bash
+python3 support/scripts/factor_claim_terminalization_audit.py --compact --output /tmp/ict-engine-factor-closure-post-3cff-20260531T1241Z.json
+```
+
+Result:
+
+- Exit code `1`.
+- `summary.status=needs_attention`.
+- `live_factor_processes=0`.
+- `active_claims=1`, `fresh_active_claims_without_live_process=1`.
+- Fresh blocker remains
+  `20260531T122333+0800-codex-ehlers-autocorr-periodogram-cycle-regime-30m-exact-aq.claim`,
+  age about `17` minutes at readback time.
+- `promotion_allowed_true=0`, `trade_usable_true=0`,
+  `same_tree_practical_closure=null`.
+
+Decision: classifier false-live behavior is repaired on the committed head, but
+the full objective remains blocked by the fresh Ehlers active claim,
+`smoke_acceptance_tmp_state`, missing same-tree practical closure, and release
+readiness. Do not take over the Ehlers claim until it is stale-safe or terminal
+evidence appears.
+
+Decision: coherent classifier false-positive repair. Full objective remains not
+complete because Ehlers has a fresh active claim without live runtime,
+same-tree practical closure is still absent, done-definition proof remains
+blocked, and release readiness is still blocked by dirty/source/remote surfaces
+in the current packets.
+
+## Post-Commit Objective Snapshot - 2026-05-31T04:38Z
+
+Committed slice:
+
+- `3cff898db8b943588cc9d9044c7f31b79d145f81`
+  (`Fix readback poller live-process classification`).
+
+Fresh packet:
+
+```bash
+python3 support/scripts/objective_closure_snapshot.py --compact --check-remotes --output-dir /tmp/ict-engine-consumer-ux-evidence-audit-20260531T1235-post-readback-poller-commit-codex
+```
+
+Result:
+
+- Exit code `1`.
+- Packet:
+  `/tmp/ict-engine-consumer-ux-evidence-audit-20260531T1235-post-readback-poller-commit-codex/objective_closure_snapshot.json`.
+- `summary.status=not_complete`, `completion_proven=false`.
+- `done_definition.head=3cff898db8b943588cc9d9044c7f31b79d145f81`.
+- `done_definition.status=pass`, but `completion_ready=false` because heavy
+  gates are still skipped: `cargo_check_all_targets`,
+  `cargo_clippy_all_targets_deny_warnings`, `cargo_test`, and
+  `smoke_acceptance_tmp_state`.
+- `practical_admission_source_surface.status=pass` with zero tracked and
+  untracked practical-admission violations.
+- Objective blockers:
+  `done_definition_not_completion_ready`,
+  `fixed_bps_cost_model_source_debt`,
+  `factor_closure_blocked`,
+  `same_tree_practical_closure_unproven`, and
+  `release_readiness_blocked`.
+- Fixed-bps cost-model source debt is untracked-only in this packet:
+  `untracked_violation_count=1790` across `322` untracked files, staged into
+  `fixed_bps_cost_model_source_debt_manifest.json`.
+- Factor closure remains blocked by the fresh Ehlers active claim:
+  `live_factor_processes=0`, `active_claims=1`,
+  `fresh_active_claims_without_live_process=1`, `promotion_allowed_true=0`,
+  `trade_usable_true=0`, `same_tree_practical_closure=null`.
+- Release readiness remote readback passed for origin and release mirror, but
+  release still blocks on `worktree_clean_for_release` and
+  `source_origin_matches_selected_source`.
+
+Decision: commit `3cff898d` is a verified classifier slice only. It is not
+completion evidence, not practical trade-use evidence, and not release
+readiness.
