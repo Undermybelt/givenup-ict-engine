@@ -10,6 +10,7 @@ use std::path::{Path, PathBuf};
 use crate::application::auto_quant::results::{
     load_strategy_library_manifest, ARTIFACT_KIND_LIBRARY,
 };
+use crate::application::factor_lifecycle::DEPLOY_READY_READINESS_CONTRACT;
 use crate::application::orchestration::{
     apply_structural_path_ranking_external_scores,
     export_structural_path_ranking_target_with_agent_material_rank,
@@ -72,6 +73,22 @@ const STRUCTURAL_PATH_RANKING_TRAINER_ARTIFACT_PROTOCOL_VERSION: &str =
     "structural-path-ranking-trainer-artifact-v1";
 const STRUCTURAL_PATH_RANKING_PRODUCTION_VALIDATION_MIN_ROWS: usize = 30;
 const ICT_ENGINE_FEEDBACK_STATE_CHILD: &str = "ict-engine-feedback";
+const ACCEPTED_EXECUTION_FEEDBACK_MARKERS: &[&str] = &[
+    "paper_execution_feedback",
+    "live_execution_feedback",
+    "paper_trade_feedback",
+    "live_trade_feedback",
+    "broker_execution_feedback",
+];
+const SIMULATED_EXECUTION_FEEDBACK_MARKERS: &[&str] = &[
+    "simulated_backtest",
+    "retained_real_event_label_simulation",
+    "ibkr_paper_trade_simulation",
+    "paper_trade_simulation",
+    "simulation_child_gate",
+    "child_gate_filtered",
+    "simulated_feedback",
+];
 
 fn structural_path_ranking_summary_path(state_dir: &str, symbol: &str) -> PathBuf {
     Path::new(state_dir)
@@ -193,6 +210,31 @@ fn lifecycle_live_trade_ready_status(status: Option<&str>) -> bool {
     matches!(status, Some("live_trade_ready" | "live_trade_usable"))
 }
 
+fn lifecycle_text_has_accepted_execution_feedback_marker(value: Option<&str>) -> bool {
+    let Some(value) = value else {
+        return false;
+    };
+    let text = value.trim().to_ascii_lowercase();
+    if text.is_empty()
+        || SIMULATED_EXECUTION_FEEDBACK_MARKERS
+            .iter()
+            .any(|marker| text.contains(marker))
+    {
+        return false;
+    }
+    ACCEPTED_EXECUTION_FEEDBACK_MARKERS
+        .iter()
+        .any(|marker| text.contains(marker))
+}
+
+fn lifecycle_row_has_accepted_execution_feedback(row: &StructuralPathRankingTargetRow) -> bool {
+    lifecycle_text_has_accepted_execution_feedback_marker(row.score_source_kind.as_deref())
+        || lifecycle_text_has_accepted_execution_feedback_marker(
+            row.execution_gate_reason.as_deref(),
+        )
+        || lifecycle_text_has_accepted_execution_feedback_marker(row.score_generator.as_deref())
+}
+
 fn lifecycle_ready_row_has_mature_training_evidence(row: &StructuralPathRankingTargetRow) -> bool {
     row.maturity_mask
         && row.calibrated_label.is_some()
@@ -212,6 +254,7 @@ fn lifecycle_learning_admitted_row(row: &StructuralPathRankingTargetRow) -> bool
 fn lifecycle_live_trade_ready_row(row: &StructuralPathRankingTargetRow) -> bool {
     lifecycle_live_trade_ready_status(row.execution_gate_status.as_deref())
         && lifecycle_ready_row_has_mature_training_evidence(row)
+        && lifecycle_row_has_accepted_execution_feedback(row)
 }
 
 fn factor_profitability_lifecycle_status_from_target_rows(
@@ -241,18 +284,22 @@ fn factor_profitability_lifecycle_status_from_target_rows(
         .iter()
         .filter(|row| lifecycle_live_trade_ready_row(row))
         .count();
+    let deploy_ready_count = live_ready_count;
     let live_trade_usable_count = live_ready_count;
     let trade_usable = live_trade_usable_count > 0;
     FactorProfitabilityLifecycleTrainingStatusSurface {
         learning_admitted_count,
         paper_ready_count,
         live_ready_count,
+        deploy_ready_count,
         live_trade_usable_count,
+        funded_live_fill_required: false,
+        readiness_contract: DEPLOY_READY_READINESS_CONTRACT.to_string(),
         promotion_allowed: trade_usable,
         trade_usable,
         summary_line: format!(
-            "factor_lifecycle: learning_admitted={} paper_ready={} live_ready={} trade_usable={}",
-            learning_admitted_count, paper_ready_count, live_ready_count, trade_usable
+            "factor_lifecycle: learning_admitted={} paper_ready={} deploy_ready={} live_ready={} funded_live_fill_required=false trade_usable={}",
+            learning_admitted_count, paper_ready_count, deploy_ready_count, live_ready_count, trade_usable
         ),
     }
 }
@@ -518,8 +565,11 @@ pub struct PolicyTrainingStatusSurface {
 pub struct FactorProfitabilityLifecycleTrainingStatusSurface {
     pub learning_admitted_count: usize,
     pub paper_ready_count: usize,
+    pub deploy_ready_count: usize,
     pub live_ready_count: usize,
     pub live_trade_usable_count: usize,
+    pub funded_live_fill_required: bool,
+    pub readiness_contract: String,
     pub promotion_allowed: bool,
     pub trade_usable: bool,
     pub summary_line: String,
@@ -1639,7 +1689,8 @@ pub fn structural_path_ranking_target_training_status(
             target_row_validation,
             feedback_observation_validation,
             factor_profitability_lifecycle: FactorProfitabilityLifecycleTrainingStatusSurface {
-                summary_line: "factor_lifecycle: learning_admitted=0 paper_ready=0 live_ready=0 trade_usable=false".to_string(),
+                readiness_contract: DEPLOY_READY_READINESS_CONTRACT.to_string(),
+                summary_line: "factor_lifecycle: learning_admitted=0 paper_ready=0 deploy_ready=0 live_ready=0 funded_live_fill_required=false trade_usable=false".to_string(),
                 ..FactorProfitabilityLifecycleTrainingStatusSurface::default()
             },
             summary_path: summary_path.to_string_lossy().to_string(),
@@ -5624,9 +5675,19 @@ detector_context:
         );
         assert_eq!(status.factor_profitability_lifecycle.paper_ready_count, 0);
         assert_eq!(status.factor_profitability_lifecycle.live_ready_count, 0);
+        assert_eq!(status.factor_profitability_lifecycle.deploy_ready_count, 0);
+        assert!(
+            !status
+                .factor_profitability_lifecycle
+                .funded_live_fill_required
+        );
+        assert_eq!(
+            status.factor_profitability_lifecycle.readiness_contract,
+            DEPLOY_READY_READINESS_CONTRACT
+        );
         assert!(!status.factor_profitability_lifecycle.trade_usable);
         assert!(status.summary_line.contains(
-            "factor_lifecycle: learning_admitted=1 paper_ready=0 live_ready=0 trade_usable=false"
+            "factor_lifecycle: learning_admitted=1 paper_ready=0 deploy_ready=0 live_ready=0 funded_live_fill_required=false trade_usable=false"
         ));
     }
 
@@ -5715,6 +5776,7 @@ detector_context:
         );
         assert_eq!(status.factor_profitability_lifecycle.paper_ready_count, 1);
         assert_eq!(status.factor_profitability_lifecycle.live_ready_count, 0);
+        assert_eq!(status.factor_profitability_lifecycle.deploy_ready_count, 0);
         assert_eq!(
             status
                 .factor_profitability_lifecycle
@@ -5724,7 +5786,114 @@ detector_context:
         assert!(!status.factor_profitability_lifecycle.promotion_allowed);
         assert!(!status.factor_profitability_lifecycle.trade_usable);
         assert!(status.summary_line.contains(
-            "factor_lifecycle: learning_admitted=1 paper_ready=1 live_ready=0 trade_usable=false"
+            "factor_lifecycle: learning_admitted=1 paper_ready=1 deploy_ready=0 live_ready=0 funded_live_fill_required=false trade_usable=false"
+        ));
+    }
+
+    #[test]
+    fn policy_training_status_exposes_deploy_ready_without_funded_live_fill_requirement() {
+        let temp = tempfile::tempdir().unwrap();
+        let symbol = "FACTOR_CANDIDATES";
+        let summary_dir = temp.path().join(symbol).join(POLICY_TRAINING_DIR);
+        std::fs::create_dir_all(&summary_dir).unwrap();
+        let mut pending_reward_states = BTreeMap::new();
+        pending_reward_states.insert("matured_success".to_string(), 1);
+        let summary = StructuralPathRankingTargetExportSummary {
+            symbol: symbol.to_string(),
+            rows: 1,
+            candidate_set_id: "structural-candidates:FACTOR_CANDIDATES:deploy-ready".to_string(),
+            candidate_set_size: 1,
+            pending_reward_states,
+            mature_rows: 1,
+            rows_with_raw_path_score: 1,
+            rows_with_execution_gate_status: 1,
+            rows_with_training_weight: 1,
+            csv_path: summary_dir
+                .join("structural_path_ranking_target.csv")
+                .to_string_lossy()
+                .to_string(),
+            jsonl_path: summary_dir
+                .join("structural_path_ranking_target.jsonl")
+                .to_string_lossy()
+                .to_string(),
+            summary_path: summary_dir
+                .join(STRUCTURAL_PATH_RANKING_TARGET_SUMMARY_FILE)
+                .to_string_lossy()
+                .to_string(),
+            summary_line: "structural_path_ranking_target rows=1 mature_rows=1".to_string(),
+            ..StructuralPathRankingTargetExportSummary::default()
+        };
+        std::fs::write(
+            summary_dir.join(STRUCTURAL_PATH_RANKING_TARGET_SUMMARY_FILE),
+            serde_json::to_string_pretty(&summary).unwrap(),
+        )
+        .unwrap();
+        std::fs::write(
+            summary_dir.join("structural_path_ranking_target.jsonl"),
+            serde_json::to_string(&StructuralPathRankingTargetRow {
+                rank: 1,
+                candidate_set_id: summary.candidate_set_id.clone(),
+                candidate_set_size: 1,
+                path_id: "TrendExpansion -> IntradayMomentum -> mature_edge -> deploy_ready_v1"
+                    .to_string(),
+                scenario_id: "scenario:deploy-ready".to_string(),
+                path_label: "deploy_ready_v1".to_string(),
+                regime_profit_branch_path: Some(
+                    "TrendExpansion -> IntradayMomentum -> mature_edge -> deploy_ready_v1"
+                        .to_string(),
+                ),
+                direction: "Long".to_string(),
+                raw_path_score: Some(0.84),
+                calibrated_path_prob: Some(0.78),
+                path_prob_lower_bound: Some(0.66),
+                execution_gate_status: Some("live_trade_usable".to_string()),
+                execution_gate_reason: Some(
+                    "accepted_execution_feedback_source=paper_execution_feedback pending_reward_state=matured_success training_weight=2.000000"
+                        .to_string(),
+                ),
+                pending_reward_state: "matured_success".to_string(),
+                maturity_mask: true,
+                maturity_weight: 1.0,
+                calibrated_label: Some(1.0),
+                propensity_estimate: Some(0.5),
+                ips_weight: Some(2.0),
+                training_weight: Some(2.0),
+                regime_calibration_bucket: "TrendExpansion".to_string(),
+                behavior_policy_probability: 0.5,
+                experience_prior: 0.02,
+                current_posterior: 0.84,
+                structural_baseline_score: 0.5,
+                score_source_kind: Some("paper_execution_feedback".to_string()),
+                ..StructuralPathRankingTargetRow::default()
+            })
+            .unwrap(),
+        )
+        .unwrap();
+
+        let status = policy_training_status(temp.path().to_str().unwrap(), symbol, None).unwrap();
+
+        assert_eq!(status.factor_profitability_lifecycle.paper_ready_count, 1);
+        assert_eq!(status.factor_profitability_lifecycle.live_ready_count, 1);
+        assert_eq!(status.factor_profitability_lifecycle.deploy_ready_count, 1);
+        assert_eq!(
+            status
+                .factor_profitability_lifecycle
+                .live_trade_usable_count,
+            1
+        );
+        assert!(status.factor_profitability_lifecycle.promotion_allowed);
+        assert!(status.factor_profitability_lifecycle.trade_usable);
+        assert!(
+            !status
+                .factor_profitability_lifecycle
+                .funded_live_fill_required
+        );
+        assert_eq!(
+            status.factor_profitability_lifecycle.readiness_contract,
+            DEPLOY_READY_READINESS_CONTRACT
+        );
+        assert!(status.summary_line.contains(
+            "deploy_ready=1 live_ready=1 funded_live_fill_required=false trade_usable=true"
         ));
     }
 
@@ -5882,6 +6051,7 @@ detector_context:
         let status = policy_training_status(temp.path().to_str().unwrap(), symbol, None).unwrap();
 
         assert_eq!(status.factor_profitability_lifecycle.live_ready_count, 0);
+        assert_eq!(status.factor_profitability_lifecycle.deploy_ready_count, 0);
         assert_eq!(
             status
                 .factor_profitability_lifecycle
@@ -5891,8 +6061,97 @@ detector_context:
         assert!(!status.factor_profitability_lifecycle.promotion_allowed);
         assert!(!status.factor_profitability_lifecycle.trade_usable);
         assert!(status.summary_line.contains(
-            "factor_lifecycle: learning_admitted=0 paper_ready=0 live_ready=0 trade_usable=false"
+            "factor_lifecycle: learning_admitted=0 paper_ready=0 deploy_ready=0 live_ready=0 funded_live_fill_required=false trade_usable=false"
         ));
+    }
+
+    #[test]
+    fn policy_training_status_requires_accepted_execution_feedback_source_for_live_trade_usable() {
+        let temp = tempfile::tempdir().unwrap();
+        let symbol = "FACTOR_CANDIDATES";
+        let summary_dir = temp.path().join(symbol).join(POLICY_TRAINING_DIR);
+        std::fs::create_dir_all(&summary_dir).unwrap();
+        let mut pending_reward_states = BTreeMap::new();
+        pending_reward_states.insert("matured_success".to_string(), 1);
+        let summary = StructuralPathRankingTargetExportSummary {
+            symbol: symbol.to_string(),
+            rows: 1,
+            candidate_set_id: "structural-candidates:FACTOR_CANDIDATES:source-spoof".to_string(),
+            candidate_set_size: 1,
+            pending_reward_states,
+            mature_rows: 1,
+            rows_with_raw_path_score: 1,
+            rows_with_execution_gate_status: 1,
+            rows_with_training_weight: 1,
+            csv_path: summary_dir
+                .join("structural_path_ranking_target.csv")
+                .to_string_lossy()
+                .to_string(),
+            jsonl_path: summary_dir
+                .join("structural_path_ranking_target.jsonl")
+                .to_string_lossy()
+                .to_string(),
+            summary_path: summary_dir
+                .join(STRUCTURAL_PATH_RANKING_TARGET_SUMMARY_FILE)
+                .to_string_lossy()
+                .to_string(),
+            summary_line: "structural_path_ranking_target rows=1 mature_rows=1".to_string(),
+            ..StructuralPathRankingTargetExportSummary::default()
+        };
+        std::fs::write(
+            summary_dir.join(STRUCTURAL_PATH_RANKING_TARGET_SUMMARY_FILE),
+            serde_json::to_string_pretty(&summary).unwrap(),
+        )
+        .unwrap();
+        std::fs::write(
+            summary_dir.join("structural_path_ranking_target.jsonl"),
+            serde_json::to_string(&StructuralPathRankingTargetRow {
+                rank: 1,
+                candidate_set_id: summary.candidate_set_id.clone(),
+                candidate_set_size: 1,
+                path_id: "TrendExpansion -> IntradayMomentum -> mature_edge -> spoofed_source_v1"
+                    .to_string(),
+                scenario_id: "scenario:source-spoof".to_string(),
+                path_label: "spoofed_source_v1".to_string(),
+                regime_profit_branch_path: Some(
+                    "TrendExpansion -> IntradayMomentum -> mature_edge -> spoofed_source_v1"
+                        .to_string(),
+                ),
+                direction: "Long".to_string(),
+                raw_path_score: Some(0.84),
+                calibrated_path_prob: Some(0.78),
+                path_prob_lower_bound: Some(0.66),
+                execution_gate_status: Some("live_trade_usable".to_string()),
+                pending_reward_state: "matured_success".to_string(),
+                maturity_mask: true,
+                maturity_weight: 1.0,
+                calibrated_label: Some(1.0),
+                propensity_estimate: Some(0.5),
+                ips_weight: Some(2.0),
+                training_weight: Some(2.0),
+                regime_calibration_bucket: "TrendExpansion".to_string(),
+                behavior_policy_probability: 0.5,
+                experience_prior: 0.02,
+                current_posterior: 0.84,
+                structural_baseline_score: 0.5,
+                ..StructuralPathRankingTargetRow::default()
+            })
+            .unwrap(),
+        )
+        .unwrap();
+
+        let status = policy_training_status(temp.path().to_str().unwrap(), symbol, None).unwrap();
+
+        assert_eq!(status.factor_profitability_lifecycle.live_ready_count, 0);
+        assert_eq!(status.factor_profitability_lifecycle.deploy_ready_count, 0);
+        assert_eq!(
+            status
+                .factor_profitability_lifecycle
+                .live_trade_usable_count,
+            0
+        );
+        assert!(!status.factor_profitability_lifecycle.promotion_allowed);
+        assert!(!status.factor_profitability_lifecycle.trade_usable);
     }
 
     fn structural_path_ranking_status_rows_jsonl(
