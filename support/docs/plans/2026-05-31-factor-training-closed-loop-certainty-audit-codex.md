@@ -434,3 +434,58 @@ Decision:
 - Current practical flags remain false:
   `promotion_allowed=false`, `trade_usable=false`, `update_goal=false`,
   `same_tree_practical_closure=null`.
+
+## 2026-05-31T13:03+0800 Flywheel-Vs-Practical Resolver Gate Split
+
+Fresh routing was repeated before this slice. Current route remains
+`sd/ict-engi-fact-rese-muta`; installed runtime skill
+`~/.hermes/skills/software-development/ict-engi-fact-rese-muta/SKILL.md` was
+used.
+
+Current-state guard:
+
+- `python3 support/scripts/factor_claim_terminalization_audit.py --compact`
+  at `2026-05-31T13:00+0800` reported `status=needs_attention` because a
+  foreign TOMAC/AQ runtime was live under
+  `/tmp/ict-engine-tomac-tsmom-vol-scaled-low-turnover-aq-20260531T115002+0800`.
+  This slice did not launch provider, IBKR, AQ, TOMAC, paper/live, downstream,
+  or local backtest work.
+- Objective closure artifact
+  `/tmp/ict-engine-objective-closure-20260531T125432/objective_closure_snapshot.json`
+  still reported `completion_proven=false` with
+  `same_tree_practical_closure_unproven`; all seven practical chain stages were
+  missing from validated closure evidence.
+
+Repair:
+
+- `support/scripts/research/factor_candidate_resolver.py` now exposes
+  `flywheel_learning_ready` and `flywheel_learning_ready_count` so lower-floor
+  learning/flywheel candidates are visible as productive training input.
+- The same resolver no longer treats `live_trade.promotion_allowed=true` /
+  `live_trade.trade_usable=true` as sufficient by itself. Promotion/trade-use
+  counting now also requires a validated `same_tree_practical_closure` packet
+  with `status=pass`, true practical flags, and
+  `evidence_packet_validated=true`.
+
+Verification:
+
+- `python3 -m unittest support.scripts.research.tests.test_factor_candidate_resolver -v`
+  passed: `22 tests`, `OK`.
+- `python3 -m unittest support.scripts.research.tests.test_factor_candidate_pack -v`
+  passed: `18 tests`, `OK`.
+- `python3 support/scripts/research/downstream_practical_admission_source_check.py --tracked-run-wrappers --jobs 4 --pretty`
+  passed: all tracked wrapper entries `ok=true`, `violations=[]`.
+- `git diff --check -- support/scripts/research/factor_candidate_resolver.py support/scripts/research/tests/test_factor_candidate_resolver.py`
+  produced no whitespace errors.
+- A follow-up `python3 support/scripts/factor_claim_terminalization_audit.py --compact`
+  at `2026-05-31T13:07+0800` reported `status=pass`,
+  `promotion_allowed_true=0`, `trade_usable_true=0`,
+  `same_tree_practical_closure=null`, and the code-only coordination claim did
+  not block closure.
+
+Decision:
+
+- Yes, balance belongs in the learning/flywheel plane, not by weakening the
+  three final practical tickets.
+- This slice improves throughput visibility while preserving final quality
+  gates. It produces no `trade_usable=true` factor and no practical promotion.

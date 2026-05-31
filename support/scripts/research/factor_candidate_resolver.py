@@ -464,23 +464,57 @@ def _output_ref(path: Path, output_dir: Path) -> str:
 def _closed_loop_consumption_view(
     lifecycle: dict[str, Any] | None,
 ) -> dict[str, Any]:
-    learning = (lifecycle or {}).get("learning_admission") or {}
-    live_trade = (lifecycle or {}).get("live_trade") or {}
+    lifecycle = lifecycle or {}
+    learning = lifecycle.get("learning_admission") or {}
+    live_trade = lifecycle.get("live_trade") or {}
     learning_status = learning.get("status", "unknown")
-    promotion_allowed = bool(live_trade.get("promotion_allowed", False))
-    trade_usable = bool(live_trade.get("trade_usable", False))
+    flywheel_learning_ready = learning_status == "admitted"
+    raw_promotion_allowed = bool(live_trade.get("promotion_allowed", False))
+    raw_trade_usable = bool(live_trade.get("trade_usable", False))
+    practical_closure_validated = _practical_closure_validated(lifecycle, live_trade)
+    promotion_allowed = (
+        raw_promotion_allowed and raw_trade_usable and practical_closure_validated
+    )
+    trade_usable = raw_trade_usable and promotion_allowed
+    practical_closure_blockers: list[str] = []
+    if (raw_promotion_allowed or raw_trade_usable) and not practical_closure_validated:
+        practical_closure_blockers.append(
+            "same_tree_practical_closure_missing_or_unvalidated"
+        )
     if promotion_allowed and trade_usable:
         status = "promotion_ready"
-    elif learning_status == "admitted":
+    elif flywheel_learning_ready:
         status = "observation_only_learning_admitted"
     else:
         status = "inspection_only_learning_blocked"
     return {
         "closed_loop_consumption_status": status,
         "learning_blockers": learning.get("blockers") or [],
+        "flywheel_learning_ready": flywheel_learning_ready,
+        "practical_closure_validated": practical_closure_validated,
+        "practical_closure_blockers": practical_closure_blockers,
         "promotion_allowed": promotion_allowed,
         "trade_usable": trade_usable,
     }
+
+
+def _practical_closure_validated(
+    lifecycle: dict[str, Any],
+    live_trade: dict[str, Any],
+) -> bool:
+    closure = (
+        lifecycle.get("same_tree_practical_closure")
+        or lifecycle.get("same_tree_practical_closure_packet")
+        or live_trade.get("same_tree_practical_closure")
+    )
+    if not isinstance(closure, dict):
+        return False
+    return (
+        closure.get("status") == "pass"
+        and closure.get("promotion_allowed") is True
+        and closure.get("trade_usable") is True
+        and closure.get("evidence_packet_validated") is True
+    )
 
 
 def _candidate_list_entry(candidate: dict[str, Any], repo_root: Path) -> dict[str, Any]:
@@ -588,6 +622,9 @@ def list_buildable_candidates(
         if candidate.get("closed_loop_consumption_status") == "promotion_ready"
     )
     trade_usable_count = sum(1 for candidate in buildable if candidate.get("trade_usable"))
+    flywheel_learning_ready_count = sum(
+        1 for candidate in buildable if candidate.get("flywheel_learning_ready")
+    )
     inspection_only_count = sum(
         1
         for candidate in buildable
@@ -601,6 +638,7 @@ def list_buildable_candidates(
             "legacy_excluded_count": legacy_excluded_count,
             "promotion_ready_count": promotion_ready_count,
             "trade_usable_count": trade_usable_count,
+            "flywheel_learning_ready_count": flywheel_learning_ready_count,
             "inspection_only_count": inspection_only_count,
         },
         "buildable_candidates": buildable,
@@ -668,6 +706,7 @@ def _print_human_buildable_list(payload: dict[str, Any]) -> None:
         (
             "buildable_count={buildable_count} candidate_count={candidate_count} "
             "promotion_ready_count={promotion_ready_count} trade_usable_count={trade_usable_count} "
+            "flywheel_learning_ready_count={flywheel_learning_ready_count} "
             "inspection_only_count={inspection_only_count} "
             "legacy_excluded_count={legacy_excluded_count}"
         ).format(

@@ -16,6 +16,60 @@ import factor_candidate_resolver as resolver  # noqa: E402
 
 
 class FactorCandidateResolverTests(unittest.TestCase):
+    def _write_candidate_pack(
+        self,
+        repo_root: Path,
+        candidate_id: str,
+        lifecycle: dict,
+    ) -> Path:
+        pack_dir = (
+            repo_root
+            / "support"
+            / "examples"
+            / "factor_candidate_packs"
+            / "flywheel"
+            / candidate_id
+        )
+        pack_dir.mkdir(parents=True, exist_ok=True)
+        (pack_dir / "factor_expression.json").write_text("{}", encoding="utf-8")
+        (pack_dir / "factor_eval_grid_summary.json").write_text(
+            json.dumps(
+                {
+                    "trade_density_summary": {
+                        "aggregate_trade_count": 44,
+                        "aggregate_label": "preferred_density",
+                    },
+                    "aggregate_metrics": {
+                        "trade_count": 44,
+                        "net_after_declared_friction_pct": 0.9,
+                    },
+                    "factor_profitability_lifecycle": lifecycle,
+                }
+            ),
+            encoding="utf-8",
+        )
+        (pack_dir / "transfer_score.json").write_text(
+            json.dumps(
+                {
+                    "status": "cross_market_candidate",
+                    "profitability_status": "declared_friction_positive",
+                }
+            ),
+            encoding="utf-8",
+        )
+        (pack_dir / "pack_manifest.json").write_text(
+            json.dumps(
+                {
+                    "schema_version": "factor-candidate-pack-manifest/v1",
+                    "candidate_id": candidate_id,
+                    "artifact_family": "factor_candidate_pack",
+                    "artifact_files": list(resolver.REQUIRED_CANDIDATE_PACK_FILES),
+                }
+            ),
+            encoding="utf-8",
+        )
+        return pack_dir
+
     def test_backfill_example_pack_manifests_writes_pack_manifest_for_legacy_pack(self) -> None:
         with TemporaryDirectory() as tmpdir:
             repo_root = Path(tmpdir)
@@ -564,6 +618,111 @@ class FactorCandidateResolverTests(unittest.TestCase):
         )
         self.assertFalse(order_block["promotion_allowed"])
         self.assertFalse(order_block["trade_usable"])
+
+    def test_learning_admitted_candidate_is_flywheel_ready_not_trade_usable(self) -> None:
+        with TemporaryDirectory() as tmpdir:
+            repo_root = Path(tmpdir)
+            pack_dir = self._write_candidate_pack(
+                repo_root,
+                "flywheel_learning_candidate_v1",
+                {
+                    "learning_admission": {
+                        "status": "admitted",
+                        "blockers": [],
+                    },
+                    "live_trade": {
+                        "status": "blocked",
+                        "promotion_allowed": False,
+                        "trade_usable": False,
+                        "blockers": ["live_execution_gate_not_evaluated"],
+                    },
+                },
+            )
+            payload = resolver.list_buildable_candidates(
+                repo_root=repo_root,
+                candidates=[
+                    {
+                        "candidate_id": "flywheel_learning_candidate_v1",
+                        "display_name": "Flywheel Learning Candidate",
+                        "family": "flywheel",
+                        "base_timeframe": "1m",
+                        "artifact_ready": True,
+                        "artifact_source": {
+                            "candidate_pack_dir": str(pack_dir.relative_to(repo_root))
+                        },
+                    }
+                ],
+            )
+
+        self.assertEqual(payload["summary"]["buildable_count"], 1)
+        self.assertEqual(payload["summary"]["flywheel_learning_ready_count"], 1)
+        self.assertEqual(payload["summary"]["promotion_ready_count"], 0)
+        self.assertEqual(payload["summary"]["trade_usable_count"], 0)
+        candidate = payload["buildable_candidates"][0]
+        self.assertEqual(
+            candidate["closed_loop_consumption_status"],
+            "observation_only_learning_admitted",
+        )
+        self.assertTrue(candidate["flywheel_learning_ready"])
+        self.assertFalse(candidate["promotion_allowed"])
+        self.assertFalse(candidate["trade_usable"])
+
+    def test_live_trade_self_report_requires_validated_same_tree_closure(self) -> None:
+        lifecycle = {
+            "learning_admission": {
+                "status": "admitted",
+                "blockers": [],
+            },
+            "live_trade": {
+                "status": "ready",
+                "promotion_allowed": True,
+                "trade_usable": True,
+                "blockers": [],
+            },
+        }
+
+        view = resolver._closed_loop_consumption_view(lifecycle)
+
+        self.assertEqual(
+            view["closed_loop_consumption_status"],
+            "observation_only_learning_admitted",
+        )
+        self.assertTrue(view["flywheel_learning_ready"])
+        self.assertFalse(view["practical_closure_validated"])
+        self.assertFalse(view["promotion_allowed"])
+        self.assertFalse(view["trade_usable"])
+        self.assertIn(
+            "same_tree_practical_closure_missing_or_unvalidated",
+            view["practical_closure_blockers"],
+        )
+
+    def test_validated_same_tree_closure_allows_promotion_ready_count(self) -> None:
+        lifecycle = {
+            "learning_admission": {
+                "status": "admitted",
+                "blockers": [],
+            },
+            "live_trade": {
+                "status": "ready",
+                "promotion_allowed": True,
+                "trade_usable": True,
+                "blockers": [],
+            },
+            "same_tree_practical_closure": {
+                "status": "pass",
+                "promotion_allowed": True,
+                "trade_usable": True,
+                "evidence_packet_validated": True,
+            },
+        }
+
+        view = resolver._closed_loop_consumption_view(lifecycle)
+
+        self.assertEqual(view["closed_loop_consumption_status"], "promotion_ready")
+        self.assertTrue(view["flywheel_learning_ready"])
+        self.assertTrue(view["practical_closure_validated"])
+        self.assertTrue(view["promotion_allowed"])
+        self.assertTrue(view["trade_usable"])
 
     def test_verify_repo_native_pack_contracts_surfaces_registered_and_unregistered_packs(self) -> None:
         registry = resolver.build_candidate_registry(repo_root=REPO_ROOT)
