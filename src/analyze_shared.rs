@@ -1631,8 +1631,68 @@ fn same_root_execution_tree_admission_for_analyze(
     })
 }
 
+fn same_root_admission_practical_closure_validated(admission: &serde_json::Value) -> bool {
+    same_root_admission_practical_closure_packet(admission)
+        .map(same_root_admission_practical_closure_packet_validated)
+        .unwrap_or(false)
+}
+
+fn same_root_admission_practical_closure_packet(
+    admission: &serde_json::Value,
+) -> Option<&serde_json::Value> {
+    admission.get("same_tree_practical_closure")
+}
+
+fn same_root_admission_practical_closure_packet_validated(packet: &serde_json::Value) -> bool {
+    packet.get("status").and_then(serde_json::Value::as_str) == Some("pass")
+        && packet
+            .get("promotion_allowed")
+            .and_then(serde_json::Value::as_bool)
+            .unwrap_or(false)
+        && packet
+            .get("trade_usable")
+            .and_then(serde_json::Value::as_bool)
+            .unwrap_or(false)
+        && packet
+            .get("deploy_ready")
+            .and_then(serde_json::Value::as_bool)
+            .unwrap_or(false)
+        && packet
+            .get("funded_live_fill_required")
+            .and_then(serde_json::Value::as_bool)
+            == Some(false)
+        && packet
+            .get("readiness_contract")
+            .and_then(serde_json::Value::as_str)
+            == Some(ict_engine::application::factor_lifecycle::DEPLOY_READY_READINESS_CONTRACT)
+        && packet
+            .get("provider_execution_feedback_chain")
+            .and_then(serde_json::Value::as_str)
+            == Some("pass")
+        && packet
+            .get("evidence_packet")
+            .and_then(serde_json::Value::as_str)
+            .is_some_and(|path| !path.trim().is_empty())
+        && (packet
+            .get("evidence_packet_validated")
+            .and_then(serde_json::Value::as_bool)
+            .unwrap_or(false)
+            || packet
+                .get("evidence_validated")
+                .and_then(serde_json::Value::as_bool)
+                .unwrap_or(false))
+}
+
 fn same_root_admission_live_trade_ready(admission: &serde_json::Value) -> bool {
     admission.get("status").and_then(serde_json::Value::as_str) == Some("admitted")
+        && admission
+            .get("learning_admission_status")
+            .and_then(serde_json::Value::as_str)
+            == Some("admitted")
+        && admission
+            .get("paper_admission_status")
+            .and_then(serde_json::Value::as_str)
+            == Some("ready")
         && admission
             .get("live_trade_status")
             .and_then(serde_json::Value::as_str)
@@ -1649,6 +1709,7 @@ fn same_root_admission_live_trade_ready(admission: &serde_json::Value) -> bool {
             .get("update_goal")
             .and_then(serde_json::Value::as_bool)
             .unwrap_or(false)
+        && same_root_admission_practical_closure_validated(admission)
 }
 
 pub(crate) fn persist_execution_candidate_from_analyze(
@@ -1911,6 +1972,20 @@ mod tests {
     use super::*;
     use chrono::Utc;
     use std::collections::BTreeMap;
+
+    fn validated_same_tree_practical_closure() -> serde_json::Value {
+        serde_json::json!({
+            "status": "pass",
+            "promotion_allowed": true,
+            "trade_usable": true,
+            "deploy_ready": true,
+            "funded_live_fill_required": false,
+            "readiness_contract": ict_engine::application::factor_lifecycle::DEPLOY_READY_READINESS_CONTRACT,
+            "provider_execution_feedback_chain": "pass",
+            "evidence_packet": "checks/terminal_metrics.json",
+            "evidence_packet_validated": true
+        })
+    }
 
     fn sample_analyze_report_with_factor_ranking(
         factor_ranking: Vec<ict_engine::state::PersistedFactorRanking>,
@@ -2261,12 +2336,14 @@ mod tests {
                     "pre_bayes_gate_status": "pass_neutralized",
                     "review_status": "promote_latest",
                     "source_phase": "structural-recommended-path-bundle",
-                    "learning_admission_status": "not_evaluated",
-                    "paper_admission_status": "not_evaluated",
+                    "learning_admission_status": "admitted",
+                    "paper_admission_status": "ready",
                     "live_trade_status": "ready",
                     "promotion_allowed": true,
                     "trade_usable": true,
-                    "update_goal": true
+                    "update_goal": true,
+                    "same_tree_practical_closure_validated": true,
+                    "same_tree_practical_closure": validated_same_tree_practical_closure()
                 }
             }))
             .unwrap(),
@@ -2298,6 +2375,40 @@ mod tests {
             candidate.review_decision.reason,
             "same_root_execution_tree_admitted"
         );
+    }
+
+    #[test]
+    fn same_root_admission_practical_closure_rejects_marker_only_packet() {
+        let admission = serde_json::json!({
+            "status": "admitted",
+            "learning_admission_status": "admitted",
+            "paper_admission_status": "ready",
+            "live_trade_status": "ready",
+            "promotion_allowed": true,
+            "trade_usable": true,
+            "update_goal": true,
+            "same_tree_practical_closure_validated": true
+        });
+
+        assert!(!same_root_admission_practical_closure_validated(&admission));
+        assert!(!same_root_admission_live_trade_ready(&admission));
+    }
+
+    #[test]
+    fn same_root_admission_practical_closure_accepts_structured_packet() {
+        let admission = serde_json::json!({
+            "status": "admitted",
+            "learning_admission_status": "admitted",
+            "paper_admission_status": "ready",
+            "live_trade_status": "ready",
+            "promotion_allowed": true,
+            "trade_usable": true,
+            "update_goal": true,
+            "same_tree_practical_closure": validated_same_tree_practical_closure()
+        });
+
+        assert!(same_root_admission_practical_closure_validated(&admission));
+        assert!(same_root_admission_live_trade_ready(&admission));
     }
 
     #[test]
@@ -2446,7 +2557,7 @@ mod tests {
     }
 
     #[test]
-    fn execution_candidate_keeps_exact_duplicate_same_root_admission_active() {
+    fn execution_candidate_discards_exact_duplicate_without_complete_practical_lifecycle() {
         let temp = tempfile::tempdir().unwrap();
         let mut report = sample_analyze_report_with_factor_ranking(Vec::new());
         report.symbol = "CRWD".to_string();
@@ -2508,7 +2619,9 @@ mod tests {
                     "live_trade_status": "ready",
                     "promotion_allowed": true,
                     "trade_usable": true,
-                    "update_goal": true
+                    "update_goal": true,
+                    "same_tree_practical_closure_validated": true,
+                    "same_tree_practical_closure": validated_same_tree_practical_closure()
                 }
             }))
             .unwrap(),
@@ -2529,17 +2642,17 @@ mod tests {
             .unwrap();
 
         assert!(candidate.diff_from_previous.exact_duplicate);
-        assert!(candidate.actionable);
-        assert_eq!(candidate.candidate_status, "execution_ready");
+        assert!(!candidate.actionable);
+        assert_eq!(candidate.candidate_status, "execution_observe_only");
         assert_eq!(candidate.branch_path.as_deref(), Some(branch_path));
         assert_eq!(
             candidate.regime_profit_branch_path.as_deref(),
             Some(branch_path)
         );
-        assert_ne!(candidate.review_decision.status, "discard");
+        assert_eq!(candidate.review_decision.status, "discard");
         assert_eq!(
             candidate.review_decision.reason,
-            "same_root_execution_tree_admitted_duplicate_kept_active"
+            "duplicate_execution_candidate_context"
         );
     }
 
@@ -2611,7 +2724,9 @@ mod tests {
                     "live_trade_status": "ready",
                     "promotion_allowed": true,
                     "trade_usable": true,
-                    "update_goal": true
+                    "update_goal": true,
+                    "same_tree_practical_closure_validated": true,
+                    "same_tree_practical_closure": validated_same_tree_practical_closure()
                 }
             }))
             .unwrap(),
@@ -2721,7 +2836,9 @@ mod tests {
                     "live_trade_status": "ready",
                     "promotion_allowed": true,
                     "trade_usable": true,
-                    "update_goal": true
+                    "update_goal": true,
+                    "same_tree_practical_closure_validated": true,
+                    "same_tree_practical_closure": validated_same_tree_practical_closure()
                 }
             }))
             .unwrap(),
