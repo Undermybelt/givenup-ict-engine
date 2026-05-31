@@ -94,6 +94,40 @@ class FuturesBpsFalseNegativeRevivalTests(unittest.TestCase):
         self.assertAlmostEqual(classified["gross_total_profit_pct"], 0.8, places=6)
         self.assertEqual(classified["classification"], "bps_stress_false_negative_recheck")
 
+    def test_recovers_gross_from_negative_2bps_stress_when_raw_missing(self) -> None:
+        row = {
+            "label": "NQ/1m/recover_from_2bps_stress_net",
+            "symbol": "NQ",
+            "trade_count": 100,
+            "net_2bps_total_pct": -3.2,
+            "representative_entry_price": 15000,
+        }
+
+        classified = self.classify(row)
+
+        self.assertAlmostEqual(classified["gross_total_profit_pct"], 0.8, places=6)
+        self.assertEqual(classified["legacy_wall_total_profit_pct"], -3.2)
+        self.assertEqual(classified["legacy_wall_basis_points_per_side"], 2.0)
+        self.assertEqual(classified["legacy_wall_source_key"], "net_2bps_total_pct")
+        self.assertEqual(classified["classification"], "bps_stress_false_negative_recheck")
+
+    def test_explicit_10bps_wall_can_rescue_even_when_default_5bps_wall_would_survive(self) -> None:
+        row = {
+            "label": "NQ/1h/killed_by_10bps_wall_only",
+            "symbol": "NQ",
+            "trade_count": 100,
+            "raw_total_profit_pct": 15.0,
+            "10bps_per_side_total_profit_pct": -5.0,
+            "representative_entry_price": 15000,
+        }
+
+        classified = self.classify(row)
+
+        self.assertEqual(classified["classification"], "bps_stress_false_negative_recheck")
+        self.assertEqual(classified["legacy_wall_total_profit_pct"], -5.0)
+        self.assertEqual(classified["legacy_wall_basis_points_per_side"], 10.0)
+        self.assertGreater(classified["instrument_all_in_total_profit_pct"], 0.0)
+
     def test_audit_files_counts_rows_by_classification(self) -> None:
         with tempfile.TemporaryDirectory() as tmpdir:
             path = Path(tmpdir) / "terminal_metrics.json"
@@ -169,6 +203,206 @@ class FuturesBpsFalseNegativeRevivalTests(unittest.TestCase):
 
         self.assertEqual(report["revival_recheck_count"], 1)
         self.assertEqual(report["revival_recheck_candidates"][0]["label"], "nq_csv_false_negative")
+
+    def test_false_negative_rows_preserve_session_and_trade_sample_evidence(self) -> None:
+        with tempfile.TemporaryDirectory() as tmpdir:
+            path = Path(tmpdir) / "terminal_metrics.json"
+            path.write_text(
+                json.dumps(
+                    {
+                        "top_rows": [
+                            {
+                                "symbol": "NQ",
+                                "factor_id": "tomac_nq_reaccel_30m_v1",
+                                "branch_path": "TrendExpansion -> PullbackReacceleration -> tomac_nq_reaccel_30m_v1",
+                                "timeframe": "30m",
+                                "variant": "tight_vol",
+                                "trade_count": 1902,
+                                "trades_per_day": 1.22,
+                                "raw_total_profit_pct": 85.860575,
+                                "stress_5bps_total_pct": -104.339425,
+                                "session_scope": "ETH/full_retained_session",
+                                "rth_filter_applied": False,
+                                "outside_rth_rows": 36576,
+                                "eth_full_retained_session_evidence": True,
+                                "positive_years": 4,
+                                "years": 5,
+                            }
+                        ]
+                    }
+                ),
+                encoding="utf-8",
+            )
+
+            report = revival.audit_files([path])
+
+        self.assertEqual(report["revival_recheck_count"], 1)
+        self.assertEqual(report["unique_revival_recheck_count"], 1)
+        row = report["revival_recheck_candidates"][0]
+        self.assertEqual(row["factor_id"], "tomac_nq_reaccel_30m_v1")
+        self.assertEqual(row["timeframe"], "30m")
+        self.assertEqual(row["variant"], "tight_vol")
+        self.assertEqual(row["session_scope"], "ETH/full_retained_session")
+        self.assertFalse(row["rth_filter_applied"])
+        self.assertTrue(row["eth_full_retained_session_evidence"])
+        self.assertTrue(row["minimum_trade_sample_floor_met"])
+        self.assertNotIn("density_target_1_to_3_per_day", row)
+        self.assertTrue(row["year_coverage_ok"])
+
+    def test_unique_false_negative_output_dedupes_and_preserves_gate_fields(self) -> None:
+        rows = [
+            {
+                "label": "nq_reaccel",
+                "source_file": "/tmp/root/materials/leaderboard.csv",
+                "symbol_root": "NQ",
+                "factor_id": "nq_reaccel_30m_v1",
+                "timeframe": "30m",
+                "variant": "tight_vol",
+                "classification": "bps_stress_false_negative_recheck",
+                "trade_count": 1902,
+                "gross_total_profit_pct": 85.860575,
+                "legacy_wall_total_profit_pct": -104.339425,
+                "instrument_all_in_total_profit_pct": 73.497575,
+                "session_scope": "ETH/full_retained_session",
+                "rth_filter_applied": False,
+                "eth_full_retained_session_evidence": True,
+                "density_target_1_to_3_per_day": True,
+                "promotion_allowed": False,
+                "trade_usable": False,
+                "update_goal": False,
+            },
+            {
+                "label": "nq_reaccel",
+                "source_file": "/tmp/root/checks/terminal_metrics.json",
+                "symbol_root": "NQ",
+                "factor_id": "nq_reaccel_30m_v1",
+                "timeframe": "30m",
+                "variant": "tight_vol",
+                "classification": "bps_stress_false_negative_recheck",
+                "trade_count": 1902,
+                "gross_total_profit_pct": 85.860575,
+                "legacy_wall_total_profit_pct": -104.339425,
+                "instrument_all_in_total_profit_pct": 73.497575,
+                "session_scope": "ETH/full_retained_session",
+                "rth_filter_applied": False,
+                "eth_full_retained_session_evidence": True,
+                "density_target_1_to_3_per_day": True,
+                "promotion_allowed": False,
+                "trade_usable": False,
+                "update_goal": False,
+            },
+        ]
+
+        unique = revival.unique_false_negative_candidates(rows)
+
+        self.assertEqual(len(unique), 1)
+        self.assertEqual(unique[0]["source_file"], "/tmp/root/checks/terminal_metrics.json")
+        self.assertEqual(unique[0]["duplicate_source_count"], 2)
+        self.assertEqual(unique[0]["session_scope"], "ETH/full_retained_session")
+        self.assertTrue(unique[0]["eth_full_retained_session_evidence"])
+        self.assertFalse(unique[0]["promotion_allowed"])
+
+    def test_main_writes_unique_false_negative_csv(self) -> None:
+        with tempfile.TemporaryDirectory() as tmpdir:
+            root = Path(tmpdir)
+            source = root / "terminal_metrics.json"
+            output = root / "unique.csv"
+            source.write_text(
+                json.dumps(
+                    {
+                        "top_rows": [
+                            {
+                                "symbol": "NQ",
+                                "factor_id": "nq_reaccel_30m_v1",
+                                "timeframe": "30m",
+                                "trade_count": 100,
+                                "raw_total_profit_pct": 0.8,
+                                "stress_5bps_total_pct": -9.2,
+                                "session_scope": "ETH/full_retained_session",
+                                "rth_filter_applied": False,
+                                "eth_full_retained_session_evidence": True,
+                                "trades_per_day": 0.1,
+                            }
+                        ]
+                    }
+                ),
+                encoding="utf-8",
+            )
+
+            exit_code = revival.main([str(source), "--output-unique-csv", str(output)])
+
+            with output.open(newline="", encoding="utf-8") as handle:
+                rows = list(csv.DictReader(handle))
+
+        self.assertEqual(exit_code, 0)
+        self.assertEqual(len(rows), 1)
+        self.assertEqual(rows[0]["factor_id"], "nq_reaccel_30m_v1")
+        self.assertEqual(rows[0]["session_scope"], "ETH/full_retained_session")
+        self.assertEqual(rows[0]["trades_per_day"], "0.1")
+        self.assertNotIn("density_target_1_to_3_per_day", rows[0])
+
+    def test_audit_files_reads_exact_replay_queue_schema(self) -> None:
+        with tempfile.TemporaryDirectory() as tmpdir:
+            path = Path(tmpdir) / "exact_replay_rescue_queue.json"
+            path.write_text(
+                json.dumps(
+                    {
+                        "exact_replay_queue": [
+                            {
+                                "factor_id": "tomac_nq_fee_false_negative_v1",
+                                "symbol": "NQ",
+                                "timeframe": "30m",
+                                "side": "short",
+                                "trade_count": 462,
+                                "gross_total_pct": 15.939886,
+                                "stress_5bps_total_pct": -30.260114,
+                            }
+                        ]
+                    }
+                ),
+                encoding="utf-8",
+            )
+
+            report = revival.audit_files([path])
+
+        self.assertEqual(report["revival_recheck_count"], 1)
+        row = report["revival_recheck_candidates"][0]
+        self.assertEqual(row["label"], "tomac_nq_fee_false_negative_v1")
+        self.assertEqual(row["legacy_wall_total_profit_pct"], -30.260114)
+
+    def test_directory_scan_includes_fee_rescue_judgment_ledger_materials(self) -> None:
+        with tempfile.TemporaryDirectory() as tmpdir:
+            root = Path(tmpdir)
+            path = root / "materials" / "fee_rescue_judgment_ledger.json"
+            path.parent.mkdir(parents=True)
+            path.write_text(
+                json.dumps(
+                    {
+                        "rescued_for_exact_replay": [
+                            {
+                                "factor_id": "tomac_nq_judgment_ledger_false_negative_v1",
+                                "symbol": "NQ",
+                                "timeframe": "30m",
+                                "side": "short",
+                                "trade_count": 462,
+                                "gross_total_pct": 15.939886,
+                                "stress_5bps_total_pct": -30.260114,
+                            }
+                        ]
+                    }
+                ),
+                encoding="utf-8",
+            )
+
+            files = revival.artifact_files([root])
+            report = revival.audit_files(files)
+
+        self.assertIn(path, files)
+        self.assertEqual(report["revival_recheck_count"], 1)
+        self.assertEqual(
+            report["revival_recheck_candidates"][0]["label"],
+            "tomac_nq_judgment_ledger_false_negative_v1",
+        )
 
     def test_reads_nested_terminal_window_summaries_with_inherited_identity(self) -> None:
         with tempfile.TemporaryDirectory() as tmpdir:

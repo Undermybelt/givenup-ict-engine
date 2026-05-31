@@ -13,6 +13,7 @@ from __future__ import annotations
 import argparse
 import csv
 import json
+import re
 from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Any, Iterable
@@ -20,9 +21,15 @@ from typing import Any, Iterable
 import instrument_cost_model as cost_model
 
 
+LEGACY_FIXED_COST_KEY_RE = re.compile(
+    r"^(?:net_|net_after_|stress_)?(?P<bps>\d+(?:\.\d+)?)bps(?:_per_side|_side)?(?:_total)?(?:_profit|_ret)?_pct$"
+)
+
+
 @dataclass(frozen=True)
 class RescueRow:
     factor_id: str
+    candidate_label: str | None
     branch_path: str | None
     symbol: str | None
     timeframe: str | None
@@ -56,6 +63,7 @@ class RescueRow:
 
 def normalize_row(row: dict[str, Any], source_path: str, source_table: str, source_index: int) -> RescueRow | None:
     """Normalize one artifact row into a futures real-cost rescue verdict."""
+    candidate_label = _first_text(row, "candidate_label", "label", "strategy_name")
     factor_id = _first_text(
         row,
         "factor_id",
@@ -64,7 +72,7 @@ def normalize_row(row: dict[str, Any], source_path: str, source_table: str, sour
         "label",
         "id",
     )
-    symbol = _first_text(row, "symbol", "root", "contract", "pair")
+    symbol = _first_text(row, "symbol", "effective_symbol", "symbol_root", "root", "contract", "pair")
     timeframe = _first_text(row, "timeframe", "base_timeframe", "tf")
     side = _first_text(row, "side", "direction")
     variant = _first_text(row, "variant", "variant_id", "params_label")
@@ -82,17 +90,23 @@ def normalize_row(row: dict[str, Any], source_path: str, source_table: str, sour
         "net_after_instrument_cost_pct",
         "real_cost_total_profit_pct",
         "current_fee_total_profit_pct",
+        "instrument_all_in_total_profit_pct",
+        "instrument_fee_only_total_profit_pct",
     )
     legacy_fixed_cost_total_pct = _first_float(
         row,
         "5bps_per_side_total_profit_pct",
         "legacy_fixed_cost_total_pct",
+        "legacy_fixed_cost_total_profit_pct",
+        "legacy_wall_total_profit_pct",
         "stress_5bps_total_pct",
         "net_after_5bps_side_pct",
         "net_after_5bps_per_side_pct",
         "legacy_5bps_total_profit_pct",
         "cost_5bps_side_pct",
     )
+    if legacy_fixed_cost_total_pct is None:
+        legacy_fixed_cost_total_pct = _legacy_fixed_cost_total_pct(row)
     gross_total_pct = _first_float(
         row,
         "gross_total_profit_pct",
@@ -157,6 +171,7 @@ def normalize_row(row: dict[str, Any], source_path: str, source_table: str, sour
 
     return RescueRow(
         factor_id=str(factor_id),
+        candidate_label=candidate_label,
         branch_path=_first_text(row, "branch_path", "regime_profit_branch_path", "rooted_branch_path"),
         symbol=symbol,
         timeframe=timeframe,
@@ -191,6 +206,7 @@ def build_report(
     *,
     report_path: Path | None = None,
     csv_path: Path | None = None,
+    priority_csv_path: Path | None = None,
 ) -> dict[str, Any]:
     """Build and optionally write a compact real-cost rescue report."""
     rows = _dedupe_best(_iter_normalized_rows(sources))
@@ -198,6 +214,7 @@ def build_report(
     fee_cleared_but_blocked = [row for row in rows if row.rescue_class == "fee_cleared_but_blocked_non_cost"]
     replay = [row for row in rows if row.rescue_class == "needs_reprice_replay"]
     eth_replay = [row for row in rows if row.rescue_class == "needs_eth_full_session_replay"]
+    fee_cleared_priority = _fee_cleared_priority_rows([*fee_cleared_but_blocked, *eth_replay])
     already_stress_alive = [row for row in rows if row.rescue_class == "already_survives_legacy_fixed_cost"]
     not_rescued = [row for row in rows if row.rescue_class.startswith("not_rescued")]
     known_classes = {
@@ -221,6 +238,7 @@ def build_report(
         "fee_cleared_but_blocked_count": len(fee_cleared_but_blocked),
         "needs_reprice_replay_count": len(replay),
         "needs_eth_full_session_replay_count": len(eth_replay),
+        "fee_cleared_priority_count": len(fee_cleared_priority),
         "already_survives_legacy_fixed_cost_count": len(already_stress_alive),
         "not_rescued_count": len(not_rescued),
         "other_class_count": len(other),
@@ -228,6 +246,7 @@ def build_report(
         "fee_cleared_but_blocked": [asdict(row) for row in fee_cleared_but_blocked],
         "needs_reprice_replay": [asdict(row) for row in replay],
         "needs_eth_full_session_replay": [asdict(row) for row in eth_replay],
+        "fee_cleared_priority_queue": fee_cleared_priority,
         "already_survives_legacy_fixed_cost": [asdict(row) for row in already_stress_alive],
         "not_rescued": [asdict(row) for row in not_rescued],
         "other_classes": [asdict(row) for row in other],
@@ -240,7 +259,59 @@ def build_report(
         report_path.write_text(json.dumps(report, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     if csv_path is not None:
         _write_rows_csv(csv_path, rescued)
+    if priority_csv_path is not None:
+        _write_dict_rows_csv(priority_csv_path, fee_cleared_priority)
     return report
+
+
+def _fee_cleared_priority_rows(rows: list[RescueRow]) -> list[dict[str, Any]]:
+    prioritized = sorted(rows, key=_fee_cleared_priority_key)
+    output: list[dict[str, Any]] = []
+    for index, row in enumerate(prioritized, start=1):
+        packet = asdict(row)
+        bucket, rationale = _fee_cleared_priority_bucket(row)
+        packet.update(
+            {
+                "priority_rank": index,
+                "priority_bucket": bucket,
+                "priority_rationale": rationale,
+                "next_action": "exact_recheck_after_runtime_clears",
+                "promotion_allowed": False,
+                "trade_usable": False,
+                "update_goal": False,
+            }
+        )
+        output.append(packet)
+    return output
+
+
+def _fee_cleared_priority_key(row: RescueRow) -> tuple[int, int, float, str]:
+    return (
+        _fee_cleared_priority_bucket_rank(row),
+        -(row.instrument_cost_total_pct if row.instrument_cost_total_pct is not None else -999999.0),
+        -row.trade_count,
+        row.factor_id,
+    )
+
+
+def _fee_cleared_priority_bucket_rank(row: RescueRow) -> int:
+    bucket, _ = _fee_cleared_priority_bucket(row)
+    return {
+        "exact_recheck_first": 0,
+        "sample_floor_repair": 1,
+    }.get(bucket, 9)
+
+
+def _fee_cleared_priority_bucket(row: RescueRow) -> tuple[str, str]:
+    if not row.minimum_trade_sample_floor_met:
+        return (
+            "sample_floor_repair",
+            "fee cleared, but sample floor is weak; expand exact evidence before promotion",
+        )
+    return (
+        "exact_recheck_first",
+        "fee cleared with enough sample to rehear session and density blockers first",
+    )
 
 
 def _classify_rescue(
@@ -269,7 +340,7 @@ def _classify_rescue(
             return "already_survives_legacy_fixed_cost"
         if not eth_evidence or rth_filter_applied is not False:
             return "needs_eth_full_session_replay"
-        if not sample_floor or not density_ok or not year_coverage_ok:
+        if not sample_floor or not year_coverage_ok:
             return "fee_cleared_but_blocked_non_cost"
         return "rescued_for_exact_aq"
 
@@ -353,8 +424,6 @@ def _reason_codes(
         reasons.append("rth_filter_not_false")
     if not sample_floor:
         reasons.append("sample_floor_not_met")
-    if not density_ok:
-        reasons.append("density_floor_not_met")
     if not year_coverage_ok:
         reasons.append("positive_year_coverage_too_weak_or_missing")
     return reasons
@@ -402,7 +471,7 @@ def _read_json_tables(path: Path) -> list[tuple[str, list[dict[str, Any]]]]:
 
 
 def _looks_like_candidate_row(value: dict[str, Any]) -> bool:
-    return any(
+    return _legacy_fixed_cost_total_pct(value) is not None or any(
         key in value
         for key in (
             "factor_id",
@@ -411,17 +480,41 @@ def _looks_like_candidate_row(value: dict[str, Any]) -> bool:
             "trade_count",
             "5bps_per_side_total_profit_pct",
             "legacy_fixed_cost_total_pct",
+            "legacy_wall_total_profit_pct",
             "instrument_cost_total_profit_pct",
             "instrument_cost_total_ret_pct",
             "instrument_cost_total_pct",
+            "instrument_all_in_total_profit_pct",
+            "instrument_fee_only_total_profit_pct",
         )
     )
 
 
+def _legacy_fixed_cost_total_pct(row: dict[str, Any]) -> float | None:
+    candidates: list[tuple[float, float, str]] = []
+    for key, raw_value in row.items():
+        match = LEGACY_FIXED_COST_KEY_RE.match(str(key))
+        if match is None:
+            continue
+        bps = float(match.group("bps"))
+        if bps <= 0.0:
+            continue
+        value = _floatish(raw_value)
+        if value is None:
+            continue
+        candidates.append((value, bps, str(key)))
+    if not candidates:
+        return None
+    negative = [item for item in candidates if item[0] <= 0.0]
+    if negative:
+        return sorted(negative, key=lambda item: (-item[1], item[2]))[0][0]
+    return sorted(candidates, key=lambda item: (item[0], -item[1], item[2]))[0][0]
+
+
 def _dedupe_best(rows: list[RescueRow]) -> list[RescueRow]:
-    best: dict[tuple[str, str | None, str | None, str | None, str | None], RescueRow] = {}
+    best: dict[tuple[Any, ...], RescueRow] = {}
     for row in rows:
-        key = (row.factor_id, row.symbol, row.timeframe, row.side, row.variant)
+        key = _dedupe_key(row)
         incumbent = best.get(key)
         if incumbent is None or _row_score(row) > _row_score(incumbent):
             best[key] = row
@@ -433,6 +526,28 @@ def _dedupe_best(rows: list[RescueRow]) -> list[RescueRow]:
             row.factor_id,
         ),
     )
+
+
+def _dedupe_key(row: RescueRow) -> tuple[Any, ...]:
+    base = (row.factor_id, row.symbol, row.timeframe, row.side, row.variant)
+    if row.candidate_label and row.candidate_label != row.factor_id:
+        return (*base, "candidate_label", row.candidate_label)
+    if row.timeframe is None and row.variant is None:
+        return (
+            *base,
+            "economic_signature",
+            row.trade_count,
+            _rounded_key_float(row.instrument_cost_total_pct),
+            _rounded_key_float(row.legacy_fixed_cost_total_pct),
+            _rounded_key_float(row.gross_total_pct),
+        )
+    return (*base, "factor_identity")
+
+
+def _rounded_key_float(value: float | None) -> float | None:
+    if value is None:
+        return None
+    return round(value, 6)
 
 
 def _row_score(row: RescueRow) -> tuple[int, float, int]:
@@ -462,6 +577,19 @@ def _write_rows_csv(path: Path, rows: list[RescueRow]) -> None:
         writer.writeheader()
         for row in rows:
             writer.writerow(asdict(row))
+
+
+def _write_dict_rows_csv(path: Path, rows: list[dict[str, Any]]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    fieldnames: list[str] = []
+    for row in rows:
+        for key in row:
+            if key not in fieldnames:
+                fieldnames.append(key)
+    with path.open("w", newline="", encoding="utf-8") as handle:
+        writer = csv.DictWriter(handle, fieldnames=fieldnames)
+        writer.writeheader()
+        writer.writerows(rows)
 
 
 def _first_text(row: dict[str, Any], *keys: str) -> str | None:
@@ -536,13 +664,19 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument("sources", nargs="+", type=Path)
     parser.add_argument("--report-json", type=Path)
     parser.add_argument("--csv", dest="csv_path", type=Path)
+    parser.add_argument("--priority-csv", dest="priority_csv_path", type=Path)
     parser.add_argument("--compact", action="store_true")
     return parser.parse_args(argv)
 
 
 def main(argv: list[str] | None = None) -> int:
     args = parse_args(argv)
-    report = build_report(args.sources, report_path=args.report_json, csv_path=args.csv_path)
+    report = build_report(
+        args.sources,
+        report_path=args.report_json,
+        csv_path=args.csv_path,
+        priority_csv_path=args.priority_csv_path,
+    )
     if args.compact:
         print(
             json.dumps(
@@ -554,6 +688,7 @@ def main(argv: list[str] | None = None) -> int:
                     "fee_cleared_but_blocked_count": report["fee_cleared_but_blocked_count"],
                     "needs_reprice_replay_count": report["needs_reprice_replay_count"],
                     "needs_eth_full_session_replay_count": report["needs_eth_full_session_replay_count"],
+                    "fee_cleared_priority_count": report["fee_cleared_priority_count"],
                     "already_survives_legacy_fixed_cost_count": report["already_survives_legacy_fixed_cost_count"],
                     "promotion_allowed": False,
                     "trade_usable": False,

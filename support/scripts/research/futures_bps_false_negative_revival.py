@@ -20,6 +20,7 @@ import csv
 import json
 import math
 import re
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Iterable
 
@@ -30,6 +31,16 @@ ARTIFACT_GLOBS = (
     "terminal_metrics.json",
     "terminal_summary.json",
     "terminal_gate_summary.json",
+    "fee_rescue_judgment_ledger.json",
+    "exact_replay_rescue_queue.json",
+    "*rescue_queue.json",
+    "*judgment_ledger.json",
+    "*judgment_ledger.csv",
+    "*rescued_for_exact_replay.csv",
+    "*blocked_after_fee_rejudgment.csv",
+    "*fee_cleared_but_blocked_queue.csv",
+    "*needs_reprice_replay*.csv",
+    "*needs_eth_full_session_replay*.csv",
     "*gate.json",
     "autoquant_clean_*_rows.csv",
     "screen_rows.csv",
@@ -53,6 +64,15 @@ ROW_CONTAINER_KEYS = (
     "raw_realistic_cost_survivors_before_session_scope",
     "realistic_cost_survivors_before_gate1",
     "raw_cost_stress_survivors_5bps_before_session_scope",
+    "exact_replay_queue",
+    "rescued_for_exact_replay",
+    "rescued_for_exact_aq",
+    "blocked_after_fee_rejudgment",
+    "fee_cleared_but_blocked",
+    "fee_cleared_but_blocked_queue",
+    "needs_reprice_replay",
+    "needs_eth_full_session_replay",
+    "all_deduped_judgments",
 )
 GROSS_PCT_KEYS = (
     "raw_total_profit_pct",
@@ -70,14 +90,24 @@ LEGACY_WALL_NET_PCT_KEYS = (
     "net_5bps_total_pct",
     "net_after_5bps_side_pct",
     "net_after_5bps_per_side_pct",
+    "stress_5bps_total_pct",
     "cost_5bps_side_pct",
     "five_bps_per_side_pct",
+)
+LEGACY_WALL_NET_PCT_KEY_RE = re.compile(
+    r"^(?:net_|net_after_|stress_)?(?P<bps>\d+(?:\.\d+)?)bps(?:_per_side|_side)?(?:_total)?(?:_profit|_ret)?_pct$"
 )
 TRADE_COUNT_KEYS = (
     "trade_count",
     "trades",
     "n_distinct_trades",
     "rank_total_trade_count",
+)
+TRADES_PER_DAY_KEYS = (
+    "trades_per_day",
+    "trades_per_session",
+    "trade_density_per_day",
+    "density_trades_per_day",
 )
 PRICE_KEYS = (
     "representative_entry_price",
@@ -117,6 +147,14 @@ DEFAULT_REPRESENTATIVE_PRICE = {
     "BRE": 1.08,
 }
 DEFAULT_LEGACY_WALL_BASIS_POINTS_PER_SIDE = 5.0
+FALSE_NEGATIVE_CLASSIFICATION = "bps_stress_false_negative_recheck"
+
+
+@dataclass(frozen=True)
+class LegacyWallNet:
+    total_pct: float
+    basis_points_per_side: float
+    source_key: str
 
 
 def _safe_float(value: Any) -> float | None:
@@ -138,12 +176,63 @@ def _safe_int(value: Any) -> int | None:
     return int(parsed)
 
 
+def _safe_bool(value: Any) -> bool | None:
+    if isinstance(value, bool):
+        return value
+    if isinstance(value, str):
+        normalized = value.strip().lower()
+        if normalized in {"1", "true", "yes", "y"}:
+            return True
+        if normalized in {"0", "false", "no", "n"}:
+            return False
+    if isinstance(value, (int, float)):
+        return value != 0
+    return None
+
+
 def _first_number(row: dict[str, Any], keys: Iterable[str]) -> float | None:
     for key in keys:
         value = _safe_float(row.get(key))
         if value is not None:
             return value
     return None
+
+
+def _legacy_wall_net_for_row(
+    row: dict[str, Any],
+    *,
+    default_basis_points_per_side: float = DEFAULT_LEGACY_WALL_BASIS_POINTS_PER_SIDE,
+) -> LegacyWallNet | None:
+    for key in LEGACY_WALL_NET_PCT_KEYS:
+        value = _safe_float(row.get(key))
+        if value is not None:
+            bps = _legacy_wall_bps_from_key(key, default_basis_points_per_side=default_basis_points_per_side)
+            return LegacyWallNet(value, bps, key)
+    dynamic: list[LegacyWallNet] = []
+    for key, raw_value in row.items():
+        match = LEGACY_WALL_NET_PCT_KEY_RE.match(str(key))
+        if match is None:
+            continue
+        value = _safe_float(raw_value)
+        if value is None:
+            continue
+        bps = float(match.group("bps"))
+        if bps <= 0.0:
+            continue
+        dynamic.append(LegacyWallNet(value, bps, str(key)))
+    if not dynamic:
+        return None
+    negative = [item for item in dynamic if item.total_pct <= 0.0]
+    if negative:
+        return sorted(negative, key=lambda item: (-item.basis_points_per_side, item.source_key))[0]
+    return sorted(dynamic, key=lambda item: (item.total_pct, -item.basis_points_per_side, item.source_key))[0]
+
+
+def _legacy_wall_bps_from_key(key: str, *, default_basis_points_per_side: float) -> float:
+    match = re.search(r"(\d+(?:\.\d+)?)bps", key)
+    if match is None:
+        return float(default_basis_points_per_side)
+    return float(match.group(1))
 
 
 def _row_label(row: dict[str, Any], path: Path) -> str:
@@ -216,14 +305,77 @@ def trade_count_for_row(row: dict[str, Any]) -> int | None:
     return None
 
 
+def trades_per_day_for_row(row: dict[str, Any]) -> float | None:
+    for key in TRADES_PER_DAY_KEYS:
+        value = _safe_float(row.get(key))
+        if value is not None:
+            return value
+    return None
+
+
+def _density_target_1_to_3_per_day(row: dict[str, Any]) -> bool | None:
+    for key in ("density_target_1_to_3_per_day", "density_floor_met"):
+        value = _safe_bool(row.get(key))
+        if value is not None:
+            return value
+    return None
+
+
+def _year_coverage_ok(row: dict[str, Any]) -> bool | None:
+    for key in ("year_coverage_ok", "positive_year_coverage_met", "year_stability_met"):
+        value = _safe_bool(row.get(key))
+        if value is not None:
+            return value
+    positive_years = _safe_int(row.get("positive_years") or row.get("positive_year_count"))
+    years = _safe_int(row.get("years") or row.get("year_count") or row.get("total_years"))
+    if positive_years is None or years is None:
+        return None
+    if years >= 5:
+        return positive_years >= 3
+    return positive_years >= max(1, years - 1)
+
+
+def _session_gate_fields(row: dict[str, Any], trades: int | None) -> dict[str, Any]:
+    trades_per_day = trades_per_day_for_row(row)
+    density_ok = _density_target_1_to_3_per_day(row)
+    minimum_trade_sample_floor_met = _safe_bool(row.get("minimum_trade_sample_floor_met"))
+    if minimum_trade_sample_floor_met is None and trades is not None:
+        minimum_trade_sample_floor_met = trades >= 30
+    return {
+        "factor_id": row.get("factor_id") or row.get("strategy_id") or row.get("package_id") or row.get("label"),
+        "branch_path": row.get("branch_path") or row.get("regime_profit_branch_path") or row.get("rooted_branch_path"),
+        "timeframe": row.get("timeframe") or row.get("base_timeframe") or row.get("tf"),
+        "side": row.get("side") or row.get("direction"),
+        "variant": row.get("variant") or row.get("variant_id") or row.get("params_label"),
+        "session_scope": row.get("session_scope") or row.get("session") or row.get("data_session_scope"),
+        "rth_filter_applied": _safe_bool(row.get("rth_filter_applied")),
+        "outside_rth_rows": _safe_int(row.get("outside_rth_rows")),
+        "eth_full_retained_session_evidence": _safe_bool(row.get("eth_full_retained_session_evidence")),
+        "minimum_trade_sample_floor_met": minimum_trade_sample_floor_met,
+        "trades_per_day": trades_per_day,
+        "density_target_1_to_3_per_day": density_ok,
+        "density_floor_met": _safe_bool(row.get("density_floor_met")) if row.get("density_floor_met") is not None else density_ok,
+        "positive_years": _safe_int(row.get("positive_years") or row.get("positive_year_count")),
+        "years": _safe_int(row.get("years") or row.get("year_count") or row.get("total_years")),
+        "year_coverage_ok": _year_coverage_ok(row),
+    }
+
+
+def _compact_optional_fields(fields: dict[str, Any]) -> dict[str, Any]:
+    return {key: value for key, value in fields.items() if value is not None and value != ""}
+
+
 def gross_pct_for_row(row: dict[str, Any], *, legacy_wall_basis_points_per_side: float) -> float | None:
     gross = _first_number(row, GROSS_PCT_KEYS)
     if gross is not None:
         return gross
-    stress_net = _first_number(row, LEGACY_WALL_NET_PCT_KEYS)
+    stress_net = _legacy_wall_net_for_row(
+        row,
+        default_basis_points_per_side=legacy_wall_basis_points_per_side,
+    )
     trades = trade_count_for_row(row)
     if stress_net is not None and trades is not None:
-        return stress_net + trades * legacy_wall_round_turn_pct(legacy_wall_basis_points_per_side)
+        return stress_net.total_pct + trades * legacy_wall_round_turn_pct(stress_net.basis_points_per_side)
     return None
 
 
@@ -254,12 +406,14 @@ def classify_row(
     trades = trade_count_for_row(row)
     gross_pct = gross_pct_for_row(row, legacy_wall_basis_points_per_side=legacy_wall_basis_points_per_side)
     label = _row_label(row, source_file)
+    carried_fields = _compact_optional_fields(_session_gate_fields(row, trades))
     profile = cost_model.futures_cost_profile(root)
     if trades is None or trades <= 0 or gross_pct is None:
         return {
             "label": label,
             "source_file": str(source_file),
             "symbol_root": root,
+            **carried_fields,
             "classification": "insufficient_trade_or_gross_data",
             "trade_count": trades,
             "promotion_allowed": False,
@@ -271,6 +425,7 @@ def classify_row(
             "label": label,
             "source_file": str(source_file),
             "symbol_root": root,
+            **carried_fields,
             "classification": "cost_model_unverified",
             "trade_count": trades,
             "gross_total_profit_pct": round(gross_pct, 6),
@@ -283,10 +438,17 @@ def classify_row(
         }
 
     representative_price = representative_price_for_root(row, root)
+    legacy_wall_net = _legacy_wall_net_for_row(
+        row,
+        default_basis_points_per_side=legacy_wall_basis_points_per_side,
+    )
+    effective_legacy_wall_basis_points_per_side = (
+        legacy_wall_net.basis_points_per_side if legacy_wall_net is not None else legacy_wall_basis_points_per_side
+    )
     fee_pct = profile.round_trip_fee_pct(representative_price)
     all_in_pct = profile.round_trip_cost_pct(representative_price)
-    legacy_wall_pct = legacy_wall_round_turn_pct(legacy_wall_basis_points_per_side)
-    legacy_wall_total_pct = gross_pct - trades * legacy_wall_pct
+    legacy_wall_pct = legacy_wall_round_turn_pct(effective_legacy_wall_basis_points_per_side)
+    legacy_wall_total_pct = legacy_wall_net.total_pct if legacy_wall_net is not None else gross_pct - trades * legacy_wall_pct
     fee_only_total_pct = gross_pct - trades * fee_pct
     all_in_total_pct = gross_pct - trades * all_in_pct
     gross_edge_bps = gross_pct / trades * 100.0
@@ -308,12 +470,15 @@ def classify_row(
         "label": label,
         "source_file": str(source_file),
         "symbol_root": root,
+        **carried_fields,
         "classification": classification,
         "trade_count": trades,
         "representative_price": representative_price,
         "gross_total_profit_pct": round(gross_pct, 6),
         "gross_edge_bps_per_trade": round(gross_edge_bps, 6),
         "legacy_wall_total_profit_pct": round(legacy_wall_total_pct, 6),
+        "legacy_wall_basis_points_per_side": round(effective_legacy_wall_basis_points_per_side, 6),
+        "legacy_wall_source_key": legacy_wall_net.source_key if legacy_wall_net is not None else "computed_default_wall",
         "instrument_fee_only_total_profit_pct": round(fee_only_total_pct, 6),
         "instrument_all_in_total_profit_pct": round(all_in_total_pct, 6),
         "instrument_fee_only_bps_per_trade": round(fee_pct * 100.0, 6),
@@ -330,7 +495,7 @@ def classify_row(
 
 def _looks_like_candidate_row(row: dict[str, Any]) -> bool:
     has_trade = any(key in row for key in TRADE_COUNT_KEYS)
-    has_economics = any(key in row for key in (*GROSS_PCT_KEYS, *LEGACY_WALL_NET_PCT_KEYS))
+    has_economics = any(key in row for key in (*GROSS_PCT_KEYS, *LEGACY_WALL_NET_PCT_KEYS)) or _legacy_wall_net_for_row(row) is not None
     return has_trade and has_economics and futures_root_for_row(row) is not None
 
 
@@ -444,15 +609,18 @@ def audit_files(
     counts: dict[str, int] = {}
     for row in rows:
         counts[row["classification"]] = counts.get(row["classification"], 0) + 1
+    unique_revival_candidates = unique_false_negative_candidates(rows)
     return {
         "schema_version": "futures-bps-false-negative-revival/v1",
         "artifact_files_scanned": len(files),
         "candidate_rows_classified": len(rows),
         "classification_counts": counts,
-        "revival_recheck_count": counts.get("bps_stress_false_negative_recheck", 0),
+        "revival_recheck_count": counts.get(FALSE_NEGATIVE_CLASSIFICATION, 0),
+        "unique_revival_recheck_count": len(unique_revival_candidates),
         "revival_recheck_candidates": [
-            row for row in rows if row["classification"] == "bps_stress_false_negative_recheck"
+            row for row in rows if row["classification"] == FALSE_NEGATIVE_CLASSIFICATION
         ],
+        "unique_revival_recheck_candidates": unique_revival_candidates,
         "zero_edge_churn_count": counts.get("zero_edge_churn_not_rescued_by_realistic_cost", 0),
         "cost_model_unverified_count": counts.get("cost_model_unverified", 0),
         "promotion_allowed": False,
@@ -461,6 +629,61 @@ def audit_files(
         "rows": rows,
         "read_errors": read_errors,
     }
+
+
+def unique_false_negative_candidates(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    grouped: dict[tuple[Any, ...], list[dict[str, Any]]] = {}
+    for row in rows:
+        if row.get("classification") != FALSE_NEGATIVE_CLASSIFICATION:
+            continue
+        grouped.setdefault(_false_negative_identity(row), []).append(row)
+
+    unique_rows: list[dict[str, Any]] = []
+    for group_rows in grouped.values():
+        group_rows = sorted(group_rows, key=_false_negative_row_sort_key)
+        selected = dict(group_rows[0])
+        sources: list[str] = []
+        for row in group_rows:
+            source = str(row.get("source_file") or "")
+            if source and source not in sources:
+                sources.append(source)
+        selected["duplicate_source_count"] = len(group_rows)
+        selected["source_examples"] = " | ".join(sources[:4])
+        selected["promotion_allowed"] = False
+        selected["trade_usable"] = False
+        selected["update_goal"] = False
+        unique_rows.append(selected)
+
+    return sorted(
+        unique_rows,
+        key=lambda row: (
+            -float(row.get("instrument_all_in_total_profit_pct") or -1e12),
+            -float(row.get("gross_edge_bps_per_trade") or -1e12),
+            str(row.get("label") or ""),
+        ),
+    )
+
+
+def _false_negative_identity(row: dict[str, Any]) -> tuple[Any, ...]:
+    return (
+        row.get("label"),
+        row.get("symbol_root"),
+        row.get("factor_id"),
+        row.get("timeframe"),
+        row.get("side"),
+        row.get("variant"),
+        row.get("trade_count"),
+        row.get("gross_total_profit_pct"),
+        row.get("legacy_wall_total_profit_pct"),
+        row.get("instrument_all_in_total_profit_pct"),
+    )
+
+
+def _false_negative_row_sort_key(row: dict[str, Any]) -> tuple[int, str]:
+    source = str(row.get("source_file") or "")
+    # Prefer terminal packets over duplicate material CSV rows when both exist.
+    priority = 0 if source.endswith("terminal_metrics.json") or source.endswith("terminal_summary.json") else 1
+    return (priority, source)
 
 
 def write_csv(path: Path, rows: list[dict[str, Any]]) -> None:
@@ -486,6 +709,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--max-files", type=int, default=None)
     parser.add_argument("--output-json", type=Path)
     parser.add_argument("--output-csv", type=Path)
+    parser.add_argument("--output-unique-csv", type=Path)
     parser.add_argument("--pretty", action="store_true")
     args = parser.parse_args(argv)
 
@@ -497,6 +721,8 @@ def main(argv: list[str] | None = None) -> int:
         args.output_json.write_text(text, encoding="utf-8")
     if args.output_csv:
         write_csv(args.output_csv, report["rows"])
+    if args.output_unique_csv:
+        write_csv(args.output_unique_csv, report["unique_revival_recheck_candidates"])
     print(text, end="")
     return 0
 
