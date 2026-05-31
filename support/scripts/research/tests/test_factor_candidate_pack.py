@@ -485,6 +485,56 @@ Uses MTF: yes
             bundle["transfer_score"]["timeframe_ladder_transfer"]["trade_usable"]
         )
 
+    def test_candidate_pack_flywheel_learning_uses_lower_floor_without_trade_promotion(self) -> None:
+        manifest = {
+            "manifest_version": "1.0",
+            "timeframe": "1m",
+            "strategies": [
+                {
+                    "name": "FlywheelLearningCandidate",
+                    "status": "ok",
+                    "validation_metrics": {
+                        "sharpe": 0.72,
+                        "trade_count": 44,
+                        "win_rate_pct": 58.0,
+                        "profit_factor": 1.31,
+                        "net_after_declared_friction_pct": 0.9,
+                    },
+                    "per_pair_metrics": {
+                        "NQ/USD": {
+                            "sharpe": 0.72,
+                            "trade_count": 44,
+                            "profit_factor": 1.31,
+                            "net_after_declared_friction_pct": 0.9,
+                        }
+                    },
+                }
+            ],
+        }
+        candidate_spec = {
+            "candidate_id": "flywheel_learning_candidate_v1",
+            "expected_regime": "TrendExpansion -> FlywheelLearning",
+            "regime_confidence": 0.80,
+            "regime_confidence_floor": 0.95,
+            "provider_state": "ready",
+            "leakage_check": "pass",
+        }
+
+        bundle = pack.build_factor_candidate_pack(
+            manifest=manifest,
+            strategy_name="FlywheelLearningCandidate",
+            candidate_spec=candidate_spec,
+        )
+
+        lifecycle = bundle["factor_eval_grid_summary"]["factor_profitability_lifecycle"]
+        self.assertEqual(lifecycle["learning_admission"]["status"], "admitted")
+        self.assertEqual(lifecycle["learning_admission"]["blockers"], [])
+        self.assertEqual(lifecycle["paper_admission"]["status"], "observe")
+        self.assertEqual(lifecycle["live_trade"]["status"], "blocked")
+        self.assertFalse(lifecycle["live_trade"]["promotion_allowed"])
+        self.assertFalse(lifecycle["live_trade"]["trade_usable"])
+        self.assertFalse(lifecycle["live_trade"]["update_goal"])
+
     def test_transfer_score_penalizes_raw_only_profit_without_declared_friction(self) -> None:
         manifest = {
             "manifest_version": "1.0",

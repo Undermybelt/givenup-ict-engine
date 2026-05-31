@@ -9,6 +9,10 @@ from typing import Any
 import zipfile
 
 
+DEFAULT_REGIME_CONFIDENCE_FLOOR = 0.95
+FLYWHEEL_REGIME_CONFIDENCE_FLOOR = 0.75
+
+
 def _trade_density_label(trade_count: int | None) -> str:
     if trade_count is None:
         return "external_evidence"
@@ -218,10 +222,19 @@ def _factor_profitability_lifecycle(
     expectancy, expectancy_blockers = _declared_friction_expectancy(metrics)
     leakage_passed = candidate_spec.get("leakage_check", "pass") == "pass"
     provider_state = candidate_spec.get("provider_state", "ready")
+    live_regime_confidence_floor = float(
+        candidate_spec.get("regime_confidence_floor", DEFAULT_REGIME_CONFIDENCE_FLOOR)
+    )
+    flywheel_regime_confidence_floor = float(
+        candidate_spec.get(
+            "flywheel_regime_confidence_floor",
+            min(live_regime_confidence_floor, FLYWHEEL_REGIME_CONFIDENCE_FLOOR),
+        )
+    )
 
     if regime_confidence is None:
         blockers.append("regime_confidence_missing")
-    elif float(regime_confidence) < float(candidate_spec.get("regime_confidence_floor", 0.95)):
+    elif float(regime_confidence) < flywheel_regime_confidence_floor:
         blockers.append("regime_confidence_below_floor")
     if not leakage_passed:
         blockers.append("leakage_check_failed")
@@ -239,6 +252,8 @@ def _factor_profitability_lifecycle(
             "status": "admitted" if learning_ok else "blocked",
             "long_run_expectancy_after_declared_friction": expectancy,
             "evidence_count": evidence_count,
+            "regime_confidence_floor": flywheel_regime_confidence_floor,
+            "live_regime_confidence_floor": live_regime_confidence_floor,
             "leakage_check": "pass" if leakage_passed else "fail",
             "provider_state": provider_state,
             "blockers": [] if learning_ok else blockers,
