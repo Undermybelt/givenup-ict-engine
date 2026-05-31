@@ -38,6 +38,16 @@ class DownstreamPracticalAdmissionSourceCheckTests(unittest.TestCase):
 
         self.assertEqual(files, [first, second])
 
+    def test_expression_text_uses_cached_source_lines_for_multiline_nodes(self) -> None:
+        source = "def build():\n    value = (\n        alpha\n        and beta\n    )\n"
+        tree = checker.ast.parse(source)
+        assign = next(node for node in checker.ast.walk(tree) if isinstance(node, checker.ast.Assign))
+
+        self.assertEqual(
+            checker.expression_text(source, assign.value),
+            "alpha and beta",
+        )
+
     def test_tracked_run_wrapper_files_uses_git_ls_files(self) -> None:
         tmpdir = tempfile.TemporaryDirectory()
         self.addCleanup(tmpdir.cleanup)

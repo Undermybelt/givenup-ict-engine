@@ -5,7 +5,7 @@ Route: `sd/ict-engine-maintenance-loop`
 Status: active / not complete
 Repo: `/Users/thrill3r/projects-ict-engine/ict-engine`
 Branch: `main`
-Observed HEAD: `7e95b910061980f25d96b58dbc8820289cc5250d`
+Observed HEAD: `113a43299c27e91903072427debda0e1df582a00`
 
 ## Objective
 
@@ -240,6 +240,69 @@ Current blockers from that packet:
 Decision: still not complete. The current coherent repair only makes the
 parent evidence packet reusable enough to expose the real blockers.
 
+## Loophole Loop 4
+
+2026-05-31T11:45+0800 resume after concurrent commits:
+
+- Current HEAD is `113a43299c27e91903072427debda0e1df582a00` on `main`.
+- Concurrent commits already landed the source-scanner invocation and packet
+  readback changes:
+  `113a4329 Fix objective source scanner invocation` and
+  `d332ad09 Improve objective closure packet readback`.
+- The remaining coherent local slice is the refreshed practical-admission debt
+  quarantine plus the multiline `expression_text()` regression test that
+  covers cached source-line extraction.
+
+Verification:
+
+- Passed:
+  `python3 -m unittest support.scripts.research.tests.test_downstream_practical_admission_source_check -v`
+  (`47/47`).
+- Passed:
+  `python3 -m unittest support.scripts.tests.test_done_definition_audit support.scripts.tests.test_objective_closure_snapshot -v`
+  (`82/82`).
+- Passed:
+  `python3 support/scripts/check_script_manifest.py`.
+- Passed:
+  `python3 support/scripts/ci/check_docs_runtime_isolation.py`.
+- Passed:
+  `git diff --check -- support/docs/audits/practical-admission-source-debt-quarantine.json support/scripts/research/tests/test_downstream_practical_admission_source_check.py`.
+- Tracked source scanner proof:
+  `/usr/bin/time -p python3 support/scripts/research/downstream_practical_admission_source_check.py --tracked-run-wrappers --jobs 4 > /tmp/ict-engine-tracked-practical-source-scan-20260531T-codex.json`
+  exited `0` in `real 4.97s`; JSON summary was `49` reports,
+  `ok=True`, `violations=0`.
+- Fresh parent packet:
+  `python3 support/scripts/objective_closure_snapshot.py --compact --check-remotes --output-dir /tmp/ict-engine-consumer-ux-evidence-audit-20260531T-rerun-codex --timeout-seconds 180`
+  exited `1` with `summary.status=not_complete`, not `snapshot_failed`.
+  Packet sizes were:
+  `objective_closure_snapshot.json=19826 bytes`,
+  `done_definition_audit.compact.json=6724 bytes`,
+  `factor_claim_terminalization_audit.compact.json=2049 bytes`,
+  `release_readiness_audit.compact.json=5244 bytes`.
+
+Current blockers from
+`/tmp/ict-engine-consumer-ux-evidence-audit-20260531T-rerun-codex/objective_closure_snapshot.json`:
+
+- `done_definition_not_completion_ready`: done-definition surface is
+  `status=pass`, but `completion_ready=false` because heavy gates are still
+  skipped:
+  `cargo_check_all_targets`, `cargo_clippy_all_targets_deny_warnings`,
+  `cargo_test`, `smoke_acceptance_tmp_state`.
+- `factor_closure_blocked`: `live_factor_processes=1`, blocking reason
+  `live_factor_processes`; queue head is pid `57740` with run root
+  `ict-engine-tomac-eth-trend-ote-reacceleration-exact-aqlaunch-20260531T114456+0800`.
+- `same_tree_practical_closure_unproven`: no validated same-tree practical
+  closure packet exists; missing stages are provider data, Pre-Bayes,
+  BBN/workflow, path-ranker, execution-tree, feedback/update, and
+  policy-training.
+- `release_readiness_blocked`: unresolved gates are
+  `worktree_clean_for_release` and `source_origin_matches_selected_source`;
+  remote readback itself passed for both origin and release mirror.
+
+Decision: still not complete. The current slice only refreshes reviewed
+shared-worktree source-debt quarantine and preserves the scanner performance
+regression; it is not release, trade-use, or objective-completion evidence.
+
 ## Next Steps
 
 1. Run the existing audits and capture exact blockers.
@@ -250,3 +313,259 @@ parent evidence packet reusable enough to expose the real blockers.
 5. Update this doc with evidence and repeat until no blocker remains or a real
    external/shared-worktree blocker is proven.
 6. Commit only the coherent verified slice by explicit path.
+
+## Superseded Refresh - 2026-05-31T03:44Z
+
+Historical packet retained for drift context. It is superseded by Loophole
+Loop 4 above, because the later
+`/tmp/ict-engine-consumer-ux-evidence-audit-20260531T-rerun-codex/objective_closure_snapshot.json`
+readback observed `factor_closure_blocked` with `live_factor_processes=1`.
+Do not use this section as current completion evidence.
+
+Earlier packet:
+
+```bash
+python3 support/scripts/objective_closure_snapshot.py --compact --check-remotes --output-dir /tmp/ict-engine-consumer-ux-evidence-audit-20260531T-after-head-113a4329
+```
+
+Output:
+
+- Parent packet:
+  `/tmp/ict-engine-consumer-ux-evidence-audit-20260531T-after-head-113a4329/objective_closure_snapshot.json`
+- `summary.status=not_complete`
+- `summary.blockers=[done_definition_not_completion_ready,
+  same_tree_practical_closure_unproven, release_readiness_blocked]`
+- `done_definition.head=113a43299c27e91903072427debda0e1df582a00`
+- `done_definition.status=pass`, `completion_ready=false`,
+  `evidence_level=partial_skipped_gates`
+- `done_definition.practical_admission_source_surface.status=pass`,
+  `scan_scope=tracked_run_wrappers_plus_tracked_report_files`,
+  `candidate_wrapper_files=1063`, `tracked_scanned_files=50`,
+  `tracked_violation_count=0`, `untracked_scanned_files=0`
+- `await_launch_source_surface.status=pass`, with quarantined untracked await
+  launch debt still visible: `46` violations across `46` untracked files,
+  quarantine matched
+- `factor_closure.status=pass`, `active_claims=0`,
+  `live_factor_processes=0`, `blocking_reasons=[]`,
+  `promotion_allowed_true=0`, `trade_usable_true=0`
+- `same_tree_practical_closure=null`, so practical/live-use completion remains
+  unproven even though claim terminalization blockers are clear
+- `release_readiness.status=needs_fix`,
+  `unresolved=[worktree_clean_for_release, source_origin_matches_selected_source]`
+- `release_readiness.remote_details.enabled=true`,
+  `origin_status=pass`, `release_mirror_status=pass`
+
+Important drift during this turn:
+
+- While auditing, concurrent repo work advanced HEAD from
+  `7e95b910061980f25d96b58dbc8820289cc5250d` to
+  `113a43299c27e91903072427debda0e1df582a00` with commits:
+  `d332ad09 Improve objective closure packet readback` and
+  `113a4329 Fix objective source scanner invocation`.
+- Before that HEAD change, the parent packet still blocked on unmatched
+  practical-admission untracked wrapper debt:
+  `/tmp/ict-engine-consumer-ux-evidence-audit-20260531T-current-refresh/objective_closure_snapshot.json`
+  reported `434` violations across `226` untracked files and
+  `factor_closure.active_claims=5`.
+- After the HEAD change, the practical-admission source gate is lightweight and
+  deterministic for the completion packet: it scans tracked wrappers plus the
+  tracked report file via `--tracked-run-wrappers --jobs 4`, and the parent no
+  longer hides untracked await-launch residue because that debt remains
+  separately quarantined and reported.
+
+Answer to the 100% confidence question remains: no. The current evidence is
+much better than the earlier packet, but completion is still disproven by:
+
+1. heavy done-definition gates skipped in the current parent packet;
+2. no validated same-tree practical closure packet covering provider/data,
+   Pre-Bayes, BBN/workflow, path-ranker, execution tree, feedback/update, and
+   policy-training stages;
+3. release readiness failing on dirty worktree and selected-source origin
+   alignment.
+
+Next concrete steps:
+
+1. Run focused regressions for `done_definition_audit` and
+   `objective_closure_snapshot` after the source-scanner invocation change.
+2. If focused tests pass, rerun the parent snapshot once more to check stability.
+3. Locate or produce a validated `same_tree_practical_closure` packet; do not
+   use `factor_closure.status=pass` or zero active claims as practical-use proof.
+4. Only after practical closure and heavy done-definition evidence exist, build
+   a clean selected export for release readiness instead of using this broad
+   dirty worktree.
+5. Stage only the verified coherent slice by explicit path; do not stage
+   unrelated factor wrappers, run trees, or other agents' modified files.
+
+## Verification After Scanner Fix - 2026-05-31T03:47Z
+
+Focused regressions:
+
+```bash
+python3 -m unittest support.scripts.tests.test_done_definition_audit support.scripts.tests.test_objective_closure_snapshot -v
+```
+
+Result: `82` tests ran in `9.016s`, all `OK`.
+
+Post-test stability packet:
+
+```bash
+python3 support/scripts/objective_closure_snapshot.py --compact --check-remotes --output-dir /tmp/ict-engine-consumer-ux-evidence-audit-20260531T-post-tests
+```
+
+Output:
+
+- Parent packet:
+  `/tmp/ict-engine-consumer-ux-evidence-audit-20260531T-post-tests/objective_closure_snapshot.json`
+- `summary.status=not_complete`
+- Blockers remained stable:
+  `done_definition_not_completion_ready`,
+  `same_tree_practical_closure_unproven`,
+  `release_readiness_blocked`
+- `done_definition.practical_admission_source_surface.status=pass`,
+  `scan_scope=tracked_run_wrappers_plus_tracked_report_files`,
+  `tracked_violation_count=0`
+- `factor_closure.status=pass`, `active_claims=0`,
+  `live_factor_processes=0`
+- `release_readiness.remote_details.origin_status=pass`,
+  `release_mirror_status=pass`
+
+Verified improvement:
+
+- The packet is now lighter and more reusable for the practical-admission source
+  surface: the parent preserves the exact tracked scan scope and command, while
+  untracked await-launch debt remains visible through the quarantined child
+  manifest instead of being hidden.
+
+Still not completion:
+
+- `completion_ready=false` because the heavy done-definition gates are skipped.
+- `same_tree_practical_closure=null`; no packet proves the live/practical chain.
+- Release readiness remains blocked by the dirty shared worktree and selected
+  source origin alignment.
+
+Commit decision for this slice: do not claim objective completion yet. A commit
+is only appropriate for a coherent verified slice; full-objective commit must
+wait until the same-tree practical closure and heavy/release gates are proven.
+
+## Final Current Readback - 2026-05-31T03:50Z
+
+The factor-closure surface is time-variant in this shared tree. A focused
+factor compact audit briefly reported `status=pass`, `live_factor_processes=0`
+at `2026-05-31T03:49Z`, but the later parent snapshot is the current objective
+readback for this doc.
+
+Command:
+
+```bash
+python3 support/scripts/objective_closure_snapshot.py --compact --check-remotes --output-dir /tmp/ict-engine-consumer-ux-evidence-audit-20260531T-final-codex --timeout-seconds 180
+```
+
+Result:
+
+- Parent packet:
+  `/tmp/ict-engine-consumer-ux-evidence-audit-20260531T-final-codex/objective_closure_snapshot.json`
+- Exit code: `1`
+- `summary.status=not_complete`
+- `summary.blockers=[done_definition_not_completion_ready,
+  factor_closure_blocked, same_tree_practical_closure_unproven,
+  release_readiness_blocked]`
+- `done_definition.status=pass`, `completion_ready=false`,
+  `skip_count=4`; skipped heavy gates are `cargo_check_all_targets`,
+  `cargo_clippy_all_targets_deny_warnings`, `cargo_test`, and
+  `smoke_acceptance_tmp_state`.
+- `practical_admission_source_surface.status=pass`,
+  `tracked_violation_count=0`, `untracked_violation_count=0`.
+- `await_launch_source_surface.status=pass`; quarantined untracked await-launch
+  debt remains visible at `46` violations across `46` untracked files.
+- `factor_closure.status=needs_attention`, `live_factor_processes=1`,
+  queue head pid `63182`, run root
+  `ict-engine-lbr-310-grail-pullback-exact-aq-20260531T114834+0800`.
+- `same_tree_practical_closure=null`; no validated practical closure packet
+  covers provider/data, Pre-Bayes, BBN/workflow, path-ranker, execution-tree,
+  feedback/update, and policy-training.
+- `release_readiness.status=needs_fix`; unresolved gates remain
+  `worktree_clean_for_release` and `source_origin_matches_selected_source`.
+  Remote readback itself passed for both origin and release mirror.
+
+Decision: still not complete. Current evidence supports only a narrow verified
+source-debt/readback slice, not objective completion, release readiness, or
+practical trade usability.
+
+## Verification After Source-Scope Preservation - 2026-05-31T03:48Z
+
+Current coherent local slice:
+
+- `done_definition_audit.py --compact` keeps practical/await-launch source
+  scan details even when the gate status is `pass`, so parent packets can prove
+  what was actually scanned instead of showing only a green surface.
+- `objective_closure_snapshot.py` preserves the same source-scan coverage fields
+  in the parent surface:
+  `scan_scope`, `candidate_wrapper_files`, `scanned_files`,
+  `tracked_scanned_files`, `untracked_scanned_files`, and
+  `violations_by_type`.
+- Tests now cover pass-state source proof retention, parent preservation, and
+  multiline source-expression normalization in the downstream practical source
+  scanner.
+
+Focused verification:
+
+- Passed:
+  `python3 -m unittest support.scripts.tests.test_objective_closure_snapshot -v`
+  (`47/47`).
+- Passed:
+  `python3 -m unittest support.scripts.tests.test_done_definition_audit -v`
+  (`35/35`).
+- Passed:
+  `python3 -m unittest support.scripts.research.tests.test_downstream_practical_admission_source_check -v`
+  (`47/47`).
+- Passed:
+  `python3 support/scripts/check_script_manifest.py`.
+- Passed:
+  `python3 support/scripts/ci/check_docs_runtime_isolation.py`.
+- Passed:
+  `git diff --check -- support/docs/audits/practical-admission-source-debt-quarantine.json support/scripts/done_definition_audit.py support/scripts/tests/test_done_definition_audit.py support/scripts/objective_closure_snapshot.py support/scripts/tests/test_objective_closure_snapshot.py support/scripts/research/tests/test_downstream_practical_admission_source_check.py support/docs/plans/2026-05-31-consumer-ux-evidence-packet-audit-current.md`.
+
+Fresh parent packet:
+
+```bash
+python3 support/scripts/objective_closure_snapshot.py --compact --check-remotes --output-dir /tmp/ict-engine-consumer-ux-evidence-audit-20260531T-after-source-scope
+```
+
+Result:
+
+- Exit code `1`, fail-closed because the full objective is still not proven.
+- Parent packet:
+  `/tmp/ict-engine-consumer-ux-evidence-audit-20260531T-after-source-scope/objective_closure_snapshot.json`.
+- `summary.status=not_complete`.
+- Blockers:
+  `done_definition_not_completion_ready`,
+  `same_tree_practical_closure_unproven`,
+  `release_readiness_blocked`.
+- `done_definition.head=113a43299c27e91903072427debda0e1df582a00`.
+- `done_definition.status=pass`, `completion_ready=false`,
+  `pass_count=6`, `fail_count=0`, `skip_count=4`, `total_gates=10`.
+- Heavy gates still skipped:
+  `cargo_check_all_targets`, `cargo_clippy_all_targets_deny_warnings`,
+  `cargo_test`, `smoke_acceptance_tmp_state`.
+- `practical_admission_source_surface.status=pass`,
+  `scan_scope=tracked_run_wrappers_plus_tracked_report_files`,
+  `candidate_wrapper_files=1063`, `scanned_files=50`,
+  `tracked_scanned_files=50`, `untracked_scanned_files=0`,
+  `tracked_violation_count=0`, `untracked_violation_count=0`,
+  `violations_by_type={}`.
+- `await_launch_source_surface.status=pass`, but quarantined untracked
+  await-launch debt remains visible: `46` violations across `46` untracked
+  files, quarantine matched.
+- `factor_closure.status=pass`, `active_claims=0`,
+  `live_factor_processes=0`, `blocking_reasons=[]`,
+  `promotion_allowed_true=0`, `trade_usable_true=0`.
+- `same_tree_practical_closure=null`; missing practical-chain stages remain
+  provider/data, Pre-Bayes, BBN/workflow, path-ranker, execution-tree,
+  feedback/update, and policy-training.
+- `release_readiness.status=needs_fix`, unresolved gates are
+  `worktree_clean_for_release` and `source_origin_matches_selected_source`.
+  Remote readback passed for both origin and release mirror.
+
+Decision: still not complete. This slice improves packet lightness/reuse by
+keeping pass-state source-scan proof in compact parent packets. It is not
+trade-use evidence, release evidence, or completion evidence.

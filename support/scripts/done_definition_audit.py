@@ -980,6 +980,8 @@ def _compact_source_gate_details(details: dict, root: str) -> dict:
     scalar_keys = [
         "error",
         "rule",
+        "scan_scope",
+        "candidate_wrapper_files",
         "scanned_files",
         "tracked_scanned_files",
         "tracked_violating_files",
@@ -1021,7 +1023,7 @@ def _compact_gate(gate: dict, root: str) -> dict:
     }
     if gate.get("id") in {"practical_admission_source_surface", "await_launch_source_surface"}:
         details = gate.get("details", {})
-        if gate.get("status") != "pass" or int(details.get("untracked_violation_count") or 0) > 0:
+        if details:
             compact["details"] = _compact_source_gate_details(details, root)
     elif gate.get("status") != "pass":
         compact["details"] = _compact_value(gate.get("details", {}), root)

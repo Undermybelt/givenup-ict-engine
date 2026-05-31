@@ -266,12 +266,18 @@ def _source_debt_surface(gate: dict[str, Any]) -> dict[str, Any]:
         details = {}
     return {
         "status": gate.get("status"),
+        "scan_scope": details.get("scan_scope"),
+        "candidate_wrapper_files": details.get("candidate_wrapper_files"),
+        "scanned_files": details.get("scanned_files"),
+        "tracked_scanned_files": details.get("tracked_scanned_files"),
+        "untracked_scanned_files": details.get("untracked_scanned_files"),
         "tracked_violation_count": details.get("tracked_violation_count"),
         "tracked_violating_files": details.get("tracked_violating_files"),
         "untracked_violation_count": details.get("untracked_violation_count"),
         "untracked_violating_files": details.get("untracked_violating_files"),
         "violation_count": details.get("violation_count"),
         "violating_files": details.get("violating_files"),
+        "violations_by_type": details.get("violations_by_type"),
         "debt_manifest_file": details.get("debt_manifest_file"),
         "quarantine": details.get("quarantine"),
         "sample_violations": details.get("sample_violations", []),

@@ -266,6 +266,38 @@ Measured on 2026-05-22:
         self.assertEqual(gate["details"]["tracked_violation_count"], 0)
         self.assertEqual(gate["details"]["debt_manifest_file"], "/tmp/practical-admission-source-debt.json")
 
+    def test_compact_report_keeps_passed_practical_admission_scan_proof(self) -> None:
+        report = {
+            "timestamp_utc": "2026-05-31T03:40:00Z",
+            "repo_root": str(SCRIPTS_ROOT.parents[1]),
+            "summary": {"status": "pass"},
+            "gates": [
+                {
+                    "id": "practical_admission_source_surface",
+                    "status": "pass",
+                    "heavy": False,
+                    "details": {
+                        "scan_scope": "tracked_run_wrappers_plus_tracked_report_files",
+                        "candidate_wrapper_files": 1064,
+                        "tracked_violation_count": 0,
+                        "tracked_violating_files": 0,
+                        "untracked_violation_count": 0,
+                        "untracked_violating_files": 0,
+                        "violation_count": 0,
+                        "violating_files": 0,
+                    },
+                }
+            ],
+        }
+
+        compact = json.loads(format_report(report, compact=True))
+        details = compact["gates"][0]["details"]
+
+        self.assertEqual(details["scan_scope"], "tracked_run_wrappers_plus_tracked_report_files")
+        self.assertEqual(details["candidate_wrapper_files"], 1064)
+        self.assertEqual(details["tracked_violation_count"], 0)
+        self.assertEqual(details["untracked_violation_count"], 0)
+
     def test_compact_report_summarizes_failed_practical_admission_scan_command(self) -> None:
         scanner_targets = [
             f"support/docs/experiments/actionable-regime-confidence/scripts/run_case_{index}.py"

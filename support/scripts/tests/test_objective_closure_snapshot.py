@@ -1849,11 +1849,16 @@ class ObjectiveClosureSnapshotTest(unittest.TestCase):
                                 "id": "practical_admission_source_surface",
                                 "status": "fail",
                                 "details": {
+                                    "scan_scope": "tracked_run_wrappers_plus_tracked_report_files",
+                                    "candidate_wrapper_files": 1063,
                                     "scanned_files": 120,
+                                    "tracked_scanned_files": 120,
+                                    "untracked_scanned_files": 0,
                                     "violating_files": 0,
                                     "violation_count": 0,
                                     "tracked_violation_count": 0,
                                     "untracked_violation_count": 0,
+                                    "violations_by_type": {},
                                     "scanner_error": "timeout",
                                     "scanner_timeout_seconds": 180,
                                     "scanner_returncode": None,
@@ -1909,6 +1914,11 @@ class ObjectiveClosureSnapshotTest(unittest.TestCase):
             )
 
         source_surface = snapshot["audits"]["done_definition"]["surface"]["practical_admission_source_surface"]
+        self.assertEqual(source_surface["scan_scope"], "tracked_run_wrappers_plus_tracked_report_files")
+        self.assertEqual(source_surface["candidate_wrapper_files"], 1063)
+        self.assertEqual(source_surface["scanned_files"], 120)
+        self.assertEqual(source_surface["tracked_scanned_files"], 120)
+        self.assertEqual(source_surface["untracked_scanned_files"], 0)
         self.assertEqual(source_surface["scanner_error"], "timeout")
         self.assertEqual(source_surface["scanner_timeout_seconds"], 180)
         self.assertEqual(source_surface["scanner_returncode"], None)

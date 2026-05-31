@@ -1,13 +1,14 @@
 {
   "schema_version": "practical-admission-source-debt-quarantine/v1",
-  "generated_at": "2026-05-29T22:30:14Z",
+  "generated_at": "2026-05-31T03:18:01Z",
   "decision": "quarantined_untracked_wrapper_debt",
-  "scope": "Untracked support/docs/experiments/actionable-regime-confidence/scripts/run_*.py practical-admission violations present in the shared worktree on 2026-05-29.",
+  "scope": "Untracked support/docs/experiments/actionable-regime-confidence/scripts/run_*.py practical-admission violations present in the shared worktree on 2026-05-31.",
   "rationale": "The tracked source gate has zero practical-admission wrapper violations. The remaining debt is untracked wrapper residue from concurrent factor work; it must stay visible and excluded from completion/release claims until the files are either removed, tracked and fixed, or otherwise retired.",
-  "untracked_violation_count": 335,
-  "untracked_violating_files": 175,
-  "untracked_violations_sha256": "a63ffa0e460234419a0635dc14ae154d60f4e3325f7266f1dbb4cf18d9760aa4",
+  "untracked_violation_count": 434,
+  "untracked_violating_files": 226,
+  "untracked_violations_sha256": "021b108a029f14e3eea37ee072637324c94de4c6876b2b6cfd2b71d52a67170e",
   "reviewed_alternative_untracked_violations_sha256": [
+    "a63ffa0e460234419a0635dc14ae154d60f4e3325f7266f1dbb4cf18d9760aa4",
     "9945631cb78ac92c5ec7037781c73c1e37a87eb791b03f80175ff1690b2e05f3",
     "623655607b6604e1bbec2dab02c2f2e7de867d60a8fea40378880a30ce967569",
     "c2c70a41ab24da8ad9a621e0d130bc8e0ef0773b67e39eb497bdfbe35b7a9145",
@@ -16,8 +17,16 @@
     "f9f9828c248ed5f7e8fe745479c0c02cb04a928addca4e2aeff17106ab6355a2",
     "1fa4ce7f889e95d223165b09ee8d94c4319cdd5591d7e5fb770eb9f2b9dbd9b0"
   ],
-  "source_packet": "/tmp/ict-engine-goal-20260530-current-fd59751-after-practical-quarantine/done_definition_audit.compact.json",
-  "reviewed_drift": "The 2026-05-29T22:30Z done-definition child audit in /tmp/ict-engine-goal-20260530-current-fd59751-after-practical-quarantine on head bbcb360aa3dd70ec7df1cbd757111c2991c9ab68 reports 335 violations across 175 untracked files, with tracked practical-admission violations still zero and this primary quarantine fingerprint matched. Earlier same-primary readbacks on heads fd59751ce4a4dc6ee9621e511128aaeb7854fa61, 19a569d3418a9fd3727b7f3479872e7e0529d515, 71c9655a9004e0dd3cdf0d3179aa730d93858ca1, and 3ce57b3b7ed187dcb6349662b5a6f8d1db3b659d reported the same 335/175 primary fingerprint. A transient 2026-05-29T21:43Z snapshot on head e444e6f3811d8abea9f0c2e0726fb63a3f57d9fd saw 341 violations across 176 untracked files; comparison showed the only additive drift was 6 stable signatures in support/docs/experiments/actionable-regime-confidence/scripts/run_tomac_nq_compound_rv_stress_gate_practical_lifecycle_v1.py. That wrapper was then committed and later touched by fd59751, but current scans still match the reviewed primary fingerprint. The remaining debt is untracked wrapper residue only; this is not release, promotion, trade-use, or objective-completion evidence.",
+  "source_packet": "/tmp/ict-engine-consumer-ux-evidence-audit-20260531T-current-refresh/done_definition_audit.compact.json",
+  "reviewed_drift": "The 2026-05-31T03:16Z objective closure snapshot in /tmp/ict-engine-consumer-ux-evidence-audit-20260531T-current-refresh on head 7e95b910061980f25d96b58dbc8820289cc5250d reports 434 practical-admission source violations across 226 untracked files, with tracked practical-admission violations still zero. The generated full debt manifest is /tmp/ict-engine-consumer-ux-evidence-audit-20260531T-current-refresh/practical_admission_source_debt_manifest.json and classifies the current untracked debt as: practical_flag_without_extension_complete_guard=118, retired_field_used_as_practical_gate_template=82, downstream_admission_uses_fixed_bps_survivor_gate=79, five_bps_survival_uses_trade_density_floor=79, branch_local_admission_uses_transition_hard_gate=74, extension_complete_without_validated_practical_closure_source=2. This is reviewed as shared-worktree untracked wrapper residue only; it is not release, promotion, trade-use, or objective-completion evidence. If the count, file count, or fingerprint drifts, the next snapshot must fail closed until reviewed again.",
+  "reviewed_current_untracked_violations_by_type": {
+    "branch_local_admission_uses_transition_hard_gate": 74,
+    "downstream_admission_uses_fixed_bps_survivor_gate": 79,
+    "extension_complete_without_validated_practical_closure_source": 2,
+    "five_bps_survival_uses_trade_density_floor": 79,
+    "practical_flag_without_extension_complete_guard": 118,
+    "retired_field_used_as_practical_gate_template": 82
+  },
   "promotion_allowed": false,
   "trade_usable": false,
   "update_goal": false,
