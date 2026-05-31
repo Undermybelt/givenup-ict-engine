@@ -8,7 +8,7 @@ governance only; no script was moved or promoted by this document.
 
 | Path | Stability | Safe default | Verification |
 |---|---|---|---|
-| `support/scripts/smoke_acceptance.sh` | stable first-run smoke | yes, writes under `/tmp` by default | `bash -n support/scripts/smoke_acceptance.sh`; run script |
+| `support/scripts/smoke_acceptance.sh` | stable first-run smoke | yes, writes under `/tmp` by default; set `ICT_ENGINE_BIN=/path/to/ict-engine` to reuse an already-built binary instead of repeated `cargo run` probes | `bash -n support/scripts/smoke_acceptance.sh`; run script |
 | `support/scripts/ci/check_docs_runtime_isolation.py` | CI guard | yes, read-only | CI / direct Python run |
 | `support/scripts/help_audit.py` | audit helper | yes, read-only cargo help probes | `python3 support/scripts/help_audit.py` |
 | `support/scripts/done_definition_audit.py` | audit helper | yes, lightweight read-only checks by default; `--compact` emits token-friendly JSON without repo-local absolute paths, marks skipped-heavy evidence as not completion-ready, preserves pass-state source debt, fails closed when unsafe practical-admission wrappers remain, and surfaces await-launch wrappers that check `live_factor_processes` without active/fresh claim guards | `python3 -m unittest support.scripts.tests.test_done_definition_audit -v` |

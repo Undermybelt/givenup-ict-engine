@@ -8,6 +8,18 @@ SYMBOL="${SYMBOL:-DEMO}"
 SMOKE_UPDATE_OUTCOME="${SMOKE_UPDATE_OUTCOME:-breakeven}"
 SMOKE_UPDATE_PNL="${SMOKE_UPDATE_PNL:-0}"
 
+engine() {
+  if [[ -n "${ICT_ENGINE_BIN:-}" ]]; then
+    if [[ ! -x "$ICT_ENGINE_BIN" ]]; then
+      printf "smoke_acceptance: ICT_ENGINE_BIN is not executable: %s\n" "$ICT_ENGINE_BIN" >&2
+      exit 2
+    fi
+    "$ICT_ENGINE_BIN" "$@"
+  else
+    cargo run --quiet -- "$@"
+  fi
+}
+
 resolve_for_guard() {
   local raw_path="$1"
   local candidate parent suffix parent_real
@@ -94,21 +106,21 @@ require_output_literal() {
 }
 
 run provider_status \
-  cargo run --quiet -- provider-status --compact
+  engine provider-status --compact
 run workflow_empty \
-  cargo run --quiet -- workflow-status --symbol "$SYMBOL" --state-dir "$STATE_DIR" --human
+  engine workflow-status --symbol "$SYMBOL" --state-dir "$STATE_DIR" --human
 run analyze_demo \
-  cargo run --quiet -- analyze --symbol "$SYMBOL" --demo --state-dir "$STATE_DIR" --human
+  engine analyze --symbol "$SYMBOL" --demo --state-dir "$STATE_DIR" --human
 run workflow_agent \
-  cargo run --quiet -- workflow-status --symbol "$SYMBOL" --state-dir "$STATE_DIR" --refresh --agent
+  engine workflow-status --symbol "$SYMBOL" --state-dir "$STATE_DIR" --refresh --agent
 run pre_bayes_json \
-  cargo run --quiet -- pre-bayes-status --symbol "$SYMBOL" --state-dir "$STATE_DIR" --refresh --output-format json
+  engine pre-bayes-status --symbol "$SYMBOL" --state-dir "$STATE_DIR" --refresh --output-format json
 run update_demo \
-  cargo run --quiet -- update --symbol "$SYMBOL" --state-dir "$STATE_DIR" --outcome "$SMOKE_UPDATE_OUTCOME" --pnl "$SMOKE_UPDATE_PNL"
+  engine update --symbol "$SYMBOL" --state-dir "$STATE_DIR" --outcome "$SMOKE_UPDATE_OUTCOME" --pnl "$SMOKE_UPDATE_PNL"
 run workflow_agent_after_update \
-  cargo run --quiet -- workflow-status --symbol "$SYMBOL" --state-dir "$STATE_DIR" --refresh --agent
+  engine workflow-status --symbol "$SYMBOL" --state-dir "$STATE_DIR" --refresh --agent
 run policy_training_agent \
-  cargo run --quiet -- policy-training-status --symbol "$SYMBOL" --state-dir "$STATE_DIR" --output-format agent
+  engine policy-training-status --symbol "$SYMBOL" --state-dir "$STATE_DIR" --output-format agent
 
 if scan_private_output; then
   printf 'smoke_acceptance: possible private path or secret leak in %s\n' "$OUT_DIR" >&2
