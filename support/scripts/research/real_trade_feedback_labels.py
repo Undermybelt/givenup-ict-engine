@@ -3,6 +3,7 @@ from __future__ import annotations
 import argparse
 import json
 import math
+import re
 from bisect import bisect_right
 from datetime import datetime
 from pathlib import Path
@@ -26,6 +27,17 @@ SIMULATED_FEEDBACK_MARKERS = (
     "child_gate_filtered",
     "simulated_feedback",
 )
+NEGATED_EXECUTION_FEEDBACK_MARKER_PREFIXES = {
+    "not",
+    "no",
+    "non",
+    "without",
+    "missing",
+    "absent",
+    "fake",
+    "spoofed",
+}
+NEGATED_EXECUTION_FEEDBACK_MARKER_LOOKBACK = 3
 
 
 def _timestamp_ms(value: str) -> int:
@@ -104,8 +116,8 @@ def _accepted_feedback_source(value: str) -> str:
         raise ValueError("feedback_source is required")
     if any(marker in normalized for marker in SIMULATED_FEEDBACK_MARKERS):
         raise ValueError("simulated feedback sources cannot be accepted paper/broker feedback")
-    if not any(marker in normalized for marker in ACCEPTED_EXECUTION_FEEDBACK_MARKERS):
-        raise ValueError("feedback_source must contain an accepted paper/live/broker execution marker")
+    if not _source_has_accepted_feedback_marker(normalized):
+        raise ValueError("feedback_source must include an accepted paper/live/broker execution marker")
     return source
 
 
@@ -115,7 +127,29 @@ def _is_accepted_feedback_source(value: str | None) -> bool:
         return False
     if any(marker in normalized for marker in SIMULATED_FEEDBACK_MARKERS):
         return False
-    return any(marker in normalized for marker in ACCEPTED_EXECUTION_FEEDBACK_MARKERS)
+    return _source_has_accepted_feedback_marker(normalized)
+
+
+def _source_has_accepted_feedback_marker(value: str) -> bool:
+    tokens = _source_marker_tokens(value)
+    for index, token in enumerate(tokens):
+        if token not in ACCEPTED_EXECUTION_FEEDBACK_MARKERS:
+            continue
+        lookback_tokens = tokens[
+            max(0, index - NEGATED_EXECUTION_FEEDBACK_MARKER_LOOKBACK) : index
+        ]
+        if any(token in NEGATED_EXECUTION_FEEDBACK_MARKER_PREFIXES for token in lookback_tokens):
+            continue
+        return True
+    return False
+
+
+def _source_marker_tokens(value: str) -> list[str]:
+    return [
+        token
+        for token in re.split(r"[^a-z0-9_]+", value)
+        if token
+    ]
 
 
 def _side_to_direction(side: object) -> str:

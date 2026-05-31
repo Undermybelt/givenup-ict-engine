@@ -89,6 +89,10 @@ const SIMULATED_EXECUTION_FEEDBACK_MARKERS: &[&str] = &[
     "child_gate_filtered",
     "simulated_feedback",
 ];
+const NEGATED_EXECUTION_FEEDBACK_MARKER_PREFIXES: &[&str] = &[
+    "not", "no", "non", "without", "missing", "absent", "fake", "spoofed",
+];
+const NEGATED_EXECUTION_FEEDBACK_MARKER_LOOKBACK: usize = 3;
 
 fn structural_path_ranking_summary_path(state_dir: &str, symbol: &str) -> PathBuf {
     Path::new(state_dir)
@@ -222,9 +226,29 @@ fn lifecycle_text_has_accepted_execution_feedback_marker(value: Option<&str>) ->
     {
         return false;
     }
-    ACCEPTED_EXECUTION_FEEDBACK_MARKERS
-        .iter()
-        .any(|marker| text.contains(marker))
+    let tokens = source_marker_tokens(&text);
+    source_tokens_have_accepted_execution_feedback_marker(&tokens)
+}
+
+fn source_marker_tokens(text: &str) -> Vec<&str> {
+    text.split(|ch: char| !(ch.is_ascii_alphanumeric() || ch == '_'))
+        .filter(|token| !token.is_empty())
+        .collect()
+}
+
+fn source_tokens_have_accepted_execution_feedback_marker(tokens: &[&str]) -> bool {
+    tokens.iter().enumerate().any(|(index, token)| {
+        ACCEPTED_EXECUTION_FEEDBACK_MARKERS
+            .iter()
+            .any(|marker| token == marker)
+            && !tokens[index.saturating_sub(NEGATED_EXECUTION_FEEDBACK_MARKER_LOOKBACK)..index]
+                .iter()
+                .any(|previous| {
+                    NEGATED_EXECUTION_FEEDBACK_MARKER_PREFIXES
+                        .iter()
+                        .any(|prefix| previous == prefix)
+                })
+    })
 }
 
 fn lifecycle_row_has_accepted_execution_feedback(row: &StructuralPathRankingTargetRow) -> bool {
@@ -5895,6 +5919,103 @@ detector_context:
         assert!(status.summary_line.contains(
             "deploy_ready=1 live_ready=1 funded_live_fill_required=false trade_usable=true"
         ));
+    }
+
+    #[test]
+    fn policy_training_status_rejects_spoofed_execution_feedback_substring() {
+        let temp = tempfile::tempdir().unwrap();
+        let symbol = "FACTOR_CANDIDATES";
+        let summary_dir = temp.path().join(symbol).join(POLICY_TRAINING_DIR);
+        std::fs::create_dir_all(&summary_dir).unwrap();
+        let mut pending_reward_states = BTreeMap::new();
+        pending_reward_states.insert("matured_success".to_string(), 1);
+        let summary = StructuralPathRankingTargetExportSummary {
+            symbol: symbol.to_string(),
+            rows: 1,
+            candidate_set_id: "structural-candidates:FACTOR_CANDIDATES:source-spoof".to_string(),
+            candidate_set_size: 1,
+            pending_reward_states,
+            mature_rows: 1,
+            rows_with_raw_path_score: 1,
+            rows_with_execution_gate_status: 1,
+            rows_with_training_weight: 1,
+            csv_path: summary_dir
+                .join("structural_path_ranking_target.csv")
+                .to_string_lossy()
+                .to_string(),
+            jsonl_path: summary_dir
+                .join("structural_path_ranking_target.jsonl")
+                .to_string_lossy()
+                .to_string(),
+            summary_path: summary_dir
+                .join(STRUCTURAL_PATH_RANKING_TARGET_SUMMARY_FILE)
+                .to_string_lossy()
+                .to_string(),
+            summary_line: "structural_path_ranking_target rows=1 mature_rows=1".to_string(),
+            ..StructuralPathRankingTargetExportSummary::default()
+        };
+        std::fs::write(
+            summary_dir.join(STRUCTURAL_PATH_RANKING_TARGET_SUMMARY_FILE),
+            serde_json::to_string_pretty(&summary).unwrap(),
+        )
+        .unwrap();
+        std::fs::write(
+            summary_dir.join("structural_path_ranking_target.jsonl"),
+            serde_json::to_string(&StructuralPathRankingTargetRow {
+                rank: 1,
+                candidate_set_id: summary.candidate_set_id.clone(),
+                candidate_set_size: 1,
+                path_id: "TrendExpansion -> IntradayMomentum -> mature_edge -> spoof_v1"
+                    .to_string(),
+                scenario_id: "scenario:source-spoof".to_string(),
+                path_label: "spoof_v1".to_string(),
+                regime_profit_branch_path: Some(
+                    "TrendExpansion -> IntradayMomentum -> mature_edge -> spoof_v1".to_string(),
+                ),
+                direction: "Long".to_string(),
+                raw_path_score: Some(0.84),
+                calibrated_path_prob: Some(0.78),
+                path_prob_lower_bound: Some(0.66),
+                execution_gate_status: Some("live_trade_usable".to_string()),
+                execution_gate_reason: Some(
+                    "accepted_execution_feedback_source=without broker paper_execution_feedback pending_reward_state=matured_success training_weight=2.000000"
+                        .to_string(),
+                ),
+                pending_reward_state: "matured_success".to_string(),
+                maturity_mask: true,
+                maturity_weight: 1.0,
+                calibrated_label: Some(1.0),
+                propensity_estimate: Some(0.5),
+                ips_weight: Some(2.0),
+                training_weight: Some(2.0),
+                regime_calibration_bucket: "TrendExpansion".to_string(),
+                behavior_policy_probability: 0.5,
+                experience_prior: 0.02,
+                current_posterior: 0.84,
+                structural_baseline_score: 0.5,
+                score_source_kind: Some("without broker paper_execution_feedback".to_string()),
+                score_generator: Some(
+                    "accepted_execution_feedback_aggregate:without-broker-paper_execution_feedback:count=30"
+                        .to_string(),
+                ),
+                ..StructuralPathRankingTargetRow::default()
+            })
+            .unwrap(),
+        )
+        .unwrap();
+
+        let status = policy_training_status(temp.path().to_str().unwrap(), symbol, None).unwrap();
+
+        assert_eq!(status.factor_profitability_lifecycle.live_ready_count, 0);
+        assert_eq!(status.factor_profitability_lifecycle.deploy_ready_count, 0);
+        assert_eq!(
+            status
+                .factor_profitability_lifecycle
+                .live_trade_usable_count,
+            0
+        );
+        assert!(!status.factor_profitability_lifecycle.promotion_allowed);
+        assert!(!status.factor_profitability_lifecycle.trade_usable);
     }
 
     #[test]

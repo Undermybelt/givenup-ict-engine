@@ -3,6 +3,7 @@ use serde::{Deserialize, Serialize};
 pub const DEFAULT_REGIME_CONFIDENCE_FLOOR: f64 = 0.95;
 pub const FLYWHEEL_REGIME_CONFIDENCE_FLOOR: f64 = 0.75;
 pub const LIVE_EXECUTION_READINESS_FLOOR: f64 = 0.45;
+pub const PAPER_FEEDBACK_COLLECTION_MIN_ROWS: usize = 12;
 pub const PAPER_VALIDATION_MIN_ROWS: usize = 30;
 pub const DEPLOY_READY_READINESS_CONTRACT: &str =
     "deploy_ready_from_backtest_autoquant_provider_or_paper_sim_execution_chain_not_funded_fill";
@@ -164,8 +165,18 @@ pub fn decide_profitability_lifecycle(
     };
 
     let mut feedback_collection_blockers = Vec::new();
-    if !paper_ready {
-        feedback_collection_blockers.push("paper_not_ready".to_string());
+    if !learning_admitted {
+        feedback_collection_blockers.push("learning_not_admitted".to_string());
+    }
+    if input.validation_rows.raw_scored_mature < PAPER_FEEDBACK_COLLECTION_MIN_ROWS {
+        feedback_collection_blockers.push("raw_scored_mature_below_feedback_floor".to_string());
+    }
+    if input.validation_rows.production < PAPER_FEEDBACK_COLLECTION_MIN_ROWS {
+        feedback_collection_blockers.push("production_validation_below_feedback_floor".to_string());
+    }
+    if input.validation_rows.observation < PAPER_FEEDBACK_COLLECTION_MIN_ROWS {
+        feedback_collection_blockers
+            .push("observation_validation_below_feedback_floor".to_string());
     }
     if !input.market_data_provenance_verified {
         feedback_collection_blockers.push("market_data_provenance_unverified".to_string());
@@ -216,8 +227,12 @@ pub fn decide_profitability_lifecycle(
     if !input.ranker_validation_ready {
         feedback_collection_blockers.push("ranker_validation_not_ready".to_string());
     }
-    let paper_feedback_collection_ready = paper_ready && feedback_collection_blockers.is_empty();
+    let paper_feedback_collection_ready =
+        learning_admitted && feedback_collection_blockers.is_empty();
     let mut live_blockers = feedback_collection_blockers.clone();
+    if !paper_ready {
+        live_blockers.push("paper_not_ready_for_live".to_string());
+    }
     if !input.retained_session_scope_verified {
         live_blockers.push("retained_session_scope_unverified".to_string());
     }
@@ -238,7 +253,8 @@ pub fn decide_profitability_lifecycle(
             false
         }
     };
-    let live_ready = paper_feedback_collection_ready
+    let live_ready = paper_ready
+        && paper_feedback_collection_ready
         && input.retained_session_scope_verified
         && input.promotion_cost_verified
         && input.accepted_execution_feedback
@@ -671,6 +687,52 @@ mod tests {
             .live
             .blockers
             .contains(&"accepted_execution_feedback_missing".to_string()));
+        assert!(!decision.live.deploy_ready);
+        assert!(!decision.live.promotion_allowed);
+        assert!(!decision.live.trade_usable);
+        assert!(!decision.live.update_goal);
+    }
+
+    #[test]
+    fn lifecycle_allows_feedback_collection_below_full_paper_row_floor_without_live_promotion() {
+        let input = ProfitabilityAdmissionInput {
+            regime_confidence: Some(0.99),
+            regime_confidence_floor: 0.95,
+            long_run_expectancy_after_declared_friction: Some(0.03),
+            evidence_count: 24,
+            leakage_passed: true,
+            provider_state: ProviderEvidenceState::Ready,
+            market_data_provenance_verified: true,
+            retained_session_scope_verified: true,
+            promotion_cost_verified: true,
+            accepted_execution_feedback: true,
+            execution_readiness: Some(0.91),
+            transition_hazard: Some(0.10),
+            pda_hybrid_alignment: Some(true),
+            pre_bayes_gate_status: Some("pass_hard".to_string()),
+            execution_gate_status: Some("ready".to_string()),
+            execution_tree_gate_status: Some("ready".to_string()),
+            execution_tree_branch: Some("fill_viable".to_string()),
+            path_ranker_score_used_by_execution_tree: true,
+            ranker_validation_ready: true,
+            validation_rows: ValidationRows {
+                raw_scored_mature: 12,
+                production: 12,
+                observation: 12,
+            },
+        };
+
+        let decision = decide_profitability_lifecycle(&input);
+
+        assert_eq!(decision.learning.status, AdmissionStatus::Admitted);
+        assert_eq!(decision.paper.status, AdmissionStatus::Observe);
+        assert!(decision.live.paper_feedback_collection_ready);
+        assert!(decision.live.paper_feedback_collection_blockers.is_empty());
+        assert_eq!(decision.live.status, AdmissionStatus::Blocked);
+        assert!(decision
+            .live
+            .blockers
+            .contains(&"paper_not_ready_for_live".to_string()));
         assert!(!decision.live.deploy_ready);
         assert!(!decision.live.promotion_allowed);
         assert!(!decision.live.trade_usable);

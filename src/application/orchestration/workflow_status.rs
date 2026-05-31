@@ -24,6 +24,7 @@ use crate::application::belief::{
     jump_calibration_gate_workflow_summary, jump_model_workflow_summary,
 };
 use crate::application::data_sources::control_matrix_providers::IBKR_GATEWAY_PORT_CANDIDATES;
+use crate::application::factor_lifecycle::profitability_admission::PAPER_FEEDBACK_COLLECTION_MIN_ROWS;
 use crate::application::factor_lifecycle::DEPLOY_READY_READINESS_CONTRACT;
 use crate::application::output_foundation::{
     print_redacted_json, redact_local_paths_in_human_text, redact_local_paths_in_value,
@@ -1020,6 +1021,140 @@ fn structural_candidate_ranker_feedback_ready(candidate: &Value) -> bool {
     runtime_enabled && runtime_status_ready && score_present && feedback_confirmation_ready
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+struct FeedbackCollectionValidationRows {
+    raw_scored_mature: usize,
+    production_validation: usize,
+    observation_validation: usize,
+}
+
+impl FeedbackCollectionValidationRows {
+    fn ready(self) -> bool {
+        self.raw_scored_mature >= PAPER_FEEDBACK_COLLECTION_MIN_ROWS
+            && self.production_validation >= PAPER_FEEDBACK_COLLECTION_MIN_ROWS
+            && self.observation_validation >= PAPER_FEEDBACK_COLLECTION_MIN_ROWS
+    }
+}
+
+fn structural_candidate_feedback_collection_validation_rows(
+    candidate: &Value,
+) -> FeedbackCollectionValidationRows {
+    FeedbackCollectionValidationRows {
+        raw_scored_mature: structural_candidate_validation_row_count(
+            candidate,
+            &["raw_scored_mature", "raw_scored_mature_rows"],
+        ),
+        production_validation: structural_candidate_validation_row_count(
+            candidate,
+            &[
+                "production_validation",
+                "production_validation_rows",
+                "production",
+            ],
+        ),
+        observation_validation: structural_candidate_validation_row_count(
+            candidate,
+            &[
+                "observation_validation",
+                "observation_validation_rows",
+                "observation",
+            ],
+        ),
+    }
+}
+
+fn structural_candidate_validation_row_count(candidate: &Value, keys: &[&str]) -> usize {
+    for prefix in [
+        "",
+        "/validation",
+        "/validation_rows",
+        "/validation_counters",
+        "/policy_training_summary",
+        "/policy_training_summary/validation",
+        "/policy_training_summary/validation_rows",
+        "/policy_training_summary/validation_counters",
+        "/factor_profitability_lifecycle",
+        "/factor_profitability_lifecycle/validation_rows",
+        "/structural_recommended_path_bundle",
+        "/structural_recommended_path_bundle/validation",
+        "/structural_recommended_path_bundle/validation_rows",
+        "/structural_recommended_path_bundle/validation_counters",
+        "/structural_recommended_path_bundle/policy_training_summary",
+        "/structural_recommended_path_bundle/policy_training_summary/validation",
+        "/structural_recommended_path_bundle/policy_training_summary/validation_rows",
+        "/structural_recommended_path_bundle/policy_training_summary/validation_counters",
+    ] {
+        for key in keys {
+            let pointer = if prefix.is_empty() {
+                format!("/{key}")
+            } else {
+                format!("{prefix}/{key}")
+            };
+            if let Some(count) = candidate
+                .pointer(&pointer)
+                .and_then(parse_validation_row_count)
+            {
+                return count;
+            }
+        }
+    }
+
+    for pointer in [
+        "/split_reason_lineage",
+        "/output/split_reason_lineage",
+        "/structural_recommended_path_bundle/split_reason_lineage",
+        "/structural_recommended_path_bundle/confirmation_summary",
+    ] {
+        if let Some(count) = candidate
+            .pointer(pointer)
+            .and_then(Value::as_str)
+            .and_then(|text| parse_validation_row_count_from_text(text, keys))
+        {
+            return count;
+        }
+    }
+
+    0
+}
+
+fn parse_validation_row_count(value: &Value) -> Option<usize> {
+    match value {
+        Value::Number(number) => number
+            .as_u64()
+            .map(|value| value as usize)
+            .or_else(|| number.as_f64().map(|value| value.max(0.0) as usize)),
+        Value::String(text) => parse_validation_row_count_str(text),
+        Value::Object(map) => ["rows", "count", "value", "actual"]
+            .iter()
+            .find_map(|key| map.get(*key).and_then(parse_validation_row_count)),
+        _ => None,
+    }
+}
+
+fn parse_validation_row_count_str(text: &str) -> Option<usize> {
+    let rhs = text
+        .split_once('=')
+        .map(|(_, rhs)| rhs)
+        .unwrap_or(text)
+        .trim();
+    let digits: String = rhs.chars().take_while(|ch| ch.is_ascii_digit()).collect();
+    if digits.is_empty() {
+        None
+    } else {
+        digits.parse().ok()
+    }
+}
+
+fn parse_validation_row_count_from_text(text: &str, keys: &[&str]) -> Option<usize> {
+    text.split_whitespace().find_map(|token| {
+        keys.iter().find_map(|key| {
+            token
+                .strip_prefix(&format!("{key}="))
+                .and_then(parse_validation_row_count_str)
+        })
+    })
+}
+
 fn structural_closed_loop_branch_admission_value(candidate: &Value) -> Option<Value> {
     let path_id = candidate.get("path_id").and_then(Value::as_str)?;
     let source_phase = candidate.get("source_phase").and_then(Value::as_str)?;
@@ -1139,10 +1274,11 @@ fn structural_closed_loop_branch_admission_value(candidate: &Value) -> Option<Va
     let same_tree_practical_closure = same_tree_practical_closure_packet_for_value(candidate)
         .cloned()
         .unwrap_or(Value::Null);
-    let paper_feedback_collection_ready = ready
-        && actionable
-        && learning_admission_status == "admitted"
-        && paper_admission_status == "ready";
+    let paper_feedback_collection_validation_rows =
+        structural_candidate_feedback_collection_validation_rows(candidate);
+    let paper_feedback_collection_ready = learning_admission_status == "admitted"
+        && paper_admission_status == "ready"
+        && paper_feedback_collection_validation_rows.ready();
     let explicit_live_ready = learning_admission_status == "admitted"
         && paper_admission_status == "ready"
         && live_trade_status == "ready"
@@ -1190,6 +1326,12 @@ fn structural_closed_loop_branch_admission_value(candidate: &Value) -> Option<Va
         "learning_admission_status": learning_admission_status,
         "paper_admission_status": paper_admission_status,
         "paper_feedback_collection_ready": paper_feedback_collection_ready,
+        "paper_feedback_collection_validation_rows": {
+            "raw_scored_mature": paper_feedback_collection_validation_rows.raw_scored_mature,
+            "production_validation": paper_feedback_collection_validation_rows.production_validation,
+            "observation_validation": paper_feedback_collection_validation_rows.observation_validation,
+            "min_rows": PAPER_FEEDBACK_COLLECTION_MIN_ROWS,
+        },
         "live_trade_status": normalized_live_trade_status,
         "promotion_allowed": normalized_practical_flags,
         "trade_usable": normalized_practical_flags,
@@ -1242,14 +1384,10 @@ fn same_tree_practical_closure_packet_validated(packet: &Value) -> bool {
             .get("evidence_packet")
             .and_then(Value::as_str)
             .is_some_and(|path| !path.trim().is_empty())
-        && (packet
+        && packet
             .get("evidence_packet_validated")
             .and_then(Value::as_bool)
             .unwrap_or(false)
-            || packet
-                .get("evidence_validated")
-                .and_then(Value::as_bool)
-                .unwrap_or(false))
 }
 
 fn closed_loop_admission_live_trade_ready(admission: &Value) -> bool {
@@ -1279,26 +1417,19 @@ fn closed_loop_admission_live_trade_ready(admission: &Value) -> bool {
 }
 
 fn closed_loop_admission_paper_feedback_collection_ready(admission: &Value) -> bool {
-    admission
-        .get("paper_feedback_collection_ready")
-        .and_then(Value::as_bool)
-        .unwrap_or(false)
-        || (admission
-            .get("learning_admission_status")
+    let learning_and_paper_ready = admission
+        .get("learning_admission_status")
+        .and_then(Value::as_str)
+        == Some("admitted")
+        && admission
+            .get("paper_admission_status")
             .and_then(Value::as_str)
-            == Some("admitted")
-            && admission
-                .get("paper_admission_status")
-                .and_then(Value::as_str)
-                == Some("ready")
-            && admission
-                .get("ready")
-                .and_then(Value::as_bool)
-                .unwrap_or(false)
-            && admission
-                .get("actionable")
-                .and_then(Value::as_bool)
-                .unwrap_or(false))
+            == Some("ready");
+    learning_and_paper_ready
+        && admission
+            .get("paper_feedback_collection_ready")
+            .and_then(Value::as_bool)
+            .unwrap_or(false)
 }
 
 fn workflow_factor_profitability_lifecycle_value(admission: Option<&Value>) -> Value {
@@ -7858,6 +7989,34 @@ mod tests {
     }
 
     #[test]
+    fn workflow_factor_profitability_lifecycle_rejects_legacy_evidence_validated_alias() {
+        let mut closure = validated_same_tree_practical_closure();
+        closure
+            .as_object_mut()
+            .unwrap()
+            .remove("evidence_packet_validated");
+        closure["evidence_validated"] = serde_json::json!(true);
+        let admission = serde_json::json!({
+            "status": "admitted",
+            "learning_admission_status": "admitted",
+            "paper_admission_status": "ready",
+            "live_trade_status": "ready",
+            "promotion_allowed": true,
+            "trade_usable": true,
+            "update_goal": true,
+            "same_tree_practical_closure": closure
+        });
+
+        let lifecycle = workflow_factor_profitability_lifecycle_value(Some(&admission));
+
+        assert_eq!(lifecycle["live_trade_status"], "blocked");
+        assert_eq!(lifecycle["deploy_ready"], false);
+        assert_eq!(lifecycle["promotion_allowed"], false);
+        assert_eq!(lifecycle["trade_usable"], false);
+        assert_eq!(lifecycle["update_goal"], false);
+    }
+
+    #[test]
     fn workflow_factor_profitability_lifecycle_requires_complete_live_ready_tuple() {
         let admission = serde_json::json!({
             "status": "admitted",
@@ -7967,6 +8126,55 @@ mod tests {
     }
 
     #[test]
+    fn workflow_factor_profitability_lifecycle_rejects_paper_feedback_collection_flag_without_learning_and_paper(
+    ) {
+        let admission = serde_json::json!({
+            "status": "fail_closed",
+            "learning_admission_status": "not_evaluated",
+            "paper_admission_status": "not_evaluated",
+            "paper_feedback_collection_ready": true,
+            "live_trade_status": "blocked",
+            "promotion_allowed": false,
+            "trade_usable": false,
+            "update_goal": false
+        });
+
+        let lifecycle = workflow_factor_profitability_lifecycle_value(Some(&admission));
+
+        assert_eq!(lifecycle["paper_feedback_collection_ready"], false);
+        assert_eq!(lifecycle["paper_feedback_collection_status"], "blocked");
+        assert_eq!(lifecycle["live_trade_status"], "blocked");
+        assert_eq!(lifecycle["deploy_ready"], false);
+        assert_eq!(lifecycle["promotion_allowed"], false);
+        assert_eq!(lifecycle["trade_usable"], false);
+        assert_eq!(lifecycle["update_goal"], false);
+    }
+
+    #[test]
+    fn workflow_factor_profitability_lifecycle_rejects_ready_actionable_without_feedback_collection_flag(
+    ) {
+        let admission = serde_json::json!({
+            "status": "fail_closed",
+            "learning_admission_status": "admitted",
+            "paper_admission_status": "ready",
+            "ready": true,
+            "actionable": true,
+            "live_trade_status": "blocked",
+            "promotion_allowed": false,
+            "trade_usable": false,
+            "update_goal": false
+        });
+
+        let lifecycle = workflow_factor_profitability_lifecycle_value(Some(&admission));
+
+        assert_eq!(lifecycle["paper_feedback_collection_ready"], false);
+        assert_eq!(lifecycle["paper_feedback_collection_status"], "blocked");
+        assert_eq!(lifecycle["promotion_allowed"], false);
+        assert_eq!(lifecycle["trade_usable"], false);
+        assert_eq!(lifecycle["update_goal"], false);
+    }
+
+    #[test]
     fn structural_branch_admission_derives_training_planes_from_ranker_feedback_without_live_plane()
     {
         let candidate = serde_json::json!({
@@ -8005,6 +8213,82 @@ mod tests {
     }
 
     #[test]
+    fn structural_branch_admission_blocks_feedback_collection_without_validation_rows() {
+        let candidate = serde_json::json!({
+            "source_phase": "structural-recommended-path-bundle",
+            "path_id": "TrendExpansion -> SessionDirectionalBias -> NoLookaheadGreedyComposite -> greedy_v1",
+            "path_label": "aggregate_feedback:greedy_v1",
+            "ready": true,
+            "actionable": true,
+            "candidate_status": "pass",
+            "execution_gate_status": "pass",
+            "pre_bayes_gate_status": "pass_hard",
+            "review_status": "observe",
+            "path_ranker_raw_score": 0.8498279112898877,
+            "structural_recommended_path_bundle": {
+                "confirmation_summary": "pending_reward_state=matured_success execution_gate_status=pass",
+                "path_ranker_runtime": {
+                    "enabled": true,
+                    "status": "using_candidate_set_scores"
+                }
+            }
+        });
+
+        let admission = structural_closed_loop_branch_admission_value(&candidate).unwrap();
+        let lifecycle = workflow_factor_profitability_lifecycle_value(Some(&admission));
+
+        assert_eq!(admission["learning_admission_status"], "admitted");
+        assert_eq!(admission["paper_admission_status"], "ready");
+        assert_eq!(admission["paper_feedback_collection_ready"], false);
+        assert_eq!(lifecycle["paper_feedback_collection_ready"], false);
+        assert_eq!(lifecycle["paper_feedback_collection_status"], "blocked");
+        assert_eq!(admission["promotion_allowed"], false);
+        assert_eq!(admission["trade_usable"], false);
+    }
+
+    #[test]
+    fn structural_branch_admission_can_collect_feedback_when_not_actionable_yet() {
+        let candidate = serde_json::json!({
+            "source_phase": "structural-recommended-path-bundle",
+            "path_id": "TrendExpansion -> SessionDirectionalBias -> NoLookaheadGreedyComposite -> greedy_v1",
+            "path_label": "aggregate_feedback:greedy_v1",
+            "ready": false,
+            "actionable": false,
+            "candidate_status": "pass",
+            "execution_gate_status": "pass",
+            "pre_bayes_gate_status": "pass_hard",
+            "review_status": "observe",
+            "path_ranker_raw_score": 0.8498279112898877,
+            "structural_recommended_path_bundle": {
+                "confirmation_summary": "pending_reward_state=matured_success execution_gate_status=pass",
+                "validation_counters": {
+                    "raw_scored_mature": "12/12",
+                    "production_validation": "12/12",
+                    "observation_validation": "12/12"
+                },
+                "path_ranker_runtime": {
+                    "enabled": true,
+                    "status": "using_candidate_set_scores"
+                }
+            }
+        });
+
+        let admission = structural_closed_loop_branch_admission_value(&candidate).unwrap();
+        let lifecycle = workflow_factor_profitability_lifecycle_value(Some(&admission));
+
+        assert_eq!(admission["status"], "fail_closed");
+        assert_eq!(admission["learning_admission_status"], "admitted");
+        assert_eq!(admission["paper_admission_status"], "ready");
+        assert_eq!(admission["paper_feedback_collection_ready"], true);
+        assert_eq!(lifecycle["paper_feedback_collection_ready"], true);
+        assert_eq!(lifecycle["paper_feedback_collection_status"], "ready");
+        assert_eq!(lifecycle["live_trade_status"], "blocked");
+        assert_eq!(lifecycle["promotion_allowed"], false);
+        assert_eq!(lifecycle["trade_usable"], false);
+        assert_eq!(lifecycle["update_goal"], false);
+    }
+
+    #[test]
     fn structural_branch_admission_can_pass_to_paper_feedback_collection_without_trade_use() {
         let candidate = serde_json::json!({
             "source_phase": "structural-recommended-path-bundle",
@@ -8019,6 +8303,11 @@ mod tests {
             "path_ranker_raw_score": 0.8498279112898877,
             "structural_recommended_path_bundle": {
                 "confirmation_summary": "pending_reward_state=matured_success execution_gate_status=pass",
+                "validation_counters": {
+                    "raw_scored_mature": "12/12",
+                    "production_validation": "12/12",
+                    "observation_validation": "12/12"
+                },
                 "path_ranker_runtime": {
                     "enabled": true,
                     "status": "using_candidate_set_scores"

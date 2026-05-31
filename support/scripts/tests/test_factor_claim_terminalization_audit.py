@@ -44,6 +44,35 @@ def practical_command_results() -> list[dict]:
 
 
 class FactorClaimTerminalizationAuditTest(unittest.TestCase):
+    def test_dedupe_live_processes_preserves_same_root_instance_count(self) -> None:
+        live_processes = [
+            {
+                "pid": 101,
+                "ppid": 1,
+                "elapsed": "01:00",
+                "run_root": "/tmp/ict-engine-duplicate-root",
+                "command_excerpt": "python run_tomac_index_futures_clean_aq_v1.py",
+            },
+            {
+                "pid": 202,
+                "ppid": 101,
+                "elapsed": "00:55",
+                "run_root": "/tmp/ict-engine-duplicate-root",
+                "command_excerpt": "python run_tomac.py",
+            },
+        ]
+
+        deduped = audit_module._dedupe_live_processes(live_processes)
+        summary = summarize([], live_processes=deduped, now=datetime(2026, 5, 31, tzinfo=timezone.utc))
+
+        self.assertEqual(len(deduped), 1)
+        self.assertEqual(deduped[0]["process_count"], 2)
+        self.assertEqual(deduped[0]["related_pids"], [101, 202])
+        self.assertEqual(summary["live_factor_processes"], 1)
+        self.assertEqual(summary["live_factor_process_instances"], 2)
+        self.assertEqual(summary["duplicate_live_factor_process_instances"], 1)
+        self.assertIn("inspect duplicate live processes", summary["next_action"])
+
     def test_compact_live_process_marks_exit_file_stale_for_current_process(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             run_root = Path(tmp) / "ict-engine-live-root"
@@ -1436,7 +1465,10 @@ trade_usable=false
                         "retained_session_coverage": {
                             "status": "pass",
                             "has_non_rth_rows": True,
-                            "evidence": "verified retained tradable-session rows outside RTH",
+                            "non_rth_row_count": 384,
+                            "rth_window": "09:30-16:00",
+                            "timezone": "America/New_York",
+                            "evidence": "checks/retained_session_coverage.json",
                         },
                         "promotion_cost_verified": True,
                         "cost_model": {
@@ -3710,6 +3742,16 @@ trade_usable=false
             "support.scripts.tests.test_factor_claim_terminalization_audit."
             "FactorClaimTerminalizationAuditTest."
             "test_live_process_classifier_ignores_run_tomac_help_probe -v"
+        )
+
+        self.assertFalse(_is_live_factor_command(command))
+
+    def test_live_process_classifier_ignores_py_compile_factor_wrapper(self) -> None:
+        command = (
+            "/opt/homebrew/Cellar/python@3.13/3.13.12_1/Frameworks/Python.framework/Versions/3.13/"
+            "Resources/Python.app/Contents/MacOS/Python -m py_compile "
+            "support/docs/experiments/actionable-regime-confidence/scripts/"
+            "run_tomac_session_path_curvature_velocity_aqprep_v1.py"
         )
 
         self.assertFalse(_is_live_factor_command(command))

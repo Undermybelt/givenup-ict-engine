@@ -1502,6 +1502,8 @@ struct StructuralFeedbackAggregateStats {
     refs: StructuralFeedbackRefs,
     direction: Direction,
     count: usize,
+    accepted_execution_feedback_count: usize,
+    accepted_execution_feedback_kind: Option<&'static str>,
     pnl_sum: f64,
     gross_profit: f64,
     gross_loss_abs: f64,
@@ -1511,6 +1513,14 @@ struct StructuralFeedbackAggregateStats {
 impl StructuralFeedbackAggregateStats {
     fn push(&mut self, record: &FeedbackRecord) {
         self.count += 1;
+        if let Some(kind) = structural_feedback_execution_feedback_kind(&record.source) {
+            self.accepted_execution_feedback_count += 1;
+            self.accepted_execution_feedback_kind = match self.accepted_execution_feedback_kind {
+                None => Some(kind),
+                Some(existing) if existing == kind => Some(existing),
+                Some(_) => Some("mixed_execution_feedback"),
+            };
+        }
         self.pnl_sum += record.pnl;
         if record.pnl > 0.0 {
             self.gross_profit += record.pnl;
@@ -1539,6 +1549,90 @@ impl StructuralFeedbackAggregateStats {
             return 0.5;
         }
         (self.probability_sum / self.count as f64).clamp(0.01, 1.0)
+    }
+
+    fn live_trade_usable_source_kind(&self) -> Option<&'static str> {
+        if self.count >= 30
+            && self.accepted_execution_feedback_count == self.count
+            && self.pnl_sum > 0.0
+        {
+            return self.accepted_execution_feedback_kind;
+        }
+        None
+    }
+}
+
+fn structural_feedback_execution_feedback_kind(source: &str) -> Option<&'static str> {
+    let text = source.trim().to_ascii_lowercase();
+    if text.is_empty()
+        || text.contains("simulated")
+        || text.contains("simulation")
+        || text.contains("retained_real_event_label")
+    {
+        return None;
+    }
+    [
+        "paper_execution_feedback",
+        "live_execution_feedback",
+        "paper_trade_feedback",
+        "live_trade_feedback",
+        "broker_execution_feedback",
+    ]
+    .into_iter()
+    .find(|marker| source_marker_has_accepted_execution_feedback(&text, marker))
+}
+
+fn source_marker_tokens(text: &str) -> Vec<&str> {
+    text.split(|ch: char| !(ch.is_ascii_alphanumeric() || ch == '_'))
+        .filter(|token| !token.is_empty())
+        .collect()
+}
+
+fn source_marker_has_accepted_execution_feedback(text: &str, marker: &str) -> bool {
+    let tokens = source_marker_tokens(text);
+    tokens.iter().enumerate().any(|(index, token)| {
+        token == &marker
+            && !tokens[index.saturating_sub(3)..index]
+                .iter()
+                .any(|previous| {
+                    matches!(
+                        *previous,
+                        "not"
+                            | "no"
+                            | "non"
+                            | "without"
+                            | "missing"
+                            | "absent"
+                            | "fake"
+                            | "spoofed"
+                    )
+                })
+    })
+}
+
+fn structural_path_ranking_apply_execution_feedback_lifecycle_gates(
+    rows: &mut [StructuralPathRankingTargetRow],
+) {
+    for row in rows {
+        let accepted_kind = row
+            .score_source_kind
+            .as_deref()
+            .and_then(structural_feedback_execution_feedback_kind);
+        let Some(kind) = accepted_kind else {
+            continue;
+        };
+        if row.pending_reward_state != "matured_success"
+            || !row.maturity_mask
+            || !row.calibrated_label.is_some_and(|label| label > 0.0)
+            || !row.training_weight.is_some_and(|weight| weight > 0.0)
+        {
+            continue;
+        }
+        row.execution_gate_status = Some("live_trade_usable".to_string());
+        row.execution_gate_reason = Some(format!(
+            "accepted_execution_feedback_source={kind} pending_reward_state=matured_success training_weight={:.6}",
+            row.training_weight.unwrap_or_default()
+        ));
     }
 }
 
@@ -1569,6 +1663,8 @@ fn structural_path_ranking_feedback_aggregate_target_rows(
                     refs: refs.clone(),
                     direction: record.model_probabilities_before_trade.selected_direction,
                     count: 0,
+                    accepted_execution_feedback_count: 0,
+                    accepted_execution_feedback_kind: None,
                     pnl_sum: 0.0,
                     gross_profit: 0.0,
                     gross_loss_abs: 0.0,
@@ -1589,6 +1685,7 @@ fn structural_path_ranking_feedback_aggregate_target_rows(
             } else {
                 "matured_failure"
             };
+            let live_trade_usable_source_kind = stats.live_trade_usable_source_kind();
             let calibrated_label = structural_path_ranking_reward_label(pending_reward_state);
             let raw_path_score = stats.profit_factor_score();
             let behavior_policy_probability = stats.average_probability();
@@ -1695,9 +1792,14 @@ fn structural_path_ranking_feedback_aggregate_target_rows(
                 ob_confidence: None,
                 ob_fail_closed_reason: None,
                 score_model_family: None,
-                score_source_kind: None,
+                score_source_kind: live_trade_usable_source_kind.map(str::to_string),
                 score_model_artifact_uri: None,
-                score_generator: None,
+                score_generator: live_trade_usable_source_kind.map(|kind| {
+                    format!(
+                        "accepted_execution_feedback_aggregate:{kind}:count={}",
+                        stats.count
+                    )
+                }),
             };
             row.parent_regime_root = Some(stats.refs.node_id.clone());
             structural_populate_regime_profit_branch_fields(&mut row);
@@ -2875,8 +2977,10 @@ pub fn export_structural_path_ranking_target_with_agent_material_rank(
     for row in &mut history_artifact.rows {
         structural_populate_regime_profit_branch_fields(row);
     }
+    structural_path_ranking_apply_execution_feedback_lifecycle_gates(&mut history_artifact.rows);
     apply_structural_path_probability_bins(&mut current_artifact.rows, &history_report.bins);
     apply_structural_path_ranking_execution_gates(&mut current_artifact);
+    structural_path_ranking_apply_execution_feedback_lifecycle_gates(&mut current_artifact.rows);
     let history_csv = render_structural_path_ranking_target_rows_csv(
         &history_artifact.protocol_version,
         &history_artifact.symbol,
@@ -3012,6 +3116,7 @@ pub fn apply_structural_path_ranking_external_scores(
     };
     apply_structural_path_probability_bins(&mut current_artifact.rows, &history_report.bins);
     apply_structural_path_ranking_execution_gates(&mut current_artifact);
+    structural_path_ranking_apply_execution_feedback_lifecycle_gates(&mut current_artifact.rows);
     let csv_name = format!(
         "{STRUCTURAL_PATH_RANKING_TARGET_EXPORT_DIR}/{STRUCTURAL_PATH_RANKING_TARGET_CSV_FILE}"
     );
@@ -7651,6 +7756,191 @@ mod tests {
     }
 
     #[test]
+    fn target_export_marks_aggregate_paper_execution_feedback_as_live_trade_usable() {
+        let temp = tempfile::tempdir().unwrap();
+        let snapshot = WorkflowSnapshot {
+            symbol: "NQ".to_string(),
+            ..WorkflowSnapshot::default()
+        };
+        let path_id = "TrendExpansion -> IntradayMomentum -> mature_edge -> paper_exec_v1";
+        let feedback = (0..30)
+            .map(|index| {
+                let outcome = if index < 20 { "win" } else { "loss" };
+                let mut record = feedback_record_for_target_export(
+                    &format!("paper-exec-{index}"),
+                    path_id,
+                    outcome,
+                    0.72,
+                );
+                record.source =
+                    "auto_quant_real_trades:paper_execution_feedback:nq_compound_test".to_string();
+                record.pnl = if index < 20 { 1.0 } else { -0.5 };
+                record
+            })
+            .collect::<Vec<_>>();
+
+        let summary = export_structural_path_ranking_target(
+            temp.path().to_str().unwrap(),
+            "NQ",
+            &snapshot,
+            &ProviderCatalogAgentSurface::default(),
+            &feedback,
+            &StructuralPriorLearningState::default(),
+        )
+        .unwrap();
+        let current_rows =
+            load_structural_path_ranking_target_rows(Path::new(&summary.jsonl_path)).unwrap();
+        let aggregate = current_rows
+            .iter()
+            .find(|row| {
+                row.path_id == path_id
+                    && row
+                        .candidate_set_id
+                        .starts_with("structural-feedback-aggregate:")
+            })
+            .expect("aggregate paper execution feedback row");
+
+        assert_eq!(aggregate.pending_reward_state, "matured_success");
+        assert_eq!(
+            aggregate.execution_gate_status.as_deref(),
+            Some("live_trade_usable")
+        );
+        assert!(aggregate.training_weight.unwrap_or_default() > 0.0);
+
+        let status = crate::application::entry_models::policy_training_status(
+            temp.path().to_str().unwrap(),
+            "NQ",
+            None,
+        )
+        .unwrap();
+        assert_eq!(status.factor_profitability_lifecycle.live_ready_count, 1);
+        assert!(status.factor_profitability_lifecycle.trade_usable);
+    }
+
+    #[test]
+    fn target_export_does_not_mark_simulated_aggregate_feedback_as_live_trade_usable() {
+        let temp = tempfile::tempdir().unwrap();
+        let snapshot = WorkflowSnapshot {
+            symbol: "NQ".to_string(),
+            ..WorkflowSnapshot::default()
+        };
+        let path_id = "TrendExpansion -> IntradayMomentum -> mature_edge -> simulated_exec_v1";
+        let feedback = (0..30)
+            .map(|index| {
+                let outcome = if index < 20 { "win" } else { "loss" };
+                let mut record = feedback_record_for_target_export(
+                    &format!("sim-exec-{index}"),
+                    path_id,
+                    outcome,
+                    0.72,
+                );
+                record.source =
+                    "auto_quant_replay:simulated_backtest:retained_real_event_label".to_string();
+                record.pnl = if index < 20 { 1.0 } else { -0.5 };
+                record
+            })
+            .collect::<Vec<_>>();
+
+        let summary = export_structural_path_ranking_target(
+            temp.path().to_str().unwrap(),
+            "NQ",
+            &snapshot,
+            &ProviderCatalogAgentSurface::default(),
+            &feedback,
+            &StructuralPriorLearningState::default(),
+        )
+        .unwrap();
+        let current_rows =
+            load_structural_path_ranking_target_rows(Path::new(&summary.jsonl_path)).unwrap();
+        let aggregate = current_rows
+            .iter()
+            .find(|row| {
+                row.path_id == path_id
+                    && row
+                        .candidate_set_id
+                        .starts_with("structural-feedback-aggregate:")
+            })
+            .expect("aggregate simulated feedback row");
+
+        assert_eq!(aggregate.pending_reward_state, "matured_success");
+        assert_ne!(
+            aggregate.execution_gate_status.as_deref(),
+            Some("live_trade_usable")
+        );
+
+        let status = crate::application::entry_models::policy_training_status(
+            temp.path().to_str().unwrap(),
+            "NQ",
+            None,
+        )
+        .unwrap();
+        assert_eq!(status.factor_profitability_lifecycle.live_ready_count, 0);
+        assert!(!status.factor_profitability_lifecycle.trade_usable);
+    }
+
+    #[test]
+    fn target_export_does_not_mark_spoofed_aggregate_feedback_substring_as_live_trade_usable() {
+        let temp = tempfile::tempdir().unwrap();
+        let snapshot = WorkflowSnapshot {
+            symbol: "NQ".to_string(),
+            ..WorkflowSnapshot::default()
+        };
+        let path_id = "TrendExpansion -> IntradayMomentum -> mature_edge -> spoofed_exec_v1";
+        let feedback = (0..30)
+            .map(|index| {
+                let outcome = if index < 20 { "win" } else { "loss" };
+                let mut record = feedback_record_for_target_export(
+                    &format!("spoofed-exec-{index}"),
+                    path_id,
+                    outcome,
+                    0.72,
+                );
+                record.source =
+                    "auto_quant_real_trades:without-broker-paper_execution_feedback:nq_compound_test"
+                        .to_string();
+                record.pnl = if index < 20 { 1.0 } else { -0.5 };
+                record
+            })
+            .collect::<Vec<_>>();
+
+        let summary = export_structural_path_ranking_target(
+            temp.path().to_str().unwrap(),
+            "NQ",
+            &snapshot,
+            &ProviderCatalogAgentSurface::default(),
+            &feedback,
+            &StructuralPriorLearningState::default(),
+        )
+        .unwrap();
+        let current_rows =
+            load_structural_path_ranking_target_rows(Path::new(&summary.jsonl_path)).unwrap();
+        let aggregate = current_rows
+            .iter()
+            .find(|row| {
+                row.path_id == path_id
+                    && row
+                        .candidate_set_id
+                        .starts_with("structural-feedback-aggregate:")
+            })
+            .expect("aggregate spoofed feedback row");
+
+        assert_eq!(aggregate.pending_reward_state, "matured_success");
+        assert_ne!(
+            aggregate.execution_gate_status.as_deref(),
+            Some("live_trade_usable")
+        );
+
+        let status = crate::application::entry_models::policy_training_status(
+            temp.path().to_str().unwrap(),
+            "NQ",
+            None,
+        )
+        .unwrap();
+        assert_eq!(status.factor_profitability_lifecycle.live_ready_count, 0);
+        assert!(!status.factor_profitability_lifecycle.trade_usable);
+    }
+
+    #[test]
     fn target_export_skips_infrastructure_negative_feedback_rows() {
         let temp = tempfile::tempdir().unwrap();
         let snapshot = WorkflowSnapshot {
@@ -9896,7 +10186,10 @@ mod tests {
                 matched.score_generator.as_deref(),
                 Some("test-canonical-branch-scorer")
             );
-            assert_eq!(matched.regime_profit_branch_path.as_deref(), Some(legacy_path));
+            assert_eq!(
+                matched.regime_profit_branch_path.as_deref(),
+                Some(legacy_path)
+            );
         }
     }
 

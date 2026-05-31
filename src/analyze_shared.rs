@@ -1673,14 +1673,10 @@ fn same_root_admission_practical_closure_packet_validated(packet: &serde_json::V
             .get("evidence_packet")
             .and_then(serde_json::Value::as_str)
             .is_some_and(|path| !path.trim().is_empty())
-        && (packet
+        && packet
             .get("evidence_packet_validated")
             .and_then(serde_json::Value::as_bool)
             .unwrap_or(false)
-            || packet
-                .get("evidence_validated")
-                .and_then(serde_json::Value::as_bool)
-                .unwrap_or(false))
 }
 
 fn same_root_admission_live_trade_ready(admission: &serde_json::Value) -> bool {
@@ -2409,6 +2405,29 @@ mod tests {
 
         assert!(same_root_admission_practical_closure_validated(&admission));
         assert!(same_root_admission_live_trade_ready(&admission));
+    }
+
+    #[test]
+    fn same_root_admission_practical_closure_rejects_legacy_evidence_validated_alias() {
+        let mut closure = validated_same_tree_practical_closure();
+        closure
+            .as_object_mut()
+            .unwrap()
+            .remove("evidence_packet_validated");
+        closure["evidence_validated"] = serde_json::json!(true);
+        let admission = serde_json::json!({
+            "status": "admitted",
+            "learning_admission_status": "admitted",
+            "paper_admission_status": "ready",
+            "live_trade_status": "ready",
+            "promotion_allowed": true,
+            "trade_usable": true,
+            "update_goal": true,
+            "same_tree_practical_closure": closure
+        });
+
+        assert!(!same_root_admission_practical_closure_validated(&admission));
+        assert!(!same_root_admission_live_trade_ready(&admission));
     }
 
     #[test]

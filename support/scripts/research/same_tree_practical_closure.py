@@ -9,6 +9,7 @@ from one owner with one validation contract.
 from __future__ import annotations
 
 import json
+import re
 from pathlib import Path
 from typing import Any
 
@@ -38,6 +39,17 @@ ACCEPTED_EXECUTION_FEEDBACK_SOURCE_MARKERS = (
     "live_trade_feedback",
     "broker_execution_feedback",
 )
+NEGATED_EXECUTION_FEEDBACK_MARKER_PREFIXES = {
+    "not",
+    "no",
+    "non",
+    "without",
+    "missing",
+    "absent",
+    "fake",
+    "spoofed",
+}
+NEGATED_EXECUTION_FEEDBACK_MARKER_LOOKBACK = 3
 DEPLOY_READY_READINESS_CONTRACT = (
     "deploy_ready_from_backtest_autoquant_provider_or_paper_sim_execution_chain_not_funded_fill"
 )
@@ -75,6 +87,7 @@ def build_same_tree_practical_closure_packet(
         "readiness_contract": DEPLOY_READY_READINESS_CONTRACT,
         "provider_execution_feedback_chain": "pass",
         "evidence_packet": evidence_packet,
+        "evidence_packet_validated": True,
         "path_ranker_score_used_by_execution_tree": metrics.get(
             "path_ranker_score_used_by_execution_tree"
         ),
@@ -210,7 +223,21 @@ def _is_accepted_execution_feedback_source(value: object) -> bool:
     text = normalized_text(value)
     if not text or _is_simulated_feedback_source(text):
         return False
-    return any(marker in text for marker in ACCEPTED_EXECUTION_FEEDBACK_SOURCE_MARKERS)
+    tokens = source_marker_tokens(text)
+    return source_tokens_have_accepted_execution_feedback_marker(tokens)
+
+
+def source_tokens_have_accepted_execution_feedback_marker(tokens: list[str]) -> bool:
+    for index, token in enumerate(tokens):
+        if token not in ACCEPTED_EXECUTION_FEEDBACK_SOURCE_MARKERS:
+            continue
+        lookback_tokens = tokens[
+            max(0, index - NEGATED_EXECUTION_FEEDBACK_MARKER_LOOKBACK) : index
+        ]
+        if any(token in NEGATED_EXECUTION_FEEDBACK_MARKER_PREFIXES for token in lookback_tokens):
+            continue
+        return True
+    return False
 
 
 def _is_simulated_feedback_source(value: object) -> bool:
@@ -229,6 +256,14 @@ def _is_simulated_feedback_source(value: object) -> bool:
     return any(marker in text for marker in simulated_markers)
 
 
+def source_marker_tokens(value: str) -> list[str]:
+    return [
+        token
+        for token in re.split(r"[^a-z0-9_]+", value)
+        if token
+    ]
+
+
 def session_scope_proves_practical_closure(metrics: dict[str, Any]) -> bool:
     scope = normalized_key(metrics.get("session_scope"))
     if scope not in {"eth_full_retained_session", "full_retained_session", "eth"}:
@@ -242,8 +277,40 @@ def session_scope_proves_practical_closure(metrics: dict[str, Any]) -> bool:
         return False
     if coverage.get("has_non_rth_rows") is not True:
         return False
-    evidence = coverage.get("evidence") or coverage.get("evidence_path") or coverage.get("row_coverage_evidence")
-    return isinstance(evidence, str) and bool(evidence.strip())
+    if positive_int(
+        coverage.get("non_rth_row_count")
+        or coverage.get("retained_non_rth_row_count")
+        or coverage.get("outside_rth_row_count")
+        or coverage.get("rows_outside_rth")
+    ) <= 0:
+        return False
+    if not any(
+        verified_cost_model_text(coverage.get(key))
+        for key in ("rth_window", "regular_session_window", "exchange_local_rth_window")
+    ):
+        return False
+    if not any(
+        verified_cost_model_text(coverage.get(key))
+        for key in ("timezone", "exchange_timezone", "rth_timezone")
+    ):
+        return False
+    evidence = (
+        coverage.get("evidence")
+        or coverage.get("evidence_path")
+        or coverage.get("row_coverage_evidence")
+    )
+    if isinstance(evidence, str):
+        return structured_evidence_ref_text(evidence)
+    if isinstance(evidence, (dict, list)):
+        return bool(evidence)
+    return False
+
+
+def structured_evidence_ref_text(value: object) -> bool:
+    text = normalized_text(value)
+    if not text or any(char.isspace() for char in text):
+        return False
+    return "/" in text or "." in text
 
 
 def cost_model_proves_practical_closure(metrics: dict[str, Any]) -> bool:

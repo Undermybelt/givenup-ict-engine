@@ -955,6 +955,8 @@ def summarize(
     promotion_allowed_true = sum(1 for claim in claims if claim.get("promotion_allowed") is True)
     same_tree_practical_closure = _discover_same_tree_practical_closure(claims, repo_root=repo_root)
     live_factor_processes = len(live_processes)
+    live_factor_process_instances = sum(int(process.get("process_count") or 1) for process in live_processes)
+    duplicate_live_factor_process_instances = max(0, live_factor_process_instances - live_factor_processes)
     needs_attention = bool(
         active_claims
         or invalid_active_claims
@@ -994,6 +996,8 @@ def summarize(
     if live_factor_processes:
         blocking_reasons.append("live_factor_processes")
         next_actions.append("wait for live factor processes to exit or claim them before closure")
+        if duplicate_live_factor_process_instances:
+            next_actions.append("inspect duplicate live processes sharing the same run root before closure")
     if missing_run_roots:
         blocking_reasons.append("missing_run_roots")
         next_actions.append("restore or terminalize missing run roots")
@@ -1020,6 +1024,8 @@ def summarize(
         "fresh_wait_only_active_claims_without_live_process": fresh_wait_only_active_claims_without_live_process,
         "stale_wait_only_active_claims_without_live_process": stale_wait_only_active_claims_without_live_process,
         "live_factor_processes": live_factor_processes,
+        "live_factor_process_instances": live_factor_process_instances,
+        "duplicate_live_factor_process_instances": duplicate_live_factor_process_instances,
         "missing_run_roots": missing_run_roots,
         "trade_usable_true": trade_usable_true,
         "promotion_allowed_true": promotion_allowed_true,
@@ -1352,7 +1358,12 @@ def _is_live_factor_command(command: str) -> bool:
 
 def _is_test_runner_command(command: str) -> bool:
     normalized = " ".join(command.split())
-    return bool(re.search(r"(?:^|\s)(?:python\d*(?:\.\d+)?|\S*/Python)\s+-m\s+unittest(?:\s|$)", normalized))
+    return bool(
+        re.search(
+            r"(?:^|\s)(?:python\d*(?:\.\d+)?|\S*/Python)\s+-m\s+(?:unittest|py_compile|compileall)(?:\s|$)",
+            normalized,
+        )
+    )
 
 
 def _is_git_patch_command(command: str) -> bool:
@@ -1737,13 +1748,22 @@ def _pid_cwds(pids: list[int]) -> dict[int, str]:
 
 
 def _dedupe_live_processes(processes: list[dict[str, Any]]) -> list[dict[str, Any]]:
-    by_key: dict[str, dict[str, Any]] = {}
+    by_key: dict[str, list[dict[str, Any]]] = {}
     for process in processes:
         key = str(process.get("run_root") or process.get("pid"))
-        current = by_key.get(key)
-        if current is None or _process_rank(process) > _process_rank(current):
-            by_key[key] = process
-    return sorted(by_key.values(), key=lambda item: int(item.get("pid") or 0))
+        by_key.setdefault(key, []).append(process)
+
+    deduped: list[dict[str, Any]] = []
+    for grouped in by_key.values():
+        representative = max(grouped, key=_process_rank)
+        if len(grouped) > 1:
+            representative = dict(representative)
+            representative["process_count"] = len(grouped)
+            representative["related_pids"] = sorted(
+                int(process["pid"]) for process in grouped if process.get("pid") is not None
+            )
+        deduped.append(representative)
+    return sorted(deduped, key=lambda item: int(item.get("pid") or 0))
 
 
 def _drop_stale_failed_tomac_prep_wrappers(processes: list[dict[str, Any]]) -> list[dict[str, Any]]:
@@ -2007,16 +2027,22 @@ def _attention_action_queue(
             }
             for claim in stale_takeover_claims
         ],
-        "live_runtime_run_roots": [
-            {
-                "pid": process.get("pid"),
-                "run_root": process.get("run_root"),
-                "exit_file_state": process.get("exit_file_state"),
-                "command_excerpt": process.get("command_excerpt"),
-            }
-            for process in live_processes
-        ],
+        "live_runtime_run_roots": [_compact_live_runtime_queue_item(process) for process in live_processes],
     }
+
+
+def _compact_live_runtime_queue_item(process: dict[str, Any]) -> dict[str, Any]:
+    item = {
+        "pid": process.get("pid"),
+        "run_root": process.get("run_root"),
+        "exit_file_state": process.get("exit_file_state"),
+        "command_excerpt": process.get("command_excerpt"),
+    }
+    if process.get("process_count", 1) != 1:
+        item["process_count"] = process.get("process_count")
+    if process.get("related_pids"):
+        item["related_pids"] = process.get("related_pids")
+    return item
 
 
 def _compact_live_process(process: dict[str, Any], root: str, portable_paths: bool = False) -> dict[str, Any]:
@@ -2028,7 +2054,7 @@ def _compact_live_process(process: dict[str, Any], root: str, portable_paths: bo
         exit_file_state = "present" if process.get("exit_file_exists") else "missing"
         if exit_file_state == "present" and _exit_file_predates_live_process(process):
             exit_file_state = "stale_for_process"
-    return {
+    item = {
         "pid": process.get("pid"),
         "ppid": process.get("ppid"),
         "elapsed": process.get("elapsed"),
@@ -2037,7 +2063,12 @@ def _compact_live_process(process: dict[str, Any], root: str, portable_paths: bo
         "run_root": _compact_text(process.get("run_root"), root, portable_paths=portable_paths),
         "exit_file": _compact_text(process.get("exit_file"), root, portable_paths=portable_paths),
         "command_excerpt": _compact_text(process.get("command_excerpt"), root, portable_paths=portable_paths),
-}
+    }
+    if process.get("process_count", 1) != 1:
+        item["process_count"] = process.get("process_count")
+    if process.get("related_pids"):
+        item["related_pids"] = process.get("related_pids")
+    return item
 
 
 def _exit_file_predates_live_process(process: dict[str, Any]) -> bool:

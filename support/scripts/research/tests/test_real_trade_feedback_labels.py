@@ -359,6 +359,39 @@ class RealTradeFeedbackLabelsTests(unittest.TestCase):
                 feedback_source="auto_quant_real_trades:simulated_backtest:test",
             )
 
+        with self.assertRaisesRegex(ValueError, "accepted paper/live/broker execution marker"):
+            builder.build_accepted_paper_execution_feedback_rows(
+                captures,
+                symbol="S",
+                strategy_name="strategy",
+                factor_id="factor",
+                branch_path="Branch -> factor",
+                auto_quant_run_id="run",
+                feedback_source="auto_quant_real_trades:not_paper_execution_feedback:test",
+            )
+
+        with self.assertRaisesRegex(ValueError, "accepted paper/live/broker execution marker"):
+            builder.build_accepted_paper_execution_feedback_rows(
+                captures,
+                symbol="S",
+                strategy_name="strategy",
+                factor_id="factor",
+                branch_path="Branch -> factor",
+                auto_quant_run_id="run",
+                feedback_source="auto_quant_real_trades:not-paper_execution_feedback:test",
+            )
+
+        with self.assertRaisesRegex(ValueError, "accepted paper/live/broker execution marker"):
+            builder.build_accepted_paper_execution_feedback_rows(
+                captures,
+                symbol="S",
+                strategy_name="strategy",
+                factor_id="factor",
+                branch_path="Branch -> factor",
+                auto_quant_run_id="run",
+                feedback_source="auto_quant_real_trades:without-broker-paper_execution_feedback:test",
+            )
+
     def test_accepted_feedback_summary_rejects_simulated_feedback_source(self) -> None:
         summary = builder.build_accepted_feedback_conversion_summary(
             rows=[

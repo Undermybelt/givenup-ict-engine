@@ -90,7 +90,10 @@ def valid_metrics() -> dict:
         "retained_session_coverage": {
             "status": "pass",
             "has_non_rth_rows": True,
-            "evidence": "verified retained tradable-session rows outside RTH",
+            "non_rth_row_count": 384,
+            "rth_window": "09:30-16:00",
+            "timezone": "America/New_York",
+            "evidence": "checks/retained_session_coverage.json",
         },
         "promotion_cost_verified": True,
         "cost_model": {
@@ -127,6 +130,7 @@ class SameTreePracticalClosureTests(unittest.TestCase):
         self.assertFalse(packet["funded_live_fill_required"])
         self.assertEqual(packet["readiness_contract"], closure.DEPLOY_READY_READINESS_CONTRACT)
         self.assertEqual(packet["provider_execution_feedback_chain"], "pass")
+        self.assertTrue(packet["evidence_packet_validated"])
 
     def test_builds_pass_packet_from_full_chain_without_caller_preset_practical_flags(self) -> None:
         metrics = valid_metrics()
@@ -245,6 +249,41 @@ class SameTreePracticalClosureTests(unittest.TestCase):
 
         self.assertIsNone(closure.build_same_tree_practical_closure_packet(metrics))
 
+    def test_rejects_spoofed_accepted_execution_feedback_substring(self) -> None:
+        metrics = valid_metrics()
+        metrics["feedback_source"] = "audit:not_paper_execution_feedback:factor_v1"
+        metrics["runtime_trade_feedback_summary"] = {
+            "source": "audit:not_paper_execution_feedback:factor_v1",
+            "accepted_rows": 3,
+            "broker_fill_evidence_rows": 3,
+            "broker_realized_rows": 3,
+        }
+
+        self.assertIsNone(closure.build_same_tree_practical_closure_packet(metrics))
+
+    def test_rejects_negated_accepted_execution_feedback_token(self) -> None:
+        metrics = valid_metrics()
+        metrics["feedback_source"] = "audit:not-paper_execution_feedback:factor_v1"
+        metrics["runtime_trade_feedback_summary"] = {
+            "source": "audit:not paper_execution_feedback factor_v1",
+            "accepted_rows": 3,
+            "broker_fill_evidence_rows": 3,
+            "broker_realized_rows": 3,
+        }
+
+        self.assertIsNone(closure.build_same_tree_practical_closure_packet(metrics))
+
+        metrics = valid_metrics()
+        metrics["feedback_source"] = "audit:without broker paper_execution_feedback:factor_v1"
+        metrics["runtime_trade_feedback_summary"] = {
+            "source": "audit:without-broker-paper_execution_feedback:factor_v1",
+            "accepted_rows": 3,
+            "broker_fill_evidence_rows": 3,
+            "broker_realized_rows": 3,
+        }
+
+        self.assertIsNone(closure.build_same_tree_practical_closure_packet(metrics))
+
     def test_rejects_accepted_source_without_broker_execution_evidence(self) -> None:
         metrics = valid_metrics()
         metrics["runtime_trade_feedback_summary"] = {
@@ -274,6 +313,16 @@ class SameTreePracticalClosureTests(unittest.TestCase):
 
         metrics = valid_metrics()
         metrics["retained_session_coverage"]["has_non_rth_rows"] = False
+
+        self.assertIsNone(closure.build_same_tree_practical_closure_packet(metrics))
+
+    def test_rejects_session_scope_with_only_unstructured_non_rth_evidence_text(self) -> None:
+        metrics = valid_metrics()
+        metrics["retained_session_coverage"] = {
+            "status": "pass",
+            "has_non_rth_rows": True,
+            "evidence": "verified retained tradable-session rows outside RTH",
+        }
 
         self.assertIsNone(closure.build_same_tree_practical_closure_packet(metrics))
 
