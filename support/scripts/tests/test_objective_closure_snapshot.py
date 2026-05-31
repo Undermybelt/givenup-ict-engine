@@ -2023,6 +2023,10 @@ class ObjectiveClosureSnapshotTest(unittest.TestCase):
                             "status": "pass",
                             "completion_ready": False,
                             "evidence_level": "partial_skipped_gates",
+                            "pass_count": 7,
+                            "fail_count": 0,
+                            "skip_count": 4,
+                            "total_gates": 11,
                             "unresolved": [],
                             "skipped_gates": ["cargo_test"],
                             "next_action": "rerun with --run-all-heavy before treating done-definition as completion proof",
@@ -2079,6 +2083,10 @@ class ObjectiveClosureSnapshotTest(unittest.TestCase):
                         "status": "pass",
                         "completion_ready": True,
                         "evidence_level": "full_enabled_gate_coverage",
+                        "pass_count": 11,
+                        "fail_count": 0,
+                        "skip_count": 0,
+                        "total_gates": 11,
                         "unresolved": [],
                         "skipped_gates": [],
                         "next_action": "done-definition gates have full enabled coverage",
@@ -2099,6 +2107,10 @@ class ObjectiveClosureSnapshotTest(unittest.TestCase):
         self.assertTrue(done_surface["completion_ready"])
         self.assertEqual(done_surface["proof_source"], "heavy_done_definition.compact.json")
         self.assertTrue(done_surface["proof_applied"])
+        self.assertEqual(done_surface["pass_count"], 11)
+        self.assertEqual(done_surface["fail_count"], 0)
+        self.assertEqual(done_surface["skip_count"], 0)
+        self.assertEqual(done_surface["total_gates"], 11)
         self.assertNotIn("done_definition_not_completion_ready", snapshot["summary"]["blockers"])
         self.assertIn("factor_closure_blocked", snapshot["summary"]["blockers"])
         self.assertIn("release_readiness_blocked", snapshot["summary"]["blockers"])
