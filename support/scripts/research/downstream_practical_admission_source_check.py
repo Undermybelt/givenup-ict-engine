@@ -6,11 +6,38 @@ from __future__ import annotations
 import argparse
 import ast
 import json
+import subprocess
+import sys
+from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 from typing import Any
 
 
+TRACKED_RUN_WRAPPER_GLOB = "support/docs/experiments/actionable-regime-confidence/scripts/run_*.py"
 PRACTICAL_KEYS = frozenset(("promotion_allowed", "trade_usable", "update_goal"))
+SOURCE_SCAN_TRIGGER_STRINGS = (
+    "promotion_allowed",
+    "trade_usable",
+    "update_goal",
+    "practical_admission_flags",
+    "same-tree-practical-closure/v1",
+    "same_tree_practical_closure",
+    "write_text",
+    "pda_hybrid_alignment",
+    "pda_required",
+    "transition_hazard",
+    "transition_hazard_required",
+    "transition_hazard_lt",
+    "survives_5bps_per_side",
+    "survives_2bps_per_side",
+    "survivors_",
+    "downstream_allowed",
+    "learning_admission",
+    "learning_allowed",
+)
+_SEGMENT_CACHE_SOURCE_ID: int | None = None
+_SEGMENT_CACHE_SOURCE: str | None = None
+_SEGMENT_CACHE_LINES: list[str] = []
 LEARNING_KEYS = frozenset((
     "learning_admission",
     "learning_admission_status",
@@ -40,6 +67,7 @@ PDA_HARD_GATE_PATTERNS = (
 )
 TRANSITION_HARD_GATE_PATTERNS = (
     "hazard < 0.60",
+    "hazard_f < 0.60",
     "transition_hazard < 0.60",
     "hybrid_transition_hazard < 0.60",
     "transition_hazard_gte_0.60",
@@ -112,10 +140,38 @@ def string_key(node: ast.AST) -> str | None:
 
 
 def expression_text(source: str, node: ast.AST) -> str:
-    segment = ast.get_source_segment(source, node)
+    segment = cached_source_segment(source, node)
     if segment:
         return " ".join(segment.strip().split())
     return ast.dump(node, annotate_fields=False, include_attributes=False)
+
+
+def cached_source_segment(source: str, node: ast.AST) -> str | None:
+    lineno = getattr(node, "lineno", None)
+    end_lineno = getattr(node, "end_lineno", None)
+    col_offset = getattr(node, "col_offset", None)
+    end_col_offset = getattr(node, "end_col_offset", None)
+    if not all(isinstance(value, int) for value in (lineno, end_lineno, col_offset, end_col_offset)):
+        return None
+    lines = cached_source_lines(source)
+    if lineno < 1 or end_lineno < lineno or end_lineno > len(lines):
+        return None
+    if lineno == end_lineno:
+        return lines[lineno - 1][col_offset:end_col_offset]
+    selected = [lines[lineno - 1][col_offset:]]
+    selected.extend(lines[lineno:end_lineno - 1])
+    selected.append(lines[end_lineno - 1][:end_col_offset])
+    return "".join(selected)
+
+
+def cached_source_lines(source: str) -> list[str]:
+    global _SEGMENT_CACHE_LINES, _SEGMENT_CACHE_SOURCE, _SEGMENT_CACHE_SOURCE_ID
+    source_id = id(source)
+    if _SEGMENT_CACHE_SOURCE_ID != source_id or _SEGMENT_CACHE_SOURCE is not source:
+        _SEGMENT_CACHE_SOURCE_ID = source_id
+        _SEGMENT_CACHE_SOURCE = source
+        _SEGMENT_CACHE_LINES = source.splitlines(keepends=True)
+    return _SEGMENT_CACHE_LINES
 
 
 def is_false_literal(node: ast.AST) -> bool:
@@ -174,7 +230,42 @@ def contains_pda_hard_gate(source: str, node: ast.AST) -> bool:
 
 def contains_transition_hard_gate(source: str, node: ast.AST) -> bool:
     text = expression_text(source, node)
-    return any(pattern in text for pattern in TRANSITION_HARD_GATE_PATTERNS)
+    if any(pattern in text for pattern in TRANSITION_HARD_GATE_PATTERNS):
+        return True
+    return any(is_transition_hazard_threshold_compare(child) for child in ast.walk(node))
+
+
+def is_transition_hazard_threshold_compare(node: ast.AST) -> bool:
+    if not isinstance(node, ast.Compare):
+        return False
+    operands = [node.left, *node.comparators]
+    for left, op, right in zip(operands, node.ops, operands[1:]):
+        if isinstance(op, (ast.Lt, ast.LtE)):
+            if expression_names_transition_hazard(left) and expression_is_numeric_threshold(right, 0.60):
+                return True
+        if isinstance(op, (ast.Gt, ast.GtE)):
+            if expression_is_numeric_threshold(left, 0.60) and expression_names_transition_hazard(right):
+                return True
+    return False
+
+
+def expression_names_transition_hazard(node: ast.AST) -> bool:
+    for child in ast.walk(node):
+        if isinstance(child, ast.Name) and "hazard" in child.id.lower():
+            return True
+        if isinstance(child, ast.Attribute) and "hazard" in child.attr.lower():
+            return True
+        if isinstance(child, ast.Constant) and isinstance(child.value, str):
+            lowered = child.value.lower()
+            if "hazard" in lowered or "transition_hazard" in lowered:
+                return True
+    return False
+
+
+def expression_is_numeric_threshold(node: ast.AST, value: float) -> bool:
+    if isinstance(node, ast.Constant) and isinstance(node.value, (int, float)):
+        return abs(float(node.value) - value) < 1e-9
+    return False
 
 
 def contains_legacy_fixed_bps_downstream_gate(source: str, node: ast.AST) -> bool:
@@ -808,16 +899,107 @@ def check_source(source: str, *, path: Path | None = None) -> dict[str, Any]:
 
 
 def check_source_file(path: Path) -> dict[str, Any]:
-    return check_source(path.read_text(encoding="utf-8"), path=path)
+    source = path.read_text(encoding="utf-8")
+    if not any(trigger in source for trigger in SOURCE_SCAN_TRIGGER_STRINGS):
+        return {
+            "file": str(path),
+            "ok": True,
+            "decision": "practical_admission_source_irrelevant",
+            "violations": [],
+        }
+    return check_source(source, path=path)
+
+
+def git_repo_root(cwd: Path | None = None) -> Path:
+    proc = subprocess.run(
+        ["git", "rev-parse", "--show-toplevel"],
+        cwd=cwd or Path.cwd(),
+        check=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True,
+    )
+    return Path(proc.stdout.strip())
+
+
+def tracked_run_wrapper_files(repo_root: Path | None = None) -> list[Path]:
+    root = repo_root or git_repo_root()
+    proc = subprocess.run(
+        ["git", "ls-files", TRACKED_RUN_WRAPPER_GLOB],
+        cwd=root,
+        check=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True,
+    )
+    return [root / line.strip() for line in proc.stdout.splitlines() if line.strip()]
+
+
+def files_from_list(path: str | Path, *, stdin_text: str | None = None) -> list[Path]:
+    if str(path) == "-":
+        content = sys.stdin.read() if stdin_text is None else stdin_text
+    else:
+        content = Path(path).read_text(encoding="utf-8")
+    return [Path(line.strip()) for line in content.splitlines() if line.strip()]
+
+
+def collect_cli_files(
+    files: list[Path],
+    *,
+    files_from: str | Path | None = None,
+    tracked_run_wrappers: bool = False,
+    repo_root: Path | None = None,
+    stdin_text: str | None = None,
+) -> list[Path]:
+    candidates = list(files)
+    if files_from is not None:
+        candidates.extend(files_from_list(files_from, stdin_text=stdin_text))
+    if tracked_run_wrappers:
+        candidates.extend(tracked_run_wrapper_files(repo_root))
+
+    deduped: list[Path] = []
+    seen: set[str] = set()
+    for path in candidates:
+        key = str(path)
+        if key in seen:
+            continue
+        seen.add(key)
+        deduped.append(path)
+    return deduped
+
+
+def scan_source_files(paths: list[Path], *, jobs: int = 1) -> list[dict[str, Any]]:
+    worker_count = max(1, int(jobs))
+    if worker_count == 1 or len(paths) <= 1:
+        return [check_source_file(path) for path in paths]
+    with ThreadPoolExecutor(max_workers=worker_count) as executor:
+        return list(executor.map(check_source_file, paths))
 
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("files", nargs="+", type=Path, help="Python downstream wrapper files to scan")
+    parser.add_argument("files", nargs="*", type=Path, help="Python downstream wrapper files to scan")
+    parser.add_argument(
+        "--files-from",
+        help="Read newline-delimited Python wrapper paths from a file, or '-' for stdin",
+    )
+    parser.add_argument(
+        "--tracked-run-wrappers",
+        action="store_true",
+        help=f"Scan tracked repo wrappers matched by git ls-files {TRACKED_RUN_WRAPPER_GLOB!r}",
+    )
+    parser.add_argument("--jobs", type=int, default=1, help="Number of source-scan workers")
     parser.add_argument("--pretty", action="store_true", help="Pretty-print JSON output")
     args = parser.parse_args()
 
-    reports = [check_source_file(path) for path in args.files]
+    files = collect_cli_files(
+        args.files,
+        files_from=args.files_from,
+        tracked_run_wrappers=args.tracked_run_wrappers,
+    )
+    if not files:
+        parser.error("provide wrapper files, --files-from, or --tracked-run-wrappers")
+    reports = scan_source_files(files, jobs=args.jobs)
     print(json.dumps(reports, ensure_ascii=False, indent=2 if args.pretty else None))
     return 0 if all(report["ok"] for report in reports) else 1
 

@@ -9,7 +9,7 @@ from pathlib import Path
 from path_defaults import resolve_repo_root
 
 ROOT = resolve_repo_root(__file__)
-HELP_TIMEOUT_SECONDS = 15
+DEFAULT_HELP_TIMEOUT_SECONDS = 15
 DEFAULT_BUILD_TIMEOUT_SECONDS = 120
 BANNED_HELP_PATTERNS = [
     r"e\.g\.\s*NQ",
@@ -53,6 +53,17 @@ def build_timeout_seconds():
     except ValueError:
         return DEFAULT_BUILD_TIMEOUT_SECONDS
     return value if value > 0 else DEFAULT_BUILD_TIMEOUT_SECONDS
+
+
+def help_timeout_seconds():
+    raw = os.environ.get('ICT_ENGINE_HELP_AUDIT_HELP_TIMEOUT_SECONDS', '').strip()
+    if not raw:
+        return DEFAULT_HELP_TIMEOUT_SECONDS
+    try:
+        value = int(raw)
+    except ValueError:
+        return DEFAULT_HELP_TIMEOUT_SECONDS
+    return value if value > 0 else DEFAULT_HELP_TIMEOUT_SECONDS
 
 
 def ict_engine_bin():
@@ -99,7 +110,9 @@ def ict_engine_bin():
     return candidate
 
 
-def run_help(args, timeout=HELP_TIMEOUT_SECONDS):
+def run_help(args, timeout=None):
+    if timeout is None:
+        timeout = help_timeout_seconds()
     result = subprocess.run(
         [str(ict_engine_bin()), *args],
         cwd=ROOT,

@@ -26,6 +26,65 @@ class DownstreamPracticalAdmissionSourceCheckTests(unittest.TestCase):
         path.write_text(source, encoding="utf-8")
         return path
 
+    def test_collect_cli_files_reads_newline_delimited_file_list(self) -> None:
+        first = self.write_named_source("run_first.py", "def build():\n    return {}\n")
+        second = self.write_named_source("run_second.py", "def build():\n    return {}\n")
+        list_file = self.write_named_source(
+            "scan-files.txt",
+            f"\n{first}\n{second}\n{first}\n",
+        )
+
+        files = checker.collect_cli_files([], files_from=list_file)
+
+        self.assertEqual(files, [first, second])
+
+    def test_tracked_run_wrapper_files_uses_git_ls_files(self) -> None:
+        tmpdir = tempfile.TemporaryDirectory()
+        self.addCleanup(tmpdir.cleanup)
+        root = Path(tmpdir.name)
+        scripts = root / "support/docs/experiments/actionable-regime-confidence/scripts"
+        scripts.mkdir(parents=True)
+        tracked = scripts / "run_tracked_gate_v1.py"
+        untracked = scripts / "run_untracked_gate_v1.py"
+        tracked.write_text("def build():\n    return {}\n", encoding="utf-8")
+        untracked.write_text("def build():\n    return {}\n", encoding="utf-8")
+        import subprocess
+
+        subprocess.run(
+            ["git", "init"],
+            cwd=root,
+            check=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+        )
+        subprocess.run(["git", "add", str(tracked.relative_to(root))], cwd=root, check=True)
+
+        files = checker.tracked_run_wrapper_files(root)
+
+        self.assertEqual(files, [tracked])
+
+    def test_scan_source_files_parallel_preserves_input_order(self) -> None:
+        first = self.write_named_source(
+            "run_first.py",
+            """
+def build_metrics(pass_exec):
+    return {"promotion_allowed": pass_exec}
+""",
+        )
+        second = self.write_named_source(
+            "run_second.py",
+            """
+def build_metrics():
+    return {"promotion_allowed": False}
+""",
+        )
+
+        reports = checker.scan_source_files([first, second], jobs=2)
+
+        self.assertEqual([report["file"] for report in reports], [str(first), str(second)])
+        self.assertFalse(reports[0]["ok"])
+        self.assertTrue(reports[1]["ok"])
+
     def test_flags_branch_local_admission_as_practical_assignment(self) -> None:
         path = self.write_source(
             """
@@ -318,6 +377,38 @@ def build_metrics(all_ok, exact_branch_survived, actionable, hazard, pda, readin
 
         self.assertFalse(report["ok"])
         self.assertEqual(report["violations"][0]["violation"], "branch_local_admission_uses_transition_hard_gate")
+
+    def test_flags_transition_hazard_alias_as_branch_local_hard_gate(self) -> None:
+        path = self.write_source(
+            """
+def practical_admission_flags(branch_local_admitted, extension_complete=False):
+    practical_allowed = bool(branch_local_admitted and extension_complete)
+    return {
+        "branch_local_admitted": bool(branch_local_admitted),
+        "extension_complete": bool(extension_complete),
+        "promotion_allowed": practical_allowed,
+        "trade_usable": practical_allowed,
+        "update_goal": practical_allowed,
+    }
+
+def build_metrics(all_ok, exact_branch_survived, actionable, hazard, readiness):
+    hazard_f = float(hazard)
+    admitted = all_ok and exact_branch_survived and actionable and hazard_f < 0.60 and readiness >= 0.45
+    practical = practical_admission_flags(admitted)
+    return {
+        "branch_local_admitted": practical["branch_local_admitted"],
+        "promotion_allowed": practical["promotion_allowed"],
+        "trade_usable": practical["trade_usable"],
+        "update_goal": practical["update_goal"],
+    }
+"""
+        )
+
+        report = checker.check_source_file(path)
+
+        self.assertFalse(report["ok"])
+        self.assertEqual(report["violations"][0]["violation"], "branch_local_admission_uses_transition_hard_gate")
+        self.assertEqual(report["violations"][0]["key"], "admitted")
 
     def test_flags_transition_hazard_taint_through_intermediate_guard(self) -> None:
         path = self.write_source(
