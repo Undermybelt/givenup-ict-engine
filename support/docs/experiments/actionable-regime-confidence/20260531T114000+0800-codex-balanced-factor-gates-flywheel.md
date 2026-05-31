@@ -8,7 +8,7 @@
 - route_alias: `sd/ict-engi-fact-rese-muta`
 - workdoc: `/tmp/ict-engine-balanced-factor-gates-20260531T113047+0800/workdoc.md`
 - claim: `/tmp/ict-engine-agent-claims/board-b-factor-refinement/20260531T113047+0800-codex-balanced-factor-gates.claim`
-- status: `code_slice_in_progress`
+- status: `terminalized_verified_code_slice_no_runtime_launch`
 - promotion_allowed: `false`
 - trade_usable: `false`
 - update_goal: `false`
@@ -88,3 +88,37 @@ The full user objective is still not complete:
 Next strict step after commit: use the relaxed learning/flywheel admission to
 feed more candidates into evidence collection, then require the unchanged live
 hard gates before promotion.
+
+## 2026-05-31T12:39:47+0800 Current-Turn Verification
+
+Fresh claim audit after the committed code slice still reports no practical
+factor:
+
+- `promotion_allowed_true=0`
+- `trade_usable_true=0`
+- `same_tree_practical_closure=null`
+- `live_factor_processes=0`
+- one fresh active non-coordination claim blocks new runtime launch:
+  `20260531T122333+0800-codex-ehlers-autocorr-periodogram-cycle-regime-30m-exact-aq.claim`
+
+Current-turn verification passed:
+
+- `CARGO_TARGET_DIR=/tmp/ict-engine-cargo-target-balanced-gates-verify cargo test -q --lib profitability_admission -- --nocapture`
+  passed: `12 passed; 0 failed`.
+- `CARGO_TARGET_DIR=/tmp/ict-engine-cargo-target-balanced-gates-verify cargo test -q --lib policy_training_status_ -- --nocapture`
+  passed: `12 passed; 0 failed`.
+- `python3 -m unittest support.scripts.research.tests.test_factor_candidate_pack -v`
+  passed: `18 tests`.
+- `python3 -m unittest support.scripts.research.tests.test_same_tree_practical_closure -v`
+  passed: `22 tests`.
+- `python3 -m unittest support.scripts.tests.test_objective_closure_snapshot -v`
+  passed: `47 tests`.
+- `python3 support/scripts/research/downstream_practical_admission_source_check.py --tracked-run-wrappers`
+  returned all scanned tracked wrapper entries with `ok=true`.
+- `python3 -m unittest support.scripts.tests.test_factor_claim_terminalization_audit.FactorClaimTerminalizationAuditTest.test_build_report_discovers_valid_same_tree_practical_closure_packet -v`
+  passed.
+
+One mistyped single-test command failed before the corrected test name was run:
+`FactorClaimTerminalizationAuditTests` should be
+`FactorClaimTerminalizationAuditTest`. This was an invocation error, not a
+code failure.
