@@ -1456,7 +1456,16 @@ def _looks_like_readback_command(command: str) -> bool:
     readback_markers = ("ps -axo", "ps auxww", " rg ", " tail -n", " find ")
     if not any(marker in normalized for marker in readback_markers):
         return False
-    return "python" not in normalized and "auto-quant-agent-material" not in normalized
+    return not _has_python_script_invocation(normalized) and "auto-quant-agent-material" not in normalized
+
+
+def _has_python_script_invocation(normalized_command: str) -> bool:
+    return bool(
+        re.search(
+            r"(?:^|\s)(?:python\d*(?:\.\d+)?|\S*/Python)\s+(?:-\S+\s+)*[^\s;'\"`]+\.py\b",
+            normalized_command,
+        )
+    )
 
 
 def _extract_run_root(command: str) -> Path | None:

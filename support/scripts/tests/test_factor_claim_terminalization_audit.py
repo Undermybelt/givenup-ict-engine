@@ -3411,6 +3411,23 @@ trade_usable=false
 
         self.assertFalse(_is_live_factor_command(command))
 
+    def test_live_process_classifier_ignores_ps_awk_exit_file_readback_poller(self) -> None:
+        command = (
+            "/bin/zsh -lc sleep 30; ps -p 11741 -o pid,ppid,etime,stat,%cpu,%mem,command; "
+            "printf '\\nchildren\\n'; "
+            "ps -axo pid,ppid,etime,stat,%cpu,%mem,command | awk '$2==11741 || $1==11741 {print}'; "
+            "printf '\\nexits\\n'; "
+            "for f in /tmp/ict-engine-tomac-tsmom-vol-scaled-low-turnover-aq-20260531T115002+0800/checks/*.exit; "
+            "do test -f \"$f\" && printf '%s ' \"$f\" && cat \"$f\"; done; "
+            "python3 - <<'PY' "
+            "from pathlib import Path; "
+            "print(Path('/tmp/ict-engine-tomac-tsmom-vol-scaled-low-turnover-aq-20260531T115002+0800/"
+            "checks/run_tomac_1h.exit').read_text()); "
+            "PY"
+        )
+
+        self.assertFalse(_is_live_factor_command(command))
+
     def test_live_process_classifier_ignores_sed_readback_of_factor_wrappers(self) -> None:
         command = (
             "/bin/zsh -lc sed -n '1,260p' "
