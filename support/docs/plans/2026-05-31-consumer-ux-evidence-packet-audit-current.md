@@ -2510,6 +2510,46 @@ runtime, not by a smoke classifier false positive. Do not launch a sibling
 AQ/provider lane and do not claim release readiness or practical trade
 usefulness while this claim/process is active.
 
+## VHF Runtime Terminalized And Factor Closure Clear - 2026-05-31T13:34+0800
+
+The VHF/CHOP exact-AQ runtime exited after the previous readback.
+
+Terminal packet:
+
+- `/tmp/ict-engine-vhf-chop-trend-reacceleration-exact-aqprep-20260531T132517+0800/summaries/terminal_summary.json`.
+- `status=exact_aq_completed_fail_closed`.
+- `target_count=11`.
+- Every AQ command row observed in the terminal packet has `exit=0` and
+  `timed_out=false`.
+- The packet keeps `promotion_allowed=false`, `trade_usable=false`,
+  `update_goal=false`, and `same_tree_practical_closure=null`.
+- Top exact-AQ rows include positive instrument-cost economics, for example:
+  `tomac_nq_30m_vhf_chop_trend_reacceleration_long_fastcompressionrelease_exact_aq_v1`
+  with `trade_count=1287`,
+  `instrument_cost_total_profit_pct=32.154643`, and
+  `instrument_cost_profit_factor=1.247031`.
+- These rows are still not practical closure because downstream lifecycle,
+  paper/live feedback, and same-tree practical closure are absent.
+
+Fresh factor audit:
+
+```bash
+python3 support/scripts/factor_claim_terminalization_audit.py --compact --portable-paths --output /tmp/ict-engine-factor-closure-current-caa2d143-codex.json
+```
+
+Result:
+
+- Exit code `0`.
+- `summary.status=pass`.
+- `active_claims=0`, `live_factor_processes=0`,
+  `blocking_reasons=[]`.
+- `promotion_allowed_true=0`, `trade_usable_true=0`,
+  `same_tree_practical_closure=null`.
+
+Decision: factor closure is clear again, but practical trade usefulness remains
+unproven. The best VHF rows are exact-AQ positives to investigate, not
+`trade_usable=true` factors.
+
 ## Continuation Readback - 2026-05-31T13:27+0800
 
 Routing was repeated before this continuation:
