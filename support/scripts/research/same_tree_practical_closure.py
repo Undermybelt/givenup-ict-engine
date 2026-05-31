@@ -31,6 +31,13 @@ DISALLOWED_MARKET_DATA_SOURCE_CLASSES = {
     "tomac_raw_csv",
     "raw_local_csv",
 }
+ACCEPTED_EXECUTION_FEEDBACK_SOURCE_MARKERS = (
+    "paper_execution_feedback",
+    "live_execution_feedback",
+    "paper_trade_feedback",
+    "live_trade_feedback",
+    "broker_execution_feedback",
+)
 DEPLOY_READY_READINESS_CONTRACT = (
     "deploy_ready_from_backtest_autoquant_provider_or_paper_sim_execution_chain_not_funded_fill"
 )
@@ -93,8 +100,6 @@ def write_same_tree_practical_closure_packet(
 
 def metrics_prove_same_tree_practical_closure(metrics: dict[str, Any]) -> bool:
     """Return true only for complete same-tree practical lifecycle evidence."""
-    if metrics.get("promotion_allowed") is not True or metrics.get("trade_usable") is not True:
-        return False
     if metrics.get("all_command_exits_zero") is not True:
         return False
     if metrics.get("exact_branch_survived") is not True:
@@ -109,8 +114,9 @@ def metrics_prove_same_tree_practical_closure(metrics: dict[str, Any]) -> bool:
         return False
     if metrics.get("path_ranker_score_used_by_execution_tree") is not True:
         return False
-    candidate_status = str(metrics.get("execution_candidate_status") or "")
-    if candidate_status in {"", "no_trade", "observe", "discard"}:
+    if not execution_candidate_status_proves_practical_closure(
+        metrics.get("execution_candidate_status")
+    ):
         return False
     if not validation_counters_cover_practical_chain(metrics.get("validation_counters")):
         return False
@@ -124,7 +130,103 @@ def metrics_prove_same_tree_practical_closure(metrics: dict[str, Any]) -> bool:
         return False
     if not cost_model_proves_practical_closure(metrics):
         return False
+    if not feedback_chain_proves_practical_closure(metrics):
+        return False
     return command_results_prove_practical_closure(metrics.get("command_results"))
+
+
+def execution_candidate_status_proves_practical_closure(value: object) -> bool:
+    status = normalized_key(value)
+    if not status:
+        return False
+    blocked_markers = (
+        "observe",
+        "no_trade",
+        "discard",
+        "reject",
+        "blocked",
+        "fail_closed",
+        "not_ready",
+    )
+    return not any(marker in status for marker in blocked_markers)
+
+
+def feedback_chain_proves_practical_closure(metrics: dict[str, Any]) -> bool:
+    """Reject retained-label/backtest feedback masquerading as execution proof."""
+    feedback_sources = [metrics.get("feedback_source"), metrics.get("trade_feedback_source")]
+    broker_execution_evidence_seen = (
+        metrics.get("broker_fill_evidence") is True and metrics.get("broker_realized") is True
+    )
+    for key in (
+        "runtime_trade_feedback_summary",
+        "trade_summary",
+        "feedback_summary",
+        "structural_feedback_summary",
+    ):
+        summary = metrics.get(key)
+        if isinstance(summary, dict):
+            feedback_sources.extend((summary.get("source"), summary.get("feedback_source")))
+            broker_execution_evidence_seen = (
+                broker_execution_evidence_seen
+                or _summary_has_broker_execution_evidence(summary)
+            )
+            if summary.get("broker_fill_evidence") is False or summary.get("broker_realized") is False:
+                if any(_is_simulated_feedback_source(source) for source in feedback_sources):
+                    return False
+    if any(_is_simulated_feedback_source(source) for source in feedback_sources):
+        return False
+    if not any(_is_accepted_execution_feedback_source(source) for source in feedback_sources):
+        return False
+    if not broker_execution_evidence_seen:
+        return False
+    for row in metrics.get("command_results") or []:
+        if not isinstance(row, dict):
+            continue
+        if normalized_key(row.get("stage")) != "feedback_update":
+            continue
+        text = " ".join(
+            normalized_text(row.get(key))
+            for key in ("name", "source", "feedback_source", "command", "argv")
+        )
+        if any(marker in text for marker in ("simulated", "simulation", "retained_real_event_label")):
+            return False
+    return True
+
+
+def _summary_has_broker_execution_evidence(summary: dict[str, Any]) -> bool:
+    if summary.get("broker_fill_evidence") is True and summary.get("broker_realized") is True:
+        return True
+    accepted_rows = positive_int(
+        summary.get("accepted_rows") or summary.get("accepted_feedback_rows")
+    )
+    if accepted_rows <= 0:
+        return False
+    broker_fill_rows = positive_int(summary.get("broker_fill_evidence_rows"))
+    broker_realized_rows = positive_int(summary.get("broker_realized_rows"))
+    return broker_fill_rows >= accepted_rows and broker_realized_rows >= accepted_rows
+
+
+def _is_accepted_execution_feedback_source(value: object) -> bool:
+    text = normalized_text(value)
+    if not text or _is_simulated_feedback_source(text):
+        return False
+    return any(marker in text for marker in ACCEPTED_EXECUTION_FEEDBACK_SOURCE_MARKERS)
+
+
+def _is_simulated_feedback_source(value: object) -> bool:
+    text = normalized_text(value)
+    if not text:
+        return False
+    simulated_markers = (
+        "simulated_backtest",
+        "retained_real_event_label_simulation",
+        "ibkr_paper_trade_simulation",
+        "paper_trade_simulation",
+        "simulation_child_gate",
+        "child_gate_filtered",
+        "simulated_feedback",
+    )
+    return any(marker in text for marker in simulated_markers)
 
 
 def session_scope_proves_practical_closure(metrics: dict[str, Any]) -> bool:

@@ -20,7 +20,7 @@ def practical_command_results() -> list[dict]:
         {"stage": "bbn_workflow", "name": "04_workflow_status_bbn", "exit": 0, "timed_out": False},
         {"stage": "path_ranker", "name": "11_train_catboost_path_ranker", "exit": 0, "timed_out": False},
         {"stage": "execution_tree", "name": "16_analyze_after_ranker_execution_tree", "exit": 0, "timed_out": False},
-        {"stage": "feedback_update", "name": "08_ingest_simulated_trade_feedback", "exit": 0, "timed_out": False},
+        {"stage": "feedback_update", "name": "08_ingest_paper_execution_feedback", "exit": 0, "timed_out": False},
         {"stage": "policy_training", "name": "19_policy_training_status", "exit": 0, "timed_out": False},
     ]
 
@@ -61,6 +61,13 @@ def valid_metrics() -> dict:
                 "promotion_allowed": True,
                 "trade_usable": True,
             }
+        },
+        "feedback_source": "auto_quant_real_trades:paper_execution_feedback:factor_v1",
+        "runtime_trade_feedback_summary": {
+            "source": "auto_quant_real_trades:paper_execution_feedback:factor_v1",
+            "accepted_rows": 3,
+            "broker_fill_evidence_rows": 3,
+            "broker_realized_rows": 3,
         },
         "learning_admission_status": "admitted",
         "paper_admission_status": "ready",
@@ -120,6 +127,20 @@ class SameTreePracticalClosureTests(unittest.TestCase):
         self.assertFalse(packet["funded_live_fill_required"])
         self.assertEqual(packet["readiness_contract"], closure.DEPLOY_READY_READINESS_CONTRACT)
         self.assertEqual(packet["provider_execution_feedback_chain"], "pass")
+
+    def test_builds_pass_packet_from_full_chain_without_caller_preset_practical_flags(self) -> None:
+        metrics = valid_metrics()
+        metrics["promotion_allowed"] = False
+        metrics["trade_usable"] = False
+        metrics["update_goal"] = False
+
+        packet = closure.build_same_tree_practical_closure_packet(metrics)
+
+        self.assertIsNotNone(packet)
+        assert packet is not None
+        self.assertTrue(packet["promotion_allowed"])
+        self.assertTrue(packet["trade_usable"])
+        self.assertFalse(packet["update_goal"])
 
     def test_rejects_missing_lifecycle_tuple(self) -> None:
         metrics = valid_metrics()
@@ -190,6 +211,52 @@ class SameTreePracticalClosureTests(unittest.TestCase):
                 "timed_out": False,
             }
         ]
+
+        self.assertIsNone(closure.build_same_tree_practical_closure_packet(metrics))
+
+    def test_rejects_simulated_backtest_feedback_as_practical_closure_source(self) -> None:
+        metrics = valid_metrics()
+        metrics["feedback_source"] = "auto_quant_real_trades:simulated_backtest:rv_stress_gate"
+        metrics["runtime_trade_feedback_summary"] = {
+            "source": "auto_quant_real_trades:simulated_backtest:rv_stress_gate",
+            "broker_fill_evidence": False,
+            "broker_realized": False,
+        }
+
+        self.assertIsNone(closure.build_same_tree_practical_closure_packet(metrics))
+
+        metrics = valid_metrics()
+        metrics["command_results"] = [
+            {
+                **row,
+                "name": "08_ingest_simulated_trade_feedback"
+                if row["stage"] == "feedback_update"
+                else row["name"],
+            }
+            for row in metrics["command_results"]
+        ]
+
+        self.assertIsNone(closure.build_same_tree_practical_closure_packet(metrics))
+
+    def test_rejects_missing_accepted_execution_feedback_source(self) -> None:
+        metrics = valid_metrics()
+        metrics.pop("feedback_source")
+        metrics.pop("runtime_trade_feedback_summary")
+
+        self.assertIsNone(closure.build_same_tree_practical_closure_packet(metrics))
+
+    def test_rejects_accepted_source_without_broker_execution_evidence(self) -> None:
+        metrics = valid_metrics()
+        metrics["runtime_trade_feedback_summary"] = {
+            "source": "auto_quant_real_trades:paper_execution_feedback:factor_v1",
+            "accepted_rows": 3,
+        }
+
+        self.assertIsNone(closure.build_same_tree_practical_closure_packet(metrics))
+
+    def test_rejects_observe_only_execution_candidate_status(self) -> None:
+        metrics = valid_metrics()
+        metrics["execution_candidate_status"] = "execution_observe_only"
 
         self.assertIsNone(closure.build_same_tree_practical_closure_packet(metrics))
 
