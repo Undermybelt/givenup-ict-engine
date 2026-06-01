@@ -77,7 +77,7 @@ class TvrCrwdTrendReclaimFullLadderGate1Test(unittest.TestCase):
         self.assertFalse(row["promotion_cost_verified"])
         self.assertFalse(row["survives_instrument_cost"])
         self.assertTrue(row["minimum_trade_sample_floor_met"])
-        self.assertTrue(row["density_target_1_to_3_per_day"])
+        self.assertNotIn("density_target_1_to_3_per_day", row)
         self.assertFalse(row["gate1_survivor"])
         self.assertEqual(row["cost_model"]["instrument_class"], "US_EQUITY")
         self.assertEqual(row["cost_model"]["symbol"], "CRWD")

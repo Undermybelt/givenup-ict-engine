@@ -180,6 +180,27 @@ class RunTomacOneConfigTests(unittest.TestCase):
         self.assertEqual(args["margin_mode"], "isolated")
         self.assertEqual(Path(args["datadir"]), data_dir)
 
+    def test_legacy_unsuffixed_futures_feather_is_staged_for_freqtrade_loader(self) -> None:
+        with TemporaryDirectory() as tmpdir:
+            captured: dict[str, object] = {}
+            module, strategies, data_dir = self.load_module(Path(tmpdir), captured)
+            (strategies / "LongNqCandidate.py").write_text(
+                "class LongNqCandidate:\n    can_short = False\n",
+                encoding="utf-8",
+            )
+            legacy_file = data_dir / "NQ_USD-15m.feather"
+            legacy_file.parent.mkdir(parents=True)
+            legacy_file.write_text("legacy-feather-placeholder", encoding="utf-8")
+
+            module.run("LongNqCandidate", "15m", None, ["NQ/USD"], "20210103-20251231")
+
+            staged = data_dir / "futures" / "NQ_USD-15m-futures.feather"
+            args = captured["args"]
+            self.assertTrue(staged.exists())
+            self.assertEqual(staged.read_text(encoding="utf-8"), "legacy-feather-placeholder")
+            self.assertEqual(args["trading_mode"], "futures")
+            self.assertEqual(Path(args["datadir"]), data_dir)
+
     def test_plain_spot_long_strategy_keeps_default_mode(self) -> None:
         with TemporaryDirectory() as tmpdir:
             captured: dict[str, object] = {}

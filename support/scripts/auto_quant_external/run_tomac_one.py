@@ -35,6 +35,7 @@ from contextlib import contextmanager
 import importlib
 import sys
 import json
+import shutil
 from pathlib import Path
 
 AUTO_QUANT = Path.cwd()
@@ -74,6 +75,36 @@ def _futures_datadir(pair: str, timeframe: str | None, data_dir: Path) -> Path:
         if any((root / "futures" / stem).exists() for stem in stems):
             return root
     return data_dir
+
+
+def ensure_futures_feather_aliases(pairs: list[str] | None, timeframe: str | None, data_dir: Path) -> list[dict[str, str]]:
+    if not pairs:
+        return []
+    staged: list[dict[str, str]] = []
+    timeframes = [timeframe] if timeframe else ["1m", "5m", "15m", "30m", "1h", "4h", "1d"]
+    for pair in pairs:
+        base, quote = _pair_tokens(pair)
+        if instrument_cost_model.futures_cost_profile(base) is None:
+            continue
+        for tf in [item for item in timeframes if item]:
+            futures_stem = f"{base}_{quote}-{tf}-futures.feather"
+            existing = [
+                data_dir / "futures" / futures_stem,
+                data_dir / "binance" / "futures" / futures_stem,
+            ]
+            if any(path.exists() for path in existing):
+                continue
+            legacy_stem = f"{base}_{quote}-{tf}.feather"
+            for root in (data_dir, data_dir / "binance"):
+                source = root / legacy_stem
+                if not source.exists():
+                    continue
+                target = root / "futures" / futures_stem
+                target.parent.mkdir(parents=True, exist_ok=True)
+                shutil.copy2(source, target)
+                staged.append({"source": str(source), "target": str(target)})
+                break
+    return staged
 
 
 def select_datadir_for_pairs(pairs: list[str] | None, timeframe: str | None, data_dir: Path) -> Path:
@@ -155,6 +186,7 @@ def build_backtest_args(
 ) -> dict[str, object]:
     datadir = Path(rt.DATA_DIR)
     if should_use_futures_mode(pairs, timeframe=timeframe, data_dir=datadir):
+        ensure_futures_feather_aliases(pairs, timeframe, datadir)
         datadir = select_datadir_for_pairs(pairs, timeframe, datadir)
     args: dict[str, object] = {
         "config": [str(rt.CONFIG)],

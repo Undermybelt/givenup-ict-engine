@@ -1,6 +1,6 @@
 {
   "symbol": "SRC_ROOT_CARRY_LONG_220646",
-  "generated_at": "2026-05-12T14:15:02.122057Z",
+  "generated_at": "2026-05-16T01:11:43.868813Z",
   "current_focus_phase": "update",
   "current_focus_reason": "insufficient_improvement|artifact_actionable_count=0 artifact_latest_promotable=None artifact_rule_breaks=0 artifact_consumed_trend_status=no_consumed_validation artifact_consumed_targets=[]|artifact_promotion_strength=low|artifact_consumed_trend_reason=no_consumed_artifacts",
   "blocking_truth": {
@@ -86,6 +86,10 @@
     "pre_bayes_multi_timeframe_direction_bias": "direction_bias_unavailable",
     "pre_bayes_multi_timeframe_alignment_score": null,
     "pre_bayes_multi_timeframe_entry_alignment_score": null,
+    "conformal_coverage_1sigma": null,
+    "conformal_miscoverage_1sigma": null,
+    "mean_prediction_interval_half_width": null,
+    "worst_window_miscoverage": null,
     "realized_outcome": "loss",
     "structural_learning_credit_class": "negative_executed",
     "structural_learning_success_credit": 0.0,

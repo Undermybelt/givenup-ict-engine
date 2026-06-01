@@ -5,6 +5,7 @@ import csv
 import json
 import shutil
 import subprocess
+import sys
 from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
@@ -13,6 +14,12 @@ from zoneinfo import ZoneInfo
 
 REPO = Path("/Users/thrill3r/projects-ict-engine/ict-engine")
 BASE = REPO / "support/docs/experiments/actionable-regime-confidence"
+RESEARCH_HELPERS = REPO / "support/scripts/research"
+if str(RESEARCH_HELPERS) not in sys.path:
+    sys.path.insert(0, str(RESEARCH_HELPERS))
+
+import instrument_cost_model as cost_model  # noqa: E402
+
 STAMP = datetime.now(ZoneInfo("Asia/Shanghai")).strftime("%Y%m%dT%H%M%S+0800")
 ROOT = BASE / "runs" / f"{STAMP}-codex-ibkr-mgc1m-opening-vwap-rvol-reclaim-gate1-v1"
 PY = Path("/Users/thrill3r/.venvs/ict-engine-provider-py313/bin/python")
@@ -346,57 +353,47 @@ def main() -> int:
     if dispatch and dispatch["exit"] == 0:
         rank = run_cmd("07_auto_quant_agent_material_rank", [ICT, "auto-quant-agent-material-rank", "--symbol", AQ_SYMBOL, "--state-dir", ROOT / "state"], timeout=180)
         commands.append(rank)
-    rank_rows = latest_rank_rows() if rank and rank["exit"] == 0 else []
-    cost = []
-    for row in rank_rows:
-        trades = int(row.get("trade_count") or 0)
-        gross = safe_float(row.get("total_profit_pct"))
-        record = {"label": row_label(row), "status": row.get("status"), "trade_count": trades, "win_rate_pct": safe_float(row.get("win_rate_pct")), "raw_total_profit_pct": gross, "sharpe": safe_float(row.get("sharpe")), "branch_path": row.get("branch_path")}
-        for bps in (0, 1, 2, 5):
-            record[f"{bps}bps_per_side_total_profit_pct"] = round(gross - trades * bps * 0.02, 6)
-        record["survives_2bps_per_side"] = trades >= 6 and record["2bps_per_side_total_profit_pct"] > 0
-        record["survives_5bps_per_side"] = trades > 0 and record["5bps_per_side_total_profit_pct"] > 0
-        cost.append(record)
-    survivors_2 = [row["label"] for row in cost if row["survives_2bps_per_side"]]
-    survivors_5 = [row["label"] for row in cost if row["survives_5bps_per_side"]]
+    rank_rows = latest_rank_rows() if commands[-1]["name"] == "03_auto_quant_agent_material_rank" and commands[-1]["exit"] == 0 else []
+    representative_price = cost_model.representative_price_from_provider_rows(provider_rows)
+    cost_summary = cost_model.rank_rows_real_fee_summary(
+        rank_rows,
+        symbol=ROOT_SYMBOL,
+        representative_price=representative_price,
+        label_fn=label_for,
+    )
+    cost_rows = cost_summary["rows"]
+    survivors_instrument_cost = cost_summary["survivors"]
     branch_paths = sorted({str(row.get("branch_path") or "") for row in rank_rows})
-    branch_ok = bool(rank_rows) and branch_paths == [BRANCH_TEMPLATE]
-    downstream = branch_ok and bool(survivors_5)
+    branch_ok = bool(rank_rows) and branch_paths == [BRANCH_PATH]
+    downstream = hard_gate_downstream_allowed(branch_ok, survivors_instrument_cost)
     decision = "gate1_ibkr_mgc1m_opening_vwap_rvol_reclaim_downstream_allowed" if downstream else "drop_or_block_gate1_practical"
     metrics = {
-        "run_root": str(ROOT),
-        "factor_id": FACTOR_ID,
-        "decision": decision,
-        "provider_rows": provider_rows,
-        "rank_rows": len(rank_rows),
+        "run_root": str(ROOT), "factor_id": FACTOR_ID, "branch_path": BRANCH_PATH,
+        "decision": decision, "provider_rows": provider_rows, "rank_rows": len(rank_rows),
         "rank_total_trade_count": sum(int(row.get("trade_count") or 0) for row in rank_rows),
-        "exact_1m_cost_stress": cost,
-        "exact_1m_survivors_2bps": survivors_2,
-        "exact_1m_survivors_5bps": survivors_5,
+        "representative_price": representative_price,
+        "cost_model": cost_summary["cost_model"],
+        "promotion_cost_verified": cost_summary["promotion_cost_verified"],
+        "exact_1m_instrument_cost_rows": cost_rows,
+        "exact_1m_survivors_instrument_cost": survivors_instrument_cost,
         "branch_paths": branch_paths,
-        "branch_fields_preserved": branch_ok,
-        "downstream_allowed": downstream,
-        "pre_bayes_allowed": downstream,
-        "bbn_allowed": downstream,
-        "catboost_allowed": False,
-        "execution_tree_allowed": False,
-        "promotion_allowed": False,
-        "trade_usable": False,
-        "update_goal": False,
-        "local_cache_replay": False,
+        "branch_fields_preserved": branch_ok, "downstream_allowed": downstream,
+        "pre_bayes_allowed": downstream, "bbn_allowed": downstream, "catboost_allowed": False,
+        "execution_tree_allowed": False, "promotion_allowed": False, "trade_usable": False,
+        "update_goal": False, "local_cache_replay": False,
         "command_exits": {cmd["name"]: cmd["exit"] for cmd in commands},
-        "skill_update": "not_needed" if not downstream else "needed_after_downstream",
+        "skill_update": "needed_after_downstream" if downstream else "not_needed",
     }
     (ROOT / "checks/terminal_metrics.json").write_text(json.dumps(metrics, indent=2) + "\n", encoding="utf-8")
-    with (ROOT / "summaries/rank_rows.csv").open("w", newline="", encoding="utf-8") as handle:
-        fields = ["label", "status", "trade_count", "win_rate_pct", "raw_total_profit_pct", "1bps_per_side_total_profit_pct", "2bps_per_side_total_profit_pct", "5bps_per_side_total_profit_pct", "survives_2bps_per_side", "survives_5bps_per_side", "branch_path"]
-        writer = csv.DictWriter(handle, fieldnames=fields)
-        writer.writeheader()
-        writer.writerows([{key: row.get(key, "") for key in fields} for row in cost])
-    lines = ["# Terminal Decision Summary", "", f"Decision: `{decision}`", "", "Exact 1m rows:", "", "| label | trades | win_rate | raw | 1bps | 2bps | 5bps |", "|---|---:|---:|---:|---:|---:|---:|"]
-    for row in cost:
-        lines.append(f"| `{row['label']}` | {row['trade_count']} | {row['win_rate_pct']:.4f}% | {row['raw_total_profit_pct']:.2f}% | {row['1bps_per_side_total_profit_pct']:.2f}% | {row['2bps_per_side_total_profit_pct']:.2f}% | {row['5bps_per_side_total_profit_pct']:.2f}% |")
-    lines += ["", f"- `branch_fields_preserved={branch_ok}`", f"- `exact_1m_survivors_2bps={survivors_2}`", f"- `downstream_allowed={downstream}`", ""]
+    cost_model.write_real_fee_rank_rows_csv(ROOT / "summaries/rank_rows.csv", cost_rows)
+    lines = cost_model.real_fee_rank_table_lines(
+        decision=decision,
+        title="Exact 1m rows:",
+        rows=cost_rows,
+        branch_ok=branch_ok,
+        survivors=survivors_instrument_cost,
+        downstream=downstream,
+    )
     (ROOT / "summaries/terminal_decision_summary.md").write_text("\n".join(lines), encoding="utf-8")
     print(json.dumps(metrics, indent=2))
     return 0 if rank and rank["exit"] == 0 else 1

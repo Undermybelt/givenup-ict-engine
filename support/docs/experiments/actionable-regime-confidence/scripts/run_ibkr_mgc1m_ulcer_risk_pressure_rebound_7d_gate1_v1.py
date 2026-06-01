@@ -222,40 +222,44 @@ def main() -> int:
         commands.append(base.run_cmd("03_auto_quant_agent_material_rank", [base.ICT, "auto-quant-agent-material-rank", "--symbol", base.AQ_SYMBOL, "--state-dir", base.ROOT / "state"], timeout=240))
 
     rank_rows = base.latest_rank_rows() if commands[-1]["name"] == "03_auto_quant_agent_material_rank" and commands[-1]["exit"] == 0 else []
-    cost_rows = []
-    for row in rank_rows:
-        trades = int(row.get("trade_count") or 0)
-        gross = base.safe_float(row.get("total_profit_pct"))
-        record = {"label": label_for(row), "status": row.get("status"), "trade_count": trades, "win_rate_pct": base.safe_float(row.get("win_rate_pct")), "raw_total_profit_pct": gross, "sharpe": base.safe_float(row.get("sharpe")), "branch_path": row.get("branch_path")}
-        for bps in (0, 1, 2, 5):
-            record[f"{bps}bps_per_side_total_profit_pct"] = round(gross - trades * bps * 0.02, 6)
-        record["survives_2bps_per_side"] = trades >= 6 and record["2bps_per_side_total_profit_pct"] > 0
-        record["survives_5bps_per_side"] = trades > 0 and record["5bps_per_side_total_profit_pct"] > 0
-        cost_rows.append(record)
-    survivors_2 = [row["label"] for row in cost_rows if row["survives_2bps_per_side"]]
-    survivors_5 = [row["label"] for row in cost_rows if row["survives_5bps_per_side"]]
+    representative_price = base.cost_model.representative_price_from_provider_rows(provider_rows)
+    cost_summary = base.cost_model.rank_rows_real_fee_summary(
+        rank_rows,
+        symbol=base.ROOT_SYMBOL,
+        representative_price=representative_price,
+        label_fn=label_for,
+    )
+    cost_rows = cost_summary["rows"]
+    survivors_instrument_cost = cost_summary["survivors"]
     branch_paths = sorted({str(row.get("branch_path") or "") for row in rank_rows})
     branch_ok = bool(rank_rows) and branch_paths == [base.BRANCH_PATH]
-    downstream = branch_ok and bool(survivors_5)
+    downstream = base.hard_gate_downstream_allowed(branch_ok, survivors_instrument_cost)
     decision = "gate1_ibkr_mgc1m_ulcer_risk_pressure_rebound_downstream_allowed" if downstream else "drop_or_block_gate1_practical"
     metrics = {
         "run_root": str(base.ROOT), "source_provider_root": str(base.SOURCE_ROOT), "factor_id": base.FACTOR_ID,
         "branch_path": base.BRANCH_PATH, "decision": decision, "source_backed_family": base.SOURCE_BACKED_FAMILY,
-        "provider_rows": provider_rows, "rank_rows": len(rank_rows), "rank_total_trade_count": sum(int(row.get("trade_count") or 0) for row in rank_rows),
-        "exact_1m_cost_stress": cost_rows, "exact_1m_survivors_2bps": survivors_2, "exact_1m_survivors_5bps": survivors_5,
+        "provider_rows": provider_rows, "rank_rows": len(rank_rows),
+        "rank_total_trade_count": sum(int(row.get("trade_count") or 0) for row in rank_rows),
+        "representative_price": representative_price,
+        "cost_model": cost_summary["cost_model"],
+        "promotion_cost_verified": cost_summary["promotion_cost_verified"],
+        "exact_1m_instrument_cost_rows": cost_rows,
+        "exact_1m_survivors_instrument_cost": survivors_instrument_cost,
         "branch_paths": branch_paths, "branch_fields_preserved": branch_ok, "downstream_allowed": downstream,
         "pre_bayes_allowed": downstream, "bbn_allowed": downstream, "catboost_allowed": downstream, "execution_tree_allowed": downstream,
         "promotion_allowed": False, "trade_usable": False, "update_goal": False, "local_cache_replay": False,
         "command_exits": {cmd["name"]: cmd["exit"] for cmd in commands}, "skill_update": "needed_after_downstream" if downstream else "not_needed",
     }
     (base.ROOT / "checks/terminal_metrics.json").write_text(json.dumps(metrics, indent=2) + "\n", encoding="utf-8")
-    with (base.ROOT / "summaries/rank_rows.csv").open("w", newline="", encoding="utf-8") as handle:
-        fields = ["label", "status", "trade_count", "win_rate_pct", "raw_total_profit_pct", "1bps_per_side_total_profit_pct", "2bps_per_side_total_profit_pct", "5bps_per_side_total_profit_pct", "survives_2bps_per_side", "survives_5bps_per_side", "branch_path"]
-        writer = csv.DictWriter(handle, fieldnames=fields); writer.writeheader(); writer.writerows([{key: row.get(key, "") for key in fields} for row in cost_rows])
-    lines = ["# Terminal Decision Summary", "", f"Decision: `{decision}`", "", "Source: public Ulcer Index drawdown/risk-pressure rebound family; rewritten as Freqtrade/AQ material.", "", base.SUMMARY_TABLE_TITLE, "", "| label | trades | win_rate | raw | 1bps | 2bps | 5bps |", "|---|---:|---:|---:|---:|---:|---:|"]
-    for row in cost_rows:
-        lines.append(f"| `{row['label']}` | {row['trade_count']} | {row['win_rate_pct']:.4f}% | {row['raw_total_profit_pct']:.2f}% | {row['1bps_per_side_total_profit_pct']:.2f}% | {row['2bps_per_side_total_profit_pct']:.2f}% | {row['5bps_per_side_total_profit_pct']:.2f}% |")
-    lines += ["", f"- `branch_fields_preserved={branch_ok}`", f"- `exact_1m_survivors_2bps={survivors_2}`", f"- `exact_1m_survivors_5bps={survivors_5}`", f"- `downstream_allowed={downstream}`", ""]
+    base.cost_model.write_real_fee_rank_rows_csv(base.ROOT / "summaries/rank_rows.csv", cost_rows)
+    lines = base.cost_model.real_fee_rank_table_lines(
+        decision=decision,
+        title="Source: public Ulcer Index drawdown/risk-pressure rebound family; rewritten as Freqtrade/AQ material.",
+        rows=cost_rows,
+        branch_ok=branch_ok,
+        survivors=survivors_instrument_cost,
+        downstream=downstream,
+    )
     (base.ROOT / "summaries/terminal_decision_summary.md").write_text("\n".join(lines), encoding="utf-8")
     print(json.dumps(metrics, indent=2))
     return 0 if commands and commands[-1]["name"] == "03_auto_quant_agent_material_rank" and commands[-1]["exit"] == 0 else 1

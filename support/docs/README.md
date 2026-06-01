@@ -42,6 +42,8 @@ Public and contributor-facing:
 - `support/docs/first-run.md`: clone-to-useful-output guide.
 - `support/docs/smoke-acceptance.md`: execution-level smoke and acceptance flow.
 - `support/docs/research-system-map.md`: research subsystem map.
+- `support/docs/product-boundary-buy-vs-build.md`: build/adapt/reject boundary
+  for avoiding weaker clones of mature quant/trading tools.
 - `support/docs/autoresearch-derived-surfaces-contract.md`: authoritative JSON vs
   derived convenience output boundaries.
 - `support/docs/autoresearch-state-transitions.md`: autoresearch write-order and state

@@ -61,6 +61,10 @@ audit until the evidence is strong enough or the remaining blockers are explicit
 | L4 | ETH/full retained session scope may be missing from factor workdocs or terminal packets. | Pending source/doc audit. | Require session-scope evidence or keep promotion false. | open |
 | L5 | Closed-loop proof may omit accepted execution feedback while still reporting deploy/live readiness. | `policy_training_status_` tests require accepted paper/live/broker execution-feedback markers for live/trade-usable rows; simulated/backtest markers remain blocked. | Split `paper_feedback_collection_ready` from final live/trade usability; accepted execution feedback remains required for final promotion. | fixed in focused Rust surfaces |
 | L6 | Done-definition may miss Python helper/report surfaces that can emit practical flags. | `done_definition_audit.py --compact` now covers practical-admission source, await-launch source, and fixed-bps cost-model source surfaces without timing out in the no-heavy path. | Keep scanner coverage in done-definition and objective-closure snapshot readbacks; tracked practical leakage remains fail-closed. | fixed for current no-heavy scanner coverage |
+| L7 | Accepted execution-feedback source markers can be spoofed by substring labels such as `not_paper_execution_feedback`. | Current-tree focused test `test_rejects_spoofed_accepted_execution_feedback_substring` initially failed: `same_tree_practical_closure.py` built a pass packet from `audit:not_paper_execution_feedback:factor_v1`. The same substring pattern existed in `real_trade_feedback_labels.py`, `training_export.rs`, and `structural_playbook.rs`. | Require accepted paper/live/broker feedback markers to match source tokens exactly; keep simulated markers conservatively rejected. Add/keep spoof regression tests across same-tree closure, real-trade feedback conversion, policy-training status, and structural target export. | fixed and focused tests passed |
+| L7 | Feedback/flywheel entry still treated real cost/session verification debt like final promotion debt, blocking otherwise clean candidates before they can collect feedback. | `paper_feedback_collection_ready` excluded accepted execution feedback but still used `retained_session_scope_verified` and `promotion_cost_verified` as feedback-collection blockers. | Move cost/session verification debt to final live blockers while keeping feedback collection gated by positive expectancy after declared friction, no leakage, mature validation rows, verified market-data provenance, execution readiness, Pre-Bayes, execution tree, and path-ranker evidence. | fixed and verified |
+| L8 | Canonical same-tree practical-closure packets could pass Python metrics but fail Rust workflow validation because the packet did not write `evidence_packet_validated=true`. | `same_tree_practical_closure.py` built pass packets with an `evidence_packet` path but without the validation boolean required by `workflow_status.rs`, `analyze_shared.rs`, `objective_closure_snapshot.py`, and `factor_candidate_resolver.py`. | Add `evidence_packet_validated=true` to the canonical Python packet builder and assert it in `test_builds_pass_packet_from_full_practical_chain`; rerun Python and Rust closure-readback tests. | fixed and verified |
+| L9 | The untracked practical-admission wrapper quarantine drifted, causing done-definition to fail even though tracked/current authority still had zero violations. | `done_definition_audit.py --compact --practical-admission-source-timeout-seconds 300` reported tracked violations `0`, but untracked debt drifted to `463` violations across `223` files with fingerprint `1bd52815cc90100bd42e84ecff2e0430e51723c79df24312f0c5fccba5f5c638`. | Refresh `support/docs/audits/practical-admission-source-debt-quarantine.json` to the reviewed current fingerprint while keeping the debt quarantined and explicitly non-promotional. This does not make the untracked wrappers release-ready, promotion-ready, or trade-usable. | fixed for audit classification; debt remains quarantined |
 
 ## Verification Log
 
@@ -120,6 +124,31 @@ audit until the evidence is strong enough or the remaining blockers are explicit
   `active_claims=0`, `promotion_allowed_true=0`, `trade_usable_true=0`, and
   `same_tree_practical_closure=null`; this slice did not launch or promote a
   factor.
+- 2026-05-31T13:25:20+08:00: found and repaired accepted-feedback marker
+  spoofing. Before the fix,
+  `python3 -m unittest support.scripts.research.tests.test_same_tree_practical_closure.SameTreePracticalClosureTests.test_rejects_spoofed_accepted_execution_feedback_substring -v`
+  failed because `audit:not_paper_execution_feedback:factor_v1` still built a
+  pass same-tree practical-closure packet. Python fixes now pass
+  `test_same_tree_practical_closure` (`23` tests) and
+  `test_real_trade_feedback_labels` (`12` tests). Rust marker spoof tests are
+  passed under isolated cargo target
+  `/tmp/ict-engine-cargo-target-feedback-marker-20260531`:
+  `policy_training_status_rejects_spoofed_execution_feedback_substring`,
+  `policy_training_status_requires_accepted_execution_feedback_source_for_live_trade_usable`,
+  `target_export_does_not_mark_spoofed_aggregate_feedback_substring_as_live_trade_usable`,
+  and `target_export_marks_aggregate_paper_execution_feedback_as_live_trade_usable`.
+  `rustfmt --edition 2021 --check` passed for touched Rust files, Python
+  `py_compile` passed for touched Python files, and `git diff --check` passed
+  for the current repair slice.
+- 2026-05-31T13:38:13+08:00: lightweight objective snapshot after the marker
+  spoof repair stayed fail-closed:
+  `/tmp/ict-engine-objective-closure-after-feedback-marker-spoof-fix-20260531T1326-codex/objective_closure_snapshot.json`
+  returned `status=not_complete`, `completion_proven=false`,
+  `promotion_allowed_true=0`, `trade_usable_true=0`, and
+  `same_tree_practical_closure=null`. It also surfaced a new foreign live
+  factor process, PID `32378`, under
+  `ict-engine-rsrs-high-low-regression-trend-admission-local-screen-20260531T131755+0800`,
+  so runtime launch remains blocked.
 
 ## Current Remaining Blockers
 
@@ -138,3 +167,354 @@ audit until the evidence is strong enough or the remaining blockers are explicit
   no active claims and no practical flags. Launching or promoting a candidate
   still needs a fresh claim audit and the full evidence packet after runtime
   occupancy clears.
+
+## 2026-05-31 13:02 +0800 Heavy Gate And Runtime Refresh
+
+Additional verification after the source-gate repair:
+
+- `/tmp/ict-engine-done-definition-heavy-20260531T-codex-closedloop-final.json`
+  reports `completion_ready=true`, `status=pass`, `pass_count=11`,
+  `skip_count=0`, and no unresolved done-definition gates.
+- In that proof, `practical_admission_source_surface=pass` with
+  `tracked_violation_count=0`; `fixed_bps_cost_model_source_surface=pass` with
+  `tracked_violation_count=0` and matched quarantine for `1790` untracked
+  fixed-bps violations across `322` untracked experiment scripts.
+- Manual smoke acceptance also passed with
+  `STATE_DIR=/tmp/ict-engine-smoke-acceptance-codex-20260531T1241` and
+  `OUT_DIR=/tmp/ict-engine-smoke-acceptance-codex-20260531T1241-out`.
+- The OTE calendar-guard exact-AQ packet at
+  `/tmp/ict-engine-tomac-eth-trend-ote-reacceleration-calendar-guard-exact-aqlaunch-20260531T125313+0800`
+  remained fail-closed: `decision=exact_aq_terminal_readback_practical_lifecycle_incomplete`,
+  `promotion_allowed=false`, `trade_usable=false`, `update_goal=false`, and
+  `same_tree_practical_closure=null`.
+- Fresh compact claim audit at 2026-05-31 13:02 +0800 reports
+  `status=needs_attention`, `live_factor_processes=1`, `active_claims=0`,
+  `promotion_allowed_true=0`, `trade_usable_true=0`, and
+  `same_tree_practical_closure=null`. The live root is the foreign TSMOM 5m AQ
+  continuation under
+  `/tmp/ict-engine-tomac-tsmom-vol-scaled-low-turnover-aq-20260531T115002+0800`.
+
+This closes the current source-scan loophole slice, not the whole objective.
+Final practical closure is still missing accepted paper/live/broker feedback and
+a validated same-tree practical closure packet.
+
+## 2026-05-31 15:16 +0800 Feedback Floor And ETH Evidence Tightening
+
+Follow-up to the operator request that good candidates should pass into the
+flywheel more easily without degrading factor quality:
+
+- `paper_feedback_collection_ready` now has its own explicit row floor:
+  `PAPER_FEEDBACK_COLLECTION_MIN_ROWS=12` for raw-scored mature, production,
+  and observation validation rows.
+- Full paper/live promotion still uses `PAPER_VALIDATION_MIN_ROWS=30`. A
+  candidate under 30/30/30 can collect feedback only; live blockers include
+  `paper_not_ready_for_live`, and `deploy_ready`, `promotion_allowed`,
+  `trade_usable`, and `update_goal` remain false.
+- Canonical same-tree practical closure now requires structured
+  retained-session proof: pass status, non-RTH rows, positive row count, RTH
+  window, timezone, and structured evidence reference/object. A prose-only
+  assertion of non-RTH coverage is rejected.
+- Verification passed:
+  `python3 -m unittest support.scripts.research.tests.test_same_tree_practical_closure -v`
+  (`25` tests),
+  `python3 -m unittest support.scripts.tests.test_factor_claim_terminalization_audit -v`
+  (`127` tests), `py_compile` for the touched Python files,
+  `rustfmt --edition 2021 --check
+  src/application/factor_lifecycle/profitability_admission.rs`,
+  `cargo test profitability_admission::tests -- --nocapture` (`14` tests), and
+  `cargo test workflow_factor_profitability_lifecycle -- --nocapture`
+  (`9` tests).
+
+Current practical flags remain false. This slice improves throughput into
+feedback collection and tightens ETH/session proof; it does not create accepted
+paper/live/broker feedback or a same-tree practical closure packet.
+
+Post-terminalization readback:
+
+- `python3 support/scripts/factor_claim_terminalization_audit.py --compact`
+  reported `status=pass`, `active_claims=0`, `live_factor_processes=0`,
+  `promotion_allowed_true=0`, `trade_usable_true=0`, and
+  `same_tree_practical_closure=null`.
+- `python3 support/scripts/objective_closure_snapshot.py --compact ...`
+  wrote
+  `/tmp/ict-engine-goal-source-loophole-audit-20260531T145700+0800/objective_snapshot_after_threshold_session_fix/objective_closure_snapshot.json`
+  and returned nonzero because the objective remains `not_complete`.
+  The snapshot kept `completion_proven=false`, with blockers including
+  `same_tree_practical_closure_unproven` and `release_readiness_blocked`.
+
+## 2026-05-31 13:11 +0800 Feedback Collection Threshold Split
+
+No-launch gate adjustment for the operator request to let quality candidates
+enter the flywheel before all three final tickets exist:
+
+- `paper_feedback_collection_ready` no longer treats
+  `retained_session_scope_verified=false` or `promotion_cost_verified=false` as
+  feedback-collection blockers by themselves.
+- Those debts remain final live blockers, and `deploy_ready`,
+  `promotion_allowed`, `trade_usable`, and `update_goal` still require verified
+  retained session scope, verified promotion cost, accepted execution feedback,
+  strict live regime confidence, and the validated same-tree closure chain.
+- Quality stays enforced before feedback collection: learning/paper admission,
+  positive expectancy after declared friction, leakage pass, mature validation
+  rows, verified market-data provenance, execution readiness, Pre-Bayes,
+  execution-tree, and path-ranker evidence.
+- Focused Rust verification passed under
+  `/tmp/ict-engine-cargo-target-gate-threshold-20260531T1308`:
+  `cargo test profitability_admission::tests -- --nocapture` (13 passed),
+  `cargo test structural_branch_admission -- --nocapture` (7 passed), and
+  `cargo test workflow_factor_profitability_lifecycle -- --nocapture`
+  (8 passed).
+- `rustfmt --edition 2021 --check
+  src/application/factor_lifecycle/profitability_admission.rs` passed.
+- `git diff --check` passed.
+- Compact claim audit after terminalizing this no-promotion claim reports
+  `status=pass`, `active_claims=0`, `live_factor_processes=0`,
+  `promotion_allowed_true=0`, `trade_usable_true=0`, and
+  `same_tree_practical_closure=null`; this slice did not launch or promote a
+  factor.
+- A later re-audit at 2026-05-31 13:26 +0800 saw new foreign active lanes
+  (`MedRV/MinRV 30m` claim and `VHF/CHOP` exact-AQ prep live runtime), so the
+  shared runtime returned to `status=needs_attention`. It still reported
+  `promotion_allowed_true=0`, `trade_usable_true=0`, and
+  `same_tree_practical_closure=null`.
+- A fresh compact claim audit at 2026-05-31 13:38 +0800 reports no active
+  claims but one RSRS high/low regression local-screen live runtime, so the
+  shared runtime is still `status=needs_attention`. It still reports
+  `promotion_allowed_true=0`, `trade_usable_true=0`, and
+  `same_tree_practical_closure=null`.
+
+## 2026-05-31 14:16 +0800 Closure Packet And Quarantine Refresh
+
+- Canonical same-tree practical-closure packet compatibility was repaired.
+  `support/scripts/research/same_tree_practical_closure.py` now writes
+  `evidence_packet_validated=true` in pass packets, matching the Rust and
+  objective-snapshot validators.
+- Verification passed:
+  `python3 -m unittest support.scripts.research.tests.test_same_tree_practical_closure -v`
+  (`24` tests),
+  `python3 -m unittest support.scripts.tests.test_factor_claim_terminalization_audit -v`
+  (`127` tests), `py_compile` for the touched Python files, and Rust filters
+  `same_root_admission_practical_closure_accepts_structured_packet`,
+  `structural_branch_admission_accepts_validated_same_tree_closure_packet`, and
+  `workflow_factor_profitability_lifecycle_exposes_paper_feedback_collection_stage`
+  under `/tmp/ict-engine-cargo-target-closure-packet-20260531`.
+- Done-definition source debt was rechecked after the closure-packet repair.
+  The first compact rerun failed only because the untracked practical-admission
+  quarantine fingerprint drifted. Tracked/current practical-admission
+  violations remained `0`.
+- Reviewed current untracked practical-admission debt is `463` violations across
+  `223` files:
+  `practical_flag_without_extension_complete_guard=120`,
+  `branch_local_admission_uses_transition_hard_gate=105`,
+  `downstream_admission_uses_fixed_bps_survivor_gate=79`,
+  `five_bps_survival_uses_trade_density_floor=79`,
+  `retired_field_used_as_practical_gate_template=78`,
+  `extension_complete_without_validated_practical_closure_source=2`.
+- After refreshing
+  `support/docs/audits/practical-admission-source-debt-quarantine.json`,
+  compact done-definition passed with `fail_count=0`, `skip_count=4`,
+  `practical_admission_source_surface=pass`, `quarantine_matched=true`, and
+  `completion_ready=false` because heavy gates were not run.
+- This did not promote any factor. `promotion_allowed=false`,
+  `trade_usable=false`, `update_goal=false`, and
+  `same_tree_practical_closure=null` remain the current practical status.
+
+## 2026-05-31 14:49 +0800 Legacy Evidence Alias Fail-Closed Repair
+
+Finding:
+
+- Rust practical-closure validators still accepted the legacy
+  `evidence_validated=true` alias when canonical
+  `evidence_packet_validated=true` was absent.
+- That was a fail-open compatibility loophole: a marker using the old alias
+  could satisfy final lifecycle/admission validation even though the current
+  source-of-truth field was missing.
+
+Repair:
+
+- `src/application/orchestration/workflow_status.rs` now requires
+  `evidence_packet_validated=true` in
+  `same_tree_practical_closure_packet_validated`.
+- `src/analyze_shared.rs` now requires `evidence_packet_validated=true` in
+  `same_root_admission_practical_closure_validated`.
+- Added regression tests on both surfaces that remove
+  `evidence_packet_validated`, set legacy `evidence_validated=true`, and assert
+  that final live/trade readiness remains blocked.
+
+Verification:
+
+- RED: `cargo test evidence_validated_alias -- --nocapture` first failed in
+  `workflow_factor_profitability_lifecycle_rejects_legacy_evidence_validated_alias`
+  because old code returned `live_trade_status=ready`.
+- GREEN: `cargo test evidence_validated_alias -- --nocapture` passed.
+- Positive acceptance still passes:
+  `cargo test same_root_admission_practical_closure_accepts_structured_packet -- --nocapture`
+  and
+  `cargo test workflow_factor_profitability_lifecycle_marks_deploy_ready_without_funded_live_fill -- --nocapture`.
+- Broader focused filters passed:
+  `cargo test workflow_factor_profitability_lifecycle -- --nocapture` (`9`
+  tests) and `cargo test same_root_admission_practical_closure -- --nocapture`
+  (`3` tests).
+- `rustfmt --edition 2021 --check
+  src/application/orchestration/workflow_status.rs src/analyze_shared.rs`
+  passed.
+- Objective snapshot after the fix:
+  `/tmp/ict-engine-closed-loop-loophole-audit-20260531T143419+0800/objective_snapshot_after_legacy_alias_fix/objective_closure_snapshot.json`
+  remained `status=not_complete`, `completion_proven=false`,
+  `promotion_allowed_true=0`, `trade_usable_true=0`, and
+  `same_tree_practical_closure=null`.
+
+Decision:
+
+- This is not a threshold-lowering change. It closes an old compatibility path
+  that could fake a final practical proof.
+- The balance remains: lower-friction learning/paper feedback collection may
+  feed the flywheel, but final `promotion_allowed`, `trade_usable`, and
+  `update_goal` still require canonical same-tree closure, accepted
+  paper/live/broker feedback, verified real cost, and ETH/full retained session
+  proof.
+
+## 2026-05-31T15:29+0800 Feedback-Collection Flag Consumer Guard
+
+Finding:
+
+- The workflow lifecycle consumer treated a naked
+  `paper_feedback_collection_ready=true` flag as sufficient for feedback
+  collection readiness.
+- A producer could therefore bypass the learning/paper admission planes in the
+  readback while still staying below live promotion.
+
+Repair:
+
+- `closed_loop_admission_paper_feedback_collection_ready` now requires the
+  admission object to have both `learning_admission_status=admitted` and
+  `paper_admission_status=ready` before it honors explicit
+  `paper_feedback_collection_ready=true`.
+- Later revalidation removed the legacy `ready && actionable` consumer fallback;
+  feedback collection readiness must now be explicit.
+- Added regression coverage in
+  `workflow_factor_profitability_lifecycle_rejects_paper_feedback_collection_flag_without_learning_and_paper`.
+
+Verification:
+
+- RED before fix:
+  `cargo test workflow_factor_profitability_lifecycle_rejects_paper_feedback_collection_flag_without_learning_and_paper -- --nocapture`
+  failed because lifecycle readback returned `paper_feedback_collection_ready=true`.
+- GREEN after fix: the same command passed.
+- `cargo test workflow_factor_profitability_lifecycle -- --nocapture` passed
+  `10` tests.
+
+Decision:
+
+- This preserves the intended balance: feedback collection is easier than final
+  trade usability, but still requires the learning/paper quality planes.
+- It does not create `promotion_allowed=true`, `trade_usable=true`, or
+  `update_goal=true`.
+
+## 2026-05-31T16:09+0800 Feedback-Collection Row-Floor Revalidation
+
+Finding:
+
+- The previous consumer guard still left two quality leaks:
+  `workflow_factor_profitability_lifecycle_value` could infer feedback
+  collection readiness from legacy `ready=true` / `actionable=true`, and
+  `structural_closed_loop_branch_admission_value` could produce
+  `paper_feedback_collection_ready=true` from ranker runtime plus matured
+  confirmation text without proving the 12/12/12 feedback-collection row floor.
+
+Repair:
+
+- Removed the legacy `ready && actionable` fallback from
+  `closed_loop_admission_paper_feedback_collection_ready`.
+- Added structural validation-row parsing for candidate, lifecycle, policy
+  summary, bundle, and lineage-style counters.
+- Structural branch admission now emits
+  `paper_feedback_collection_ready=true` only when raw-scored mature,
+  production validation, and observation validation are each at least `12`.
+- The admission readback now includes
+  `paper_feedback_collection_validation_rows` for inspection.
+
+Verification:
+
+- RED before fix:
+  `cargo test workflow_factor_profitability_lifecycle_rejects_ready_actionable_without_feedback_collection_flag -- --nocapture`
+  failed with `paper_feedback_collection_ready=true`.
+- RED before fix:
+  `cargo test structural_branch_admission_blocks_feedback_collection_without_validation_rows -- --nocapture`
+  failed with `paper_feedback_collection_ready=true`.
+- GREEN after fix: both commands passed.
+- `cargo test workflow_factor_profitability_lifecycle -- --nocapture` passed
+  `11` tests.
+- `cargo test structural_branch_admission -- --nocapture` passed `8` tests.
+
+Decision:
+
+- This tightens the quality floor for the easy feedback flywheel without moving
+  the final practical tickets. Final `promotion_allowed`, `trade_usable`, and
+  `update_goal` still require validated same-tree practical closure, accepted
+  paper/live/broker feedback, verified cost, and ETH/full retained session
+  proof.
+
+Post-terminalization readback:
+
+- Compact claim audit reported `status=pass`, `active_claims=0`,
+  `live_factor_processes=0`, `promotion_allowed_true=0`,
+  `trade_usable_true=0`, and `same_tree_practical_closure=null`.
+- Objective snapshot under
+  `/tmp/ict-engine-goal-consumer-revalidation-audit-20260531T152928+0800/objective_snapshot_after_feedback_collection_consumer_guard/`
+  returned nonzero with `status=not_complete` and
+  `completion_proven=false`. Remaining blockers are expected: skipped heavy
+  done-definition gates, missing same-tree practical closure, dirty-worktree
+  release readiness, and skipped remote release checks.
+
+## 2026-05-31T17:06+0800 Current Loop Re-Audit
+
+Current HEAD: `6591a02294175dacdde8f0c482f038cf705580e6`
+(`6591a022 Fix done proof count merge`).
+
+What changed in the loophole ledger:
+
+- The accepted-feedback spoof fix was rechecked against both
+  `not_paper_execution_feedback` and separator-token
+  `not-paper_execution_feedback` forms.
+- The canonical same-tree closure helper still emits
+  `evidence_packet_validated=true` only when all practical evidence is present.
+- Rust workflow/analyze validators still reject the legacy
+  `evidence_validated=true` alias when `evidence_packet_validated=true` is
+  absent.
+- Feedback collection remains separate from practical promotion. Intermediate
+  collection may be ready only when learning and paper admission are ready; it
+  does not imply `deploy_ready`, `promotion_allowed`, or `trade_usable`.
+
+Verification:
+
+- `python3 -m unittest support.scripts.research.tests.test_same_tree_practical_closure support.scripts.research.tests.test_real_trade_feedback_labels support.scripts.tests.test_factor_claim_terminalization_audit -v`
+  passed: `164` tests.
+- `python3 -m py_compile support/scripts/research/same_tree_practical_closure.py support/scripts/research/real_trade_feedback_labels.py support/scripts/research/tests/test_same_tree_practical_closure.py support/scripts/research/tests/test_real_trade_feedback_labels.py`
+  passed.
+- `rustfmt --edition 2021 --check` passed for touched Rust files.
+- Rust focused filters passed under
+  `/tmp/ict-engine-cargo-target-closed-loop-current-20260531`:
+  `execution_feedback`, `workflow_factor_profitability_lifecycle`,
+  `structural_branch_admission`, `same_root_admission_practical_closure`, and
+  `evidence_validated_alias`.
+- `git diff --check` passed.
+- Current compact claim audit passed with `active_claims=0`,
+  `live_factor_processes=0`, `promotion_allowed_true=0`,
+  `trade_usable_true=0`, and `same_tree_practical_closure=null`.
+- Light done-definition passed with `completion_ready=false`, skipped heavy
+  gates, tracked practical-admission/source debt `0`, and quarantined
+  untracked debt still matching manifests.
+- Current objective snapshot at
+  `/tmp/ict-engine-objective-current-6591a022-codex-20260531T1658/objective_closure_snapshot.json`
+  returned `status=not_complete`.
+
+Remaining blockers:
+
+- No validated same-tree practical-closure packet exists.
+- Heavy done-definition gates were not run in the parent packet.
+- Release/source alignment remains blocked by the shared dirty worktree.
+
+Decision: continue the full objective. The current repair closes concrete
+fail-open proof/readback loopholes, but it still produces no practical factor
+and no `trade_usable=true` claim.

@@ -3,8 +3,10 @@ from __future__ import annotations
 
 import csv
 import json
+import os
 import shutil
 import subprocess
+import sys
 from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
@@ -13,6 +15,12 @@ from zoneinfo import ZoneInfo
 
 REPO = Path("/Users/thrill3r/projects-ict-engine/ict-engine")
 BASE = REPO / "support/docs/experiments/actionable-regime-confidence"
+RESEARCH_HELPERS = REPO / "support/scripts/research"
+if str(RESEARCH_HELPERS) not in sys.path:
+    sys.path.insert(0, str(RESEARCH_HELPERS))
+
+import instrument_cost_model as cost_model  # noqa: E402
+
 STAMP = datetime.now(ZoneInfo("Asia/Shanghai")).strftime("%Y%m%dT%H%M%S+0800")
 ROOT = BASE / "runs" / f"{STAMP}-codex-ibkr-mgc1m-donchian-turtle-breakout-7d-gate1-v1"
 SOURCE_ROOT = BASE / "runs/20260519T232924+0800-codex-ibkr-mgc1m-opening-vwap-rvol-reclaim-7d-gate1-v1"
@@ -24,18 +32,22 @@ ICT = REPO / ".local-artifacts/cargo-target/debug/ict-engine"
 if not ICT.exists():
     ICT = REPO / "target/debug/ict-engine"
 AQ_REPO = Path("/Users/thrill3r/Auto-Quant")
+IBKR_HOST = os.environ.get("ICT_IBKR_HOST", "127.0.0.1")
+IBKR_PORT = os.environ.get("ICT_IBKR_PORT", "").strip()
+IBKR_CLIENT_ID = int(os.environ.get("ICT_IBKR_CLIENT_ID", "862"))
 
 AQ_SYMBOL = "IBKR_MGC1M_DONCHIAN_TURTLE_BREAKOUT_7D_GATE1_V1"
 FACTOR_ID = "ibkr_mgc1m_donchian_turtle_breakout_7d_gate1_v1"
 BRANCH_PATH = "TrendExpansion -> DonchianTurtleBreakout -> ibkr_mgc1m_donchian_turtle_breakout_7d_gate1_v1"
+ROOT_SYMBOL = "MGC"
+PRODUCT = "precious_metals"
+EXCHANGE = "COMEX"
+MULTIPLIER = "10"
+LAST_TRADE_DATE = "202606"
 
 
-def cost_survives(trade_count: int, cost_stressed_total_profit_pct: float) -> bool:
-    return trade_count > 0 and cost_stressed_total_profit_pct > 0
-
-
-def hard_gate_downstream_allowed(branch_fields_preserved: bool, exact_1m_5bps: list[str]) -> bool:
-    return bool(branch_fields_preserved and exact_1m_5bps)
+def hard_gate_downstream_allowed(branch_fields_preserved: bool, survivors: list[str]) -> bool:
+    return bool(branch_fields_preserved and survivors)
 
 
 @dataclass(frozen=True)
@@ -81,6 +93,47 @@ def run_cmd(name: str, argv: list[object], timeout: int = 300) -> dict:
     (ROOT / "command-output" / f"{name}.err").write_text(stderr, encoding="utf-8")
     (ROOT / "checks" / f"{name}.exit").write_text(f"{rc}\n", encoding="utf-8")
     return {"name": name, "exit": rc, "timed_out": timed_out}
+
+
+def prepare_fresh_ibkr_source() -> Path:
+    raw_dir = ROOT / "data/provider/raw"
+    raw_dir.mkdir(parents=True, exist_ok=True)
+    output = raw_dir / "ibkr_mgc_202606_1m_7d_fresh.csv"
+    argv: list[object] = [
+        PY,
+        REPO / "support/scripts/auto_quant_external/fetch_external.py",
+        "ibkr-historical",
+        "--symbol",
+        ROOT_SYMBOL,
+        "--sec-type",
+        "FUT",
+        "--exchange",
+        EXCHANGE,
+        "--currency",
+        "USD",
+        "--last-trade-date",
+        LAST_TRADE_DATE,
+        "--multiplier",
+        MULTIPLIER,
+        "--bar-size",
+        "1 min",
+        "--duration",
+        "7 D",
+        "--what-to-show",
+        "TRADES",
+        "--host",
+        IBKR_HOST,
+        "--client-id",
+        str(IBKR_CLIENT_ID),
+        "--output",
+        output,
+    ]
+    if IBKR_PORT:
+        argv += ["--port", IBKR_PORT]
+    result = run_cmd("00_ibkr_fresh_fetch", argv, timeout=600)
+    if result["exit"] != 0:
+        raise SystemExit(f"fresh IBKR fetch failed with exit={result['exit']}")
+    return output
 
 
 def timerange(path: Path) -> str:
@@ -223,7 +276,7 @@ def write_materials(data_path: Path) -> list[Path]:
                 "material_timeframe": "1m",
                 "provider": "IBKR",
                 "provider_window": "7 D",
-                "provider_provenance": f"IBKR FUT MGC 202606 1m 7 D source={SOURCE_ROOT.name}",
+                "provider_provenance": "IBKR FUT MGC 202606 1m 7 D source=fresh_same_turn_fetch",
                 "source_backed_family": "Donchian/Turtle breakout",
                 "asset_class": "futures",
                 "sec_type": "FUT",
@@ -235,7 +288,7 @@ def write_materials(data_path: Path) -> list[Path]:
                 "trade_usable": False,
                 "update_goal": False,
             },
-            "notes": ["source_backed=donchian_turtle", "local_cache_replay=false_source_provider_root_reused", "downstream_forbidden_until_cost_density_survives"],
+            "notes": ["source_backed=donchian_turtle", "local_cache_replay=false_fresh_ibkr_fetch_from_same_session", "downstream_forbidden_until_cost_density_survives"],
         }
         material.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
         materials.append(material)
@@ -243,60 +296,61 @@ def write_materials(data_path: Path) -> list[Path]:
 
 
 def main() -> int:
-    for sub in ["data/provider/normalized", "agent-material", "summaries", "checks", "command-output", "state", "scripts"]:
+    for sub in ["data/provider/raw", "data/provider/normalized", "agent-material", "summaries", "checks", "command-output", "state", "scripts"]:
         (ROOT / sub).mkdir(parents=True, exist_ok=True)
     shutil.copy2(__file__, ROOT / "scripts" / Path(__file__).name)
-    if not SOURCE_DATA.exists():
-        raise FileNotFoundError(SOURCE_DATA)
     data_path = ROOT / "data/provider/normalized/ibkr_mgc_202606_1m_7d.csv"
-    shutil.copy2(SOURCE_DATA, data_path)
+    commands = [run_cmd("00_provider_status_ibkr", [ICT, "provider-status", "--provider", "ibkr", "--agent"], timeout=60)]
+    source_path = prepare_fresh_ibkr_source()
+    shutil.copy2(source_path, data_path)
     provider_rows = [{
-        "provider": "IBKR", "sec_type": "FUT", "symbol": "MGC", "product": "precious_metals",
-        "exchange": "COMEX", "last_trade_date": "202606", "timeframe": "1m", "duration": "7 D",
-        "rows": row_count(data_path), "path": str(data_path), "source_provider_root": str(SOURCE_ROOT),
-        "local_cache_replay": "false_source_provider_root_reused",
+        "provider": "IBKR", "sec_type": "FUT", "symbol": ROOT_SYMBOL, "product": PRODUCT,
+        "exchange": EXCHANGE, "last_trade_date": LAST_TRADE_DATE, "timeframe": "1m", "duration": "7 D",
+        "rows": row_count(data_path), "path": str(data_path), "source_csv": str(source_path),
+        "local_cache_replay": "false_fresh_ibkr_fetch_from_same_session",
     }]
     with (ROOT / "summaries/provider_provenance_matrix.csv").open("w", newline="", encoding="utf-8") as handle:
         writer = csv.DictWriter(handle, fieldnames=list(provider_rows[0].keys()))
         writer.writeheader(); writer.writerows(provider_rows)
     materials = write_materials(data_path)
     strategies = [Path(json.loads(path.read_text())["strategy_source_path"]) for path in materials]
-    commands = [run_cmd("00_strategy_py_compile", [PY, "-m", "py_compile", *strategies], timeout=120)]
+    commands.append(run_cmd("04_strategy_py_compile", [PY, "-m", "py_compile", *strategies], timeout=120))
     if commands[-1]["exit"] == 0:
         args: list[object] = [ICT, "auto-quant-agent-material-batch", "--symbol", AQ_SYMBOL, "--state-dir", ROOT / "state", "--max-parallel", "1"]
         if AQ_REPO.exists():
             args += ["--repo-url", AQ_REPO]
         for material in materials:
             args += ["--material", material]
-        commands.append(run_cmd("01_auto_quant_agent_material_batch", args, timeout=900))
+        commands.append(run_cmd("05_auto_quant_agent_material_batch", args, timeout=900))
     if commands[-1]["exit"] == 0:
-        commands.append(run_cmd("02_auto_quant_agent_material_dispatch", [ICT, "auto-quant-agent-material-dispatch", "--symbol", AQ_SYMBOL, "--state-dir", ROOT / "state"], timeout=1200))
+        commands.append(run_cmd("06_auto_quant_agent_material_dispatch", [ICT, "auto-quant-agent-material-dispatch", "--symbol", AQ_SYMBOL, "--state-dir", ROOT / "state"], timeout=1200))
     if commands[-1]["exit"] == 0:
-        commands.append(run_cmd("03_auto_quant_agent_material_rank", [ICT, "auto-quant-agent-material-rank", "--symbol", AQ_SYMBOL, "--state-dir", ROOT / "state"], timeout=240))
+        commands.append(run_cmd("07_auto_quant_agent_material_rank", [ICT, "auto-quant-agent-material-rank", "--symbol", AQ_SYMBOL, "--state-dir", ROOT / "state"], timeout=240))
 
-    rank_rows = latest_rank_rows() if commands[-1]["name"] == "03_auto_quant_agent_material_rank" and commands[-1]["exit"] == 0 else []
-    cost_rows = []
-    for row in rank_rows:
-        trades = int(row.get("trade_count") or 0)
-        gross = safe_float(row.get("total_profit_pct"))
-        record = {"label": label_for(row), "status": row.get("status"), "trade_count": trades, "win_rate_pct": safe_float(row.get("win_rate_pct")), "raw_total_profit_pct": gross, "sharpe": safe_float(row.get("sharpe")), "branch_path": row.get("branch_path")}
-        for bps in (0, 1, 2, 5):
-            record[f"{bps}bps_per_side_total_profit_pct"] = round(gross - trades * bps * 0.02, 6)
-        record["survives_2bps_per_side"] = cost_survives(trades, record["2bps_per_side_total_profit_pct"])
-        record["survives_5bps_per_side"] = cost_survives(trades, record["5bps_per_side_total_profit_pct"])
-        cost_rows.append(record)
-    survivors_2 = [row["label"] for row in cost_rows if row["survives_2bps_per_side"]]
-    survivors_5 = [row["label"] for row in cost_rows if row["survives_5bps_per_side"]]
+    rank_rows = latest_rank_rows() if commands[-1]["name"] == "07_auto_quant_agent_material_rank" and commands[-1]["exit"] == 0 else []
+    representative_price = cost_model.representative_price_from_provider_rows(provider_rows)
+    cost_summary = cost_model.rank_rows_real_fee_summary(
+        rank_rows,
+        symbol=ROOT_SYMBOL,
+        representative_price=representative_price,
+        label_fn=label_for,
+    )
+    cost_rows = cost_summary["rows"]
+    survivors_instrument_cost = cost_summary["survivors"]
     branch_paths = sorted({str(row.get("branch_path") or "") for row in rank_rows})
     branch_ok = bool(rank_rows) and branch_paths == [BRANCH_PATH]
-    downstream = hard_gate_downstream_allowed(branch_ok, survivors_5)
+    downstream = hard_gate_downstream_allowed(branch_ok, survivors_instrument_cost)
     decision = "gate1_ibkr_mgc1m_donchian_turtle_downstream_allowed" if downstream else "drop_or_block_gate1_practical"
     metrics = {
-        "run_root": str(ROOT), "source_provider_root": str(SOURCE_ROOT), "factor_id": FACTOR_ID, "branch_path": BRANCH_PATH,
+        "run_root": str(ROOT), "factor_id": FACTOR_ID, "branch_path": BRANCH_PATH,
         "decision": decision, "provider_rows": provider_rows, "rank_rows": len(rank_rows),
         "rank_total_trade_count": sum(int(row.get("trade_count") or 0) for row in rank_rows),
-        "exact_1m_cost_stress": cost_rows, "exact_1m_survivors_2bps": survivors_2,
-        "exact_1m_survivors_5bps": survivors_5, "branch_paths": branch_paths,
+        "representative_price": representative_price,
+        "cost_model": cost_summary["cost_model"],
+        "promotion_cost_verified": cost_summary["promotion_cost_verified"],
+        "exact_1m_instrument_cost_rows": cost_rows,
+        "exact_1m_survivors_instrument_cost": survivors_instrument_cost,
+        "branch_paths": branch_paths,
         "branch_fields_preserved": branch_ok, "downstream_allowed": downstream,
         "pre_bayes_allowed": downstream, "bbn_allowed": downstream, "catboost_allowed": False,
         "execution_tree_allowed": False, "promotion_allowed": False, "trade_usable": False,
@@ -305,16 +359,18 @@ def main() -> int:
         "skill_update": "needed_after_downstream" if downstream else "not_needed",
     }
     (ROOT / "checks/terminal_metrics.json").write_text(json.dumps(metrics, indent=2) + "\n", encoding="utf-8")
-    with (ROOT / "summaries/rank_rows.csv").open("w", newline="", encoding="utf-8") as handle:
-        fields = ["label", "status", "trade_count", "win_rate_pct", "raw_total_profit_pct", "1bps_per_side_total_profit_pct", "2bps_per_side_total_profit_pct", "5bps_per_side_total_profit_pct", "survives_2bps_per_side", "survives_5bps_per_side", "branch_path"]
-        writer = csv.DictWriter(handle, fieldnames=fields); writer.writeheader(); writer.writerows([{key: row.get(key, "") for key in fields} for row in cost_rows])
-    lines = ["# Terminal Decision Summary", "", f"Decision: `{decision}`", "", "Exact MGC 1m Donchian/Turtle rows:", "", "| label | trades | win_rate | raw | 1bps | 2bps | 5bps |", "|---|---:|---:|---:|---:|---:|---:|"]
-    for row in cost_rows:
-        lines.append(f"| `{row['label']}` | {row['trade_count']} | {row['win_rate_pct']:.4f}% | {row['raw_total_profit_pct']:.2f}% | {row['1bps_per_side_total_profit_pct']:.2f}% | {row['2bps_per_side_total_profit_pct']:.2f}% | {row['5bps_per_side_total_profit_pct']:.2f}% |")
-    lines += ["", f"- `branch_fields_preserved={branch_ok}`", f"- `exact_1m_survivors_2bps={survivors_2}`", f"- `exact_1m_survivors_5bps={survivors_5}`", f"- `downstream_allowed={downstream}`", ""]
+    cost_model.write_real_fee_rank_rows_csv(ROOT / "summaries/rank_rows.csv", cost_rows)
+    lines = cost_model.real_fee_rank_table_lines(
+        decision=decision,
+        title="Exact MGC 1m Donchian/Turtle rows:",
+        rows=cost_rows,
+        branch_ok=branch_ok,
+        survivors=survivors_instrument_cost,
+        downstream=downstream,
+    )
     (ROOT / "summaries/terminal_decision_summary.md").write_text("\n".join(lines), encoding="utf-8")
     print(json.dumps(metrics, indent=2))
-    return 0 if commands and commands[-1]["name"] == "03_auto_quant_agent_material_rank" and commands[-1]["exit"] == 0 else 1
+    return 0 if commands and commands[-1]["name"] == "07_auto_quant_agent_material_rank" and commands[-1]["exit"] == 0 else 1
 
 
 if __name__ == "__main__":

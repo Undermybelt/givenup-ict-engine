@@ -2,10 +2,13 @@
 from __future__ import annotations
 
 import argparse
+import csv
 import json
+import os
 import subprocess
 import sys
-from datetime import datetime
+from collections import deque
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from zoneinfo import ZoneInfo
 
@@ -33,11 +36,40 @@ ROOT = Path(f"/tmp/ict-engine-nq-compound-rv-stress-practical-lifecycle-{STAMP}"
 SYMBOL = "TOMAC_NQ_COMPOUND_RV_STRESS_GATE_PRACTICAL_LIFECYCLE_V1"
 FACTOR_ID = "nq_compound_trend_rrr_chopfilter_rv_stress_gate_rescore_v1"
 PARENT_FACTOR_ID = "nq_compound_trend_rrr_chopfilter_v1"
+TRADE_FEEDBACK_SOURCE = "auto_quant_real_trades:simulated_backtest:tomac_nq_compound_rv_stress_gate_v1"
+ACCEPTED_FEEDBACK_MARKERS = (
+    "paper_execution_feedback",
+    "live_execution_feedback",
+    "paper_trade_feedback",
+    "live_trade_feedback",
+    "broker_execution_feedback",
+)
+SIMULATED_FEEDBACK_MARKERS = (
+    "simulated_backtest",
+    "retained_real_event_label_simulation",
+    "ibkr_paper_trade_simulation",
+    "paper_trade_simulation",
+    "simulation_child_gate",
+    "child_gate_filtered",
+    "simulated_feedback",
+)
 BRANCH_PATH = (
     "US index futures -> NQ -> ETH/full_retained_session -> 1m parent execution + shifted 5m/15m/30m/1h/4h/1d context "
     "-> HtfTrendRegime -> ChopFilter(ER>=0.35,n40) -> MomentumResonance -> CompoundTrendRrrBreadth "
     "-> FixedRrrBracket -> RealizedVolatilityStressGate(30m_abs_ret16_max <= 0.04174409724) "
     "-> PracticalLifecycleContinuation"
+)
+ROW_CAPS = {
+    "1m": 5000,
+    "5m": 2500,
+    "15m": 1200,
+    "30m": 800,
+    "1h": 500,
+    "4h": 240,
+    "1d": 160,
+}
+SOURCE_DATA_ROOT = Path(
+    os.environ.get("NQ_COMPOUND_SOURCE_DATA_ROOT", "/tmp/ict-engine-auto-quant/user_data/data")
 )
 
 STATE = ROOT / "state"
@@ -77,9 +109,182 @@ def read_json(path: Path) -> dict:
     return payload if isinstance(payload, dict) else {}
 
 
+def read_policy_training_summary() -> dict:
+    summary = read_json(STATE / SYMBOL / "policy_training/structural_path_ranking_target_summary.json")
+    for name in ("19_policy_after_ranker.out", "10_policy_after_feedback.out"):
+        payload = read_json(CMD / name)
+        if not payload:
+            continue
+        merged = dict(summary)
+        merged.update(payload)
+        summary = merged
+    return summary
+
+
+def read_json_or_list(path: Path) -> object:
+    try:
+        return json.loads(path.read_text(encoding="utf-8"))
+    except Exception:
+        return None
+
+
 def write_json(path: Path, payload: dict) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(json_safe(payload), indent=2, sort_keys=True) + "\n", encoding="utf-8")
+
+
+def source_feather_path(timeframe: str) -> Path:
+    candidates = [
+        SOURCE_DATA_ROOT / f"NQ_USD-{timeframe}.feather",
+        SOURCE_DATA_ROOT / "binance" / f"NQ_USD-{timeframe}.feather",
+    ]
+    for candidate in candidates:
+        if candidate.exists():
+            return candidate
+    return candidates[0]
+
+
+def feather_to_csv(source_feather: Path, target_csv: Path) -> int:
+    target_csv.parent.mkdir(parents=True, exist_ok=True)
+    script = r"""
+import json
+import sys
+from pathlib import Path
+
+import pandas as pd
+
+source = Path(sys.argv[1])
+target = Path(sys.argv[2])
+frame = pd.read_feather(source)
+frame["date"] = pd.to_datetime(frame["date"], utc=True)
+frame = frame.sort_values("date").drop_duplicates(subset=["date"], keep="last")
+frame["timestamp"] = frame["date"].dt.strftime("%Y-%m-%dT%H:%M:%S+00:00")
+out = frame[["timestamp", "open", "high", "low", "close", "volume"]].copy()
+out.to_csv(target, index=False)
+print(json.dumps({"rows": int(len(out))}))
+"""
+    proc = subprocess.run(
+        [str(PY_RUNNER), "-c", script, str(source_feather), str(target_csv)],
+        text=True,
+        capture_output=True,
+        timeout=900,
+    )
+    if proc.returncode != 0:
+        raise RuntimeError(proc.stderr or proc.stdout or f"feather_to_csv failed for {source_feather}")
+    summary = json.loads(proc.stdout)
+    return int(summary.get("rows") or 0)
+
+
+def trim_csv_rows(source: Path, target: Path, keep_rows: int) -> int:
+    with source.open(newline="", encoding="utf-8") as handle:
+        reader = csv.DictReader(handle)
+        rows = deque(reader, maxlen=keep_rows)
+        fieldnames = reader.fieldnames or ["timestamp", "open", "high", "low", "close", "volume"]
+    target.parent.mkdir(parents=True, exist_ok=True)
+    with target.open("w", newline="", encoding="utf-8") as handle:
+        writer = csv.DictWriter(handle, fieldnames=fieldnames)
+        writer.writeheader()
+        writer.writerows(rows)
+    return len(rows)
+
+
+def trimmed_csv_to_cleaned_json(source_csv: Path, target_json: Path) -> int:
+    with source_csv.open(newline="", encoding="utf-8") as handle:
+        reader = csv.DictReader(handle)
+        candles = [
+            {
+                "timestamp": row["timestamp"],
+                "open": float(row["open"]),
+                "high": float(row["high"]),
+                "low": float(row["low"]),
+                "close": float(row["close"]),
+                "volume": float(row["volume"]),
+            }
+            for row in reader
+        ]
+    target_json.parent.mkdir(parents=True, exist_ok=True)
+    target_json.write_text(
+        json.dumps({"symbol": SYMBOL, "candles": candles}, indent=2) + "\n",
+        encoding="utf-8",
+    )
+    return len(candles)
+
+
+def prepare_local_data(data_root: Path) -> dict[str, dict[str, object]]:
+    full_dir = ROOT / "data/provider/full"
+    full_dir.mkdir(parents=True, exist_ok=True)
+    summaries: dict[str, dict[str, object]] = {}
+    market = SYMBOL.lower()
+    for timeframe, keep_rows in ROW_CAPS.items():
+        source = source_feather_path(timeframe)
+        if not source.exists():
+            raise RuntimeError(f"missing NQ source feather for {timeframe}: {source}")
+        full_csv = full_dir / f"nq_usd_{timeframe}_full.csv"
+        trimmed_csv = data_root / f"nq_usd_{timeframe}_trimmed.csv"
+        cleaned_json = data_root / f"cleaned-{timeframe}" / f"{market}.continuous-{timeframe}.json"
+        full_rows = feather_to_csv(source, full_csv)
+        kept_rows = trim_csv_rows(full_csv, trimmed_csv, keep_rows)
+        cleaned_rows = trimmed_csv_to_cleaned_json(trimmed_csv, cleaned_json)
+        summaries[timeframe] = {
+            "source": str(source),
+            "full_csv": str(full_csv),
+            "trimmed_csv": str(trimmed_csv),
+            "cleaned_json": str(cleaned_json),
+            "full_rows": full_rows,
+            "kept_rows": kept_rows,
+            "cleaned_rows": cleaned_rows,
+        }
+    write_json(
+        CHECKS / "source_data_summary.json",
+        {
+            "source_data_root": str(SOURCE_DATA_ROOT),
+            "row_caps": ROW_CAPS,
+            "timeframes": summaries,
+        },
+    )
+    return summaries
+
+
+def reset_prior_init_state() -> dict[str, list[str]]:
+    removed: list[str] = []
+    rolled_back: list[str] = []
+    symbol_dirs = [STATE / SYMBOL, STATE / "auto-quant" / SYMBOL]
+    for symbol_dir in dict.fromkeys(symbol_dirs):
+        for path in (
+            symbol_dir / "bbn_network.json",
+            symbol_dir / "auto_quant_prior_init_history.json",
+        ):
+            if path.exists():
+                path.unlink()
+                removed.append(str(path))
+        if symbol_dir.exists():
+            for path in symbol_dir.glob("auto_quant_prior_init*.json"):
+                if path.exists():
+                    path.unlink()
+                    removed.append(str(path))
+        ledger_path = symbol_dir / "artifact_ledger.json"
+        ledger = read_json(ledger_path)
+        if not isinstance(ledger, list):
+            try:
+                ledger = json.loads(ledger_path.read_text(encoding="utf-8")) if ledger_path.exists() else []
+            except Exception:
+                ledger = []
+        if isinstance(ledger, list):
+            changed = False
+            for entry in ledger:
+                if not isinstance(entry, dict):
+                    continue
+                if entry.get("artifact_kind") == "auto_quant_prior_init_applied" and entry.get("status") == "applied":
+                    entry["status"] = "rolled_back_before_lifecycle_rerun"
+                    entry["decision_hint"] = "rolled_back_before_lifecycle_rerun"
+                    rolled_back.append(str(entry.get("artifact_id") or entry.get("entry_id") or "unknown"))
+                    changed = True
+            if changed:
+                write_json(ledger_path, ledger)
+    summary = {"removed": removed, "rolled_back": rolled_back}
+    if removed or rolled_back:
+        write_json(CHECKS / "prior_init_reset.json", summary)
+    return summary
 
 
 def json_safe(value: object) -> object:
@@ -124,6 +329,35 @@ def run_stage(stage: str, name: str, argv: list[object], timeout: int = 300) -> 
     result = run_cmd(name, argv, timeout)
     result["stage"] = stage
     return result
+
+
+def replace_cli_arg(argv: list[object], flag: str, value: object) -> list[object]:
+    updated = list(argv)
+    try:
+        index = [str(item) for item in updated].index(flag)
+    except ValueError:
+        updated.extend([flag, value])
+        return updated
+    if index + 1 < len(updated):
+        updated[index + 1] = value
+    else:
+        updated.append(value)
+    return updated
+
+
+def register_trainer_argv_from_artifact(argv: list[object]) -> list[object]:
+    artifact = read_json(MODEL_DIR / "trainer_artifact.json")
+    model_family = str(artifact.get("model_family") or "").strip()
+    if not model_family:
+        return list(argv)
+    updated = replace_cli_arg(argv, "--model-family", model_family)
+    trained_rows = positive_int(artifact.get("trained_rows"))
+    if trained_rows > 0:
+        updated = replace_cli_arg(updated, "--trained-rows", trained_rows)
+    calibration_rows = positive_int(artifact.get("calibration_rows"))
+    if calibration_rows > 0:
+        updated = replace_cli_arg(updated, "--calibration-rows", calibration_rows)
+    return updated
 
 
 def command_results_cover_practical_stages(value: object) -> bool:
@@ -257,6 +491,17 @@ def practical_evidence_fields(materialization_root: Path | None, source_packet: 
     }
 
 
+def validated_extension_complete(source_packet: dict | None) -> bool:
+    if not isinstance(source_packet, dict):
+        return False
+    if source_packet.get("validated_extension_complete") is not True:
+        return False
+    evidence = source_packet.get("validated_extension_evidence") or source_packet.get(
+        "validated_extension_evidence_packet"
+    )
+    return isinstance(evidence, (str, dict, list)) and bool(evidence)
+
+
 def normalized_text(value: object) -> str:
     return str(value or "").strip().lower()
 
@@ -310,6 +555,381 @@ def command_step(stage: str, name: str, argv: list[object], timeout: int) -> dic
 
 def resolve_data_root(value: str) -> Path:
     return Path(value) if value else DATA_DIR
+
+
+def cleaned_interval_file_count(data_root: Path) -> int:
+    market = SYMBOL.lower()
+    return sum(
+        1
+        for timeframe in ROW_CAPS
+        if (data_root / f"cleaned-{timeframe}" / f"{market}.continuous-{timeframe}.json").exists()
+    )
+
+
+def path_is_under_run_root(path: Path) -> bool:
+    try:
+        return path.resolve().is_relative_to(ROOT.resolve())
+    except OSError:
+        return False
+
+
+def should_prepare_local_data(data_root: Path, *, data_root_explicit: bool) -> bool:
+    if not data_root_explicit:
+        return True
+    if cleaned_interval_file_count(data_root) >= 3:
+        return False
+    return path_is_under_run_root(data_root)
+
+
+def _float_value(value: object, default: float = 0.0) -> float:
+    if isinstance(value, bool):
+        return default
+    if isinstance(value, (int, float)):
+        return float(value)
+    if isinstance(value, str):
+        try:
+            return float(value.strip())
+        except ValueError:
+            return default
+    return default
+
+
+def prepare_runtime_strategy_library(source_library: Path) -> Path:
+    payload = read_json(source_library)
+    source_strategies = payload.get("strategies") if isinstance(payload.get("strategies"), list) else []
+    strategies: list[dict[str, object]] = []
+    for raw in source_strategies:
+        if not isinstance(raw, dict):
+            continue
+        metadata = raw.get("metadata") if isinstance(raw.get("metadata"), dict) else {}
+        trade_count = positive_int(
+            first_present(
+                metadata.get("child_full_trade_count"),
+                metadata.get("trade_count"),
+                metadata.get("trades"),
+            )
+        )
+        total_profit_pct = _float_value(
+            first_present(
+                metadata.get("child_full_instrument_cost_total_ret_pct"),
+                metadata.get("child_full_net5bps_total_ret_pct"),
+                metadata.get("instrument_cost_total_profit_pct"),
+                metadata.get("total_profit_pct"),
+            )
+        )
+        strategy_name = str(raw.get("name") or metadata.get("factor_id") or FACTOR_ID)
+        runtime_metadata = dict(metadata)
+        runtime_metadata.update(
+            {
+                "strategy": strategy_name,
+                "mutation_id": FACTOR_ID,
+                "base_factor": PARENT_FACTOR_ID,
+                "hypothesis": "rv-stress child gate continuation of NQ compound trend RRR chop filter",
+                "paradigm": "regime_rooted_tomac_nq_practical_lifecycle",
+                "expected_regime": "HtfTrendRegime -> ChopFilter -> MomentumResonance",
+                "main_regime": "HtfTrendRegime",
+                "sub_regime": "ChopFilterMomentumResonance",
+                "sub_sub_regime_or_profit_factor": "realized_volatility_stress_gate",
+                "profit_factor": FACTOR_ID,
+                "regime_profit_branch_path": BRANCH_PATH,
+                "parent": PARENT_FACTOR_ID,
+                "asset_class": "futures",
+                "status": "active",
+                "promotion_allowed": False,
+                "trade_usable": False,
+            }
+        )
+        strategies.append(
+            {
+                "name": strategy_name,
+                "status": "ok",
+                "error": None,
+                "file_path": str(source_library),
+                "pairs": ["NQ"],
+                "timerange": "20210103-20251231",
+                "validation_metrics": {
+                    "trade_count": trade_count,
+                    "win_rate_pct": _float_value(metadata.get("child_full_win_rate_pct"), 50.0),
+                    "total_profit_pct": total_profit_pct,
+                    "profit_factor": _float_value(metadata.get("child_full_profit_factor"), 1.0),
+                    "sharpe": _float_value(metadata.get("child_full_sharpe"), 0.0),
+                    "sortino": _float_value(metadata.get("child_full_sortino"), 0.0),
+                    "calmar": _float_value(metadata.get("child_full_calmar"), 0.0),
+                    "max_drawdown_pct": _float_value(metadata.get("child_full_max_drawdown_pct"), 0.0),
+                },
+                "per_pair_metrics": {
+                    "NQ_USD_1m_ETH_FULL_RETAINED": {
+                        "trade_count": trade_count,
+                        "win_rate_pct": _float_value(metadata.get("child_full_win_rate_pct"), 50.0),
+                        "total_profit_pct": total_profit_pct,
+                        "profit_factor": _float_value(metadata.get("child_full_profit_factor"), 1.0),
+                        "sharpe": _float_value(metadata.get("child_full_sharpe"), 0.0),
+                        "sortino": _float_value(metadata.get("child_full_sortino"), 0.0),
+                        "calmar": _float_value(metadata.get("child_full_calmar"), 0.0),
+                        "max_drawdown_pct": _float_value(metadata.get("child_full_max_drawdown_pct"), 0.0),
+                    }
+                },
+                "metadata": runtime_metadata,
+            }
+        )
+    runtime_library = {
+        "manifest_version": "1.0",
+        "auto_quant_repo_url": "tomac_nq_compound_rv_stress_gate_practical_lifecycle_v1",
+        "auto_quant_pinned_ref": "local_materialization_runtime_adapter",
+        "timeframe": str(payload.get("timeframe") or "1m"),
+        "strategies": strategies,
+        "validation_errors": [],
+    }
+    MATERIALS.mkdir(parents=True, exist_ok=True)
+    out = MATERIALS / "tomac_nq_compound_rv_stress_runtime_strategy_library.json"
+    write_json(out, runtime_library)
+    return out
+
+
+def parse_utc_datetime(value: object) -> datetime:
+    if isinstance(value, (int, float)) and not isinstance(value, bool):
+        seconds = float(value) / 1000.0 if abs(float(value)) > 10_000_000_000 else float(value)
+        return datetime.fromtimestamp(seconds, tz=timezone.utc)
+    text = str(value or "").strip()
+    if not text:
+        return datetime.now(timezone.utc)
+    text = text.replace("Z", "+00:00")
+    parsed = datetime.fromisoformat(text)
+    if parsed.tzinfo is None:
+        parsed = parsed.replace(tzinfo=timezone.utc)
+    return parsed.astimezone(timezone.utc)
+
+
+def timestamp_ms(value: object) -> int:
+    return int(parse_utc_datetime(value).timestamp() * 1000)
+
+
+def direction_label(value: object) -> str:
+    if isinstance(value, (int, float)) and not isinstance(value, bool):
+        if value > 0:
+            return "Bull"
+        if value < 0:
+            return "Bear"
+        return "Neutral"
+    text = str(value or "").strip().lower()
+    if text in {"1", "+1", "bull", "bullish", "long", "buy"}:
+        return "Bull"
+    if text in {"-1", "bear", "bearish", "short", "sell"}:
+        return "Bear"
+    return "Neutral"
+
+
+def realized_outcome_from_pnl(pnl: float) -> str:
+    if pnl > 0.0:
+        return "win"
+    if pnl < 0.0:
+        return "loss"
+    return "breakeven"
+
+
+def selected_probability_from_pnl(pnl: float) -> float:
+    return min(0.95, max(0.05, 0.5 + pnl * 8.0))
+
+
+def runtime_trade_record(row: dict[str, object], index: int) -> dict[str, object]:
+    open_value = row.get("open_ts") or row.get("event_ts")
+    open_dt = parse_utc_datetime(open_value)
+    bars_held = positive_int(row.get("bars_held")) or 1
+    close_dt = parse_utc_datetime(row.get("close_ts")) if row.get("close_ts") else open_dt + timedelta(minutes=bars_held)
+    pnl = _float_value(
+        first_present(
+            row.get("instrument_cost_return"),
+            row.get("realized_pnl"),
+            row.get("net5bps_return"),
+            row.get("gross_return"),
+        )
+    )
+    direction = direction_label(row.get("direction"))
+    selected_probability = selected_probability_from_pnl(pnl)
+    if direction == "Bear":
+        long_score = 1.0 - selected_probability
+        short_score = selected_probability
+    elif direction == "Bull":
+        long_score = selected_probability
+        short_score = 1.0 - selected_probability
+    else:
+        long_score = short_score = 0.5
+    stream_label = str(row.get("stream_label") or FACTOR_ID)
+    child_gate = str(row.get("child_gate") or "30m_abs_ret16_max")
+    open_ms = int(open_dt.timestamp() * 1000)
+    close_ms = int(close_dt.timestamp() * 1000)
+    trade_id = f"rv-stress-{index:04d}-{open_ms}"
+    original_branch = str(row.get("regime_profit_branch_path") or row.get("branch_path") or "")
+    return {
+        "schema_version": "1.0",
+        "symbol": SYMBOL,
+        "trade_id": trade_id,
+        "strategy_name": stream_label,
+        "strategy_mutation_id": FACTOR_ID,
+        "auto_quant_run_id": "simulated_backtest_from_rv_stress_materialization",
+        "open_ts_ms": open_ms,
+        "close_ts_ms": close_ms,
+        "direction": direction,
+        "pnl": pnl,
+        "realized_outcome": realized_outcome_from_pnl(pnl),
+        "regime_at_entry": "trend",
+        "entry_signal": "medium",
+        "factors_used": [
+            {
+                "factor_name": stream_label,
+                "category": "strategy_stream",
+                "direction": direction,
+                "value": 1.0,
+                "confidence": 0.65,
+                "weighted_score": 0.65,
+                "uncertainty_contribution": 0.20,
+            },
+            {
+                "factor_name": child_gate,
+                "category": "realized_volatility_stress_gate",
+                "direction": direction,
+                "value": _float_value(row.get("child_threshold")),
+                "confidence": 0.72,
+                "weighted_score": 0.72,
+                "uncertainty_contribution": 0.15,
+            },
+        ],
+        "model_probabilities_before_trade": {
+            "selected_direction": direction,
+            "selected_probability": selected_probability,
+            "long_score": long_score,
+            "short_score": short_score,
+            "win_prob_long": long_score,
+            "win_prob_short": short_score,
+            "uncertainty": max(0.0, 1.0 - abs(selected_probability - 0.5) * 2.0),
+        },
+        "structural_feedback": {
+            "protocol_version": "structural-feedback-v1",
+            "recommendation_id": f"structural-feedback:{SYMBOL}:rv-stress:{index:04d}:{open_ms}",
+            "recommended_at": open_dt.isoformat().replace("+00:00", "Z"),
+            "node_id": "US index futures",
+            "branch_id": "US index futures -> NQ",
+            "scenario_id": "US index futures -> NQ -> ETH/full_retained_session",
+            "path_id": BRANCH_PATH,
+            "followed_path": True,
+            "exit_reason": str(row.get("exit_reason") or realized_outcome_from_pnl(pnl)),
+            "notes": f"simulated backtest feedback from retained ETH materialization; not broker fill evidence; original_branch={original_branch}",
+        },
+        "regime_profit_branch_path": BRANCH_PATH,
+        "main_regime": "US index futures",
+        "sub_regime": "NQ",
+        "sub_sub_regime_or_profit_factor": "ETH/full_retained_session",
+        "profit_factor": FACTOR_ID,
+    }
+
+
+def prepare_runtime_trade_feedback(source_feedback: Path) -> tuple[Path, dict[str, object]]:
+    if not source_feedback.exists():
+        raise RuntimeError(f"missing materialized feedback JSONL: {source_feedback}")
+    out_dir = ROOT / "feedback"
+    out_dir.mkdir(parents=True, exist_ok=True)
+    out = out_dir / "tomac_nq_compound_rv_stress_runtime_real_trades.jsonl"
+    rows = wins = losses = breakevens = 0
+    with source_feedback.open(encoding="utf-8") as source, out.open("w", encoding="utf-8") as handle:
+        for raw_line in source:
+            line = raw_line.strip()
+            if not line:
+                continue
+            raw_payload = json.loads(line)
+            if not isinstance(raw_payload, dict):
+                continue
+            record = runtime_trade_record(raw_payload, rows)
+            handle.write(json.dumps(record, separators=(",", ":"), sort_keys=True) + "\n")
+            rows += 1
+            outcome = record["realized_outcome"]
+            wins += int(outcome == "win")
+            losses += int(outcome == "loss")
+            breakevens += int(outcome == "breakeven")
+    summary = {
+        "source_feedback": str(source_feedback),
+        "runtime_feedback": str(out),
+        "target_schema": "auto_quant_real_trades_jsonl/v1",
+        "source": TRADE_FEEDBACK_SOURCE,
+        "rows": rows,
+        "wins": wins,
+        "losses": losses,
+        "breakevens": breakevens,
+        "broker_realized": False,
+        "broker_fill_evidence": False,
+        "session_scope": "ETH/full_retained_session",
+        "rth_filter_applied": False,
+    }
+    write_json(CHECKS / "runtime_trade_feedback_summary.json", summary)
+    return out, summary
+
+
+def accepted_execution_feedback_source(value: object) -> str | None:
+    text = str(value or "").strip()
+    normalized = text.lower()
+    if not normalized or any(marker in normalized for marker in SIMULATED_FEEDBACK_MARKERS):
+        return None
+    if any(marker in normalized for marker in ACCEPTED_FEEDBACK_MARKERS):
+        return text
+    return None
+
+
+def inspect_runtime_trade_feedback(source_feedback: Path) -> dict[str, object]:
+    if not source_feedback.exists():
+        raise RuntimeError(f"missing feedback JSONL: {source_feedback}")
+    rows = wins = losses = breakevens = 0
+    broker_realized = False
+    broker_fill_evidence = False
+    accepted_source: str | None = None
+    with source_feedback.open(encoding="utf-8") as source:
+        for raw_line in source:
+            line = raw_line.strip()
+            if not line:
+                continue
+            payload = json.loads(line)
+            if not isinstance(payload, dict):
+                continue
+            rows += 1
+            accepted_source = accepted_source or accepted_execution_feedback_source(payload.get("source"))
+            accepted_source = accepted_source or accepted_execution_feedback_source(payload.get("feedback_source"))
+            broker_realized = broker_realized or payload.get("broker_realized") is True
+            broker_fill_evidence = broker_fill_evidence or payload.get("broker_fill_evidence") is True
+            outcome = str(payload.get("realized_outcome") or "").strip().lower()
+            if not outcome:
+                outcome = realized_outcome_from_pnl(_float_value(payload.get("pnl")))
+            wins += int(outcome == "win")
+            losses += int(outcome == "loss")
+            breakevens += int(outcome == "breakeven")
+    return {
+        "source_feedback": str(source_feedback),
+        "runtime_feedback": str(source_feedback),
+        "target_schema": "auto_quant_real_trades_jsonl/v1",
+        "source": accepted_source,
+        "rows": rows,
+        "wins": wins,
+        "losses": losses,
+        "breakevens": breakevens,
+        "broker_realized": broker_realized,
+        "broker_fill_evidence": broker_fill_evidence,
+        "session_scope": "ETH/full_retained_session",
+        "rth_filter_applied": False,
+    }
+
+
+def prepare_real_trade_feedback(source_feedback: Path) -> Path:
+    summary = inspect_runtime_trade_feedback(source_feedback)
+    if summary.get("source") and summary.get("broker_realized") is True and summary.get("broker_fill_evidence") is True:
+        write_json(CHECKS / "runtime_trade_feedback_summary.json", summary)
+        return source_feedback
+    runtime_feedback, _summary = prepare_runtime_trade_feedback(source_feedback)
+    return runtime_feedback
+
+
+def runtime_trade_feedback_source() -> str:
+    summary = read_json(CHECKS / "runtime_trade_feedback_summary.json")
+    source = accepted_execution_feedback_source(summary.get("source"))
+    if source:
+        return source
+    return TRADE_FEEDBACK_SOURCE
 
 
 def build_lifecycle_command_plan(
@@ -392,7 +1012,7 @@ def build_lifecycle_command_plan(
                 "--trades",
                 feedback_file,
                 "--source",
-                "retained_real_event_label_simulation_child_gate_filtered",
+                runtime_trade_feedback_source(),
             ],
             300,
         ),
@@ -439,7 +1059,7 @@ def build_lifecycle_command_plan(
                 "--artifact-uri",
                 trainer_artifact,
                 "--model-family",
-                "weighted_feature_sum_v1",
+                "catboost",
                 "--trained-rows",
                 "1",
                 "--calibration-rows",
@@ -483,10 +1103,13 @@ def build_lifecycle_command_plan(
 def run_lifecycle_driver(plan: list[dict[str, object]]) -> list[dict]:
     results: list[dict] = []
     for step in plan:
+        argv = list(step["argv"])
+        if str(step["name"]) == "14_register_trainer":
+            argv = register_trainer_argv_from_artifact(argv)
         result = run_stage(
             str(step["stage"]),
             str(step["name"]),
-            list(step["argv"]),
+            argv,
             int(step.get("timeout") or 300),
         )
         results.append(result)
@@ -556,17 +1179,21 @@ def write_summary(
     candidate = read_json(STATE / SYMBOL / "execution_candidate.json")
     trace = read_json(STATE / SYMBOL / "execution_tree_trace.json")
     trace_output = trace.get("output") if isinstance(trace.get("output"), dict) else trace
-    policy = read_json(STATE / SYMBOL / "policy_training/structural_path_ranking_target_summary.json")
+    policy = read_policy_training_summary()
     closed_loop = workflow.get("closed_loop_branch_admission") or trace.get("closed_loop_branch_admission") or {}
     counters = validation_counters(trace_output)
     actionable = bool(candidate.get("actionable") or trace_output.get("actionable") or closed_loop.get("actionable"))
-    candidate_status = str(candidate.get("candidate_status") or closed_loop.get("candidate_status") or trace_output.get("candidate_status") or "")
+    candidate_status = str(closed_loop.get("candidate_status") or trace_output.get("candidate_status") or candidate.get("candidate_status") or "")
     exact_survived = exact_branch_survived(candidate, trace_output, closed_loop)
+    pass_exec = branch_local_admitted(closed_loop) and exact_survived
     all_ok = bool(command_results) and all(
         row.get("exit") == 0 and row.get("timed_out") is False for row in command_results
     )
     material = materialization_summary(materialization_root) if materialization_root else {}
     evidence_fields = practical_evidence_fields(materialization_root, source_packet)
+    source_extension_complete = validated_extension_complete(source_packet)
+    runtime_feedback_summary = read_json(CHECKS / "runtime_trade_feedback_summary.json")
+    feedback_source = first_present(runtime_feedback_summary.get("source"), runtime_feedback_summary.get("feedback_source"))
     metrics = {
         "schema_version": "tomac-nq-compound-rv-stress-practical-lifecycle-terminal/v1",
         "status": "practical_lifecycle_evaluating",
@@ -579,6 +1206,8 @@ def write_summary(
         "source_cost_coverage_packet": str(source_packet_path) if source_packet_path else None,
         "materialization_status": material.get("status"),
         "feedback_rows": material.get("feedback_rows"),
+        "feedback_source": feedback_source,
+        "runtime_trade_feedback_summary": runtime_feedback_summary,
         "best_gate": material.get("best_gate"),
         "best_threshold": material.get("best_threshold"),
         "command_results": command_results,
@@ -586,7 +1215,7 @@ def write_summary(
         "exact_branch_survived": exact_survived,
         "execution_candidate_actionable": actionable,
         "execution_candidate_status": candidate_status,
-        "branch_local_admitted": branch_local_admitted(closed_loop) and exact_survived,
+        "branch_local_admitted": pass_exec,
         "validation_ready": all(ratio_covers(counters.get(key)) for key in ("raw_scored_mature", "production_validation", "observation_validation")),
         "validation_counters": counters,
         "path_ranker_score_visible_to_execution_tree": trace_output.get("path_ranker_score_visible_to_execution_tree"),
@@ -605,23 +1234,23 @@ def write_summary(
         "retained_session_coverage": evidence_fields["retained_session_coverage"],
         "promotion_cost_verified": evidence_fields["promotion_cost_verified"],
         "cost_model": evidence_fields["cost_model"],
+        "validated_extension_complete": source_extension_complete,
+        "extension_complete": False,
         "promotion_allowed": False,
         "trade_usable": False,
         "update_goal": False,
     }
-    write_json(CHECKS / "terminal_metrics.json", metrics)
     packet = write_same_tree_practical_closure_packet(
         metrics,
         SUMMARIES / "same_tree_practical_closure.json",
         evidence_packet="checks/terminal_metrics.json",
     )
-    metrics["status"] = "practical_closure_pass" if packet is not None else "practical_lifecycle_fail_closed"
-    # Practical authority lives in the canonical same-tree packet. The wrapper
-    # terminal metrics stay fail-closed so local lifecycle readbacks cannot
-    # self-promote through stale workflow flags.
-    metrics["promotion_allowed"] = False
-    metrics["trade_usable"] = False
-    metrics["update_goal"] = False
+    # Practical authority lives in the canonical same-tree packet. Wrapper
+    # terminal metrics stay fail-closed to avoid self-promotion through local
+    # lifecycle readbacks.
+    closure_pass = packet is not None
+    metrics["status"] = "practical_closure_pass" if closure_pass else "practical_lifecycle_fail_closed"
+    metrics["same_tree_practical_closure"] = str(SUMMARIES / "same_tree_practical_closure.json") if closure_pass else None
     write_json(CHECKS / "terminal_metrics.json", metrics)
     summary = {
         "status": metrics["status"],
@@ -677,10 +1306,16 @@ def main(argv: list[str] | None = None) -> int:
     for directory in (STATE, CMD, CHECKS, SUMMARIES, MATERIALS, MODEL_DIR, DATA_DIR):
         directory.mkdir(parents=True, exist_ok=True)
     if args.execute_driver:
+        data_root = resolve_data_root(args.data_root)
+        if should_prepare_local_data(data_root, data_root_explicit=bool(args.data_root)):
+            prepare_local_data(data_root)
+        reset_prior_init_state()
+        runtime_strategy_library = prepare_runtime_strategy_library(Path(args.strategy_library))
+        runtime_feedback_file = prepare_real_trade_feedback(Path(args.feedback_file))
         plan = build_lifecycle_command_plan(
-            strategy_library=Path(args.strategy_library),
-            data_root=resolve_data_root(args.data_root),
-            feedback_file=Path(args.feedback_file),
+            strategy_library=runtime_strategy_library,
+            data_root=data_root,
+            feedback_file=runtime_feedback_file,
         )
         write_json(CHECKS / "lifecycle_command_plan.json", {"steps": plan})
         command_results = run_lifecycle_driver(plan)

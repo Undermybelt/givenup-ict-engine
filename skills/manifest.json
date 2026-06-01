@@ -151,7 +151,8 @@
         "repo_training_scratch_surface hygiene"
       ],
       "references": [
-        "skills/ict-engi-fact-rese-muta/references/index.md"
+        "skills/ict-engi-fact-rese-muta/references/index.md",
+        "skills/ict-engi-fact-rese-muta/references/data-cleaning-and-candidate-prefilter-20260601.md"
       ],
       "repo_mirror": {
         "source": "~/.hermes/skills/software-development/ict-engi-fact-rese-muta/SKILL.md",

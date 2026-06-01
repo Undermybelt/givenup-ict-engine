@@ -11,12 +11,14 @@ import shutil
 import subprocess
 import sys
 import textwrap
+import zipfile
 from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
 from typing import Any
 from zoneinfo import ZoneInfo
 
+import numpy as np
 import pandas as pd
 
 
@@ -42,6 +44,29 @@ DEFAULT_COMPACT_ROOT = BASE / "runs" / f"{STAMP}-codex-tomac-index-futures-clean
 DEFAULT_START = "2021-01-01"
 DEFAULT_END = "2025-12-31"
 DEFAULT_TIMEFRAMES = ("1m", "5m", "15m", "30m", "1h", "4h", "1d")
+MBS_CONVEXITY_FAMILY = "mbs_convexity_duration_hedge_risk_transfer_filter"
+JOLTS_LABOR_TIGHTNESS_FAMILY = "jolts_labor_tightness_regime_filter"
+JDK_RELATIVE_ROTATION_FAMILY = "jdk_relative_rotation_regime_gate"
+DYNAMIC_LEAD_LAG_BREADTH_FAMILY = "dynamic_lead_lag_breadth_gate"
+DYNAMIC_LEAD_LAG_LEADERS = ("YM", "GC")
+DYNAMIC_LEAD_LAG_SIDECAR_COLUMNS = (
+    "dll_nq_momentum_bps",
+    "dll_nq_ema_fast",
+    "dll_nq_ema_slow",
+    "dll_leadlag_score_bps",
+    "dll_leadlag_max_abs_corr",
+    "dll_leadlag_agreement_long",
+    "dll_leadlag_agreement_short",
+    "dll_ym_score_bps",
+    "dll_gc_score_bps",
+    "dll_ym_best_abs_corr",
+    "dll_gc_best_abs_corr",
+)
+MBS_MACRO_RATE_SOURCES = {
+    "mortgage_30y_rate": ("fred_mortgage30us.csv", "MORTGAGE30US"),
+    "treasury_10y_yield": ("fred_dgs10.csv", "DGS10"),
+}
+JOLTS_MACRO_SOURCE = "fred_jolts_unemploy.csv"
 MONTH_CODES = "FGHJKMNQUVXZ"
 CONTRACT_ROOT_ALIASES = {
     "XAU": "GC",
@@ -51,6 +76,28 @@ SESSION_SCOPE = "ETH/full_retained_session"
 RTH_FILTER_APPLIED = False
 RTH_START_UTC_MINUTE = 13 * 60 + 30
 RTH_END_UTC_MINUTE = 21 * 60
+
+
+def canonical_tomac_symbol(symbol: str) -> str:
+    root = normalize_futures_root(symbol)
+    return CONTRACT_ROOT_ALIASES.get(root, root)
+
+
+def canonical_tomac_symbol_sequence(symbols: list[str]) -> tuple[list[str], list[dict[str, str]]]:
+    canonical_symbols: list[str] = []
+    aliases: list[dict[str, str]] = []
+    seen: set[str] = set()
+    for raw_symbol in symbols:
+        requested = str(raw_symbol).upper().strip()
+        if not requested:
+            continue
+        canonical = canonical_tomac_symbol(requested)
+        if requested != canonical:
+            aliases.append({"requested": requested, "canonical": canonical})
+        if canonical not in seen:
+            canonical_symbols.append(canonical)
+            seen.add(canonical)
+    return canonical_symbols, aliases
 
 
 def has_pyarrow() -> bool:
@@ -93,6 +140,8 @@ class TomacSource:
     symbol: str
     source_csv: Path
     schema: str = "databento_parent_ohlcv_1m"
+    archive_zip: Path | None = None
+    archive_member: str | None = None
 
 
 @dataclass(frozen=True)
@@ -153,23 +202,33 @@ def source_universe() -> list[TomacSource]:
     return [
         TomacSource(
             symbol="ES",
-            source_csv=TOMAC / "es future 2021-2025/glbx-mdp3-20100606-20260403.ohlcv-1m.csv",
+            source_csv=TOMAC / "es future 2021-2025/glbx-mdp3-20110101-20251231.ohlcv-1m.csv",
+            archive_zip=TOMAC / "es future 2021-2025.zip",
+            archive_member="glbx-mdp3-20110101-20251231.ohlcv-1m.csv",
         ),
         TomacSource(
             symbol="YM",
             source_csv=TOMAC / "ym future 2021-2025/glbx-mdp3-20110101-20251231.ohlcv-1m.csv",
+            archive_zip=TOMAC / "ym future 2021-2025.zip",
+            archive_member="glbx-mdp3-20110101-20251231.ohlcv-1m.csv",
         ),
         TomacSource(
             symbol="NQ",
-            source_csv=TOMAC / "nq future 2021-2025/glbx-mdp3-20100606-20260403.ohlcv-1m.csv",
+            source_csv=TOMAC / "nq future 2021-2025/glbx-mdp3-20110101-20251231.ohlcv-1m.csv",
+            archive_zip=TOMAC / "nq future 2021-2025.zip",
+            archive_member="glbx-mdp3-20110101-20251231.ohlcv-1m.csv",
         ),
         TomacSource(
             symbol="6E",
             source_csv=TOMAC / "eur future 2015-2025/glbx-mdp3-20150101-20251231.ohlcv-1m.csv",
+            archive_zip=TOMAC / "eur future 2015-2025.zip",
+            archive_member="glbx-mdp3-20150101-20251231.ohlcv-1m.csv",
         ),
         TomacSource(
-            symbol="XAU",
+            symbol="GC",
             source_csv=TOMAC / "xau future 2021-2025/glbx-mdp3-20210106-20260105.ohlcv-1m.csv",
+            archive_zip=TOMAC / "xau future 2021-2025.zip",
+            archive_member="glbx-mdp3-20210106-20260105.ohlcv-1m.csv",
         ),
     ]
 
@@ -564,28 +623,6 @@ def candidate_specs(families: list[str] | None = None) -> list[CandidateSpec]:
             trailing_offset=0.0048,
         ),
         CandidateSpec(
-            key="hurst_efficiency_density_repair",
-            class_prefix="HurstEfficiencyDensityRepair",
-            main_regime="TrendExpansion",
-            sub_regime="HurstEfficiencyPersistence",
-            profit_factor="CompressionPause",
-            child_profit_factor="ReaccelerationBreakout",
-            extra_profit_factors=("DensityRepair",),
-            direction="long",
-            roi=0.0088,
-            stoploss=-0.0068,
-            trailing_positive=0.0020,
-            trailing_offset=0.0058,
-            factor_id_by_timeframe=(
-                (
-                    "5m",
-                    "tomac_idxfut_clean_hurst_efficiency_density_repair_v1",
-                ),
-            ),
-            allowed_symbols=("NQ",),
-            allowed_timeframes=("5m",),
-        ),
-        CandidateSpec(
             key="value_area_vpoc_htf_trend_mss_filter",
             class_prefix="ValueAreaVpocHtfTrendMssFilter",
             main_regime="RangeTransition",
@@ -597,6 +634,34 @@ def candidate_specs(families: list[str] | None = None) -> list[CandidateSpec]:
             stoploss=-0.0060,
             trailing_positive=0.0018,
             trailing_offset=0.0052,
+        ),
+        CandidateSpec(
+            key="htf_range_edge_cisd_mss_displacement_te",
+            class_prefix="HtfRangeEdgeCisdMssDisplacementTe",
+            main_regime="RegimeTransition",
+            sub_regime="TrendExpansionOnly",
+            profit_factor="HtfRangeEdgeCisdMssDisplacement",
+            child_profit_factor="NextSegmentTrendExpansionPosterior",
+            direction="long_short",
+            roi=0.0088,
+            stoploss=-0.0068,
+            trailing_positive=0.0020,
+            trailing_offset=0.0060,
+            allowed_symbols=("NQ", "YM"),
+        ),
+        CandidateSpec(
+            key="htf_range_breakout_retest_te_selective",
+            class_prefix="HtfRangeBreakoutRetestTeSelective",
+            main_regime="RegimeTransition",
+            sub_regime="TrendExpansionOnly",
+            profit_factor="HtfRangeBreakoutRetestAcceptance",
+            child_profit_factor="SelectivePosteriorV1",
+            direction="long_short",
+            roi=0.0105,
+            stoploss=-0.0062,
+            trailing_positive=0.0024,
+            trailing_offset=0.0070,
+            allowed_symbols=("NQ", "YM"),
         ),
         CandidateSpec(
             key="nr7_range_expansion",
@@ -821,6 +886,43 @@ def candidate_specs(families: list[str] | None = None) -> list[CandidateSpec]:
             trailing_offset=0.0052,
         ),
         CandidateSpec(
+            key="aroon_cci_cadence_lift_volume_persistence_retest",
+            class_prefix="AroonCciCadenceLiftVolumePersistenceRetest",
+            main_regime="TrendExpansion",
+            sub_regime="DirectionalPersistence",
+            profit_factor="AroonCciTrendContinuation",
+            child_profit_factor="CadenceLiftSymbolGuard",
+            extra_profit_factors=("VolumePersistenceRetest",),
+            direction="long",
+            roi=0.0074,
+            stoploss=-0.0062,
+            trailing_positive=0.0018,
+            trailing_offset=0.0054,
+        ),
+        CandidateSpec(
+            key="aroon_band_acceptance_trendbirth",
+            class_prefix="AroonBandAcceptanceTrendbirth",
+            main_regime="RegimeTransition",
+            sub_regime="TrendExpansionOnly",
+            profit_factor="ClosedBarTrendBirth",
+            child_profit_factor="AroonBandAcceptance",
+            direction="long_short",
+            roi=0.0086,
+            stoploss=-0.0068,
+            trailing_positive=0.0020,
+            trailing_offset=0.0058,
+            factor_id_by_timeframe=(
+                ("1m", "aroon_band_acceptance_trendbirth_1m_v8"),
+                ("3m", "aroon_band_acceptance_trendbirth_3m_v8"),
+                ("5m", "aroon_band_acceptance_trendbirth_5m_v8"),
+                ("15m", "aroon_band_acceptance_trendbirth_15m_v8"),
+                ("30m", "aroon_band_acceptance_trendbirth_30m_v8"),
+                ("1h", "aroon_band_acceptance_trendbirth_1h_v8"),
+                ("4h", "aroon_band_acceptance_trendbirth_4h_v8"),
+            ),
+            allowed_timeframes=("1m", "3m", "5m", "15m", "30m", "1h", "4h"),
+        ),
+        CandidateSpec(
             key="connors_rsi2_rebound",
             class_prefix="ConnorsRsi2Rebound",
             main_regime="RangeReversion",
@@ -923,6 +1025,30 @@ def candidate_specs(families: list[str] | None = None) -> list[CandidateSpec]:
             trailing_offset=0.0052,
         ),
         CandidateSpec(
+            key="trend_ote_ks_distribution_stability_reacceleration",
+            class_prefix="TrendOteKsDistributionStabilityReacceleration",
+            main_regime="TrendExpansion",
+            sub_regime="OtePullbackContinuation",
+            profit_factor="ReturnShapeStability",
+            child_profit_factor="KsDistributionDriftGuard",
+            extra_profit_factors=("ReaccelerationEntry",),
+            direction="long",
+            roi=0.0088,
+            stoploss=-0.0068,
+            trailing_positive=0.0020,
+            trailing_offset=0.0058,
+            factor_id_by_timeframe=(
+                ("5m", "tomac_nq_5m_eth_ote_ks_stability_reacceleration_long_v1"),
+                ("15m", "tomac_nq_15m_eth_ote_ks_stability_reacceleration_long_v1"),
+                ("30m", "tomac_nq_30m_eth_ote_ks_stability_reacceleration_long_v1"),
+                ("1h", "tomac_nq_1h_eth_ote_ks_stability_reacceleration_long_v1"),
+                ("4h", "tomac_nq_4h_eth_ote_ks_stability_reacceleration_long_v1"),
+                ("1d", "tomac_nq_1d_eth_ote_ks_stability_reacceleration_long_v1"),
+            ),
+            allowed_symbols=("NQ",),
+            allowed_timeframes=("5m", "15m", "30m", "1h", "4h", "1d"),
+        ),
+        CandidateSpec(
             key="h4_midnight_macd_rsi_pullback",
             class_prefix="H4MidnightMacdRsiPullback",
             main_regime="TrendExpansion",
@@ -946,6 +1072,43 @@ def candidate_specs(families: list[str] | None = None) -> list[CandidateSpec]:
             stoploss=-0.0066,
             trailing_positive=0.0018,
             trailing_offset=0.0051,
+        ),
+        CandidateSpec(
+            key="macd_cross_regime_trigger",
+            class_prefix="MacdCrossRegimeTrigger",
+            main_regime="TrendExpansion",
+            sub_regime="MacdCrossRegimeTrigger",
+            profit_factor="GoldDeadCrossStateSwitch",
+            direction="long_short",
+            roi=0.0071,
+            stoploss=-0.0064,
+            trailing_positive=0.0018,
+            trailing_offset=0.0052,
+        ),
+        CandidateSpec(
+            key="macd_failed_cross_trap_reversal",
+            class_prefix="MacdFailedCrossTrapReversal",
+            main_regime="RangeTransition",
+            sub_regime="MacdFailedCrossTrap",
+            profit_factor="FailedGoldDeadCrossTrapReversal",
+            direction="long_short",
+            roi=0.0070,
+            stoploss=-0.0063,
+            trailing_positive=0.0018,
+            trailing_offset=0.0051,
+        ),
+        CandidateSpec(
+            key="macd_failed_cross_trap_mtf_resonance",
+            class_prefix="MacdFailedCrossTrapMtfResonance",
+            main_regime="RangeTransition",
+            sub_regime="MacdFailedCrossTrap",
+            profit_factor="FailedGoldDeadCrossTrapReversal",
+            child_profit_factor="MtfHistogramSlopeResonance",
+            direction="long_short",
+            roi=0.0068,
+            stoploss=-0.0061,
+            trailing_positive=0.0017,
+            trailing_offset=0.0049,
         ),
         CandidateSpec(
             key="liquidity_purge_rejection",
@@ -1062,6 +1225,1474 @@ def candidate_specs(families: list[str] | None = None) -> list[CandidateSpec]:
             trailing_offset=0.0054,
         ),
         CandidateSpec(
+            key="linear_regression_r2_slope_trend_rejoin_filter",
+            class_prefix="LinearRegressionR2SlopeTrendRejoinFilter",
+            main_regime="TrendExpansion",
+            sub_regime="LinearRegressionSlopeQuality",
+            profit_factor="R2TrendFitAdmission",
+            child_profit_factor="ResidualPullbackRejoin",
+            extra_profit_factors=("MtfSlopeResonance",),
+            direction="long_short",
+            roi=0.0104,
+            stoploss=-0.0076,
+            trailing_positive=0.0021,
+            trailing_offset=0.0064,
+            factor_id_by_timeframe=(
+                ("5m", "tomac_idxfut_clean_linear_regression_r2_slope_trend_rejoin_5m_v1"),
+                ("15m", "tomac_idxfut_clean_linear_regression_r2_slope_trend_rejoin_15m_v1"),
+                ("30m", "tomac_idxfut_clean_linear_regression_r2_slope_trend_rejoin_30m_v1"),
+                ("1h", "tomac_idxfut_clean_linear_regression_r2_slope_trend_rejoin_1h_v1"),
+                ("4h", "tomac_idxfut_clean_linear_regression_r2_slope_trend_rejoin_4h_v1"),
+                ("1d", "tomac_idxfut_clean_linear_regression_r2_slope_trend_rejoin_1d_v1"),
+            ),
+            allowed_timeframes=("5m", "15m", "30m", "1h", "4h", "1d"),
+        ),
+        CandidateSpec(
+            key="rolling_regression_residual_trend_rejoin_gate",
+            class_prefix="RollingRegressionResidualTrendRejoinGate",
+            main_regime="TrendExpansion",
+            sub_regime="RollingRegressionTrend",
+            profit_factor="ResidualPullback",
+            child_profit_factor="TrendLineRejoin",
+            extra_profit_factors=("MtfSlopeResonance", "FrictionAwareAtrHold"),
+            direction="long_short",
+            roi=0.0108,
+            stoploss=-0.0078,
+            trailing_positive=0.0022,
+            trailing_offset=0.0068,
+        ),
+        CandidateSpec(
+            key="elder_force_index_pullback_continuation",
+            class_prefix="ElderForceIndexPullbackContinuation",
+            main_regime="TrendExpansion",
+            sub_regime="VolumeImpulseTrend",
+            profit_factor="ElderForceIndexPullback",
+            child_profit_factor="MtfTrendResonance",
+            extra_profit_factors=("FrictionAwareAtrHold",),
+            direction="long_short",
+            roi=0.0098,
+            stoploss=-0.0074,
+            trailing_positive=0.0020,
+            trailing_offset=0.0062,
+        ),
+        CandidateSpec(
+            key="dss_bressert_reacceleration_filter",
+            class_prefix="DssBressertReaccelerationFilter",
+            main_regime="TrendExpansion",
+            sub_regime="DoubleSmoothedStochasticState",
+            profit_factor="PullbackReacceleration",
+            child_profit_factor="MtfTrendResonance",
+            extra_profit_factors=("FrictionAwareAtrHold",),
+            direction="long_short",
+            roi=0.0094,
+            stoploss=-0.0071,
+            trailing_positive=0.0020,
+            trailing_offset=0.0060,
+        ),
+        CandidateSpec(
+            key="qqe_rsi_trend_quality_reacceleration_gate",
+            class_prefix="QqeRsiTrendQualityReaccelerationGate",
+            main_regime="TrendExpansion",
+            sub_regime="MomentumSmoothing",
+            profit_factor="QQERSITrendQuality",
+            child_profit_factor="ReaccelerationAfterPullback",
+            extra_profit_factors=("MtfSlopeResonance", "FrictionAwareAtrHold"),
+            direction="long_short",
+            roi=0.0096,
+            stoploss=-0.0072,
+            trailing_positive=0.0020,
+            trailing_offset=0.0061,
+        ),
+        CandidateSpec(
+            key="range_entropy_squeeze_breadth_release",
+            class_prefix="RangeEntropySqueezeBreadthRelease",
+            main_regime="RangeTransition",
+            sub_regime="LowEntropySqueeze",
+            profit_factor="BreadthConfirmedRangeRelease",
+            child_profit_factor="AtrExpansionHold",
+            extra_profit_factors=("LowTurnoverExitGuard",),
+            direction="long",
+            roi=0.0094,
+            stoploss=-0.0072,
+            trailing_positive=0.0021,
+            trailing_offset=0.0064,
+        ),
+        CandidateSpec(
+            key="permutation_entropy_chop_filter",
+            class_prefix="PermutationEntropyChopFilter",
+            main_regime="TransitionRisk",
+            sub_regime="OrdinalComplexity",
+            profit_factor="PermutationEntropyChopFilter",
+            child_profit_factor="ParentTrendExecutionQualityGate",
+            direction="long",
+            roi=0.0076,
+            stoploss=-0.0068,
+            trailing_positive=0.0018,
+            trailing_offset=0.0054,
+        ),
+        CandidateSpec(
+            key="conformal_interval_width_risk_throttle",
+            class_prefix="ConformalIntervalWidthRiskThrottle",
+            main_regime="TransitionRisk",
+            sub_regime="DistributionFreeIntervalCalibration",
+            profit_factor="ConformalWidthMiscoverageState",
+            child_profit_factor="ParentSignalRiskThrottle",
+            direction="long_short",
+            roi=0.0090,
+            stoploss=-0.0072,
+            trailing_positive=0.0020,
+            trailing_offset=0.0061,
+        ),
+        CandidateSpec(
+            key="mutual_information_regime_channel_admission_filter",
+            class_prefix="MutualInformationRegimeChannelAdmissionFilter",
+            main_regime="ValidationMaturity",
+            sub_regime="InformationRateRegimeChannel",
+            profit_factor="ConditionalEntropyReduction",
+            child_profit_factor="ParentSignalAdmissionFilter",
+            direction="long_short",
+            roi=0.0090,
+            stoploss=-0.0072,
+            trailing_positive=0.0020,
+            trailing_offset=0.0060,
+        ),
+        CandidateSpec(
+            key="realized_vol_term_structure_breakout",
+            class_prefix="RealizedVolTermStructureBreakout",
+            main_regime="TrendExpansion",
+            sub_regime="RealizedVolTermStructure",
+            profit_factor="CompressionToExpansionBreakout",
+            child_profit_factor="AtrManagedHold",
+            extra_profit_factors=("LowTurnoverExitGuard",),
+            direction="long_short",
+            roi=0.0105,
+            stoploss=-0.0078,
+            trailing_positive=0.0022,
+            trailing_offset=0.0068,
+        ),
+        CandidateSpec(
+            key="regime_transition_failure_reclaim",
+            class_prefix="RegimeTransitionFailureReclaim",
+            main_regime="Transition",
+            sub_regime="RegimeTransitionFailure",
+            profit_factor="FailedFlipReclaim",
+            child_profit_factor="MtfConfirmation",
+            extra_profit_factors=("FixedRrrAtrBracket",),
+            direction="long_short",
+            roi=0.0074,
+            stoploss=-0.0066,
+            trailing_positive=0.0019,
+            trailing_offset=0.0055,
+        ),
+        CandidateSpec(
+            key="evt_tail_index_exceedance_regime_gate",
+            class_prefix="EvtTailIndexExceedanceRegimeGate",
+            main_regime="ExtremeStress",
+            sub_regime="TailIndexRegime",
+            profit_factor="QuantileExceedanceIntensity",
+            child_profit_factor="TrendReclaimOrRiskOffAdmission",
+            direction="long_short",
+            roi=0.0086,
+            stoploss=-0.0071,
+            trailing_positive=0.0020,
+            trailing_offset=0.0060,
+        ),
+        CandidateSpec(
+            key="intraday_liquidity_seasonality_residual_shock_filter",
+            class_prefix="IntradayLiquiditySeasonalityResidualShockFilter",
+            main_regime="SessionLiquidity",
+            sub_regime="IntradaySeasonality",
+            profit_factor="LiquidityResidualShockState",
+            child_profit_factor="TrendReclaimOrBreakoutAdmission",
+            direction="long_short",
+            roi=0.0082,
+            stoploss=-0.0068,
+            trailing_positive=0.0019,
+            trailing_offset=0.0058,
+        ),
+        CandidateSpec(
+            key="ssa_spectral_trend_denoise_filter",
+            class_prefix="SsaSpectralTrendDenoiseFilter",
+            main_regime="TrendExpansion",
+            sub_regime="SpectralDenoiseTrendQuality",
+            profit_factor="SsaLowRankSignalFilter",
+            child_profit_factor="ParentSignalAdmission",
+            direction="long_short",
+            roi=0.0090,
+            stoploss=-0.0072,
+            trailing_positive=0.0020,
+            trailing_offset=0.0062,
+        ),
+        CandidateSpec(
+            key="vmd_intrinsic_mode_trend_rejoin_filter",
+            class_prefix="VmdIntrinsicModeTrendRejoinFilter",
+            main_regime="TrendExpansion",
+            sub_regime="AdaptiveSignalDecomposition",
+            profit_factor="VariationalModeIntrinsicTrend",
+            child_profit_factor="ModeEnergyConcentration",
+            direction="long_short",
+            roi=0.0096,
+            stoploss=-0.0074,
+            trailing_positive=0.0021,
+            trailing_offset=0.0063,
+        ),
+        CandidateSpec(
+            key="ehlers_autocorr_periodogram_cycle_regime_gate",
+            class_prefix="EhlersAutocorrPeriodogramCycleRegimeGate",
+            main_regime="CycleRegime",
+            sub_regime="AutocorrelationPeriodogram",
+            profit_factor="DominantCycleStability",
+            child_profit_factor="ParentSignalAdmissionFilter",
+            direction="long_short",
+            roi=0.0088,
+            stoploss=-0.0068,
+            trailing_positive=0.0020,
+            trailing_offset=0.0058,
+            factor_id_by_timeframe=(
+                ("5m", "tomac_nq_5m_ehlers_autocorr_periodogram_cycle_regime_gate_v1"),
+                ("15m", "tomac_nq_15m_ehlers_autocorr_periodogram_cycle_regime_gate_v1"),
+                ("30m", "tomac_nq_30m_ehlers_autocorr_periodogram_cycle_regime_gate_v1"),
+                ("1h", "tomac_nq_1h_ehlers_autocorr_periodogram_cycle_regime_gate_v1"),
+                ("4h", "tomac_nq_4h_ehlers_autocorr_periodogram_cycle_regime_gate_v1"),
+                ("1d", "tomac_nq_1d_ehlers_autocorr_periodogram_cycle_regime_gate_v1"),
+            ),
+            allowed_symbols=("NQ",),
+            allowed_timeframes=("5m", "15m", "30m", "1h", "4h", "1d"),
+        ),
+        CandidateSpec(
+            key="hilbert_analytic_phase_trend_admission",
+            class_prefix="HilbertAnalyticPhaseTrendAdmission",
+            main_regime="TrendExpansion",
+            sub_regime="CyclePhaseState",
+            profit_factor="HilbertAnalyticPhaseSlope",
+            child_profit_factor="PhaseCoherentTrendAdmission",
+            extra_profit_factors=("FrictionAwareRrrBracket",),
+            direction="long_short",
+            roi=0.0096,
+            stoploss=-0.0072,
+            trailing_positive=0.0021,
+            trailing_offset=0.0062,
+            factor_id_by_timeframe=(
+                ("5m", "tomac_nq_5m_hilbert_analytic_phase_trend_admission_v1"),
+                ("15m", "tomac_nq_15m_hilbert_analytic_phase_trend_admission_v1"),
+                ("30m", "tomac_nq_30m_hilbert_analytic_phase_trend_admission_v1"),
+                ("1h", "tomac_nq_1h_hilbert_analytic_phase_trend_admission_v1"),
+                ("4h", "tomac_nq_4h_hilbert_analytic_phase_trend_admission_v1"),
+                ("1d", "tomac_nq_1d_hilbert_analytic_phase_trend_admission_v1"),
+            ),
+            allowed_symbols=("NQ",),
+            allowed_timeframes=("5m", "15m", "30m", "1h", "4h", "1d"),
+        ),
+        CandidateSpec(
+            key="wavelet_coherence_lead_lag_filter",
+            class_prefix="WaveletCoherenceLeadLagFilter",
+            main_regime="CrossMarketConfirmation",
+            sub_regime="WaveletCoherenceLeadLag",
+            profit_factor="ScaleLocalizedLeaderConfirmation",
+            child_profit_factor="ParentTrendAdmission",
+            direction="long_short",
+            roi=0.0098,
+            stoploss=-0.0075,
+            trailing_positive=0.0021,
+            trailing_offset=0.0065,
+        ),
+        CandidateSpec(
+            key=DYNAMIC_LEAD_LAG_BREADTH_FAMILY,
+            class_prefix="DynamicLeadLagBreadthGate",
+            main_regime="CrossMarketStructure",
+            sub_regime="DynamicLeadLagBreadth",
+            profit_factor="PairSpecificLagAdmissionFilter",
+            child_profit_factor="NqTrendParentRescore",
+            direction="long",
+            roi=0.0118,
+            stoploss=-0.0082,
+            trailing_positive=0.0024,
+            trailing_offset=0.0072,
+            factor_id_by_timeframe=(
+                ("1h", "tomac_nq_dynamic_lead_lag_breadth_gate_1h_long_lb64_cw128_h24_v1"),
+            ),
+            allowed_symbols=("NQ",),
+            allowed_timeframes=("1h",),
+        ),
+        CandidateSpec(
+            key="bocpd_runlength_transition_acceptance",
+            class_prefix="BocpdRunlengthTransitionAcceptance",
+            main_regime="RegimeRoot",
+            sub_regime="BayesianRunLengthState",
+            profit_factor="TransitionAcceptance",
+            child_profit_factor="TrendExpansionParentAdmission",
+            direction="long_short",
+            roi=0.0094,
+            stoploss=-0.0073,
+            trailing_positive=0.0021,
+            trailing_offset=0.0063,
+            allowed_symbols=("NQ",),
+            allowed_timeframes=("5m", "15m", "30m", "1h"),
+        ),
+        CandidateSpec(
+            key="filtered_markov_trendexpansion_posterior_gate",
+            class_prefix="FilteredMarkovTrendExpansionPosteriorGate",
+            main_regime="RegimeTransition",
+            sub_regime="TrendExpansionOnly",
+            profit_factor="FilteredMarkovPosterior",
+            child_profit_factor="NextSegmentTrendExpansion",
+            direction="long_short",
+            roi=0.0102,
+            stoploss=-0.0074,
+            trailing_positive=0.0023,
+            trailing_offset=0.0066,
+            allowed_symbols=("NQ",),
+            allowed_timeframes=("30m", "1h", "15m", "5m"),
+        ),
+        CandidateSpec(
+            key="residual_momentum_beta_neutral_parent_admission",
+            class_prefix="ResidualMomentumBetaNeutralParentAdmission",
+            main_regime="TrendExpansion",
+            sub_regime="ResidualMomentum",
+            profit_factor="BetaNeutralMarketModeRemoval",
+            child_profit_factor="ParentSignalAdmission",
+            direction="long_short",
+            roi=0.0088,
+            stoploss=-0.0070,
+            trailing_positive=0.0020,
+            trailing_offset=0.0060,
+        ),
+        CandidateSpec(
+            key="jolts_labor_tightness_regime_filter",
+            class_prefix="JoltsLaborTightnessRegimeFilter",
+            main_regime="MacroLaborRegime",
+            sub_regime="JoltsLaborTightness",
+            profit_factor="RiskOnOffAdmissionFilter",
+            direction="long_short",
+            roi=0.0087,
+            stoploss=-0.0071,
+            trailing_positive=0.0020,
+            trailing_offset=0.0060,
+        ),
+        CandidateSpec(
+            key="matrix_profile_motif_discord_admission_filter",
+            class_prefix="MatrixProfileMotifDiscordAdmissionFilter",
+            main_regime="ValidationMaturity",
+            sub_regime="MatrixProfileMotifDiscord",
+            profit_factor="ParentSignalSimilarityAdmission",
+            child_profit_factor="DiscordVetoTrendAdmission",
+            direction="long_short",
+            roi=0.0092,
+            stoploss=-0.0073,
+            trailing_positive=0.0020,
+            trailing_offset=0.0061,
+        ),
+        CandidateSpec(
+            key="sax_symbolic_aggregate_word_shift_filter",
+            class_prefix="SaxSymbolicAggregateWordShiftFilter",
+            main_regime="RangeTransition",
+            sub_regime="SymbolicWordShift",
+            profit_factor="SaxMotifDiscordAdmissionFilter",
+            child_profit_factor="ParentSignalAdmissionFilter",
+            direction="long_short",
+            roi=0.0091,
+            stoploss=-0.0072,
+            trailing_positive=0.0020,
+            trailing_offset=0.0061,
+        ),
+        CandidateSpec(
+            key="chande_forecast_oscillator_half_life_reversion_gate",
+            class_prefix="ChandeForecastOscillatorHalfLifeReversionGate",
+            main_regime="MeanReversion",
+            sub_regime="ForecastErrorOscillator",
+            profit_factor="ChandeForecastDeviation",
+            child_profit_factor="HalfLifeReversionAdmission",
+            direction="long_short",
+            roi=0.0090,
+            stoploss=-0.0072,
+            trailing_positive=0.0020,
+            trailing_offset=0.0061,
+        ),
+        CandidateSpec(
+            key="score_driven_gas_state_admission_filter",
+            class_prefix="ScoreDrivenGasStateAdmissionFilter",
+            main_regime="ValidationMaturity",
+            sub_regime="ObservationDrivenState",
+            profit_factor="ScoreDrivenGASFilter",
+            child_profit_factor="ParentSignalAdmissionFilter",
+            direction="long_short",
+            roi=0.0093,
+            stoploss=-0.0074,
+            trailing_positive=0.0020,
+            trailing_offset=0.0062,
+        ),
+        CandidateSpec(
+            key="shiryaev_roberts_quickest_change_persistence_filter",
+            class_prefix="ShiryaevRobertsQuickestChangePersistenceFilter",
+            main_regime="ValidationMaturity",
+            sub_regime="QuickestChangeDetection",
+            profit_factor="ShiryaevRobertsPersistence",
+            child_profit_factor="ParentSignalAdmissionFilter",
+            direction="long_short",
+            roi=0.0093,
+            stoploss=-0.0074,
+            trailing_positive=0.0020,
+            trailing_offset=0.0062,
+            allowed_timeframes=("5m", "15m", "30m", "1h", "4h", "1d"),
+        ),
+        CandidateSpec(
+            key="local_polynomial_curvature_acceleration_filter",
+            class_prefix="LocalPolynomialCurvatureAccelerationFilter",
+            main_regime="TrendExpansion",
+            sub_regime="LocalPolynomialTrendGeometry",
+            profit_factor="CurvatureAccelerationState",
+            child_profit_factor="ParentTrendAdmission",
+            direction="long_short",
+            roi=0.0094,
+            stoploss=-0.0073,
+            trailing_positive=0.0021,
+            trailing_offset=0.0063,
+        ),
+        CandidateSpec(
+            key="ultimate_oscillator_mtf_divergence_filter",
+            class_prefix="UltimateOscillatorMtfDivergenceFilter",
+            main_regime="TrendExpansion",
+            sub_regime="MultiHorizonMomentum",
+            profit_factor="UltimateOscillatorDivergence",
+            child_profit_factor="MtfTrendReclaim",
+            direction="long_short",
+            roi=0.0091,
+            stoploss=-0.0072,
+            trailing_positive=0.0020,
+            trailing_offset=0.0061,
+        ),
+        CandidateSpec(
+            key="true_strength_index_mtf_reacceleration_filter",
+            class_prefix="TrueStrengthIndexMtfReaccelerationFilter",
+            main_regime="TrendExpansion",
+            sub_regime="DoubleSmoothedMomentum",
+            profit_factor="TrueStrengthIndexReacceleration",
+            child_profit_factor="MtfTrendReclaim",
+            direction="long_short",
+            roi=0.0092,
+            stoploss=-0.0072,
+            trailing_positive=0.0020,
+            trailing_offset=0.0062,
+        ),
+        CandidateSpec(
+            key="trend_intensity_index_reacceleration_filter",
+            class_prefix="TrendIntensityIndexReaccelerationFilter",
+            main_regime="TrendExpansion",
+            sub_regime="TrendIntensityIndex",
+            profit_factor="ReaccelerationAfterPullback",
+            child_profit_factor="ParentTrendAdmissionFilter",
+            direction="long_short",
+            roi=0.0092,
+            stoploss=-0.0072,
+            trailing_positive=0.0020,
+            trailing_offset=0.0062,
+        ),
+        CandidateSpec(
+            key="tsmom_vol_scaled_low_turnover_rrr",
+            class_prefix="TsmomVolScaledLowTurnoverRrr",
+            main_regime="TrendExpansion",
+            sub_regime="TimeSeriesMomentum",
+            profit_factor="VolScaledLowTurnoverHold",
+            child_profit_factor="FixedRrrContinuation",
+            extra_profit_factors=("SourceBackedMopHurstPedersen",),
+            direction="long_short",
+            roi=0.0135,
+            stoploss=-0.0090,
+            trailing_positive=0.0025,
+            trailing_offset=0.0080,
+            allowed_timeframes=("5m", "15m", "30m", "1h", "4h", "1d"),
+        ),
+        CandidateSpec(
+            key="rsi_range_shift_regime_trend_filter",
+            class_prefix="RsiRangeShiftRegimeTrendFilter",
+            main_regime="TrendExpansion",
+            sub_regime="RsiRangeShiftRegime",
+            profit_factor="BullBearRangeMigration",
+            child_profit_factor="ParentTrendAdmissionFilter",
+            direction="long_short",
+            roi=0.0090,
+            stoploss=-0.0071,
+            trailing_positive=0.0020,
+            trailing_offset=0.0060,
+        ),
+        CandidateSpec(
+            key="chande_momentum_mtf_reacceleration_filter",
+            class_prefix="ChandeMomentumMtfReaccelerationFilter",
+            main_regime="TrendExpansion",
+            sub_regime="MomentumOscillatorState",
+            profit_factor="ChandeMomentumReacceleration",
+            child_profit_factor="MtfTrendReclaim",
+            direction="long_short",
+            roi=0.0091,
+            stoploss=-0.0071,
+            trailing_positive=0.0020,
+            trailing_offset=0.0061,
+        ),
+        CandidateSpec(
+            key="stochastic_rsi_mtf_reacceleration_filter",
+            class_prefix="StochasticRsiMtfReaccelerationFilter",
+            main_regime="TrendExpansion",
+            sub_regime="StochasticRsiMomentumState",
+            profit_factor="StochasticRsiReacceleration",
+            child_profit_factor="MtfTrendReclaim",
+            direction="long_short",
+            roi=0.0090,
+            stoploss=-0.0071,
+            trailing_positive=0.0020,
+            trailing_offset=0.0060,
+        ),
+        CandidateSpec(
+            key="kdj_stochastic_jline_reacceleration",
+            class_prefix="KdjStochasticJlineReacceleration",
+            main_regime="TrendExpansion",
+            sub_regime="StochasticRangePosition",
+            profit_factor="KDJJLineReacceleration",
+            child_profit_factor="MtfSlopeResonance",
+            extra_profit_factors=("FrictionAwareAtrHold",),
+            direction="long_short",
+            roi=0.0092,
+            stoploss=-0.0072,
+            trailing_positive=0.0020,
+            trailing_offset=0.0062,
+        ),
+        CandidateSpec(
+            key="relative_vigor_index_mtf_reacceleration_filter",
+            class_prefix="RelativeVigorIndexMtfReaccelerationFilter",
+            main_regime="TrendExpansion",
+            sub_regime="RelativeVigorMomentumState",
+            profit_factor="RelativeVigorReacceleration",
+            child_profit_factor="MtfTrendReclaim",
+            direction="long_short",
+            roi=0.0090,
+            stoploss=-0.0071,
+            trailing_positive=0.0020,
+            trailing_offset=0.0060,
+        ),
+        CandidateSpec(
+            key="low_volatility_trend_pullback_reacceleration",
+            class_prefix="LowVolatilityTrendPullbackReacceleration",
+            main_regime="TrendExpansion",
+            sub_regime="LowVolatilityPersistence",
+            profit_factor="PullbackReacceleration",
+            child_profit_factor="MtfOptionalResonance",
+            direction="long_short",
+            roi=0.0090,
+            stoploss=-0.0070,
+            trailing_positive=0.0020,
+            trailing_offset=0.0060,
+        ),
+        CandidateSpec(
+            key="hurst_efficiency_density_repair",
+            class_prefix="HurstEfficiencyDensityRepair",
+            main_regime="TrendExpansion",
+            sub_regime="HurstEfficiencyPersistence",
+            profit_factor="CompressionPause",
+            child_profit_factor="ReaccelerationBreakout",
+            extra_profit_factors=("DensityRepair",),
+            direction="long",
+            roi=0.0088,
+            stoploss=-0.0068,
+            trailing_positive=0.0020,
+            trailing_offset=0.0058,
+            factor_id_by_timeframe=(
+                (
+                    "5m",
+                    "tomac_idxfut_clean_hurst_efficiency_density_repair_v1",
+                ),
+            ),
+            allowed_symbols=("NQ",),
+            allowed_timeframes=("5m",),
+        ),
+        CandidateSpec(
+            key="fisher_transform_trend_rejoin",
+            class_prefix="FisherTransformTrendRejoin",
+            main_regime="RegimeRoot",
+            sub_regime="TrendExpansion",
+            profit_factor="FisherTransformCycleState",
+            child_profit_factor="PullbackExhaustion",
+            extra_profit_factors=("TrendRejoin", "MtfSlopeResonance"),
+            direction="long",
+            roi=0.0078,
+            stoploss=-0.0068,
+            trailing_positive=0.0018,
+            trailing_offset=0.0054,
+            factor_id_by_timeframe=(
+                (
+                    "5m",
+                    "tomac_idxfut_clean_fisher_transform_trend_rejoin_nq5m_long_v1",
+                ),
+            ),
+            allowed_symbols=("NQ",),
+            allowed_timeframes=("5m",),
+        ),
+        CandidateSpec(
+            key="session_vwap_absorption_reacceleration",
+            class_prefix="SessionVwapAbsorptionReacceleration",
+            main_regime="TrendExpansion",
+            sub_regime="LiquidityAbsorption",
+            profit_factor="SessionVwapReacceleration",
+            child_profit_factor="MtfOptionalResonance",
+            direction="long_short",
+            roi=0.0090,
+            stoploss=-0.0070,
+            trailing_positive=0.0020,
+            trailing_offset=0.0060,
+        ),
+        CandidateSpec(
+            key="balance_of_power_volume_pressure_trend_acceptance_filter",
+            class_prefix="BalanceOfPowerVolumePressureTrendAcceptanceFilter",
+            main_regime="TrendExpansion",
+            sub_regime="CandleBodyPressure",
+            profit_factor="BalanceOfPowerVolumeConfirmation",
+            child_profit_factor="MtfTrendAcceptance",
+            direction="long_short",
+            roi=0.0088,
+            stoploss=-0.0068,
+            trailing_positive=0.0020,
+            trailing_offset=0.0059,
+        ),
+        CandidateSpec(
+            key="polarized_fractal_efficiency_trend_acceptance",
+            class_prefix="PolarizedFractalEfficiencyTrendAcceptance",
+            main_regime="RegimeRoot",
+            sub_regime="TrendExpansion",
+            profit_factor="FractalEfficiency",
+            child_profit_factor="PolarizedFractalEfficiencyTrendAcceptance",
+            extra_profit_factors=("MtfSlopeResonance",),
+            direction="long_short",
+            roi=0.0092,
+            stoploss=-0.0068,
+            trailing_positive=0.0020,
+            trailing_offset=0.0060,
+        ),
+        CandidateSpec(
+            key="anchored_return_memory_decay_reacceleration_filter",
+            class_prefix="AnchoredReturnMemoryDecayReaccelerationFilter",
+            main_regime="TrendExpansion",
+            sub_regime="AnchoredSessionReturnMemory",
+            profit_factor="MemoryDecayPullback",
+            child_profit_factor="ReaccelerationAfterDecay",
+            direction="long_short",
+            roi=0.0091,
+            stoploss=-0.0071,
+            trailing_positive=0.0020,
+            trailing_offset=0.0060,
+        ),
+        CandidateSpec(
+            key="bayesian_surprise_innovation_shock_regime_filter",
+            class_prefix="BayesianSurpriseInnovationShockRegimeFilter",
+            main_regime="RegimeUncertainty",
+            sub_regime="PredictiveInnovationShock",
+            profit_factor="BayesianSurpriseFilter",
+            child_profit_factor="ParentSignalAdmission",
+            direction="long",
+            roi=100.0,
+            stoploss=-0.0200,
+            trailing_positive=0.0000,
+            trailing_offset=0.0000,
+            allowed_timeframes=("5m", "15m", "30m", "1h", "4h", "1d"),
+        ),
+        CandidateSpec(
+            key="volume_weighted_macd_trend_reacceleration_filter",
+            class_prefix="VolumeWeightedMacdTrendReaccelerationFilter",
+            main_regime="TrendExpansion",
+            sub_regime="VolumeWeightedMomentum",
+            profit_factor="VwmacdReacceleration",
+            child_profit_factor="ParentTrendAdmission",
+            direction="long_short",
+            roi=0.0091,
+            stoploss=-0.0071,
+            trailing_positive=0.0020,
+            trailing_offset=0.0060,
+        ),
+        CandidateSpec(
+            key="buff_averages_volume_weighted_trend_reacceleration_filter",
+            class_prefix="BuffAveragesVolumeWeightedTrendReaccelerationFilter",
+            main_regime="RegimeRoot",
+            sub_regime="TrendExpansion",
+            profit_factor="VolumeWeightedAverageSpreadState",
+            child_profit_factor="BuffAveragesReacceleration",
+            extra_profit_factors=("MtfTrendResonance",),
+            direction="long_short",
+            roi=0.0090,
+            stoploss=-0.0071,
+            trailing_positive=0.0020,
+            trailing_offset=0.0060,
+        ),
+        CandidateSpec(
+            key="decay_weighted_trend_reacceleration_filter",
+            class_prefix="DecayWeightedTrendReaccelerationFilter",
+            main_regime="TrendExpansion",
+            sub_regime="DecayWeightedTrendState",
+            profit_factor="PullbackEnergyRelease",
+            child_profit_factor="ReaccelerationAdmission",
+            direction="long_short",
+            roi=0.0090,
+            stoploss=-0.0071,
+            trailing_positive=0.0020,
+            trailing_offset=0.0060,
+        ),
+        CandidateSpec(
+            key="asi_trend_breakout_admission_filter",
+            class_prefix="AsiTrendBreakoutAdmissionFilter",
+            main_regime="TrendExpansion",
+            sub_regime="AccumulativeSwingIndex",
+            profit_factor="BreakoutLineConfirmation",
+            child_profit_factor="ParentTrendAdmissionFilter",
+            direction="long_short",
+            roi=0.0090,
+            stoploss=-0.0071,
+            trailing_positive=0.0020,
+            trailing_offset=0.0060,
+        ),
+        CandidateSpec(
+            key="damiani_volatmeter_trend_admission_filter",
+            class_prefix="DamianiVolatmeterTrendAdmissionFilter",
+            main_regime="TrendExpansion",
+            sub_regime="DamianiVolatmeter",
+            profit_factor="NoiseSuppressedTrendExpansion",
+            child_profit_factor="ParentTrendAdmissionFilter",
+            direction="long_short",
+            roi=0.0090,
+            stoploss=-0.0071,
+            trailing_positive=0.0020,
+            trailing_offset=0.0060,
+        ),
+        CandidateSpec(
+            key="internal_bar_strength_state_filter",
+            class_prefix="InternalBarStrengthStateFilter",
+            main_regime="MeanReversionPressure",
+            sub_regime="IntrabarCloseLocation",
+            profit_factor="InternalBarStrengthState",
+            child_profit_factor="ParentSignalAdmissionFilter",
+            direction="long_short",
+            roi=0.0062,
+            stoploss=-0.0062,
+            trailing_positive=0.0015,
+            trailing_offset=0.0048,
+        ),
+        CandidateSpec(
+            key="volume_clock_relative_participation_breakout",
+            class_prefix="VolumeClockRelativeParticipationBreakout",
+            main_regime="MarketMicrostructure",
+            sub_regime="VolumeClockState",
+            profit_factor="RelativeParticipationBreakout",
+            child_profit_factor="MtfTrendConfirmation",
+            extra_profit_factors=("FixedRrrAtrBracket",),
+            direction="long_short",
+            roi=0.0062,
+            stoploss=-0.0062,
+            trailing_positive=0.0015,
+            trailing_offset=0.0048,
+        ),
+        CandidateSpec(
+            key="volume_flow_impulse_trend_rejoin_filter",
+            class_prefix="VolumeFlowImpulseTrendRejoinFilter",
+            main_regime="RegimeRoot",
+            sub_regime="TrendExpansion",
+            profit_factor="VolumeFlowImpulse",
+            child_profit_factor="KlingerObvAcceleration",
+            extra_profit_factors=("TrendRejoin",),
+            direction="long_short",
+            roi=0.0140,
+            stoploss=-0.0092,
+            trailing_positive=0.0028,
+            trailing_offset=0.0084,
+            factor_id_by_timeframe=(
+                ("4h", "tomac_nq_4h_volume_flow_impulse_trend_rejoin_v1"),
+            ),
+            allowed_symbols=("NQ",),
+            allowed_timeframes=("4h",),
+        ),
+        CandidateSpec(
+            key="visibility_graph_trend_persistence_filter",
+            class_prefix="VisibilityGraphTrendPersistenceFilter",
+            main_regime="TrendExpansion",
+            sub_regime="SequenceTopology",
+            profit_factor="VisibilityGraphTrendPersistence",
+            child_profit_factor="ParentSignalAdmissionFilter",
+            direction="long_short",
+            roi=0.0096,
+            stoploss=-0.0074,
+            trailing_positive=0.0021,
+            trailing_offset=0.0063,
+        ),
+        CandidateSpec(
+            key="sprt_sequential_likelihood_trend_confirmation_filter",
+            class_prefix="SprtSequentialLikelihoodTrendConfirmationFilter",
+            main_regime="ValidationMaturity",
+            sub_regime="SequentialEvidence",
+            profit_factor="SprtLikelihoodTrendConfirmation",
+            child_profit_factor="ParentSignalAdmissionFilter",
+            direction="long_short",
+            roi=0.0094,
+            stoploss=-0.0074,
+            trailing_positive=0.0021,
+            trailing_offset=0.0063,
+        ),
+        CandidateSpec(
+            key="l1_trend_filter_slope_stability_gate",
+            class_prefix="L1TrendFilterSlopeStabilityGate",
+            main_regime="TrendExpansion",
+            sub_regime="SparseTrendDenoising",
+            profit_factor="L1TrendFilterSlopeStability",
+            child_profit_factor="ParentSignalAdmissionFilter",
+            direction="long_short",
+            roi=0.0096,
+            stoploss=-0.0074,
+            trailing_positive=0.0021,
+            trailing_offset=0.0063,
+        ),
+        CandidateSpec(
+            key="hawkes_intensity_cluster_admission_filter",
+            class_prefix="HawkesIntensityClusterAdmissionFilter",
+            main_regime="ValidationMaturity",
+            sub_regime="EventClusterIntensity",
+            profit_factor="HawkesSelfExcitingActivityState",
+            child_profit_factor="ParentSignalAdmissionFilter",
+            direction="long_short",
+            roi=0.0094,
+            stoploss=-0.0074,
+            trailing_positive=0.0021,
+            trailing_offset=0.0064,
+        ),
+        CandidateSpec(
+            key="beveridge_nelson_cycle_trend_filter",
+            class_prefix="BeveridgeNelsonCycleTrendFilter",
+            main_regime="RegimeRoot",
+            sub_regime="StochasticTrendCycleDecomposition",
+            profit_factor="BeveridgeNelsonPermanentSlope",
+            child_profit_factor="TransitoryGapMeanReversion",
+            extra_profit_factors=("ParentSignalAdmissionFilter",),
+            direction="long_short",
+            roi=0.0092,
+            stoploss=-0.0073,
+            trailing_positive=0.0021,
+            trailing_offset=0.0062,
+            allowed_timeframes=("5m", "15m", "30m", "1h", "4h", "1d"),
+        ),
+        CandidateSpec(
+            key="bds_nonlinear_dependence_admission_filter",
+            class_prefix="BdsNonlinearDependenceAdmissionFilter",
+            main_regime="TransitionRisk",
+            sub_regime="NonlinearDependence",
+            profit_factor="BdsCorrelationDimensionGate",
+            child_profit_factor="ParentSignalAdmissionFilter",
+            direction="long_short",
+            roi=0.0093,
+            stoploss=-0.0074,
+            trailing_positive=0.0021,
+            trailing_offset=0.0064,
+        ),
+        CandidateSpec(
+            key="rqa_determinism_trend_persistence_filter",
+            class_prefix="RqaDeterminismTrendPersistenceFilter",
+            main_regime="SpectralRhythm",
+            sub_regime="PhaseSpaceRecurrence",
+            profit_factor="RqaDeterminismLaminarity",
+            child_profit_factor="ParentTrendAdmissionFilter",
+            direction="long_short",
+            roi=0.0094,
+            stoploss=-0.0074,
+            trailing_positive=0.0021,
+            trailing_offset=0.0064,
+        ),
+        CandidateSpec(
+            key="jump_activity_index_finite_infinite_state_filter",
+            class_prefix="JumpActivityIndexFiniteInfiniteStateFilter",
+            main_regime="TransitionRisk",
+            sub_regime="JumpActivityRegime",
+            profit_factor="FiniteInfiniteActivityState",
+            child_profit_factor="ParentTrendOrReclaimAdmissionFilter",
+            direction="long_short",
+            roi=0.0090,
+            stoploss=-0.0072,
+            trailing_positive=0.0020,
+            trailing_offset=0.0061,
+        ),
+        CandidateSpec(
+            key="market_turbulence_mahalanobis_state_filter",
+            class_prefix="MarketTurbulenceMahalanobisStateFilter",
+            main_regime="RiskState",
+            sub_regime="MarketTurbulence",
+            profit_factor="RollingMahalanobisDistance",
+            child_profit_factor="ParentSignalAdmissionFilter",
+            direction="long_short",
+            roi=0.0091,
+            stoploss=-0.0072,
+            trailing_positive=0.0020,
+            trailing_offset=0.0062,
+        ),
+        CandidateSpec(
+            key="jensen_shannon_return_distribution_shift_gate",
+            class_prefix="JensenShannonReturnDistributionShiftGate",
+            main_regime="ValidationMaturity",
+            sub_regime="DistributionShift",
+            profit_factor="JensenShannonReturnShapeDrift",
+            child_profit_factor="ParentSignalAdmissionFilter",
+            direction="long_short",
+            roi=0.0090,
+            stoploss=-0.0072,
+            trailing_positive=0.0020,
+            trailing_offset=0.0061,
+        ),
+        CandidateSpec(
+            key="bartels_rank_serial_randomness_trend_filter",
+            class_prefix="BartelsRankSerialRandomnessTrendFilter",
+            main_regime="TrendExpansion",
+            sub_regime="SerialDependenceQuality",
+            profit_factor="BartelsRankRandomnessRejection",
+            child_profit_factor="ParentTrendAdmission",
+            direction="long_short",
+            roi=0.0092,
+            stoploss=-0.0073,
+            trailing_positive=0.0020,
+            trailing_offset=0.0062,
+        ),
+        CandidateSpec(
+            key="pettitt_rank_shift_breakout_reliability_filter",
+            class_prefix="PettittRankShiftBreakoutReliabilityFilter",
+            main_regime="TrendExpansion",
+            sub_regime="NonparametricChangePoint",
+            profit_factor="PettittRankShift",
+            child_profit_factor="BreakoutReliabilityGate",
+            direction="long_short",
+            roi=0.0090,
+            stoploss=-0.0072,
+            trailing_positive=0.0020,
+            trailing_offset=0.0061,
+        ),
+        CandidateSpec(
+            key="rough_volatility_local_roughness_filter",
+            class_prefix="RoughVolatilityLocalRoughnessFilter",
+            main_regime="VolatilityState",
+            sub_regime="RoughVolatility",
+            profit_factor="LocalRoughnessPersistence",
+            child_profit_factor="ParentSignalAdmissionFilter",
+            direction="long_short",
+            roi=0.0093,
+            stoploss=-0.0074,
+            trailing_positive=0.0021,
+            trailing_offset=0.0064,
+        ),
+        CandidateSpec(
+            key="structural_break_variance_shift_admission_filter",
+            class_prefix="StructuralBreakVarianceShiftAdmissionFilter",
+            main_regime="ValidationMaturity",
+            sub_regime="StructuralBreakStability",
+            profit_factor="VarianceShiftAndParameterBreak",
+            child_profit_factor="ParentSignalAdmissionFilter",
+            direction="long_short",
+            roi=0.0092,
+            stoploss=-0.0073,
+            trailing_positive=0.0020,
+            trailing_offset=0.0062,
+        ),
+        CandidateSpec(
+            key="high_low_spread_amihud_liquidity_shock_filter",
+            class_prefix="HighLowSpreadAmihudLiquidityShockFilter",
+            main_regime="LiquidityState",
+            sub_regime="HighLowSpreadEstimator",
+            profit_factor="AmihudPriceImpactShock",
+            child_profit_factor="ParentTrendAdmissionFilter",
+            direction="long_short",
+            roi=0.0090,
+            stoploss=-0.0072,
+            trailing_positive=0.0020,
+            trailing_offset=0.0061,
+        ),
+        CandidateSpec(
+            key="kyle_lambda_impact_resilience_filter",
+            class_prefix="KyleLambdaImpactResilienceFilter",
+            main_regime="LiquidityStress",
+            sub_regime="SignedVolumePriceImpact",
+            profit_factor="KyleLambdaImpactState",
+            child_profit_factor="ImpactResilienceAdmissionFilter",
+            direction="long_short",
+            roi=0.0091,
+            stoploss=-0.0073,
+            trailing_positive=0.0020,
+            trailing_offset=0.0062,
+        ),
+        CandidateSpec(
+            key="signed_return_impact_absorption_reversal_gate",
+            class_prefix="SignedReturnImpactAbsorptionReversalGate",
+            main_regime="MicrostructureProxy",
+            sub_regime="SignedReturnImpact",
+            profit_factor="AbsorptionFailureReversal",
+            child_profit_factor="MtfMeanReversionAdmission",
+            direction="long_short",
+            roi=0.0064,
+            stoploss=-0.0062,
+            trailing_positive=0.0016,
+            trailing_offset=0.0048,
+        ),
+        CandidateSpec(
+            key="correlation_network_centrality_risk_gate",
+            class_prefix="CorrelationNetworkCentralityRiskGate",
+            main_regime="CrossMarketStructure",
+            sub_regime="CorrelationNetworkTopology",
+            profit_factor="MstCentralityCrowdingState",
+            child_profit_factor="ParentTrendAdmissionFilter",
+            direction="long_short",
+            roi=0.0094,
+            stoploss=-0.0073,
+            trailing_positive=0.0020,
+            trailing_offset=0.0062,
+            allowed_timeframes=("5m", "15m", "30m", "1h", "4h", "1d"),
+        ),
+        CandidateSpec(
+            key="dcca_cross_correlation_trend_admission_filter",
+            class_prefix="DccaCrossCorrelationTrendAdmissionFilter",
+            main_regime="CrossMarketStructure",
+            sub_regime="DetrendedCrossCorrelation",
+            profit_factor="DccaTrendCoherenceGate",
+            child_profit_factor="ParentSignalAdmissionFilter",
+            direction="long_short",
+            roi=0.0094,
+            stoploss=-0.0073,
+            trailing_positive=0.0020,
+            trailing_offset=0.0063,
+        ),
+        CandidateSpec(
+            key="covar_systemic_tail_risk_admission_filter",
+            class_prefix="CovarSystemicTailRiskAdmissionFilter",
+            main_regime="RiskState",
+            sub_regime="ConditionalTailSystemicRisk",
+            profit_factor="DeltaCoVaRStressState",
+            child_profit_factor="ParentSignalAdmissionFilter",
+            direction="long_short",
+            roi=0.0092,
+            stoploss=-0.0074,
+            trailing_positive=0.0020,
+            trailing_offset=0.0063,
+        ),
+        CandidateSpec(
+            key="unit_root_stationarity_mode_switch_gate",
+            class_prefix="UnitRootStationarityModeSwitchGate",
+            main_regime="ValidationMaturity",
+            sub_regime="UnitRootStationarityMode",
+            profit_factor="ParentContinuationOrReversionAdmission",
+            direction="long_short",
+            roi=0.0090,
+            stoploss=-0.0072,
+            trailing_positive=0.0020,
+            trailing_offset=0.0061,
+        ),
+        CandidateSpec(
+            key="state_space_slope_dispersion_trend_hold",
+            class_prefix="StateSpaceSlopeDispersionTrendHold",
+            main_regime="TrendExpansion",
+            sub_regime="StateSpaceTrendSlope",
+            profit_factor="ResidualDispersionExpansion",
+            child_profit_factor="CrossIndexTrendBreadth",
+            extra_profit_factors=("LowTurnoverAtrHold",),
+            direction="long",
+            roi=0.0120,
+            stoploss=-0.0085,
+            trailing_positive=0.0025,
+            trailing_offset=0.0080,
+        ),
+        CandidateSpec(
+            key="rsrs_high_low_regression_trend_admission",
+            class_prefix="RsrsHighLowRegressionTrendAdmission",
+            main_regime="TrendExpansion",
+            sub_regime="HighLowRegressionTrendQuality",
+            profit_factor="RsrsZscoreAdmission",
+            child_profit_factor="FixedRrrContinuation",
+            direction="long_short",
+            roi=0.0094,
+            stoploss=-0.0074,
+            trailing_positive=0.0020,
+            trailing_offset=0.0062,
+        ),
+        CandidateSpec(
+            key="vhf_chop_trend_reacceleration",
+            class_prefix="VhfChopTrendReacceleration",
+            main_regime="TrendExpansion",
+            sub_regime="DirectionalEfficiency",
+            profit_factor="VhfChopCompressionRelease",
+            child_profit_factor="MtfTrendReacceleration",
+            direction="long_short",
+            roi=0.0096,
+            stoploss=-0.0072,
+            trailing_positive=0.0020,
+            trailing_offset=0.0060,
+        ),
+        CandidateSpec(
+            key="trendexpansion_bocpd_dynmom_vhfchop",
+            class_prefix="TrendExpansionBocpdDynmomVhfChop",
+            main_regime="TrendExpansion",
+            sub_regime="RegimeChangeAdmission",
+            profit_factor="BocpdRunLengthReset",
+            child_profit_factor="DynamicMomentumConsensus",
+            extra_profit_factors=("VhfChopNoTrendVeto", "ExpansionTrendOnlyEntry"),
+            direction="long_short",
+            roi=0.0102,
+            stoploss=-0.0074,
+            trailing_positive=0.0021,
+            trailing_offset=0.0062,
+            factor_id_by_timeframe=(
+                ("5m", "tomac_nq_5m_trendexpansion_bocpd_dynmom_vhfchop_mtf_v1"),
+                ("15m", "tomac_nq_15m_trendexpansion_bocpd_dynmom_vhfchop_mtf_v1"),
+                ("30m", "tomac_nq_30m_trendexpansion_bocpd_dynmom_vhfchop_mtf_v1"),
+                ("1h", "tomac_nq_1h_trendexpansion_bocpd_dynmom_vhfchop_mtf_v1"),
+                ("4h", "tomac_nq_4h_trendexpansion_bocpd_dynmom_vhfchop_mtf_v1"),
+                ("1d", "tomac_nq_1d_trendexpansion_bocpd_dynmom_vhfchop_mtf_v1"),
+            ),
+            allowed_symbols=("NQ",),
+            allowed_timeframes=("5m", "15m", "30m", "1h", "4h", "1d"),
+        ),
+        CandidateSpec(
+            key="trend_expansion_only_regime_transition_clean_state_shift",
+            class_prefix="TrendExpansionOnlyCleanStateShift",
+            main_regime="RegimeTransition",
+            sub_regime="TrendExpansionOnly",
+            profit_factor="CompressionBreakoutStateShift",
+            direction="long",
+            roi=0.0108,
+            stoploss=-0.0076,
+            trailing_positive=0.0022,
+            trailing_offset=0.0065,
+            factor_id_by_timeframe=(
+                (
+                    "15m",
+                    "tomac_nq_15m_trend_expansion_only_regime_transition_long_clean_state_shift_exact_aq_v1",
+                ),
+            ),
+            allowed_symbols=("NQ",),
+            allowed_timeframes=("15m",),
+        ),
+        CandidateSpec(
+            key="trend_expansion_only_regime_transition_retest_hold_quality",
+            class_prefix="TrendExpansionOnlyRetestHoldQuality",
+            main_regime="RegimeTransition",
+            sub_regime="TrendExpansionOnly",
+            profit_factor="CompressionBreakoutStateShift",
+            child_profit_factor="RetestHoldQuality",
+            direction="long",
+            roi=0.0110,
+            stoploss=-0.0064,
+            trailing_positive=0.0022,
+            trailing_offset=0.0062,
+            factor_id_by_timeframe=(
+                (
+                    "15m",
+                    "tomac_nq_15m_trend_expansion_only_regime_transition_long_retest_hold_quality_exact_aq_v1",
+                ),
+            ),
+            allowed_symbols=("NQ",),
+            allowed_timeframes=("15m",),
+        ),
+        CandidateSpec(
+            key="trend_expansion_only_regime_transition_strict_state_shift",
+            class_prefix="TrendExpansionOnlyStrictStateShift",
+            main_regime="RegimeTransition",
+            sub_regime="TrendExpansionOnly",
+            profit_factor="CompressionBreakoutStateShift",
+            child_profit_factor="StrictStateShift",
+            direction="long",
+            roi=0.0112,
+            stoploss=-0.0078,
+            trailing_positive=0.0024,
+            trailing_offset=0.0068,
+            factor_id_by_timeframe=(
+                (
+                    "5m",
+                    "tomac_nq_5m_trend_expansion_only_regime_transition_long_strict_state_shift_exact_aq_v1",
+                ),
+            ),
+            allowed_symbols=("NQ",),
+            allowed_timeframes=("5m",),
+        ),
+        CandidateSpec(
+            key="range_estimator_disagreement_compression_release",
+            class_prefix="RangeEstimatorDisagreementCompressionRelease",
+            main_regime="RangeVolatilityRegime",
+            sub_regime="EstimatorDisagreementCompression",
+            profit_factor="CompressionReleaseBreakout",
+            child_profit_factor="AtrManagedHold",
+            direction="long_short",
+            roi=0.0104,
+            stoploss=-0.0076,
+            trailing_positive=0.0021,
+            trailing_offset=0.0064,
+        ),
+        CandidateSpec(
+            key="yang_zhang_range_vol_split_reacceleration",
+            class_prefix="YangZhangRangeVolSplitReacceleration",
+            main_regime="TrendExpansion",
+            sub_regime="RangeBasedVolatility",
+            profit_factor="YangZhangGapRangeSplit",
+            child_profit_factor="RogersSatchellReaccelerationAdmission",
+            direction="long_short",
+            roi=0.0102,
+            stoploss=-0.0074,
+            trailing_positive=0.0021,
+            trailing_offset=0.0062,
+            allowed_timeframes=("5m", "15m", "30m", "1h", "4h", "1d"),
+        ),
+        CandidateSpec(
+            key="inside_bar_breakout_hold",
+            class_prefix="InsideBarBreakoutHold",
+            main_regime="TrendExpansion",
+            sub_regime="VolatilityCompression",
+            profit_factor="InsideRangeBreakoutHold",
+            child_profit_factor="TrendAcceptance",
+            extra_profit_factors=("LowTurnoverAtrHold",),
+            direction="long_short",
+            roi=0.0108,
+            stoploss=-0.0076,
+            trailing_positive=0.0022,
+            trailing_offset=0.0066,
+        ),
+        CandidateSpec(
+            key="realized_skew_semivariance_trend_acceptance",
+            class_prefix="RealizedSkewSemivarianceTrendAcceptance",
+            main_regime="TrendExpansion",
+            sub_regime="RealizedAsymmetryState",
+            profit_factor="UpsideSemivarianceDominance",
+            child_profit_factor="TrendAcceptance",
+            extra_profit_factors=("MtfSlopeResonanceOptional",),
+            direction="long_short",
+            roi=0.0102,
+            stoploss=-0.0074,
+            trailing_positive=0.0021,
+            trailing_offset=0.0063,
+        ),
+        CandidateSpec(
+            key="gsadf_explosive_trend_breakout",
+            class_prefix="GsadfExplosiveTrendBreakout",
+            main_regime="TrendExpansion",
+            sub_regime="ExplosiveTrendDiagnostics",
+            profit_factor="GsadfBreakoutPersistence",
+            child_profit_factor="MtfSlopeConfirmation",
+            extra_profit_factors=("FrictionAwareAtrHold",),
+            direction="long",
+            roi=0.0135,
+            stoploss=-0.0092,
+            trailing_positive=0.0028,
+            trailing_offset=0.0082,
+        ),
+        CandidateSpec(
+            key="variance_ratio_serial_correlation_trend_hold",
+            class_prefix="VarianceRatioSerialCorrelationTrendHold",
+            main_regime="TrendExpansion",
+            sub_regime="VarianceRatioPersistence",
+            profit_factor="PositiveSerialCorrelationTrendHold",
+            child_profit_factor="MtfMomentumConfirmation",
+            extra_profit_factors=("FrictionAwareAtrHold",),
+            direction="long",
+            roi=0.0128,
+            stoploss=-0.0088,
+            trailing_positive=0.0026,
+            trailing_offset=0.0078,
+        ),
+        CandidateSpec(
+            key="teager_kaiser_energy_impulse_trend_gate",
+            class_prefix="TeagerKaiserEnergyImpulseTrendGate",
+            main_regime="TrendExpansion",
+            sub_regime="NonlinearEnergyImpulse",
+            profit_factor="TeagerKaiserImpulsePersistence",
+            child_profit_factor="MtfTrendResonance",
+            extra_profit_factors=("FrictionAwareAtrHold",),
+            direction="long",
+            roi=0.0122,
+            stoploss=-0.0086,
+            trailing_positive=0.0025,
+            trailing_offset=0.0076,
+        ),
+        CandidateSpec(
+            key="volatility_managed_trend_size_gate",
+            class_prefix="VolatilityManagedTrendSizeGate",
+            main_regime="TrendExpansion",
+            sub_regime="VolatilityManagedExposure",
+            profit_factor="RealizedVolatilityThrottle",
+            child_profit_factor="ParentSignalRiskThrottle",
+            direction="long_short",
+            roi=0.0108,
+            stoploss=-0.0074,
+            trailing_positive=0.0022,
+            trailing_offset=0.0066,
+        ),
+        CandidateSpec(
+            key="mann_kendall_theil_sen_trend_gate",
+            class_prefix="MannKendallTheilSenTrendGate",
+            main_regime="TrendExpansion",
+            sub_regime="RankMonotoneTrend",
+            profit_factor="MannKendallPersistence",
+            child_profit_factor="TheilSenSlopeConfirmation",
+            extra_profit_factors=("FrictionAwareAtrHold",),
+            direction="long",
+            roi=0.0126,
+            stoploss=-0.0086,
+            trailing_positive=0.0025,
+            trailing_offset=0.0076,
+        ),
+        CandidateSpec(
+            key="quantile_regression_trend_asymmetry_gate",
+            class_prefix="QuantileRegressionTrendAsymmetryGate",
+            main_regime="TrendExpansion",
+            sub_regime="DistributionalSlope",
+            profit_factor="RollingQuantileRegression",
+            child_profit_factor="UpperLowerTailSlopeAsymmetry",
+            extra_profit_factors=("FrictionAwareAtrHold",),
+            direction="long",
+            roi=0.0124,
+            stoploss=-0.0087,
+            trailing_positive=0.0025,
+            trailing_offset=0.0075,
+        ),
+        CandidateSpec(
+            key="median_price_envelope_reacceleration_filter",
+            class_prefix="MedianPriceEnvelopeReaccelerationFilter",
+            main_regime="TrendExpansion",
+            sub_regime="MedianPriceEnvelope",
+            profit_factor="PullbackAcceptance",
+            child_profit_factor="ReaccelerationFilter",
+            extra_profit_factors=("FrictionAwareAtrHold",),
+            direction="long",
+            roi=0.0118,
+            stoploss=-0.0084,
+            trailing_positive=0.0024,
+            trailing_offset=0.0072,
+        ),
+        CandidateSpec(
+            key="emd_imf_trend_residual_gate",
+            class_prefix="EmdImfTrendResidualGate",
+            main_regime="TrendExpansion",
+            sub_regime="AdaptiveModeDecomposition",
+            profit_factor="ImfTrendResidualAgreement",
+            child_profit_factor="MtfResidualEnergyVeto",
+            extra_profit_factors=("FrictionAwareAtrHold",),
+            direction="long",
+            roi=0.0120,
+            stoploss=-0.0086,
+            trailing_positive=0.0025,
+            trailing_offset=0.0074,
+        ),
+        CandidateSpec(
+            key="weekly_donchian_adx_breadth_hold",
+            class_prefix="WeeklyDonchianAdxBreadthHold",
+            main_regime="TrendExpansion",
+            sub_regime="WeeklyBreakoutPersistence",
+            profit_factor="DonchianAdxTrendHold",
+            child_profit_factor="CrossIndexBreadthConfirmation",
+            extra_profit_factors=("LowTurnoverAtrHold",),
+            direction="long",
+            roi=0.0180,
+            stoploss=-0.0120,
+            trailing_positive=0.0040,
+            trailing_offset=0.0140,
+        ),
+        CandidateSpec(
+            key="multires_energy_trend_gate",
+            class_prefix="MultiResEnergyTrendGate",
+            main_regime="TrendExpansion",
+            sub_regime="MultiResolutionEnergyTrend",
+            profit_factor="DirectionalEnergyRatio",
+            child_profit_factor="MtfSlopeResonance",
+            extra_profit_factors=("FrictionAwareRrrBracket",),
+            direction="long_short",
+            roi=0.0115,
+            stoploss=-0.0084,
+            trailing_positive=0.0026,
+            trailing_offset=0.0074,
+        ),
+        CandidateSpec(
+            key="price_stiffness_density_trend_carry",
+            class_prefix="PriceStiffnessDensityTrendCarry",
+            main_regime="TrendExpansion",
+            sub_regime="PriceDistributionStiffness",
+            profit_factor="DensityTrendCarry",
+            child_profit_factor="MtfResonanceAdmission",
+            extra_profit_factors=("FrictionAwareRrrBracket",),
+            direction="long_short",
+            roi=0.0112,
+            stoploss=-0.0082,
+            trailing_positive=0.0024,
+            trailing_offset=0.0070,
+            allowed_symbols=("NQ", "YM", "GC"),
+            allowed_timeframes=("5m", "15m", "30m", "1h", "4h", "1d"),
+        ),
+        CandidateSpec(
+            key="trend_magic_cci_atr_slow_long",
+            class_prefix="TrendMagicCciAtrSlowLong",
+            main_regime="TrendExpansion",
+            sub_regime="TrendMagicCciAtrTrail",
+            profit_factor="MtfTrendContinuation",
+            child_profit_factor="SlowLongFrictionAwareAtrBracket",
+            direction="long",
+            roi=0.0120,
+            stoploss=-0.0060,
+            trailing_positive=0.0024,
+            trailing_offset=0.0072,
+            factor_id_by_timeframe=(
+                ("5m", "tomac_nq_5m_trend_magic_cci_atr_slow_long_exact_aq_v1"),
+                ("15m", "tomac_nq_15m_trend_magic_cci_atr_slow_long_exact_aq_v1"),
+            ),
+            allowed_symbols=("NQ",),
+            allowed_timeframes=("5m", "15m"),
+        ),
+        CandidateSpec(
+            key="trend_magic_cci_atr_balanced_long",
+            class_prefix="TrendMagicCciAtrBalancedLong",
+            main_regime="TrendExpansion",
+            sub_regime="TrendMagicCciAtrTrail",
+            profit_factor="MtfTrendContinuation",
+            child_profit_factor="BalancedLongFrictionAwareAtrBracket",
+            direction="long",
+            roi=0.0080,
+            stoploss=-0.0040,
+            trailing_positive=0.0018,
+            trailing_offset=0.0052,
+            factor_id_by_timeframe=(
+                ("5m", "tomac_nq_5m_trend_magic_cci_atr_balanced_long_exact_aq_v1"),
+            ),
+            allowed_symbols=("NQ",),
+            allowed_timeframes=("5m",),
+        ),
+        CandidateSpec(
+            key="first30_last30_momentum_close_drive",
+            class_prefix="FirstThirtyLastThirtyMomentumCloseDrive",
+            main_regime="TrendExpansion",
+            sub_regime="MarketIntradayMomentum",
+            profit_factor="FirstWindowMomentumContinuation",
+            child_profit_factor="LastWindowCloseDrive",
+            extra_profit_factors=("HtfTrendAgreement",),
+            direction="long_short",
+            roi=0.0068,
+            stoploss=-0.0062,
+            trailing_positive=0.0017,
+            trailing_offset=0.0050,
+        ),
+        CandidateSpec(
+            key="order_flow_imbalance_proxy_trend_reversal_gate",
+            class_prefix="OrderFlowImbalanceProxyTrendReversalGate",
+            main_regime="MicrostructureProxy",
+            sub_regime="CompletedBarOrderFlowImbalance",
+            profit_factor="AbsorptionOrContinuationState",
+            child_profit_factor="MtfTrendReversalAdmission",
+            direction="long_short",
+            roi=0.0062,
+            stoploss=-0.0062,
+            trailing_positive=0.0015,
+            trailing_offset=0.0048,
+        ),
+        CandidateSpec(
+            key="adaptive_vwap_deviation_half_life_reversion_gate",
+            class_prefix="AdaptiveVwapDeviationHalfLifeReversionGate",
+            main_regime="MeanReversion",
+            sub_regime="AdaptiveVwapDeviation",
+            profit_factor="HalfLifeReversionPressure",
+            child_profit_factor="MtfCompressionRegimeAgreement",
+            direction="long_short",
+            roi=0.0058,
+            stoploss=-0.0058,
+            trailing_positive=0.0014,
+            trailing_offset=0.0042,
+        ),
+        CandidateSpec(
             key="session_window_sweep_reclaim",
             class_prefix="SessionWindowSweepReclaim",
             main_regime="SessionRhythm",
@@ -1072,6 +2703,313 @@ def candidate_specs(families: list[str] | None = None) -> list[CandidateSpec]:
             stoploss=-0.0063,
             trailing_positive=0.0017,
             trailing_offset=0.0051,
+        ),
+        CandidateSpec(
+            key="overnight_intraday_disagreement_reclaim",
+            class_prefix="OvernightIntradayDisagreementReclaim",
+            main_regime="SessionRhythm",
+            sub_regime="OvernightInventoryDisagreement",
+            profit_factor="GlobexIntradayContinuationFailure",
+            child_profit_factor="SessionVwapMidpointReclaim",
+            extra_profit_factors=("MtfSlopeVeto",),
+            direction="long_short",
+            roi=0.0064,
+            stoploss=-0.0062,
+            trailing_positive=0.0016,
+            trailing_offset=0.0049,
+        ),
+        CandidateSpec(
+            key="jdk_relative_rotation_regime_gate",
+            class_prefix="JdkRelativeRotationRegimeGate",
+            main_regime="CrossMarketStructure",
+            sub_regime="RelativeRotationGraph",
+            profit_factor="RSRatioRSMomentumQuadrant",
+            child_profit_factor="LeadershipTransitionGate",
+            direction="long_short",
+            roi=0.0082,
+            stoploss=-0.0068,
+            trailing_positive=0.0019,
+            trailing_offset=0.0058,
+        ),
+        CandidateSpec(
+            key="mbs_convexity_duration_hedge_risk_transfer_filter",
+            class_prefix="MbsConvexityDurationHedgeRiskTransferFilter",
+            main_regime="MacroRates",
+            sub_regime="MortgageConvexityHedging",
+            profit_factor="DurationExtensionShock",
+            child_profit_factor="EquityIndexRiskTransferFilter",
+            direction="long_short",
+            roi=0.0088,
+            stoploss=-0.0074,
+            trailing_positive=0.0020,
+            trailing_offset=0.0062,
+        ),
+        CandidateSpec(
+            key="event_duration_liquidity_clock_trend_filter",
+            class_prefix="EventDurationLiquidityClockTrendFilter",
+            main_regime="SessionLiquidity",
+            sub_regime="EventDurationLiquidityClock",
+            profit_factor="ACDStyleDurationThrottle",
+            child_profit_factor="ParentTrendAdmission",
+            direction="long_short",
+            roi=0.0086,
+            stoploss=-0.0070,
+            trailing_positive=0.0020,
+            trailing_offset=0.0060,
+        ),
+        CandidateSpec(
+            key="trendexpansion_event_duration_liquidity_clock",
+            class_prefix="TrendExpansionEventDurationLiquidityClock",
+            main_regime="TrendExpansion",
+            sub_regime="EventDurationLiquidityClock",
+            profit_factor="ACDStyleDurationCompression",
+            child_profit_factor="ParentTrendAdmission",
+            direction="long_short",
+            roi=0.0086,
+            stoploss=-0.0070,
+            trailing_positive=0.0020,
+            trailing_offset=0.0060,
+            allowed_timeframes=("1m", "3m", "5m", "15m", "30m", "1h", "4h"),
+        ),
+        CandidateSpec(
+            key="renko_price_brick_reacceleration_filter",
+            class_prefix="RenkoPriceBrickReaccelerationFilter",
+            main_regime="RegimeRoot",
+            sub_regime="EventCompressedTrend",
+            profit_factor="RenkoPriceBrickState",
+            child_profit_factor="BrickReaccelerationAdmission",
+            direction="long_short",
+            roi=0.0094,
+            stoploss=-0.0074,
+            trailing_positive=0.0021,
+            trailing_offset=0.0064,
+            allowed_timeframes=("5m", "15m", "30m", "1h", "4h", "1d"),
+        ),
+        CandidateSpec(
+            key="candlestick_pattern_context_reliability_gate",
+            class_prefix="CandlestickPatternContextReliabilityGate",
+            main_regime="TrendExpansion",
+            sub_regime="PriceActionPatternReliability",
+            profit_factor="CandlestickContextFilter",
+            child_profit_factor="ParentSignalAdmissionGate",
+            direction="long_short",
+            roi=0.0082,
+            stoploss=-0.0068,
+            trailing_positive=0.0020,
+            trailing_offset=0.0058,
+            allowed_timeframes=("5m", "15m", "30m", "1h", "4h", "1d"),
+        ),
+        CandidateSpec(
+            key="swing_leg_duration_amplitude_asymmetry_filter",
+            class_prefix="SwingLegDurationAmplitudeAsymmetryFilter",
+            main_regime="RegimeRoot",
+            sub_regime="SwingStructureRegime",
+            profit_factor="ConfirmedPivotLegAsymmetry",
+            child_profit_factor="DurationAmplitudeContinuation",
+            direction="long_short",
+            roi=0.0084,
+            stoploss=-0.0070,
+            trailing_positive=0.0020,
+            trailing_offset=0.0060,
+        ),
+        CandidateSpec(
+            key="trend_turtle_soup_density_repair_child",
+            class_prefix="TrendTurtleSoupDensityRepairChild",
+            main_regime="RegimeRoot",
+            sub_regime="TrendPersistence",
+            profit_factor="DonchianFalseBreak",
+            child_profit_factor="TurtleSoupContinuationReclaim",
+            extra_profit_factors=("DensityRepairChild",),
+            direction="long_short",
+            roi=0.0076,
+            stoploss=-0.0066,
+            trailing_positive=0.0018,
+            trailing_offset=0.0054,
+        ),
+        CandidateSpec(
+            key="range_compression_participation_trend_breakout",
+            class_prefix="RangeCompressionParticipationTrendBreakout",
+            main_regime="RegimeRoot",
+            sub_regime="LowVolatilityCompression",
+            profit_factor="ParticipationExpansion",
+            child_profit_factor="TrendBreakoutRejoin",
+            direction="long_short",
+            roi=0.0082,
+            stoploss=-0.0068,
+            trailing_positive=0.0019,
+            trailing_offset=0.0058,
+        ),
+        CandidateSpec(
+            key="medrv_minrv_noise_robust_vol_state_gate",
+            class_prefix="MedrvMinrvNoiseRobustVolStateGate",
+            main_regime="VolatilityState",
+            sub_regime="JumpRobustRealizedVolatility",
+            profit_factor="MedrvMinrvNoiseRobustState",
+            child_profit_factor="ParentTrendOrReclaimAdmission",
+            direction="long_short",
+            roi=0.0080,
+            stoploss=-0.0068,
+            trailing_positive=0.0018,
+            trailing_offset=0.0058,
+        ),
+        CandidateSpec(
+            key="directional_sign_entropy_release_reacceleration",
+            class_prefix="DirectionalSignEntropyReleaseReacceleration",
+            main_regime="RegimeRoot",
+            sub_regime="TrendExpansion",
+            profit_factor="DirectionalSignEntropyCompression",
+            child_profit_factor="EntropyReleaseReacceleration",
+            extra_profit_factors=("MtfResonance",),
+            direction="long_short",
+            roi=0.0078,
+            stoploss=-0.0064,
+            trailing_positive=0.0018,
+            trailing_offset=0.0054,
+        ),
+        CandidateSpec(
+            key="pesaran_timmermann_directional_accuracy_admission_filter",
+            class_prefix="PesaranTimmermannDirectionalAccuracyAdmissionFilter",
+            main_regime="RegimeRoot",
+            sub_regime="TrendExpansion",
+            profit_factor="DirectionalForecastSkill",
+            child_profit_factor="PesaranTimmermannDirectionalAccuracy",
+            extra_profit_factors=("ParentTrendAdmission",),
+            direction="long_short",
+            roi=0.0081,
+            stoploss=-0.0066,
+            trailing_positive=0.0019,
+            trailing_offset=0.0056,
+        ),
+        CandidateSpec(
+            key="elder_thermometer_heat_rejoin",
+            class_prefix="ElderThermometerHeatRejoin",
+            main_regime="TrendExpansion",
+            sub_regime="MarketThermometerHeat",
+            profit_factor="HeatNormalizedTrendRejoin",
+            direction="long_short",
+            roi=0.0080,
+            stoploss=-0.0068,
+            trailing_positive=0.0019,
+            trailing_offset=0.0057,
+        ),
+        CandidateSpec(
+            key="pgo_atr_trend_rejoin",
+            class_prefix="PgoAtrTrendRejoin",
+            main_regime="TrendExpansion",
+            sub_regime="AtrNormalizedDeviationState",
+            profit_factor="PrettyGoodOscillatorTrendRejoin",
+            child_profit_factor="MtfSlopeResonanceGuard",
+            direction="long_short",
+            roi=0.0082,
+            stoploss=-0.0068,
+            trailing_positive=0.0019,
+            trailing_offset=0.0058,
+        ),
+        CandidateSpec(
+            key="gann_hilo_atr_trend_rejoin_filter",
+            class_prefix="GannHiLoAtrTrendRejoinFilter",
+            main_regime="TrendExpansion",
+            sub_regime="GannHiLoActivatorState",
+            profit_factor="AtrTrendRejoin",
+            child_profit_factor="MtfTrendResonance",
+            direction="long_short",
+            roi=0.0082,
+            stoploss=-0.0069,
+            trailing_positive=0.0019,
+            trailing_offset=0.0058,
+        ),
+        CandidateSpec(
+            key="heikin_ashi_kama_trend_pullback_rejoin",
+            class_prefix="HeikinAshiKamaTrendPullbackRejoin",
+            main_regime="RegimeRoot",
+            sub_regime="TrendExpansion",
+            profit_factor="HeikinAshiTrendState",
+            child_profit_factor="KamaEfficiencyPullback",
+            extra_profit_factors=("RejoinReacceleration", "MtfSlopeResonance"),
+            direction="long",
+            roi=0.0105,
+            stoploss=-0.0072,
+            trailing_positive=0.0021,
+            trailing_offset=0.0062,
+            factor_id_by_timeframe=(
+                (
+                    "15m",
+                    "tomac_nq_15m_heikin_ashi_kama_trend_pullback_rejoin_long_deeprejoin_v1",
+                ),
+                (
+                    "30m",
+                    "tomac_nq_30m_heikin_ashi_kama_trend_pullback_rejoin_long_qualityrejoin_v1",
+                ),
+            ),
+            allowed_symbols=("NQ",),
+            allowed_timeframes=("15m", "30m"),
+        ),
+        CandidateSpec(
+            key="kairi_ym5m_year_stability_refinement",
+            class_prefix="KairiYm5mYearStabilityRefinement",
+            main_regime="RegimeRoot",
+            sub_regime="TrendPersistence",
+            profit_factor="KairiMaDeviationPullback",
+            child_profit_factor="TrendRejoin",
+            extra_profit_factors=("Ym5mYearStabilityRefinement",),
+            direction="long",
+            roi=0.0068,
+            stoploss=-0.0058,
+            trailing_positive=0.0016,
+            trailing_offset=0.0048,
+            factor_id_by_timeframe=(
+                (
+                    "5m",
+                    "tomac_ym_5m_kairi_ma_deviation_trend_rejoin_year_stability_ystabe18r2s5t140_v1",
+                ),
+            ),
+            allowed_symbols=("YM",),
+            allowed_timeframes=("5m",),
+        ),
+        CandidateSpec(
+            key="ultimate_williams_reacceleration",
+            class_prefix="UltimateWilliamsReacceleration",
+            main_regime="RegimeRoot",
+            sub_regime="OscillatorReacceleration",
+            profit_factor="UltimateWilliamsReclaim",
+            child_profit_factor="TrendContinuationFilter",
+            direction="long_short",
+            roi=0.0078,
+            stoploss=-0.0066,
+            trailing_positive=0.0018,
+            trailing_offset=0.0056,
+        ),
+        CandidateSpec(
+            key="participation_clock_breakout",
+            class_prefix="ParticipationClockBreakout",
+            main_regime="SessionLiquidity",
+            sub_regime="ParticipationClock",
+            profit_factor="RelativeVolumeAcceleration",
+            child_profit_factor="OpeningRangeAcceptance",
+            direction="long_short",
+            roi=0.0080,
+            stoploss=-0.0065,
+            trailing_positive=0.0020,
+            trailing_offset=0.0060,
+        ),
+        CandidateSpec(
+            key="heikin_ashi_kama_trend_pullback_rejoin_long_quality_30m",
+            class_prefix="HeikinAshiKamaTrendPullbackRejoinLongQuality",
+            main_regime="TrendExpansion",
+            sub_regime="HeikinAshiTrendState",
+            profit_factor="KamaEfficiencyPullback",
+            child_profit_factor="RejoinReacceleration",
+            extra_profit_factors=("MtfSlopeResonance",),
+            direction="long",
+            roi=0.0120,
+            stoploss=-0.0085,
+            trailing_positive=0.0024,
+            trailing_offset=0.0072,
+            factor_id_by_timeframe=(
+                ("30m", "tomac_nq_30m_heikin_ashi_kama_trend_pullback_rejoin_long_qualityrejoin_v1"),
+            ),
+            allowed_symbols=("NQ",),
+            allowed_timeframes=("30m",),
         ),
         CandidateSpec(
             key="tod_balanced_ym_late_session_cadence_addon",
@@ -1088,11 +3026,14 @@ def candidate_specs(families: list[str] | None = None) -> list[CandidateSpec]:
             trailing_offset=0.0046,
         ),
     ]
+    by_key: dict[str, CandidateSpec] = {}
+    for spec in specs:
+        by_key.setdefault(spec.key, spec)
     if not families:
-        return specs
+        return list(by_key.values())
     requested = set(families)
-    selected = [spec for spec in specs if spec.key in requested]
-    missing = sorted(requested.difference({spec.key for spec in specs}))
+    selected = [spec for spec in by_key.values() if spec.key in requested]
+    missing = sorted(requested.difference(by_key))
     if missing:
         raise ValueError(f"unknown candidate families: {','.join(missing)}")
     return selected
@@ -1100,9 +3041,13 @@ def candidate_specs(families: list[str] | None = None) -> list[CandidateSpec]:
 
 def is_outright_contract(contract: str, symbol: str) -> bool:
     text = str(contract or "").upper().strip()
-    root_symbol = CONTRACT_ROOT_ALIASES.get(symbol.upper(), symbol.upper())
+    root_symbol = canonical_tomac_symbol(symbol)
     root = re.escape(root_symbol)
     return re.fullmatch(rf"{root}[{MONTH_CODES}][0-9]{{1,2}}", text) is not None
+
+
+def cost_profile_symbol_for_source(symbol: str) -> str:
+    return canonical_tomac_symbol(symbol)
 
 
 def select_front_outright_rows(frame: pd.DataFrame, symbol: str) -> tuple[pd.DataFrame, dict[str, int]]:
@@ -1223,6 +3168,7 @@ def back_adjust_rolls(frame: pd.DataFrame, *, symbol: str) -> tuple[pd.DataFrame
 def freq_for_timeframe(timeframe: str) -> str:
     mapping = {
         "1m": "1min",
+        "3m": "3min",
         "5m": "5min",
         "15m": "15min",
         "30m": "30min",
@@ -1284,6 +3230,436 @@ def dense_calendar_for_aq(frame: pd.DataFrame, timeframe: str) -> tuple[pd.DataF
     return dense, stats
 
 
+def _fred_rate_frame(path: Path, *, value_column: str, output_column: str) -> pd.DataFrame:
+    raw = pd.read_csv(path)
+    if "DATE" in raw.columns:
+        date_column = "DATE"
+    elif "observation_date" in raw.columns:
+        date_column = "observation_date"
+    else:
+        raise ValueError(f"FRED rate file missing DATE/observation_date column: {path}")
+    if value_column not in raw.columns:
+        raise ValueError(f"FRED rate file missing {value_column} column: {path}")
+    frame = raw[[date_column, value_column]].copy()
+    frame["date"] = pd.to_datetime(frame[date_column], utc=True, errors="coerce")
+    frame[output_column] = pd.to_numeric(frame[value_column].replace(".", pd.NA), errors="coerce")
+    frame = frame.dropna(subset=["date", output_column]).sort_values("date")
+    return frame[["date", output_column]].drop_duplicates(subset=["date"], keep="last")
+
+
+def merge_mbs_macro_rate_sidecar(frame: pd.DataFrame, root: Path) -> tuple[pd.DataFrame, dict[str, Any]]:
+    source_dir = root / "source_evidence"
+    missing_sources = [
+        str(source_dir / filename)
+        for filename, _column in MBS_MACRO_RATE_SOURCES.values()
+        if not (source_dir / filename).exists()
+    ]
+    if missing_sources:
+        return frame.copy(), {
+            "status": "missing_source_files",
+            "source_dir": str(source_dir),
+            "missing_sources": missing_sources,
+            "materialized_columns": [],
+            "future_lookahead": False,
+        }
+
+    merged = frame.copy()
+    merged["date"] = pd.to_datetime(merged["date"], utc=True)
+    merged = merged.sort_values("date")
+    materialized_columns: list[str] = []
+    source_files: dict[str, str] = {}
+    for output_column, (filename, value_column) in MBS_MACRO_RATE_SOURCES.items():
+        source_path = source_dir / filename
+        rate_frame = _fred_rate_frame(source_path, value_column=value_column, output_column=output_column)
+        merged = pd.merge_asof(
+            merged,
+            rate_frame,
+            on="date",
+            direction="backward",
+            allow_exact_matches=True,
+        )
+        materialized_columns.append(output_column)
+        source_files[output_column] = str(source_path)
+
+    return merged, {
+        "status": "materialized",
+        "source_dir": str(source_dir),
+        "source_files": source_files,
+        "materialized_columns": materialized_columns,
+        "input_rows": int(len(frame)),
+        "output_rows": int(len(merged)),
+        "future_lookahead": False,
+        "merge_method": "backward_asof_completed_fred_observation_date",
+    }
+
+
+def family_selection_requires_mbs_macro_sidecar(families: list[str] | None) -> bool:
+    return families is None or MBS_CONVEXITY_FAMILY in set(families)
+
+
+def merge_jolts_macro_sidecar(frame: pd.DataFrame, root: Path) -> tuple[pd.DataFrame, dict[str, Any]]:
+    source_dir = root / "source_evidence"
+    source_path = source_dir / JOLTS_MACRO_SOURCE
+    materialized_columns = [
+        "job_openings_to_unemployed_proxy",
+        "jolts_quits_rate_proxy",
+        "jolts_release_effective",
+    ]
+    provenance_columns = ["jolts_source_observation_date", "jolts_release_effective_timestamp"]
+    if not source_path.exists():
+        return frame.copy(), {
+            "status": "missing_source_files",
+            "source_dir": str(source_dir),
+            "missing_sources": [str(source_path)],
+            "materialized_columns": [],
+            "future_lookahead": False,
+        }
+
+    raw = pd.read_csv(source_path)
+    if "DATE" in raw.columns:
+        date_column = "DATE"
+    elif "observation_date" in raw.columns:
+        date_column = "observation_date"
+    else:
+        raise ValueError(f"JOLTS sidecar file missing DATE/observation_date column: {source_path}")
+    required = {"JTSJOL", "JTSQUR", "UNEMPLOY", "jolts_release_effective"}
+    missing = sorted(required.difference(raw.columns))
+    if missing:
+        return frame.copy(), {
+            "status": "missing_required_columns",
+            "source_dir": str(source_dir),
+            "source_files": {"jolts_labor_tightness": str(source_path)},
+            "missing_columns": missing,
+            "materialized_columns": [],
+            "provenance_columns": [],
+            "future_lookahead": False,
+        }
+
+    jolts = raw[[date_column, "JTSJOL", "JTSQUR", "UNEMPLOY", "jolts_release_effective"]].copy()
+    jolts["jolts_source_observation_date"] = pd.to_datetime(jolts[date_column], utc=True, errors="coerce")
+    jolts["jolts_release_effective_timestamp"] = pd.to_datetime(
+        jolts["jolts_release_effective"], utc=True, errors="coerce"
+    )
+    jolts["date"] = jolts["jolts_release_effective_timestamp"]
+    jolts["job_openings"] = pd.to_numeric(jolts["JTSJOL"].replace(".", pd.NA), errors="coerce")
+    jolts["unemployed"] = pd.to_numeric(jolts["UNEMPLOY"].replace(".", pd.NA), errors="coerce")
+    jolts["job_openings_to_unemployed_proxy"] = jolts["job_openings"] / jolts["unemployed"].replace(0, pd.NA)
+    jolts["jolts_quits_rate_proxy"] = pd.to_numeric(jolts["JTSQUR"].replace(".", pd.NA), errors="coerce")
+    jolts = jolts.dropna(subset=["date", "job_openings_to_unemployed_proxy", "jolts_quits_rate_proxy"])
+    jolts = jolts.sort_values("date").drop_duplicates(subset=["date"], keep="last")
+    jolts = jolts[
+        [
+            "date",
+            "job_openings_to_unemployed_proxy",
+            "jolts_quits_rate_proxy",
+            "jolts_source_observation_date",
+            "jolts_release_effective_timestamp",
+        ]
+    ]
+
+    merged = frame.copy()
+    merged["date"] = pd.to_datetime(merged["date"], utc=True)
+    merged = merged.sort_values("date")
+    merged = pd.merge_asof(
+        merged,
+        jolts,
+        on="date",
+        direction="backward",
+        allow_exact_matches=True,
+    )
+    merged["jolts_release_effective"] = merged["job_openings_to_unemployed_proxy"].notna()
+    return merged, {
+        "status": "materialized",
+        "source_dir": str(source_dir),
+        "source_files": {"jolts_labor_tightness": str(source_path)},
+        "materialized_columns": materialized_columns,
+        "provenance_columns": provenance_columns,
+        "input_rows": int(len(frame)),
+        "output_rows": int(len(merged)),
+        "future_lookahead": False,
+        "merge_method": "backward_asof_release_effective_timestamp",
+    }
+
+
+def family_selection_requires_jolts_macro_sidecar(families: list[str] | None) -> bool:
+    return families is None or JOLTS_LABOR_TIGHTNESS_FAMILY in set(families)
+
+
+def family_selection_requires_jdk_relative_rotation_sidecar(families: list[str] | None) -> bool:
+    return families is None or JDK_RELATIVE_ROTATION_FAMILY in set(families)
+
+
+def family_selection_requires_dynamic_lead_lag_sidecar(families: list[str] | None) -> bool:
+    return families is None or DYNAMIC_LEAD_LAG_BREADTH_FAMILY in set(families)
+
+
+def merge_jdk_relative_rotation_sidecar(
+    frame: pd.DataFrame,
+    root: Path,
+    *,
+    symbol: str,
+    timeframe: str,
+    symbols: list[str],
+) -> tuple[pd.DataFrame, dict[str, Any]]:
+    symbol = canonical_tomac_symbol(symbol)
+    symbols, _aliases = canonical_tomac_symbol_sequence(symbols)
+    if symbol not in symbols:
+        return frame.copy(), {
+            "status": "symbol_not_in_cross_market_universe",
+            "symbol": symbol,
+            "timeframe": timeframe,
+            "symbols": symbols,
+            "materialized_columns": [],
+            "future_lookahead": False,
+        }
+
+    close_frames: list[pd.DataFrame] = []
+    missing_sources: list[str] = []
+    for peer in symbols:
+        clean_path = root / "clean" / peer / f"{peer}_USD-{timeframe}.feather"
+        if not clean_path.exists():
+            missing_sources.append(str(clean_path))
+            continue
+        peer_frame = pd.read_feather(clean_path, columns=["date", "close"])
+        peer_frame["date"] = pd.to_datetime(peer_frame["date"], utc=True)
+        peer_frame = peer_frame.sort_values("date").drop_duplicates(subset=["date"], keep="last")
+        peer_frame[f"jdk_close_{peer.lower()}"] = pd.to_numeric(peer_frame["close"], errors="coerce")
+        close_frames.append(peer_frame[["date", f"jdk_close_{peer.lower()}"]])
+
+    if missing_sources:
+        return frame.copy(), {
+            "status": "missing_clean_symbol_feathers",
+            "symbol": symbol,
+            "timeframe": timeframe,
+            "symbols": symbols,
+            "missing_sources": missing_sources,
+            "materialized_columns": [],
+            "future_lookahead": False,
+        }
+
+    merged_closes = close_frames[0]
+    for peer_frame in close_frames[1:]:
+        merged_closes = pd.merge(merged_closes, peer_frame, on="date", how="outer")
+    merged_closes = merged_closes.sort_values("date")
+    close_columns = [f"jdk_close_{peer.lower()}" for peer in symbols]
+    for column in close_columns:
+        merged_closes[column] = pd.to_numeric(merged_closes[column], errors="coerce").ffill()
+        base = merged_closes[column].rolling(144, min_periods=34).median().shift(1)
+        merged_closes[f"{column}_normalized"] = merged_closes[column] / base.replace(0, pd.NA)
+
+    own_norm = merged_closes[f"jdk_close_{symbol.lower()}_normalized"]
+    peer_norm_columns = [f"jdk_close_{peer.lower()}_normalized" for peer in symbols if peer != symbol]
+    basket = merged_closes[peer_norm_columns].mean(axis=1)
+    rs_ratio_raw = own_norm / basket.replace(0, pd.NA)
+    rs_mean = rs_ratio_raw.rolling(89, min_periods=34).mean().shift(1)
+    rs_std = rs_ratio_raw.rolling(89, min_periods=34).std().shift(1)
+    rs_ratio = (rs_ratio_raw - rs_mean) / rs_std.replace(0, pd.NA)
+    rs_momentum = rs_ratio.diff(13).rolling(5, min_periods=2).mean().shift(1)
+    merged_closes["jdk_rs_ratio"] = rs_ratio.shift(1)
+    merged_closes["jdk_rs_momentum"] = rs_momentum
+    merged_closes["jdk_relative_leading"] = (
+        merged_closes["jdk_rs_ratio"].gt(0.0) & merged_closes["jdk_rs_momentum"].gt(0.0)
+    )
+    merged_closes["jdk_relative_improving"] = (
+        merged_closes["jdk_rs_ratio"].le(0.0) & merged_closes["jdk_rs_momentum"].gt(0.0)
+    )
+    merged_closes["jdk_relative_weakening"] = (
+        merged_closes["jdk_rs_ratio"].gt(0.0) & merged_closes["jdk_rs_momentum"].le(0.0)
+    )
+    merged_closes["jdk_relative_lagging"] = (
+        merged_closes["jdk_rs_ratio"].le(0.0) & merged_closes["jdk_rs_momentum"].le(0.0)
+    )
+    constructive = merged_closes["jdk_relative_leading"] | merged_closes["jdk_relative_improving"]
+    defensive = merged_closes["jdk_relative_lagging"] | merged_closes["jdk_relative_weakening"]
+    merged_closes["jdk_leadership_constructive"] = constructive
+    merged_closes["jdk_leadership_defensive"] = defensive
+    merged_closes["jdk_rotation_persistence"] = (
+        constructive.astype(int).groupby((constructive != constructive.shift()).cumsum()).cumcount() + 1
+    ).where(constructive, 0)
+    sidecar_columns = [
+        "jdk_rs_ratio",
+        "jdk_rs_momentum",
+        "jdk_relative_leading",
+        "jdk_relative_improving",
+        "jdk_relative_weakening",
+        "jdk_relative_lagging",
+        "jdk_leadership_constructive",
+        "jdk_leadership_defensive",
+        "jdk_rotation_persistence",
+    ]
+    sidecar = merged_closes[["date", *sidecar_columns]].copy()
+
+    merged = frame.copy()
+    merged["date"] = pd.to_datetime(merged["date"], utc=True)
+    merged = pd.merge(merged.sort_values("date"), sidecar.sort_values("date"), on="date", how="left")
+    for column in sidecar_columns:
+        if column.startswith("jdk_relative_") or column.startswith("jdk_leadership_"):
+            merged[column] = merged[column].fillna(False).astype(bool)
+    merged["jdk_rotation_sidecar_symbol"] = symbol
+    merged["jdk_rotation_sidecar_timeframe"] = timeframe
+    merged["jdk_rotation_sidecar_symbols"] = ",".join(symbols)
+    return merged, {
+        "status": "materialized",
+        "symbol": symbol,
+        "timeframe": timeframe,
+        "symbols": symbols,
+        "materialized_columns": sidecar_columns,
+        "input_rows": int(len(frame)),
+        "output_rows": int(len(merged)),
+        "non_null_rs_ratio_rows": int(merged["jdk_rs_ratio"].notna().sum()),
+        "future_lookahead": False,
+        "merge_method": "same_timestamp_clean_close_cross_market_sidecar_shifted_features",
+    }
+
+
+def _dynamic_lead_lag_default_columns(frame: pd.DataFrame) -> pd.DataFrame:
+    merged = frame.copy()
+    defaults: dict[str, object] = {
+        "dll_nq_momentum_bps": np.nan,
+        "dll_nq_ema_fast": np.nan,
+        "dll_nq_ema_slow": np.nan,
+        "dll_leadlag_score_bps": 0.0,
+        "dll_leadlag_max_abs_corr": 0.0,
+        "dll_leadlag_agreement_long": 0,
+        "dll_leadlag_agreement_short": 0,
+        "dll_ym_score_bps": 0.0,
+        "dll_gc_score_bps": 0.0,
+        "dll_ym_best_abs_corr": 0.0,
+        "dll_gc_best_abs_corr": 0.0,
+    }
+    for column, value in defaults.items():
+        if column not in merged.columns:
+            merged[column] = value
+    return merged
+
+
+def merge_dynamic_lead_lag_breadth_sidecar(
+    frame: pd.DataFrame,
+    root: Path,
+    *,
+    symbol: str,
+    timeframe: str,
+) -> tuple[pd.DataFrame, dict[str, Any]]:
+    symbol = canonical_tomac_symbol(symbol)
+    sidecar_columns = list(DYNAMIC_LEAD_LAG_SIDECAR_COLUMNS)
+    if symbol != "NQ" or timeframe != "1h":
+        merged = _dynamic_lead_lag_default_columns(frame)
+        return merged, {
+            "status": "unsupported_symbol_or_timeframe",
+            "symbol": symbol,
+            "timeframe": timeframe,
+            "required_symbol": "NQ",
+            "required_timeframe": "1h",
+            "materialized_columns": sidecar_columns,
+            "future_lookahead": False,
+        }
+
+    close_frames: list[pd.DataFrame] = []
+    missing_sources: list[str] = []
+    required_symbols = ("NQ", *DYNAMIC_LEAD_LAG_LEADERS)
+    for peer in required_symbols:
+        clean_path = root / "clean" / peer / f"{peer}_USD-{timeframe}.feather"
+        if not clean_path.exists():
+            missing_sources.append(str(clean_path))
+            continue
+        peer_frame = pd.read_feather(clean_path, columns=["date", "close"])
+        peer_frame["date"] = pd.to_datetime(peer_frame["date"], utc=True)
+        peer_frame = peer_frame.sort_values("date").drop_duplicates(subset=["date"], keep="last")
+        peer_frame[f"dll_close_{peer.lower()}"] = pd.to_numeric(peer_frame["close"], errors="coerce")
+        close_frames.append(peer_frame[["date", f"dll_close_{peer.lower()}"]])
+
+    if missing_sources:
+        merged = _dynamic_lead_lag_default_columns(frame)
+        return merged, {
+            "status": "missing_clean_symbol_feathers",
+            "symbol": symbol,
+            "timeframe": timeframe,
+            "required_symbols": required_symbols,
+            "missing_sources": missing_sources,
+            "materialized_columns": sidecar_columns,
+            "future_lookahead": False,
+        }
+
+    close_data = close_frames[0]
+    for peer_frame in close_frames[1:]:
+        close_data = pd.merge(close_data, peer_frame, on="date", how="outer")
+    close_data = close_data.sort_values("date")
+    close_columns = [f"dll_close_{peer.lower()}" for peer in required_symbols]
+    for column in close_columns:
+        close_data[column] = pd.to_numeric(close_data[column], errors="coerce").ffill()
+
+    lookback = 64
+    corr_window = 128
+    corr_min = 0.10
+    score_min_bps = 4.0
+    nq_close = close_data["dll_close_nq"]
+    nq_return = nq_close.pct_change()
+    close_data["dll_nq_momentum_bps"] = (nq_close / nq_close.shift(lookback) - 1.0) * 10000.0
+    close_data["dll_nq_ema_fast"] = nq_close.ewm(span=32, adjust=False, min_periods=16).mean()
+    close_data["dll_nq_ema_slow"] = nq_close.ewm(span=64, adjust=False, min_periods=32).mean()
+
+    score_series: list[pd.Series] = []
+    abs_corr_series: list[pd.Series] = []
+    long_agreements: list[pd.Series] = []
+    short_agreements: list[pd.Series] = []
+    for leader in DYNAMIC_LEAD_LAG_LEADERS:
+        leader_return = close_data[f"dll_close_{leader.lower()}"].pct_change()
+        corr_items: list[pd.Series] = []
+        score_items: list[pd.Series] = []
+        for lag in range(1, 7):
+            lagged = leader_return.shift(lag)
+            corr = lagged.rolling(corr_window, min_periods=max(10, corr_window // 3)).corr(nq_return).shift(1)
+            score = (corr * lagged * 10000.0).where(corr.abs() >= corr_min)
+            corr_items.append(corr.rename(str(lag)))
+            score_items.append(score.rename(str(lag)))
+        corr_frame = pd.concat(corr_items, axis=1)
+        score_frame = pd.concat(score_items, axis=1)
+        corr_abs = corr_frame.abs().fillna(-1.0)
+        best_idx = corr_abs.to_numpy().argmax(axis=1)
+        row_idx = np.arange(len(score_frame))
+        best_score = score_frame.fillna(0.0).to_numpy()[row_idx, best_idx]
+        best_corr = corr_abs.replace(-1.0, np.nan).max(axis=1).fillna(0.0)
+        score_column = f"dll_{leader.lower()}_score_bps"
+        corr_column = f"dll_{leader.lower()}_best_abs_corr"
+        close_data[score_column] = pd.Series(best_score, index=close_data.index)
+        close_data[corr_column] = best_corr
+        score_series.append(close_data[score_column])
+        abs_corr_series.append(close_data[corr_column])
+        long_agreements.append(close_data[score_column] > score_min_bps)
+        short_agreements.append(close_data[score_column] < -score_min_bps)
+
+    close_data["dll_leadlag_score_bps"] = pd.concat(score_series, axis=1).sum(axis=1)
+    close_data["dll_leadlag_max_abs_corr"] = pd.concat(abs_corr_series, axis=1).max(axis=1)
+    close_data["dll_leadlag_agreement_long"] = pd.concat(long_agreements, axis=1).sum(axis=1)
+    close_data["dll_leadlag_agreement_short"] = pd.concat(short_agreements, axis=1).sum(axis=1)
+    sidecar = close_data[["date", *sidecar_columns]].copy()
+
+    merged = frame.copy()
+    merged["date"] = pd.to_datetime(merged["date"], utc=True)
+    merged = pd.merge(merged.sort_values("date"), sidecar.sort_values("date"), on="date", how="left")
+    merged = _dynamic_lead_lag_default_columns(merged)
+    merged["dynamic_lead_lag_sidecar_symbol"] = symbol
+    merged["dynamic_lead_lag_sidecar_timeframe"] = timeframe
+    merged["dynamic_lead_lag_sidecar_leaders"] = ",".join(DYNAMIC_LEAD_LAG_LEADERS)
+    return merged, {
+        "status": "materialized",
+        "symbol": symbol,
+        "timeframe": timeframe,
+        "target_symbol": "NQ",
+        "leaders": DYNAMIC_LEAD_LAG_LEADERS,
+        "lookback": lookback,
+        "corr_window": corr_window,
+        "corr_min": corr_min,
+        "score_min_bps": score_min_bps,
+        "materialized_columns": sidecar_columns,
+        "input_rows": int(len(frame)),
+        "output_rows": int(len(merged)),
+        "non_null_score_rows": int(merged["dll_leadlag_score_bps"].notna().sum()),
+        "future_lookahead": False,
+        "merge_method": "same_timestamp_clean_close_cross_market_sidecar_completed_bar_lag_features",
+    }
+
+
 def session_coverage_stats(frame: pd.DataFrame) -> dict[str, Any]:
     if frame.empty:
         outside_rth_rows = 0
@@ -1317,6 +3693,77 @@ def session_coverage_stats(frame: pd.DataFrame) -> dict[str, Any]:
             f"window 13:30-21:00 UTC; no RTH filter applied."
         ),
     }
+
+
+def validate_zip_pristine_source(source: TomacSource) -> dict[str, Any]:
+    if source.archive_zip is None or source.archive_member is None:
+        return {
+            "status": "not_zip_backed",
+            "source_csv": str(source.source_csv),
+            "future_lookahead": False,
+        }
+
+    archive = source.archive_zip
+    member = source.archive_member
+    blockers: list[str] = []
+    packet: dict[str, Any] = {
+        "status": "pending",
+        "symbol": source.symbol,
+        "source_csv": str(source.source_csv),
+        "archive_zip": str(archive),
+        "archive_member": member,
+        "future_lookahead": False,
+    }
+
+    if not archive.exists():
+        blockers.append("archive_zip_missing")
+        packet["blockers"] = blockers
+        raise ValueError(f"zip-pristine source validation failed: {json.dumps(packet, sort_keys=True)}")
+
+    with zipfile.ZipFile(archive) as zf:
+        infos = {Path(info.filename).name: info for info in zf.infolist() if not info.is_dir()}
+        expected_names = set(infos)
+        info = infos.get(member)
+        if info is None:
+            blockers.append("archive_member_missing")
+            packet["archive_members"] = sorted(expected_names)
+        else:
+            packet["archive_member_size"] = int(info.file_size)
+            packet["archive_member_crc"] = format(int(info.CRC), "08x")
+
+    source_dir = source.source_csv.parent
+    if not source.source_csv.exists():
+        blockers.append("source_csv_missing")
+    else:
+        if source.source_csv.is_symlink():
+            blockers.append("source_csv_is_symlink")
+        actual_size = int(source.source_csv.stat().st_size)
+        packet["source_csv_size"] = actual_size
+        expected_size = packet.get("archive_member_size")
+        if expected_size is not None and actual_size != expected_size:
+            blockers.append("source_csv_size_mismatch_archive")
+
+    if source_dir.exists():
+        actual_names = {item.name for item in source_dir.iterdir() if not item.name.startswith(".")}
+        extra_names = sorted(actual_names - expected_names)
+        missing_names = sorted(expected_names - actual_names)
+        if extra_names:
+            blockers.append("extracted_source_dir_has_extra_files")
+            packet["extra_files"] = extra_names
+        if missing_names:
+            blockers.append("extracted_source_dir_missing_archive_files")
+            packet["missing_files"] = missing_names
+    else:
+        blockers.append("source_dir_missing")
+
+    if blockers:
+        packet["status"] = "fail_closed_polluted_or_unverified_source"
+        packet["blockers"] = blockers
+        raise ValueError(f"zip-pristine source validation failed: {json.dumps(packet, sort_keys=True)}")
+
+    packet["status"] = "pass_zip_pristine_source"
+    packet["blockers"] = []
+    return packet
 
 
 def clean_quality(frame: pd.DataFrame, *, symbol: str, timeframe: str) -> dict[str, Any]:
@@ -1379,6 +3826,7 @@ def clean_source_to_1m(
         "roll_adjustment_method": "boundary_prev_close_minus_new_open",
         "future_lookahead": False,
     }
+    stats["source_archive_validation"] = validate_zip_pristine_source(source)
     usecols = ["ts_event", "open", "high", "low", "close", "volume", "symbol"]
     remaining = max_rows
 
@@ -1487,10 +3935,24 @@ def write_clean_bundle(
 
 
 def load_clean_bundle(root: Path, symbol: str, timeframes: tuple[str, ...]) -> dict[str, Any]:
+    symbol = canonical_tomac_symbol(symbol)
     quality_path = root / "clean" / symbol / "clean_quality.json"
     if not quality_path.exists():
         raise FileNotFoundError(f"missing clean bundle for {symbol}: {quality_path}")
     bundle = json.loads(quality_path.read_text(encoding="utf-8"))
+    validation = bundle.get("source_archive_validation") or {}
+    if validation.get("status") != "pass_zip_pristine_source":
+        raise ValueError(
+            f"clean bundle for {symbol} lacks pass_zip_pristine_source validation: {quality_path}"
+        )
+    if bundle.get("session_scope") != SESSION_SCOPE or bundle.get("rth_filter_applied") is not False:
+        raise ValueError(
+            f"clean bundle for {symbol} lacks ETH/full retained session proof: {quality_path}"
+        )
+    if bundle.get("eth_full_retained_session_evidence") is not True:
+        raise ValueError(
+            f"clean bundle for {symbol} lacks retained rows outside RTH evidence: {quality_path}"
+        )
     missing: list[str] = []
     for timeframe in timeframes:
         info = (bundle.get("timeframes") or {}).get(timeframe)
@@ -1522,6 +3984,7 @@ def timeframe_class_suffix(timeframe: str) -> str:
 
 
 def strategy_class_name(spec: CandidateSpec, *, symbol: str, timeframe: str) -> str:
+    symbol = canonical_tomac_symbol(symbol)
     return f"Tomac{symbol}{spec.class_prefix}{timeframe_class_suffix(timeframe)}CleanV1"
 
 
@@ -1532,6 +3995,7 @@ def generated_strategy_specs(
     families: list[str] | None = None,
 ) -> list[GeneratedStrategySpec]:
     generated: list[GeneratedStrategySpec] = []
+    symbols, _aliases = canonical_tomac_symbol_sequence(symbols)
     for symbol in symbols:
         for spec in candidate_specs(families=families):
             if not spec.supports(symbol=symbol, timeframe=timeframe):
@@ -1551,6 +4015,7 @@ def generated_strategy_specs(
 
 
 def futures_feather_path(workspace: Path, symbol: str, timeframe: str) -> Path:
+    symbol = canonical_tomac_symbol(symbol)
     return workspace / "user_data/data/futures" / f"{symbol}_USD-{timeframe}-futures.feather"
 
 
@@ -1584,7 +4049,247 @@ def _synthetic_leverage_tiers(pair: str) -> list[dict[str, float | None]]:
     runner_path.write_text(text, encoding="utf-8")
 
 
+def kairi_ym5m_year_stability_strategy_source(spec: CandidateSpec, *, symbol: str, timeframe: str) -> str:
+    class_name = strategy_class_name(spec, symbol=symbol, timeframe=timeframe)
+    factor_id = spec.factor_id(timeframe)
+    branch_path = spec.branch_path_with_factor(timeframe)
+    product_label = product_label_for_symbol(symbol)
+    return textwrap.dedent(
+        f"""
+        from freqtrade.strategy import IStrategy
+        from pandas import DataFrame
+        import pandas as pd
+        import numpy as np
+        import talib.abstract as ta
+
+
+        class {class_name}(IStrategy):
+            \"\"\"
+            data_cleaner: tomac_index_futures_clean_aq_v1
+            no_future_rule: entries and exits use raw conditions shifted by one closed bar
+            factor_id: {factor_id}
+            branch_path: {branch_path}
+            market: futures
+            product: {product_label}
+            symbol: {symbol}
+            timeframe_label: {timeframe}
+            \"\"\"
+            INTERFACE_VERSION = 3
+            timeframe = "{timeframe}"
+            can_short = False
+            minimal_roi = {{"0": {spec.roi:.4f}, "60": {spec.roi * 0.45:.4f}, "180": {spec.roi * 0.18:.4f}}}
+            stoploss = {spec.stoploss}
+            trailing_stop = True
+            trailing_stop_positive = {spec.trailing_positive}
+            trailing_stop_positive_offset = {spec.trailing_offset}
+            trailing_only_offset_is_reached = True
+            process_only_new_candles = True
+            use_exit_signal = True
+            startup_candle_count = 220
+
+            def populate_indicators(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
+                if metadata.get("pair") != "{symbol}/USD":
+                    return dataframe
+                dataframe["ema_fast"] = ta.EMA(dataframe, timeperiod=12)
+                dataframe["ema_slow"] = ta.EMA(dataframe, timeperiod=48)
+                dataframe["ema21"] = ta.EMA(dataframe, timeperiod=21)
+                dataframe["ema55"] = ta.EMA(dataframe, timeperiod=55)
+                dataframe["atr14"] = ta.ATR(dataframe, timeperiod=14)
+                dataframe["atr96"] = ta.ATR(dataframe, timeperiod=96)
+                dataframe["rsi14"] = ta.RSI(dataframe, timeperiod=14)
+                dataframe["vol96"] = dataframe["volume"].rolling(96, min_periods=24).mean()
+                dataframe["rvol96"] = dataframe["volume"] / dataframe["vol96"].replace(0, np.nan)
+                typical = (dataframe["high"] + dataframe["low"] + dataframe["close"]) / 3.0
+                day = dataframe["date"].dt.strftime("%Y-%m-%d")
+                pv = typical * dataframe["volume"]
+                dataframe["session_vwap"] = pv.groupby(day).cumsum() / dataframe["volume"].groupby(day).cumsum().replace(0, 1)
+                dataframe["kairi_ma_deviation_bps"] = (
+                    dataframe["close"] / dataframe["ema_fast"].replace(0, np.nan) - 1.0
+                ) * 10000.0
+                dataframe["kairi_pullback_low_prev"] = (
+                    dataframe["kairi_ma_deviation_bps"].rolling(12, min_periods=1).min().shift(1)
+                )
+                dataframe["kairi_fast_slope_bps"] = (
+                    dataframe["ema_fast"] / dataframe["ema_fast"].shift(12).replace(0, np.nan) - 1.0
+                ) * 10000.0
+                return dataframe
+
+            def populate_entry_trend(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
+                dataframe["enter_long"] = 0
+                dataframe["enter_short"] = 0
+                dataframe["enter_tag"] = ""
+                if metadata.get("pair") != "{symbol}/USD":
+                    return dataframe
+
+                def _series(name: str, fallback: str) -> pd.Series:
+                    return dataframe[name] if name in dataframe.columns else dataframe[fallback]
+
+                mtf_votes_long = (
+                    (_series("ema20_5m", "ema_fast") > _series("ema50_5m", "ema_slow")).astype(int)
+                    + (_series("ema20_15m", "ema_fast") > _series("ema50_15m", "ema_slow")).astype(int)
+                    + (_series("ema20_30m", "ema_fast") > _series("ema50_30m", "ema_slow")).astype(int)
+                    + (_series("ema20_1h", "ema_fast") > _series("ema50_1h", "ema_slow")).astype(int)
+                    + (_series("ema20_4h", "ema_fast") > _series("ema50_4h", "ema_slow")).astype(int)
+                )
+                kairi_ym5m_mtf_resonance_long = (
+                    mtf_votes_long.ge(1)
+                    & (_series("slope_15m", "kairi_fast_slope_bps") > -dataframe["atr14"] * 0.10)
+                    & (_series("slope_1h", "kairi_fast_slope_bps") > -dataframe["atr14"] * 0.14)
+                )
+                kairi_ym5m_year_stability_long = (
+                    dataframe["ema_fast"].gt(dataframe["ema_slow"])
+                    & dataframe["close"].gt(dataframe["ema_fast"] - dataframe["atr14"] * 0.18)
+                    & dataframe["kairi_fast_slope_bps"].ge(0.5)
+                    & dataframe["rvol96"].between(0.35, 5.80)
+                    & dataframe["rsi14"].between(38, 76)
+                )
+                kairi_pullback_rejoin = (
+                    dataframe["kairi_pullback_low_prev"].le(-18.0)
+                    & dataframe["kairi_ma_deviation_bps"].ge(-2.0)
+                )
+                entry_raw = (
+                    kairi_ym5m_year_stability_long.fillna(False)
+                    & kairi_ym5m_mtf_resonance_long.fillna(False)
+                    & kairi_pullback_rejoin.fillna(False)
+                    & dataframe["close"].gt(dataframe["session_vwap"] - dataframe["atr14"] * 0.40)
+                )
+                entry = entry_raw.shift(1).fillna(False)
+                dataframe.loc[entry, ["enter_long", "enter_tag"]] = (1, "{factor_id}")
+                short_entry_raw = pd.Series(False, index=dataframe.index)
+                short_entry = short_entry_raw.shift(1).fillna(False)
+                dataframe.loc[short_entry, "enter_short"] = 0
+                return dataframe
+
+            def populate_exit_trend(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
+                dataframe["exit_long"] = 0
+                dataframe["exit_short"] = 0
+                if metadata.get("pair") != "{symbol}/USD":
+                    return dataframe
+                end_of_session = dataframe["date"].dt.tz_convert("America/New_York").dt.hour.ge(16)
+                exit_raw = (
+                    end_of_session
+                    | dataframe["close"].lt(dataframe["ema_fast"] - dataframe["atr14"] * 0.42)
+                    | dataframe["kairi_ma_deviation_bps"].gt(34.0)
+                    | dataframe["rsi14"].gt(82)
+                )
+                exit_signal = exit_raw.shift(1).fillna(False)
+                dataframe.loc[exit_signal, "exit_long"] = 1
+                return dataframe
+        """
+    ).lstrip()
+
+
+def bayesian_surprise_innovation_shock_strategy_source(
+    spec: CandidateSpec,
+    *,
+    symbol: str,
+    timeframe: str,
+) -> str:
+    class_name = strategy_class_name(spec, symbol=symbol, timeframe=timeframe)
+    factor_id = spec.factor_id(timeframe)
+    branch_path = spec.branch_path_with_factor(timeframe)
+    product_label = product_label_for_symbol(symbol)
+    index = ("5m", "15m", "30m", "1h", "4h", "1d").index(timeframe)
+    surprise_window = 48 + index * 8
+    prediction_window = 12 + index * 2
+    decay_window = 3 + min(index, 3)
+    startup_candle_count = max(surprise_window + prediction_window + 8, 80)
+    novelty_floor_z = 0.65
+    panic_ceiling_z = 2.75
+    return textwrap.dedent(
+        f"""
+        from freqtrade.strategy import IStrategy
+        from pandas import DataFrame
+        import numpy as np
+        import pandas as pd
+
+
+        class {class_name}(IStrategy):
+            \"\"\"
+            data_cleaner: tomac_index_futures_clean_aq_v1
+            no_future_rule: entries and exits use raw conditions shifted by one closed bar
+            factor_id: {factor_id}
+            branch_path: {branch_path}
+            market: futures
+            product: {product_label}
+            symbol: {symbol}
+            timeframe_label: {timeframe}
+            \"\"\"
+            INTERFACE_VERSION = 3
+            timeframe = "{timeframe}"
+            can_short = False
+            minimal_roi = {{"0": 100.0}}
+            stoploss = -0.0200
+            trailing_stop = False
+            process_only_new_candles = True
+            use_exit_signal = True
+            startup_candle_count = {startup_candle_count}
+            rth_filter_applied = False
+            session_scope = "ETH/full_retained_session"
+            factor_id = "{factor_id}"
+
+            def populate_indicators(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
+                if metadata.get("pair") != "{symbol}/USD":
+                    return dataframe
+                returns = dataframe["close"].pct_change()
+                dataframe["pred_close"] = dataframe["close"].shift(1).rolling({prediction_window}).mean()
+                dataframe["innovation"] = dataframe["close"] - dataframe["pred_close"]
+                innovation_vol = dataframe["innovation"].rolling({surprise_window}).std().replace(0, np.nan)
+                dataframe["surprise_z"] = (
+                    dataframe["innovation"].abs() / innovation_vol
+                ).replace([np.inf, -np.inf], np.nan)
+                dataframe["surprise_decay"] = (
+                    dataframe["surprise_z"] - dataframe["surprise_z"].rolling({decay_window}).mean()
+                )
+                dataframe["surprise_z_shifted"] = dataframe["surprise_z"].shift(1)
+                dataframe["surprise_decay_shifted"] = dataframe["surprise_decay"].shift(1)
+                dataframe["trend_fast"] = dataframe["close"].ewm(span=8, adjust=False).mean()
+                dataframe["trend_slow"] = dataframe["close"].ewm(span=34, adjust=False).mean()
+                dataframe["trend_fast_shifted"] = dataframe["trend_fast"].shift(1)
+                dataframe["trend_slow_shifted"] = dataframe["trend_slow"].shift(1)
+                dataframe["return_vol"] = returns.rolling({surprise_window}).std().shift(1)
+                dataframe["retained_session_proxy"] = True
+                return dataframe
+
+            def populate_entry_trend(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
+                dataframe["enter_long"] = 0
+                dataframe["enter_tag"] = ""
+                if metadata.get("pair") != "{symbol}/USD":
+                    return dataframe
+                informative_not_panic = (
+                    dataframe["surprise_z_shifted"].ge({novelty_floor_z})
+                    & dataframe["surprise_z_shifted"].le({panic_ceiling_z})
+                    & dataframe["surprise_decay_shifted"].le(dataframe["surprise_z_shifted"] * 0.35)
+                )
+                parent_trend_long = dataframe["trend_fast_shifted"].gt(dataframe["trend_slow_shifted"])
+                entry_raw = informative_not_panic.fillna(False) & parent_trend_long.fillna(False)
+                entry = entry_raw.shift(1).fillna(False)
+                dataframe.loc[entry, ["enter_long", "enter_tag"]] = (1, "{factor_id}")
+                return dataframe
+
+            def populate_exit_trend(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
+                dataframe["exit_long"] = 0
+                if metadata.get("pair") != "{symbol}/USD":
+                    return dataframe
+                panic_or_stale = (
+                    dataframe["surprise_z_shifted"].gt({panic_ceiling_z})
+                    | dataframe["surprise_z_shifted"].lt({novelty_floor_z} * 0.5)
+                    | dataframe["trend_fast_shifted"].lt(dataframe["trend_slow_shifted"])
+                )
+                exit_raw = panic_or_stale.fillna(False)
+                exit_signal = exit_raw.shift(1).fillna(False)
+                dataframe.loc[exit_signal, "exit_long"] = 1
+                return dataframe
+        """
+    ).lstrip()
+
+
 def strategy_source(spec: CandidateSpec, *, symbol: str, timeframe: str) -> str:
+    symbol = canonical_tomac_symbol(symbol)
+    if spec.key == "kairi_ym5m_year_stability_refinement":
+        return kairi_ym5m_year_stability_strategy_source(spec, symbol=symbol, timeframe=timeframe)
+    if spec.key == "bayesian_surprise_innovation_shock_regime_filter":
+        return bayesian_surprise_innovation_shock_strategy_source(spec, symbol=symbol, timeframe=timeframe)
     class_name = strategy_class_name(spec, symbol=symbol, timeframe=timeframe)
     factor_id = spec.factor_id(timeframe)
     branch_path = spec.branch_path_with_factor(timeframe)
@@ -1595,17 +4300,57 @@ def strategy_source(spec: CandidateSpec, *, symbol: str, timeframe: str) -> str:
         "wpr_adx_fractal_sweep_reclaim",
         "wpr_adx_hurst_profile_mss_reclaim",
         "value_area_vpoc_htf_trend_mss_filter",
+        "htf_range_edge_cisd_mss_displacement_te",
+        "htf_range_breakout_retest_te_selective",
     }
-    startup_candle_count = 420 if spec.key == "value_area_vpoc_htf_trend_mss_filter" else (
-        320 if spec.key in {
-            "wpr_adx_hurst_profile_mss_reclaim",
-            "hurst_efficiency_density_repair",
-        } else 220
+    startup_candle_count = 460 if spec.key in {
+        "bds_nonlinear_dependence_admission_filter",
+        "conformal_interval_width_risk_throttle",
+        "jensen_shannon_return_distribution_shift_gate",
+        "market_turbulence_mahalanobis_state_filter",
+        "mutual_information_regime_channel_admission_filter",
+        "trend_ote_ks_distribution_stability_reacceleration",
+        "ehlers_autocorr_periodogram_cycle_regime_gate",
+        "hilbert_analytic_phase_trend_admission",
+    } else (
+        420 if spec.key == "value_area_vpoc_htf_trend_mss_filter" else (
+            320 if spec.key in {
+                "wpr_adx_hurst_profile_mss_reclaim",
+                "hurst_efficiency_density_repair",
+                "jdk_relative_rotation_regime_gate",
+            } else 220
+        )
+    )
+    trend_magic_params = {
+        "trend_magic_cci_atr_slow_long": {
+            "cci_period": 50,
+            "atr_period": 21,
+            "atr_mult": 1.5,
+            "min_context": 2,
+            "min_body_atr": 0.12,
+        },
+        "trend_magic_cci_atr_balanced_long": {
+            "cci_period": 20,
+            "atr_period": 14,
+            "atr_mult": 1.0,
+            "min_context": 2,
+            "min_body_atr": 0.08,
+        },
+    }.get(
+        spec.key,
+        {
+            "cci_period": 20,
+            "atr_period": 14,
+            "atr_mult": 1.0,
+            "min_context": 2,
+            "min_body_atr": 0.08,
+        },
     )
     return textwrap.dedent(
         f"""
         from freqtrade.strategy import IStrategy
         from pandas import DataFrame
+        from pathlib import Path
         import bisect
         import pandas as pd
         import numpy as np
@@ -1639,6 +4384,12 @@ def strategy_source(spec: CandidateSpec, *, symbol: str, timeframe: str) -> str:
             def populate_indicators(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
                 if metadata.get("pair") != "{symbol}/USD":
                     return dataframe
+                if "{spec.key}" == "dynamic_lead_lag_breadth_gate":
+                    sidecar_path = Path(__file__).with_name("dynamic_lead_lag_breadth_gate_{symbol}_{timeframe}_sidecar.feather")
+                    sidecar = pd.read_feather(sidecar_path)
+                    sidecar["date"] = pd.to_datetime(sidecar["date"], utc=True)
+                    dataframe["date"] = pd.to_datetime(dataframe["date"], utc=True)
+                    dataframe = dataframe.merge(sidecar, on="date", how="left")
                 dataframe["ema21"] = ta.EMA(dataframe, timeperiod=21)
                 dataframe["ema20"] = ta.EMA(dataframe, timeperiod=20)
                 dataframe["ema32"] = ta.EMA(dataframe, timeperiod=32)
@@ -1654,6 +4405,12 @@ def strategy_source(spec: CandidateSpec, *, symbol: str, timeframe: str) -> str:
                 dataframe["rsi2"] = ta.RSI(dataframe, timeperiod=2)
                 dataframe["rsi3"] = ta.RSI(dataframe, timeperiod=3)
                 dataframe["rsi14"] = ta.RSI(dataframe, timeperiod=14)
+                close_return = dataframe["close"].pct_change()
+                dataframe["rv_short"] = close_return.rolling(8).std() * np.sqrt(8.0)
+                dataframe["rv_long"] = close_return.rolling(36).std() * np.sqrt(36.0)
+                dataframe["rv_ratio"] = dataframe["rv_short"] / dataframe["rv_long"].replace(0, np.nan)
+                dataframe["rv_ratio_q35"] = dataframe["rv_ratio"].rolling(180).quantile(0.35).shift(1)
+                dataframe["rv_short_median32"] = dataframe["rv_short"].rolling(32).median().shift(1)
                 dataframe["vol_ma20"] = dataframe["volume"].rolling(20).mean()
                 dataframe["vol_ma30"] = dataframe["volume"].rolling(30).mean()
                 dataframe["vol_ma96"] = dataframe["volume"].rolling(96).mean()
@@ -1664,6 +4421,9 @@ def strategy_source(spec: CandidateSpec, *, symbol: str, timeframe: str) -> str:
                 dataframe["minute_of_day_ny"] = ny.dt.hour * 60 + ny.dt.minute
                 dataframe["session_open"] = dataframe.groupby(day)["open"].transform("first")
                 dataframe["hour_open"] = dataframe.groupby([day, ny.dt.hour])["open"].transform("first")
+                rth_open_minute = 9 * 60 + 30
+                rth_open_source = dataframe["open"].where(dataframe["minute_of_day_ny"].ge(rth_open_minute))
+                dataframe["ny_rth_open"] = rth_open_source.groupby(day).transform("first")
                 pv = typical * dataframe["volume"]
                 dataframe["session_vwap"] = pv.groupby(day).cumsum() / dataframe["volume"].groupby(day).cumsum().replace(0, 1)
                 prior_day_high = dataframe.groupby(day)["high"].max().shift(1)
@@ -1672,6 +4432,16 @@ def strategy_source(spec: CandidateSpec, *, symbol: str, timeframe: str) -> str:
                 dataframe["prior_day_high"] = day.map(prior_day_high)
                 dataframe["prior_day_low"] = day.map(prior_day_low)
                 dataframe["prior_day_close"] = day.map(prior_day_close)
+                dataframe["overnight_return"] = (
+                    dataframe["ny_rth_open"] - dataframe["prior_day_close"]
+                ) / dataframe["prior_day_close"].replace(0, np.nan)
+                dataframe["overnight_midpoint"] = (dataframe["ny_rth_open"] + dataframe["prior_day_close"]) / 2.0
+                first30_window = dataframe["minute_of_day_ny"].between(9 * 60 + 30, 10 * 60)
+                last_window = dataframe["minute_of_day_ny"].between(15 * 60 + 20, 15 * 60 + 55)
+                first30_open = dataframe["open"].where(first30_window).groupby(day).transform("first")
+                first30_close = dataframe["close"].where(first30_window).groupby(day).transform("last")
+                dataframe["first30_return"] = (first30_close - first30_open) / first30_open.replace(0, np.nan)
+                dataframe["last_window_close_drive"] = last_window
                 dataframe["prior_day_range"] = dataframe["prior_day_high"] - dataframe["prior_day_low"]
                 dataframe["camarilla_pp"] = (
                     dataframe["prior_day_high"] + dataframe["prior_day_low"] + dataframe["prior_day_close"]
@@ -1700,6 +4470,33 @@ def strategy_source(spec: CandidateSpec, *, symbol: str, timeframe: str) -> str:
                 dataframe["close_location"] = (
                     (dataframe["close"] - dataframe["low"]) / bar_range_safe
                 ).clip(0.0, 1.0)
+                dataframe["vwap_deviation_atr"] = (
+                    (dataframe["close"] - dataframe["session_vwap"])
+                    / dataframe["atr14"].replace(0, np.nan)
+                )
+                dataframe["abs_vwap_deviation_atr"] = dataframe["vwap_deviation_atr"].abs()
+                dataframe["abs_vwap_deviation_atr_shifted"] = dataframe["abs_vwap_deviation_atr"].shift(1)
+                dataframe["vwap_deviation_decay_ratio"] = (
+                    dataframe["abs_vwap_deviation_atr"]
+                    / dataframe["abs_vwap_deviation_atr_shifted"].replace(0, np.nan)
+                )
+                dataframe["vwap_deviation_decay_speed"] = (
+                    dataframe["abs_vwap_deviation_atr_shifted"]
+                    - dataframe["abs_vwap_deviation_atr"]
+                )
+                dataframe["clv_order_flow_proxy"] = (
+                    (
+                        (dataframe["close"] - dataframe["low"])
+                        - (dataframe["high"] - dataframe["close"])
+                    )
+                    / bar_range_safe
+                ).clip(-1.0, 1.0)
+                dataframe["signed_volume_proxy"] = dataframe["clv_order_flow_proxy"] * dataframe["volume"]
+                dataframe["signed_volume_proxy_shifted"] = dataframe["signed_volume_proxy"].shift(1)
+                order_flow_proxy_sum = dataframe["signed_volume_proxy_shifted"].rolling(13, min_periods=5).sum()
+                order_flow_proxy_reference = order_flow_proxy_sum.rolling(89, min_periods=34).mean().shift(1)
+                order_flow_proxy_scale = order_flow_proxy_sum.rolling(89, min_periods=34).std().shift(1).replace(0, np.nan)
+                dataframe["ofi_proxy_z"] = (order_flow_proxy_sum - order_flow_proxy_reference) / order_flow_proxy_scale
                 dataframe["bar_range_atr"] = dataframe["bar_range"] / dataframe["atr14"]
                 macd_line, macd_signal, macd_hist = ta.MACD(dataframe["close"], fastperiod=12, slowperiod=26, signalperiod=9)
                 dataframe["macd_line"] = macd_line
@@ -1743,6 +4540,349 @@ def strategy_source(spec: CandidateSpec, *, symbol: str, timeframe: str) -> str:
                 dataframe["vortex_minus14"] = minus_vm.rolling(14).sum() / tr14
                 dataframe["ema21_slope_bps_12"] = (dataframe["ema21"] - dataframe["ema21"].shift(12)) / dataframe["close"].replace(0, np.nan) * 10000.0
                 dataframe["ema55_slope_bps_48"] = (dataframe["ema55"] - dataframe["ema55"].shift(48)) / dataframe["close"].replace(0, np.nan) * 10000.0
+                if "{spec.key}" == "rsrs_high_low_regression_trend_admission":
+                    dataframe["__row_order"] = range(len(dataframe))
+                    context_base = dataframe[["__row_order", "date", "open", "high", "low", "close", "volume"]].copy()
+                    context_base["__date_utc"] = pd.to_datetime(context_base["date"], utc=True)
+                    context_base = context_base.sort_values("__date_utc")
+                    fast_columns = {{}}
+                    for label, rule in {{"5m": "5min", "15m": "15min", "30m": "30min", "1h": "1h", "4h": "4h", "1d": "1D"}}.items():
+                        tf = (
+                            context_base.set_index("__date_utc")[["open", "high", "low", "close", "volume"]]
+                            .resample(rule, label="right", closed="right")
+                            .agg({{"open": "first", "high": "max", "low": "min", "close": "last", "volume": "sum"}})
+                            .dropna()
+                        )
+                        tf[f"ema20_{{label}}"] = tf["close"].ewm(span=20, adjust=False, min_periods=20).mean()
+                        tf[f"ema50_{{label}}"] = tf["close"].ewm(span=50, adjust=False, min_periods=50).mean()
+                        tf[f"slope_{{label}}"] = tf[f"ema20_{{label}}"] - tf[f"ema20_{{label}}"].shift(6)
+                        tf.index.name = "__date_utc"
+                        keep = [f"ema20_{{label}}", f"ema50_{{label}}", f"slope_{{label}}"]
+                        merged = pd.merge_asof(
+                            context_base[["__row_order", "__date_utc"]],
+                            tf[keep].reset_index(),
+                            on="__date_utc",
+                            direction="backward",
+                        ).sort_values("__row_order")
+                        for column in keep:
+                            fast_columns[column] = merged[column].to_numpy()
+                    rsrs_window = 24
+                    rsrs_z_window = 144
+                    rsrs_low_mean = dataframe["low"].rolling(rsrs_window, min_periods=rsrs_window).mean()
+                    rsrs_high_mean = dataframe["high"].rolling(rsrs_window, min_periods=rsrs_window).mean()
+                    rsrs_cov = (
+                        (dataframe["low"] - rsrs_low_mean)
+                        * (dataframe["high"] - rsrs_high_mean)
+                    ).rolling(rsrs_window, min_periods=rsrs_window).mean()
+                    rsrs_low_var = (
+                        (dataframe["low"] - rsrs_low_mean) ** 2
+                    ).rolling(rsrs_window, min_periods=rsrs_window).mean().replace(0, np.nan)
+                    rsrs_high_var = (
+                        (dataframe["high"] - rsrs_high_mean) ** 2
+                    ).rolling(rsrs_window, min_periods=rsrs_window).mean().replace(0, np.nan)
+                    rsrs_beta = rsrs_cov / rsrs_low_var
+                    rsrs_corr = rsrs_cov / np.sqrt(rsrs_low_var * rsrs_high_var)
+                    rsrs_r2 = (rsrs_corr ** 2).clip(lower=0.0, upper=1.0)
+                    rsrs_beta_mean = rsrs_beta.rolling(rsrs_z_window, min_periods=48).mean()
+                    rsrs_beta_std = rsrs_beta.rolling(rsrs_z_window, min_periods=48).std().replace(0, np.nan)
+                    rsrs_z = (rsrs_beta - rsrs_beta_mean) / rsrs_beta_std
+                    rsrs_right_skew_score = rsrs_z * rsrs_r2
+                    fast_columns.update(
+                        {{
+                            "rsrs_beta_24": rsrs_beta,
+                            "rsrs_r2_24": rsrs_r2,
+                            "rsrs_z_144": rsrs_z,
+                            "rsrs_right_skew_score": rsrs_right_skew_score,
+                            "rsrs_z_144_shifted": rsrs_z.shift(1),
+                            "rsrs_r2_24_shifted": rsrs_r2.shift(1),
+                            "rsrs_right_skew_score_shifted": rsrs_right_skew_score.shift(1),
+                        }}
+                    )
+                    dataframe = pd.concat([dataframe, pd.DataFrame(fast_columns, index=dataframe.index)], axis=1)
+                    return dataframe.drop(columns=["__row_order"], errors="ignore").copy()
+                dataframe["kairi_ema12"] = dataframe["close"].ewm(span=12, adjust=False, min_periods=12).mean()
+                dataframe["kairi_ema48"] = dataframe["close"].ewm(span=48, adjust=False, min_periods=48).mean()
+                dataframe["kairi_ma_deviation_bps"] = (
+                    (dataframe["close"] / dataframe["kairi_ema12"].replace(0, np.nan)) - 1.0
+                ) * 10000.0
+                dataframe["kairi_pullback_low_prev"] = (
+                    dataframe["kairi_ma_deviation_bps"].rolling(12, min_periods=1).min().shift(1)
+                )
+                dataframe["kairi_pullback_high_prev"] = (
+                    dataframe["kairi_ma_deviation_bps"].rolling(12, min_periods=1).max().shift(1)
+                )
+                dataframe["kairi_fast_slope_bps"] = (
+                    (dataframe["kairi_ema12"] - dataframe["kairi_ema12"].shift(12))
+                    / dataframe["close"].replace(0, np.nan)
+                ) * 10000.0
+                log_close = np.log(dataframe["close"].replace(0, np.nan))
+                return_1 = log_close.diff()
+                dataframe["serial_corr_12"] = return_1.rolling(48).corr(return_1.shift(1))
+                dataframe["serial_corr_48"] = return_1.rolling(144).corr(return_1.shift(1))
+                return_4 = log_close.diff(4)
+                return_16 = log_close.diff(16)
+                dataframe["variance_ratio_4"] = (
+                    return_4.rolling(96).var() / (4.0 * return_1.rolling(96).var()).replace(0, np.nan)
+                )
+                dataframe["variance_ratio_16"] = (
+                    return_16.rolling(192).var() / (16.0 * return_1.rolling(192).var()).replace(0, np.nan)
+                )
+                dataframe["explosive_slope_bps_48"] = (log_close - log_close.shift(48)) / 48.0 * 10000.0
+                dataframe["explosive_slope_bps_144"] = (log_close - log_close.shift(144)) / 144.0 * 10000.0
+                dataframe["explosive_trend_slope_acceleration"] = (
+                    dataframe["explosive_slope_bps_48"]
+                    - dataframe["explosive_slope_bps_144"].rolling(5).mean()
+                )
+                gsadf_trend = log_close.ewm(span=55, adjust=False, min_periods=20).mean()
+                gsadf_residual = log_close - gsadf_trend
+                gsadf_residual_autocorr = gsadf_residual.rolling(34).corr(gsadf_residual.shift(1))
+                gsadf_residual_sign = np.sign(gsadf_residual)
+                gsadf_residual_sign_persistence = (
+                    (gsadf_residual_sign == gsadf_residual_sign.shift(1)).astype(float).rolling(21).mean()
+                )
+                dataframe["adf_like_residual_persistence"] = gsadf_residual_autocorr.fillna(
+                    gsadf_residual_sign_persistence
+                )
+                def _rank_trend_corr(values):
+                    series = pd.Series(values)
+                    if series.isna().any():
+                        return np.nan
+                    return series.rank().corr(pd.Series(np.arange(len(series), dtype=float)))
+                dataframe["mann_kendall_rank_corr_55"] = log_close.rolling(55).apply(_rank_trend_corr, raw=True)
+                dataframe["mann_kendall_rank_corr_89"] = log_close.rolling(89).apply(_rank_trend_corr, raw=True)
+                slope_21 = (log_close - log_close.shift(21)) / 21.0 * 10000.0
+                slope_34 = (log_close - log_close.shift(34)) / 34.0 * 10000.0
+                slope_55 = (log_close - log_close.shift(55)) / 55.0 * 10000.0
+                slope_89 = (log_close - log_close.shift(89)) / 89.0 * 10000.0
+                robust_slope_components = pd.concat([slope_21, slope_34, slope_55, slope_89], axis=1)
+                dataframe["theil_sen_robust_slope_bps"] = robust_slope_components.median(axis=1)
+                dataframe["theil_sen_slope_consistency"] = robust_slope_components.gt(0.0).mean(axis=1)
+                quantile_return = log_close.diff()
+                quantile_lower = quantile_return.rolling(96, min_periods=55).quantile(0.20)
+                quantile_median = quantile_return.rolling(96, min_periods=55).quantile(0.50)
+                quantile_upper = quantile_return.rolling(96, min_periods=55).quantile(0.80)
+                conformal_return_center = quantile_return.rolling(34, min_periods=13).mean().shift(1)
+                dataframe["conformal_abs_residual_proxy"] = (
+                    quantile_return - conformal_return_center
+                ).abs()
+                dataframe["conformal_residual_quantile"] = (
+                    dataframe["conformal_abs_residual_proxy"]
+                    .rolling(233, min_periods=89)
+                    .quantile(0.80)
+                    .shift(1)
+                )
+                dataframe["conformal_interval_half_width"] = (
+                    dataframe["conformal_residual_quantile"] * dataframe["close"].shift(1)
+                )
+                conformal_width_q25 = (
+                    dataframe["conformal_interval_half_width"]
+                    .rolling(233, min_periods=89)
+                    .quantile(0.25)
+                    .shift(1)
+                )
+                conformal_width_q85 = (
+                    dataframe["conformal_interval_half_width"]
+                    .rolling(233, min_periods=89)
+                    .quantile(0.85)
+                    .shift(1)
+                )
+                dataframe["conformal_interval_width_percentile"] = (
+                    (dataframe["conformal_interval_half_width"] - conformal_width_q25)
+                    / (conformal_width_q85 - conformal_width_q25).replace(0, np.nan)
+                ).clip(lower=0.0, upper=1.5)
+                dataframe["conformal_interval_width_percentile_shifted"] = (
+                    dataframe["conformal_interval_width_percentile"].shift(1)
+                )
+                conformal_uncovered = (
+                    dataframe["conformal_residual_quantile"].notna()
+                    & dataframe["conformal_abs_residual_proxy"].gt(dataframe["conformal_residual_quantile"])
+                )
+                dataframe["conformal_miscoverage_rate"] = (
+                    conformal_uncovered.astype(float).rolling(55, min_periods=21).mean()
+                )
+                dataframe["conformal_miscoverage_rate_shifted"] = (
+                    dataframe["conformal_miscoverage_rate"].shift(1)
+                )
+                dataframe["conformal_miscoverage_acceleration"] = (
+                    dataframe["conformal_miscoverage_rate"]
+                    - dataframe["conformal_miscoverage_rate"].rolling(34, min_periods=13).mean().shift(1)
+                )
+                dataframe["conformal_miscoverage_acceleration_shifted"] = (
+                    dataframe["conformal_miscoverage_acceleration"].shift(1)
+                )
+                left_tail_threshold = quantile_return.rolling(144, min_periods=89).quantile(0.05).shift(1)
+                right_tail_threshold = quantile_return.rolling(144, min_periods=89).quantile(0.95).shift(1)
+                left_tail_event = quantile_return.lt(left_tail_threshold)
+                right_tail_event = quantile_return.gt(right_tail_threshold)
+                dataframe["left_tail_exceedance_count"] = left_tail_event.astype(float).rolling(55, min_periods=21).sum().shift(1)
+                dataframe["right_tail_exceedance_count"] = right_tail_event.astype(float).rolling(55, min_periods=21).sum().shift(1)
+                dataframe["tail_exceedance_balance"] = dataframe["right_tail_exceedance_count"] - dataframe["left_tail_exceedance_count"]
+                dataframe["tail_exceedance_intensity"] = (
+                    dataframe["left_tail_exceedance_count"] + dataframe["right_tail_exceedance_count"]
+                ) / 55.0
+                dataframe["tail_exceedance_intensity_slope"] = dataframe["tail_exceedance_intensity"] - dataframe["tail_exceedance_intensity"].rolling(34, min_periods=13).mean().shift(1)
+                tail_reference = dataframe["tail_exceedance_intensity"].rolling(233, min_periods=89).quantile(0.72).shift(1)
+                dataframe["tail_index_regime_cooldown"] = dataframe["tail_exceedance_intensity"].lt(tail_reference)
+                minute_key = dataframe["minute_of_day_ny"]
+                dataframe["liquidity_seasonality_volume_baseline"] = (
+                    dataframe.groupby(minute_key)["volume"]
+                    .transform(lambda values: values.shift(1).rolling(21, min_periods=8).median())
+                    .replace(0, np.nan)
+                )
+                dataframe["liquidity_seasonality_range_baseline"] = (
+                    dataframe.groupby(minute_key)["bar_range"]
+                    .transform(lambda values: values.shift(1).rolling(21, min_periods=8).median())
+                    .replace(0, np.nan)
+                )
+                dataframe["volume_seasonality_residual"] = (
+                    dataframe["volume"] / dataframe["liquidity_seasonality_volume_baseline"]
+                )
+                dataframe["range_seasonality_residual"] = (
+                    dataframe["bar_range"] / dataframe["liquidity_seasonality_range_baseline"]
+                )
+                dataframe["liquidity_residual_shock_score"] = (
+                    dataframe["volume_seasonality_residual"].clip(upper=8.0)
+                    * dataframe["range_seasonality_residual"].clip(upper=8.0)
+                ).pow(0.5)
+                dataframe["quantile_lower_slope_bps"] = (
+                    quantile_lower.rolling(34, min_periods=21).mean()
+                    - quantile_lower.shift(34).rolling(34, min_periods=21).mean()
+                ) * 10000.0
+                dataframe["quantile_median_slope_bps"] = (
+                    quantile_median.rolling(34, min_periods=21).mean()
+                    - quantile_median.shift(34).rolling(34, min_periods=21).mean()
+                ) * 10000.0
+                dataframe["quantile_upper_slope_bps"] = (
+                    quantile_upper.rolling(34, min_periods=21).mean()
+                    - quantile_upper.shift(34).rolling(34, min_periods=21).mean()
+                ) * 10000.0
+                dataframe["quantile_tail_slope_asymmetry"] = (
+                    dataframe["quantile_upper_slope_bps"]
+                    - dataframe["quantile_lower_slope_bps"].abs()
+                )
+                dataframe["median_price"] = hl2
+                dataframe["median_price_envelope_center"] = (
+                    dataframe["median_price"].rolling(55, min_periods=21).median().shift(1)
+                )
+                median_price_abs_dev = (dataframe["median_price"] - dataframe["median_price_envelope_center"]).abs()
+                dataframe["median_price_envelope_width"] = (
+                    median_price_abs_dev.rolling(55, min_periods=21).median().shift(1)
+                    / dataframe["atr14"].replace(0, np.nan)
+                )
+                dataframe["median_price_envelope_displacement"] = (
+                    (dataframe["median_price"].shift(1) - dataframe["median_price_envelope_center"])
+                    / dataframe["atr14"].replace(0, np.nan)
+                )
+                dataframe["median_price_envelope_center_slope_bps"] = (
+                    dataframe["median_price_envelope_center"].diff(13)
+                    / dataframe["close"].replace(0, np.nan)
+                    * 10000.0
+                )
+                dataframe["median_price_envelope_reacceleration"] = (
+                    dataframe["median_price_envelope_displacement"]
+                    - dataframe["median_price_envelope_displacement"].rolling(21, min_periods=8).median().shift(1)
+                )
+                if "{spec.key}" == "emd_imf_trend_residual_gate":
+                    emd_fast_component = close_return.ewm(span=13, adjust=False, min_periods=8).mean()
+                    emd_slow_component = close_return.ewm(span=89, adjust=False, min_periods=34).mean()
+                    dataframe["emd_imf_fast_energy_proxy"] = emd_fast_component.pow(2).rolling(21, min_periods=8).sum().shift(1)
+                    dataframe["emd_imf_slow_residual_proxy"] = (
+                        (emd_slow_component - emd_fast_component)
+                        .abs()
+                        .rolling(55, min_periods=21)
+                        .mean()
+                        .shift(1)
+                    )
+                    dataframe["emd_imf_residual_slope_bps"] = (
+                        (emd_slow_component - emd_fast_component)
+                        .diff(13)
+                        .shift(1)
+                        * 10000.0
+                    )
+                    dataframe["emd_imf_energy_ratio"] = (
+                        dataframe["emd_imf_fast_energy_proxy"]
+                        / dataframe["emd_imf_slow_residual_proxy"].replace(0, np.nan)
+                    )
+                    dataframe["emd_imf_trend_residual_agreement"] = (
+                        dataframe["emd_imf_residual_slope_bps"].gt(-0.18)
+                        & dataframe["emd_imf_energy_ratio"].between(0.08, 3.20)
+                        & dataframe["emd_imf_slow_residual_proxy"].lt(
+                            dataframe["emd_imf_slow_residual_proxy"].rolling(144, min_periods=55).quantile(0.82).shift(1)
+                        )
+                    )
+                if "{spec.key}" == "unit_root_stationarity_mode_switch_gate":
+                    dataframe["unit_root_return"] = log_close.diff().shift(1)
+                    dataframe["pp_adf_unit_root_proxy"] = (
+                        dataframe["unit_root_return"]
+                        .rolling(89, min_periods=34)
+                        .apply(lambda values: pd.Series(values).autocorr(lag=1), raw=False)
+                    )
+                    dataframe["kpss_stationarity_proxy"] = (
+                        dataframe["unit_root_return"].rolling(55, min_periods=21).std()
+                        / dataframe["unit_root_return"].rolling(233, min_periods=89).std().replace(0, np.nan)
+                    )
+                    dataframe["df_gls_detrended_slope"] = (
+                        log_close.ewm(span=89, adjust=False, min_periods=34).mean()
+                        - log_close.ewm(span=233, adjust=False, min_periods=89).mean()
+                    ).diff(13).shift(1) * 10000.0
+                dataframe["fast_energy"] = close_return.pow(2).rolling(12).sum()
+                dataframe["slow_energy"] = close_return.pow(2).rolling(96).sum()
+                dataframe["energy_ratio"] = dataframe["fast_energy"] / dataframe["slow_energy"].replace(0, np.nan)
+                dataframe["signed_fast_energy"] = close_return.rolling(12).sum() * dataframe["energy_ratio"]
+                if "{spec.key}" in ("trend_magic_cci_atr_slow_long", "trend_magic_cci_atr_balanced_long"):
+                    trend_magic_typical = (dataframe["high"] + dataframe["low"] + dataframe["close"]) / 3.0
+                    trend_magic_cci_mean = trend_magic_typical.rolling(
+                        {trend_magic_params["cci_period"]},
+                        min_periods={trend_magic_params["cci_period"]},
+                    ).mean()
+                    trend_magic_mean_dev = (
+                        (trend_magic_typical - trend_magic_cci_mean)
+                        .abs()
+                        .rolling({trend_magic_params["cci_period"]}, min_periods={trend_magic_params["cci_period"]})
+                        .mean()
+                    )
+                    trend_magic_cci = (
+                        (trend_magic_typical - trend_magic_cci_mean)
+                        / (0.015 * trend_magic_mean_dev.replace(0, np.nan))
+                    )
+                    trend_magic_prev_close = dataframe["close"].shift(1)
+                    trend_magic_true_range = pd.concat(
+                        [
+                            (dataframe["high"] - dataframe["low"]).abs(),
+                            (dataframe["high"] - trend_magic_prev_close).abs(),
+                            (dataframe["low"] - trend_magic_prev_close).abs(),
+                        ],
+                        axis=1,
+                    ).max(axis=1)
+                    trend_magic_atr = trend_magic_true_range.rolling(
+                        {trend_magic_params["atr_period"]},
+                        min_periods={trend_magic_params["atr_period"]},
+                    ).mean()
+                    trend_magic_up_line = dataframe["low"] - {trend_magic_params["atr_mult"]:.2f} * trend_magic_atr
+                    trend_magic_down_line = dataframe["high"] + {trend_magic_params["atr_mult"]:.2f} * trend_magic_atr
+                    trend_magic_line = pd.Series(
+                        np.where(trend_magic_cci >= 0, trend_magic_up_line, trend_magic_down_line),
+                        index=dataframe.index,
+                    )
+                    dataframe["trend_magic_cci_shifted"] = trend_magic_cci.shift(1)
+                    dataframe["trend_magic_atr_shifted"] = trend_magic_atr.shift(1)
+                    dataframe["trend_magic_line_shifted"] = trend_magic_line.shift(1)
+                    dataframe["trend_magic_dir_shifted"] = np.where(dataframe["trend_magic_cci_shifted"] >= 0, 1, -1)
+                    dataframe["trend_magic_body_atr_shifted"] = (
+                        (dataframe["close"] - dataframe["open"]).abs()
+                        / trend_magic_atr.replace(0, np.nan)
+                    ).shift(1)
+                    dataframe["trend_magic_own_trend_shifted"] = np.sign(
+                        dataframe["ema21"] - dataframe["ema55"]
+                    ).shift(1)
+                    dataframe["trend_magic_context_votes_long"] = (
+                        dataframe["trend_magic_own_trend_shifted"].gt(0).astype(int)
+                        + dataframe["slope_15m"].gt(-dataframe["atr14"] * 0.06).astype(int)
+                        + dataframe["slope_30m"].gt(-dataframe["atr14"] * 0.08).astype(int)
+                        + dataframe["slope_1h"].gt(-dataframe["atr14"] * 0.10).astype(int)
+                        + dataframe["slope_4h"].gt(-dataframe["atr14"] * 0.16).astype(int)
+                        + dataframe["slope_1d"].gt(-dataframe["atr14"] * 0.18).astype(int)
+                    )
                 regression_window = 96
                 regression_x = pd.Series(np.arange(regression_window, dtype=float))
 
@@ -1766,6 +4906,12 @@ def strategy_source(spec: CandidateSpec, *, symbol: str, timeframe: str) -> str:
                     residual = float(np.sum((values - fitted) ** 2))
                     return float(1.0 - residual / total)
 
+                def _regression_last_fit(values: np.ndarray) -> float:
+                    if len(values) != regression_window or np.isnan(values).any():
+                        return np.nan
+                    slope, intercept = np.polyfit(regression_x, values.astype(float), 1)
+                    return float(slope * regression_x.iloc[-1] + intercept)
+
                 dataframe["regression_slope_bps_96"] = dataframe["close"].rolling(regression_window).apply(
                     _regression_slope_bps,
                     raw=True,
@@ -1774,6 +4920,1881 @@ def strategy_source(spec: CandidateSpec, *, symbol: str, timeframe: str) -> str:
                     _regression_r2,
                     raw=True,
                 )
+                dataframe["rolling_regression_trendline_96"] = dataframe["close"].rolling(
+                    regression_window,
+                ).apply(_regression_last_fit, raw=True)
+                dataframe["rolling_regression_residual"] = (
+                    dataframe["close"] - dataframe["rolling_regression_trendline_96"]
+                )
+                dataframe["rolling_regression_residual_atr"] = (
+                    dataframe["rolling_regression_residual"] / dataframe["atr14"].replace(0, np.nan)
+                )
+                dataframe["rolling_regression_residual_shifted"] = dataframe[
+                    "rolling_regression_residual_atr"
+                ].shift(1)
+                dataframe["rolling_regression_residual_rejoin_delta"] = (
+                    dataframe["rolling_regression_residual_atr"]
+                    - dataframe["rolling_regression_residual_shifted"]
+                )
+                if "{spec.key}" == "elder_thermometer_heat_rejoin":
+                    previous_high = dataframe["high"].shift(1)
+                    previous_low = dataframe["low"].shift(1)
+                    dataframe["elder_thermometer_heat"] = pd.concat(
+                        [
+                            (dataframe["high"] - previous_high).abs(),
+                            (dataframe["low"] - previous_low).abs(),
+                        ],
+                        axis=1,
+                    ).max(axis=1)
+                    dataframe["elder_thermometer_heat_reference"] = (
+                        dataframe["elder_thermometer_heat"]
+                        .rolling(55, min_periods=21)
+                        .median()
+                        .shift(1)
+                    )
+                    dataframe["elder_thermometer_heat_ratio_shifted"] = (
+                        dataframe["elder_thermometer_heat"].shift(1)
+                        / dataframe["elder_thermometer_heat_reference"].replace(0, np.nan)
+                    )
+                    dataframe["elder_thermometer_heat_delta_shifted"] = (
+                        dataframe["elder_thermometer_heat_ratio_shifted"]
+                        - dataframe["elder_thermometer_heat_ratio_shifted"].rolling(13, min_periods=5).median().shift(1)
+                    )
+                    dataframe["elder_thermometer_direction_shifted"] = np.sign(
+                        dataframe["close"].shift(1) - dataframe["open"].shift(1)
+                    )
+                if "{spec.key}" == "pgo_atr_trend_rejoin":
+                    pgo_basis = dataframe["close"].rolling(21, min_periods=13).mean()
+                    dataframe["pgo_atr_deviation"] = (
+                        (dataframe["close"] - pgo_basis) / dataframe["atr14"].replace(0, np.nan)
+                    )
+                    dataframe["pgo_atr_deviation_shifted"] = dataframe["pgo_atr_deviation"].shift(1)
+                    dataframe["pgo_rejoin_impulse_shifted"] = (
+                        dataframe["pgo_atr_deviation_shifted"]
+                        - dataframe["pgo_atr_deviation"].rolling(8, min_periods=4).median().shift(2)
+                    )
+                    dataframe["pgo_basis_slope_bps_shifted"] = (
+                        (pgo_basis - pgo_basis.shift(8))
+                        / pgo_basis.shift(8).replace(0, np.nan)
+                        * 10000.0
+                    ).shift(1)
+                if "{spec.key}" == "gann_hilo_atr_trend_rejoin_filter":
+                    hilo_window = 13
+                    dataframe["gann_hilo_high_shifted"] = (
+                        dataframe["high"].rolling(hilo_window, min_periods=8).mean().shift(1)
+                    )
+                    dataframe["gann_hilo_low_shifted"] = (
+                        dataframe["low"].rolling(hilo_window, min_periods=8).mean().shift(1)
+                    )
+                    dataframe["gann_hilo_activator_state"] = np.select(
+                        [
+                            dataframe["close"].shift(1) > dataframe["gann_hilo_high_shifted"],
+                            dataframe["close"].shift(1) < dataframe["gann_hilo_low_shifted"],
+                        ],
+                        [1, -1],
+                        default=0,
+                    )
+                    dataframe["gann_hilo_state_persistence"] = (
+                        pd.Series(dataframe["gann_hilo_activator_state"], index=dataframe.index)
+                        .rolling(5, min_periods=3)
+                        .sum()
+                    )
+                    dataframe["gann_hilo_rejoin_distance_atr"] = (
+                        (dataframe["close"].shift(1) - dataframe["gann_hilo_low_shifted"])
+                        / dataframe["atr14"].replace(0, np.nan)
+                    )
+                    dataframe["gann_hilo_short_rejoin_distance_atr"] = (
+                        (dataframe["gann_hilo_high_shifted"] - dataframe["close"].shift(1))
+                        / dataframe["atr14"].replace(0, np.nan)
+                    )
+                    dataframe["gann_hilo_rejoin_impulse_atr"] = (
+                        (dataframe["close"] - dataframe["close"].shift(1))
+                        / dataframe["atr14"].replace(0, np.nan)
+                    )
+                if "{spec.key}" == "heikin_ashi_kama_trend_pullback_rejoin":
+                    kama_window = 28 if "{timeframe}" == "15m" else 24
+                    efficiency_window = 20 if "{timeframe}" == "15m" else 12
+
+                    def _kama_series(close: pd.Series, window: int) -> pd.Series:
+                        change = close.diff(window).abs()
+                        volatility = close.diff().abs().rolling(
+                            window,
+                            min_periods=max(2, window // 2),
+                        ).sum()
+                        efficiency = (change / volatility.replace(0.0, np.nan)).clip(0.0, 1.0)
+                        fast = 2.0 / 3.0
+                        slow = 2.0 / 31.0
+                        smoothing = (efficiency * (fast - slow) + slow).pow(2).fillna(slow * slow)
+                        values = close.to_numpy(dtype=float)
+                        smooth_values = smoothing.to_numpy(dtype=float)
+                        out = np.full(len(values), np.nan, dtype=float)
+                        for idx, value in enumerate(values):
+                            if np.isnan(value):
+                                continue
+                            if idx == 0 or np.isnan(out[idx - 1]):
+                                out[idx] = value
+                                continue
+                            out[idx] = out[idx - 1] + smooth_values[idx] * (value - out[idx - 1])
+                        return pd.Series(out, index=close.index)
+
+                    ha_close = (
+                        dataframe["open"]
+                        + dataframe["high"]
+                        + dataframe["low"]
+                        + dataframe["close"]
+                    ) / 4.0
+                    ha_open_values = np.full(len(dataframe), np.nan, dtype=float)
+                    raw_open = dataframe["open"].to_numpy(dtype=float)
+                    raw_close = dataframe["close"].to_numpy(dtype=float)
+                    ha_close_values = ha_close.to_numpy(dtype=float)
+                    for idx in range(len(dataframe)):
+                        if idx == 0:
+                            ha_open_values[idx] = (raw_open[idx] + raw_close[idx]) / 2.0
+                        else:
+                            ha_open_values[idx] = (ha_open_values[idx - 1] + ha_close_values[idx - 1]) / 2.0
+                    dataframe["ha_close"] = ha_close
+                    dataframe["ha_open"] = pd.Series(ha_open_values, index=dataframe.index)
+                    dataframe["ha_body"] = dataframe["ha_close"] - dataframe["ha_open"]
+                    dataframe["ha_trend"] = np.sign(dataframe["ha_body"]).replace(0, np.nan).ffill().fillna(0)
+                    dataframe["ha_trend_shifted"] = dataframe["ha_trend"].shift(1).fillna(0)
+                    dataframe["kama"] = _kama_series(dataframe["close"], kama_window)
+                    dataframe["kama_deviation_bps"] = (
+                        dataframe["close"] / dataframe["kama"].replace(0.0, np.nan) - 1.0
+                    ) * 10000.0
+                    kama_change = dataframe["close"].diff(efficiency_window).abs()
+                    kama_path = dataframe["close"].diff().abs().rolling(
+                        efficiency_window,
+                        min_periods=max(2, efficiency_window // 2),
+                    ).sum()
+                    dataframe["kama_efficiency_shifted"] = (
+                        kama_change / kama_path.replace(0.0, np.nan)
+                    ).clip(0.0, 1.0).shift(1)
+                    dataframe["kama_pullback_low_prev"] = (
+                        dataframe["kama_deviation_bps"].rolling(30, min_periods=1).min().shift(1)
+                    )
+                    dataframe["kama_slope_bps_shifted"] = (
+                        (dataframe["kama"] / dataframe["kama"].shift(3) - 1.0) * 10000.0
+                    ).shift(1)
+                if "{spec.key}" == "vhf_chop_trend_reacceleration":
+                    vhf_window = 34
+                    vhf_high = dataframe["high"].rolling(vhf_window, min_periods=vhf_window).max()
+                    vhf_low = dataframe["low"].rolling(vhf_window, min_periods=vhf_window).min()
+                    close_path = dataframe["close"].diff().abs().rolling(vhf_window, min_periods=vhf_window).sum()
+                    true_range_sum = true_range.rolling(vhf_window, min_periods=vhf_window).sum()
+                    price_range = (vhf_high - vhf_low).replace(0, np.nan)
+                    dataframe["vhf_34"] = (
+                        (dataframe["close"] - dataframe["close"].shift(vhf_window)).abs()
+                        / close_path.replace(0, np.nan)
+                    )
+                    dataframe["chop_34"] = (
+                        100.0
+                        * np.log10(true_range_sum / price_range.replace(0, np.nan))
+                        / np.log10(float(vhf_window))
+                    )
+                    dataframe["vhf_34_shifted"] = dataframe["vhf_34"].shift(1)
+                    dataframe["chop_34_shifted"] = dataframe["chop_34"].shift(1)
+                    dataframe["directional_efficiency_shifted"] = (
+                        (1.0 - dataframe["chop_34_shifted"] / 100.0) * dataframe["vhf_34_shifted"]
+                    ).clip(lower=0.0, upper=1.0)
+                    dataframe["vhf_reacceleration_shifted"] = (
+                        dataframe["vhf_34_shifted"] - dataframe["vhf_34_shifted"].shift(8)
+                    )
+                if "{spec.key}" == "trendexpansion_bocpd_dynmom_vhfchop":
+                    bocpd_window = 96
+                    completed_log_return = log_close.diff().shift(1)
+                    completed_abs_return = completed_log_return.abs()
+                    fast_abs_return = completed_abs_return.rolling(18, min_periods=9).mean()
+                    slow_abs_return = completed_abs_return.rolling(bocpd_window, min_periods=48).mean()
+                    dataframe["bocpd_hazard_proxy_shifted"] = (
+                        fast_abs_return / slow_abs_return.replace(0.0, np.nan) - 1.0
+                    ).clip(lower=-0.90, upper=3.50)
+                    dataframe["bocpd_run_length_reset_shifted"] = (
+                        dataframe["bocpd_hazard_proxy_shifted"].gt(0.16)
+                        & completed_abs_return.rolling(8, min_periods=4).mean().gt(
+                            slow_abs_return * 0.82
+                        )
+                    )
+                    dataframe["dynmom_fast_bps_shifted"] = (
+                        (dataframe["close"] / dataframe["close"].shift(12) - 1.0) * 10000.0
+                    ).shift(1)
+                    dataframe["dynmom_mid_bps_shifted"] = (
+                        (dataframe["close"] / dataframe["close"].shift(48) - 1.0) * 10000.0
+                    ).shift(1)
+                    dataframe["dynmom_slow_bps_shifted"] = (
+                        (dataframe["close"] / dataframe["close"].shift(144) - 1.0) * 10000.0
+                    ).shift(1)
+                    dataframe["dynmom_consensus_shifted"] = (
+                        dataframe["dynmom_fast_bps_shifted"].gt(0.0).astype(int)
+                        + dataframe["dynmom_mid_bps_shifted"].gt(0.0).astype(int)
+                        + dataframe["dynmom_slow_bps_shifted"].gt(0.0).astype(int)
+                        - dataframe["dynmom_fast_bps_shifted"].lt(0.0).astype(int)
+                        - dataframe["dynmom_mid_bps_shifted"].lt(0.0).astype(int)
+                        - dataframe["dynmom_slow_bps_shifted"].lt(0.0).astype(int)
+                    )
+                    trend_window = 34
+                    trend_high = dataframe["high"].rolling(trend_window, min_periods=trend_window).max()
+                    trend_low = dataframe["low"].rolling(trend_window, min_periods=trend_window).min()
+                    trend_close_path = dataframe["close"].diff().abs().rolling(
+                        trend_window,
+                        min_periods=trend_window,
+                    ).sum()
+                    trend_true_range_sum = true_range.rolling(
+                        trend_window,
+                        min_periods=trend_window,
+                    ).sum()
+                    trend_price_range = (trend_high - trend_low).replace(0, np.nan)
+                    dataframe["trendexpansion_vhf_shifted"] = (
+                        (dataframe["close"] - dataframe["close"].shift(trend_window)).abs()
+                        / trend_close_path.replace(0, np.nan)
+                    ).shift(1)
+                    dataframe["trendexpansion_chop_shifted"] = (
+                        100.0
+                        * np.log10(trend_true_range_sum / trend_price_range.replace(0, np.nan))
+                        / np.log10(float(trend_window))
+                    ).shift(1)
+                    dataframe["vhf_chop_no_trend_veto_shifted"] = (
+                        dataframe["trendexpansion_chop_shifted"].gt(63.0)
+                        | dataframe["trendexpansion_vhf_shifted"].lt(0.16)
+                        | dataframe["bocpd_hazard_proxy_shifted"].lt(-0.18)
+                    )
+                if "{spec.key}" in {{
+                    "trend_expansion_only_regime_transition_clean_state_shift",
+                    "trend_expansion_only_regime_transition_retest_hold_quality",
+                    "trend_expansion_only_regime_transition_strict_state_shift",
+                }}:
+                    state_window = 34
+                    state_high = dataframe["high"].rolling(state_window, min_periods=state_window).max()
+                    state_low = dataframe["low"].rolling(state_window, min_periods=state_window).min()
+                    state_close_path = dataframe["close"].diff().abs().rolling(
+                        state_window,
+                        min_periods=state_window,
+                    ).sum()
+                    state_true_range_sum = true_range.rolling(
+                        state_window,
+                        min_periods=state_window,
+                    ).sum()
+                    state_price_range = (state_high - state_low).replace(0, np.nan)
+                    state_vhf = (
+                        (dataframe["close"] - dataframe["close"].shift(state_window)).abs()
+                        / state_close_path.replace(0, np.nan)
+                    )
+                    state_chop = (
+                        100.0
+                        * np.log10(state_true_range_sum / state_price_range.replace(0, np.nan))
+                        / np.log10(float(state_window))
+                    )
+                    dataframe["state_shift_vhf_shifted"] = state_vhf.shift(1)
+                    dataframe["state_shift_chop_shifted"] = state_chop.shift(1)
+                    dataframe["state_shift_vhf_rise_shifted"] = (
+                        dataframe["state_shift_vhf_shifted"] - dataframe["state_shift_vhf_shifted"].shift(6)
+                    )
+                    dataframe["state_shift_adx_rise_shifted"] = (
+                        dataframe["adx14"] - dataframe["adx14"].shift(5)
+                    ).shift(1)
+                    dataframe["state_shift_prior_narrow_range"] = dataframe["bar_range_atr"].shift(1).le(
+                        dataframe["bar_range_atr"].rolling(24, min_periods=12).quantile(0.33).shift(1)
+                    )
+                    dataframe["state_shift_momentum_bps_shifted"] = (
+                        (dataframe["close"] / dataframe["close"].shift(6) - 1.0) * 10000.0
+                    ).shift(1)
+                    dataframe["state_shift_donchian_high_prev"] = (
+                        dataframe["high"].rolling(24, min_periods=12).max().shift(1)
+                    )
+                    state_shift_retest_hold_long = pd.Series(False, index=dataframe.index)
+                    for retest_offset in range(1, 4):
+                        retest_level = dataframe["state_shift_donchian_high_prev"].shift(retest_offset)
+                        prior_breakout = dataframe["close"].shift(retest_offset).gt(retest_level)
+                        state_shift_retest_hold_long = (
+                            state_shift_retest_hold_long
+                            | (
+                                prior_breakout.fillna(False)
+                                & dataframe["low"].le(retest_level * 1.0025)
+                                & dataframe["close"].gt(retest_level)
+                                & dataframe["close"].ge(dataframe["open"])
+                            ).fillna(False)
+                        )
+                    dataframe["state_shift_retest_hold_long"] = state_shift_retest_hold_long
+                if "{spec.key}" == "medrv_minrv_noise_robust_vol_state_gate":
+                    robust_window = 48
+                    completed_log_return = log_close.diff().shift(1)
+                    completed_abs_return = completed_log_return.abs()
+                    ordinary_rv = completed_log_return.pow(2).rolling(
+                        robust_window,
+                        min_periods=robust_window,
+                    ).sum()
+                    neighbor_min = pd.concat(
+                        [completed_abs_return, completed_abs_return.shift(1)],
+                        axis=1,
+                    ).min(axis=1)
+                    neighbor_med = pd.concat(
+                        [completed_abs_return, completed_abs_return.shift(1), completed_abs_return.shift(2)],
+                        axis=1,
+                    ).median(axis=1)
+                    dataframe["minrv_like"] = neighbor_min.pow(2).rolling(
+                        robust_window,
+                        min_periods=robust_window,
+                    ).sum() * np.pi / (np.pi - 2.0)
+                    dataframe["medrv_like"] = neighbor_med.pow(2).rolling(
+                        robust_window,
+                        min_periods=robust_window,
+                    ).sum() * np.pi / (6.0 - 4.0 * np.sqrt(3.0) + np.pi)
+                    robust_anchor = ((dataframe["medrv_like"] + dataframe["minrv_like"]) / 2.0).replace(0.0, np.nan)
+                    dataframe["rv_medrv_disagreement"] = ((ordinary_rv - robust_anchor).abs() / robust_anchor).replace(
+                        [np.inf, -np.inf],
+                        np.nan,
+                    )
+                    robust_vol = np.sqrt(robust_anchor.clip(lower=0.0))
+                    robust_center = robust_vol.rolling(144, min_periods=48).mean().shift(1)
+                    robust_scale = robust_vol.rolling(144, min_periods=48).std().shift(1).replace(0.0, np.nan)
+                    dataframe["robust_vol_state_z"] = (robust_vol - robust_center) / robust_scale
+                    dataframe["rv_medrv_disagreement_shifted"] = dataframe["rv_medrv_disagreement"].shift(1)
+                    dataframe["robust_vol_state_z_shifted"] = dataframe["robust_vol_state_z"].shift(1)
+                if "{spec.key}" == "rsrs_high_low_regression_trend_admission":
+                    rsrs_window = 24
+                    rsrs_z_window = 144
+                    rsrs_low_mean = dataframe["low"].rolling(rsrs_window, min_periods=rsrs_window).mean()
+                    rsrs_high_mean = dataframe["high"].rolling(rsrs_window, min_periods=rsrs_window).mean()
+                    rsrs_cov = (
+                        (dataframe["low"] - rsrs_low_mean)
+                        * (dataframe["high"] - rsrs_high_mean)
+                    ).rolling(rsrs_window, min_periods=rsrs_window).mean()
+                    rsrs_low_var = (
+                        (dataframe["low"] - rsrs_low_mean) ** 2
+                    ).rolling(rsrs_window, min_periods=rsrs_window).mean().replace(0, np.nan)
+                    rsrs_high_var = (
+                        (dataframe["high"] - rsrs_high_mean) ** 2
+                    ).rolling(rsrs_window, min_periods=rsrs_window).mean().replace(0, np.nan)
+                    dataframe["rsrs_beta_24"] = rsrs_cov / rsrs_low_var
+                    rsrs_corr = rsrs_cov / np.sqrt(rsrs_low_var * rsrs_high_var)
+                    dataframe["rsrs_r2_24"] = (rsrs_corr ** 2).clip(lower=0.0, upper=1.0)
+                    rsrs_beta_mean = dataframe["rsrs_beta_24"].rolling(
+                        rsrs_z_window,
+                        min_periods=48,
+                    ).mean()
+                    rsrs_beta_std = dataframe["rsrs_beta_24"].rolling(
+                        rsrs_z_window,
+                        min_periods=48,
+                    ).std().replace(0, np.nan)
+                    dataframe["rsrs_z_144"] = (dataframe["rsrs_beta_24"] - rsrs_beta_mean) / rsrs_beta_std
+                    dataframe["rsrs_right_skew_score"] = dataframe["rsrs_z_144"] * dataframe["rsrs_r2_24"]
+                    dataframe["rsrs_z_144_shifted"] = dataframe["rsrs_z_144"].shift(1)
+                    dataframe["rsrs_r2_24_shifted"] = dataframe["rsrs_r2_24"].shift(1)
+                    dataframe["rsrs_right_skew_score_shifted"] = dataframe[
+                        "rsrs_right_skew_score"
+                    ].shift(1)
+                dataframe["elder_force_index"] = dataframe["close"].diff() * dataframe["volume"]
+                dataframe["elder_force_index_smooth"] = dataframe["elder_force_index"].ewm(
+                    span=13,
+                    adjust=False,
+                    min_periods=5,
+                ).mean()
+                dataframe["elder_force_index_slope"] = (
+                    dataframe["elder_force_index_smooth"]
+                    - dataframe["elder_force_index_smooth"].rolling(8, min_periods=3).mean().shift(1)
+                )
+                dataframe["elder_force_index_reference"] = dataframe["elder_force_index_smooth"].rolling(
+                    89,
+                    min_periods=34,
+                ).median().shift(1)
+                dataframe["elder_force_pullback_depth_atr"] = (
+                    (dataframe["close"] - dataframe["ema21"]).abs()
+                    / dataframe["atr14"].replace(0, np.nan)
+                )
+                if "{spec.key}" == "score_driven_gas_state_admission_filter":
+                    gas_return = log_close.diff().shift(1)
+                    gas_location = gas_return.ewm(alpha=0.08, adjust=False, min_periods=34).mean()
+                    gas_scale = gas_return.sub(gas_location).abs().ewm(alpha=0.06, adjust=False, min_periods=34).mean()
+                    gas_scale = gas_scale.replace(0, np.nan)
+                    gas_standardized_score = (gas_return - gas_location) / gas_scale
+                    dataframe["gas_location_score"] = gas_location * 10000.0
+                    dataframe["gas_scale_state"] = gas_scale * 10000.0
+                    dataframe["gas_standardized_score"] = gas_standardized_score.clip(-8.0, 8.0)
+                    dataframe["gas_tail_pressure"] = (
+                        dataframe["gas_standardized_score"].abs()
+                        .rolling(55, min_periods=21)
+                        .mean()
+                        .shift(1)
+                    )
+                    dataframe["gas_location_drift"] = (
+                        dataframe["gas_location_score"]
+                        - dataframe["gas_location_score"].rolling(34, min_periods=13).mean().shift(1)
+                    )
+                    dataframe["gas_scale_expansion"] = (
+                        dataframe["gas_scale_state"]
+                        / dataframe["gas_scale_state"].rolling(144, min_periods=55).median().shift(1).replace(0, np.nan)
+                    )
+                if "{spec.key}" == "shiryaev_roberts_quickest_change_persistence_filter":
+                    sr_completed_return = log_close.diff().shift(1)
+                    sr_return_scale = sr_completed_return.rolling(144, min_periods=55).std().shift(1).replace(0, np.nan)
+                    sr_directional_evidence = (sr_completed_return / sr_return_scale).clip(-4.0, 4.0)
+                    sr_long_likelihood_proxy = np.exp(sr_directional_evidence.clip(-3.0, 3.0) * 0.45).clip(0.20, 6.00)
+                    sr_short_likelihood_proxy = np.exp((-sr_directional_evidence).clip(-3.0, 3.0) * 0.45).clip(0.20, 6.00)
+
+                    def _shiryaev_roberts_recursion(values: pd.Series) -> pd.Series:
+                        stat = 0.0
+                        out = []
+                        for value in values:
+                            if pd.isna(value):
+                                stat = 0.0
+                                out.append(np.nan)
+                                continue
+                            stat = (1.0 + stat) * float(value)
+                            if not np.isfinite(stat):
+                                stat = 0.0
+                            out.append(min(stat, 250.0))
+                        return pd.Series(out, index=values.index)
+
+                    dataframe["shiryaev_roberts_stat_long"] = _shiryaev_roberts_recursion(sr_long_likelihood_proxy)
+                    dataframe["shiryaev_roberts_stat_short"] = _shiryaev_roberts_recursion(sr_short_likelihood_proxy)
+                    dataframe["shiryaev_roberts_stat"] = pd.concat(
+                        [dataframe["shiryaev_roberts_stat_long"], dataframe["shiryaev_roberts_stat_short"]],
+                        axis=1,
+                    ).max(axis=1)
+                    dataframe["shiryaev_roberts_stat_shifted"] = dataframe["shiryaev_roberts_stat"].shift(1)
+                    dataframe["shiryaev_roberts_stat_long_shifted"] = dataframe["shiryaev_roberts_stat_long"].shift(1)
+                    dataframe["shiryaev_roberts_stat_short_shifted"] = dataframe["shiryaev_roberts_stat_short"].shift(1)
+                    dataframe["shiryaev_roberts_reference"] = dataframe["shiryaev_roberts_stat"].rolling(144, min_periods=55).median().shift(1)
+                    dataframe["shiryaev_roberts_persistence_ratio"] = (
+                        dataframe["shiryaev_roberts_stat_shifted"]
+                        / dataframe["shiryaev_roberts_reference"].replace(0, np.nan)
+                    )
+                if "{spec.key}" in (
+                    "event_duration_liquidity_clock_trend_filter",
+                    "trendexpansion_event_duration_liquidity_clock",
+                ):
+                    event_volume_intensity = dataframe["rvol96"].shift(1).clip(lower=0.05, upper=8.0)
+                    event_range_intensity = dataframe["bar_range_atr"].shift(1).clip(lower=0.03, upper=8.0)
+                    event_body_intensity = dataframe["body_atr"].shift(1).clip(lower=0.02, upper=5.0)
+                    event_duration_liquidity_clock = (
+                        event_volume_intensity * event_range_intensity * event_body_intensity
+                    ).pow(1.0 / 3.0)
+                    dataframe["event_duration_liquidity_clock"] = event_duration_liquidity_clock
+                    dataframe["event_clock_duration_proxy"] = 1.0 / event_duration_liquidity_clock.replace(0, np.nan)
+                    dataframe["event_clock_duration_baseline"] = dataframe[
+                        "event_clock_duration_proxy"
+                    ].rolling(144, min_periods=55).median().shift(1)
+                    dataframe["event_clock_duration_floor"] = dataframe[
+                        "event_clock_duration_proxy"
+                    ].rolling(144, min_periods=55).quantile(0.22).shift(1)
+                    dataframe["event_clock_duration_ceiling"] = dataframe[
+                        "event_clock_duration_proxy"
+                    ].rolling(144, min_periods=55).quantile(0.88).shift(1)
+                    dataframe["event_clock_compression_ratio"] = dataframe[
+                        "event_clock_duration_proxy"
+                    ] / dataframe["event_clock_duration_baseline"].replace(0, np.nan)
+                    dataframe["event_clock_burst_state"] = dataframe["event_clock_duration_proxy"].lt(
+                        dataframe["event_clock_duration_floor"]
+                    )
+                    dataframe["event_clock_dead_state"] = dataframe["event_clock_duration_proxy"].gt(
+                        dataframe["event_clock_duration_ceiling"]
+                    )
+                    dataframe["event_clock_trend_participation"] = (
+                        dataframe["event_clock_compression_ratio"].between(0.30, 0.92)
+                        & dataframe["event_duration_liquidity_clock"].between(0.34, 3.80)
+                    )
+                if "{spec.key}" == "renko_price_brick_reacceleration_filter":
+                    renko_completed_close = dataframe["close"].shift(1)
+                    renko_completed_range = (dataframe["high"] - dataframe["low"]).abs().shift(1)
+                    renko_atr_size = (dataframe["atr14"].shift(1) * 0.74).replace(0, np.nan)
+                    renko_range_size = renko_completed_range.rolling(144, min_periods=55).quantile(0.72).shift(1)
+                    dataframe["renko_completed_brick_size_shifted"] = pd.concat(
+                        [renko_atr_size, renko_range_size],
+                        axis=1,
+                    ).max(axis=1).clip(lower=0.01)
+
+                    def _renko_price_brick_state(close: pd.Series, brick_size: pd.Series) -> pd.DataFrame:
+                        last_level = np.nan
+                        current_direction = 0
+                        run_length = 0
+                        event_values = []
+                        direction_values = []
+                        run_values = []
+                        extension_values = []
+                        for close_value, size_value in zip(close, brick_size):
+                            if pd.isna(close_value) or pd.isna(size_value) or size_value <= 0:
+                                event_values.append(0)
+                                direction_values.append(current_direction)
+                                run_values.append(run_length)
+                                extension_values.append(np.nan)
+                                continue
+                            close_float = float(close_value)
+                            size_float = float(size_value)
+                            if pd.isna(last_level):
+                                last_level = close_float
+                                event_values.append(0)
+                                direction_values.append(current_direction)
+                                run_values.append(run_length)
+                                extension_values.append(0.0)
+                                continue
+                            move = close_float - float(last_level)
+                            event_direction = 0
+                            if abs(move) >= size_float:
+                                brick_steps = max(1, int(abs(move) // size_float))
+                                event_direction = 1 if move > 0 else -1
+                                last_level = float(last_level) + event_direction * size_float * brick_steps
+                                if event_direction == current_direction:
+                                    run_length += brick_steps
+                                else:
+                                    current_direction = event_direction
+                                    run_length = brick_steps
+                            extension = abs(close_float - float(last_level)) / size_float
+                            event_values.append(event_direction)
+                            direction_values.append(current_direction)
+                            run_values.append(run_length)
+                            extension_values.append(extension)
+                        state = pd.DataFrame(index=close.index)
+                        state["renko_price_brick_state"] = event_values
+                        state["renko_price_brick_direction"] = direction_values
+                        state["renko_price_brick_run_length"] = run_values
+                        state["renko_price_brick_extension_ratio"] = extension_values
+                        return state
+
+                    renko_state_frame = _renko_price_brick_state(
+                        renko_completed_close,
+                        dataframe["renko_completed_brick_size_shifted"],
+                    )
+                    dataframe["renko_price_brick_state"] = renko_state_frame["renko_price_brick_state"]
+                    dataframe["renko_price_brick_direction"] = renko_state_frame["renko_price_brick_direction"]
+                    dataframe["renko_price_brick_run_length"] = renko_state_frame["renko_price_brick_run_length"]
+                    dataframe["renko_price_brick_extension_ratio"] = renko_state_frame[
+                        "renko_price_brick_extension_ratio"
+                    ]
+                    renko_direction_flip = (
+                        dataframe["renko_price_brick_state"].ne(0)
+                        & dataframe["renko_price_brick_direction"].ne(dataframe["renko_price_brick_direction"].shift(1))
+                    )
+                    dataframe["renko_brick_flip_count_21"] = renko_direction_flip.rolling(
+                        21,
+                        min_periods=8,
+                    ).sum().shift(1)
+                    dataframe["renko_brick_churn_veto"] = (
+                        dataframe["renko_brick_flip_count_21"].ge(3)
+                        | dataframe["renko_price_brick_extension_ratio"].gt(2.85)
+                    )
+                    dataframe["renko_brick_reacceleration_long"] = (
+                        dataframe["renko_price_brick_state"].eq(1)
+                        & dataframe["renko_price_brick_direction"].eq(1)
+                        & dataframe["renko_price_brick_run_length"].between(1, 9)
+                        & dataframe["renko_price_brick_state"].shift(1).le(0)
+                    )
+                    dataframe["renko_brick_reacceleration_short"] = (
+                        dataframe["renko_price_brick_state"].eq(-1)
+                        & dataframe["renko_price_brick_direction"].eq(-1)
+                        & dataframe["renko_price_brick_run_length"].between(1, 9)
+                        & dataframe["renko_price_brick_state"].shift(1).ge(0)
+                    )
+                if "{spec.key}" == "candlestick_pattern_context_reliability_gate":
+                    candle_body = dataframe["close"] - dataframe["open"]
+                    candle_range = (dataframe["high"] - dataframe["low"]).replace(0, np.nan)
+                    body_share = (candle_body.abs() / candle_range).clip(lower=0.0, upper=1.0)
+                    close_location_raw = ((dataframe["close"] - dataframe["low"]) / candle_range).clip(0.0, 1.0)
+                    prior_body = candle_body.shift(1)
+                    prior_open = dataframe["open"].shift(1)
+                    prior_close = dataframe["close"].shift(1)
+                    bullish_engulfing = (
+                        candle_body.gt(0)
+                        & prior_body.lt(0)
+                        & dataframe["close"].gt(prior_open)
+                        & dataframe["open"].le(prior_close)
+                    )
+                    bearish_engulfing = (
+                        candle_body.lt(0)
+                        & prior_body.gt(0)
+                        & dataframe["close"].lt(prior_open)
+                        & dataframe["open"].ge(prior_close)
+                    )
+                    bullish_marubozu = (
+                        candle_body.gt(0)
+                        & body_share.ge(0.72)
+                        & close_location_raw.ge(0.74)
+                    )
+                    bearish_marubozu = (
+                        candle_body.lt(0)
+                        & body_share.ge(0.72)
+                        & close_location_raw.le(0.26)
+                    )
+                    dataframe["bullish_engulfing_shifted"] = bullish_engulfing.shift(1).fillna(False)
+                    dataframe["bearish_engulfing_shifted"] = bearish_engulfing.shift(1).fillna(False)
+                    dataframe["bullish_marubozu_shifted"] = bullish_marubozu.shift(1).fillna(False)
+                    dataframe["bearish_marubozu_shifted"] = bearish_marubozu.shift(1).fillna(False)
+                    dataframe["candlestick_body_share_shifted"] = body_share.shift(1)
+                    dataframe["candlestick_close_location_shifted"] = close_location_raw.shift(1)
+                    dataframe["candlestick_pattern_strength_shifted"] = (
+                        dataframe["candlestick_body_share_shifted"].clip(0.0, 1.0)
+                        * dataframe["bar_range_atr"].shift(1).clip(0.0, 3.5)
+                    )
+                    dataframe["candlestick_pattern_uncertain"] = (
+                        dataframe["candlestick_body_share_shifted"].lt(0.20)
+                        | dataframe["bar_range_atr"].shift(1).lt(0.08)
+                    )
+                if "{spec.key}" == "jensen_shannon_return_distribution_shift_gate":
+                    js_return_shifted = log_close.diff().shift(1)
+                    js_range_shifted = dataframe["bar_range_atr"].shift(1)
+                    js_volume_shock_shifted = dataframe["rvol96"].shift(1)
+
+                    def _bernoulli_js_divergence(values: np.ndarray) -> float:
+                        sample = pd.Series(values).replace([np.inf, -np.inf], np.nan).dropna()
+                        if len(sample) < 24:
+                            return np.nan
+                        median = float(sample.median())
+                        front = sample.iloc[: len(sample) // 2]
+                        back = sample.iloc[len(sample) // 2 :]
+                        p = float((front > median).mean())
+                        q = float((back > median).mean())
+                        eps = 1e-6
+                        p = min(max(p, eps), 1.0 - eps)
+                        q = min(max(q, eps), 1.0 - eps)
+                        midpoint = 0.5 * (p + q)
+                        return float(
+                            0.5 * (p * np.log(p / midpoint) + (1.0 - p) * np.log((1.0 - p) / (1.0 - midpoint)))
+                            + 0.5 * (q * np.log(q / midpoint) + (1.0 - q) * np.log((1.0 - q) / (1.0 - midpoint)))
+                        )
+
+                    dataframe["jensen_shannon_return_shape_drift"] = js_return_shifted.rolling(
+                        89,
+                        min_periods=55,
+                    ).apply(_bernoulli_js_divergence, raw=True)
+                    js_range_drift = js_range_shifted.rolling(89, min_periods=55).apply(
+                        _bernoulli_js_divergence,
+                        raw=True,
+                    )
+                    js_volume_drift = js_volume_shock_shifted.rolling(89, min_periods=55).apply(
+                        _bernoulli_js_divergence,
+                        raw=True,
+                    )
+                    dataframe["jensen_shannon_range_volume_drift"] = (js_range_drift + js_volume_drift) / 2.0
+                    dataframe["js_distribution_shift_gate"] = (
+                        dataframe["jensen_shannon_return_shape_drift"]
+                        + dataframe["jensen_shannon_range_volume_drift"]
+                    ).rolling(13, min_periods=5).mean().shift(1)
+                    dataframe["js_distribution_shift_baseline"] = dataframe["js_distribution_shift_gate"].rolling(
+                        233,
+                        min_periods=89,
+                    ).median().shift(1)
+                    dataframe["js_distribution_shift_reference"] = dataframe["js_distribution_shift_gate"].rolling(
+                        233,
+                        min_periods=89,
+                    ).quantile(0.72).shift(1)
+                if "{spec.key}" == "trend_ote_ks_distribution_stability_reacceleration":
+                    ote_ks_return_shape = (
+                        (dataframe["close"] - dataframe["open"])
+                        / dataframe["atr14"].replace(0, np.nan)
+                    ).shift(1)
+                    ote_ks_range_shape = dataframe["bar_range_atr"].shift(1)
+                    ote_ks_body_shape = dataframe["body_atr"].shift(1)
+                    current_q25 = ote_ks_return_shape.rolling(55, min_periods=34).quantile(0.25)
+                    current_q50 = ote_ks_return_shape.rolling(55, min_periods=34).median()
+                    current_q75 = ote_ks_return_shape.rolling(55, min_periods=34).quantile(0.75)
+                    prior_q25 = current_q25.shift(55)
+                    prior_q50 = current_q50.shift(55)
+                    prior_q75 = current_q75.shift(55)
+                    current_iqr = (current_q75 - current_q25).abs().replace(0, np.nan)
+                    prior_iqr = (prior_q75 - prior_q25).abs().replace(0, np.nan)
+                    ote_ks_scale = (current_iqr + prior_iqr) / 2.0
+                    dataframe["ote_ks_distribution_distance"] = (
+                        pd.concat(
+                            [
+                                (current_q25 - prior_q25).abs(),
+                                (current_q50 - prior_q50).abs(),
+                                (current_q75 - prior_q75).abs(),
+                            ],
+                            axis=1,
+                        ).max(axis=1)
+                        / ote_ks_scale.replace(0, np.nan)
+                    ).shift(1)
+                    dataframe["ote_ks_body_range_balance"] = (
+                        ote_ks_body_shape.rolling(34, min_periods=21).median()
+                        / ote_ks_range_shape.rolling(34, min_periods=21).median().replace(0, np.nan)
+                    ).shift(1)
+                    dataframe["ote_ks_stability_reference"] = (
+                        dataframe["ote_ks_distribution_distance"].rolling(233, min_periods=89).quantile(0.72).shift(1)
+                    )
+                    dataframe["ote_ks_stability_gate"] = (
+                        dataframe["ote_ks_distribution_distance"].between(0.02, 1.35)
+                        & dataframe["ote_ks_distribution_distance"].lt(
+                            dataframe["ote_ks_stability_reference"].fillna(1.10) * 1.18
+                        )
+                        & dataframe["ote_ks_body_range_balance"].between(0.18, 0.88)
+                    )
+                if "{spec.key}" == "ehlers_autocorr_periodogram_cycle_regime_gate":
+                    ehlers_returns = dataframe["close"].pct_change().replace([np.inf, -np.inf], np.nan)
+                    ehlers_autocorr_columns = []
+                    for ehlers_lag in (10, 14, 18, 22, 28, 34):
+                        ehlers_column = "ehlers_autocorr_lag_" + str(ehlers_lag)
+                        dataframe[ehlers_column] = (
+                            ehlers_returns.rolling(ehlers_lag * 3, min_periods=ehlers_lag + 8)
+                            .corr(ehlers_returns.shift(ehlers_lag))
+                            .abs()
+                        )
+                        ehlers_autocorr_columns.append(ehlers_column)
+                    ehlers_autocorr_surface = dataframe[ehlers_autocorr_columns]
+                    ehlers_valid_surface = ehlers_autocorr_surface.notna().any(axis=1)
+                    ehlers_dominant_label = ehlers_autocorr_surface.fillna(-1.0).idxmax(axis=1)
+                    ehlers_dominant_period = (
+                        ehlers_dominant_label.str.extract(r"_(\\d+)$")[0].astype(float).where(ehlers_valid_surface)
+                    )
+                    ehlers_total_power = ehlers_autocorr_surface.abs().sum(axis=1).where(ehlers_valid_surface)
+                    ehlers_top2_power = ehlers_autocorr_surface.where(
+                        ehlers_autocorr_surface.rank(axis=1, method="first", ascending=False).le(2)
+                    ).sum(axis=1)
+                    ehlers_cycle_concentration = ehlers_top2_power / ehlers_total_power.replace(0, np.nan)
+                    ehlers_cycle_stability = ehlers_dominant_period.diff().abs().rolling(8, min_periods=4).mean()
+                    ehlers_price_change = (dataframe["close"] - dataframe["close"].shift(32)).abs()
+                    ehlers_path_length = dataframe["close"].diff().abs().rolling(32, min_periods=16).sum()
+                    dataframe["ehlers_dominant_cycle_period_shifted"] = ehlers_dominant_period.shift(1)
+                    dataframe["ehlers_cycle_power_shifted"] = ehlers_autocorr_surface.max(axis=1).shift(1)
+                    dataframe["ehlers_cycle_concentration_shifted"] = ehlers_cycle_concentration.shift(1)
+                    dataframe["ehlers_cycle_stability_shifted"] = ehlers_cycle_stability.shift(1)
+                    dataframe["ehlers_efficiency_ratio_shifted"] = (
+                        ehlers_price_change / ehlers_path_length.replace(0, np.nan)
+                    ).shift(1)
+                if "{spec.key}" == "hilbert_analytic_phase_trend_admission":
+                    hilbert_fast = dataframe["close"].ewm(span=13, adjust=False, min_periods=8).mean()
+                    hilbert_slow = dataframe["close"].ewm(span=34, adjust=False, min_periods=21).mean()
+                    hilbert_cycle_component = hilbert_fast - hilbert_slow
+                    hilbert_quadrature_proxy = hilbert_cycle_component.diff(3).rolling(5, min_periods=3).mean()
+                    hilbert_phase = np.degrees(
+                        np.arctan2(hilbert_quadrature_proxy, hilbert_cycle_component.replace(0, np.nan))
+                    )
+                    hilbert_unwrapped_phase = pd.Series(
+                        np.unwrap(np.radians(hilbert_phase.fillna(0.0).to_numpy())),
+                        index=dataframe.index,
+                    )
+                    hilbert_phase_slope = hilbert_unwrapped_phase.diff(5)
+                    hilbert_phase_accel = hilbert_phase_slope.diff(3)
+                    hilbert_amp = (
+                        hilbert_cycle_component.pow(2) + hilbert_quadrature_proxy.pow(2)
+                    ).pow(0.5)
+                    hilbert_amp_z = (
+                        (hilbert_amp - hilbert_amp.rolling(89, min_periods=34).median())
+                        / hilbert_amp.rolling(89, min_periods=34).std().replace(0, np.nan)
+                    )
+                    phase_coherence_score = (
+                        hilbert_phase_slope.rolling(13, min_periods=8).mean().abs()
+                        / hilbert_phase_slope.rolling(34, min_periods=13).std().replace(0, np.nan)
+                    )
+                    dataframe["hilbert_phase_shifted"] = hilbert_phase.shift(1)
+                    dataframe["hilbert_phase_slope_shifted"] = hilbert_phase_slope.shift(1)
+                    dataframe["hilbert_phase_accel_shifted"] = hilbert_phase_accel.shift(1)
+                    dataframe["hilbert_amp_z_shifted"] = hilbert_amp_z.shift(1)
+                    dataframe["phase_coherence_score_shifted"] = phase_coherence_score.shift(1)
+                if "{spec.key}" == "range_estimator_disagreement_compression_release":
+                    range_high_low = np.log(dataframe["high"].replace(0, np.nan) / dataframe["low"].replace(0, np.nan))
+                    open_close = np.log(dataframe["close"].replace(0, np.nan) / dataframe["open"].replace(0, np.nan))
+                    high_open = np.log(dataframe["high"].replace(0, np.nan) / dataframe["open"].replace(0, np.nan))
+                    low_open = np.log(dataframe["low"].replace(0, np.nan) / dataframe["open"].replace(0, np.nan))
+                    high_close = np.log(dataframe["high"].replace(0, np.nan) / dataframe["close"].replace(0, np.nan))
+                    low_close = np.log(dataframe["low"].replace(0, np.nan) / dataframe["close"].replace(0, np.nan))
+                    dataframe["parkinson_range_vol"] = np.sqrt((range_high_low.pow(2) / (4.0 * np.log(2.0))).clip(lower=0.0)).shift(1)
+                    dataframe["garman_klass_range_vol"] = np.sqrt(
+                        (0.5 * range_high_low.pow(2) - (2.0 * np.log(2.0) - 1.0) * open_close.pow(2)).clip(lower=0.0)
+                    ).shift(1)
+                    dataframe["rogers_satchell_range_vol"] = np.sqrt(
+                        (high_open * high_close + low_open * low_close).clip(lower=0.0)
+                    ).shift(1)
+                    range_estimator_stack = pd.concat(
+                        [
+                            dataframe["parkinson_range_vol"],
+                            dataframe["garman_klass_range_vol"],
+                            dataframe["rogers_satchell_range_vol"],
+                        ],
+                        axis=1,
+                    )
+                    dataframe["range_estimator_disagreement"] = range_estimator_stack.std(axis=1)
+                    dataframe["range_estimator_disagreement_z"] = (
+                        dataframe["range_estimator_disagreement"]
+                        - dataframe["range_estimator_disagreement"].rolling(144, min_periods=55).median().shift(1)
+                    ) / dataframe["range_estimator_disagreement"].rolling(144, min_periods=55).std().shift(1).replace(0, np.nan)
+                    dataframe["range_compression_state"] = (
+                        dataframe["rv_short"].shift(1)
+                        / dataframe["rv_long"].shift(1).replace(0, np.nan)
+                    )
+                    dataframe["range_compression_floor"] = dataframe["range_compression_state"].rolling(
+                        233,
+                        min_periods=89,
+                    ).quantile(0.35).shift(1)
+                    dataframe["range_estimator_disagreement_resolving"] = (
+                        dataframe["range_estimator_disagreement"]
+                        < dataframe["range_estimator_disagreement"].rolling(21, min_periods=8).mean().shift(1)
+                    )
+                    dataframe["compression_release_breakout"] = (
+                        dataframe["range_compression_state"].lt(dataframe["range_compression_floor"])
+                        & dataframe["range_estimator_disagreement_z"].gt(0.35)
+                        & dataframe["range_estimator_disagreement_resolving"].fillna(False)
+                    )
+                if "{spec.key}" == "yang_zhang_range_vol_split_reacceleration":
+                    safe_open = dataframe["open"].replace(0, np.nan)
+                    safe_high = dataframe["high"].replace(0, np.nan)
+                    safe_low = dataframe["low"].replace(0, np.nan)
+                    safe_close = dataframe["close"].replace(0, np.nan)
+                    yz_open_jump = np.log(safe_open / safe_close.shift(1))
+                    yz_open_close = np.log(safe_close / safe_open)
+                    yz_high_open = np.log(safe_high / safe_open)
+                    yz_high_close = np.log(safe_high / safe_close)
+                    yz_low_open = np.log(safe_low / safe_open)
+                    yz_low_close = np.log(safe_low / safe_close)
+                    yz_rs_variance = (yz_high_open * yz_high_close + yz_low_open * yz_low_close).clip(lower=0.0)
+                    yz_rs_range_vol_raw = np.sqrt(yz_rs_variance.rolling(34, min_periods=21).mean())
+                    yz_open_jump_vol_raw = np.sqrt(yz_open_jump.pow(2).rolling(34, min_periods=21).mean())
+                    yz_open_close_vol_raw = np.sqrt(yz_open_close.pow(2).rolling(34, min_periods=21).mean())
+                    yz_total_vol_raw = (
+                        yz_rs_range_vol_raw + yz_open_jump_vol_raw + yz_open_close_vol_raw
+                    ).replace(0, np.nan)
+                    dataframe["yz_rogers_satchell_range_vol"] = yz_rs_range_vol_raw.shift(1)
+                    dataframe["yz_open_jump_vol_share"] = (yz_open_jump_vol_raw / yz_total_vol_raw).shift(1)
+                    dataframe["yz_range_vol_share"] = (yz_rs_range_vol_raw / yz_total_vol_raw).shift(1)
+                    dataframe["yz_range_vol_baseline"] = dataframe["yz_rogers_satchell_range_vol"].rolling(
+                        144,
+                        min_periods=55,
+                    ).median().shift(1)
+                    dataframe["yz_range_vol_impulse"] = (
+                        dataframe["yz_rogers_satchell_range_vol"]
+                        / dataframe["yz_range_vol_baseline"].replace(0, np.nan)
+                    )
+                    dataframe["yz_range_vol_reacceleration"] = (
+                        dataframe["yz_range_vol_impulse"].between(1.05, 3.20)
+                        & dataframe["yz_rogers_satchell_range_vol"].gt(
+                            dataframe["yz_rogers_satchell_range_vol"].rolling(13, min_periods=5).mean().shift(1)
+                        )
+                        & dataframe["yz_range_vol_share"].between(0.26, 0.82)
+                    )
+                    dataframe["yz_gap_noise_cap"] = (
+                        dataframe["yz_open_jump_vol_share"].lt(0.44)
+                        & dataframe["yz_open_jump_vol_share"].rolling(8, min_periods=3).max().lt(0.62)
+                    )
+                if "{spec.key}" == "inside_bar_breakout_hold":
+                    dataframe["inside_range_high"] = dataframe["high"].shift(1)
+                    dataframe["inside_range_low"] = dataframe["low"].shift(1)
+                    dataframe["prior_inside_bar"] = (
+                        (dataframe["high"].shift(1) < dataframe["high"].shift(2))
+                        & (dataframe["low"].shift(1) > dataframe["low"].shift(2))
+                    )
+                    breakout_buffer = dataframe["atr14"].shift(1) * 0.08
+                    dataframe["inside_breakout_long"] = (
+                        dataframe["prior_inside_bar"].fillna(False)
+                        & (dataframe["close"] > dataframe["inside_range_high"] + breakout_buffer)
+                    )
+                    dataframe["inside_breakout_short"] = (
+                        dataframe["prior_inside_bar"].fillna(False)
+                        & (dataframe["close"] < dataframe["inside_range_low"] - breakout_buffer)
+                    )
+                    dataframe["inside_breakout_hold_long"] = (
+                        dataframe["inside_breakout_long"].fillna(False)
+                        & (
+                            (dataframe["close"].shift(1) > dataframe["inside_range_high"].shift(1))
+                            | (
+                                (dataframe["low"] <= dataframe["inside_range_high"] + dataframe["atr14"] * 0.18)
+                                & (dataframe["close"] > dataframe["inside_range_high"])
+                            )
+                        )
+                    )
+                    dataframe["inside_breakout_hold_short"] = (
+                        dataframe["inside_breakout_short"].fillna(False)
+                        & (
+                            (dataframe["close"].shift(1) < dataframe["inside_range_low"].shift(1))
+                            | (
+                                (dataframe["high"] >= dataframe["inside_range_low"] - dataframe["atr14"] * 0.18)
+                                & (dataframe["close"] < dataframe["inside_range_low"])
+                            )
+                        )
+                    )
+                if "{spec.key}" == "realized_skew_semivariance_trend_acceptance":
+                    realized_return = log_close.diff().shift(1)
+                    upside_return = realized_return.clip(lower=0.0)
+                    downside_return = realized_return.clip(upper=0.0)
+                    dataframe["realized_skew_96_shifted"] = realized_return.rolling(96, min_periods=34).skew()
+                    dataframe["upside_semivariance_96_shifted"] = upside_return.pow(2).rolling(
+                        96,
+                        min_periods=34,
+                    ).mean()
+                    dataframe["downside_semivariance_96_shifted"] = downside_return.pow(2).rolling(
+                        96,
+                        min_periods=34,
+                    ).mean()
+                    dataframe["semivariance_balance_shifted"] = (
+                        dataframe["upside_semivariance_96_shifted"]
+                        - dataframe["downside_semivariance_96_shifted"]
+                    ) / (
+                        dataframe["upside_semivariance_96_shifted"]
+                        + dataframe["downside_semivariance_96_shifted"]
+                    ).replace(0, np.nan)
+                if "{spec.key}" == "sax_symbolic_aggregate_word_shift_filter":
+                    sax_return = log_close.diff().shift(1)
+                    sax_range = dataframe["bar_range_atr"].shift(1)
+                    sax_return_center = sax_return.rolling(144, min_periods=55).median().shift(1)
+                    sax_return_scale = sax_return.rolling(144, min_periods=55).std().shift(1).replace(0, np.nan)
+                    sax_range_center = sax_range.rolling(144, min_periods=55).median().shift(1)
+                    sax_range_scale = sax_range.rolling(144, min_periods=55).std().shift(1).replace(0, np.nan)
+                    sax_return_z = ((sax_return - sax_return_center) / sax_return_scale).clip(-3.0, 3.0)
+                    sax_range_z = ((sax_range - sax_range_center) / sax_range_scale).clip(-3.0, 3.0)
+                    dataframe["sax_return_symbol_shifted"] = pd.cut(
+                        sax_return_z,
+                        bins=[-np.inf, -0.84, -0.25, 0.25, 0.84, np.inf],
+                        labels=False,
+                    )
+                    dataframe["sax_range_symbol_shifted"] = pd.cut(
+                        sax_range_z,
+                        bins=[-np.inf, -0.84, -0.25, 0.25, 0.84, np.inf],
+                        labels=False,
+                    )
+                    dataframe["sax_word_code"] = (
+                        dataframe["sax_return_symbol_shifted"] * 10.0
+                        + dataframe["sax_range_symbol_shifted"]
+                    )
+                    sax_word_repeat_rate = dataframe["sax_word_code"].rolling(
+                        34,
+                        min_periods=13,
+                    ).apply(lambda values: pd.Series(values).mode().iloc[0] if len(pd.Series(values).dropna()) else np.nan, raw=False)
+                    dataframe["sax_word_rarity"] = (
+                        dataframe["sax_word_code"].ne(sax_word_repeat_rate)
+                        .rolling(55, min_periods=21)
+                        .mean()
+                        .shift(1)
+                    )
+                    dataframe["sax_motif_churn"] = (
+                        dataframe["sax_word_code"].ne(dataframe["sax_word_code"].shift(1))
+                        .rolling(21, min_periods=8)
+                        .mean()
+                        .shift(1)
+                    )
+                    dataframe["sax_directional_word_transition"] = (
+                        dataframe["sax_return_symbol_shifted"]
+                        - dataframe["sax_return_symbol_shifted"].rolling(13, min_periods=5).median().shift(1)
+                    )
+                    dataframe["sax_range_expansion_transition"] = (
+                        dataframe["sax_range_symbol_shifted"]
+                        - dataframe["sax_range_symbol_shifted"].rolling(13, min_periods=5).median().shift(1)
+                    )
+                if "{spec.key}" == "chande_forecast_oscillator_half_life_reversion_gate":
+                    chande_forecast_window = 34
+                    chande_forecast_x = pd.Series(np.arange(chande_forecast_window, dtype=float))
+
+                    def _chande_forecast_endpoint(values: np.ndarray) -> float:
+                        if len(values) != chande_forecast_window or np.isnan(values).any():
+                            return np.nan
+                        slope, intercept = np.polyfit(chande_forecast_x, values.astype(float), 1)
+                        return float(slope * chande_forecast_x.iloc[-1] + intercept)
+
+                    chande_completed_close = dataframe["close"].shift(1)
+                    dataframe["chande_forecast_endpoint"] = chande_completed_close.rolling(
+                        chande_forecast_window,
+                    ).apply(_chande_forecast_endpoint, raw=True)
+                    dataframe["chande_forecast_error_shifted"] = (
+                        chande_completed_close - dataframe["chande_forecast_endpoint"]
+                    )
+                    dataframe["chande_forecast_oscillator"] = (
+                        dataframe["chande_forecast_error_shifted"]
+                        / chande_completed_close.replace(0, np.nan)
+                    ) * 100.0
+                    chande_forecast_error_abs = dataframe["chande_forecast_error_shifted"].abs()
+                    chande_forecast_error_reference = chande_forecast_error_abs.rolling(
+                        21,
+                        min_periods=8,
+                    ).max().shift(1)
+                    dataframe["chande_forecast_error_half_life"] = (
+                        chande_forecast_error_abs
+                        / chande_forecast_error_reference.replace(0, np.nan)
+                    )
+                    dataframe["forecast_error_reversion_pressure"] = (
+                        chande_forecast_error_abs.shift(1) - chande_forecast_error_abs
+                    ) / dataframe["atr14"].shift(1).replace(0, np.nan)
+                if "{spec.key}" == "bartels_rank_serial_randomness_trend_filter":
+                    bartels_rank_return_shifted = log_close.diff().shift(1)
+
+                    def _bartels_rank_serial_score(values: np.ndarray) -> float:
+                        sample = pd.Series(values).replace([np.inf, -np.inf], np.nan).dropna()
+                        if len(sample) < 24:
+                            return np.nan
+                        ranks = sample.rank(method="average").to_numpy(dtype=float)
+                        diffs = np.diff(ranks)
+                        numerator = float(np.sum(diffs * diffs))
+                        denominator = float(np.sum((ranks - ranks.mean()) ** 2))
+                        if denominator <= 1e-12:
+                            return np.nan
+                        return float(numerator / denominator)
+
+                    dataframe["bartels_rank_serial_randomness_score"] = bartels_rank_return_shifted.rolling(
+                        55,
+                        min_periods=34,
+                    ).apply(_bartels_rank_serial_score, raw=True)
+                    dataframe["bartels_rank_nonrandom_trend_quality"] = (
+                        dataframe["bartels_rank_serial_randomness_score"].between(0.55, 2.25)
+                        & dataframe["bartels_rank_serial_randomness_score"].lt(
+                            dataframe["bartels_rank_serial_randomness_score"]
+                            .rolling(144, min_periods=55)
+                            .quantile(0.86)
+                            .shift(1)
+                        )
+                    )
+                if "{spec.key}" == "local_polynomial_curvature_acceleration_filter":
+                    local_poly_window = 55
+                    local_poly_x = np.arange(local_poly_window, dtype=float)
+
+                    def _local_poly_slope_bps(values: np.ndarray) -> float:
+                        if len(values) != local_poly_window or np.isnan(values).any():
+                            return np.nan
+                        coefs = np.polyfit(local_poly_x, np.log(values.astype(float)), 2)
+                        slope = (2.0 * coefs[0] * local_poly_x[-1]) + coefs[1]
+                        return float(slope * 10000.0)
+
+                    def _local_poly_curvature_bps(values: np.ndarray) -> float:
+                        if len(values) != local_poly_window or np.isnan(values).any():
+                            return np.nan
+                        coefs = np.polyfit(local_poly_x, np.log(values.astype(float)), 2)
+                        return float(2.0 * coefs[0] * 10000.0)
+
+                    dataframe["local_poly_slope_bps_55"] = dataframe["close"].rolling(
+                        local_poly_window,
+                        min_periods=local_poly_window,
+                    ).apply(_local_poly_slope_bps, raw=True)
+                    dataframe["local_poly_curvature_bps_55"] = dataframe["close"].rolling(
+                        local_poly_window,
+                        min_periods=local_poly_window,
+                    ).apply(_local_poly_curvature_bps, raw=True)
+                    dataframe["local_poly_curvature_z"] = (
+                        dataframe["local_poly_curvature_bps_55"]
+                        - dataframe["local_poly_curvature_bps_55"].rolling(144, min_periods=55).median().shift(1)
+                    ) / dataframe["local_poly_curvature_bps_55"].rolling(144, min_periods=55).std().shift(1).replace(0, np.nan)
+                    dataframe["local_poly_slope_acceleration"] = (
+                        dataframe["local_poly_slope_bps_55"]
+                        - dataframe["local_poly_slope_bps_55"].rolling(34, min_periods=13).mean().shift(1)
+                    )
+                if "{spec.key}" == "ultimate_oscillator_mtf_divergence_filter":
+                    ultimate_prev_close = dataframe["close"].shift(1)
+                    ultimate_low_ref = pd.concat([dataframe["low"], ultimate_prev_close], axis=1).min(axis=1)
+                    ultimate_high_ref = pd.concat([dataframe["high"], ultimate_prev_close], axis=1).max(axis=1)
+                    dataframe["ultimate_oscillator_bp"] = dataframe["close"] - ultimate_low_ref
+                    dataframe["ultimate_oscillator_tr"] = ultimate_high_ref - ultimate_low_ref
+                    dataframe["ultimate_oscillator_avg7"] = (
+                        dataframe["ultimate_oscillator_bp"].rolling(7, min_periods=7).sum()
+                        / dataframe["ultimate_oscillator_tr"].rolling(7, min_periods=7).sum().replace(0, np.nan)
+                    )
+                    dataframe["ultimate_oscillator_avg14"] = (
+                        dataframe["ultimate_oscillator_bp"].rolling(14, min_periods=14).sum()
+                        / dataframe["ultimate_oscillator_tr"].rolling(14, min_periods=14).sum().replace(0, np.nan)
+                    )
+                    dataframe["ultimate_oscillator_avg28"] = (
+                        dataframe["ultimate_oscillator_bp"].rolling(28, min_periods=28).sum()
+                        / dataframe["ultimate_oscillator_tr"].rolling(28, min_periods=28).sum().replace(0, np.nan)
+                    )
+                    dataframe["ultimate_oscillator_value"] = 100.0 * (
+                        (4.0 * dataframe["ultimate_oscillator_avg7"])
+                        + (2.0 * dataframe["ultimate_oscillator_avg14"])
+                        + dataframe["ultimate_oscillator_avg28"]
+                    ) / 7.0
+                    dataframe["ultimate_oscillator_value_shifted"] = dataframe["ultimate_oscillator_value"].shift(1)
+                    dataframe["ultimate_oscillator_low34"] = dataframe["ultimate_oscillator_value_shifted"].rolling(34, min_periods=13).min().shift(1)
+                    dataframe["ultimate_oscillator_high34"] = dataframe["ultimate_oscillator_value_shifted"].rolling(34, min_periods=13).max().shift(1)
+                if "{spec.key}" == "true_strength_index_mtf_reacceleration_filter":
+                    dataframe["tsi_price_change"] = dataframe["close"].diff()
+                    dataframe["tsi_abs_price_change"] = dataframe["tsi_price_change"].abs()
+                    dataframe["tsi_smoothed_pc_25"] = dataframe["tsi_price_change"].ewm(
+                        span=25,
+                        adjust=False,
+                        min_periods=25,
+                    ).mean()
+                    dataframe["tsi_smoothed_abs_pc_25"] = dataframe["tsi_abs_price_change"].ewm(
+                        span=25,
+                        adjust=False,
+                        min_periods=25,
+                    ).mean()
+                    tsi_double_smoothed_pc = dataframe["tsi_smoothed_pc_25"].ewm(
+                        span=13,
+                        adjust=False,
+                        min_periods=13,
+                    ).mean()
+                    tsi_double_smoothed_abs_pc = dataframe["tsi_smoothed_abs_pc_25"].ewm(
+                        span=13,
+                        adjust=False,
+                        min_periods=13,
+                    ).mean()
+                    dataframe["true_strength_index_value"] = 100.0 * (
+                        tsi_double_smoothed_pc / tsi_double_smoothed_abs_pc.replace(0, np.nan)
+                    )
+                    dataframe["true_strength_index_signal"] = dataframe["true_strength_index_value"].ewm(
+                        span=7,
+                        adjust=False,
+                        min_periods=7,
+                    ).mean()
+                    dataframe["true_strength_index_value_shifted"] = dataframe["true_strength_index_value"].shift(1)
+                    dataframe["true_strength_index_signal_shifted"] = dataframe["true_strength_index_signal"].shift(1)
+                    dataframe["true_strength_index_histogram_shifted"] = (
+                        dataframe["true_strength_index_value_shifted"]
+                        - dataframe["true_strength_index_signal_shifted"]
+                    )
+                if "{spec.key}" == "trend_intensity_index_reacceleration_filter":
+                    tii_window = 55
+                    tii_baseline = dataframe["close"].rolling(tii_window, min_periods=21).mean().shift(1)
+                    tii_deviation = dataframe["close"].shift(1) - tii_baseline
+                    tii_positive_pressure = tii_deviation.clip(lower=0.0).rolling(21, min_periods=8).sum()
+                    tii_negative_pressure = (-tii_deviation.clip(upper=0.0)).rolling(21, min_periods=8).sum()
+                    tii_pressure_total = (tii_positive_pressure + tii_negative_pressure).replace(0, np.nan)
+                    dataframe["trend_intensity_index_value"] = 100.0 * tii_positive_pressure / tii_pressure_total
+                    dataframe["trend_intensity_index_value_shifted"] = dataframe[
+                        "trend_intensity_index_value"
+                    ].shift(1)
+                    dataframe["trend_intensity_index_slope"] = (
+                        dataframe["trend_intensity_index_value_shifted"]
+                        - dataframe["trend_intensity_index_value_shifted"].rolling(8, min_periods=3).mean().shift(1)
+                    )
+                    dataframe["trend_intensity_index_reacceleration"] = (
+                        dataframe["trend_intensity_index_slope"]
+                        - dataframe["trend_intensity_index_slope"].rolling(13, min_periods=5).mean().shift(1)
+                    )
+                    dataframe["trend_intensity_index_pullback_depth_atr"] = (
+                        (dataframe["close"].shift(1) - dataframe["ema21"].shift(1)).abs()
+                        / dataframe["atr14"].shift(1).replace(0, np.nan)
+                    )
+                if "{spec.key}" == "tsmom_vol_scaled_low_turnover_rrr":
+                    completed_return = dataframe["close"].pct_change().shift(1)
+                    dataframe["tsmom_return_55_shifted"] = dataframe["close"].pct_change(55).shift(1)
+                    dataframe["tsmom_return_144_shifted"] = dataframe["close"].pct_change(144).shift(1)
+                    dataframe["tsmom_realized_vol_55_shifted"] = completed_return.rolling(
+                        55,
+                        min_periods=21,
+                    ).std()
+                    dataframe["tsmom_vol_scaled_score"] = (
+                        dataframe["tsmom_return_144_shifted"]
+                        / dataframe["tsmom_realized_vol_55_shifted"].replace(0.0, np.nan)
+                    ).clip(-12.0, 12.0)
+                    dataframe["tsmom_abs_trend_bps"] = dataframe["tsmom_return_144_shifted"].abs() * 10000.0
+                    dataframe["tsmom_vol_budget_ok"] = dataframe["tsmom_realized_vol_55_shifted"].between(
+                        dataframe["tsmom_realized_vol_55_shifted"].rolling(144, min_periods=55).quantile(0.20),
+                        dataframe["tsmom_realized_vol_55_shifted"].rolling(144, min_periods=55).quantile(0.88),
+                    )
+                    dataframe["tsmom_low_turnover_hold_state"] = (
+                        dataframe["tsmom_abs_trend_bps"].gt(42.0)
+                        & dataframe["tsmom_return_55_shifted"].abs().gt(0.0018)
+                    )
+                if "{spec.key}" == "dss_bressert_reacceleration_filter":
+                    dss_low = dataframe["low"].rolling(13, min_periods=13).min()
+                    dss_high = dataframe["high"].rolling(13, min_periods=13).max()
+                    dss_range = (dss_high - dss_low).replace(0, np.nan)
+                    dss_raw_k = 100.0 * (dataframe["close"] - dss_low) / dss_range
+                    dss_smooth_1 = dss_raw_k.ewm(span=8, adjust=False, min_periods=8).mean()
+                    dataframe["dss_bressert_value"] = dss_smooth_1.ewm(
+                        span=5,
+                        adjust=False,
+                        min_periods=5,
+                    ).mean()
+                    dataframe["dss_bressert_value_shifted"] = dataframe["dss_bressert_value"].shift(1)
+                    dataframe["dss_bressert_signal_shifted"] = dataframe[
+                        "dss_bressert_value"
+                    ].ewm(span=5, adjust=False, min_periods=5).mean().shift(1)
+                    dataframe["dss_bressert_slope"] = (
+                        dataframe["dss_bressert_value_shifted"]
+                        - dataframe["dss_bressert_value_shifted"].rolling(5, min_periods=3).mean().shift(1)
+                    )
+                    dataframe["dss_bressert_reacceleration"] = (
+                        dataframe["dss_bressert_slope"]
+                        - dataframe["dss_bressert_slope"].rolling(8, min_periods=3).mean().shift(1)
+                    )
+                    dataframe["dss_bressert_pullback_depth_atr"] = (
+                        (dataframe["close"].shift(1) - dataframe["ema21"].shift(1)).abs()
+                        / dataframe["atr14"].shift(1).replace(0, np.nan)
+                    )
+                if "{spec.key}" == "chande_momentum_mtf_reacceleration_filter":
+                    chande_momentum_delta = dataframe["close"].diff()
+                    chande_momentum_gain = chande_momentum_delta.clip(lower=0.0)
+                    chande_momentum_loss = (-chande_momentum_delta.clip(upper=0.0))
+                    dataframe["chande_momentum_gain_sum"] = chande_momentum_gain.rolling(
+                        20,
+                        min_periods=20,
+                    ).sum()
+                    dataframe["chande_momentum_loss_sum"] = chande_momentum_loss.rolling(
+                        20,
+                        min_periods=20,
+                    ).sum()
+                    dataframe["chande_momentum_value"] = 100.0 * (
+                        (dataframe["chande_momentum_gain_sum"] - dataframe["chande_momentum_loss_sum"])
+                        / (
+                            dataframe["chande_momentum_gain_sum"]
+                            + dataframe["chande_momentum_loss_sum"]
+                        ).replace(0, np.nan)
+                    )
+                    dataframe["chande_momentum_signal"] = dataframe["chande_momentum_value"].ewm(
+                        span=9,
+                        adjust=False,
+                        min_periods=9,
+                    ).mean()
+                    dataframe["chande_momentum_value_shifted"] = dataframe["chande_momentum_value"].shift(1)
+                    dataframe["chande_momentum_signal_shifted"] = dataframe["chande_momentum_signal"].shift(1)
+                    dataframe["chande_momentum_histogram_shifted"] = (
+                        dataframe["chande_momentum_value_shifted"]
+                        - dataframe["chande_momentum_signal_shifted"]
+                    )
+                if "{spec.key}" == "relative_vigor_index_mtf_reacceleration_filter":
+                    dataframe["relative_vigor_index_numerator"] = (
+                        dataframe["close"] - dataframe["open"]
+                    ).rolling(10, min_periods=10).sum()
+                    dataframe["relative_vigor_index_denominator"] = (
+                        dataframe["high"] - dataframe["low"]
+                    ).rolling(10, min_periods=10).sum().replace(0, np.nan)
+                    dataframe["relative_vigor_index_value"] = 100.0 * (
+                        dataframe["relative_vigor_index_numerator"]
+                        / dataframe["relative_vigor_index_denominator"]
+                    )
+                    dataframe["relative_vigor_index_signal"] = dataframe[
+                        "relative_vigor_index_value"
+                    ].rolling(4, min_periods=4).mean()
+                    dataframe["relative_vigor_index_value_shifted"] = dataframe[
+                        "relative_vigor_index_value"
+                    ].shift(1)
+                    dataframe["relative_vigor_index_signal_shifted"] = dataframe[
+                        "relative_vigor_index_signal"
+                    ].shift(1)
+                    dataframe["relative_vigor_index_histogram_shifted"] = (
+                        dataframe["relative_vigor_index_value_shifted"]
+                        - dataframe["relative_vigor_index_signal_shifted"]
+                    )
+                    dataframe["relative_vigor_index_slope"] = (
+                        dataframe["relative_vigor_index_value_shifted"]
+                        - dataframe["relative_vigor_index_value_shifted"].rolling(8, min_periods=3).mean().shift(1)
+                    )
+                    dataframe["relative_vigor_index_reacceleration"] = (
+                        dataframe["relative_vigor_index_slope"]
+                        - dataframe["relative_vigor_index_slope"].rolling(13, min_periods=5).mean().shift(1)
+                    )
+                if "{spec.key}" == "low_volatility_trend_pullback_reacceleration":
+                    low_volatility_reference = close_return.rolling(144, min_periods=55).std().shift(1)
+                    low_volatility_threshold = low_volatility_reference.rolling(
+                        377,
+                        min_periods=144,
+                    ).quantile(0.38).shift(1)
+                    dataframe["low_volatility_state"] = low_volatility_reference.le(low_volatility_threshold)
+                    dataframe["low_volatility_pullback_depth_atr"] = (
+                        (dataframe["close"].shift(1) - dataframe["ema21"].shift(1))
+                        / dataframe["atr14"].shift(1).replace(0, np.nan)
+                    )
+                    dataframe["low_volatility_trend_slope_bps"] = (
+                        (dataframe["ema21"].shift(1) / dataframe["ema21"].shift(13) - 1.0)
+                        * 10000.0
+                    )
+                    dataframe["low_volatility_reacceleration"] = (
+                        dataframe["low_volatility_trend_slope_bps"]
+                        - dataframe["low_volatility_trend_slope_bps"].rolling(21, min_periods=8).mean().shift(1)
+                    )
+                if "{spec.key}" == "hurst_efficiency_density_repair":
+                    hurst_context_base = dataframe[["date", "open", "high", "low", "close", "volume"]].copy()
+                    hurst_context_base["__row_order"] = range(len(hurst_context_base))
+                    hurst_context_base["__date_utc"] = pd.to_datetime(hurst_context_base["date"], utc=True)
+                    hurst_context_base = hurst_context_base.sort_values("__date_utc")
+                    hurst_context_15m = (
+                        hurst_context_base.set_index("__date_utc")[["open", "high", "low", "close", "volume"]]
+                        .resample("15min", label="right", closed="right")
+                        .agg({{"open": "first", "high": "max", "low": "min", "close": "last", "volume": "sum"}})
+                        .dropna()
+                    )
+                    hurst_context_15m["ema20_15m"] = hurst_context_15m["close"].ewm(
+                        span=20,
+                        adjust=False,
+                        min_periods=20,
+                    ).mean()
+                    hurst_context_15m["ema50_15m"] = hurst_context_15m["close"].ewm(
+                        span=50,
+                        adjust=False,
+                        min_periods=50,
+                    ).mean()
+                    hurst_context_15m["slope_15m"] = (
+                        hurst_context_15m["ema20_15m"] - hurst_context_15m["ema20_15m"].shift(6)
+                    )
+                    hurst_context_15m.index.name = "__date_utc"
+                    hurst_context_keep = ["ema20_15m", "ema50_15m", "slope_15m"]
+                    hurst_context_merged = pd.merge_asof(
+                        hurst_context_base[["__row_order", "__date_utc"]],
+                        hurst_context_15m[hurst_context_keep].reset_index(),
+                        on="__date_utc",
+                        direction="backward",
+                    ).sort_values("__row_order")
+                    for column in hurst_context_keep:
+                        dataframe[column] = hurst_context_merged[column].to_numpy()
+
+                    def _hurst_rs_proxy(series: pd.Series) -> float:
+                        values = series.to_numpy(dtype=float)
+                        if len(values) < 32 or np.isnan(values).any():
+                            return np.nan
+                        demeaned = values - values.mean()
+                        sigma = demeaned.std()
+                        if sigma <= 1e-12:
+                            return np.nan
+                        cumulative = np.cumsum(demeaned)
+                        spread = cumulative.max() - cumulative.min()
+                        if spread <= 1e-12:
+                            return np.nan
+                        return float(np.log(spread / sigma) / np.log(len(values)))
+
+                    hurst_net_move = (dataframe["close"] - dataframe["close"].shift(64)).abs()
+                    hurst_path_move = dataframe["close"].diff().abs().rolling(64, min_periods=21).sum()
+                    dataframe["hurst_efficiency_ratio"] = hurst_net_move / hurst_path_move.replace(0, np.nan)
+                    dataframe["hurst_efficiency_ratio_shifted"] = dataframe["hurst_efficiency_ratio"].shift(1)
+                    dataframe["hurst_proxy"] = dataframe["close"].rolling(64, min_periods=64).apply(
+                        _hurst_rs_proxy,
+                        raw=False,
+                    )
+                    dataframe["hurst_proxy_shifted"] = dataframe["hurst_proxy"].shift(1)
+                    dataframe["hurst_compression_range_atr"] = (
+                        dataframe["bar_range_atr"].shift(1).rolling(8, min_periods=3).mean()
+                    )
+                    dataframe["hurst_compression_reference_atr"] = (
+                        dataframe["bar_range_atr"].shift(1).rolling(55, min_periods=21).quantile(0.42).shift(1)
+                    )
+                    dataframe["hurst_compression_pause"] = dataframe["hurst_compression_range_atr"].le(
+                        dataframe["hurst_compression_reference_atr"]
+                    )
+                    dataframe["hurst_reacceleration_bps"] = (
+                        (dataframe["ema21"].shift(1) / dataframe["ema21"].shift(7).replace(0, np.nan)) - 1.0
+                    ) * 10000.0
+                    hurst_context_path = dataframe["ema20_15m"].diff().abs().rolling(8, min_periods=3).sum()
+                    hurst_context_net = (dataframe["ema20_15m"] - dataframe["ema20_15m"].shift(8)).abs()
+                    dataframe["hurst_context_efficiency_ratio"] = (
+                        hurst_context_net / hurst_context_path.replace(0, np.nan)
+                    )
+                    dataframe["hurst_context_efficiency_ratio_shifted"] = dataframe[
+                        "hurst_context_efficiency_ratio"
+                    ].shift(1)
+                    dataframe["hurst_context_trend_shifted"] = (
+                        (dataframe["ema20_15m"] > dataframe["ema50_15m"])
+                        & (dataframe["slope_15m"] > -dataframe["atr14"] * 0.05)
+                    ).shift(1).fillna(False)
+                if "{spec.key}" == "fisher_transform_trend_rejoin":
+                    fisher_lookback = 34
+                    fisher_median_price = (dataframe["high"] + dataframe["low"]) / 2.0
+                    fisher_low = dataframe["low"].rolling(
+                        fisher_lookback,
+                        min_periods=12,
+                    ).min()
+                    fisher_high = dataframe["high"].rolling(
+                        fisher_lookback,
+                        min_periods=12,
+                    ).max()
+                    fisher_position = 2.0 * (
+                        (fisher_median_price - fisher_low)
+                        / (fisher_high - fisher_low).replace(0, np.nan)
+                        - 0.5
+                    )
+                    fisher_smoothed = fisher_position.ewm(
+                        span=5,
+                        adjust=False,
+                        min_periods=3,
+                    ).mean().clip(-0.999, 0.999)
+                    dataframe["fisher_transform_value"] = 0.5 * np.log(
+                        (1.0 + fisher_smoothed) / (1.0 - fisher_smoothed)
+                    )
+                    dataframe["fisher_transform_value_shifted"] = dataframe[
+                        "fisher_transform_value"
+                    ].shift(1)
+                    dataframe["fisher_transform_signal_shifted"] = dataframe[
+                        "fisher_transform_value"
+                    ].shift(2).rolling(3, min_periods=1).mean()
+                    dataframe["fisher_transform_turn"] = (
+                        dataframe["fisher_transform_value_shifted"]
+                        - dataframe["fisher_transform_signal_shifted"]
+                    )
+                    dataframe["fisher_transform_pullback_depth_atr"] = (
+                        (dataframe["close"].shift(1) - dataframe["ema21"].shift(1)).abs()
+                        / dataframe["atr14"].shift(1).replace(0, np.nan)
+                    )
+                    dataframe["fisher_transform_rejoin_slope_bps"] = (
+                        (dataframe["ema21"].shift(1) / dataframe["ema21"].shift(4).replace(0, np.nan)) - 1.0
+                    ) * 10000.0
+                if "{spec.key}" == "session_vwap_absorption_reacceleration":
+                    session_vwap_absorption_range_q = dataframe["bar_range_atr"].shift(1).rolling(
+                        48,
+                        min_periods=16,
+                    ).quantile(0.55).shift(1)
+                    session_vwap_absorption_range_median = dataframe["bar_range_atr"].shift(1).rolling(
+                        48,
+                        min_periods=16,
+                    ).median().shift(1)
+                    session_vwap_absorption_volume_median = dataframe["volume"].shift(1).rolling(
+                        48,
+                        min_periods=16,
+                    ).median().shift(1)
+                    dataframe["session_vwap_absorption_distance_atr"] = (
+                        (dataframe["close"].shift(1) - dataframe["session_vwap"].shift(1)).abs()
+                        / dataframe["atr14"].shift(1).replace(0, np.nan)
+                    )
+                    dataframe["session_vwap_absorption_compressed"] = (
+                        dataframe["bar_range_atr"].shift(1) <= session_vwap_absorption_range_q
+                    )
+                    dataframe["session_vwap_absorption_muted_drift_atr"] = (
+                        (dataframe["close"].shift(1) - dataframe["close"].shift(7)).abs()
+                        / dataframe["atr14"].shift(1).replace(0, np.nan)
+                    )
+                    dataframe["session_vwap_absorption_volume_ratio"] = (
+                        dataframe["volume"].shift(1)
+                        / session_vwap_absorption_volume_median.replace(0, np.nan)
+                    )
+                    dataframe["session_vwap_reacceleration_slope"] = (
+                        (dataframe["close"].shift(1) - dataframe["close"].shift(8))
+                        / dataframe["atr14"].shift(1).replace(0, np.nan)
+                    )
+                    dataframe["session_vwap_trigger_range_ratio"] = (
+                        dataframe["bar_range_atr"]
+                        / session_vwap_absorption_range_median.replace(0, np.nan)
+                    )
+                if "{spec.key}" == "balance_of_power_volume_pressure_trend_acceptance_filter":
+                    dataframe["bop_pressure_value"] = (
+                        (dataframe["close"] - dataframe["open"])
+                        / (dataframe["high"] - dataframe["low"]).replace(0, np.nan)
+                    )
+                    dataframe["bop_pressure_shifted"] = dataframe["bop_pressure_value"].shift(1)
+                    dataframe["bop_pressure_baseline"] = (
+                        dataframe["bop_pressure_shifted"].rolling(21, min_periods=8).mean().shift(1)
+                    )
+                    dataframe["bop_pressure_impulse"] = (
+                        dataframe["bop_pressure_shifted"] - dataframe["bop_pressure_baseline"]
+                    )
+                    dataframe["bop_volume_participation"] = (
+                        dataframe["volume"].shift(1)
+                        / dataframe["volume"].shift(1).rolling(96, min_periods=34).median().shift(1).replace(0, np.nan)
+                    )
+                    dataframe["bop_body_acceptance"] = dataframe["body_atr"].shift(1)
+                    dataframe["bop_range_efficiency"] = (
+                        dataframe["body_atr"].shift(1)
+                        / dataframe["bar_range_atr"].shift(1).replace(0, np.nan).abs()
+                    )
+                if "{spec.key}" == "polarized_fractal_efficiency_trend_acceptance":
+                    pfe_lookback = {20 if timeframe in {"5m", "15m"} else 18 if timeframe in {"30m", "1h"} else 14 if timeframe == "4h" else 10}
+                    pfe_close_bps = np.log(dataframe["close"].replace(0.0, np.nan)) * 10000.0
+                    pfe_one_bar_path = np.sqrt(pfe_close_bps.diff().pow(2) + 1.0)
+                    pfe_path_length = pfe_one_bar_path.rolling(
+                        pfe_lookback,
+                        min_periods=pfe_lookback,
+                    ).sum()
+                    pfe_direct_move = pfe_close_bps - pfe_close_bps.shift(pfe_lookback)
+                    pfe_direct_distance = np.sqrt(
+                        pfe_direct_move.pow(2) + float(pfe_lookback * pfe_lookback)
+                    )
+                    dataframe["pfe_raw"] = (
+                        np.sign(pfe_direct_move.fillna(0.0))
+                        * (pfe_direct_distance / pfe_path_length.replace(0.0, np.nan))
+                        * 100.0
+                    ).clip(-100.0, 100.0)
+                    dataframe["pfe_shifted"] = dataframe["pfe_raw"].shift(1)
+                    dataframe["pfe_slope_shifted"] = (
+                        dataframe["pfe_raw"] - dataframe["pfe_raw"].shift(3)
+                    ).shift(1)
+                    dataframe["pfe_lookback_return_bps_shifted"] = (
+                        (dataframe["close"] / dataframe["close"].shift(pfe_lookback) - 1.0)
+                        * 10000.0
+                    ).shift(1)
+                    dataframe["pfe_fast_slope_bps_shifted"] = (
+                        (dataframe["ema21"] / dataframe["ema21"].shift(3) - 1.0)
+                        * 10000.0
+                    ).shift(1)
+                    dataframe["pfe_mtf_long_aligned"] = (
+                        (dataframe["slope_15m"] > 0.0).astype(int)
+                        + (dataframe["slope_30m"] > 0.0).astype(int)
+                        + (dataframe["slope_1h"] > 0.0).astype(int)
+                        + (dataframe["slope_4h"] > 0.0).astype(int)
+                    )
+                    dataframe["pfe_mtf_short_aligned"] = (
+                        (dataframe["slope_15m"] < 0.0).astype(int)
+                        + (dataframe["slope_30m"] < 0.0).astype(int)
+                        + (dataframe["slope_1h"] < 0.0).astype(int)
+                        + (dataframe["slope_4h"] < 0.0).astype(int)
+                    )
+                if "{spec.key}" == "anchored_return_memory_decay_reacceleration_filter":
+                    dataframe["anchored_session_return"] = (
+                        (dataframe["close"] - dataframe["session_open"])
+                        / dataframe["session_open"].replace(0, np.nan)
+                    )
+                    dataframe["anchored_session_return_shifted"] = dataframe[
+                        "anchored_session_return"
+                    ].shift(1)
+                    dataframe["anchored_return_memory_mean"] = (
+                        dataframe["anchored_session_return_shifted"]
+                        .rolling(21, min_periods=8)
+                        .mean()
+                        .shift(1)
+                    )
+                    dataframe["anchored_return_long_memory_mean"] = (
+                        dataframe["anchored_session_return_shifted"]
+                        .rolling(89, min_periods=34)
+                        .mean()
+                        .shift(1)
+                    )
+                    dataframe["anchored_return_memory_decay"] = (
+                        dataframe["anchored_session_return_shifted"]
+                        - dataframe["anchored_return_memory_mean"]
+                    )
+                    dataframe["anchored_return_memory_decay_ratio"] = (
+                        dataframe["anchored_return_memory_decay"].abs()
+                        / dataframe["atr14"].shift(1).replace(0, np.nan)
+                    )
+                    dataframe["anchored_return_reacceleration"] = (
+                        dataframe["anchored_session_return_shifted"]
+                        - dataframe["anchored_session_return_shifted"].shift(3)
+                    )
+                if "{spec.key}" == "volume_weighted_macd_trend_reacceleration_filter":
+                    vwmacd_volume = dataframe["volume"].clip(lower=0.0)
+                    vwmacd_fast_denominator = vwmacd_volume.rolling(13, min_periods=8).sum().replace(0, np.nan)
+                    vwmacd_slow_denominator = vwmacd_volume.rolling(34, min_periods=21).sum().replace(0, np.nan)
+                    dataframe["vwmacd_fast_vwma"] = (
+                        (dataframe["close"] * vwmacd_volume).rolling(13, min_periods=8).sum()
+                        / vwmacd_fast_denominator
+                    )
+                    dataframe["vwmacd_slow_vwma"] = (
+                        (dataframe["close"] * vwmacd_volume).rolling(34, min_periods=21).sum()
+                        / vwmacd_slow_denominator
+                    )
+                    dataframe["vwmacd_spread"] = dataframe["vwmacd_fast_vwma"] - dataframe["vwmacd_slow_vwma"]
+                    dataframe["vwmacd_signal"] = dataframe["vwmacd_spread"].ewm(
+                        span=9,
+                        adjust=False,
+                        min_periods=9,
+                    ).mean()
+                    dataframe["vwmacd_spread_shifted"] = dataframe["vwmacd_spread"].shift(1)
+                    dataframe["vwmacd_signal_shifted"] = dataframe["vwmacd_signal"].shift(1)
+                    dataframe["vwmacd_histogram_shifted"] = (
+                        dataframe["vwmacd_spread_shifted"]
+                        - dataframe["vwmacd_signal_shifted"]
+                    )
+                    dataframe["vwmacd_reacceleration"] = (
+                        dataframe["vwmacd_histogram_shifted"]
+                        - dataframe["vwmacd_histogram_shifted"].rolling(13, min_periods=5).mean().shift(1)
+                    )
+                if "{spec.key}" == "buff_averages_volume_weighted_trend_reacceleration_filter":
+                    buff_averages_volume = dataframe["volume"].clip(lower=0.0)
+                    dataframe["buff_averages_price_volume"] = dataframe["close"] * buff_averages_volume
+                    buff_averages_fast_denominator = buff_averages_volume.rolling(
+                        5,
+                        min_periods=5,
+                    ).sum().replace(0, np.nan)
+                    buff_averages_slow_denominator = buff_averages_volume.rolling(
+                        20,
+                        min_periods=13,
+                    ).sum().replace(0, np.nan)
+                    dataframe["buff_averages_fast"] = (
+                        dataframe["buff_averages_price_volume"].rolling(5, min_periods=5).sum()
+                        / buff_averages_fast_denominator
+                    )
+                    dataframe["buff_averages_slow"] = (
+                        dataframe["buff_averages_price_volume"].rolling(20, min_periods=13).sum()
+                        / buff_averages_slow_denominator
+                    )
+                    dataframe["buff_averages_spread_shifted"] = (
+                        dataframe["buff_averages_fast"] - dataframe["buff_averages_slow"]
+                    ).shift(1)
+                    dataframe["buff_averages_spread_signal"] = dataframe[
+                        "buff_averages_spread_shifted"
+                    ].rolling(8, min_periods=3).mean().shift(1)
+                    dataframe["buff_averages_reacceleration"] = (
+                        dataframe["buff_averages_spread_shifted"]
+                        - dataframe["buff_averages_spread_signal"]
+                    )
+                if "{spec.key}" == "decay_weighted_trend_reacceleration_filter":
+                    dataframe["decay_weighted_trend_fast"] = dataframe["close"].ewm(
+                        span=13,
+                        adjust=False,
+                        min_periods=13,
+                    ).mean()
+                    dataframe["decay_weighted_trend_slow"] = dataframe["close"].ewm(
+                        span=55,
+                        adjust=False,
+                        min_periods=34,
+                    ).mean()
+                    dataframe["decay_weighted_trend_spread_shifted"] = (
+                        dataframe["decay_weighted_trend_fast"]
+                        - dataframe["decay_weighted_trend_slow"]
+                    ).shift(1)
+                    dataframe["decay_weighted_pullback_energy"] = (
+                        (dataframe["close"].shift(1) - dataframe["decay_weighted_trend_fast"].shift(1))
+                        / dataframe["atr14"].shift(1).replace(0, np.nan)
+                    )
+                    dataframe["decay_weighted_reacceleration"] = (
+                        dataframe["decay_weighted_trend_spread_shifted"]
+                        - dataframe["decay_weighted_trend_spread_shifted"].rolling(8, min_periods=3).mean().shift(1)
+                    )
+                if "{spec.key}" == "asi_trend_breakout_admission_filter":
+                    asi_high_close_range = (dataframe["high"] - dataframe["close"].shift(1)).abs()
+                    asi_low_close_range = (dataframe["low"] - dataframe["close"].shift(1)).abs()
+                    asi_high_low_range = (dataframe["high"] - dataframe["low"]).abs()
+                    dataframe["asi_range_denominator"] = pd.concat(
+                        [asi_high_close_range, asi_low_close_range, asi_high_low_range],
+                        axis=1,
+                    ).max(axis=1).replace(0, np.nan)
+                    dataframe["asi_swing_index"] = 50.0 * (
+                        dataframe["close"]
+                        - dataframe["close"].shift(1)
+                        + 0.5 * (dataframe["close"] - dataframe["open"])
+                        + 0.25 * (dataframe["close"].shift(1) - dataframe["open"].shift(1))
+                    ) / dataframe["asi_range_denominator"]
+                    dataframe["asi_accumulative_swing_index"] = dataframe["asi_swing_index"].fillna(0.0).cumsum()
+                    dataframe["asi_accumulative_swing_index_shifted"] = dataframe[
+                        "asi_accumulative_swing_index"
+                    ].shift(1)
+                    dataframe["asi_signal_mean_shifted"] = (
+                        dataframe["asi_accumulative_swing_index_shifted"]
+                        .rolling(34, min_periods=13)
+                        .mean()
+                        .shift(1)
+                    )
+                    dataframe["asi_breakout_line_shifted"] = (
+                        dataframe["asi_accumulative_swing_index_shifted"]
+                        .rolling(55, min_periods=21)
+                        .max()
+                        .shift(1)
+                    )
+                    dataframe["asi_breakdown_line_shifted"] = (
+                        dataframe["asi_accumulative_swing_index_shifted"]
+                        .rolling(55, min_periods=21)
+                        .min()
+                        .shift(1)
+                    )
+                    dataframe["asi_slope_shifted"] = (
+                        dataframe["asi_accumulative_swing_index_shifted"]
+                        - dataframe["asi_accumulative_swing_index_shifted"].rolling(8, min_periods=3).mean().shift(1)
+                    )
+                    dataframe["asi_reacceleration_shifted"] = (
+                        dataframe["asi_slope_shifted"]
+                        - dataframe["asi_slope_shifted"].rolling(13, min_periods=5).mean().shift(1)
+                    )
+                    dataframe["asi_near_zero_veto"] = dataframe[
+                        "asi_accumulative_swing_index_shifted"
+                    ].abs().lt(12.0)
+                if "{spec.key}" == "damiani_volatmeter_trend_admission_filter":
+                    damiani_range = (dataframe["high"] - dataframe["low"]).abs()
+                    dataframe["damiani_volatility_fast"] = damiani_range.rolling(
+                        13,
+                        min_periods=8,
+                    ).mean()
+                    dataframe["damiani_volatility_slow"] = damiani_range.rolling(
+                        34,
+                        min_periods=21,
+                    ).mean()
+                    dataframe["damiani_noise_floor"] = (
+                        (dataframe["close"] - dataframe["session_vwap"]).abs()
+                        .rolling(21, min_periods=8)
+                        .mean()
+                    )
+                    dataframe["damiani_signal_ratio"] = (
+                        dataframe["damiani_volatility_fast"]
+                        / dataframe["damiani_volatility_slow"].replace(0, np.nan)
+                    )
+                    dataframe["damiani_noise_ratio"] = (
+                        dataframe["damiani_noise_floor"]
+                        / dataframe["atr14"].replace(0, np.nan)
+                    )
+                    dataframe["damiani_signal_ratio_shifted"] = dataframe["damiani_signal_ratio"].shift(1)
+                    dataframe["damiani_noise_ratio_shifted"] = dataframe["damiani_noise_ratio"].shift(1)
+                    dataframe["damiani_signal_slope_shifted"] = (
+                        dataframe["damiani_signal_ratio_shifted"]
+                        - dataframe["damiani_signal_ratio_shifted"].rolling(8, min_periods=3).mean().shift(1)
+                    )
+                    dataframe["damiani_noise_suppressed_state"] = (
+                        dataframe["damiani_signal_ratio_shifted"].gt(1.02)
+                        & dataframe["damiani_noise_ratio_shifted"].between(0.05, 1.85)
+                    )
+                if "{spec.key}" == "internal_bar_strength_state_filter":
+                    internal_bar_strength_range = (
+                        dataframe["high"] - dataframe["low"]
+                    ).replace(0, np.nan)
+                    dataframe["internal_bar_strength_raw"] = np.where(
+                        dataframe["high"].eq(dataframe["low"]),
+                        0.5,
+                        (dataframe["close"] - dataframe["low"]) / internal_bar_strength_range,
+                    )
+                    dataframe["internal_bar_strength_raw"] = pd.Series(
+                        dataframe["internal_bar_strength_raw"],
+                        index=dataframe.index,
+                    ).clip(lower=0.0, upper=1.0)
+                    dataframe["internal_bar_strength_shifted"] = dataframe[
+                        "internal_bar_strength_raw"
+                    ].shift(1)
+                    dataframe["internal_bar_strength_low_band"] = (
+                        dataframe["internal_bar_strength_shifted"]
+                        .rolling(55, min_periods=21)
+                        .quantile(0.18)
+                        .shift(1)
+                    )
+                    dataframe["internal_bar_strength_high_band"] = (
+                        dataframe["internal_bar_strength_shifted"]
+                        .rolling(55, min_periods=21)
+                        .quantile(0.82)
+                        .shift(1)
+                    )
+                    dataframe["internal_bar_strength_midline_shifted"] = (
+                        dataframe["internal_bar_strength_shifted"]
+                        .rolling(21, min_periods=8)
+                        .mean()
+                        .shift(1)
+                    )
+                    dataframe["internal_bar_strength_recovery"] = (
+                        dataframe["internal_bar_strength_shifted"]
+                        - dataframe["internal_bar_strength_shifted"]
+                        .rolling(5, min_periods=3)
+                        .min()
+                        .shift(1)
+                    )
+                    dataframe["internal_bar_strength_high_fade"] = (
+                        dataframe["internal_bar_strength_shifted"]
+                        .rolling(5, min_periods=3)
+                        .max()
+                        .shift(1)
+                        - dataframe["internal_bar_strength_shifted"]
+                    )
+                if "{spec.key}" == "volume_clock_relative_participation_breakout":
+                    cumulative_volume = dataframe.groupby(day)["volume"].cumsum()
+                    same_minute_cumulative = cumulative_volume.groupby(dataframe["minute_of_day_ny"]).shift(1)
+                    cumulative_baseline = same_minute_cumulative.groupby(dataframe["minute_of_day_ny"]).transform(
+                        lambda values: values.rolling(20, min_periods=3).median()
+                    )
+                    fallback_cumulative_baseline = cumulative_volume.shift(1).expanding(min_periods=3).median()
+                    dataframe["volume_clock_progress"] = (
+                        cumulative_volume / cumulative_baseline.fillna(fallback_cumulative_baseline).replace(0, np.nan)
+                    ).clip(lower=0.0, upper=1.0)
+                    same_minute_volume = dataframe.groupby(dataframe["minute_of_day_ny"])["volume"].shift(1)
+                    same_minute_baseline = same_minute_volume.groupby(dataframe["minute_of_day_ny"]).transform(
+                        lambda values: values.rolling(20, min_periods=3).median()
+                    )
+                    recent_volume_baseline = dataframe["volume"].shift(1).rolling(60, min_periods=10).median()
+                    expanding_volume_baseline = dataframe["volume"].shift(1).expanding(min_periods=3).median()
+                    volume_baseline = (
+                        same_minute_baseline
+                        .fillna(recent_volume_baseline)
+                        .fillna(expanding_volume_baseline)
+                        .replace(0, np.nan)
+                    )
+                    dataframe["relative_participation"] = dataframe["volume"] / volume_baseline
+                    relative_reference = dataframe["relative_participation"].shift(1).rolling(20, min_periods=3).median()
+                    dataframe["volume_clock_accel"] = dataframe["relative_participation"] - relative_reference.fillna(1.0)
+                    dataframe["volume_clock_mtf_trend_long"] = (
+                        (dataframe["ema20_5m"] > dataframe["ema50_5m"]).astype(int)
+                        + (dataframe["ema20_15m"] > dataframe["ema50_15m"]).astype(int)
+                        + (dataframe["ema20_30m"] > dataframe["ema50_30m"]).astype(int)
+                        + (dataframe["ema20_1h"] > dataframe["ema50_1h"]).astype(int)
+                        + (dataframe["ema20_4h"] > dataframe["ema50_4h"]).astype(int)
+                    )
+                    dataframe["volume_clock_mtf_trend_short"] = (
+                        (dataframe["ema20_5m"] < dataframe["ema50_5m"]).astype(int)
+                        + (dataframe["ema20_15m"] < dataframe["ema50_15m"]).astype(int)
+                        + (dataframe["ema20_30m"] < dataframe["ema50_30m"]).astype(int)
+                        + (dataframe["ema20_1h"] < dataframe["ema50_1h"]).astype(int)
+                        + (dataframe["ema20_4h"] < dataframe["ema50_4h"]).astype(int)
+                    )
+                    dataframe["volume_clock_breakout_long"] = (
+                        dataframe["relative_participation"].ge(1.45)
+                        & dataframe["volume_clock_accel"].ge(0.20)
+                        & dataframe["volume_clock_progress"].between(0.10, 0.94)
+                        & dataframe["volume_clock_mtf_trend_long"].ge(2)
+                        & dataframe["slope_1h"].ge(0.0)
+                    )
+                    dataframe["volume_clock_breakout_short"] = (
+                        dataframe["relative_participation"].ge(1.45)
+                        & dataframe["volume_clock_accel"].ge(0.20)
+                        & dataframe["volume_clock_progress"].between(0.10, 0.94)
+                        & dataframe["volume_clock_mtf_trend_short"].ge(2)
+                        & dataframe["slope_1h"].le(0.0)
+                    )
+                if "{spec.key}" == "volume_flow_impulse_trend_rejoin_filter":
+                    volume_flow_range_safe = dataframe["bar_range"].replace(0, np.nan)
+                    volume_flow_close_location = (
+                        (dataframe["close"] - dataframe["low"]) / volume_flow_range_safe
+                    ).clip(0.0, 1.0)
+                    volume_flow_direction = (
+                        np.sign(typical.diff()).replace(0, np.nan).ffill().fillna(0.0)
+                    )
+                    dataframe["volume_flow_force"] = (
+                        dataframe["volume"]
+                        * volume_flow_direction
+                        * (2.0 * volume_flow_close_location - 1.0)
+                    )
+                    dataframe["volume_flow_klinger_fast"] = dataframe["volume_flow_force"].ewm(
+                        span=13,
+                        adjust=False,
+                        min_periods=13,
+                    ).mean()
+                    dataframe["volume_flow_klinger_slow"] = dataframe["volume_flow_force"].ewm(
+                        span=34,
+                        adjust=False,
+                        min_periods=34,
+                    ).mean()
+                    dataframe["volume_flow_klinger_osc"] = (
+                        dataframe["volume_flow_klinger_fast"] - dataframe["volume_flow_klinger_slow"]
+                    )
+                    dataframe["volume_flow_klinger_signal"] = dataframe["volume_flow_klinger_osc"].ewm(
+                        span=8,
+                        adjust=False,
+                        min_periods=8,
+                    ).mean()
+                    dataframe["volume_flow_klinger_hist"] = (
+                        dataframe["volume_flow_klinger_osc"] - dataframe["volume_flow_klinger_signal"]
+                    )
+                    volume_flow_reference = (
+                        dataframe["volume_flow_klinger_hist"].rolling(89, min_periods=34).mean().shift(1)
+                    )
+                    volume_flow_scale = (
+                        dataframe["volume_flow_klinger_hist"]
+                        .rolling(89, min_periods=34)
+                        .std()
+                        .shift(1)
+                        .replace(0, np.nan)
+                    )
+                    dataframe["volume_flow_klinger_z"] = (
+                        dataframe["volume_flow_klinger_hist"] - volume_flow_reference
+                    ) / volume_flow_scale
+                    volume_flow_obv_step = np.sign(dataframe["close"].diff()).fillna(0.0) * dataframe["volume"]
+                    dataframe["volume_flow_obv"] = volume_flow_obv_step.cumsum()
+                    dataframe["volume_flow_obv_slope"] = (
+                        dataframe["volume_flow_obv"].diff(8) / dataframe["vol_ma20"].replace(0, np.nan)
+                    )
+                    dataframe["volume_flow_obv_accel"] = (
+                        dataframe["volume_flow_obv_slope"]
+                        - dataframe["volume_flow_obv_slope"].rolling(13, min_periods=5).mean().shift(1)
+                    )
+                    dataframe["volume_flow_klinger_hist_shifted"] = dataframe["volume_flow_klinger_hist"].shift(1)
+                    dataframe["volume_flow_klinger_z_shifted"] = dataframe["volume_flow_klinger_z"].shift(1)
+                    dataframe["volume_flow_obv_slope_shifted"] = dataframe["volume_flow_obv_slope"].shift(1)
+                    dataframe["volume_flow_obv_accel_shifted"] = dataframe["volume_flow_obv_accel"].shift(1)
+                if "{spec.key}" == "stochastic_rsi_mtf_reacceleration_filter":
+                    dataframe["stochastic_rsi_low14"] = dataframe["rsi14"].rolling(
+                        14,
+                        min_periods=14,
+                    ).min()
+                    dataframe["stochastic_rsi_high14"] = dataframe["rsi14"].rolling(
+                        14,
+                        min_periods=14,
+                    ).max()
+                    stochastic_rsi_range = (
+                        dataframe["stochastic_rsi_high14"] - dataframe["stochastic_rsi_low14"]
+                    ).replace(0, np.nan)
+                    dataframe["stochastic_rsi_raw"] = 100.0 * (
+                        (dataframe["rsi14"] - dataframe["stochastic_rsi_low14"])
+                        / stochastic_rsi_range
+                    )
+                    dataframe["stochastic_rsi_k"] = dataframe["stochastic_rsi_raw"].rolling(
+                        3,
+                        min_periods=3,
+                    ).mean()
+                    dataframe["stochastic_rsi_d"] = dataframe["stochastic_rsi_k"].rolling(
+                        3,
+                        min_periods=3,
+                    ).mean()
+                    dataframe["stochastic_rsi_k_shifted"] = dataframe["stochastic_rsi_k"].shift(1)
+                    dataframe["stochastic_rsi_d_shifted"] = dataframe["stochastic_rsi_d"].shift(1)
+                    dataframe["stochastic_rsi_histogram_shifted"] = (
+                        dataframe["stochastic_rsi_k_shifted"]
+                        - dataframe["stochastic_rsi_d_shifted"]
+                    )
+                if "{spec.key}" == "kdj_stochastic_jline_reacceleration":
+                    dataframe["kdj_low14"] = dataframe["low"].rolling(14, min_periods=14).min()
+                    dataframe["kdj_high14"] = dataframe["high"].rolling(14, min_periods=14).max()
+                    kdj_range = (dataframe["kdj_high14"] - dataframe["kdj_low14"]).replace(0, np.nan)
+                    dataframe["kdj_rsv"] = 100.0 * ((dataframe["close"] - dataframe["kdj_low14"]) / kdj_range)
+                    dataframe["kdj_k"] = dataframe["kdj_rsv"].ewm(alpha=1.0 / 3.0, adjust=False, min_periods=3).mean()
+                    dataframe["kdj_d"] = dataframe["kdj_k"].ewm(alpha=1.0 / 3.0, adjust=False, min_periods=3).mean()
+                    dataframe["kdj_jline"] = 3.0 * dataframe["kdj_k"] - 2.0 * dataframe["kdj_d"]
+                    dataframe["kdj_k_shifted"] = dataframe["kdj_k"].shift(1)
+                    dataframe["kdj_d_shifted"] = dataframe["kdj_d"].shift(1)
+                    dataframe["kdj_jline_shifted"] = dataframe["kdj_jline"].shift(1)
+                    dataframe["kdj_jline_delta3_shifted"] = (
+                        dataframe["kdj_jline_shifted"] - dataframe["kdj_jline_shifted"].shift(3)
+                    )
+                    dataframe["kdj_jline_signal_shifted"] = (
+                        dataframe["kdj_jline_shifted"].rolling(21, min_periods=8).mean().shift(1)
+                    )
                 aroon_window = 25
                 dataframe["aroon_up25"] = dataframe["high"].rolling(aroon_window + 1).apply(
                     lambda values: 100.0 * (aroon_window - (len(values) - 1 - int(np.argmax(values)))) / aroon_window,
@@ -1783,6 +6804,24 @@ def strategy_source(spec: CandidateSpec, *, symbol: str, timeframe: str) -> str:
                     lambda values: 100.0 * (aroon_window - (len(values) - 1 - int(np.argmin(values)))) / aroon_window,
                     raw=True,
                 )
+                if "{spec.key}" == "aroon_band_acceptance_trendbirth":
+                    dataframe["aroon_band_mid34"] = dataframe["close"].rolling(34, min_periods=20).mean()
+                    dataframe["aroon_band_std34"] = dataframe["close"].rolling(34, min_periods=20).std()
+                    dataframe["aroon_band_upper34"] = (
+                        dataframe["aroon_band_mid34"] + dataframe["aroon_band_std34"] * 1.35
+                    )
+                    dataframe["aroon_band_lower34"] = (
+                        dataframe["aroon_band_mid34"] - dataframe["aroon_band_std34"] * 1.35
+                    )
+                    dataframe["aroon_band_mid_slope_bps12"] = (
+                        (dataframe["aroon_band_mid34"] - dataframe["aroon_band_mid34"].shift(12))
+                        / dataframe["aroon_band_mid34"].shift(12).replace(0, np.nan)
+                        * 10000.0
+                    )
+                    dataframe["aroon_band_width_atr"] = (
+                        (dataframe["aroon_band_upper34"] - dataframe["aroon_band_lower34"])
+                        / dataframe["atr14"].replace(0, np.nan)
+                    )
                 cci_tp = (dataframe["high"] + dataframe["low"] + dataframe["close"]) / 3.0
                 cci_ma = cci_tp.rolling(20).mean()
                 cci_mad = (cci_tp - cci_ma).abs().rolling(20).mean().replace(0, np.nan)
@@ -1860,6 +6899,36 @@ def strategy_source(spec: CandidateSpec, *, symbol: str, timeframe: str) -> str:
                         0.0,
                     ),
                 )
+                if "{spec.key}" == "bds_nonlinear_dependence_admission_filter":
+                    bds_residual_return = (
+                        close_return - close_return.rolling(55, min_periods=21).mean()
+                    ).shift(1)
+                    dataframe["bds_residual_return"] = bds_residual_return
+                    bds_residual_scale = bds_residual_return.rolling(144, min_periods=55).std().shift(1)
+                    dataframe["bds_epsilon_scale_075"] = bds_residual_scale * 0.75
+                    dataframe["bds_epsilon_scale_150"] = bds_residual_scale * 1.50
+                    bds_scale_sq = bds_residual_scale.pow(2).replace(0, np.nan)
+                    bds_scale_cube = bds_residual_scale.pow(3).replace(0, np.nan)
+                    dataframe["bds_embedding_dimension_2"] = (
+                        bds_residual_return.mul(bds_residual_return.shift(1))
+                        .rolling(55, min_periods=21)
+                        .mean()
+                        .abs()
+                        / bds_scale_sq
+                    )
+                    dataframe["bds_embedding_dimension_3"] = (
+                        bds_residual_return
+                        .mul(bds_residual_return.shift(1))
+                        .mul(bds_residual_return.shift(2))
+                        .rolling(89, min_periods=34)
+                        .mean()
+                        .abs()
+                        / bds_scale_cube
+                    )
+                    dataframe["bds_nonlinear_dependence_score"] = (
+                        dataframe["bds_embedding_dimension_2"].clip(0.0, 2.5)
+                        + dataframe["bds_embedding_dimension_3"].clip(0.0, 2.5)
+                    ) / 2.0
                 if "{spec.key}" == "wpr_adx_hurst_profile_mss_reclaim":
                     def _hurst_rs(series: pd.Series) -> float:
                         values = series.to_numpy(dtype=float)
@@ -1935,54 +7004,6 @@ def strategy_source(spec: CandidateSpec, *, symbol: str, timeframe: str) -> str:
                     dataframe["profile_poc_dist_atr"] = (
                         (dataframe["close"] - dataframe["profile_poc96"]).abs() / profile_atr
                     )
-                if "{spec.key}" == "hurst_efficiency_density_repair":
-                    def _hurst_rs_proxy(series: pd.Series) -> float:
-                        values = series.to_numpy(dtype=float)
-                        if len(values) < 32 or np.isnan(values).any():
-                            return np.nan
-                        demeaned = values - values.mean()
-                        sigma = demeaned.std()
-                        if sigma <= 1e-12:
-                            return np.nan
-                        cumulative = np.cumsum(demeaned)
-                        spread = cumulative.max() - cumulative.min()
-                        if spread <= 1e-12:
-                            return np.nan
-                        return float(np.log(spread / sigma) / np.log(len(values)))
-
-                    hurst_net_move = (dataframe["close"] - dataframe["close"].shift(64)).abs()
-                    hurst_path_move = dataframe["close"].diff().abs().rolling(64, min_periods=21).sum()
-                    dataframe["hurst_efficiency_ratio"] = hurst_net_move / hurst_path_move.replace(0, np.nan)
-                    dataframe["hurst_efficiency_ratio_shifted"] = dataframe["hurst_efficiency_ratio"].shift(1)
-                    dataframe["hurst_proxy"] = dataframe["close"].rolling(64, min_periods=64).apply(
-                        _hurst_rs_proxy,
-                        raw=False,
-                    )
-                    dataframe["hurst_proxy_shifted"] = dataframe["hurst_proxy"].shift(1)
-                    dataframe["hurst_compression_range_atr"] = (
-                        dataframe["bar_range_atr"].shift(1).rolling(8, min_periods=3).mean()
-                    )
-                    dataframe["hurst_compression_reference_atr"] = (
-                        dataframe["bar_range_atr"].shift(1).rolling(55, min_periods=21).quantile(0.42).shift(1)
-                    )
-                    dataframe["hurst_compression_pause"] = dataframe["hurst_compression_range_atr"].le(
-                        dataframe["hurst_compression_reference_atr"]
-                    )
-                    dataframe["hurst_reacceleration_bps"] = (
-                        (dataframe["ema21"].shift(1) / dataframe["ema21"].shift(7).replace(0, np.nan)) - 1.0
-                    ) * 10000.0
-                    hurst_context_path = dataframe["ema20_15m"].diff().abs().rolling(8, min_periods=3).sum()
-                    hurst_context_net = (dataframe["ema20_15m"] - dataframe["ema20_15m"].shift(8)).abs()
-                    dataframe["hurst_context_efficiency_ratio"] = (
-                        hurst_context_net / hurst_context_path.replace(0, np.nan)
-                    )
-                    dataframe["hurst_context_efficiency_ratio_shifted"] = dataframe[
-                        "hurst_context_efficiency_ratio"
-                    ].shift(1)
-                    dataframe["hurst_context_trend_shifted"] = (
-                        (dataframe["ema20_15m"] > dataframe["ema50_15m"])
-                        & (dataframe["slope_15m"] > -dataframe["atr14"] * 0.05)
-                    ).shift(1).fillna(False)
                 if "{spec.key}" == "value_area_vpoc_htf_trend_mss_filter":
                     def _round_to_row(value: float, row_size: float) -> float:
                         if not np.isfinite(value):
@@ -2141,7 +7162,7 @@ def strategy_source(spec: CandidateSpec, *, symbol: str, timeframe: str) -> str:
                         (dataframe["close"] < dataframe["swing_low8"])
                         & (dataframe["close"].shift(1) >= dataframe["swing_low8"].shift(1))
                     )
-                    profile_row_size = {{"NQ": 0.25, "ES": 0.25, "YM": 1.0, "6E": 0.00005, "XAU": 0.1}}.get("{symbol}", 0.25)
+                    profile_row_size = {{"NQ": 0.25, "ES": 0.25, "YM": 1.0, "6E": 0.00005, "GC": 0.1}}.get("{symbol}", 0.25)
                     (
                         dataframe["session_or_breakout_atr"],
                         dataframe["session_ib_breakout_atr"],
@@ -2152,6 +7173,88 @@ def strategy_source(spec: CandidateSpec, *, symbol: str, timeframe: str) -> str:
                         dataframe["session_profile_val"],
                         dataframe["session_profile_vah"],
                     ) = _session_profile_arrays(dataframe, row_size=profile_row_size)
+                if "{spec.key}" in (
+                    "htf_range_edge_cisd_mss_displacement_te",
+                    "htf_range_breakout_retest_te_selective",
+                ):
+                    htf_range_window = 96
+                    dataframe["htf_range_high96"] = dataframe["high"].rolling(htf_range_window).max().shift(1)
+                    dataframe["htf_range_low96"] = dataframe["low"].rolling(htf_range_window).min().shift(1)
+                    dataframe["htf_range_width_atr"] = (
+                        (dataframe["htf_range_high96"] - dataframe["htf_range_low96"])
+                        / dataframe["atr14"].replace(0, np.nan)
+                    )
+                    dataframe["htf_range_top_distance_atr"] = (
+                        dataframe["htf_range_high96"] - dataframe["close"]
+                    ) / dataframe["atr14"].replace(0, np.nan)
+                    dataframe["htf_range_bottom_distance_atr"] = (
+                        dataframe["close"] - dataframe["htf_range_low96"]
+                    ) / dataframe["atr14"].replace(0, np.nan)
+                    dataframe["htf_range_top_sweep"] = (
+                        dataframe["high"].gt(dataframe["htf_range_high96"] + dataframe["atr14"] * 0.03)
+                        & dataframe["close"].lt(dataframe["htf_range_high96"])
+                    )
+                    dataframe["htf_range_bottom_sweep"] = (
+                        dataframe["low"].lt(dataframe["htf_range_low96"] - dataframe["atr14"] * 0.03)
+                        & dataframe["close"].gt(dataframe["htf_range_low96"])
+                    )
+                    dataframe["htf_range_top_breakout_accept"] = (
+                        dataframe["close"].gt(dataframe["htf_range_high96"] + dataframe["atr14"] * 0.08)
+                        & dataframe["close"].shift(1).le(dataframe["htf_range_high96"].shift(1) + dataframe["atr14"].shift(1) * 0.04)
+                    )
+                    dataframe["htf_range_bottom_breakdown_accept"] = (
+                        dataframe["close"].lt(dataframe["htf_range_low96"] - dataframe["atr14"] * 0.08)
+                        & dataframe["close"].shift(1).ge(dataframe["htf_range_low96"].shift(1) - dataframe["atr14"].shift(1) * 0.04)
+                    )
+                    dataframe["htf_range_top_breakout_recent"] = (
+                        dataframe["htf_range_top_breakout_accept"].fillna(False).rolling(5, min_periods=1).max().gt(0)
+                    )
+                    dataframe["htf_range_bottom_breakdown_recent"] = (
+                        dataframe["htf_range_bottom_breakdown_accept"].fillna(False).rolling(5, min_periods=1).max().gt(0)
+                    )
+                    dataframe["htf_range_top_retest_hold"] = (
+                        dataframe["htf_range_top_breakout_recent"].fillna(False)
+                        & dataframe["low"].le(dataframe["htf_range_high96"] + dataframe["atr14"] * 0.28)
+                        & dataframe["close"].gt(dataframe["htf_range_high96"] + dataframe["atr14"] * 0.05)
+                    )
+                    dataframe["htf_range_bottom_retest_hold"] = (
+                        dataframe["htf_range_bottom_breakdown_recent"].fillna(False)
+                        & dataframe["high"].ge(dataframe["htf_range_low96"] - dataframe["atr14"] * 0.28)
+                        & dataframe["close"].lt(dataframe["htf_range_low96"] - dataframe["atr14"] * 0.05)
+                    )
+                    prior_bear_open = dataframe["open"].shift(1).where(dataframe["close"].shift(1) < dataframe["open"].shift(1)).ffill()
+                    prior_bull_open = dataframe["open"].shift(1).where(dataframe["close"].shift(1) > dataframe["open"].shift(1)).ffill()
+                    dataframe["bull_cisd_delivery_flip"] = (
+                        dataframe["close"].gt(prior_bear_open)
+                        & dataframe["close"].shift(1).le(prior_bear_open.shift(1))
+                    )
+                    dataframe["bear_cisd_delivery_flip"] = (
+                        dataframe["close"].lt(prior_bull_open)
+                        & dataframe["close"].shift(1).ge(prior_bull_open.shift(1))
+                    )
+                    dataframe["bull_displacement_impulse"] = (
+                        dataframe["close"].gt(dataframe["open"])
+                        & dataframe["body_atr"].ge(0.38)
+                        & dataframe["bar_range_atr"].between(0.55, 3.60)
+                        & (dataframe["close_location"] >= 0.62)
+                    )
+                    dataframe["bear_displacement_impulse"] = (
+                        dataframe["close"].lt(dataframe["open"])
+                        & dataframe["body_atr"].ge(0.38)
+                        & dataframe["bar_range_atr"].between(0.55, 3.60)
+                        & (dataframe["close_location"] <= 0.38)
+                    )
+                    vhf_window = 34
+                    vhf_denominator = dataframe["close"].diff().abs().rolling(vhf_window, min_periods=vhf_window).sum()
+                    dataframe["htf_range_edge_vhf34"] = (
+                        (dataframe["close"] - dataframe["close"].shift(vhf_window)).abs()
+                        / vhf_denominator.replace(0, np.nan)
+                    )
+                    dataframe["htf_range_edge_vhf34_shifted"] = dataframe["htf_range_edge_vhf34"].shift(1)
+                    dataframe["htf_range_edge_vhf34_slope"] = (
+                        dataframe["htf_range_edge_vhf34_shifted"]
+                        - dataframe["htf_range_edge_vhf34_shifted"].rolling(8, min_periods=3).mean().shift(1)
+                    )
                 dataframe["midnight_open"] = dataframe.groupby(day)["open"].transform("first")
                 dataframe["__row_order"] = range(len(dataframe))
                 context_base = dataframe[["__row_order", "date", "open", "high", "low", "close", "volume"]].copy()
@@ -2178,6 +7281,269 @@ def strategy_source(spec: CandidateSpec, *, symbol: str, timeframe: str) -> str:
                     for column in keep:
                         dataframe[column] = merged[column].to_numpy()
                 dataframe = dataframe.drop(columns=["__row_order"], errors="ignore")
+                if "{spec.key}" == "heikin_ashi_kama_trend_pullback_rejoin_long_quality_30m":
+                    ha_close = (
+                        dataframe["open"]
+                        + dataframe["high"]
+                        + dataframe["low"]
+                        + dataframe["close"]
+                    ) / 4.0
+                    ha_open = ha_close.to_numpy(dtype=float).copy()
+                    if len(ha_open):
+                        ha_open[0] = float(
+                            (dataframe["open"].iloc[0] + dataframe["close"].iloc[0]) / 2.0
+                        )
+                    for idx in range(1, len(ha_open)):
+                        ha_open[idx] = (ha_open[idx - 1] + float(ha_close.iloc[idx - 1])) / 2.0
+                    dataframe["ha_close"] = ha_close
+                    dataframe["ha_open"] = ha_open
+                    dataframe["ha_body"] = dataframe["ha_close"] - dataframe["ha_open"]
+                    dataframe["ha_trend_shifted"] = (
+                        np.sign(dataframe["ha_body"])
+                        .replace(0, np.nan)
+                        .ffill()
+                        .fillna(0.0)
+                        .shift(1)
+                    )
+                    kama_window = 24
+                    efficiency_window = 12
+                    close = dataframe["close"].astype(float)
+                    change = close.diff(kama_window).abs()
+                    volatility = close.diff().abs().rolling(kama_window, min_periods=12).sum()
+                    efficiency = (change / volatility.replace(0.0, np.nan)).fillna(0.0).clip(0.0, 1.0)
+                    fast_sc = 2.0 / 3.0
+                    slow_sc = 2.0 / 31.0
+                    smoothing = (efficiency * (fast_sc - slow_sc) + slow_sc) ** 2
+                    close_values = close.to_numpy(dtype=float)
+                    smoothing_values = smoothing.to_numpy(dtype=float)
+                    kama = np.full(len(close_values), np.nan, dtype=float)
+                    if len(close_values):
+                        kama[0] = close_values[0]
+                    for idx in range(1, len(close_values)):
+                        if not np.isfinite(close_values[idx]):
+                            kama[idx] = kama[idx - 1]
+                            continue
+                        prior = kama[idx - 1] if np.isfinite(kama[idx - 1]) else close_values[idx]
+                        factor = smoothing_values[idx] if np.isfinite(smoothing_values[idx]) else slow_sc**2
+                        kama[idx] = prior + factor * (close_values[idx] - prior)
+                    dataframe["heikin_kama"] = pd.Series(kama, index=dataframe.index)
+                    dataframe["heikin_kama_deviation_bps"] = (
+                        dataframe["close"] / dataframe["heikin_kama"].replace(0.0, np.nan) - 1.0
+                    ) * 10000.0
+                    dataframe["heikin_kama_pullback_low_prev"] = (
+                        dataframe["heikin_kama_deviation_bps"].rolling(24, min_periods=1).min().shift(1)
+                    )
+                    dataframe["heikin_kama_efficiency_shifted"] = efficiency.shift(1)
+                    dataframe["heikin_kama_slope_bps_shifted"] = (
+                        (
+                            dataframe["heikin_kama"]
+                            / dataframe["heikin_kama"].shift(3).replace(0.0, np.nan)
+                            - 1.0
+                        )
+                        * 10000.0
+                    ).shift(1)
+                    dataframe["heikin_kama_mtf_long_aligned"] = (
+                        (
+                            (dataframe["ema20_1h"] > dataframe["ema50_1h"])
+                            & dataframe["slope_1h"].gt(0.0)
+                        ).astype(int)
+                        + (
+                            (dataframe["ema20_4h"] > dataframe["ema50_4h"])
+                            & dataframe["slope_4h"].gt(0.0)
+                        ).astype(int)
+                        + (
+                            (dataframe["ema20_1d"] > dataframe["ema50_1d"])
+                            & dataframe["slope_1d"].gt(0.0)
+                        ).astype(int)
+                    )
+                if "{spec.key}" == "jolts_labor_tightness_regime_filter":
+                    if "job_openings_to_unemployed_proxy" not in dataframe.columns:
+                        dataframe["job_openings_to_unemployed_proxy"] = np.nan
+                    if "jolts_quits_rate_proxy" not in dataframe.columns:
+                        dataframe["jolts_quits_rate_proxy"] = np.nan
+                    if "jolts_release_effective" not in dataframe.columns:
+                        dataframe["jolts_release_effective"] = False
+                    dataframe["job_openings_to_unemployed_proxy"] = pd.to_numeric(
+                        dataframe["job_openings_to_unemployed_proxy"],
+                        errors="coerce",
+                    )
+                    dataframe["jolts_quits_rate_proxy"] = pd.to_numeric(
+                        dataframe["jolts_quits_rate_proxy"],
+                        errors="coerce",
+                    )
+                    dataframe["jolts_labor_tightness_release_lag_ok"] = dataframe[
+                        "jolts_release_effective"
+                    ].fillna(False).astype(bool)
+                    dataframe["jolts_labor_tightness_pressure_slope"] = (
+                        dataframe["job_openings_to_unemployed_proxy"]
+                        - dataframe["job_openings_to_unemployed_proxy"].shift(21)
+                    )
+                if "{spec.key}" == "swing_leg_duration_amplitude_asymmetry_filter":
+                    pivot_window = 3
+                    atr_safe = dataframe["atr14"].replace(0, np.nan)
+                    lookback = pivot_window * 2 + 1
+                    candidate_high = dataframe["high"].shift(pivot_window)
+                    candidate_low = dataframe["low"].shift(pivot_window)
+                    trailing_high = dataframe["high"].rolling(lookback, min_periods=lookback).max()
+                    trailing_low = dataframe["low"].rolling(lookback, min_periods=lookback).min()
+                    dataframe["confirmed_pivot_high"] = (
+                        (candidate_high == trailing_high)
+                        & (candidate_high > dataframe["high"].shift(pivot_window + 1))
+                        & (candidate_high > dataframe["high"].shift(pivot_window - 1))
+                    ).fillna(False)
+                    dataframe["confirmed_pivot_low"] = (
+                        (candidate_low == trailing_low)
+                        & (candidate_low < dataframe["low"].shift(pivot_window + 1))
+                        & (candidate_low < dataframe["low"].shift(pivot_window - 1))
+                    ).fillna(False)
+                    row_index = pd.Series(np.arange(len(dataframe)), index=dataframe.index, dtype="float64")
+                    confirmed_event = dataframe["confirmed_pivot_high"] | dataframe["confirmed_pivot_low"]
+                    pivot_price = candidate_high.where(dataframe["confirmed_pivot_high"], candidate_low.where(dataframe["confirmed_pivot_low"]))
+                    pivot_side = pd.Series(
+                        np.select(
+                            [dataframe["confirmed_pivot_high"], dataframe["confirmed_pivot_low"]],
+                            [1.0, -1.0],
+                            default=np.nan,
+                        ),
+                        index=dataframe.index,
+                    )
+                    pivot_confirm_index = row_index.where(confirmed_event)
+                    last_pivot_price = pivot_price.ffill()
+                    last_pivot_side = pivot_side.ffill()
+                    last_pivot_index = pivot_confirm_index.ffill()
+                    prev_pivot_price = last_pivot_price.shift(1).where(confirmed_event).ffill()
+                    prev_pivot_side = last_pivot_side.shift(1).where(confirmed_event).ffill()
+                    prev_pivot_index = last_pivot_index.shift(1).where(confirmed_event).ffill()
+                    dataframe["confirmed_pivot_high_price"] = candidate_high.where(
+                        dataframe["confirmed_pivot_high"]
+                    ).ffill()
+                    dataframe["confirmed_pivot_low_price"] = candidate_low.where(
+                        dataframe["confirmed_pivot_low"]
+                    ).ffill()
+                    dataframe["confirmed_pivot_high_index"] = row_index.where(
+                        dataframe["confirmed_pivot_high"]
+                    ).ffill()
+                    dataframe["confirmed_pivot_low_index"] = row_index.where(
+                        dataframe["confirmed_pivot_low"]
+                    ).ffill()
+                    completed_up_leg = confirmed_event & (prev_pivot_side < 0.0) & (last_pivot_side > 0.0)
+                    completed_down_leg = confirmed_event & (prev_pivot_side > 0.0) & (last_pivot_side < 0.0)
+                    leg_amplitude_atr = (last_pivot_price - prev_pivot_price).abs() / atr_safe
+                    leg_duration = (last_pivot_index - prev_pivot_index).abs().clip(lower=1.0)
+                    dataframe["up_swing_leg_amplitude_atr"] = leg_amplitude_atr.where(completed_up_leg).ffill()
+                    dataframe["down_swing_leg_amplitude_atr"] = leg_amplitude_atr.where(completed_down_leg).ffill()
+                    dataframe["up_swing_leg_duration"] = leg_duration.where(completed_up_leg).ffill()
+                    dataframe["down_swing_leg_duration"] = leg_duration.where(completed_down_leg).ffill()
+                    up_velocity = dataframe["up_swing_leg_amplitude_atr"] / dataframe["up_swing_leg_duration"].replace(0, np.nan)
+                    down_velocity = dataframe["down_swing_leg_amplitude_atr"] / dataframe["down_swing_leg_duration"].replace(0, np.nan)
+                    dataframe["swing_leg_amplitude_ratio"] = dataframe["up_swing_leg_amplitude_atr"] / dataframe[
+                        "down_swing_leg_amplitude_atr"
+                    ].replace(0, np.nan)
+                    dataframe["swing_leg_duration_ratio"] = dataframe["up_swing_leg_duration"] / dataframe[
+                        "down_swing_leg_duration"
+                    ].replace(0, np.nan)
+                    dataframe["swing_leg_velocity_ratio"] = up_velocity / down_velocity.replace(0, np.nan)
+                    dataframe["swing_leg_midpoint"] = (last_pivot_price + prev_pivot_price) / 2.0
+                    dataframe["swing_leg_pullback_contained"] = (
+                        (dataframe["close"] - dataframe["swing_leg_midpoint"]).abs()
+                        / atr_safe
+                    ).rolling(8, min_periods=3).mean()
+                if "{spec.key}" == "directional_sign_entropy_release_reacceleration":
+                    signed_return = np.sign(dataframe["close"].pct_change())
+                    positive_sign_share = signed_return.gt(0).rolling(21, min_periods=8).mean().shift(1)
+                    negative_sign_share = signed_return.lt(0).rolling(21, min_periods=8).mean().shift(1)
+                    sign_balance = (positive_sign_share - negative_sign_share).abs().clip(upper=0.999999)
+                    dataframe["directional_sign_entropy"] = (1.0 - sign_balance).fillna(1.0)
+                    dataframe["directional_sign_entropy_shifted"] = dataframe["directional_sign_entropy"].shift(1)
+                    dataframe["directional_sign_entropy_release"] = (
+                        dataframe["directional_sign_entropy_shifted"].rolling(8, min_periods=4).mean().shift(1)
+                        - dataframe["directional_sign_entropy_shifted"]
+                    )
+                    signed_return_drift = dataframe["close"].pct_change(3).shift(1)
+                    dataframe["signed_return_reacceleration"] = (
+                        signed_return_drift
+                        - signed_return_drift.rolling(8, min_periods=4).mean().shift(1)
+                    )
+                if "{spec.key}" == "pesaran_timmermann_directional_accuracy_admission_filter":
+                    directional_return = dataframe["close"].pct_change()
+                    forecast_direction_raw = pd.Series(
+                        np.select(
+                            [
+                                (dataframe["ema21"] > dataframe["ema55"])
+                                & dataframe["ema21_slope_bps_12"].gt(0.10),
+                                (dataframe["ema21"] < dataframe["ema55"])
+                                & dataframe["ema21_slope_bps_12"].lt(-0.10),
+                            ],
+                            [1.0, -1.0],
+                            default=0.0,
+                        ),
+                        index=dataframe.index,
+                    )
+                    realized_direction_raw = pd.Series(
+                        np.select(
+                            [directional_return.gt(0.0), directional_return.lt(0.0)],
+                            [1.0, -1.0],
+                            default=0.0,
+                        ),
+                        index=dataframe.index,
+                    )
+                    dataframe["pt_forecast_direction_shifted"] = forecast_direction_raw.shift(1)
+                    dataframe["pt_realized_direction_shifted"] = realized_direction_raw.shift(1)
+                    pt_valid = (
+                        dataframe["pt_forecast_direction_shifted"].ne(0.0)
+                        & dataframe["pt_realized_direction_shifted"].ne(0.0)
+                    )
+                    pt_hit = (
+                        dataframe["pt_forecast_direction_shifted"].eq(dataframe["pt_realized_direction_shifted"])
+                        & pt_valid
+                    ).astype(float)
+                    forecast_up = dataframe["pt_forecast_direction_shifted"].gt(0.0).astype(float)
+                    forecast_down = dataframe["pt_forecast_direction_shifted"].lt(0.0).astype(float)
+                    realized_up = dataframe["pt_realized_direction_shifted"].gt(0.0).astype(float)
+                    realized_down = dataframe["pt_realized_direction_shifted"].lt(0.0).astype(float)
+                    hit_rate = pt_hit.rolling(55, min_periods=21).mean()
+                    expected_hit_rate = (
+                        forecast_up.rolling(55, min_periods=21).mean()
+                        * realized_up.rolling(55, min_periods=21).mean()
+                        + forecast_down.rolling(55, min_periods=21).mean()
+                        * realized_down.rolling(55, min_periods=21).mean()
+                    )
+                    dataframe["pt_directional_accuracy_score"] = hit_rate - expected_hit_rate
+                if "{spec.key}" == "ultimate_williams_reacceleration":
+                    previous_close = dataframe["close"].shift(1)
+                    low_or_prev = pd.concat([dataframe["low"], previous_close], axis=1).min(axis=1)
+                    high_or_prev = pd.concat([dataframe["high"], previous_close], axis=1).max(axis=1)
+                    buying_pressure = dataframe["close"] - low_or_prev
+                    true_range_uo = (high_or_prev - low_or_prev).replace(0, np.nan)
+
+                    def _uo_average(window: int) -> pd.Series:
+                        return (
+                            buying_pressure.rolling(window, min_periods=window).sum()
+                            / true_range_uo.rolling(window, min_periods=window).sum().replace(0, np.nan)
+                        )
+
+                    uo_short = _uo_average(5)
+                    uo_mid = _uo_average(13)
+                    uo_long = _uo_average(34)
+                    dataframe["ultimate_oscillator_value"] = 100.0 * (
+                        (4.0 * uo_short) + (2.0 * uo_mid) + uo_long
+                    ) / 7.0
+                    dataframe["ultimate_oscillator_shifted"] = dataframe["ultimate_oscillator_value"].shift(1)
+                    dataframe["ultimate_oscillator_delta"] = (
+                        dataframe["ultimate_oscillator_shifted"]
+                        - dataframe["ultimate_oscillator_shifted"].rolling(5, min_periods=3).mean().shift(1)
+                    )
+                    highest_high = dataframe["high"].rolling(14, min_periods=14).max()
+                    lowest_low = dataframe["low"].rolling(14, min_periods=14).min()
+                    williams_range = (highest_high - lowest_low).replace(0, np.nan)
+                    dataframe["williams_r_value"] = -100.0 * ((highest_high - dataframe["close"]) / williams_range)
+                    dataframe["williams_r_shifted"] = dataframe["williams_r_value"].shift(1)
+                    dataframe["williams_r_prev_min3"] = dataframe["williams_r_value"].shift(2).rolling(3, min_periods=1).min()
+                    dataframe["williams_r_prev_max3"] = dataframe["williams_r_value"].shift(2).rolling(3, min_periods=1).max()
+                    dataframe["ultimate_williams_trend_bps"] = (
+                        (dataframe["ema21"].shift(1) / dataframe["ema21"].shift(7) - 1.0)
+                        * 10000.0
+                    )
                 return dataframe
 
             def populate_entry_trend(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
@@ -2580,6 +7946,188 @@ def strategy_source(spec: CandidateSpec, *, symbol: str, timeframe: str) -> str:
                         & dataframe["body_atr"].between(0.06, 2.2)
                         & pullback_reclaim
                         & (dataframe["close"] > dataframe["session_vwap"])
+                    )
+                elif "{spec.key}" == "trend_turtle_soup_density_repair_child":
+                    turtle_soup_density_repair_session_slot = (
+                        dataframe["minute_of_day_ny"].between(18 * 60, 23 * 60 + 30)
+                        | dataframe["minute_of_day_ny"].between(2 * 60, 5 * 60 + 30)
+                        | dataframe["minute_of_day_ny"].between(9 * 60 + 35, 11 * 60 + 45)
+                        | dataframe["minute_of_day_ny"].between(13 * 60 + 15, 16 * 60 + 45)
+                    )
+                    turtle_soup_false_break_low = (
+                        ((dataframe["low"] < dataframe["liq_low20"]) & (dataframe["close"] > dataframe["liq_low20"]))
+                        | ((dataframe["low"] < dataframe["liq_low60"]) & (dataframe["close"] > dataframe["liq_low60"]))
+                        | ((dataframe["low"] < dataframe["range_low40"]) & (dataframe["close"] > dataframe["range_low40"]))
+                        | ((dataframe["low"] < dataframe["prior_day_low"]) & (dataframe["close"] > dataframe["prior_day_low"]))
+                    )
+                    turtle_soup_false_break_high = (
+                        ((dataframe["high"] > dataframe["liq_high20"]) & (dataframe["close"] < dataframe["liq_high20"]))
+                        | ((dataframe["high"] > dataframe["liq_high60"]) & (dataframe["close"] < dataframe["liq_high60"]))
+                        | ((dataframe["high"] > dataframe["range_high40"]) & (dataframe["close"] < dataframe["range_high40"]))
+                        | ((dataframe["high"] > dataframe["prior_day_high"]) & (dataframe["close"] < dataframe["prior_day_high"]))
+                    )
+                    turtle_soup_mtf_votes_long = (
+                        (dataframe["ema20_5m"] > dataframe["ema50_5m"]).astype(int)
+                        + (dataframe["ema20_15m"] > dataframe["ema50_15m"]).astype(int)
+                        + (dataframe["ema20_30m"] > dataframe["ema50_30m"]).astype(int)
+                        + (dataframe["ema20_1h"] > dataframe["ema50_1h"]).astype(int)
+                        + (dataframe["ema20_4h"] > dataframe["ema50_4h"]).astype(int)
+                    )
+                    turtle_soup_mtf_votes_short = (
+                        (dataframe["ema20_5m"] < dataframe["ema50_5m"]).astype(int)
+                        + (dataframe["ema20_15m"] < dataframe["ema50_15m"]).astype(int)
+                        + (dataframe["ema20_30m"] < dataframe["ema50_30m"]).astype(int)
+                        + (dataframe["ema20_1h"] < dataframe["ema50_1h"]).astype(int)
+                        + (dataframe["ema20_4h"] < dataframe["ema50_4h"]).astype(int)
+                    )
+                    turtle_soup_mtf_resonance_long = (
+                        turtle_soup_mtf_votes_long.ge(3)
+                        & (dataframe["slope_15m"] > -dataframe["atr14"] * 0.08)
+                        & (dataframe["slope_30m"] > -dataframe["atr14"] * 0.10)
+                        & (dataframe["slope_1h"] > -dataframe["atr14"] * 0.12)
+                    )
+                    turtle_soup_mtf_resonance_short = (
+                        turtle_soup_mtf_votes_short.ge(3)
+                        & (dataframe["slope_15m"] < dataframe["atr14"] * 0.08)
+                        & (dataframe["slope_30m"] < dataframe["atr14"] * 0.10)
+                        & (dataframe["slope_1h"] < dataframe["atr14"] * 0.12)
+                    )
+                    trend_turtle_context_long = (
+                        (dataframe["ema21"] > dataframe["ema55"])
+                        & (dataframe["ema55"] > dataframe["ema144"])
+                        & (dataframe["close"] > dataframe["ema55"] - dataframe["atr14"] * 0.25)
+                    )
+                    trend_turtle_context_short = (
+                        (dataframe["ema21"] < dataframe["ema55"])
+                        & (dataframe["ema55"] < dataframe["ema144"])
+                        & (dataframe["close"] < dataframe["ema55"] + dataframe["atr14"] * 0.25)
+                    )
+                    turtle_soup_reclaim_long = (
+                        turtle_soup_false_break_low.fillna(False)
+                        & (dataframe["close"] > dataframe["open"])
+                        & (dataframe["close"] > dataframe["low"].rolling(3).max().shift(1))
+                        & (dataframe["close"] > dataframe["session_vwap"] - dataframe["atr14"] * 0.55)
+                    )
+                    turtle_soup_reclaim_short = (
+                        turtle_soup_false_break_high.fillna(False)
+                        & (dataframe["close"] < dataframe["open"])
+                        & (dataframe["close"] < dataframe["high"].rolling(3).min().shift(1))
+                        & (dataframe["close"] < dataframe["session_vwap"] + dataframe["atr14"] * 0.55)
+                    )
+                    raw = (
+                        turtle_soup_density_repair_session_slot
+                        & trend_turtle_context_long.fillna(False)
+                        & turtle_soup_reclaim_long.fillna(False)
+                        & turtle_soup_mtf_resonance_long.fillna(False)
+                        & dataframe["adx14"].between(12, 55)
+                        & dataframe["rvol96"].between(0.55, 6.2)
+                        & dataframe["rsi14"].between(32, 70)
+                        & dataframe["body_atr"].between(0.04, 2.6)
+                    )
+                    short_raw = (
+                        turtle_soup_density_repair_session_slot
+                        & trend_turtle_context_short.fillna(False)
+                        & turtle_soup_reclaim_short.fillna(False)
+                        & turtle_soup_mtf_resonance_short.fillna(False)
+                        & dataframe["adx14"].between(12, 55)
+                        & dataframe["rvol96"].between(0.55, 6.2)
+                        & dataframe["rsi14"].between(30, 68)
+                        & dataframe["body_atr"].between(0.04, 2.6)
+                    )
+                elif "{spec.key}" == "kairi_ym5m_year_stability_refinement":
+                    kairi_ym5m_mtf_votes_long = (
+                        (dataframe["ema20_5m"] > dataframe["ema50_5m"]).astype(int)
+                        + (dataframe["ema20_15m"] > dataframe["ema50_15m"]).astype(int)
+                        + (dataframe["ema20_30m"] > dataframe["ema50_30m"]).astype(int)
+                        + (dataframe["ema20_1h"] > dataframe["ema50_1h"]).astype(int)
+                    )
+                    kairi_ym5m_mtf_resonance_long = (
+                        kairi_ym5m_mtf_votes_long.ge(1)
+                        & (dataframe["slope_15m"] > -dataframe["atr14"] * 0.06)
+                        & (dataframe["slope_30m"] > -dataframe["atr14"] * 0.08)
+                        & (dataframe["slope_1h"] > -dataframe["atr14"] * 0.12)
+                    )
+                    kairi_ym5m_year_stability_long = (
+                        dataframe["kairi_pullback_low_prev"].le(-18.0)
+                        & dataframe["kairi_ma_deviation_bps"].ge(-2.0)
+                        & dataframe["kairi_fast_slope_bps"].gt(0.5)
+                        & (dataframe["kairi_ema12"] > dataframe["kairi_ema48"])
+                        & (dataframe["close"] > dataframe["session_vwap"] - dataframe["atr14"] * 0.22)
+                        & dataframe["rsi14"].between(44, 78)
+                        & dataframe["rvol96"].between(0.35, 4.80)
+                        & dataframe["body_atr"].between(0.04, 2.35)
+                    )
+                    raw = (
+                        kairi_ym5m_year_stability_long.fillna(False)
+                        & kairi_ym5m_mtf_resonance_long.fillna(False)
+                    )
+                elif "{spec.key}" == "range_compression_participation_trend_breakout":
+                    compression_width_atr = (dataframe["range_high40"] - dataframe["range_low40"]) / dataframe[
+                        "atr14"
+                    ].replace(0, np.nan)
+                    range_compression_state = (
+                        compression_width_atr.between(1.05, 7.25)
+                        & dataframe["rv_ratio"].lt(dataframe["rv_ratio_q35"] * 1.18)
+                        & dataframe["atr14"].lt(dataframe["atr_ma50"] * 1.20)
+                    )
+                    participation_expansion = (
+                        dataframe["rvol96"].between(0.95, 6.0)
+                        & dataframe["rvol30"].gt(dataframe["rvol96"].rolling(34, min_periods=8).median().shift(1) * 1.08)
+                        & dataframe["body_atr"].between(0.08, 2.7)
+                    )
+                    range_compression_mtf_votes_long = (
+                        (dataframe["ema20_5m"] > dataframe["ema50_5m"]).astype(int)
+                        + (dataframe["ema20_15m"] > dataframe["ema50_15m"]).astype(int)
+                        + (dataframe["ema20_30m"] > dataframe["ema50_30m"]).astype(int)
+                        + (dataframe["ema20_1h"] > dataframe["ema50_1h"]).astype(int)
+                        + (dataframe["ema20_4h"] > dataframe["ema50_4h"]).astype(int)
+                    )
+                    range_compression_mtf_votes_short = (
+                        (dataframe["ema20_5m"] < dataframe["ema50_5m"]).astype(int)
+                        + (dataframe["ema20_15m"] < dataframe["ema50_15m"]).astype(int)
+                        + (dataframe["ema20_30m"] < dataframe["ema50_30m"]).astype(int)
+                        + (dataframe["ema20_1h"] < dataframe["ema50_1h"]).astype(int)
+                        + (dataframe["ema20_4h"] < dataframe["ema50_4h"]).astype(int)
+                    )
+                    range_compression_mtf_resonance_long = (
+                        range_compression_mtf_votes_long.ge(3)
+                        & (dataframe["slope_15m"] > -dataframe["atr14"] * 0.05)
+                        & (dataframe["slope_30m"] > -dataframe["atr14"] * 0.06)
+                        & (dataframe["slope_1h"] > -dataframe["atr14"] * 0.08)
+                    )
+                    range_compression_mtf_resonance_short = (
+                        range_compression_mtf_votes_short.ge(3)
+                        & (dataframe["slope_15m"] < dataframe["atr14"] * 0.05)
+                        & (dataframe["slope_30m"] < dataframe["atr14"] * 0.06)
+                        & (dataframe["slope_1h"] < dataframe["atr14"] * 0.08)
+                    )
+                    trend_breakout_rejoin_long = (
+                        (dataframe["close"] > dataframe["range_high40"])
+                        & (dataframe["close"].shift(1) <= dataframe["range_high40"].shift(1))
+                        & (dataframe["close"] > dataframe["ema21"])
+                        & (dataframe["close"] > dataframe["session_vwap"] - dataframe["atr14"] * 0.20)
+                    )
+                    trend_breakout_rejoin_short = (
+                        (dataframe["close"] < dataframe["range_low40"])
+                        & (dataframe["close"].shift(1) >= dataframe["range_low40"].shift(1))
+                        & (dataframe["close"] < dataframe["ema21"])
+                        & (dataframe["close"] < dataframe["session_vwap"] + dataframe["atr14"] * 0.20)
+                    )
+                    raw = (
+                        range_compression_state.fillna(False)
+                        & participation_expansion.fillna(False)
+                        & range_compression_mtf_resonance_long.fillna(False)
+                        & trend_breakout_rejoin_long.fillna(False)
+                        & dataframe["adx14"].between(10, 52)
+                        & dataframe["rsi14"].between(46, 78)
+                    )
+                    short_raw = (
+                        range_compression_state.fillna(False)
+                        & participation_expansion.fillna(False)
+                        & range_compression_mtf_resonance_short.fillna(False)
+                        & trend_breakout_rejoin_short.fillna(False)
+                        & dataframe["adx14"].between(10, 52)
+                        & dataframe["rsi14"].between(22, 54)
                     )
                 elif "{spec.key}" == "prior_day_extreme_continuation":
                     trend_root = (
@@ -3419,45 +8967,6 @@ def strategy_source(spec: CandidateSpec, *, symbol: str, timeframe: str) -> str:
                         & profile_short.fillna(False)
                         & structure_short.fillna(False)
                     )
-                elif "{spec.key}" == "hurst_efficiency_density_repair":
-                    hurst_density_repair_trend_long = (
-                        (dataframe["ema21"] > dataframe["ema55"])
-                        & (dataframe["ema55"] > dataframe["ema144"] - dataframe["atr14"] * 0.12)
-                        & dataframe["hurst_reacceleration_bps"].gt(0.10)
-                    )
-                    hurst_efficiency_persistence = (
-                        dataframe["hurst_efficiency_ratio_shifted"].ge(0.20)
-                        & dataframe["hurst_proxy_shifted"].between(0.42, 0.82)
-                        & dataframe["hurst_context_efficiency_ratio_shifted"].ge(0.25)
-                        & dataframe["hurst_context_trend_shifted"].fillna(False)
-                    )
-                    hurst_density_repair_reclaim_long = (
-                        dataframe["hurst_compression_pause"].fillna(False)
-                        & (dataframe["low"].shift(1) <= dataframe["ema21"].shift(1))
-                        & (dataframe["close"] > dataframe["ema21"])
-                        & (dataframe["close"] > dataframe["close"].shift(1))
-                    )
-                    dataframe["hurst_density_repair_microbreak_long"] = (
-                        dataframe["hurst_compression_pause"].fillna(False)
-                        & (dataframe["close"] > dataframe["high"].rolling(4, min_periods=2).max().shift(1))
-                        & (dataframe["low"].shift(1) <= dataframe["ema21"].shift(1))
-                    )
-                    friction_aware_window = (
-                        dataframe["atr14"].between(dataframe["atr_ma50"] * 0.45, dataframe["atr_ma50"] * 2.25)
-                        & dataframe["bar_range_atr"].between(0.08, 2.65)
-                        & dataframe["body_atr"].between(0.02, 1.95)
-                        & dataframe["rvol96"].between(0.22, 4.60)
-                    )
-                    raw = (
-                        hurst_density_repair_trend_long.fillna(False)
-                        & hurst_efficiency_persistence.fillna(False)
-                        & (
-                            hurst_density_repair_reclaim_long.fillna(False)
-                            | dataframe["hurst_density_repair_microbreak_long"].fillna(False)
-                        )
-                        & friction_aware_window.fillna(False)
-                        & dataframe["rsi14"].between(38, 78)
-                    )
                 elif "{spec.key}" == "value_area_vpoc_htf_trend_mss_filter":
                     killzone_window = (
                         dataframe["minute_of_day_ny"].between(9 * 60 + 35, 11 * 60 + 30)
@@ -3562,6 +9071,163 @@ def strategy_source(spec: CandidateSpec, *, symbol: str, timeframe: str) -> str:
                     )
                     raw = killzone_window & long_quality
                     short_raw = killzone_window & short_quality
+                elif "{spec.key}" == "htf_range_edge_cisd_mss_displacement_te":
+                    active_session_window = (
+                        dataframe["minute_of_day_ny"].between(8 * 60, 11 * 60 + 45)
+                        | dataframe["minute_of_day_ny"].between(13 * 60, 16 * 60)
+                        | dataframe["minute_of_day_ny"].between(18 * 60, 23 * 60)
+                    )
+                    range_prior_long = (
+                        dataframe["htf_range_bottom_distance_atr"].between(-0.20, 1.15)
+                        | dataframe["htf_range_bottom_sweep"].fillna(False)
+                        | dataframe["htf_range_top_breakout_accept"].fillna(False)
+                    )
+                    range_prior_short = (
+                        dataframe["htf_range_top_distance_atr"].between(-0.20, 1.15)
+                        | dataframe["htf_range_top_sweep"].fillna(False)
+                        | dataframe["htf_range_bottom_breakdown_accept"].fillna(False)
+                    )
+                    ltf_structure_long = (
+                        dataframe["bull_mss"].fillna(False)
+                        | dataframe["bull_cisd_delivery_flip"].fillna(False)
+                    )
+                    ltf_structure_short = (
+                        dataframe["bear_mss"].fillna(False)
+                        | dataframe["bear_cisd_delivery_flip"].fillna(False)
+                    )
+                    expansion_impulse_long = (
+                        dataframe["bull_displacement_impulse"].fillna(False)
+                        | (dataframe["bull_fvg"].fillna(False) & (dataframe["close"] > dataframe["ema21"]))
+                    )
+                    expansion_impulse_short = (
+                        dataframe["bear_displacement_impulse"].fillna(False)
+                        | (dataframe["bear_fvg"].fillna(False) & (dataframe["close"] < dataframe["ema21"]))
+                    )
+                    mtf_direction_long = (
+                        (dataframe["slope_15m"] > -dataframe["atr14"] * 0.05).astype(int)
+                        + (dataframe["slope_30m"] > -dataframe["atr14"] * 0.07).astype(int)
+                        + (dataframe["slope_1h"] > -dataframe["atr14"] * 0.10).astype(int)
+                        + (dataframe["slope_4h"] > -dataframe["atr14"] * 0.12).astype(int)
+                    )
+                    mtf_direction_short = (
+                        (dataframe["slope_15m"] < dataframe["atr14"] * 0.05).astype(int)
+                        + (dataframe["slope_30m"] < dataframe["atr14"] * 0.07).astype(int)
+                        + (dataframe["slope_1h"] < dataframe["atr14"] * 0.10).astype(int)
+                        + (dataframe["slope_4h"] < dataframe["atr14"] * 0.12).astype(int)
+                    )
+                    trendiness_quality = (
+                        dataframe["adx14"].between(14, 58)
+                        & dataframe["htf_range_edge_vhf34_shifted"].between(0.12, 0.88)
+                        & dataframe["htf_range_edge_vhf34_slope"].gt(-0.018)
+                    )
+                    friction_aware_window = (
+                        dataframe["htf_range_width_atr"].between(1.20, 22.0)
+                        & dataframe["atr14"].between(dataframe["atr_ma50"] * 0.45, dataframe["atr_ma50"] * 2.60)
+                        & dataframe["bar_range_atr"].between(0.12, 3.40)
+                        & dataframe["body_atr"].between(0.04, 2.60)
+                        & dataframe["rvol96"].between(0.35, 5.80)
+                    )
+                    long_quality = (
+                        range_prior_long.fillna(False)
+                        & ltf_structure_long.fillna(False)
+                        & expansion_impulse_long.fillna(False)
+                        & mtf_direction_long.ge(2)
+                        & trendiness_quality.fillna(False)
+                        & friction_aware_window.fillna(False)
+                        & (dataframe["close"] > dataframe["session_vwap"] - dataframe["atr14"] * 0.18)
+                        & dataframe["rsi14"].between(42, 78)
+                    )
+                    short_quality = (
+                        range_prior_short.fillna(False)
+                        & ltf_structure_short.fillna(False)
+                        & expansion_impulse_short.fillna(False)
+                        & mtf_direction_short.ge(2)
+                        & trendiness_quality.fillna(False)
+                        & friction_aware_window.fillna(False)
+                        & (dataframe["close"] < dataframe["session_vwap"] + dataframe["atr14"] * 0.18)
+                        & dataframe["rsi14"].between(22, 58)
+                    )
+                    raw = active_session_window & long_quality
+                    short_raw = active_session_window & short_quality
+                elif "{spec.key}" == "htf_range_breakout_retest_te_selective":
+                    active_session_window = (
+                        dataframe["minute_of_day_ny"].between(8 * 60 + 30, 11 * 60 + 30)
+                        | dataframe["minute_of_day_ny"].between(13 * 60 + 15, 15 * 60 + 45)
+                        | dataframe["minute_of_day_ny"].between(18 * 60, 22 * 60 + 30)
+                    )
+                    ltf_structure_long = (
+                        dataframe["bull_mss"].fillna(False)
+                        | dataframe["bull_cisd_delivery_flip"].fillna(False)
+                    )
+                    ltf_structure_short = (
+                        dataframe["bear_mss"].fillna(False)
+                        | dataframe["bear_cisd_delivery_flip"].fillna(False)
+                    )
+                    expansion_impulse_long = (
+                        dataframe["bull_displacement_impulse"].fillna(False)
+                        | (
+                            dataframe["bull_fvg"].fillna(False)
+                            & dataframe["close"].gt(dataframe["ema21"])
+                            & dataframe["close_location"].ge(0.58)
+                        )
+                    )
+                    expansion_impulse_short = (
+                        dataframe["bear_displacement_impulse"].fillna(False)
+                        | (
+                            dataframe["bear_fvg"].fillna(False)
+                            & dataframe["close"].lt(dataframe["ema21"])
+                            & dataframe["close_location"].le(0.42)
+                        )
+                    )
+                    mtf_direction_long = (
+                        (dataframe["slope_15m"] > dataframe["atr14"] * 0.01).astype(int)
+                        + (dataframe["slope_30m"] > -dataframe["atr14"] * 0.02).astype(int)
+                        + (dataframe["slope_1h"] > -dataframe["atr14"] * 0.04).astype(int)
+                        + (dataframe["slope_4h"] > -dataframe["atr14"] * 0.06).astype(int)
+                    )
+                    mtf_direction_short = (
+                        (dataframe["slope_15m"] < -dataframe["atr14"] * 0.01).astype(int)
+                        + (dataframe["slope_30m"] < dataframe["atr14"] * 0.02).astype(int)
+                        + (dataframe["slope_1h"] < dataframe["atr14"] * 0.04).astype(int)
+                        + (dataframe["slope_4h"] < dataframe["atr14"] * 0.06).astype(int)
+                    )
+                    trendiness_quality = (
+                        dataframe["adx14"].between(17, 54)
+                        & dataframe["htf_range_edge_vhf34_shifted"].between(0.16, 0.80)
+                        & dataframe["htf_range_edge_vhf34_slope"].gt(-0.006)
+                    )
+                    friction_aware_window = (
+                        dataframe["htf_range_width_atr"].between(1.80, 18.0)
+                        & dataframe["atr14"].between(dataframe["atr_ma50"] * 0.55, dataframe["atr_ma50"] * 2.20)
+                        & dataframe["bar_range_atr"].between(0.18, 2.65)
+                        & dataframe["body_atr"].between(0.10, 2.05)
+                        & dataframe["rvol96"].between(0.70, 4.20)
+                        & dataframe["abs_vwap_deviation_atr"].le(2.60)
+                    )
+                    long_quality = (
+                        dataframe["htf_range_top_retest_hold"].fillna(False)
+                        & ltf_structure_long.fillna(False)
+                        & expansion_impulse_long.fillna(False)
+                        & mtf_direction_long.ge(3)
+                        & trendiness_quality.fillna(False)
+                        & friction_aware_window.fillna(False)
+                        & (dataframe["close"] > dataframe["session_vwap"])
+                        & (dataframe["ema21"] >= dataframe["ema55"] - dataframe["atr14"] * 0.02)
+                        & dataframe["rsi14"].between(48, 76)
+                    )
+                    short_quality = (
+                        dataframe["htf_range_bottom_retest_hold"].fillna(False)
+                        & ltf_structure_short.fillna(False)
+                        & expansion_impulse_short.fillna(False)
+                        & mtf_direction_short.ge(3)
+                        & trendiness_quality.fillna(False)
+                        & friction_aware_window.fillna(False)
+                        & (dataframe["close"] < dataframe["session_vwap"])
+                        & (dataframe["ema21"] <= dataframe["ema55"] + dataframe["atr14"] * 0.02)
+                        & dataframe["rsi14"].between(24, 52)
+                    )
+                    raw = active_session_window & long_quality
+                    short_raw = active_session_window & short_quality
                 elif "{spec.key}" == "liquidity_sweep_adx_liquidity_pool_context":
                     killzone_window = (
                         dataframe["minute_of_day_ny"].between(9 * 60 + 35, 11 * 60 + 30)
@@ -4046,6 +9712,47 @@ def strategy_source(spec: CandidateSpec, *, symbol: str, timeframe: str) -> str:
                         & dataframe["rsi14"].between(32, 64)
                         & (dataframe["close"] < dataframe["session_vwap"])
                     )
+                elif "{spec.key}" == "trend_ote_ks_distribution_stability_reacceleration":
+                    ote_ks_trend_root = (
+                        (dataframe["ema21"] > dataframe["ema55"])
+                        & (dataframe["ema55"] > dataframe["ema144"])
+                        & (dataframe["close"] > dataframe["session_vwap"])
+                        & (dataframe["slope_15m"] > -dataframe["atr14"] * 0.05)
+                        & (dataframe["slope_1h"] > -dataframe["atr14"] * 0.12)
+                    )
+                    ote_ks_zone_long = dataframe["close"].between(
+                        dataframe["ote_long_79"],
+                        dataframe["ote_long_62"],
+                    )
+                    ote_ks_ict_context = (
+                        dataframe["bull_fvg"].fillna(False)
+                        | (dataframe["low"] <= dataframe["prev2_high"] * 1.002)
+                        | dataframe["close"].between(dataframe["bull_ob_low"], dataframe["bull_ob_high"]).fillna(False)
+                    )
+                    ote_ks_mtf_resonance = (
+                        (dataframe["ema20_15m"] > dataframe["ema50_15m"]).astype(int)
+                        + (dataframe["ema20_30m"] > dataframe["ema50_30m"]).astype(int)
+                        + (dataframe["ema20_1h"] > dataframe["ema50_1h"]).astype(int)
+                        + (dataframe["slope_4h"] > -dataframe["atr14"] * 0.08).astype(int)
+                    )
+                    ote_ks_reacceleration_long = (
+                        (dataframe["close"] > dataframe["ema21"])
+                        & (dataframe["close"] > dataframe["close"].shift(1))
+                        & (dataframe["ema21"] > dataframe["ema21"].shift(3))
+                        & dataframe["close_location"].between(0.58, 1.00)
+                    )
+                    raw = (
+                        ote_ks_trend_root.fillna(False)
+                        & ote_ks_zone_long.fillna(False)
+                        & ote_ks_ict_context.fillna(False)
+                        & dataframe["ote_ks_stability_gate"].fillna(False)
+                        & ote_ks_reacceleration_long.fillna(False)
+                        & ote_ks_mtf_resonance.ge(2)
+                        & dataframe["rvol96"].between(0.55, 4.80)
+                        & dataframe["rsi14"].between(42, 74)
+                        & dataframe["body_atr"].between(0.06, 2.20)
+                        & dataframe["bar_range_atr"].between(0.10, 2.85)
+                    )
                 elif "{spec.key}" == "h4_midnight_macd_rsi_pullback":
                     h4_structure_bias = (
                         (dataframe["ema144"] > dataframe["ema390"])
@@ -4102,6 +9809,227 @@ def strategy_source(spec: CandidateSpec, *, symbol: str, timeframe: str) -> str:
                         & dataframe["rsi14"].between(46, 64)
                         & dataframe["rvol96"].between(0.85, 4.0)
                         & dataframe["body_atr"].between(0.08, 1.5)
+                    )
+                elif "{spec.key}" == "macd_cross_regime_trigger":
+                    golden_cross = (
+                        (dataframe["macd_line"] > dataframe["macd_signal"])
+                        & (dataframe["macd_line"].shift(1) <= dataframe["macd_signal"].shift(1))
+                    )
+                    death_cross = (
+                        (dataframe["macd_line"] < dataframe["macd_signal"])
+                        & (dataframe["macd_line"].shift(1) >= dataframe["macd_signal"].shift(1))
+                    )
+                    macd_hist_slope_up = dataframe["macd_hist"] > dataframe["macd_hist"].shift(1)
+                    macd_hist_slope_down = dataframe["macd_hist"] < dataframe["macd_hist"].shift(1)
+                    trend_expansion_long = (
+                        (dataframe["ema21"] > dataframe["ema55"])
+                        & (dataframe["ema55"] > dataframe["ema144"])
+                        & (dataframe["close"] > dataframe["session_vwap"])
+                        & (dataframe["slope_15m"] > -dataframe["atr14"] * 0.06)
+                        & (dataframe["slope_1h"] > -dataframe["atr14"] * 0.10)
+                    )
+                    trend_breakdown_short = (
+                        (dataframe["ema21"] < dataframe["ema55"])
+                        & (dataframe["ema55"] < dataframe["ema144"])
+                        & (dataframe["close"] < dataframe["session_vwap"])
+                        & (dataframe["slope_15m"] < dataframe["atr14"] * 0.06)
+                        & (dataframe["slope_1h"] < dataframe["atr14"] * 0.10)
+                    )
+                    compression_release_long = (
+                        (dataframe["macd_line"] > 0)
+                        & (dataframe["macd_line"].shift(1) <= 0)
+                        & dataframe["atr14"].gt(dataframe["atr_ma50"] * 0.72)
+                        & (dataframe["close"] > dataframe["ema55"])
+                        & (dataframe["close"] > dataframe["session_vwap"])
+                    )
+                    compression_release_short = (
+                        (dataframe["macd_line"] < 0)
+                        & (dataframe["macd_line"].shift(1) >= 0)
+                        & dataframe["atr14"].gt(dataframe["atr_ma50"] * 0.72)
+                        & (dataframe["close"] < dataframe["ema55"])
+                        & (dataframe["close"] < dataframe["session_vwap"])
+                    )
+                    range_chop_veto = (
+                        (dataframe["adx14"] < 13)
+                        | dataframe["bar_range_atr"].lt(0.10)
+                        | dataframe["rvol96"].lt(0.35)
+                    )
+                    raw = (
+                        (
+                            golden_cross.fillna(False)
+                            & macd_hist_slope_up.fillna(False)
+                            & trend_expansion_long.fillna(False)
+                        )
+                        | (
+                            compression_release_long.fillna(False)
+                            & macd_hist_slope_up.fillna(False)
+                            & dataframe["rsi14"].between(44, 72)
+                        )
+                    )
+                    short_raw = (
+                        (
+                            death_cross.fillna(False)
+                            & macd_hist_slope_down.fillna(False)
+                            & trend_breakdown_short.fillna(False)
+                        )
+                        | (
+                            compression_release_short.fillna(False)
+                            & macd_hist_slope_down.fillna(False)
+                            & dataframe["rsi14"].between(28, 56)
+                        )
+                    )
+                    raw = (
+                        raw
+                        & ~range_chop_veto.fillna(False)
+                        & dataframe["rvol96"].between(0.35, 5.0)
+                        & dataframe["body_atr"].between(0.04, 2.2)
+                    )
+                    short_raw = (
+                        short_raw
+                        & ~range_chop_veto.fillna(False)
+                        & dataframe["rvol96"].between(0.35, 5.0)
+                        & dataframe["body_atr"].between(0.04, 2.2)
+                    )
+                elif "{spec.key}" == "macd_failed_cross_trap_reversal":
+                    golden_cross = (
+                        (dataframe["macd_line"] > dataframe["macd_signal"])
+                        & (dataframe["macd_line"].shift(1) <= dataframe["macd_signal"].shift(1))
+                    )
+                    death_cross = (
+                        (dataframe["macd_line"] < dataframe["macd_signal"])
+                        & (dataframe["macd_line"].shift(1) >= dataframe["macd_signal"].shift(1))
+                    )
+                    failed_death_cross_window = death_cross.shift(1).rolling(6, min_periods=1).max().fillna(False)
+                    failed_golden_cross_window = golden_cross.shift(1).rolling(6, min_periods=1).max().fillna(False)
+                    macd_hist_slope_up = dataframe["macd_hist"] > dataframe["macd_hist"].shift(1)
+                    macd_hist_slope_down = dataframe["macd_hist"] < dataframe["macd_hist"].shift(1)
+                    higher_timeframe_hist_not_bearish = (
+                        (dataframe["slope_1h"] > -dataframe["atr14"] * 0.10)
+                        & (dataframe["ema55"] >= dataframe["ema144"] * 0.997)
+                    )
+                    higher_timeframe_hist_not_bullish = (
+                        (dataframe["slope_1h"] < dataframe["atr14"] * 0.10)
+                        & (dataframe["ema55"] <= dataframe["ema144"] * 1.003)
+                    )
+                    vwap_ema_reclaim = (
+                        (dataframe["close"] > dataframe["session_vwap"])
+                        & (dataframe["close"] > dataframe["ema21"])
+                        & (dataframe["close"].shift(1) <= dataframe["ema21"].shift(1))
+                    )
+                    vwap_ema_reject = (
+                        (dataframe["close"] < dataframe["session_vwap"])
+                        & (dataframe["close"] < dataframe["ema21"])
+                        & (dataframe["close"].shift(1) >= dataframe["ema21"].shift(1))
+                    )
+                    downside_progress_failed = dataframe["close"] >= dataframe["low"].rolling(8).min().shift(1)
+                    upside_progress_failed = dataframe["close"] <= dataframe["high"].rolling(8).max().shift(1)
+                    cross_count_18 = (golden_cross.astype(int) + death_cross.astype(int)).rolling(18).sum()
+                    trap_chop_veto = (
+                        cross_count_18.gt(4)
+                        | dataframe["bar_range_atr"].lt(0.10)
+                        | dataframe["rvol96"].lt(0.35)
+                    )
+                    death_cross_trap_reclaim = (
+                        failed_death_cross_window.astype(bool)
+                        & downside_progress_failed.fillna(False)
+                        & macd_hist_slope_up.fillna(False)
+                        & vwap_ema_reclaim.fillna(False)
+                        & higher_timeframe_hist_not_bearish.fillna(False)
+                    )
+                    golden_cross_trap_breakdown = (
+                        failed_golden_cross_window.astype(bool)
+                        & upside_progress_failed.fillna(False)
+                        & macd_hist_slope_down.fillna(False)
+                        & vwap_ema_reject.fillna(False)
+                        & higher_timeframe_hist_not_bullish.fillna(False)
+                    )
+                    raw = (
+                        death_cross_trap_reclaim.fillna(False)
+                        & ~trap_chop_veto.fillna(False)
+                        & dataframe["rsi14"].between(34, 64)
+                        & dataframe["rvol96"].between(0.35, 5.0)
+                        & dataframe["body_atr"].between(0.04, 2.0)
+                    )
+                    short_raw = (
+                        golden_cross_trap_breakdown.fillna(False)
+                        & ~trap_chop_veto.fillna(False)
+                        & dataframe["rsi14"].between(36, 66)
+                        & dataframe["rvol96"].between(0.35, 5.0)
+                        & dataframe["body_atr"].between(0.04, 2.0)
+                    )
+                elif "{spec.key}" == "macd_failed_cross_trap_mtf_resonance":
+                    golden_cross = (
+                        (dataframe["macd_line"] > dataframe["macd_signal"])
+                        & (dataframe["macd_line"].shift(1) <= dataframe["macd_signal"].shift(1))
+                    )
+                    death_cross = (
+                        (dataframe["macd_line"] < dataframe["macd_signal"])
+                        & (dataframe["macd_line"].shift(1) >= dataframe["macd_signal"].shift(1))
+                    )
+                    failed_death_cross_window = death_cross.shift(1).rolling(6, min_periods=1).max().fillna(False)
+                    failed_golden_cross_window = golden_cross.shift(1).rolling(6, min_periods=1).max().fillna(False)
+                    macd_hist_slope_up = dataframe["macd_hist"] > dataframe["macd_hist"].shift(1)
+                    macd_hist_slope_down = dataframe["macd_hist"] < dataframe["macd_hist"].shift(1)
+                    macd_hist_acceleration = dataframe["macd_hist"].diff() - dataframe["macd_hist"].diff().shift(1)
+                    mtf_histogram_slope_resonance_long = (
+                        (dataframe["slope_1h"] > -dataframe["atr14"] * 0.06)
+                        & (dataframe["slope_4h"] > -dataframe["atr14"] * 0.12)
+                        & (dataframe["ema55"] >= dataframe["ema144"] * 0.998)
+                        & (macd_hist_acceleration >= -dataframe["atr14"] * 0.015)
+                        & (dataframe["macd_hist"].rolling(3, min_periods=1).mean() >= dataframe["macd_hist"].rolling(8, min_periods=1).mean() * 0.92)
+                    )
+                    mtf_histogram_slope_resonance_short = (
+                        (dataframe["slope_1h"] < dataframe["atr14"] * 0.06)
+                        & (dataframe["slope_4h"] < dataframe["atr14"] * 0.12)
+                        & (dataframe["ema55"] <= dataframe["ema144"] * 1.002)
+                        & (macd_hist_acceleration <= dataframe["atr14"] * 0.015)
+                        & (dataframe["macd_hist"].rolling(3, min_periods=1).mean() <= dataframe["macd_hist"].rolling(8, min_periods=1).mean() * 1.08)
+                    )
+                    vwap_ema_reclaim = (
+                        (dataframe["close"] > dataframe["session_vwap"])
+                        & (dataframe["close"] > dataframe["ema21"])
+                        & (dataframe["close"].shift(1) <= dataframe["ema21"].shift(1))
+                    )
+                    vwap_ema_reject = (
+                        (dataframe["close"] < dataframe["session_vwap"])
+                        & (dataframe["close"] < dataframe["ema21"])
+                        & (dataframe["close"].shift(1) >= dataframe["ema21"].shift(1))
+                    )
+                    downside_progress_failed = dataframe["close"] >= dataframe["low"].rolling(8).min().shift(1)
+                    upside_progress_failed = dataframe["close"] <= dataframe["high"].rolling(8).max().shift(1)
+                    cross_count_18 = (golden_cross.astype(int) + death_cross.astype(int)).rolling(18).sum()
+                    trap_chop_veto = (
+                        cross_count_18.gt(4)
+                        | dataframe["bar_range_atr"].lt(0.10)
+                        | dataframe["rvol96"].lt(0.35)
+                    )
+                    death_cross_trap_reclaim = (
+                        failed_death_cross_window.astype(bool)
+                        & downside_progress_failed.fillna(False)
+                        & macd_hist_slope_up.fillna(False)
+                        & vwap_ema_reclaim.fillna(False)
+                        & mtf_histogram_slope_resonance_long.fillna(False)
+                    )
+                    golden_cross_trap_breakdown = (
+                        failed_golden_cross_window.astype(bool)
+                        & upside_progress_failed.fillna(False)
+                        & macd_hist_slope_down.fillna(False)
+                        & vwap_ema_reject.fillna(False)
+                        & mtf_histogram_slope_resonance_short.fillna(False)
+                    )
+                    raw = (
+                        death_cross_trap_reclaim.fillna(False)
+                        & ~trap_chop_veto.fillna(False)
+                        & dataframe["rsi14"].between(36, 62)
+                        & dataframe["rvol96"].between(0.45, 4.6)
+                        & dataframe["body_atr"].between(0.05, 1.8)
+                    )
+                    short_raw = (
+                        golden_cross_trap_breakdown.fillna(False)
+                        & ~trap_chop_veto.fillna(False)
+                        & dataframe["rsi14"].between(38, 64)
+                        & dataframe["rvol96"].between(0.45, 4.6)
+                        & dataframe["body_atr"].between(0.05, 1.8)
                     )
                 elif "{spec.key}" == "liquidity_purge_rejection":
                     killzone_window = (
@@ -4366,6 +10294,5529 @@ def strategy_source(spec: CandidateSpec, *, symbol: str, timeframe: str) -> str:
                         & dataframe["rvol96"].between(0.75, 4.8)
                         & dataframe["rsi14"].between(48, 76)
                     )
+                elif "{spec.key}" == "linear_regression_r2_slope_trend_rejoin_filter":
+                    linear_regression_slope_quality_long = (
+                        dataframe["regression_slope_bps_96"].between(0.32, 9.0)
+                        & dataframe["regression_slope_bps_96"].gt(
+                            dataframe["regression_slope_bps_96"].shift(18) * 0.20
+                        )
+                        & (dataframe["ema21"] > dataframe["ema55"])
+                        & (dataframe["close"] > dataframe["ema55"])
+                    )
+                    linear_regression_slope_quality_short = (
+                        dataframe["regression_slope_bps_96"].between(-9.0, -0.32)
+                        & dataframe["regression_slope_bps_96"].lt(
+                            dataframe["regression_slope_bps_96"].shift(18) * 0.20
+                        )
+                        & (dataframe["ema21"] < dataframe["ema55"])
+                        & (dataframe["close"] < dataframe["ema55"])
+                    )
+                    r2_trend_fit_admission_long = (
+                        dataframe["regression_r2_96"].between(0.20, 0.92)
+                        & dataframe["regression_slope_bps_96"].gt(0.0)
+                    )
+                    r2_trend_fit_admission_short = (
+                        dataframe["regression_r2_96"].between(0.20, 0.92)
+                        & dataframe["regression_slope_bps_96"].lt(0.0)
+                    )
+                    residual_pullback_rejoin_long = (
+                        dataframe["rolling_regression_residual_shifted"].between(-1.70, -0.12)
+                        & dataframe["rolling_regression_residual_rejoin_delta"].gt(0.05)
+                        & dataframe["rolling_regression_residual_atr"].between(-1.10, 0.70)
+                        & (dataframe["close"] > dataframe["ema21"])
+                        & (dataframe["close"] > dataframe["session_vwap"] - dataframe["atr14"] * 0.30)
+                    )
+                    residual_pullback_rejoin_short = (
+                        dataframe["rolling_regression_residual_shifted"].between(0.12, 1.70)
+                        & dataframe["rolling_regression_residual_rejoin_delta"].lt(-0.05)
+                        & dataframe["rolling_regression_residual_atr"].between(-0.70, 1.10)
+                        & (dataframe["close"] < dataframe["ema21"])
+                        & (dataframe["close"] < dataframe["session_vwap"] + dataframe["atr14"] * 0.30)
+                    )
+                    mtf_slope_resonance_long = (
+                        (dataframe["slope_5m"] > -dataframe["atr14"] * 0.08)
+                        & (dataframe["slope_15m"] > -dataframe["atr14"] * 0.10)
+                        & (dataframe["slope_30m"] > -dataframe["atr14"] * 0.12)
+                        & (dataframe["slope_1h"] > -dataframe["atr14"] * 0.14)
+                        & (dataframe["slope_4h"] > -dataframe["atr14"] * 0.18)
+                    )
+                    mtf_slope_resonance_short = (
+                        (dataframe["slope_5m"] < dataframe["atr14"] * 0.08)
+                        & (dataframe["slope_15m"] < dataframe["atr14"] * 0.10)
+                        & (dataframe["slope_30m"] < dataframe["atr14"] * 0.12)
+                        & (dataframe["slope_1h"] < dataframe["atr14"] * 0.14)
+                        & (dataframe["slope_4h"] < dataframe["atr14"] * 0.18)
+                    )
+                    regression_rejoin_bar_quality = (
+                        dataframe["body_atr"].between(0.07, 2.20)
+                        & dataframe["bar_range_atr"].between(0.14, 3.05)
+                        & dataframe["rvol96"].between(0.50, 5.2)
+                    )
+                    raw = (
+                        linear_regression_slope_quality_long.fillna(False)
+                        & r2_trend_fit_admission_long.fillna(False)
+                        & residual_pullback_rejoin_long.fillna(False)
+                        & mtf_slope_resonance_long.fillna(False)
+                        & regression_rejoin_bar_quality.fillna(False)
+                        & dataframe["rsi14"].between(42, 78)
+                    )
+                    short_raw = (
+                        linear_regression_slope_quality_short.fillna(False)
+                        & r2_trend_fit_admission_short.fillna(False)
+                        & residual_pullback_rejoin_short.fillna(False)
+                        & mtf_slope_resonance_short.fillna(False)
+                        & regression_rejoin_bar_quality.fillna(False)
+                        & dataframe["rsi14"].between(22, 58)
+                    )
+                elif "{spec.key}" == "rolling_regression_residual_trend_rejoin_gate":
+                    regression_trend_state_long = (
+                        dataframe["regression_slope_bps_96"].between(0.35, 8.5)
+                        & dataframe["regression_r2_96"].between(0.16, 0.90)
+                        & (dataframe["ema21"] > dataframe["ema55"])
+                        & (dataframe["close"] > dataframe["ema55"])
+                    )
+                    regression_trend_state_short = (
+                        dataframe["regression_slope_bps_96"].between(-8.5, -0.35)
+                        & dataframe["regression_r2_96"].between(0.16, 0.90)
+                        & (dataframe["ema21"] < dataframe["ema55"])
+                        & (dataframe["close"] < dataframe["ema55"])
+                    )
+                    residual_pullback_long = dataframe["rolling_regression_residual_shifted"].between(-1.85, -0.16)
+                    residual_pullback_short = dataframe["rolling_regression_residual_shifted"].between(0.16, 1.85)
+                    regression_trendline_rejoin_long = (
+                        dataframe["rolling_regression_residual_rejoin_delta"].gt(0.04)
+                        & dataframe["rolling_regression_residual_atr"].between(-1.20, 0.65)
+                        & (dataframe["close"] > dataframe["ema21"])
+                        & (dataframe["close"] > dataframe["session_vwap"] - dataframe["atr14"] * 0.25)
+                    )
+                    regression_trendline_rejoin_short = (
+                        dataframe["rolling_regression_residual_rejoin_delta"].lt(-0.04)
+                        & dataframe["rolling_regression_residual_atr"].between(-0.65, 1.20)
+                        & (dataframe["close"] < dataframe["ema21"])
+                        & (dataframe["close"] < dataframe["session_vwap"] + dataframe["atr14"] * 0.25)
+                    )
+                    mtf_slope_resonance_long = (
+                        (dataframe["slope_5m"] > -dataframe["atr14"] * 0.10)
+                        & (dataframe["slope_15m"] > -dataframe["atr14"] * 0.10)
+                        & (dataframe["slope_30m"] > -dataframe["atr14"] * 0.12)
+                        & (dataframe["slope_1h"] > -dataframe["atr14"] * 0.14)
+                    )
+                    mtf_slope_resonance_short = (
+                        (dataframe["slope_5m"] < dataframe["atr14"] * 0.10)
+                        & (dataframe["slope_15m"] < dataframe["atr14"] * 0.10)
+                        & (dataframe["slope_30m"] < dataframe["atr14"] * 0.12)
+                        & (dataframe["slope_1h"] < dataframe["atr14"] * 0.14)
+                    )
+                    friction_aware_atr_hold = (
+                        dataframe["body_atr"].between(0.06, 2.35)
+                        & dataframe["bar_range_atr"].between(0.12, 3.20)
+                        & dataframe["rvol96"].between(0.45, 5.4)
+                    )
+                    raw = (
+                        regression_trend_state_long.fillna(False)
+                        & residual_pullback_long.fillna(False)
+                        & regression_trendline_rejoin_long.fillna(False)
+                        & mtf_slope_resonance_long.fillna(False)
+                        & friction_aware_atr_hold.fillna(False)
+                        & dataframe["rsi14"].between(42, 76)
+                    )
+                    short_raw = (
+                        regression_trend_state_short.fillna(False)
+                        & residual_pullback_short.fillna(False)
+                        & regression_trendline_rejoin_short.fillna(False)
+                        & mtf_slope_resonance_short.fillna(False)
+                        & friction_aware_atr_hold.fillna(False)
+                        & dataframe["rsi14"].between(24, 58)
+                    )
+                elif "{spec.key}" == "rsrs_high_low_regression_trend_admission":
+                    rsrs_trend_admission_long = (
+                        dataframe["rsrs_z_144_shifted"].ge(0.70)
+                        & dataframe["rsrs_r2_24_shifted"].ge(0.55)
+                        & dataframe["rsrs_right_skew_score_shifted"].ge(0.35)
+                    )
+                    rsrs_trend_admission_short = (
+                        dataframe["rsrs_z_144_shifted"].le(-0.70)
+                        & dataframe["rsrs_r2_24_shifted"].ge(0.55)
+                        & dataframe["rsrs_right_skew_score_shifted"].le(-0.35)
+                    )
+                    rsrs_mtf_votes_long = (
+                        (dataframe["slope_30m"] > -dataframe["atr14"] * 0.10).astype(int)
+                        + (dataframe["slope_1h"] > -dataframe["atr14"] * 0.14).astype(int)
+                        + (dataframe["slope_4h"] > -dataframe["atr14"] * 0.18).astype(int)
+                        + (dataframe["slope_1d"] > -dataframe["atr14"] * 0.20).astype(int)
+                    )
+                    rsrs_mtf_votes_short = (
+                        (dataframe["slope_30m"] < dataframe["atr14"] * 0.10).astype(int)
+                        + (dataframe["slope_1h"] < dataframe["atr14"] * 0.14).astype(int)
+                        + (dataframe["slope_4h"] < dataframe["atr14"] * 0.18).astype(int)
+                        + (dataframe["slope_1d"] < dataframe["atr14"] * 0.20).astype(int)
+                    )
+                    parent_trend_long = (
+                        (dataframe["ema20"] > dataframe["ema55"])
+                        & (dataframe["close"] > dataframe["session_vwap"] - dataframe["atr14"] * 0.20)
+                        & dataframe["ema21_slope_bps_12"].gt(-0.05)
+                    )
+                    parent_trend_short = (
+                        (dataframe["ema20"] < dataframe["ema55"])
+                        & (dataframe["close"] < dataframe["session_vwap"] + dataframe["atr14"] * 0.20)
+                        & dataframe["ema21_slope_bps_12"].lt(0.05)
+                    )
+                    raw = (
+                        rsrs_trend_admission_long.fillna(False)
+                        & parent_trend_long.fillna(False)
+                        & rsrs_mtf_votes_long.ge(3)
+                        & dataframe["rvol96"].between(0.55, 5.4)
+                        & dataframe["body_atr"].between(0.06, 2.35)
+                        & dataframe["rsi14"].between(42, 78)
+                    )
+                    short_raw = (
+                        rsrs_trend_admission_short.fillna(False)
+                        & parent_trend_short.fillna(False)
+                        & rsrs_mtf_votes_short.ge(3)
+                        & dataframe["rvol96"].between(0.55, 5.4)
+                        & dataframe["body_atr"].between(0.06, 2.35)
+                        & dataframe["rsi14"].between(22, 58)
+                    )
+                elif "{spec.key}" == "elder_force_index_pullback_continuation":
+                    volume_impulse_trend_long = (
+                        (dataframe["ema21"] > dataframe["ema55"])
+                        & (dataframe["close"] > dataframe["ema55"])
+                        & dataframe["rvol96"].between(0.75, 5.6)
+                        & dataframe["elder_force_index_smooth"].gt(dataframe["elder_force_index_reference"] * 0.72)
+                    )
+                    volume_impulse_trend_short = (
+                        (dataframe["ema21"] < dataframe["ema55"])
+                        & (dataframe["close"] < dataframe["ema55"])
+                        & dataframe["rvol96"].between(0.75, 5.6)
+                        & dataframe["elder_force_index_smooth"].lt(dataframe["elder_force_index_reference"] * 0.72)
+                    )
+                    elder_force_pullback_long = (
+                        dataframe["elder_force_pullback_depth_atr"].between(0.10, 1.85)
+                        & dataframe["close"].between(
+                            dataframe["ema21"] - dataframe["atr14"] * 1.35,
+                            dataframe["ema21"] + dataframe["atr14"] * 0.42,
+                        )
+                        & dataframe["elder_force_index_smooth"].shift(1).lt(
+                            dataframe["elder_force_index_smooth"].rolling(21, min_periods=8).median().shift(1)
+                        )
+                    )
+                    elder_force_pullback_short = (
+                        dataframe["elder_force_pullback_depth_atr"].between(0.10, 1.85)
+                        & dataframe["close"].between(
+                            dataframe["ema21"] - dataframe["atr14"] * 0.42,
+                            dataframe["ema21"] + dataframe["atr14"] * 1.35,
+                        )
+                        & dataframe["elder_force_index_smooth"].shift(1).gt(
+                            dataframe["elder_force_index_smooth"].rolling(21, min_periods=8).median().shift(1)
+                        )
+                    )
+                    elder_force_reacceleration_long = (
+                        dataframe["elder_force_index_slope"].gt(0.0)
+                        & dataframe["elder_force_index_smooth"].gt(dataframe["elder_force_index_smooth"].shift(2))
+                        & (dataframe["close"] > dataframe["close"].shift(1))
+                        & (dataframe["close"] > dataframe["session_vwap"] - dataframe["atr14"] * 0.22)
+                    )
+                    elder_force_reacceleration_short = (
+                        dataframe["elder_force_index_slope"].lt(0.0)
+                        & dataframe["elder_force_index_smooth"].lt(dataframe["elder_force_index_smooth"].shift(2))
+                        & (dataframe["close"] < dataframe["close"].shift(1))
+                        & (dataframe["close"] < dataframe["session_vwap"] + dataframe["atr14"] * 0.22)
+                    )
+                    mtf_trend_resonance_long = (
+                        (dataframe["slope_5m"] > -dataframe["atr14"] * 0.05)
+                        & (dataframe["slope_15m"] > -dataframe["atr14"] * 0.07)
+                        & (dataframe["slope_30m"] > -dataframe["atr14"] * 0.09)
+                        & (dataframe["slope_1h"] > -dataframe["atr14"] * 0.13)
+                        & (dataframe["slope_4h"] > -dataframe["atr14"] * 0.18)
+                    )
+                    mtf_trend_resonance_short = (
+                        (dataframe["slope_5m"] < dataframe["atr14"] * 0.05)
+                        & (dataframe["slope_15m"] < dataframe["atr14"] * 0.07)
+                        & (dataframe["slope_30m"] < dataframe["atr14"] * 0.09)
+                        & (dataframe["slope_1h"] < dataframe["atr14"] * 0.13)
+                        & (dataframe["slope_4h"] < dataframe["atr14"] * 0.18)
+                    )
+                    friction_aware_atr_hold = (
+                        dataframe["atr14"].between(dataframe["atr_ma50"] * 0.48, dataframe["atr_ma50"] * 2.25)
+                        & dataframe["bar_range_atr"].between(0.10, 3.10)
+                        & dataframe["body_atr"].between(0.04, 2.10)
+                        & dataframe["rsi14"].between(24, 78)
+                    )
+                    raw = (
+                        volume_impulse_trend_long.fillna(False)
+                        & elder_force_pullback_long.fillna(False)
+                        & elder_force_reacceleration_long.fillna(False)
+                        & mtf_trend_resonance_long.fillna(False)
+                        & friction_aware_atr_hold.fillna(False)
+                    )
+                    short_raw = (
+                        volume_impulse_trend_short.fillna(False)
+                        & elder_force_pullback_short.fillna(False)
+                        & elder_force_reacceleration_short.fillna(False)
+                        & mtf_trend_resonance_short.fillna(False)
+                        & friction_aware_atr_hold.fillna(False)
+                    )
+                elif "{spec.key}" == "qqe_rsi_trend_quality_reacceleration_gate":
+                    qqe_rsi_smooth = dataframe["rsi14"].ewm(span=5, adjust=False, min_periods=5).mean()
+                    qqe_rsi_delta = qqe_rsi_smooth.diff().abs()
+                    qqe_atr_rsi = qqe_rsi_delta.ewm(span=14, adjust=False, min_periods=14).mean()
+                    qqe_fast_trailing_band = qqe_rsi_smooth - qqe_atr_rsi * 2.618
+                    qqe_slow_trailing_band = qqe_rsi_smooth - qqe_atr_rsi * 4.236
+                    qqe_fast_trailing_band_short = qqe_rsi_smooth + qqe_atr_rsi * 2.618
+                    qqe_slow_trailing_band_short = qqe_rsi_smooth + qqe_atr_rsi * 4.236
+                    qqe_trend_quality_long = (
+                        qqe_rsi_smooth.between(45.0, 72.0)
+                        & qqe_rsi_smooth.gt(qqe_fast_trailing_band)
+                        & qqe_rsi_smooth.gt(qqe_slow_trailing_band)
+                        & qqe_fast_trailing_band.gt(qqe_fast_trailing_band.shift(3))
+                    )
+                    qqe_trend_quality_short = (
+                        qqe_rsi_smooth.between(28.0, 55.0)
+                        & qqe_rsi_smooth.lt(qqe_fast_trailing_band_short)
+                        & qqe_rsi_smooth.lt(qqe_slow_trailing_band_short)
+                        & qqe_fast_trailing_band_short.lt(qqe_fast_trailing_band_short.shift(3))
+                    )
+                    qqe_reacceleration_after_pullback_long = (
+                        qqe_trend_quality_long.fillna(False)
+                        & qqe_rsi_smooth.gt(qqe_rsi_smooth.shift(2) + 0.65)
+                        & qqe_rsi_smooth.shift(3).lt(qqe_rsi_smooth.rolling(34, min_periods=13).median().shift(1))
+                        & (dataframe["close"] > dataframe["ema21"])
+                        & (dataframe["close"] > dataframe["session_vwap"] - dataframe["atr14"] * 0.18)
+                    )
+                    qqe_reacceleration_after_pullback_short = (
+                        qqe_trend_quality_short.fillna(False)
+                        & qqe_rsi_smooth.lt(qqe_rsi_smooth.shift(2) - 0.65)
+                        & qqe_rsi_smooth.shift(3).gt(qqe_rsi_smooth.rolling(34, min_periods=13).median().shift(1))
+                        & (dataframe["close"] < dataframe["ema21"])
+                        & (dataframe["close"] < dataframe["session_vwap"] + dataframe["atr14"] * 0.18)
+                    )
+                    mtf_slope_resonance_long = (
+                        (dataframe["slope_5m"] > -dataframe["atr14"] * 0.05)
+                        & (dataframe["slope_15m"] > -dataframe["atr14"] * 0.07)
+                        & (dataframe["slope_30m"] > -dataframe["atr14"] * 0.09)
+                        & (dataframe["slope_1h"] > -dataframe["atr14"] * 0.12)
+                    )
+                    mtf_slope_resonance_short = (
+                        (dataframe["slope_5m"] < dataframe["atr14"] * 0.05)
+                        & (dataframe["slope_15m"] < dataframe["atr14"] * 0.07)
+                        & (dataframe["slope_30m"] < dataframe["atr14"] * 0.09)
+                        & (dataframe["slope_1h"] < dataframe["atr14"] * 0.12)
+                    )
+                    friction_aware_atr_hold = (
+                        dataframe["atr14"].between(dataframe["atr_ma50"] * 0.52, dataframe["atr_ma50"] * 2.10)
+                        & dataframe["bar_range_atr"].between(0.09, 2.75)
+                        & dataframe["body_atr"].between(0.04, 1.85)
+                        & dataframe["rvol96"].between(0.30, 4.50)
+                    )
+                    raw = (
+                        qqe_reacceleration_after_pullback_long.fillna(False)
+                        & mtf_slope_resonance_long.fillna(False)
+                        & friction_aware_atr_hold.fillna(False)
+                        & (dataframe["ema21"] > dataframe["ema55"])
+                    )
+                    short_raw = (
+                        qqe_reacceleration_after_pullback_short.fillna(False)
+                        & mtf_slope_resonance_short.fillna(False)
+                        & friction_aware_atr_hold.fillna(False)
+                        & (dataframe["ema21"] < dataframe["ema55"])
+                    )
+                elif "{spec.key}" == "weekly_donchian_adx_breadth_hold":
+                    weekly_donchian_breakout = dataframe["close"] > dataframe["high"].rolling(5 * 24).max().shift(1)
+                    weekly_adx_trend_hold = (
+                        dataframe["adx14"].rolling(24).mean().between(18.0, 54.0)
+                        & (dataframe["ema55"] > dataframe["ema144"])
+                        & (dataframe["ema144"] > dataframe["ema390"])
+                    )
+                    cross_index_breadth_confirmation = (
+                        (dataframe["ema21_slope_bps_12"] > 4.0)
+                        & (dataframe["ema55_slope_bps_48"] > 2.0)
+                        & (dataframe["close"] > dataframe["ema55"])
+                    )
+                    low_turnover_atr_hold = (
+                        dataframe["atr14"].gt(dataframe["atr_ma50"] * 0.60)
+                        & dataframe["bar_range_atr"].between(0.08, 2.8)
+                        & dataframe["body_atr"].between(0.03, 1.8)
+                    )
+                    raw = (
+                        weekly_donchian_breakout.fillna(False)
+                        & weekly_adx_trend_hold.fillna(False)
+                        & cross_index_breadth_confirmation.fillna(False)
+                        & low_turnover_atr_hold.fillna(False)
+                        & dataframe["rsi14"].between(50, 78)
+                        & dataframe["rvol96"].between(0.35, 4.2)
+                    )
+                elif "{spec.key}" == "multires_energy_trend_gate":
+                    directional_energy_ratio_long = (
+                        dataframe["energy_ratio"].between(0.05, 0.55)
+                        & (dataframe["signed_fast_energy"] > 0.00010)
+                        & (dataframe["ema21_slope_bps_12"] > 1.6)
+                        & (dataframe["ema55_slope_bps_48"] > 0.5)
+                    )
+                    directional_energy_ratio_short = (
+                        dataframe["energy_ratio"].between(0.05, 0.55)
+                        & (dataframe["signed_fast_energy"] < -0.00010)
+                        & (dataframe["ema21_slope_bps_12"] < -1.6)
+                        & (dataframe["ema55_slope_bps_48"] < -0.5)
+                    )
+                    mtf_slope_resonance_long = (
+                        (dataframe["slope_5m"] > -dataframe["atr14"] * 0.04)
+                        & (dataframe["slope_15m"] > -dataframe["atr14"] * 0.06)
+                        & (dataframe["slope_30m"] > -dataframe["atr14"] * 0.08)
+                        & (dataframe["slope_1h"] > -dataframe["atr14"] * 0.10)
+                        & (dataframe["slope_4h"] > -dataframe["atr14"] * 0.16)
+                    )
+                    mtf_slope_resonance_short = (
+                        (dataframe["slope_5m"] < dataframe["atr14"] * 0.04)
+                        & (dataframe["slope_15m"] < dataframe["atr14"] * 0.06)
+                        & (dataframe["slope_30m"] < dataframe["atr14"] * 0.08)
+                        & (dataframe["slope_1h"] < dataframe["atr14"] * 0.10)
+                        & (dataframe["slope_4h"] < dataframe["atr14"] * 0.16)
+                    )
+                    friction_aware_rrr_bracket = (
+                        dataframe["atr14"].between(dataframe["atr_ma50"] * 0.55, dataframe["atr_ma50"] * 2.10)
+                        & dataframe["bar_range_atr"].between(0.10, 2.70)
+                        & dataframe["body_atr"].between(0.04, 1.80)
+                        & dataframe["rvol96"].between(0.25, 4.25)
+                    )
+                    raw = (
+                        directional_energy_ratio_long.fillna(False)
+                        & mtf_slope_resonance_long.fillna(False)
+                        & friction_aware_rrr_bracket.fillna(False)
+                        & dataframe["rsi14"].between(44, 78)
+                        & (dataframe["close"] > dataframe["ema55"])
+                    )
+                    short_raw = (
+                        directional_energy_ratio_short.fillna(False)
+                        & mtf_slope_resonance_short.fillna(False)
+                        & friction_aware_rrr_bracket.fillna(False)
+                        & dataframe["rsi14"].between(22, 56)
+                        & (dataframe["close"] < dataframe["ema55"])
+                    )
+                elif "{spec.key}" == "price_stiffness_density_trend_carry":
+                    stiffness_window = 89
+                    density_window = 34
+                    price_stiffness_range_high = dataframe["high"].rolling(
+                        stiffness_window,
+                        min_periods=34,
+                    ).max().shift(1)
+                    price_stiffness_range_low = dataframe["low"].rolling(
+                        stiffness_window,
+                        min_periods=34,
+                    ).min().shift(1)
+                    price_stiffness_range = (
+                        price_stiffness_range_high - price_stiffness_range_low
+                    ).replace(0, np.nan)
+                    dataframe["price_stiffness_clv"] = (
+                        (dataframe["close"].shift(1) - price_stiffness_range_low)
+                        / price_stiffness_range
+                    ).clip(lower=0.0, upper=1.0)
+                    price_stiffness_path = dataframe["close"].diff().abs().shift(1).rolling(
+                        stiffness_window,
+                        min_periods=34,
+                    ).sum()
+                    dataframe["price_stiffness_path_efficiency"] = (
+                        (dataframe["close"].shift(1) - dataframe["close"].shift(stiffness_window + 1)).abs()
+                        / price_stiffness_path.replace(0, np.nan)
+                    )
+                    dataframe["price_stiffness_range_density"] = (
+                        price_stiffness_range
+                        / price_stiffness_range.rolling(233, min_periods=89).median().shift(1).replace(0, np.nan)
+                    )
+                    dataframe["price_stiffness_upper"] = (
+                        dataframe["price_stiffness_clv"]
+                        .gt(0.66)
+                        .astype(float)
+                        .rolling(density_window, min_periods=13)
+                        .mean()
+                        .shift(1)
+                    )
+                    dataframe["price_stiffness_lower"] = (
+                        dataframe["price_stiffness_clv"]
+                        .lt(0.34)
+                        .astype(float)
+                        .rolling(density_window, min_periods=13)
+                        .mean()
+                        .shift(1)
+                    )
+                    dataframe["price_stiffness_mid_reclaim_delta"] = (
+                        dataframe["price_stiffness_clv"]
+                        - dataframe["price_stiffness_clv"].rolling(13, min_periods=5).median().shift(1)
+                    )
+                    price_stiffness_reclaim_long = (
+                        dataframe["price_stiffness_upper"].between(0.42, 0.88)
+                        & dataframe["price_stiffness_lower"].lt(0.34)
+                        & dataframe["price_stiffness_clv"].between(0.48, 0.84)
+                        & dataframe["price_stiffness_mid_reclaim_delta"].gt(-0.04)
+                        & dataframe["price_stiffness_path_efficiency"].gt(0.18)
+                        & dataframe["price_stiffness_range_density"].between(0.72, 2.35)
+                        & (dataframe["ema21"] > dataframe["ema55"])
+                        & (dataframe["close"] > dataframe["session_vwap"])
+                    )
+                    price_stiffness_reclaim_short = (
+                        dataframe["price_stiffness_lower"].between(0.42, 0.88)
+                        & dataframe["price_stiffness_upper"].lt(0.34)
+                        & dataframe["price_stiffness_clv"].between(0.16, 0.52)
+                        & dataframe["price_stiffness_mid_reclaim_delta"].lt(0.04)
+                        & dataframe["price_stiffness_path_efficiency"].gt(0.18)
+                        & dataframe["price_stiffness_range_density"].between(0.72, 2.35)
+                        & (dataframe["ema21"] < dataframe["ema55"])
+                        & (dataframe["close"] < dataframe["session_vwap"])
+                    )
+                    price_stiffness_mtf_resonance_long = (
+                        (dataframe["slope_5m"] > -dataframe["atr14"] * 0.04)
+                        & (dataframe["slope_15m"] > -dataframe["atr14"] * 0.06)
+                        & (dataframe["slope_30m"] > -dataframe["atr14"] * 0.08)
+                        & (dataframe["slope_1h"] > -dataframe["atr14"] * 0.10)
+                        & (dataframe["slope_4h"] > -dataframe["atr14"] * 0.16)
+                    )
+                    price_stiffness_mtf_resonance_short = (
+                        (dataframe["slope_5m"] < dataframe["atr14"] * 0.04)
+                        & (dataframe["slope_15m"] < dataframe["atr14"] * 0.06)
+                        & (dataframe["slope_30m"] < dataframe["atr14"] * 0.08)
+                        & (dataframe["slope_1h"] < dataframe["atr14"] * 0.10)
+                        & (dataframe["slope_4h"] < dataframe["atr14"] * 0.16)
+                    )
+                    friction_aware_rrr_bracket = (
+                        dataframe["atr14"].between(dataframe["atr_ma50"] * 0.55, dataframe["atr_ma50"] * 2.20)
+                        & dataframe["bar_range_atr"].between(0.08, 2.70)
+                        & dataframe["body_atr"].between(0.03, 1.80)
+                        & dataframe["rvol96"].between(0.24, 4.35)
+                    )
+                    raw = (
+                        price_stiffness_reclaim_long.fillna(False)
+                        & price_stiffness_mtf_resonance_long.fillna(False)
+                        & friction_aware_rrr_bracket.fillna(False)
+                        & dataframe["rsi14"].between(43, 77)
+                    )
+                    short_raw = (
+                        price_stiffness_reclaim_short.fillna(False)
+                        & price_stiffness_mtf_resonance_short.fillna(False)
+                        & friction_aware_rrr_bracket.fillna(False)
+                        & dataframe["rsi14"].between(23, 57)
+                    )
+                elif "{spec.key}" in ("trend_magic_cci_atr_slow_long", "trend_magic_cci_atr_balanced_long"):
+                    trend_magic_cci_atr_long = (
+                        dataframe["trend_magic_dir_shifted"].gt(0)
+                        & dataframe["trend_magic_cci_shifted"].gt(0)
+                        & dataframe["close"].gt(dataframe["trend_magic_line_shifted"])
+                        & dataframe["trend_magic_atr_shifted"].gt(0)
+                        & dataframe["trend_magic_body_atr_shifted"].ge({trend_magic_params["min_body_atr"]:.2f})
+                    )
+                    trend_magic_mtf_continuation_long = dataframe["trend_magic_context_votes_long"].ge(
+                        {trend_magic_params["min_context"]}
+                    )
+                    trend_magic_friction_aware_atr_bracket = (
+                        dataframe["atr14"].between(dataframe["atr_ma50"] * 0.45, dataframe["atr_ma50"] * 2.35)
+                        & dataframe["bar_range_atr"].between(0.08, 2.85)
+                        & dataframe["body_atr"].between(0.03, 1.95)
+                        & dataframe["rvol96"].between(0.24, 4.60)
+                    )
+                    raw = (
+                        trend_magic_cci_atr_long.fillna(False)
+                        & trend_magic_mtf_continuation_long.fillna(False)
+                        & trend_magic_friction_aware_atr_bracket.fillna(False)
+                        & dataframe["rsi14"].between(38, 78)
+                        & dataframe["close"].gt(dataframe["ema55"] - dataframe["atr14"] * 0.20)
+                    )
+                elif "{spec.key}" == "first30_last30_momentum_close_drive":
+                    htf_trend_agreement_long = (
+                        (dataframe["slope_30m"] > 0)
+                        & (dataframe["slope_1h"] > 0)
+                        & (dataframe["slope_4h"] > -dataframe["atr14"] * 0.08)
+                    )
+                    htf_trend_agreement_short = (
+                        (dataframe["slope_30m"] < 0)
+                        & (dataframe["slope_1h"] < 0)
+                        & (dataframe["slope_4h"] < dataframe["atr14"] * 0.08)
+                    )
+                    first_window_momentum_long = (
+                        dataframe["first30_return"].between(0.0012, 0.0120)
+                        & (dataframe["close"] > dataframe["session_open"] * (1.0 + dataframe["first30_return"] * 0.20))
+                    )
+                    first_window_momentum_short = (
+                        dataframe["first30_return"].between(-0.0120, -0.0012)
+                        & (dataframe["close"] < dataframe["session_open"] * (1.0 + dataframe["first30_return"] * 0.20))
+                    )
+                    close_drive_quality_long = (
+                        dataframe["last_window_close_drive"].fillna(False)
+                        & (dataframe["close"] > dataframe["session_vwap"])
+                        & (dataframe["close"] > dataframe["ema21"])
+                        & dataframe["close_location"].between(0.58, 1.00)
+                        & dataframe["bar_range_atr"].between(0.08, 2.20)
+                        & dataframe["body_atr"].between(0.04, 1.70)
+                        & dataframe["rvol96"].between(0.35, 4.50)
+                    )
+                    close_drive_quality_short = (
+                        dataframe["last_window_close_drive"].fillna(False)
+                        & (dataframe["close"] < dataframe["session_vwap"])
+                        & (dataframe["close"] < dataframe["ema21"])
+                        & dataframe["close_location"].between(0.00, 0.42)
+                        & dataframe["bar_range_atr"].between(0.08, 2.20)
+                        & dataframe["body_atr"].between(0.04, 1.70)
+                        & dataframe["rvol96"].between(0.35, 4.50)
+                    )
+                    exhaustion_veto_long = (
+                        dataframe["rsi14"].gt(80)
+                        | (dataframe["close"] > dataframe["ema21"] + dataframe["atr14"] * 3.0)
+                    )
+                    exhaustion_veto_short = (
+                        dataframe["rsi14"].lt(20)
+                        | (dataframe["close"] < dataframe["ema21"] - dataframe["atr14"] * 3.0)
+                    )
+                    raw = (
+                        first_window_momentum_long.fillna(False)
+                        & close_drive_quality_long.fillna(False)
+                        & htf_trend_agreement_long.fillna(False)
+                        & dataframe["adx14"].between(13, 48)
+                        & ~exhaustion_veto_long.fillna(False)
+                    )
+                    short_raw = (
+                        first_window_momentum_short.fillna(False)
+                        & close_drive_quality_short.fillna(False)
+                        & htf_trend_agreement_short.fillna(False)
+                        & dataframe["adx14"].between(13, 48)
+                        & ~exhaustion_veto_short.fillna(False)
+                    )
+                elif "{spec.key}" == "order_flow_imbalance_proxy_trend_reversal_gate":
+                    price_response = dataframe["close"].pct_change(3).shift(1)
+                    absorption_state_long = (
+                        dataframe["ofi_proxy_z"].lt(-0.85)
+                        & price_response.gt(-0.0008)
+                        & dataframe["close_location"].between(0.46, 1.00)
+                    ) | (
+                        dataframe["ofi_proxy_z"].gt(0.85)
+                        & price_response.gt(0.0002)
+                        & dataframe["close"].gt(dataframe["session_vwap"])
+                    )
+                    absorption_state_short = (
+                        dataframe["ofi_proxy_z"].gt(0.85)
+                        & price_response.lt(0.0008)
+                        & dataframe["close_location"].between(0.00, 0.54)
+                    ) | (
+                        dataframe["ofi_proxy_z"].lt(-0.85)
+                        & price_response.lt(-0.0002)
+                        & dataframe["close"].lt(dataframe["session_vwap"])
+                    )
+                    mtf_trend_reversal_admission_long = (
+                        (dataframe["slope_15m"] > -dataframe["atr14"] * 0.06)
+                        & (dataframe["slope_30m"] > -dataframe["atr14"] * 0.09)
+                        & (dataframe["slope_1h"] > -dataframe["atr14"] * 0.14)
+                        & dataframe["rsi14"].between(36, 74)
+                    )
+                    mtf_trend_reversal_admission_short = (
+                        (dataframe["slope_15m"] < dataframe["atr14"] * 0.06)
+                        & (dataframe["slope_30m"] < dataframe["atr14"] * 0.09)
+                        & (dataframe["slope_1h"] < dataframe["atr14"] * 0.14)
+                        & dataframe["rsi14"].between(26, 64)
+                    )
+                    practical_bar_window = (
+                        dataframe["atr14"].between(dataframe["atr_ma50"] * 0.48, dataframe["atr_ma50"] * 2.30)
+                        & dataframe["bar_range_atr"].between(0.10, 2.80)
+                        & dataframe["body_atr"].between(0.03, 1.95)
+                        & dataframe["rvol96"].between(0.30, 4.80)
+                    )
+                    raw = (
+                        absorption_state_long.fillna(False)
+                        & mtf_trend_reversal_admission_long.fillna(False)
+                        & practical_bar_window.fillna(False)
+                        & (dataframe["close"] > dataframe["ema21"] - dataframe["atr14"] * 0.30)
+                    )
+                    short_raw = (
+                        absorption_state_short.fillna(False)
+                        & mtf_trend_reversal_admission_short.fillna(False)
+                        & practical_bar_window.fillna(False)
+                        & (dataframe["close"] < dataframe["ema21"] + dataframe["atr14"] * 0.30)
+                    )
+                elif "{spec.key}" == "adaptive_vwap_deviation_half_life_reversion_gate":
+                    half_life_reversion_pressure_long = (
+                        dataframe["vwap_deviation_atr"].between(-3.60, -0.65)
+                        & dataframe["abs_vwap_deviation_atr_shifted"].gt(0.85)
+                        & dataframe["vwap_deviation_decay_ratio"].between(0.35, 0.92)
+                        & dataframe["vwap_deviation_decay_speed"].gt(0.08)
+                        & dataframe["close_location"].between(0.35, 1.00)
+                    )
+                    half_life_reversion_pressure_short = (
+                        dataframe["vwap_deviation_atr"].between(0.65, 3.60)
+                        & dataframe["abs_vwap_deviation_atr_shifted"].gt(0.85)
+                        & dataframe["vwap_deviation_decay_ratio"].between(0.35, 0.92)
+                        & dataframe["vwap_deviation_decay_speed"].gt(0.08)
+                        & dataframe["close_location"].between(0.00, 0.65)
+                    )
+                    volatility_compression = (
+                        dataframe["rv_short"].lt(dataframe["rv_short_median32"] * 1.15)
+                        | dataframe["rv_ratio"].lt(dataframe["rv_ratio_q35"] * 1.25)
+                    )
+                    mtf_compression_regime_agreement_long = (
+                        volatility_compression.fillna(False)
+                        & dataframe["adx14"].between(8, 32)
+                        & (dataframe["slope_15m"] > -dataframe["atr14"] * 0.08)
+                        & (dataframe["slope_30m"] > -dataframe["atr14"] * 0.10)
+                        & (dataframe["slope_1h"] > -dataframe["atr14"] * 0.14)
+                        & (dataframe["slope_4h"] > -dataframe["atr14"] * 0.20)
+                    )
+                    mtf_compression_regime_agreement_short = (
+                        volatility_compression.fillna(False)
+                        & dataframe["adx14"].between(8, 32)
+                        & (dataframe["slope_15m"] < dataframe["atr14"] * 0.08)
+                        & (dataframe["slope_30m"] < dataframe["atr14"] * 0.10)
+                        & (dataframe["slope_1h"] < dataframe["atr14"] * 0.14)
+                        & (dataframe["slope_4h"] < dataframe["atr14"] * 0.20)
+                    )
+                    raw = (
+                        half_life_reversion_pressure_long.fillna(False)
+                        & mtf_compression_regime_agreement_long.fillna(False)
+                        & dataframe["rsi14"].between(28, 62)
+                        & dataframe["bar_range_atr"].between(0.06, 2.20)
+                        & dataframe["rvol96"].between(0.20, 4.50)
+                    )
+                    short_raw = (
+                        half_life_reversion_pressure_short.fillna(False)
+                        & mtf_compression_regime_agreement_short.fillna(False)
+                        & dataframe["rsi14"].between(38, 72)
+                        & dataframe["bar_range_atr"].between(0.06, 2.20)
+                        & dataframe["rvol96"].between(0.20, 4.50)
+                    )
+                elif "{spec.key}" == "mbs_convexity_duration_hedge_risk_transfer_filter":
+                    required_macro_rate_columns = {"mortgage_30y_rate", "treasury_10y_yield"}
+                    missing_macro_rate_sidecar = not required_macro_rate_columns.issubset(dataframe.columns)
+                    if missing_macro_rate_sidecar:
+                        dataframe["mortgage_rate_shock_proxy"] = np.nan
+                        dataframe["treasury_rate_shock_proxy"] = np.nan
+                        dataframe["mortgage_rate_shock_shifted"] = np.nan
+                        dataframe["treasury_rate_shock_shifted"] = np.nan
+                        dataframe["duration_extension_shock_state"] = False
+                        raw = pd.Series(False, index=dataframe.index)
+                        short_raw = pd.Series(False, index=dataframe.index)
+                    else:
+                        mortgage_rate_shock_proxy = dataframe["mortgage_30y_rate"].diff(21)
+                        treasury_rate_shock_proxy = dataframe["treasury_10y_yield"].diff(21)
+                        mortgage_rate_shock_shifted = mortgage_rate_shock_proxy.shift(1)
+                        treasury_rate_shock_shifted = treasury_rate_shock_proxy.shift(1)
+                        mortgage_shock_reference = (
+                            mortgage_rate_shock_shifted.abs().rolling(96, min_periods=24).quantile(0.72).shift(1)
+                        )
+                        treasury_shock_reference = (
+                            treasury_rate_shock_shifted.abs().rolling(96, min_periods=24).quantile(0.72).shift(1)
+                        )
+                        dataframe["mortgage_rate_shock_proxy"] = mortgage_rate_shock_proxy
+                        dataframe["treasury_rate_shock_proxy"] = treasury_rate_shock_proxy
+                        dataframe["mortgage_rate_shock_shifted"] = mortgage_rate_shock_shifted
+                        dataframe["treasury_rate_shock_shifted"] = treasury_rate_shock_shifted
+                        dataframe["duration_extension_shock_state"] = (
+                            mortgage_rate_shock_shifted.gt(mortgage_shock_reference.fillna(0.0))
+                            & treasury_rate_shock_shifted.gt(treasury_shock_reference.fillna(0.0))
+                        )
+                        macro_risk_transfer_pressure = (
+                            dataframe["duration_extension_shock_state"].fillna(False)
+                            & dataframe["rv_ratio"].gt(dataframe["rv_ratio_q35"].fillna(0.0) * 1.10)
+                            & dataframe["bar_range_atr"].between(0.10, 3.20)
+                        )
+                        equity_index_risk_transfer_filter_long = (
+                            macro_risk_transfer_pressure
+                            & (dataframe["close"] > dataframe["session_vwap"])
+                            & (dataframe["slope_15m"] > -dataframe["atr14"] * 0.06)
+                            & (dataframe["slope_30m"] > -dataframe["atr14"] * 0.08)
+                            & dataframe["rsi14"].between(44, 76)
+                        )
+                        equity_index_risk_transfer_filter_short = (
+                            macro_risk_transfer_pressure
+                            & (dataframe["close"] < dataframe["session_vwap"])
+                            & (dataframe["slope_15m"] < dataframe["atr14"] * 0.06)
+                            & (dataframe["slope_30m"] < dataframe["atr14"] * 0.08)
+                            & dataframe["rsi14"].between(24, 56)
+                        )
+                        raw = (
+                            equity_index_risk_transfer_filter_long.fillna(False)
+                            & dataframe["rvol96"].between(0.25, 4.80)
+                            & dataframe["body_atr"].between(0.04, 2.40)
+                        )
+                        short_raw = (
+                            equity_index_risk_transfer_filter_short.fillna(False)
+                            & dataframe["rvol96"].between(0.25, 4.80)
+                            & dataframe["body_atr"].between(0.04, 2.40)
+                        )
+                elif "{spec.key}" == "range_entropy_squeeze_breadth_release":
+                    range_width40 = (
+                        dataframe["range_high40"] - dataframe["range_low40"]
+                    ) / dataframe["close"].replace(0, np.nan)
+                    range_entropy_proxy = (
+                        dataframe["close_location"].rolling(24).std()
+                        + dataframe["bar_range_atr"].rolling(24).std() * 0.10
+                    )
+                    low_entropy_squeeze = (
+                        range_entropy_proxy.between(0.05, 0.34)
+                        & range_width40.between(0.0010, 0.0300)
+                        & (dataframe["bar_range_atr"].rolling(18).mean() < 0.95)
+                        & dataframe["atr14"].between(dataframe["atr_ma50"] * 0.45, dataframe["atr_ma50"] * 1.20)
+                    )
+                    breadth_confirmed_range_release = (
+                        (dataframe["close"] > dataframe["range_high40"])
+                        & (dataframe["slope_5m"] > 0)
+                        & (dataframe["slope_15m"] > 0)
+                        & (dataframe["slope_30m"] > -dataframe["atr14"] * 0.08)
+                        & (dataframe["ema21_slope_bps_12"] > 0.60)
+                    )
+                    atr_expansion_hold = (
+                        dataframe["atr14"].gt(dataframe["atr_ma50"] * 0.62)
+                        & dataframe["bar_range_atr"].between(0.16, 2.65)
+                        & dataframe["body_atr"].between(0.04, 1.85)
+                        & (dataframe["close"] > dataframe["ema21"])
+                    )
+                    low_turnover_exit_guard = (
+                        dataframe["rvol96"].between(0.32, 3.75)
+                        & dataframe["adx14"].between(10, 48)
+                        & dataframe["rsi14"].between(45, 77)
+                    )
+                    exhaustion_veto = (
+                        dataframe["rsi14"].gt(82)
+                        | (dataframe["close"] > dataframe["ema21"] + dataframe["atr14"] * 3.1)
+                        | (dataframe["slope_1h"] < -dataframe["atr14"] * 0.18)
+                    )
+                    raw = (
+                        low_entropy_squeeze.fillna(False)
+                        & breadth_confirmed_range_release.fillna(False)
+                        & atr_expansion_hold.fillna(False)
+                        & low_turnover_exit_guard.fillna(False)
+                        & ~exhaustion_veto.fillna(False)
+                    )
+                elif "{spec.key}" == "permutation_entropy_chop_filter":
+                    up_move = dataframe["close"].diff().gt(0).astype(int)
+                    ordinal_pattern_entropy = up_move.rolling(34).mean().rolling(8).std()
+                    chop_filter = (
+                        ordinal_pattern_entropy.between(0.02, 0.19)
+                        & dataframe["bar_range_atr"].rolling(21).mean().between(0.16, 1.65)
+                        & dataframe["adx14"].between(14, 42)
+                    )
+                    parent_trend_execution_quality = (
+                        (dataframe["ema21"] > dataframe["ema55"])
+                        & (dataframe["ema55"] > dataframe["ema144"])
+                        & (dataframe["slope_15m"] > -dataframe["atr14"] * 0.04)
+                        & (dataframe["slope_30m"] > -dataframe["atr14"] * 0.06)
+                        & (dataframe["slope_1h"] > -dataframe["atr14"] * 0.10)
+                        & dataframe["rsi14"].between(44, 76)
+                        & dataframe["rvol96"].between(0.35, 4.20)
+                    )
+                    exhaustion_veto = (
+                        dataframe["rsi14"].gt(82)
+                        | (dataframe["close"] > dataframe["ema21"] + dataframe["atr14"] * 3.2)
+                        | (dataframe["slope_4h"] < -dataframe["atr14"] * 0.18)
+                    )
+                    raw = (
+                        chop_filter.fillna(False)
+                        & parent_trend_execution_quality.fillna(False)
+                        & ~exhaustion_veto.fillna(False)
+                    )
+                elif "{spec.key}" == "conformal_interval_width_risk_throttle":
+                    conformal_risk_state_ok = (
+                        dataframe["conformal_interval_width_percentile_shifted"].between(0.05, 0.92)
+                        & dataframe["conformal_miscoverage_rate_shifted"].between(0.0, 0.36)
+                        & dataframe["conformal_miscoverage_acceleration_shifted"].lt(0.08)
+                    )
+                    conformal_panic_veto = (
+                        dataframe["conformal_interval_width_percentile_shifted"].gt(1.12)
+                        | dataframe["conformal_miscoverage_rate_shifted"].gt(0.45)
+                    )
+                    parent_trend_long = (
+                        (dataframe["ema21"] > dataframe["ema55"])
+                        & (dataframe["ema55"] > dataframe["ema144"] - dataframe["atr14"] * 0.10)
+                        & (dataframe["close"] > dataframe["session_vwap"])
+                        & (dataframe["ema21_slope_bps_12"] > 6.0)
+                        & (dataframe["slope_15m"] > -dataframe["atr14"] * 0.05)
+                        & (dataframe["slope_1h"] > -dataframe["atr14"] * 0.10)
+                    )
+                    parent_reclaim_long = (
+                        (dataframe["low"] <= dataframe["ema21"] + dataframe["atr14"] * 0.12)
+                        & (dataframe["close"] > dataframe["ema21"])
+                        & (dataframe["close"] > dataframe["close"].shift(2))
+                    )
+                    parent_trend_short = (
+                        (dataframe["ema21"] < dataframe["ema55"])
+                        & (dataframe["ema55"] < dataframe["ema144"] + dataframe["atr14"] * 0.10)
+                        & (dataframe["close"] < dataframe["session_vwap"])
+                        & (dataframe["ema21_slope_bps_12"] < -6.0)
+                        & (dataframe["slope_15m"] < dataframe["atr14"] * 0.05)
+                        & (dataframe["slope_1h"] < dataframe["atr14"] * 0.10)
+                    )
+                    parent_reclaim_short = (
+                        (dataframe["high"] >= dataframe["ema21"] - dataframe["atr14"] * 0.12)
+                        & (dataframe["close"] < dataframe["ema21"])
+                        & (dataframe["close"] < dataframe["close"].shift(2))
+                    )
+                    conformal_width_risk_throttle_long = (
+                        conformal_risk_state_ok.fillna(False)
+                        & ~conformal_panic_veto.fillna(False)
+                        & parent_trend_long.fillna(False)
+                        & parent_reclaim_long.fillna(False)
+                    )
+                    conformal_width_risk_throttle_short = (
+                        conformal_risk_state_ok.fillna(False)
+                        & ~conformal_panic_veto.fillna(False)
+                        & parent_trend_short.fillna(False)
+                        & parent_reclaim_short.fillna(False)
+                    )
+                    friction_aware_window = (
+                        dataframe["atr14"].between(dataframe["atr_ma50"] * 0.45, dataframe["atr_ma50"] * 2.35)
+                        & dataframe["bar_range_atr"].between(0.08, 2.70)
+                        & dataframe["body_atr"].between(0.03, 1.95)
+                        & dataframe["rvol96"].between(0.30, 4.80)
+                    )
+                    raw = (
+                        conformal_width_risk_throttle_long.fillna(False)
+                        & friction_aware_window.fillna(False)
+                        & dataframe["rsi14"].between(42, 78)
+                    )
+                    short_raw = (
+                        conformal_width_risk_throttle_short.fillna(False)
+                        & friction_aware_window.fillna(False)
+                        & dataframe["rsi14"].between(22, 58)
+                    )
+                elif "{spec.key}" == "mutual_information_regime_channel_admission_filter":
+                    regime_channel_return = dataframe["close"].pct_change(5).shift(1)
+                    regime_channel_outcome_bucket = pd.Series(
+                        np.select(
+                            [
+                                regime_channel_return.gt(dataframe["atr14"].div(dataframe["close"].replace(0, np.nan)) * 0.12),
+                                regime_channel_return.lt(-dataframe["atr14"].div(dataframe["close"].replace(0, np.nan)) * 0.12),
+                            ],
+                            [1.0, -1.0],
+                            default=0.0,
+                        ),
+                        index=dataframe.index,
+                    )
+                    regime_channel_signal_state = pd.Series(
+                        np.select(
+                            [
+                                (dataframe["ema21"] > dataframe["ema55"])
+                                & dataframe["close"].gt(dataframe["session_vwap"])
+                                & dataframe["rsi14"].between(48, 76),
+                                (dataframe["ema21"] < dataframe["ema55"])
+                                & dataframe["close"].lt(dataframe["session_vwap"])
+                                & dataframe["rsi14"].between(24, 52),
+                            ],
+                            [1.0, -1.0],
+                            default=0.0,
+                        ),
+                        index=dataframe.index,
+                    )
+                    outcome_balance = regime_channel_outcome_bucket.rolling(144, min_periods=55).mean().shift(1).abs()
+                    baseline_entropy_proxy = (1.0 - outcome_balance).clip(lower=0.0, upper=1.0)
+                    regime_channel_signal_state_observed = regime_channel_signal_state.shift(6)
+                    observed_signal_sample_count = (
+                        regime_channel_signal_state_observed.ne(0.0)
+                        & regime_channel_outcome_bucket.ne(0.0)
+                    ).astype(float).rolling(144, min_periods=55).sum().shift(1)
+                    information_rate_sample_floor = observed_signal_sample_count.ge(34)
+                    conditioned_error_rate = (
+                        regime_channel_outcome_bucket.ne(regime_channel_signal_state_observed)
+                        & regime_channel_signal_state_observed.ne(0.0)
+                        & regime_channel_outcome_bucket.ne(0.0)
+                    ).astype(float).rolling(144, min_periods=55).mean().shift(1)
+                    conditioned_entropy_proxy = conditioned_error_rate.clip(lower=0.0, upper=1.0)
+                    mutual_information_regime_channel = (
+                        baseline_entropy_proxy - conditioned_entropy_proxy
+                    ).rolling(34, min_periods=13).mean()
+                    information_rate_admission_long = (
+                        mutual_information_regime_channel.gt(0.08)
+                        & information_rate_sample_floor
+                        & regime_channel_signal_state.eq(1.0)
+                        & dataframe["adx14"].between(12, 48)
+                        & dataframe["rvol96"].between(0.30, 4.50)
+                        & dataframe["slope_15m"].gt(-dataframe["atr14"] * 0.06)
+                        & dataframe["slope_1h"].gt(-dataframe["atr14"] * 0.12)
+                    )
+                    information_rate_admission_short = (
+                        mutual_information_regime_channel.gt(0.08)
+                        & information_rate_sample_floor
+                        & regime_channel_signal_state.eq(-1.0)
+                        & dataframe["adx14"].between(12, 48)
+                        & dataframe["rvol96"].between(0.30, 4.50)
+                        & dataframe["slope_15m"].lt(dataframe["atr14"] * 0.06)
+                        & dataframe["slope_1h"].lt(dataframe["atr14"] * 0.12)
+                    )
+                    practical_bar_window = (
+                        dataframe["atr14"].between(dataframe["atr_ma50"] * 0.50, dataframe["atr_ma50"] * 2.35)
+                        & dataframe["bar_range_atr"].between(0.10, 2.75)
+                        & dataframe["body_atr"].between(0.03, 1.85)
+                    )
+                    raw = information_rate_admission_long.fillna(False) & practical_bar_window.fillna(False)
+                    short_raw = information_rate_admission_short.fillna(False) & practical_bar_window.fillna(False)
+                elif "{spec.key}" == "realized_vol_term_structure_breakout":
+                    realized_vol_term_structure_breakout = True
+                    compression_to_expansion_breakout_long = (
+                        (dataframe["rv_ratio"].shift(1) <= dataframe["rv_ratio_q35"])
+                        & (dataframe["rv_short"] > dataframe["rv_short_median32"])
+                        & (dataframe["close"] > dataframe["range_high40"])
+                        & (dataframe["ema21"] > dataframe["ema55"])
+                        & (dataframe["slope_15m"] > 0)
+                        & (dataframe["slope_1h"] > -dataframe["atr14"] * 0.08)
+                    )
+                    compression_to_expansion_breakout_short = (
+                        (dataframe["rv_ratio"].shift(1) <= dataframe["rv_ratio_q35"])
+                        & (dataframe["rv_short"] > dataframe["rv_short_median32"])
+                        & (dataframe["close"] < dataframe["range_low40"])
+                        & (dataframe["ema21"] < dataframe["ema55"])
+                        & (dataframe["slope_15m"] < 0)
+                        & (dataframe["slope_1h"] < dataframe["atr14"] * 0.08)
+                    )
+                    atr_managed_hold = (
+                        dataframe["atr14"].between(dataframe["atr_ma50"] * 0.48, dataframe["atr_ma50"] * 2.25)
+                        & dataframe["bar_range_atr"].between(0.12, 2.90)
+                        & dataframe["body_atr"].between(0.03, 1.95)
+                    )
+                    low_turnover_exit_guard = (
+                        dataframe["rvol96"].between(0.25, 4.20)
+                        & dataframe["adx14"].between(8, 48)
+                        & dataframe["rv_ratio"].between(0.25, 3.25)
+                    )
+                    raw = (
+                        realized_vol_term_structure_breakout
+                        & compression_to_expansion_breakout_long.fillna(False)
+                        & atr_managed_hold.fillna(False)
+                        & low_turnover_exit_guard.fillna(False)
+                        & dataframe["rsi14"].between(45, 78)
+                    )
+                    short_raw = (
+                        realized_vol_term_structure_breakout
+                        & compression_to_expansion_breakout_short.fillna(False)
+                        & atr_managed_hold.fillna(False)
+                        & low_turnover_exit_guard.fillna(False)
+                        & dataframe["rsi14"].between(22, 55)
+                    )
+                elif "{spec.key}" == "regime_transition_failure_reclaim":
+                    failed_transition_probe_long = (
+                        (dataframe["low"] <= dataframe["session_vwap"] - dataframe["atr14"] * 0.18)
+                        | (dataframe["low"] <= dataframe["range_low40"] + dataframe["atr14"] * 0.10)
+                    )
+                    failed_transition_probe_short = (
+                        (dataframe["high"] >= dataframe["session_vwap"] + dataframe["atr14"] * 0.18)
+                        | (dataframe["high"] >= dataframe["range_high40"] - dataframe["atr14"] * 0.10)
+                    )
+                    failed_flip_reclaim_long = (
+                        (dataframe["close"] > dataframe["session_vwap"])
+                        & (dataframe["close"].shift(1) <= dataframe["session_vwap"].shift(1))
+                        & (dataframe["close"] > dataframe["ema21"])
+                        & dataframe["close_location"].between(0.54, 1.00)
+                    )
+                    failed_flip_reclaim_short = (
+                        (dataframe["close"] < dataframe["session_vwap"])
+                        & (dataframe["close"].shift(1) >= dataframe["session_vwap"].shift(1))
+                        & (dataframe["close"] < dataframe["ema21"])
+                        & dataframe["close_location"].between(0.00, 0.46)
+                    )
+                    mtf_confirmation_long = (
+                        (dataframe["slope_5m"] > -dataframe["atr14"] * 0.05)
+                        & (dataframe["slope_15m"] > -dataframe["atr14"] * 0.08)
+                        & (dataframe["slope_30m"] > -dataframe["atr14"] * 0.12)
+                        & (dataframe["slope_1h"] > -dataframe["atr14"] * 0.16)
+                    )
+                    mtf_confirmation_short = (
+                        (dataframe["slope_5m"] < dataframe["atr14"] * 0.05)
+                        & (dataframe["slope_15m"] < dataframe["atr14"] * 0.08)
+                        & (dataframe["slope_30m"] < dataframe["atr14"] * 0.12)
+                        & (dataframe["slope_1h"] < dataframe["atr14"] * 0.16)
+                    )
+                    fixed_rrr_atr_bracket = (
+                        dataframe["atr14"].between(dataframe["atr_ma50"] * 0.52, dataframe["atr_ma50"] * 2.25)
+                        & dataframe["bar_range_atr"].between(0.12, 2.65)
+                        & dataframe["body_atr"].between(0.06, 1.85)
+                        & dataframe["rvol96"].between(0.45, 4.80)
+                    )
+                    failed_transition_exhaustion_long = (
+                        dataframe["rsi14"].gt(78)
+                        | (dataframe["close"] > dataframe["ema21"] + dataframe["atr14"] * 3.0)
+                    )
+                    failed_transition_exhaustion_short = (
+                        dataframe["rsi14"].lt(22)
+                        | (dataframe["close"] < dataframe["ema21"] - dataframe["atr14"] * 3.0)
+                    )
+                    raw = (
+                        failed_transition_probe_long.fillna(False)
+                        & failed_flip_reclaim_long.fillna(False)
+                        & mtf_confirmation_long.fillna(False)
+                        & fixed_rrr_atr_bracket.fillna(False)
+                        & dataframe["rsi14"].between(38, 70)
+                        & ~failed_transition_exhaustion_long.fillna(False)
+                    )
+                    short_raw = (
+                        failed_transition_probe_short.fillna(False)
+                        & failed_flip_reclaim_short.fillna(False)
+                        & mtf_confirmation_short.fillna(False)
+                        & fixed_rrr_atr_bracket.fillna(False)
+                        & dataframe["rsi14"].between(30, 62)
+                        & ~failed_transition_exhaustion_short.fillna(False)
+                    )
+                elif "{spec.key}" == "evt_tail_index_exceedance_regime_gate":
+                    quantile_exceedance_intensity_long = (
+                        dataframe["tail_index_regime_cooldown"].fillna(False)
+                        & dataframe["tail_exceedance_intensity"].between(0.018, 0.180)
+                        & dataframe["tail_exceedance_intensity_slope"].lt(0.018)
+                        & dataframe["tail_exceedance_balance"].gt(-5.0)
+                    )
+                    quantile_exceedance_intensity_short = (
+                        dataframe["tail_index_regime_cooldown"].fillna(False)
+                        & dataframe["tail_exceedance_intensity"].between(0.018, 0.180)
+                        & dataframe["tail_exceedance_intensity_slope"].lt(0.018)
+                        & dataframe["tail_exceedance_balance"].lt(5.0)
+                    )
+                    trend_reclaim_or_riskoff_admission_long = (
+                        (dataframe["close"] > dataframe["session_vwap"])
+                        & (dataframe["close"] > dataframe["ema21"])
+                        & (dataframe["slope_15m"] > -dataframe["atr14"] * 0.06)
+                        & (dataframe["slope_1h"] > -dataframe["atr14"] * 0.12)
+                        & dataframe["rsi14"].between(42, 76)
+                    )
+                    trend_reclaim_or_riskoff_admission_short = (
+                        (dataframe["close"] < dataframe["session_vwap"])
+                        & (dataframe["close"] < dataframe["ema21"])
+                        & (dataframe["slope_15m"] < dataframe["atr14"] * 0.06)
+                        & (dataframe["slope_1h"] < dataframe["atr14"] * 0.12)
+                        & dataframe["rsi14"].between(24, 58)
+                    )
+                    tail_regime_exhaustion_veto = (
+                        dataframe["tail_exceedance_intensity"].gt(
+                            dataframe["tail_exceedance_intensity"].rolling(233, min_periods=89).quantile(0.90).shift(1)
+                        )
+                        | dataframe["bar_range_atr"].gt(3.2)
+                        | dataframe["body_atr"].gt(2.2)
+                    )
+                    raw = (
+                        quantile_exceedance_intensity_long.fillna(False)
+                        & trend_reclaim_or_riskoff_admission_long.fillna(False)
+                        & ~tail_regime_exhaustion_veto.fillna(False)
+                    )
+                    short_raw = (
+                        quantile_exceedance_intensity_short.fillna(False)
+                        & trend_reclaim_or_riskoff_admission_short.fillna(False)
+                        & ~tail_regime_exhaustion_veto.fillna(False)
+                    )
+                elif "{spec.key}" == "intraday_liquidity_seasonality_residual_shock_filter":
+                    liquidity_residual_shock_state_long = (
+                        dataframe["liquidity_residual_shock_score"].between(1.35, 4.80)
+                        & dataframe["volume_seasonality_residual"].between(1.15, 5.50)
+                        & dataframe["range_seasonality_residual"].between(1.10, 5.20)
+                        & dataframe["tail_exceedance_intensity"].lt(0.22)
+                        & dataframe["body_atr"].between(0.06, 2.10)
+                    )
+                    liquidity_residual_shock_state_short = (
+                        dataframe["liquidity_residual_shock_score"].between(1.35, 4.80)
+                        & dataframe["volume_seasonality_residual"].between(1.15, 5.50)
+                        & dataframe["range_seasonality_residual"].between(1.10, 5.20)
+                        & dataframe["tail_exceedance_intensity"].lt(0.22)
+                        & dataframe["body_atr"].between(0.06, 2.10)
+                    )
+                    trend_reclaim_or_breakout_admission_long = (
+                        (dataframe["close"] > dataframe["session_vwap"])
+                        & (dataframe["close"] > dataframe["ema21"])
+                        & (dataframe["slope_15m"] > -dataframe["atr14"] * 0.08)
+                        & (dataframe["slope_1h"] > -dataframe["atr14"] * 0.14)
+                        & dataframe["rsi14"].between(43, 76)
+                    )
+                    trend_reclaim_or_breakout_admission_short = (
+                        (dataframe["close"] < dataframe["session_vwap"])
+                        & (dataframe["close"] < dataframe["ema21"])
+                        & (dataframe["slope_15m"] < dataframe["atr14"] * 0.08)
+                        & (dataframe["slope_1h"] < dataframe["atr14"] * 0.14)
+                        & dataframe["rsi14"].between(24, 57)
+                    )
+                    residual_shock_exhaustion_veto = (
+                        dataframe["bar_range_atr"].gt(3.00)
+                        | dataframe["liquidity_residual_shock_score"].gt(5.60)
+                        | dataframe["rvol96"].gt(6.00)
+                    )
+                    raw = (
+                        liquidity_residual_shock_state_long.fillna(False)
+                        & trend_reclaim_or_breakout_admission_long.fillna(False)
+                        & ~residual_shock_exhaustion_veto.fillna(False)
+                    )
+                    short_raw = (
+                        liquidity_residual_shock_state_short.fillna(False)
+                        & trend_reclaim_or_breakout_admission_short.fillna(False)
+                        & ~residual_shock_exhaustion_veto.fillna(False)
+                    )
+                elif "{spec.key}" == "ssa_spectral_trend_denoise_filter":
+                    low_rank_trend = dataframe["close"].rolling(55).mean()
+                    low_rank_trend_slow = dataframe["close"].rolling(144).mean()
+                    residual = dataframe["close"] - low_rank_trend
+                    residual_energy = residual.pow(2).rolling(34).mean()
+                    trend_energy = low_rank_trend.diff().pow(2).rolling(34).mean()
+                    ssa_residual_energy_ratio = residual_energy / trend_energy.replace(0, np.nan)
+                    low_rank_trend_slope = low_rank_trend.diff(13) / dataframe["close"].replace(0, np.nan) * 10000.0
+                    slow_trend_slope = low_rank_trend_slow.diff(34) / dataframe["close"].replace(0, np.nan) * 10000.0
+                    ssa_low_rank_signal_filter_long = (
+                        low_rank_trend_slope.between(1.0, 18.0)
+                        & slow_trend_slope.gt(-1.5)
+                        & ssa_residual_energy_ratio.between(0.25, 85.0)
+                        & (dataframe["close"] > low_rank_trend)
+                        & (dataframe["close"] > dataframe["ema55"])
+                        & (dataframe["slope_15m"] > -dataframe["atr14"] * 0.10)
+                        & (dataframe["slope_1h"] > -dataframe["atr14"] * 0.16)
+                    )
+                    ssa_low_rank_signal_filter_short = (
+                        low_rank_trend_slope.between(-18.0, -1.0)
+                        & slow_trend_slope.lt(1.5)
+                        & ssa_residual_energy_ratio.between(0.25, 85.0)
+                        & (dataframe["close"] < low_rank_trend)
+                        & (dataframe["close"] < dataframe["ema55"])
+                        & (dataframe["slope_15m"] < dataframe["atr14"] * 0.10)
+                        & (dataframe["slope_1h"] < dataframe["atr14"] * 0.16)
+                    )
+                    friction_aware_window = (
+                        dataframe["atr14"].between(dataframe["atr_ma50"] * 0.50, dataframe["atr_ma50"] * 2.35)
+                        & dataframe["bar_range_atr"].between(0.10, 2.80)
+                        & dataframe["body_atr"].between(0.03, 1.95)
+                        & dataframe["rvol96"].between(0.25, 4.60)
+                    )
+                    raw = (
+                        ssa_low_rank_signal_filter_long.fillna(False)
+                        & friction_aware_window.fillna(False)
+                        & dataframe["rsi14"].between(46, 76)
+                    )
+                    short_raw = (
+                        ssa_low_rank_signal_filter_short.fillna(False)
+                        & friction_aware_window.fillna(False)
+                        & dataframe["rsi14"].between(24, 54)
+                    )
+                elif "{spec.key}" == "vmd_intrinsic_mode_trend_rejoin_filter":
+                    vmd_low_frequency_mode_proxy = dataframe["close"].ewm(span=144, adjust=False, min_periods=55).mean()
+                    vmd_mid_frequency_mode_proxy = dataframe["close"].ewm(span=55, adjust=False, min_periods=21).mean()
+                    vmd_high_frequency_residual = dataframe["close"] - vmd_mid_frequency_mode_proxy
+                    vmd_low_mode_slope_bps_shifted = (
+                        vmd_low_frequency_mode_proxy.diff(21)
+                        / dataframe["close"].replace(0, np.nan)
+                        * 10000.0
+                    ).shift(1)
+                    vmd_mid_mode_slope_bps_shifted = (
+                        vmd_mid_frequency_mode_proxy.diff(13)
+                        / dataframe["close"].replace(0, np.nan)
+                        * 10000.0
+                    ).shift(1)
+                    vmd_low_mode_energy_shifted = (
+                        vmd_low_frequency_mode_proxy.diff().pow(2).rolling(34, min_periods=13).mean().shift(1)
+                    )
+                    vmd_high_mode_energy_shifted = (
+                        vmd_high_frequency_residual.pow(2).rolling(34, min_periods=13).mean().shift(1)
+                    )
+                    vmd_high_mode_energy_ratio_shifted = (
+                        vmd_high_mode_energy_shifted / vmd_low_mode_energy_shifted.replace(0, np.nan)
+                    )
+                    vmd_intrinsic_mode_trend_long = (
+                        vmd_low_mode_slope_bps_shifted.between(0.75, 22.0)
+                        & vmd_mid_mode_slope_bps_shifted.gt(-0.55)
+                        & vmd_high_mode_energy_ratio_shifted.between(0.04, 4.80)
+                    )
+                    vmd_intrinsic_mode_trend_short = (
+                        vmd_low_mode_slope_bps_shifted.between(-22.0, -0.75)
+                        & vmd_mid_mode_slope_bps_shifted.lt(0.55)
+                        & vmd_high_mode_energy_ratio_shifted.between(0.04, 4.80)
+                    )
+                    parent_trend_rejoin_long = (
+                        (dataframe["ema21"] > dataframe["ema55"])
+                        & (dataframe["close"] > dataframe["session_vwap"])
+                        & (dataframe["close"] > vmd_mid_frequency_mode_proxy)
+                        & (dataframe["slope_15m"] > -dataframe["atr14"] * 0.08)
+                        & (dataframe["slope_1h"] > -dataframe["atr14"] * 0.14)
+                    )
+                    parent_trend_rejoin_short = (
+                        (dataframe["ema21"] < dataframe["ema55"])
+                        & (dataframe["close"] < dataframe["session_vwap"])
+                        & (dataframe["close"] < vmd_mid_frequency_mode_proxy)
+                        & (dataframe["slope_15m"] < dataframe["atr14"] * 0.08)
+                        & (dataframe["slope_1h"] < dataframe["atr14"] * 0.14)
+                    )
+                    friction_aware_window = (
+                        dataframe["atr14"].between(dataframe["atr_ma50"] * 0.50, dataframe["atr_ma50"] * 2.40)
+                        & dataframe["bar_range_atr"].between(0.10, 2.85)
+                        & dataframe["body_atr"].between(0.03, 1.90)
+                        & dataframe["rvol96"].between(0.25, 4.65)
+                    )
+                    raw = (
+                        vmd_intrinsic_mode_trend_long.fillna(False)
+                        & parent_trend_rejoin_long.fillna(False)
+                        & friction_aware_window.fillna(False)
+                        & dataframe["rsi14"].between(44, 76)
+                    )
+                    short_raw = (
+                        vmd_intrinsic_mode_trend_short.fillna(False)
+                        & parent_trend_rejoin_short.fillna(False)
+                        & friction_aware_window.fillna(False)
+                        & dataframe["rsi14"].between(24, 56)
+                    )
+                elif "{spec.key}" == "ehlers_autocorr_periodogram_cycle_regime_gate":
+                    atr = dataframe["atr14"].clip(lower=0.01)
+                    ehlers_breakout_high = dataframe["high"].rolling(32, min_periods=21).max().shift(1)
+                    ehlers_breakout_low = dataframe["low"].rolling(32, min_periods=21).min().shift(1)
+                    ehlers_cycle_admission = (
+                        dataframe["ehlers_cycle_power_shifted"].ge(0.18)
+                        & dataframe["ehlers_cycle_concentration_shifted"].ge(0.08)
+                        & dataframe["ehlers_cycle_stability_shifted"].le(0.50)
+                        & dataframe["ehlers_dominant_cycle_period_shifted"].between(10.0, 34.0)
+                        & dataframe["ehlers_efficiency_ratio_shifted"].ge(0.25)
+                    )
+                    ehlers_mtf_resonance_long = (
+                        (dataframe["slope_15m"] > -atr * 0.08)
+                        & (dataframe["slope_30m"] > -atr * 0.10)
+                        & (dataframe["slope_1h"] > -atr * 0.14)
+                    )
+                    ehlers_mtf_resonance_short = (
+                        (dataframe["slope_15m"] < atr * 0.08)
+                        & (dataframe["slope_30m"] < atr * 0.10)
+                        & (dataframe["slope_1h"] < atr * 0.14)
+                    )
+                    ehlers_autocorr_cycle_gate_long = (
+                        ehlers_cycle_admission.fillna(False)
+                        & dataframe["close"].gt(ehlers_breakout_high)
+                        & dataframe["ema21"].gt(dataframe["ema55"])
+                        & dataframe["close"].gt(dataframe["session_vwap"])
+                        & dataframe["rsi14"].between(44, 78)
+                        & dataframe["rvol96"].between(0.35, 4.80)
+                        & dataframe["body_atr"].between(0.03, 2.10)
+                        & ehlers_mtf_resonance_long.fillna(False)
+                    )
+                    ehlers_autocorr_cycle_gate_short = (
+                        ehlers_cycle_admission.fillna(False)
+                        & dataframe["close"].lt(ehlers_breakout_low)
+                        & dataframe["ema21"].lt(dataframe["ema55"])
+                        & dataframe["close"].lt(dataframe["session_vwap"])
+                        & dataframe["rsi14"].between(22, 56)
+                        & dataframe["rvol96"].between(0.35, 4.80)
+                        & dataframe["body_atr"].between(0.03, 2.10)
+                        & ehlers_mtf_resonance_short.fillna(False)
+                    )
+                    friction_aware_window = (
+                        dataframe["atr14"].between(dataframe["atr_ma50"] * 0.45, dataframe["atr_ma50"] * 2.55)
+                        & dataframe["bar_range_atr"].between(0.08, 2.95)
+                    )
+                    raw = ehlers_autocorr_cycle_gate_long.fillna(False) & friction_aware_window.fillna(False)
+                    short_raw = ehlers_autocorr_cycle_gate_short.fillna(False) & friction_aware_window.fillna(False)
+                elif "{spec.key}" == "hilbert_analytic_phase_trend_admission":
+                    atr = dataframe["atr14"].clip(lower=0.01)
+                    hilbert_phase_coherent = (
+                        dataframe["phase_coherence_score_shifted"].between(0.18, 4.80)
+                        & dataframe["hilbert_amp_z_shifted"].between(-0.45, 3.20)
+                        & dataframe["hilbert_phase_accel_shifted"].abs().lt(0.34)
+                    )
+                    hilbert_phase_trend_long = (
+                        dataframe["hilbert_phase_slope_shifted"].gt(0.012)
+                        & dataframe["hilbert_phase_accel_shifted"].gt(-0.12)
+                        & dataframe["phase_coherence_score_shifted"].ge(0.42)
+                    )
+                    hilbert_phase_trend_short = (
+                        dataframe["hilbert_phase_slope_shifted"].lt(-0.012)
+                        & dataframe["hilbert_phase_accel_shifted"].lt(0.12)
+                        & dataframe["phase_coherence_score_shifted"].ge(0.42)
+                    )
+                    hilbert_mtf_resonance_long = (
+                        (dataframe["slope_15m"] > -atr * 0.06)
+                        & (dataframe["slope_30m"] > -atr * 0.08)
+                        & (dataframe["slope_1h"] > -atr * 0.12)
+                    )
+                    hilbert_mtf_resonance_short = (
+                        (dataframe["slope_15m"] < atr * 0.06)
+                        & (dataframe["slope_30m"] < atr * 0.08)
+                        & (dataframe["slope_1h"] < atr * 0.12)
+                    )
+                    hilbert_analytic_phase_trend_long = (
+                        hilbert_phase_coherent.fillna(False)
+                        & hilbert_phase_trend_long.fillna(False)
+                        & dataframe["ema21"].gt(dataframe["ema55"])
+                        & dataframe["close"].gt(dataframe["ema55"])
+                        & dataframe["close"].gt(dataframe["session_vwap"] - atr * 0.18)
+                        & dataframe["rsi14"].between(42, 78)
+                        & dataframe["rvol96"].between(0.30, 4.60)
+                        & dataframe["body_atr"].between(0.04, 2.15)
+                        & hilbert_mtf_resonance_long.fillna(False)
+                    )
+                    hilbert_analytic_phase_trend_short = (
+                        hilbert_phase_coherent.fillna(False)
+                        & hilbert_phase_trend_short.fillna(False)
+                        & dataframe["ema21"].lt(dataframe["ema55"])
+                        & dataframe["close"].lt(dataframe["ema55"])
+                        & dataframe["close"].lt(dataframe["session_vwap"] + atr * 0.18)
+                        & dataframe["rsi14"].between(22, 58)
+                        & dataframe["rvol96"].between(0.30, 4.60)
+                        & dataframe["body_atr"].between(0.04, 2.15)
+                        & hilbert_mtf_resonance_short.fillna(False)
+                    )
+                    friction_aware_window = (
+                        dataframe["atr14"].between(dataframe["atr_ma50"] * 0.48, dataframe["atr_ma50"] * 2.50)
+                        & dataframe["bar_range_atr"].between(0.08, 2.85)
+                    )
+                    raw = hilbert_analytic_phase_trend_long.fillna(False) & friction_aware_window.fillna(False)
+                    short_raw = hilbert_analytic_phase_trend_short.fillna(False) & friction_aware_window.fillna(False)
+                elif "{spec.key}" == "wavelet_coherence_lead_lag_filter":
+                    short_scale_leader_return = dataframe["close"].pct_change(13).rolling(21).mean()
+                    medium_scale_follower_return = dataframe["close"].pct_change(34).rolling(34).mean()
+                    scale_localized_coherence = (
+                        short_scale_leader_return.rolling(55).corr(medium_scale_follower_return)
+                    )
+                    coherence_lead_lag_impulse = short_scale_leader_return - medium_scale_follower_return.shift(8)
+                    coherence_energy_ratio = (
+                        short_scale_leader_return.abs().rolling(34).mean()
+                        / medium_scale_follower_return.abs().rolling(34).mean().replace(0, np.nan)
+                    )
+                    leader_confirmation_long = (
+                        scale_localized_coherence.between(0.22, 0.88)
+                        & coherence_lead_lag_impulse.gt(0.00012)
+                        & coherence_energy_ratio.between(0.45, 2.80)
+                    )
+                    leader_confirmation_short = (
+                        scale_localized_coherence.between(0.22, 0.88)
+                        & coherence_lead_lag_impulse.lt(-0.00012)
+                        & coherence_energy_ratio.between(0.45, 2.80)
+                    )
+                    parent_trend_admission_long = (
+                        (dataframe["ema21"] > dataframe["ema55"])
+                        & (dataframe["close"] > dataframe["ema55"])
+                        & (dataframe["slope_15m"] > -dataframe["atr14"] * 0.08)
+                        & (dataframe["slope_1h"] > -dataframe["atr14"] * 0.14)
+                    )
+                    parent_trend_admission_short = (
+                        (dataframe["ema21"] < dataframe["ema55"])
+                        & (dataframe["close"] < dataframe["ema55"])
+                        & (dataframe["slope_15m"] < dataframe["atr14"] * 0.08)
+                        & (dataframe["slope_1h"] < dataframe["atr14"] * 0.14)
+                    )
+                    friction_aware_window = (
+                        dataframe["atr14"].between(dataframe["atr_ma50"] * 0.50, dataframe["atr_ma50"] * 2.45)
+                        & dataframe["bar_range_atr"].between(0.10, 2.90)
+                        & dataframe["body_atr"].between(0.03, 1.95)
+                        & dataframe["rvol96"].between(0.25, 4.80)
+                    )
+                    raw = (
+                        leader_confirmation_long.fillna(False)
+                        & parent_trend_admission_long.fillna(False)
+                        & friction_aware_window.fillna(False)
+                        & dataframe["rsi14"].between(45, 76)
+                    )
+                    short_raw = (
+                        leader_confirmation_short.fillna(False)
+                        & parent_trend_admission_short.fillna(False)
+                        & friction_aware_window.fillna(False)
+                        & dataframe["rsi14"].between(24, 55)
+                    )
+                elif "{spec.key}" == "dynamic_lead_lag_breadth_gate":
+                    dll_parent_trend_long = (
+                        dataframe["dll_nq_momentum_bps"].gt(40.0)
+                        & dataframe["dll_nq_ema_fast"].gt(dataframe["dll_nq_ema_slow"])
+                        & dataframe["close"].gt(dataframe["ema55"])
+                    )
+                    dll_pair_specific_lag_agreement = (
+                        dataframe["dll_leadlag_score_bps"].gt(4.0)
+                        & dataframe["dll_leadlag_agreement_long"].ge(1)
+                        & dataframe["dll_leadlag_max_abs_corr"].ge(0.10)
+                    )
+                    dll_friction_aware_window = (
+                        dataframe["atr14"].between(dataframe["atr_ma50"] * 0.45, dataframe["atr_ma50"] * 2.65)
+                        & dataframe["bar_range_atr"].between(0.06, 3.10)
+                        & dataframe["body_atr"].between(0.02, 2.10)
+                        & dataframe["rvol96"].between(0.20, 5.20)
+                    )
+                    raw = (
+                        dll_parent_trend_long.fillna(False)
+                        & dll_pair_specific_lag_agreement.fillna(False)
+                        & dll_friction_aware_window.fillna(False)
+                        & dataframe["rsi14"].between(42, 78)
+                    )
+                elif "{spec.key}" == "bocpd_runlength_transition_acceptance":
+                    bocpd_return = dataframe["close"].pct_change()
+                    bocpd_return_mean = bocpd_return.rolling(89, min_periods=34).mean().shift(1)
+                    bocpd_return_vol = bocpd_return.rolling(89, min_periods=34).std().shift(1)
+                    bocpd_return_surprise = (
+                        (bocpd_return - bocpd_return_mean).abs()
+                        / bocpd_return_vol.replace(0, np.nan)
+                    )
+                    bocpd_transition_probability = (
+                        bocpd_return_surprise.rolling(8, min_periods=3).mean() / 10.0
+                    ).clip(lower=0.0, upper=1.0)
+                    bocpd_transition_probability_shifted = bocpd_transition_probability.shift(1)
+                    bocpd_reset_state = bocpd_transition_probability_shifted.ge(0.34).fillna(False)
+                    bocpd_run_length_proxy = (
+                        (~bocpd_reset_state).astype(float)
+                        .groupby(bocpd_reset_state.cumsum())
+                        .cumsum()
+                    )
+                    bocpd_run_length_proxy = bocpd_run_length_proxy.where(
+                        bocpd_transition_probability_shifted.notna(),
+                        np.nan,
+                    )
+                    bocpd_run_length_maturity = bocpd_run_length_proxy.between(3.0, 144.0)
+                    bocpd_transition_parent_admission_long = (
+                        bocpd_transition_probability_shifted.between(0.06, 0.34)
+                        & bocpd_run_length_maturity
+                        & (dataframe["ema21"] > dataframe["ema55"])
+                        & (dataframe["close"] > dataframe["session_vwap"])
+                        & (dataframe["close"] > dataframe["ema55"])
+                        & (dataframe["slope_15m"] > -dataframe["atr14"] * 0.08)
+                        & (dataframe["slope_1h"] > -dataframe["atr14"] * 0.14)
+                    )
+                    bocpd_transition_parent_admission_short = (
+                        bocpd_transition_probability_shifted.between(0.06, 0.34)
+                        & bocpd_run_length_maturity
+                        & (dataframe["ema21"] < dataframe["ema55"])
+                        & (dataframe["close"] < dataframe["session_vwap"])
+                        & (dataframe["close"] < dataframe["ema55"])
+                        & (dataframe["slope_15m"] < dataframe["atr14"] * 0.08)
+                        & (dataframe["slope_1h"] < dataframe["atr14"] * 0.14)
+                    )
+                    bocpd_friction_aware_window = (
+                        dataframe["atr14"].between(dataframe["atr_ma50"] * 0.48, dataframe["atr_ma50"] * 2.45)
+                        & dataframe["bar_range_atr"].between(0.08, 2.90)
+                        & dataframe["body_atr"].between(0.03, 1.95)
+                        & dataframe["rvol96"].between(0.22, 4.80)
+                    )
+                    raw = (
+                        bocpd_transition_parent_admission_long.fillna(False)
+                        & bocpd_friction_aware_window.fillna(False)
+                        & dataframe["rsi14"].between(43, 76)
+                    )
+                    short_raw = (
+                        bocpd_transition_parent_admission_short.fillna(False)
+                        & bocpd_friction_aware_window.fillna(False)
+                        & dataframe["rsi14"].between(24, 56)
+                    )
+                elif "{spec.key}" == "filtered_markov_trendexpansion_posterior_gate":
+                    markov_trend_score = (
+                        (dataframe["ema21"] - dataframe["ema55"])
+                        / dataframe["atr14"].replace(0, np.nan)
+                    ).clip(lower=-6.0, upper=6.0)
+                    markov_direction_quality = (
+                        dataframe["slope_15m"].div(dataframe["atr14"].replace(0, np.nan))
+                        + dataframe["slope_1h"].div(dataframe["atr14"].replace(0, np.nan))
+                    ).clip(lower=-6.0, upper=6.0)
+                    markov_displacement_quality = (
+                        dataframe["body_atr"].rolling(8, min_periods=3).mean()
+                        + dataframe["bar_range_atr"].rolling(8, min_periods=3).mean()
+                    ).clip(lower=0.0, upper=6.0)
+                    markov_filtered_trend_probability = (
+                        0.50
+                        + 0.045 * markov_trend_score
+                        + 0.035 * markov_direction_quality
+                        + 0.030 * (markov_displacement_quality - 1.0)
+                    ).clip(lower=0.0, upper=1.0)
+                    markov_filtered_probability_shifted = markov_filtered_trend_probability.shift(1)
+                    markov_filtered_bear_probability_shifted = (1.0 - markov_filtered_trend_probability).shift(1)
+                    markov_next_segment_trendexpansion_long = (
+                        markov_filtered_probability_shifted.between(0.56, 0.84)
+                        & (dataframe["ema21"] > dataframe["ema55"])
+                        & (dataframe["close"] > dataframe["ema55"])
+                        & (dataframe["close"] > dataframe["session_vwap"])
+                        & (dataframe["slope_15m"] > -dataframe["atr14"] * 0.06)
+                        & (dataframe["slope_1h"] > -dataframe["atr14"] * 0.12)
+                    )
+                    markov_next_segment_trendexpansion_short = (
+                        markov_filtered_bear_probability_shifted.between(0.56, 0.84)
+                        & (dataframe["ema21"] < dataframe["ema55"])
+                        & (dataframe["close"] < dataframe["ema55"])
+                        & (dataframe["close"] < dataframe["session_vwap"])
+                        & (dataframe["slope_15m"] < dataframe["atr14"] * 0.06)
+                        & (dataframe["slope_1h"] < dataframe["atr14"] * 0.12)
+                    )
+                    markov_friction_aware_window = (
+                        dataframe["atr14"].between(dataframe["atr_ma50"] * 0.50, dataframe["atr_ma50"] * 2.35)
+                        & dataframe["bar_range_atr"].between(0.08, 2.75)
+                        & dataframe["body_atr"].between(0.03, 1.85)
+                        & dataframe["rvol96"].between(0.24, 4.60)
+                    )
+                    raw = (
+                        markov_next_segment_trendexpansion_long.fillna(False)
+                        & markov_friction_aware_window.fillna(False)
+                        & dataframe["rsi14"].between(44, 75)
+                    )
+                    short_raw = (
+                        markov_next_segment_trendexpansion_short.fillna(False)
+                        & markov_friction_aware_window.fillna(False)
+                        & dataframe["rsi14"].between(25, 56)
+                    )
+                elif "{spec.key}" == "pettitt_rank_shift_breakout_reliability_filter":
+                    pettitt_return = dataframe["close"].pct_change()
+                    pettitt_rank_statistic = (
+                        pettitt_return.rolling(89, min_periods=34).rank(pct=True)
+                        - pettitt_return.rolling(233, min_periods=89).rank(pct=True).shift(1)
+                    )
+                    pettitt_rank_shift = pettitt_rank_statistic.rolling(21, min_periods=8).mean()
+                    pettitt_rank_dispersion = pettitt_rank_statistic.rolling(55, min_periods=21).std().shift(1)
+                    pettitt_location_balance = (
+                        dataframe["close"].pct_change(21)
+                        / dataframe["atr14"].div(dataframe["close"].replace(0, np.nan)).replace(0, np.nan)
+                    )
+                    pettitt_breakout_reliability_long = (
+                        pettitt_rank_shift.gt(pettitt_rank_dispersion * 0.18)
+                        & pettitt_location_balance.gt(0.10)
+                        & (dataframe["ema21"] > dataframe["ema55"])
+                        & (dataframe["close"] > dataframe["session_vwap"])
+                        & (dataframe["slope_15m"] > -dataframe["atr14"] * 0.08)
+                        & (dataframe["slope_1h"] > -dataframe["atr14"] * 0.14)
+                    )
+                    pettitt_breakout_reliability_short = (
+                        pettitt_rank_shift.lt(-pettitt_rank_dispersion * 0.18)
+                        & pettitt_location_balance.lt(-0.10)
+                        & (dataframe["ema21"] < dataframe["ema55"])
+                        & (dataframe["close"] < dataframe["session_vwap"])
+                        & (dataframe["slope_15m"] < dataframe["atr14"] * 0.08)
+                        & (dataframe["slope_1h"] < dataframe["atr14"] * 0.14)
+                    )
+                    friction_aware_window = (
+                        dataframe["atr14"].between(dataframe["atr_ma50"] * 0.50, dataframe["atr_ma50"] * 2.40)
+                        & dataframe["bar_range_atr"].between(0.10, 2.85)
+                        & dataframe["body_atr"].between(0.03, 1.90)
+                        & dataframe["rvol96"].between(0.25, 4.60)
+                    )
+                    raw = (
+                        pettitt_breakout_reliability_long.fillna(False)
+                        & friction_aware_window.fillna(False)
+                        & dataframe["rsi14"].between(44, 76)
+                    )
+                    short_raw = (
+                        pettitt_breakout_reliability_short.fillna(False)
+                        & friction_aware_window.fillna(False)
+                        & dataframe["rsi14"].between(24, 56)
+                    )
+                elif "{spec.key}" == "residual_momentum_beta_neutral_parent_admission":
+                    market_mode_return = (
+                        dataframe["slope_15m"].div(dataframe["close"].replace(0, np.nan))
+                        + dataframe["slope_1h"].div(dataframe["close"].replace(0, np.nan))
+                        + dataframe["slope_4h"].div(dataframe["close"].replace(0, np.nan))
+                    ) / 3.0
+                    own_return = dataframe["close"].pct_change()
+                    rolling_beta_to_market_mode = (
+                        own_return.rolling(144, min_periods=55).cov(market_mode_return)
+                        / market_mode_return.rolling(144, min_periods=55).var().replace(0, np.nan)
+                    ).clip(lower=-2.5, upper=2.5).shift(1)
+                    beta_neutral_residual_return = own_return - rolling_beta_to_market_mode * market_mode_return
+                    residual_momentum = beta_neutral_residual_return.rolling(34, min_periods=13).sum()
+                    residual_momentum_slow = beta_neutral_residual_return.rolling(144, min_periods=55).sum().shift(1)
+                    residual_volatility = beta_neutral_residual_return.rolling(89, min_periods=34).std().shift(1)
+                    residual_crowding_state = (
+                        beta_neutral_residual_return.abs().rolling(21, min_periods=8).mean()
+                        / residual_volatility.replace(0, np.nan)
+                    )
+                    residual_momentum_parent_admission_long = (
+                        residual_momentum.gt(residual_volatility * 0.18)
+                        & residual_momentum_slow.gt(-residual_volatility * 0.36)
+                        & residual_crowding_state.between(0.22, 2.85)
+                        & (dataframe["ema21"] > dataframe["ema55"])
+                        & (dataframe["close"] > dataframe["session_vwap"])
+                        & (dataframe["slope_15m"] > -dataframe["atr14"] * 0.08)
+                        & (dataframe["slope_1h"] > -dataframe["atr14"] * 0.14)
+                    )
+                    residual_momentum_parent_admission_short = (
+                        residual_momentum.lt(-residual_volatility * 0.18)
+                        & residual_momentum_slow.lt(residual_volatility * 0.36)
+                        & residual_crowding_state.between(0.22, 2.85)
+                        & (dataframe["ema21"] < dataframe["ema55"])
+                        & (dataframe["close"] < dataframe["session_vwap"])
+                        & (dataframe["slope_15m"] < dataframe["atr14"] * 0.08)
+                        & (dataframe["slope_1h"] < dataframe["atr14"] * 0.14)
+                    )
+                    friction_aware_window = (
+                        dataframe["atr14"].between(dataframe["atr_ma50"] * 0.50, dataframe["atr_ma50"] * 2.40)
+                        & dataframe["bar_range_atr"].between(0.10, 2.85)
+                        & dataframe["body_atr"].between(0.03, 1.90)
+                        & dataframe["rvol96"].between(0.25, 4.60)
+                    )
+                    raw = (
+                        residual_momentum_parent_admission_long.fillna(False)
+                        & friction_aware_window.fillna(False)
+                        & dataframe["rsi14"].between(44, 76)
+                    )
+                    short_raw = (
+                        residual_momentum_parent_admission_short.fillna(False)
+                        & friction_aware_window.fillna(False)
+                        & dataframe["rsi14"].between(24, 56)
+                    )
+                elif "{spec.key}" == "jolts_labor_tightness_regime_filter":
+                    macro_release_ready = dataframe["jolts_labor_tightness_release_lag_ok"].fillna(False)
+                    labor_pressure = dataframe["job_openings_to_unemployed_proxy"]
+                    labor_pressure_slope = dataframe["jolts_labor_tightness_pressure_slope"]
+                    quits_proxy = dataframe["jolts_quits_rate_proxy"]
+                    labor_tightness_risk_on_admission_long = (
+                        macro_release_ready
+                        & labor_pressure.between(0.86, 1.42)
+                        & labor_pressure_slope.gt(-0.08)
+                        & quits_proxy.between(1.7, 3.6)
+                        & (dataframe["ema21"] > dataframe["ema55"])
+                        & (dataframe["close"] > dataframe["session_vwap"])
+                        & (dataframe["slope_15m"] > -dataframe["atr14"] * 0.08)
+                        & (dataframe["slope_1h"] > -dataframe["atr14"] * 0.14)
+                    )
+                    labor_tightness_risk_off_admission_short = (
+                        macro_release_ready
+                        & (labor_pressure.lt(0.88) | labor_pressure_slope.lt(-0.12))
+                        & quits_proxy.lt(2.4)
+                        & (dataframe["ema21"] < dataframe["ema55"])
+                        & (dataframe["close"] < dataframe["session_vwap"])
+                        & (dataframe["slope_15m"] < dataframe["atr14"] * 0.08)
+                        & (dataframe["slope_1h"] < dataframe["atr14"] * 0.14)
+                    )
+                    friction_aware_window = (
+                        dataframe["atr14"].between(dataframe["atr_ma50"] * 0.50, dataframe["atr_ma50"] * 2.40)
+                        & dataframe["bar_range_atr"].between(0.10, 2.85)
+                        & dataframe["body_atr"].between(0.03, 1.90)
+                        & dataframe["rvol96"].between(0.25, 4.60)
+                    )
+                    raw = (
+                        labor_tightness_risk_on_admission_long.fillna(False)
+                        & friction_aware_window.fillna(False)
+                        & dataframe["rsi14"].between(44, 76)
+                    )
+                    short_raw = (
+                        labor_tightness_risk_off_admission_short.fillna(False)
+                        & friction_aware_window.fillna(False)
+                        & dataframe["rsi14"].between(24, 56)
+                    )
+                elif "{spec.key}" == "matrix_profile_motif_discord_admission_filter":
+                    rolling_subsequence_return = dataframe["close"].pct_change(21).rolling(34).mean()
+                    rolling_subsequence_vol = dataframe["close"].pct_change().rolling(34).std()
+                    motif_reference_return = rolling_subsequence_return.rolling(144).median()
+                    motif_reference_vol = rolling_subsequence_vol.rolling(144).median()
+                    matrix_profile_distance = (
+                        (rolling_subsequence_return - motif_reference_return).abs()
+                        / rolling_subsequence_vol.replace(0, np.nan)
+                    )
+                    matrix_profile_distance_z = (
+                        matrix_profile_distance
+                        - matrix_profile_distance.rolling(144).median()
+                    ) / matrix_profile_distance.rolling(144).std().replace(0, np.nan)
+                    motif_stability = (
+                        rolling_subsequence_vol
+                        / motif_reference_vol.replace(0, np.nan)
+                    ).between(0.45, 2.40)
+                    discord_veto = matrix_profile_distance_z.gt(2.35)
+                    motif_similarity_admission_long = (
+                        matrix_profile_distance_z.between(-1.20, 1.25)
+                        & motif_stability.fillna(False)
+                        & rolling_subsequence_return.gt(-0.00004)
+                    )
+                    motif_similarity_admission_short = (
+                        matrix_profile_distance_z.between(-1.20, 1.25)
+                        & motif_stability.fillna(False)
+                        & rolling_subsequence_return.lt(0.00004)
+                    )
+                    parent_trend_admission_long = (
+                        (dataframe["ema21"] > dataframe["ema55"])
+                        & (dataframe["close"] > dataframe["session_vwap"])
+                        & (dataframe["slope_15m"] > -dataframe["atr14"] * 0.08)
+                        & (dataframe["slope_1h"] > -dataframe["atr14"] * 0.14)
+                    )
+                    parent_trend_admission_short = (
+                        (dataframe["ema21"] < dataframe["ema55"])
+                        & (dataframe["close"] < dataframe["session_vwap"])
+                        & (dataframe["slope_15m"] < dataframe["atr14"] * 0.08)
+                        & (dataframe["slope_1h"] < dataframe["atr14"] * 0.14)
+                    )
+                    friction_aware_window = (
+                        dataframe["atr14"].between(dataframe["atr_ma50"] * 0.50, dataframe["atr_ma50"] * 2.35)
+                        & dataframe["bar_range_atr"].between(0.10, 2.75)
+                        & dataframe["body_atr"].between(0.03, 1.85)
+                        & dataframe["rvol96"].between(0.25, 4.40)
+                    )
+                    raw = (
+                        motif_similarity_admission_long.fillna(False)
+                        & parent_trend_admission_long.fillna(False)
+                        & friction_aware_window.fillna(False)
+                        & ~discord_veto.fillna(False)
+                        & dataframe["rsi14"].between(44, 76)
+                    )
+                    short_raw = (
+                        motif_similarity_admission_short.fillna(False)
+                        & parent_trend_admission_short.fillna(False)
+                        & friction_aware_window.fillna(False)
+                        & ~discord_veto.fillna(False)
+                        & dataframe["rsi14"].between(24, 56)
+                    )
+                elif "{spec.key}" == "sax_symbolic_aggregate_word_shift_filter":
+                    symbolic_transition_quality = (
+                        dataframe["sax_word_rarity"].between(0.24, 0.86)
+                        & dataframe["sax_motif_churn"].between(0.18, 0.78)
+                        & dataframe["sax_range_expansion_transition"].ge(0.0)
+                    )
+                    sax_symbolic_word_admission_long = (
+                        dataframe["sax_directional_word_transition"].gt(0.35)
+                        & symbolic_transition_quality.fillna(False)
+                        & (dataframe["ema21"] > dataframe["ema55"])
+                        & (dataframe["close"] > dataframe["ema21"])
+                        & (dataframe["close"] > dataframe["session_vwap"])
+                        & (dataframe["slope_15m"] > -dataframe["atr14"] * 0.10)
+                        & (dataframe["slope_1h"] > -dataframe["atr14"] * 0.14)
+                    )
+                    sax_symbolic_word_admission_short = (
+                        dataframe["sax_directional_word_transition"].lt(-0.35)
+                        & symbolic_transition_quality.fillna(False)
+                        & (dataframe["ema21"] < dataframe["ema55"])
+                        & (dataframe["close"] < dataframe["ema21"])
+                        & (dataframe["close"] < dataframe["session_vwap"])
+                        & (dataframe["slope_15m"] < dataframe["atr14"] * 0.10)
+                        & (dataframe["slope_1h"] < dataframe["atr14"] * 0.14)
+                    )
+                    friction_aware_window = (
+                        dataframe["atr14"].between(dataframe["atr_ma50"] * 0.50, dataframe["atr_ma50"] * 2.45)
+                        & dataframe["bar_range_atr"].between(0.10, 2.90)
+                        & dataframe["body_atr"].between(0.03, 1.95)
+                        & dataframe["rvol96"].between(0.25, 4.70)
+                    )
+                    raw = (
+                        sax_symbolic_word_admission_long.fillna(False)
+                        & friction_aware_window.fillna(False)
+                        & dataframe["rsi14"].between(44, 76)
+                    )
+                    short_raw = (
+                        sax_symbolic_word_admission_short.fillna(False)
+                        & friction_aware_window.fillna(False)
+                        & dataframe["rsi14"].between(24, 56)
+                    )
+                elif "{spec.key}" == "chande_forecast_oscillator_half_life_reversion_gate":
+                    chande_forecast_half_life_reversion_long = (
+                        dataframe["chande_forecast_oscillator"].between(-2.40, -0.18)
+                        & dataframe["chande_forecast_error_half_life"].between(0.18, 0.88)
+                        & dataframe["forecast_error_reversion_pressure"].gt(0.015)
+                        & dataframe["close_location"].between(0.34, 1.00)
+                    )
+                    chande_forecast_half_life_reversion_short = (
+                        dataframe["chande_forecast_oscillator"].between(0.18, 2.40)
+                        & dataframe["chande_forecast_error_half_life"].between(0.18, 0.88)
+                        & dataframe["forecast_error_reversion_pressure"].gt(0.015)
+                        & dataframe["close_location"].between(0.00, 0.66)
+                    )
+                    chande_forecast_parent_reversion_long = (
+                        dataframe["adx14"].between(7, 34)
+                        & dataframe["close"].gt(dataframe["range_low40"] - dataframe["atr14"] * 0.35)
+                        & dataframe["close"].lt(dataframe["session_vwap"] + dataframe["atr14"] * 0.55)
+                        & (dataframe["slope_15m"] > -dataframe["atr14"] * 0.12)
+                        & (dataframe["slope_1h"] > -dataframe["atr14"] * 0.18)
+                    )
+                    chande_forecast_parent_reversion_short = (
+                        dataframe["adx14"].between(7, 34)
+                        & dataframe["close"].lt(dataframe["range_high40"] + dataframe["atr14"] * 0.35)
+                        & dataframe["close"].gt(dataframe["session_vwap"] - dataframe["atr14"] * 0.55)
+                        & (dataframe["slope_15m"] < dataframe["atr14"] * 0.12)
+                        & (dataframe["slope_1h"] < dataframe["atr14"] * 0.18)
+                    )
+                    friction_aware_window = (
+                        dataframe["atr14"].between(dataframe["atr_ma50"] * 0.48, dataframe["atr_ma50"] * 2.35)
+                        & dataframe["bar_range_atr"].between(0.08, 2.60)
+                        & dataframe["body_atr"].between(0.02, 1.80)
+                        & dataframe["rvol96"].between(0.22, 4.50)
+                    )
+                    raw = (
+                        chande_forecast_half_life_reversion_long.fillna(False)
+                        & chande_forecast_parent_reversion_long.fillna(False)
+                        & friction_aware_window.fillna(False)
+                        & dataframe["rsi14"].between(28, 64)
+                    )
+                    short_raw = (
+                        chande_forecast_half_life_reversion_short.fillna(False)
+                        & chande_forecast_parent_reversion_short.fillna(False)
+                        & friction_aware_window.fillna(False)
+                        & dataframe["rsi14"].between(36, 72)
+                    )
+                elif "{spec.key}" == "shiryaev_roberts_quickest_change_persistence_filter":
+                    sr_reference = dataframe["shiryaev_roberts_reference"].fillna(3.0)
+                    sr_persistence_ok = dataframe["shiryaev_roberts_persistence_ratio"].between(1.08, 18.0)
+                    shiryaev_roberts_parent_admission_long = (
+                        dataframe["shiryaev_roberts_stat_long_shifted"].gt(sr_reference * 1.18)
+                        & sr_persistence_ok.fillna(False)
+                        & (dataframe["ema21"] > dataframe["ema55"])
+                        & (dataframe["close"] > dataframe["session_vwap"])
+                        & (dataframe["slope_15m"] > -dataframe["atr14"] * 0.08)
+                        & (dataframe["slope_1h"] > -dataframe["atr14"] * 0.14)
+                    )
+                    shiryaev_roberts_parent_admission_short = (
+                        dataframe["shiryaev_roberts_stat_short_shifted"].gt(sr_reference * 1.18)
+                        & sr_persistence_ok.fillna(False)
+                        & (dataframe["ema21"] < dataframe["ema55"])
+                        & (dataframe["close"] < dataframe["session_vwap"])
+                        & (dataframe["slope_15m"] < dataframe["atr14"] * 0.08)
+                        & (dataframe["slope_1h"] < dataframe["atr14"] * 0.14)
+                    )
+                    shiryaev_roberts_collapse_veto = (
+                        dataframe["shiryaev_roberts_stat_shifted"].lt(sr_reference * 0.72)
+                        | dataframe["shiryaev_roberts_persistence_ratio"].lt(0.82)
+                    )
+                    friction_aware_window = (
+                        dataframe["atr14"].between(dataframe["atr_ma50"] * 0.50, dataframe["atr_ma50"] * 2.40)
+                        & dataframe["bar_range_atr"].between(0.10, 2.85)
+                        & dataframe["body_atr"].between(0.03, 1.90)
+                        & dataframe["rvol96"].between(0.25, 4.60)
+                    )
+                    raw = (
+                        shiryaev_roberts_parent_admission_long.fillna(False)
+                        & friction_aware_window.fillna(False)
+                        & dataframe["rsi14"].between(44, 76)
+                        & ~shiryaev_roberts_collapse_veto.fillna(False)
+                    )
+                    short_raw = (
+                        shiryaev_roberts_parent_admission_short.fillna(False)
+                        & friction_aware_window.fillna(False)
+                        & dataframe["rsi14"].between(24, 56)
+                        & ~shiryaev_roberts_collapse_veto.fillna(False)
+                    )
+                elif "{spec.key}" == "visibility_graph_trend_persistence_filter":
+                    graph_return = dataframe["close"].pct_change(13)
+                    graph_direction = np.sign(graph_return).replace(0, np.nan)
+                    visibility_graph_degree_asymmetry = (
+                        graph_direction.rolling(34).sum() / graph_direction.abs().rolling(34).sum().replace(0, np.nan)
+                    )
+                    visibility_graph_persistence_ratio = (
+                        (graph_direction == graph_direction.shift(1)).astype(float).rolling(34).mean()
+                    )
+                    visibility_graph_noise_ratio = (
+                        (graph_direction != graph_direction.shift(1)).astype(float).rolling(21).mean()
+                    )
+                    graph_noise_veto = visibility_graph_noise_ratio.gt(0.68) | visibility_graph_persistence_ratio.lt(0.42)
+                    graph_persistence_admission_long = (
+                        visibility_graph_degree_asymmetry.between(0.18, 0.82)
+                        & visibility_graph_persistence_ratio.between(0.50, 0.88)
+                        & graph_return.rolling(21).mean().gt(-0.00002)
+                    )
+                    graph_persistence_admission_short = (
+                        visibility_graph_degree_asymmetry.between(-0.82, -0.18)
+                        & visibility_graph_persistence_ratio.between(0.50, 0.88)
+                        & graph_return.rolling(21).mean().lt(0.00002)
+                    )
+                    parent_signal_admission_long = (
+                        (dataframe["ema21"] > dataframe["ema55"])
+                        & (dataframe["close"] > dataframe["session_vwap"])
+                        & (dataframe["slope_15m"] > -dataframe["atr14"] * 0.08)
+                        & (dataframe["slope_1h"] > -dataframe["atr14"] * 0.14)
+                    )
+                    parent_signal_admission_short = (
+                        (dataframe["ema21"] < dataframe["ema55"])
+                        & (dataframe["close"] < dataframe["session_vwap"])
+                        & (dataframe["slope_15m"] < dataframe["atr14"] * 0.08)
+                        & (dataframe["slope_1h"] < dataframe["atr14"] * 0.14)
+                    )
+                    friction_aware_window = (
+                        dataframe["atr14"].between(dataframe["atr_ma50"] * 0.50, dataframe["atr_ma50"] * 2.40)
+                        & dataframe["bar_range_atr"].between(0.10, 2.80)
+                        & dataframe["body_atr"].between(0.03, 1.90)
+                        & dataframe["rvol96"].between(0.25, 4.55)
+                    )
+                    raw = (
+                        graph_persistence_admission_long.fillna(False)
+                        & parent_signal_admission_long.fillna(False)
+                        & friction_aware_window.fillna(False)
+                        & ~graph_noise_veto.fillna(False)
+                        & dataframe["rsi14"].between(45, 76)
+                    )
+                    short_raw = (
+                        graph_persistence_admission_short.fillna(False)
+                        & parent_signal_admission_short.fillna(False)
+                        & friction_aware_window.fillna(False)
+                        & ~graph_noise_veto.fillna(False)
+                        & dataframe["rsi14"].between(24, 55)
+                    )
+                elif "{spec.key}" == "sprt_sequential_likelihood_trend_confirmation_filter":
+                    parent_trend_return = dataframe["close"].pct_change(3)
+                    volatility_scale = dataframe["close"].pct_change().rolling(55, min_periods=21).std().shift(1)
+                    normalized_parent_return = parent_trend_return / volatility_scale.replace(0, np.nan)
+                    sprt_completed_bar_evidence = (
+                        normalized_parent_return.clip(lower=-2.5, upper=2.5).shift(1)
+                    )
+                    direction_alignment = (
+                        np.sign(dataframe["slope_15m"].shift(1))
+                        + np.sign(dataframe["slope_1h"].shift(1))
+                        + np.sign(dataframe["slope_4h"].shift(1))
+                    ) / 3.0
+                    vwap_state = np.where(
+                        dataframe["close"].shift(1) > dataframe["session_vwap"].shift(1),
+                        0.18,
+                        -0.18,
+                    )
+                    sprt_log_likelihood_ratio = (
+                        sprt_completed_bar_evidence.fillna(0.0) * 0.42
+                        + pd.Series(direction_alignment, index=dataframe.index).fillna(0.0) * 0.55
+                        + pd.Series(vwap_state, index=dataframe.index).fillna(0.0)
+                    ).clip(lower=-1.35, upper=1.35)
+                    sprt_llr_accumulator = sprt_log_likelihood_ratio.rolling(8, min_periods=3).sum()
+                    sprt_accept_boundary = 2.20
+                    sprt_reject_boundary = -2.20
+                    sprt_cooldown_veto = (
+                        sprt_llr_accumulator.le(sprt_reject_boundary)
+                        | sprt_log_likelihood_ratio.rolling(5, min_periods=3).sum().le(-1.35)
+                    )
+                    sprt_parent_signal_admission_long = (
+                        sprt_llr_accumulator.ge(sprt_accept_boundary)
+                        & dataframe["ema21"].gt(dataframe["ema55"])
+                        & dataframe["close"].gt(dataframe["session_vwap"])
+                        & dataframe["slope_15m"].gt(-dataframe["atr14"] * 0.08)
+                        & dataframe["slope_1h"].gt(-dataframe["atr14"] * 0.14)
+                    )
+                    sprt_parent_signal_admission_short = (
+                        sprt_llr_accumulator.le(-sprt_accept_boundary)
+                        & dataframe["ema21"].lt(dataframe["ema55"])
+                        & dataframe["close"].lt(dataframe["session_vwap"])
+                        & dataframe["slope_15m"].lt(dataframe["atr14"] * 0.08)
+                        & dataframe["slope_1h"].lt(dataframe["atr14"] * 0.14)
+                    )
+                    friction_aware_window = (
+                        dataframe["atr14"].between(dataframe["atr_ma50"] * 0.50, dataframe["atr_ma50"] * 2.45)
+                        & dataframe["bar_range_atr"].between(0.10, 2.90)
+                        & dataframe["body_atr"].between(0.03, 1.95)
+                        & dataframe["rvol96"].between(0.25, 4.75)
+                    )
+                    raw = (
+                        sprt_parent_signal_admission_long.fillna(False)
+                        & friction_aware_window.fillna(False)
+                        & ~sprt_cooldown_veto.fillna(False)
+                        & dataframe["rsi14"].between(44, 76)
+                    )
+                    short_raw = (
+                        sprt_parent_signal_admission_short.fillna(False)
+                        & friction_aware_window.fillna(False)
+                        & ~sprt_cooldown_veto.fillna(False)
+                        & dataframe["rsi14"].between(24, 56)
+                    )
+                elif "{spec.key}" == "l1_trend_filter_slope_stability_gate":
+                    sparse_trend_proxy = dataframe["close"].ewm(span=89, adjust=False, min_periods=34).mean()
+                    sparse_trend_slow = dataframe["close"].ewm(span=233, adjust=False, min_periods=89).mean()
+                    l1_trend_slope_bps = sparse_trend_proxy.diff(13) / dataframe["close"].replace(0, np.nan) * 10000.0
+                    l1_trend_slow_slope_bps = sparse_trend_slow.diff(34) / dataframe["close"].replace(0, np.nan) * 10000.0
+                    l1_slope_sign = np.sign(l1_trend_slope_bps).replace(0, np.nan)
+                    l1_slope_persistence = (l1_slope_sign == l1_slope_sign.shift(1)).astype(float).rolling(34).mean()
+                    l1_kink_density = (l1_slope_sign != l1_slope_sign.shift(1)).astype(float).rolling(55).mean()
+                    l1_slope_stability_long = (
+                        l1_trend_slope_bps.between(0.65, 18.0)
+                        & l1_trend_slow_slope_bps.gt(-0.60)
+                        & l1_slope_persistence.between(0.52, 0.94)
+                        & l1_kink_density.le(0.36)
+                    )
+                    l1_slope_stability_short = (
+                        l1_trend_slope_bps.between(-18.0, -0.65)
+                        & l1_trend_slow_slope_bps.lt(0.60)
+                        & l1_slope_persistence.between(0.52, 0.94)
+                        & l1_kink_density.le(0.36)
+                    )
+                    parent_signal_admission_long = (
+                        (dataframe["ema21"] > dataframe["ema55"])
+                        & (dataframe["close"] > dataframe["session_vwap"])
+                        & (dataframe["slope_15m"] > -dataframe["atr14"] * 0.08)
+                        & (dataframe["slope_1h"] > -dataframe["atr14"] * 0.14)
+                    )
+                    parent_signal_admission_short = (
+                        (dataframe["ema21"] < dataframe["ema55"])
+                        & (dataframe["close"] < dataframe["session_vwap"])
+                        & (dataframe["slope_15m"] < dataframe["atr14"] * 0.08)
+                        & (dataframe["slope_1h"] < dataframe["atr14"] * 0.14)
+                    )
+                    friction_aware_window = (
+                        dataframe["atr14"].between(dataframe["atr_ma50"] * 0.50, dataframe["atr_ma50"] * 2.40)
+                        & dataframe["bar_range_atr"].between(0.10, 2.80)
+                        & dataframe["body_atr"].between(0.03, 1.90)
+                        & dataframe["rvol96"].between(0.25, 4.55)
+                    )
+                    raw = (
+                        l1_slope_stability_long.fillna(False)
+                        & parent_signal_admission_long.fillna(False)
+                        & friction_aware_window.fillna(False)
+                        & dataframe["rsi14"].between(45, 76)
+                    )
+                    short_raw = (
+                        l1_slope_stability_short.fillna(False)
+                        & parent_signal_admission_short.fillna(False)
+                        & friction_aware_window.fillna(False)
+                        & dataframe["rsi14"].between(24, 55)
+                    )
+                elif "{spec.key}" == "hawkes_intensity_cluster_admission_filter":
+                    event_threshold = dataframe["bar_range_atr"].rolling(144).quantile(0.68).shift(1)
+                    displacement_threshold = dataframe["body_atr"].rolling(144).quantile(0.62).shift(1)
+                    hawkes_up_event = (
+                        dataframe["close"].gt(dataframe["open"])
+                        & dataframe["bar_range_atr"].gt(event_threshold)
+                        & dataframe["body_atr"].gt(displacement_threshold)
+                    )
+                    hawkes_down_event = (
+                        dataframe["close"].lt(dataframe["open"])
+                        & dataframe["bar_range_atr"].gt(event_threshold)
+                        & dataframe["body_atr"].gt(displacement_threshold)
+                    )
+                    hawkes_up_event_intensity = hawkes_up_event.astype(float).ewm(span=21, adjust=False).mean()
+                    hawkes_down_event_intensity = hawkes_down_event.astype(float).ewm(span=21, adjust=False).mean()
+                    hawkes_total_intensity = hawkes_up_event_intensity + hawkes_down_event_intensity
+                    hawkes_directional_excitation_ratio = (
+                        (hawkes_up_event_intensity - hawkes_down_event_intensity)
+                        / hawkes_total_intensity.replace(0, np.nan)
+                    )
+                    hawkes_two_sided_noise_ratio = (
+                        hawkes_up_event_intensity.rolling(34).mean().clip(upper=hawkes_down_event_intensity.rolling(34).mean())
+                        / hawkes_total_intensity.rolling(34).mean().replace(0, np.nan)
+                    )
+                    hawkes_cooldown_state = hawkes_total_intensity.lt(hawkes_total_intensity.rolling(89).quantile(0.86).shift(1))
+                    hawkes_noise_veto = hawkes_two_sided_noise_ratio.gt(0.44) | ~hawkes_cooldown_state.fillna(False)
+                    hawkes_cluster_admission_long = (
+                        hawkes_directional_excitation_ratio.between(0.16, 0.78)
+                        & hawkes_total_intensity.rolling(21).mean().between(0.04, 0.42)
+                        & hawkes_up_event_intensity.gt(hawkes_down_event_intensity * 1.18)
+                    )
+                    hawkes_cluster_admission_short = (
+                        hawkes_directional_excitation_ratio.between(-0.78, -0.16)
+                        & hawkes_total_intensity.rolling(21).mean().between(0.04, 0.42)
+                        & hawkes_down_event_intensity.gt(hawkes_up_event_intensity * 1.18)
+                    )
+                    parent_signal_admission_long = (
+                        (dataframe["ema21"] > dataframe["ema55"])
+                        & (dataframe["close"] > dataframe["session_vwap"])
+                        & (dataframe["slope_15m"] > -dataframe["atr14"] * 0.08)
+                        & (dataframe["slope_1h"] > -dataframe["atr14"] * 0.14)
+                    )
+                    parent_signal_admission_short = (
+                        (dataframe["ema21"] < dataframe["ema55"])
+                        & (dataframe["close"] < dataframe["session_vwap"])
+                        & (dataframe["slope_15m"] < dataframe["atr14"] * 0.08)
+                        & (dataframe["slope_1h"] < dataframe["atr14"] * 0.14)
+                    )
+                    friction_aware_window = (
+                        dataframe["atr14"].between(dataframe["atr_ma50"] * 0.50, dataframe["atr_ma50"] * 2.45)
+                        & dataframe["bar_range_atr"].between(0.10, 2.85)
+                        & dataframe["body_atr"].between(0.03, 1.95)
+                        & dataframe["rvol96"].between(0.25, 4.70)
+                    )
+                    raw = (
+                        hawkes_cluster_admission_long.fillna(False)
+                        & parent_signal_admission_long.fillna(False)
+                        & friction_aware_window.fillna(False)
+                        & ~hawkes_noise_veto.fillna(False)
+                        & dataframe["rsi14"].between(44, 76)
+                    )
+                    short_raw = (
+                        hawkes_cluster_admission_short.fillna(False)
+                        & parent_signal_admission_short.fillna(False)
+                        & friction_aware_window.fillna(False)
+                        & ~hawkes_noise_veto.fillna(False)
+                        & dataframe["rsi14"].between(24, 56)
+                    )
+                elif "{spec.key}" == "beveridge_nelson_cycle_trend_filter":
+                    bn_log_price = np.log(dataframe["close"].replace(0, np.nan))
+                    bn_permanent_trend_proxy = bn_log_price.ewm(span=144, adjust=False, min_periods=55).mean()
+                    bn_permanent_slope_bps = bn_permanent_trend_proxy.diff(13).shift(1) * 10000.0
+                    bn_permanent_slope_accel = bn_permanent_slope_bps.diff(8).shift(1)
+                    bn_transitory_gap_bps = (bn_log_price - bn_permanent_trend_proxy).shift(1) * 10000.0
+                    bn_transitory_gap_z = (
+                        bn_transitory_gap_bps
+                        / bn_transitory_gap_bps.rolling(144, min_periods=55).std().shift(1).replace(0, np.nan)
+                    )
+                    bn_cycle_contraction = bn_transitory_gap_bps.abs().lt(
+                        bn_transitory_gap_bps.abs().rolling(55, min_periods=21).mean().shift(1)
+                    )
+                    bn_cycle_amplitude_veto = bn_transitory_gap_z.abs().gt(2.65)
+                    bn_trend_cycle_admission_long = (
+                        bn_permanent_slope_bps.between(0.45, 18.0)
+                        & bn_permanent_slope_accel.gt(-0.55)
+                        & bn_transitory_gap_z.between(-1.85, 0.45)
+                        & bn_cycle_contraction.fillna(False)
+                        & ~bn_cycle_amplitude_veto.fillna(False)
+                        & (dataframe["ema21"] > dataframe["ema55"])
+                        & (dataframe["close"] > dataframe["session_vwap"])
+                        & (dataframe["slope_15m"] > -dataframe["atr14"] * 0.08)
+                        & (dataframe["slope_1h"] > -dataframe["atr14"] * 0.14)
+                    )
+                    bn_trend_cycle_admission_short = (
+                        bn_permanent_slope_bps.between(-18.0, -0.45)
+                        & bn_permanent_slope_accel.lt(0.55)
+                        & bn_transitory_gap_z.between(-0.45, 1.85)
+                        & bn_cycle_contraction.fillna(False)
+                        & ~bn_cycle_amplitude_veto.fillna(False)
+                        & (dataframe["ema21"] < dataframe["ema55"])
+                        & (dataframe["close"] < dataframe["session_vwap"])
+                        & (dataframe["slope_15m"] < dataframe["atr14"] * 0.08)
+                        & (dataframe["slope_1h"] < dataframe["atr14"] * 0.14)
+                    )
+                    friction_aware_window = (
+                        dataframe["atr14"].between(dataframe["atr_ma50"] * 0.50, dataframe["atr_ma50"] * 2.35)
+                        & dataframe["bar_range_atr"].between(0.10, 2.75)
+                        & dataframe["body_atr"].between(0.03, 1.85)
+                        & dataframe["rvol96"].between(0.25, 4.50)
+                    )
+                    raw = (
+                        bn_trend_cycle_admission_long.fillna(False)
+                        & friction_aware_window.fillna(False)
+                        & dataframe["rsi14"].between(44, 76)
+                    )
+                    short_raw = (
+                        bn_trend_cycle_admission_short.fillna(False)
+                        & friction_aware_window.fillna(False)
+                        & dataframe["rsi14"].between(24, 56)
+                    )
+                elif "{spec.key}" == "rqa_determinism_trend_persistence_filter":
+                    rqa_embedding_return = dataframe["close"].pct_change(3)
+                    rqa_embedding_slope = dataframe["close"].pct_change(13)
+                    rqa_state_distance = (
+                        (rqa_embedding_return - rqa_embedding_return.shift(13)).abs()
+                        + (rqa_embedding_slope - rqa_embedding_slope.shift(13)).abs()
+                    )
+                    rqa_radius = rqa_state_distance.rolling(144).quantile(0.35).shift(1)
+                    rqa_recurrent_state = rqa_state_distance.le(rqa_radius)
+                    rqa_recurrence_rate = rqa_recurrent_state.astype(float).rolling(34).mean()
+                    rqa_diagonal_line_length = rqa_recurrent_state.astype(float).rolling(8).sum()
+                    rqa_determinism = (
+                        rqa_diagonal_line_length.ge(5).astype(float).rolling(34).mean()
+                        / rqa_recurrence_rate.replace(0, np.nan)
+                    ).clip(upper=1.0)
+                    rqa_vertical_run = (
+                        rqa_recurrent_state
+                        & rqa_recurrent_state.shift(1).fillna(False)
+                        & rqa_recurrent_state.shift(2).fillna(False)
+                    )
+                    rqa_laminarity = (
+                        rqa_vertical_run.astype(float).rolling(34).mean()
+                        / rqa_recurrence_rate.replace(0, np.nan)
+                    ).clip(upper=1.0)
+                    rqa_trapping_time = rqa_vertical_run.astype(float).rolling(13).sum()
+                    rqa_state_noise_veto = (
+                        rqa_recurrence_rate.lt(0.18)
+                        | rqa_recurrence_rate.gt(0.82)
+                        | rqa_determinism.lt(0.24)
+                        | rqa_laminarity.lt(0.06)
+                    )
+                    rqa_parent_trend_admission_long = (
+                        (dataframe["ema21"] > dataframe["ema55"])
+                        & (dataframe["close"] > dataframe["session_vwap"])
+                        & (dataframe["slope_15m"] > -dataframe["atr14"] * 0.08)
+                        & (dataframe["slope_1h"] > -dataframe["atr14"] * 0.14)
+                    )
+                    rqa_parent_trend_admission_short = (
+                        (dataframe["ema21"] < dataframe["ema55"])
+                        & (dataframe["close"] < dataframe["session_vwap"])
+                        & (dataframe["slope_15m"] < dataframe["atr14"] * 0.08)
+                        & (dataframe["slope_1h"] < dataframe["atr14"] * 0.14)
+                    )
+                    rqa_structure_admission_long = (
+                        rqa_recurrence_rate.between(0.22, 0.76)
+                        & rqa_determinism.between(0.28, 0.92)
+                        & rqa_laminarity.between(0.10, 0.86)
+                        & rqa_trapping_time.between(1.0, 8.0)
+                        & rqa_embedding_slope.gt(-0.00005)
+                    )
+                    rqa_structure_admission_short = (
+                        rqa_recurrence_rate.between(0.22, 0.76)
+                        & rqa_determinism.between(0.28, 0.92)
+                        & rqa_laminarity.between(0.10, 0.86)
+                        & rqa_trapping_time.between(1.0, 8.0)
+                        & rqa_embedding_slope.lt(0.00005)
+                    )
+                    friction_aware_window = (
+                        dataframe["atr14"].between(dataframe["atr_ma50"] * 0.50, dataframe["atr_ma50"] * 2.45)
+                        & dataframe["bar_range_atr"].between(0.10, 2.85)
+                        & dataframe["body_atr"].between(0.03, 1.95)
+                        & dataframe["rvol96"].between(0.25, 4.65)
+                    )
+                    raw = (
+                        rqa_structure_admission_long.fillna(False)
+                        & rqa_parent_trend_admission_long.fillna(False)
+                        & friction_aware_window.fillna(False)
+                        & ~rqa_state_noise_veto.fillna(False)
+                        & dataframe["rsi14"].between(44, 76)
+                    )
+                    short_raw = (
+                        rqa_structure_admission_short.fillna(False)
+                        & rqa_parent_trend_admission_short.fillna(False)
+                        & friction_aware_window.fillna(False)
+                        & ~rqa_state_noise_veto.fillna(False)
+                        & dataframe["rsi14"].between(24, 56)
+                    )
+                elif "{spec.key}" == "jump_activity_index_finite_infinite_state_filter":
+                    jump_activity_return = dataframe["close"].pct_change()
+                    jump_activity_return_power_1 = jump_activity_return.abs().rolling(34).mean()
+                    jump_activity_return_power_2 = jump_activity_return.pow(2).rolling(34).mean()
+                    jump_activity_small_return_frequency = (
+                        jump_activity_return.abs()
+                        .le(jump_activity_return.abs().rolling(144).quantile(0.45).shift(1))
+                        .astype(float)
+                        .rolling(34)
+                        .mean()
+                    )
+                    jump_activity_power_ratio = (
+                        jump_activity_return_power_1.pow(2)
+                        / jump_activity_return_power_2.replace(0, np.nan)
+                    )
+                    jump_activity_index_proxy = (
+                        (1.0 / jump_activity_power_ratio.replace(0, np.nan))
+                        * jump_activity_small_return_frequency
+                    ).clip(lower=0.0, upper=3.0)
+                    finite_infinite_activity_state = jump_activity_index_proxy.rolling(21).mean()
+                    infinite_activity_veto = (
+                        finite_infinite_activity_state.gt(1.85)
+                        | jump_activity_small_return_frequency.gt(0.76)
+                        | jump_activity_power_ratio.lt(0.34)
+                    )
+                    jump_activity_parent_admission_long = (
+                        (dataframe["ema21"] > dataframe["ema55"])
+                        & (dataframe["close"] > dataframe["session_vwap"])
+                        & (dataframe["slope_15m"] > -dataframe["atr14"] * 0.08)
+                        & (dataframe["slope_1h"] > -dataframe["atr14"] * 0.14)
+                    )
+                    jump_activity_parent_admission_short = (
+                        (dataframe["ema21"] < dataframe["ema55"])
+                        & (dataframe["close"] < dataframe["session_vwap"])
+                        & (dataframe["slope_15m"] < dataframe["atr14"] * 0.08)
+                        & (dataframe["slope_1h"] < dataframe["atr14"] * 0.14)
+                    )
+                    finite_activity_admission_long = (
+                        finite_infinite_activity_state.between(0.36, 1.72)
+                        & jump_activity_power_ratio.between(0.38, 1.28)
+                        & jump_activity_return.rolling(13).mean().gt(-0.00004)
+                    )
+                    finite_activity_admission_short = (
+                        finite_infinite_activity_state.between(0.36, 1.72)
+                        & jump_activity_power_ratio.between(0.38, 1.28)
+                        & jump_activity_return.rolling(13).mean().lt(0.00004)
+                    )
+                    friction_aware_window = (
+                        dataframe["atr14"].between(dataframe["atr_ma50"] * 0.50, dataframe["atr_ma50"] * 2.45)
+                        & dataframe["bar_range_atr"].between(0.10, 2.85)
+                        & dataframe["body_atr"].between(0.03, 1.95)
+                        & dataframe["rvol96"].between(0.25, 4.60)
+                    )
+                    raw = (
+                        finite_activity_admission_long.fillna(False)
+                        & jump_activity_parent_admission_long.fillna(False)
+                        & friction_aware_window.fillna(False)
+                        & ~infinite_activity_veto.fillna(False)
+                        & dataframe["rsi14"].between(44, 76)
+                    )
+                    short_raw = (
+                        finite_activity_admission_short.fillna(False)
+                        & jump_activity_parent_admission_short.fillna(False)
+                        & friction_aware_window.fillna(False)
+                        & ~infinite_activity_veto.fillna(False)
+                        & dataframe["rsi14"].between(24, 56)
+                    )
+                elif "{spec.key}" == "market_turbulence_mahalanobis_state_filter":
+                    mahalanobis_return_vector = pd.concat(
+                        [
+                            dataframe["close"].pct_change(3).rename("ret_3"),
+                            dataframe["close"].pct_change(13).rename("ret_13"),
+                            dataframe["close"].pct_change(34).rename("ret_34"),
+                            dataframe["slope_15m"].div(dataframe["close"].replace(0, np.nan)).rename("slope_15m_norm"),
+                            dataframe["slope_1h"].div(dataframe["close"].replace(0, np.nan)).rename("slope_1h_norm"),
+                        ],
+                        axis=1,
+                    )
+                    turbulence_center = mahalanobis_return_vector.rolling(390, min_periods=120).mean().shift(1)
+                    turbulence_scale = mahalanobis_return_vector.rolling(390, min_periods=120).std().shift(1).replace(0, np.nan)
+                    market_turbulence_distance = (
+                        ((mahalanobis_return_vector - turbulence_center) / turbulence_scale)
+                        .pow(2)
+                        .sum(axis=1)
+                        .div(5.0)
+                        .pow(0.5)
+                    )
+                    market_turbulence_percentile = (
+                        market_turbulence_distance.rolling(390, min_periods=120)
+                        .rank(pct=True)
+                        .shift(1)
+                    )
+                    turbulence_rising = market_turbulence_distance.gt(market_turbulence_distance.rolling(34).median().shift(1))
+                    turbulence_state_veto = market_turbulence_percentile.gt(0.92) & turbulence_rising.fillna(False)
+                    turbulence_receding_from_stress = (
+                        market_turbulence_percentile.between(0.45, 0.88)
+                        & market_turbulence_distance.lt(market_turbulence_distance.rolling(55).quantile(0.82).shift(1))
+                    )
+                    turbulence_parent_signal_admission_long = (
+                        (dataframe["ema21"] > dataframe["ema55"])
+                        & (dataframe["close"] > dataframe["session_vwap"])
+                        & (dataframe["slope_15m"] > -dataframe["atr14"] * 0.09)
+                        & (dataframe["slope_1h"] > -dataframe["atr14"] * 0.15)
+                    )
+                    turbulence_parent_signal_admission_short = (
+                        (dataframe["ema21"] < dataframe["ema55"])
+                        & (dataframe["close"] < dataframe["session_vwap"])
+                        & (dataframe["slope_15m"] < dataframe["atr14"] * 0.09)
+                        & (dataframe["slope_1h"] < dataframe["atr14"] * 0.15)
+                    )
+                    friction_aware_window = (
+                        dataframe["atr14"].between(dataframe["atr_ma50"] * 0.50, dataframe["atr_ma50"] * 2.35)
+                        & dataframe["bar_range_atr"].between(0.10, 2.75)
+                        & dataframe["body_atr"].between(0.03, 1.85)
+                        & dataframe["rvol96"].between(0.25, 4.40)
+                    )
+                    raw = (
+                        turbulence_parent_signal_admission_long.fillna(False)
+                        & friction_aware_window.fillna(False)
+                        & turbulence_receding_from_stress.fillna(False)
+                        & ~turbulence_state_veto.fillna(False)
+                        & dataframe["rsi14"].between(44, 76)
+                    )
+                    short_raw = (
+                        turbulence_parent_signal_admission_short.fillna(False)
+                        & friction_aware_window.fillna(False)
+                        & turbulence_receding_from_stress.fillna(False)
+                        & ~turbulence_state_veto.fillna(False)
+                        & dataframe["rsi14"].between(24, 56)
+                    )
+                elif "{spec.key}" == "jensen_shannon_return_distribution_shift_gate":
+                    js_distribution_shift_gate = (
+                        dataframe["js_distribution_shift_gate"].between(0.0008, 0.1150)
+                        & dataframe["js_distribution_shift_gate"].gt(
+                            dataframe["js_distribution_shift_baseline"].fillna(0.0004) * 0.92
+                        )
+                        & dataframe["js_distribution_shift_gate"].lt(
+                            dataframe["js_distribution_shift_reference"].fillna(0.1250) * 1.18
+                        )
+                    )
+                    jensen_shannon_admission_long = (
+                        js_distribution_shift_gate.fillna(False)
+                        & dataframe["jensen_shannon_return_shape_drift"].between(0.0004, 0.0900)
+                        & dataframe["jensen_shannon_range_volume_drift"].between(0.0002, 0.1100)
+                        & (dataframe["ema21"] > dataframe["ema55"])
+                        & (dataframe["close"] > dataframe["session_vwap"])
+                        & (dataframe["slope_15m"] > -dataframe["atr14"] * 0.08)
+                        & (dataframe["slope_1h"] > -dataframe["atr14"] * 0.14)
+                    )
+                    jensen_shannon_admission_short = (
+                        js_distribution_shift_gate.fillna(False)
+                        & dataframe["jensen_shannon_return_shape_drift"].between(0.0004, 0.0900)
+                        & dataframe["jensen_shannon_range_volume_drift"].between(0.0002, 0.1100)
+                        & (dataframe["ema21"] < dataframe["ema55"])
+                        & (dataframe["close"] < dataframe["session_vwap"])
+                        & (dataframe["slope_15m"] < dataframe["atr14"] * 0.08)
+                        & (dataframe["slope_1h"] < dataframe["atr14"] * 0.14)
+                    )
+                    friction_aware_window = (
+                        dataframe["atr14"].between(dataframe["atr_ma50"] * 0.50, dataframe["atr_ma50"] * 2.35)
+                        & dataframe["bar_range_atr"].between(0.10, 2.75)
+                        & dataframe["body_atr"].between(0.03, 1.85)
+                        & dataframe["rvol96"].between(0.25, 4.40)
+                    )
+                    distribution_tail_veto_long = (
+                        dataframe["js_distribution_shift_gate"].gt(
+                            dataframe["js_distribution_shift_reference"].fillna(0.1250) * 1.35
+                        )
+                        | dataframe["rv_ratio"].gt(3.25)
+                        | dataframe["rsi14"].gt(82)
+                    )
+                    distribution_tail_veto_short = (
+                        dataframe["js_distribution_shift_gate"].gt(
+                            dataframe["js_distribution_shift_reference"].fillna(0.1250) * 1.35
+                        )
+                        | dataframe["rv_ratio"].gt(3.25)
+                        | dataframe["rsi14"].lt(18)
+                    )
+                    raw = (
+                        jensen_shannon_admission_long.fillna(False)
+                        & friction_aware_window.fillna(False)
+                        & dataframe["rsi14"].between(44, 76)
+                        & ~distribution_tail_veto_long.fillna(False)
+                    )
+                    short_raw = (
+                        jensen_shannon_admission_short.fillna(False)
+                        & friction_aware_window.fillna(False)
+                        & dataframe["rsi14"].between(24, 56)
+                        & ~distribution_tail_veto_short.fillna(False)
+                    )
+                elif "{spec.key}" == "bds_nonlinear_dependence_admission_filter":
+                    bds_nonlinear_dependence_state = (
+                        dataframe["bds_nonlinear_dependence_score"].between(0.12, 1.55)
+                        & dataframe["bds_embedding_dimension_2"].between(0.018, 1.65)
+                        & dataframe["bds_embedding_dimension_3"].between(0.0005, 1.45)
+                        & dataframe["bds_epsilon_scale_075"].gt(0)
+                        & dataframe["bds_epsilon_scale_150"].gt(dataframe["bds_epsilon_scale_075"])
+                    )
+                    bds_split_stability_band = (
+                        dataframe["bds_nonlinear_dependence_score"].rolling(21, min_periods=8).std().lt(0.48)
+                        & dataframe["bds_nonlinear_dependence_score"].gt(
+                            dataframe["bds_nonlinear_dependence_score"]
+                            .rolling(144, min_periods=55)
+                            .quantile(0.50)
+                            .shift(1)
+                        )
+                    )
+                    bds_parent_signal_admission_long = (
+                        (dataframe["ema21"] > dataframe["ema55"])
+                        & (dataframe["close"] > dataframe["session_vwap"])
+                        & (dataframe["slope_15m"] > -dataframe["atr14"] * 0.08)
+                        & (dataframe["slope_1h"] > -dataframe["atr14"] * 0.14)
+                    )
+                    bds_parent_signal_admission_short = (
+                        (dataframe["ema21"] < dataframe["ema55"])
+                        & (dataframe["close"] < dataframe["session_vwap"])
+                        & (dataframe["slope_15m"] < dataframe["atr14"] * 0.08)
+                        & (dataframe["slope_1h"] < dataframe["atr14"] * 0.14)
+                    )
+                    bds_volatility_cluster_veto = (
+                        dataframe["rv_ratio"].gt(3.2)
+                        | dataframe["bar_range_atr"].rolling(8, min_periods=3).mean().gt(2.85)
+                        | dataframe["bds_nonlinear_dependence_score"].gt(2.05)
+                    )
+                    friction_aware_window = (
+                        dataframe["atr14"].between(dataframe["atr_ma50"] * 0.50, dataframe["atr_ma50"] * 2.40)
+                        & dataframe["bar_range_atr"].between(0.10, 2.85)
+                        & dataframe["body_atr"].between(0.03, 1.95)
+                        & dataframe["rvol96"].between(0.25, 4.60)
+                    )
+                    raw = (
+                        bds_nonlinear_dependence_state.fillna(False)
+                        & bds_split_stability_band.fillna(False)
+                        & bds_parent_signal_admission_long.fillna(False)
+                        & friction_aware_window.fillna(False)
+                        & ~bds_volatility_cluster_veto.fillna(False)
+                        & dataframe["rsi14"].between(44, 76)
+                    )
+                    short_raw = (
+                        bds_nonlinear_dependence_state.fillna(False)
+                        & bds_split_stability_band.fillna(False)
+                        & bds_parent_signal_admission_short.fillna(False)
+                        & friction_aware_window.fillna(False)
+                        & ~bds_volatility_cluster_veto.fillna(False)
+                        & dataframe["rsi14"].between(24, 56)
+                    )
+                elif "{spec.key}" == "bartels_rank_serial_randomness_trend_filter":
+                    bartels_rank_randomness_rejection_long = (
+                        dataframe["bartels_rank_nonrandom_trend_quality"].fillna(False)
+                        & (dataframe["ema21"] > dataframe["ema55"])
+                        & (dataframe["close"] > dataframe["session_vwap"])
+                        & (dataframe["slope_15m"] > -dataframe["atr14"] * 0.08)
+                        & (dataframe["slope_1h"] > -dataframe["atr14"] * 0.14)
+                    )
+                    bartels_rank_randomness_rejection_short = (
+                        dataframe["bartels_rank_nonrandom_trend_quality"].fillna(False)
+                        & (dataframe["ema21"] < dataframe["ema55"])
+                        & (dataframe["close"] < dataframe["session_vwap"])
+                        & (dataframe["slope_15m"] < dataframe["atr14"] * 0.08)
+                        & (dataframe["slope_1h"] < dataframe["atr14"] * 0.14)
+                    )
+                    friction_aware_window = (
+                        dataframe["atr14"].between(dataframe["atr_ma50"] * 0.50, dataframe["atr_ma50"] * 2.40)
+                        & dataframe["bar_range_atr"].between(0.10, 2.80)
+                        & dataframe["body_atr"].between(0.03, 1.90)
+                        & dataframe["rvol96"].between(0.25, 4.55)
+                    )
+                    raw = (
+                        bartels_rank_randomness_rejection_long.fillna(False)
+                        & friction_aware_window.fillna(False)
+                        & dataframe["rsi14"].between(44, 76)
+                    )
+                    short_raw = (
+                        bartels_rank_randomness_rejection_short.fillna(False)
+                        & friction_aware_window.fillna(False)
+                        & dataframe["rsi14"].between(24, 56)
+                    )
+                elif "{spec.key}" == "rough_volatility_local_roughness_filter":
+                    rough_volatility_return = dataframe["close"].pct_change()
+                    realized_volatility_fast = rough_volatility_return.rolling(21).std()
+                    realized_volatility_slow = rough_volatility_return.rolling(144).std().shift(1)
+                    realized_volatility_acceleration = (
+                        realized_volatility_fast / realized_volatility_slow.replace(0, np.nan)
+                    )
+                    local_roughness_short = rough_volatility_return.abs().rolling(13).mean()
+                    local_roughness_long = rough_volatility_return.abs().rolling(89).mean().shift(1)
+                    local_roughness_persistence = (
+                        local_roughness_short / local_roughness_long.replace(0, np.nan)
+                    )
+                    roughness_shock_veto = (
+                        realized_volatility_acceleration.gt(2.45)
+                        | local_roughness_persistence.gt(2.65)
+                        | dataframe["bar_range_atr"].gt(3.10)
+                    )
+                    roughness_persistent_state = (
+                        realized_volatility_acceleration.between(0.72, 1.95)
+                        & local_roughness_persistence.between(0.62, 2.15)
+                    )
+                    roughness_parent_signal_admission_long = (
+                        (dataframe["ema21"] > dataframe["ema55"])
+                        & (dataframe["close"] > dataframe["session_vwap"])
+                        & (dataframe["slope_15m"] > -dataframe["atr14"] * 0.09)
+                        & (dataframe["slope_1h"] > -dataframe["atr14"] * 0.15)
+                    )
+                    roughness_parent_signal_admission_short = (
+                        (dataframe["ema21"] < dataframe["ema55"])
+                        & (dataframe["close"] < dataframe["session_vwap"])
+                        & (dataframe["slope_15m"] < dataframe["atr14"] * 0.09)
+                        & (dataframe["slope_1h"] < dataframe["atr14"] * 0.15)
+                    )
+                    friction_aware_window = (
+                        dataframe["atr14"].between(dataframe["atr_ma50"] * 0.50, dataframe["atr_ma50"] * 2.45)
+                        & dataframe["bar_range_atr"].between(0.10, 2.85)
+                        & dataframe["body_atr"].between(0.03, 1.95)
+                        & dataframe["rvol96"].between(0.25, 4.70)
+                    )
+                    raw = (
+                        roughness_persistent_state.fillna(False)
+                        & roughness_parent_signal_admission_long.fillna(False)
+                        & friction_aware_window.fillna(False)
+                        & ~roughness_shock_veto.fillna(False)
+                        & dataframe["rsi14"].between(44, 76)
+                    )
+                    short_raw = (
+                        roughness_persistent_state.fillna(False)
+                        & roughness_parent_signal_admission_short.fillna(False)
+                        & friction_aware_window.fillna(False)
+                        & ~roughness_shock_veto.fillna(False)
+                        & dataframe["rsi14"].between(24, 56)
+                    )
+                elif "{spec.key}" == "structural_break_variance_shift_admission_filter":
+                    structural_break_return = dataframe["close"].pct_change()
+                    parent_slope_fast = dataframe["close"].pct_change(21)
+                    parent_slope_slow = dataframe["close"].pct_change(89)
+                    rolling_parameter_gap = (parent_slope_fast - parent_slope_slow).abs()
+                    structural_break_reference = rolling_parameter_gap.rolling(233, min_periods=89).median().shift(1)
+                    structural_break_scale = rolling_parameter_gap.rolling(233, min_periods=89).std().shift(1).replace(0, np.nan)
+                    structural_break_score = (
+                        rolling_parameter_gap - structural_break_reference
+                    ) / structural_break_scale
+                    variance_fast = structural_break_return.rolling(34).var()
+                    variance_slow = structural_break_return.rolling(233, min_periods=89).var().shift(1)
+                    variance_shift_score = variance_fast / variance_slow.replace(0, np.nan)
+                    stable_parameter_state = structural_break_score.abs().lt(1.55)
+                    variance_shift_veto = variance_shift_score.gt(2.25) | variance_shift_score.lt(0.32)
+                    break_state_veto = structural_break_score.abs().gt(2.10) | variance_shift_veto
+                    break_state_parent_admission_long = (
+                        stable_parameter_state.fillna(False)
+                        & variance_shift_score.between(0.42, 1.95)
+                        & parent_slope_fast.gt(-0.00005)
+                        & (dataframe["ema21"] > dataframe["ema55"])
+                        & (dataframe["close"] > dataframe["session_vwap"])
+                        & (dataframe["slope_15m"] > -dataframe["atr14"] * 0.08)
+                        & (dataframe["slope_1h"] > -dataframe["atr14"] * 0.14)
+                    )
+                    break_state_parent_admission_short = (
+                        stable_parameter_state.fillna(False)
+                        & variance_shift_score.between(0.42, 1.95)
+                        & parent_slope_fast.lt(0.00005)
+                        & (dataframe["ema21"] < dataframe["ema55"])
+                        & (dataframe["close"] < dataframe["session_vwap"])
+                        & (dataframe["slope_15m"] < dataframe["atr14"] * 0.08)
+                        & (dataframe["slope_1h"] < dataframe["atr14"] * 0.14)
+                    )
+                    friction_aware_window = (
+                        dataframe["atr14"].between(dataframe["atr_ma50"] * 0.50, dataframe["atr_ma50"] * 2.45)
+                        & dataframe["bar_range_atr"].between(0.10, 2.85)
+                        & dataframe["body_atr"].between(0.03, 1.95)
+                        & dataframe["rvol96"].between(0.25, 4.60)
+                    )
+                    raw = (
+                        break_state_parent_admission_long.fillna(False)
+                        & friction_aware_window.fillna(False)
+                        & ~break_state_veto.fillna(False)
+                        & dataframe["rsi14"].between(44, 76)
+                    )
+                    short_raw = (
+                        break_state_parent_admission_short.fillna(False)
+                        & friction_aware_window.fillna(False)
+                        & ~break_state_veto.fillna(False)
+                        & dataframe["rsi14"].between(24, 56)
+                    )
+                elif "{spec.key}" == "high_low_spread_amihud_liquidity_shock_filter":
+                    high_low_log_range = np.log(
+                        dataframe["high"] / dataframe["low"].replace(0, np.nan)
+                    ).abs()
+                    two_bar_high_low_log_range = np.log(
+                        dataframe["high"].rolling(2).max()
+                        / dataframe["low"].rolling(2).min().replace(0, np.nan)
+                    ).abs()
+                    high_low_spread_component = (
+                        2.0 * high_low_log_range - two_bar_high_low_log_range
+                    ).clip(lower=0.0, upper=0.08)
+                    corwin_schultz_spread_proxy = (
+                        2.0
+                        * (np.exp(high_low_spread_component) - 1.0)
+                        / (1.0 + np.exp(high_low_spread_component))
+                    )
+                    dollar_volume_proxy = (
+                        dataframe["close"].abs() * dataframe["volume"].abs()
+                    ).replace(0, np.nan)
+                    amihud_price_impact = dataframe["close"].pct_change().abs() / dollar_volume_proxy
+                    amihud_price_impact_baseline = (
+                        amihud_price_impact.rolling(144, min_periods=55).median().shift(1)
+                    )
+                    amihud_price_impact_shock = (
+                        amihud_price_impact
+                        / amihud_price_impact_baseline.replace(0, np.nan)
+                    ).clip(lower=0.0, upper=20.0)
+                    liquidity_shock_score = corwin_schultz_spread_proxy * amihud_price_impact_shock
+                    liquidity_shock_percentile = (
+                        liquidity_shock_score.rolling(233, min_periods=89).rank(pct=True).shift(1)
+                    )
+                    liquidity_shock_veto = (
+                        liquidity_shock_percentile.gt(0.90)
+                        & amihud_price_impact_shock.gt(1.65)
+                    )
+                    liquidity_normalized_state = (
+                        liquidity_shock_percentile.between(0.18, 0.82)
+                        & amihud_price_impact_shock.between(0.30, 1.55)
+                        & corwin_schultz_spread_proxy.le(
+                            corwin_schultz_spread_proxy.rolling(144, min_periods=55).quantile(0.82).shift(1)
+                        )
+                    )
+                    liquidity_parent_admission_long = (
+                        liquidity_normalized_state.fillna(False)
+                        & (dataframe["ema21"] > dataframe["ema55"])
+                        & (dataframe["close"] > dataframe["session_vwap"])
+                        & (dataframe["slope_15m"] > -dataframe["atr14"] * 0.08)
+                        & (dataframe["slope_1h"] > -dataframe["atr14"] * 0.14)
+                    )
+                    liquidity_parent_admission_short = (
+                        liquidity_normalized_state.fillna(False)
+                        & (dataframe["ema21"] < dataframe["ema55"])
+                        & (dataframe["close"] < dataframe["session_vwap"])
+                        & (dataframe["slope_15m"] < dataframe["atr14"] * 0.08)
+                        & (dataframe["slope_1h"] < dataframe["atr14"] * 0.14)
+                    )
+                    friction_aware_window = (
+                        dataframe["atr14"].between(dataframe["atr_ma50"] * 0.50, dataframe["atr_ma50"] * 2.35)
+                        & dataframe["bar_range_atr"].between(0.10, 2.75)
+                        & dataframe["body_atr"].between(0.03, 1.85)
+                        & dataframe["rvol96"].between(0.25, 4.35)
+                    )
+                    raw = (
+                        liquidity_parent_admission_long.fillna(False)
+                        & friction_aware_window.fillna(False)
+                        & ~liquidity_shock_veto.fillna(False)
+                        & dataframe["rsi14"].between(44, 76)
+                    )
+                    short_raw = (
+                        liquidity_parent_admission_short.fillna(False)
+                        & friction_aware_window.fillna(False)
+                        & ~liquidity_shock_veto.fillna(False)
+                        & dataframe["rsi14"].between(24, 56)
+                    )
+                elif "{spec.key}" == "kyle_lambda_impact_resilience_filter":
+                    close_return = dataframe["close"].pct_change()
+                    impact_signed_volume_proxy = (
+                        np.sign(dataframe["close"] - dataframe["open"]) * dataframe["volume"].abs()
+                    )
+                    impact_signed_volume_proxy_shifted = impact_signed_volume_proxy.shift(1)
+                    impact_return_shifted = close_return.shift(1)
+                    impact_dollar_flow_proxy_shifted = (
+                        impact_signed_volume_proxy_shifted * dataframe["close"].shift(1).abs()
+                    ).replace(0, np.nan)
+                    kyle_lambda_impact_proxy = (
+                        impact_return_shifted.rolling(144, min_periods=55).cov(impact_dollar_flow_proxy_shifted)
+                        / impact_dollar_flow_proxy_shifted.rolling(144, min_periods=55).var().replace(0, np.nan)
+                    ).abs().clip(lower=0.0, upper=1.0e-4)
+                    kyle_lambda_baseline = kyle_lambda_impact_proxy.rolling(233, min_periods=89).median().shift(1)
+                    kyle_lambda_shock_ratio = (
+                        kyle_lambda_impact_proxy / kyle_lambda_baseline.replace(0, np.nan)
+                    ).clip(lower=0.0, upper=25.0)
+                    kyle_lambda_percentile = (
+                        kyle_lambda_impact_proxy.rolling(233, min_periods=89).rank(pct=True).shift(1)
+                    )
+                    impact_flow_percentile = (
+                        impact_signed_volume_proxy_shifted.abs().rolling(233, min_periods=89).rank(pct=True).shift(1)
+                    )
+                    impact_reversal_return = close_return.rolling(5, min_periods=2).sum().shift(1)
+                    impact_reversal_atr = dataframe["atr14"].shift(1).div(dataframe["close"].shift(1).replace(0, np.nan))
+                    impact_resilience_state = (
+                        kyle_lambda_percentile.between(0.12, 0.78)
+                        | (
+                            impact_flow_percentile.gt(0.76)
+                            & kyle_lambda_percentile.between(0.28, 0.90)
+                            & impact_reversal_return.abs().lt(impact_reversal_atr * 0.85)
+                        )
+                    )
+                    lambda_impact_shock_veto = (
+                        kyle_lambda_percentile.gt(0.92)
+                        | (kyle_lambda_shock_ratio.gt(2.65) & impact_flow_percentile.gt(0.70))
+                    )
+                    lambda_impact_parent_admission_long = (
+                        impact_resilience_state.fillna(False)
+                        & ~lambda_impact_shock_veto.fillna(False)
+                        & (dataframe["ema21"] > dataframe["ema55"])
+                        & (dataframe["close"] > dataframe["session_vwap"])
+                        & (dataframe["slope_15m"] > -dataframe["atr14"] * 0.08)
+                        & (dataframe["slope_1h"] > -dataframe["atr14"] * 0.14)
+                    )
+                    lambda_impact_parent_admission_short = (
+                        impact_resilience_state.fillna(False)
+                        & ~lambda_impact_shock_veto.fillna(False)
+                        & (dataframe["ema21"] < dataframe["ema55"])
+                        & (dataframe["close"] < dataframe["session_vwap"])
+                        & (dataframe["slope_15m"] < dataframe["atr14"] * 0.08)
+                        & (dataframe["slope_1h"] < dataframe["atr14"] * 0.14)
+                    )
+                    friction_aware_window = (
+                        dataframe["atr14"].between(dataframe["atr_ma50"] * 0.50, dataframe["atr_ma50"] * 2.35)
+                        & dataframe["bar_range_atr"].between(0.10, 2.75)
+                        & dataframe["body_atr"].between(0.03, 1.85)
+                        & dataframe["rvol96"].between(0.25, 4.35)
+                    )
+                    raw = (
+                        lambda_impact_parent_admission_long.fillna(False)
+                        & friction_aware_window.fillna(False)
+                        & dataframe["rsi14"].between(44, 76)
+                    )
+                    short_raw = (
+                        lambda_impact_parent_admission_short.fillna(False)
+                        & friction_aware_window.fillna(False)
+                        & dataframe["rsi14"].between(24, 56)
+                    )
+                elif "{spec.key}" == "signed_return_impact_absorption_reversal_gate":
+                    close_return = dataframe["close"].pct_change()
+                    signed_bar_direction = np.sign(dataframe["close"] - dataframe["open"])
+                    signed_return_impact_proxy = (
+                        close_return.shift(1)
+                        / dataframe["volume"].abs().rolling(21, min_periods=8).mean().shift(1).replace(0, np.nan)
+                    ) * 1_000_000.0
+                    impact_absorption_baseline = signed_return_impact_proxy.abs().rolling(
+                        144,
+                        min_periods=55,
+                    ).median().shift(1)
+                    impact_absorption_state = (
+                        signed_return_impact_proxy.abs()
+                        / impact_absorption_baseline.replace(0, np.nan)
+                    ).clip(lower=0.0, upper=25.0)
+                    impact_absorption_percentile = (
+                        impact_absorption_state.rolling(233, min_periods=89).rank(pct=True).shift(1)
+                    )
+                    absorption_reversal_pressure = (
+                        signed_bar_direction.shift(1)
+                        * close_return.rolling(3, min_periods=2).sum().shift(1)
+                    )
+                    absorption_reversal_long = (
+                        signed_return_impact_proxy.lt(0.0)
+                        & impact_absorption_percentile.between(0.62, 0.94)
+                        & absorption_reversal_pressure.lt(0.0)
+                        & (dataframe["close"] > dataframe["low"].rolling(13, min_periods=5).min().shift(1))
+                    )
+                    absorption_reversal_short = (
+                        signed_return_impact_proxy.gt(0.0)
+                        & impact_absorption_percentile.between(0.62, 0.94)
+                        & absorption_reversal_pressure.gt(0.0)
+                        & (dataframe["close"] < dataframe["high"].rolling(13, min_periods=5).max().shift(1))
+                    )
+                    mtf_mean_reversion_admission_long = (
+                        (dataframe["close"] < dataframe["session_vwap"] + dataframe["atr14"] * 0.80)
+                        & (dataframe["slope_15m"] > -dataframe["atr14"] * 0.20)
+                        & (dataframe["slope_1h"] > -dataframe["atr14"] * 0.28)
+                    )
+                    mtf_mean_reversion_admission_short = (
+                        (dataframe["close"] > dataframe["session_vwap"] - dataframe["atr14"] * 0.80)
+                        & (dataframe["slope_15m"] < dataframe["atr14"] * 0.20)
+                        & (dataframe["slope_1h"] < dataframe["atr14"] * 0.28)
+                    )
+                    absorption_friction_window = (
+                        dataframe["atr14"].between(dataframe["atr_ma50"] * 0.45, dataframe["atr_ma50"] * 2.60)
+                        & dataframe["bar_range_atr"].between(0.10, 3.10)
+                        & dataframe["body_atr"].between(0.03, 2.05)
+                        & dataframe["rvol96"].between(0.30, 5.20)
+                    )
+                    raw = (
+                        absorption_reversal_long.fillna(False)
+                        & mtf_mean_reversion_admission_long.fillna(False)
+                        & absorption_friction_window.fillna(False)
+                        & dataframe["rsi14"].between(28, 58)
+                    )
+                    short_raw = (
+                        absorption_reversal_short.fillna(False)
+                        & mtf_mean_reversion_admission_short.fillna(False)
+                        & absorption_friction_window.fillna(False)
+                        & dataframe["rsi14"].between(42, 72)
+                    )
+                elif "{spec.key}" == "correlation_network_centrality_risk_gate":
+                    network_parent_return = dataframe["close"].pct_change(21).shift(1)
+                    network_peer_return_15m = dataframe["slope_15m"].div(dataframe["close"].replace(0, np.nan)).shift(1)
+                    network_peer_return_1h = dataframe["slope_1h"].div(dataframe["close"].replace(0, np.nan)).shift(1)
+                    network_peer_return_4h = dataframe["slope_4h"].div(dataframe["close"].replace(0, np.nan)).shift(1)
+                    network_corr_15m = network_parent_return.rolling(144, min_periods=55).corr(network_peer_return_15m)
+                    network_corr_1h = network_parent_return.rolling(144, min_periods=55).corr(network_peer_return_1h)
+                    network_corr_4h = network_parent_return.rolling(144, min_periods=55).corr(network_peer_return_4h)
+                    network_average_correlation = (
+                        network_corr_15m.fillna(0.0) + network_corr_1h.fillna(0.0) + network_corr_4h.fillna(0.0)
+                    ) / 3.0
+                    correlation_network_distance_proxy = np.sqrt(
+                        (2.0 * (1.0 - network_average_correlation.clip(-0.99, 0.99))).clip(lower=0.0)
+                    )
+                    mst_centrality_crowding_state_shifted = (
+                        network_average_correlation.abs().rolling(89, min_periods=34).mean().shift(1)
+                    )
+                    market_mode_compression_shifted = (
+                        (1.0 - correlation_network_distance_proxy.clip(0.0, 2.0) / 2.0)
+                        .rolling(55, min_periods=21)
+                        .mean()
+                        .shift(1)
+                    )
+                    network_peer_direction_shifted = (
+                        (
+                            network_peer_return_15m.rolling(21, min_periods=8).mean()
+                            + network_peer_return_1h.rolling(21, min_periods=8).mean()
+                            + network_peer_return_4h.rolling(21, min_periods=8).mean()
+                        )
+                        / 3.0
+                    ).shift(1)
+                    network_crowding_veto = (
+                        mst_centrality_crowding_state_shifted.gt(0.74)
+                        | market_mode_compression_shifted.gt(0.70)
+                        | correlation_network_distance_proxy.lt(0.38)
+                    )
+                    correlation_network_parent_trend_admission_long = (
+                        network_peer_direction_shifted.gt(0.000015)
+                        & correlation_network_distance_proxy.between(0.42, 1.58)
+                        & mst_centrality_crowding_state_shifted.between(0.08, 0.72)
+                        & (dataframe["ema21"] > dataframe["ema55"])
+                        & (dataframe["close"] > dataframe["session_vwap"])
+                        & (dataframe["slope_15m"] > -dataframe["atr14"] * 0.08)
+                        & (dataframe["slope_1h"] > -dataframe["atr14"] * 0.14)
+                    )
+                    correlation_network_parent_trend_admission_short = (
+                        network_peer_direction_shifted.lt(-0.000015)
+                        & correlation_network_distance_proxy.between(0.42, 1.58)
+                        & mst_centrality_crowding_state_shifted.between(0.08, 0.72)
+                        & (dataframe["ema21"] < dataframe["ema55"])
+                        & (dataframe["close"] < dataframe["session_vwap"])
+                        & (dataframe["slope_15m"] < dataframe["atr14"] * 0.08)
+                        & (dataframe["slope_1h"] < dataframe["atr14"] * 0.14)
+                    )
+                    friction_aware_window = (
+                        dataframe["atr14"].between(dataframe["atr_ma50"] * 0.50, dataframe["atr_ma50"] * 2.40)
+                        & dataframe["bar_range_atr"].between(0.10, 2.85)
+                        & dataframe["body_atr"].between(0.03, 1.95)
+                        & dataframe["rvol96"].between(0.25, 4.70)
+                    )
+                    raw = (
+                        correlation_network_parent_trend_admission_long.fillna(False)
+                        & friction_aware_window.fillna(False)
+                        & ~network_crowding_veto.fillna(False)
+                        & dataframe["rsi14"].between(44, 76)
+                    )
+                    short_raw = (
+                        correlation_network_parent_trend_admission_short.fillna(False)
+                        & friction_aware_window.fillna(False)
+                        & ~network_crowding_veto.fillna(False)
+                        & dataframe["rsi14"].between(24, 56)
+                    )
+                elif "{spec.key}" == "participation_clock_breakout":
+                    participation_clock = dataframe["rvol96"].rolling(96, min_periods=24).rank(pct=True).shift(1)
+                    rvol_acceleration = dataframe["rvol96"].diff(3).shift(1)
+                    opening_range_high = dataframe["high"].rolling(16, min_periods=4).max().shift(1)
+                    opening_range_low = dataframe["low"].rolling(16, min_periods=4).min().shift(1)
+                    opening_range_acceptance_long = (
+                        dataframe["close"].gt(opening_range_high)
+                        & dataframe["low"].gt(opening_range_high - dataframe["atr14"] * 0.35)
+                    )
+                    opening_range_acceptance_short = (
+                        dataframe["close"].lt(opening_range_low)
+                        & dataframe["high"].lt(opening_range_low + dataframe["atr14"] * 0.35)
+                    )
+                    participation_clock_breakout_long = (
+                        participation_clock.gt(0.68)
+                        & rvol_acceleration.gt(0.10)
+                        & opening_range_acceptance_long.fillna(False)
+                        & dataframe["close"].gt(dataframe["session_vwap"])
+                        & dataframe["ema21"].gt(dataframe["ema55"])
+                    )
+                    participation_clock_breakout_short = (
+                        participation_clock.gt(0.68)
+                        & rvol_acceleration.gt(0.10)
+                        & opening_range_acceptance_short.fillna(False)
+                        & dataframe["close"].lt(dataframe["session_vwap"])
+                        & dataframe["ema21"].lt(dataframe["ema55"])
+                    )
+                    relative_volume_acceleration_window = (
+                        dataframe["atr14"].between(dataframe["atr_ma50"] * 0.50, dataframe["atr_ma50"] * 2.55)
+                        & dataframe["bar_range_atr"].between(0.12, 2.95)
+                        & dataframe["body_atr"].between(0.05, 2.10)
+                        & dataframe["rvol96"].between(0.65, 5.80)
+                    )
+                    raw = (
+                        participation_clock_breakout_long.fillna(False)
+                        & relative_volume_acceleration_window.fillna(False)
+                        & dataframe["rsi14"].between(46, 78)
+                    )
+                    short_raw = (
+                        participation_clock_breakout_short.fillna(False)
+                        & relative_volume_acceleration_window.fillna(False)
+                        & dataframe["rsi14"].between(22, 54)
+                    )
+                elif "{spec.key}" == "dcca_cross_correlation_trend_admission_filter":
+                    dcca_parent_return = dataframe["close"].pct_change(21)
+                    dcca_peer_return = (
+                        dataframe["slope_15m"].div(dataframe["close"].replace(0, np.nan))
+                        + dataframe["slope_1h"].div(dataframe["close"].replace(0, np.nan))
+                    ) / 2.0
+                    dcca_parent_trend = dcca_parent_return - dcca_parent_return.rolling(89, min_periods=34).mean().shift(1)
+                    dcca_peer_trend = dcca_peer_return - dcca_peer_return.rolling(89, min_periods=34).mean().shift(1)
+                    dcca_peer_coherence = dcca_parent_trend.rolling(144, min_periods=55).corr(dcca_peer_trend).shift(1)
+                    dcca_trend_coherence_score = (
+                        dcca_peer_coherence
+                        * np.sign(dcca_parent_trend.rolling(21, min_periods=8).mean().shift(1))
+                    )
+                    dcca_breakdown_veto = (
+                        dcca_peer_coherence.abs().lt(0.10)
+                        | dcca_peer_coherence.rolling(55, min_periods=21).std().shift(1).gt(0.34)
+                    )
+                    dcca_parent_signal_admission_long = (
+                        dcca_trend_coherence_score.gt(0.16)
+                        & dcca_peer_coherence.between(0.12, 0.88)
+                        & (dataframe["ema21"] > dataframe["ema55"])
+                        & (dataframe["close"] > dataframe["session_vwap"])
+                        & (dataframe["slope_15m"] > -dataframe["atr14"] * 0.08)
+                        & (dataframe["slope_1h"] > -dataframe["atr14"] * 0.14)
+                    )
+                    dcca_parent_signal_admission_short = (
+                        dcca_trend_coherence_score.lt(-0.16)
+                        & dcca_peer_coherence.between(-0.88, -0.12)
+                        & (dataframe["ema21"] < dataframe["ema55"])
+                        & (dataframe["close"] < dataframe["session_vwap"])
+                        & (dataframe["slope_15m"] < dataframe["atr14"] * 0.08)
+                        & (dataframe["slope_1h"] < dataframe["atr14"] * 0.14)
+                    )
+                    friction_aware_window = (
+                        dataframe["atr14"].between(dataframe["atr_ma50"] * 0.50, dataframe["atr_ma50"] * 2.40)
+                        & dataframe["bar_range_atr"].between(0.10, 2.80)
+                        & dataframe["body_atr"].between(0.03, 1.90)
+                        & dataframe["rvol96"].between(0.25, 4.55)
+                    )
+                    raw = (
+                        dcca_parent_signal_admission_long.fillna(False)
+                        & friction_aware_window.fillna(False)
+                        & ~dcca_breakdown_veto.fillna(False)
+                        & dataframe["rsi14"].between(44, 76)
+                    )
+                    short_raw = (
+                        dcca_parent_signal_admission_short.fillna(False)
+                        & friction_aware_window.fillna(False)
+                        & ~dcca_breakdown_veto.fillna(False)
+                        & dataframe["rsi14"].between(24, 56)
+                    )
+                elif "{spec.key}" == "covar_systemic_tail_risk_admission_filter":
+                    covar_parent_return = dataframe["close"].pct_change(21)
+                    covar_peer_system_return = (
+                        dataframe["slope_15m"].div(dataframe["close"].replace(0, np.nan))
+                        + dataframe["slope_1h"].div(dataframe["close"].replace(0, np.nan))
+                        + dataframe["slope_4h"].div(dataframe["close"].replace(0, np.nan))
+                    ) / 3.0
+                    parent_tail_threshold = covar_parent_return.rolling(377, min_periods=144).quantile(0.10).shift(1)
+                    system_tail_threshold = covar_peer_system_return.rolling(377, min_periods=144).quantile(0.10).shift(1)
+                    median_system_var = covar_peer_system_return.rolling(377, min_periods=144).median().shift(1)
+                    conditional_tail_sample = covar_peer_system_return.where(covar_parent_return.le(parent_tail_threshold))
+                    conditional_system_var = conditional_tail_sample.rolling(377, min_periods=55).quantile(0.20).shift(1)
+                    delta_covar_stress_state = (conditional_system_var - median_system_var).abs()
+                    delta_covar_stress_reference = delta_covar_stress_state.rolling(233, min_periods=89).quantile(0.72).shift(1)
+                    system_tail_pressure = covar_peer_system_return.le(system_tail_threshold).rolling(55, min_periods=21).mean().shift(1)
+                    delta_covar_veto = (
+                        delta_covar_stress_state.gt(delta_covar_stress_reference)
+                        & system_tail_pressure.gt(0.34)
+                    )
+                    covar_parent_signal_admission_long = (
+                        ~delta_covar_veto.fillna(False)
+                        & covar_parent_return.rolling(21, min_periods=8).mean().shift(1).gt(-0.00008)
+                        & (dataframe["ema21"] > dataframe["ema55"])
+                        & (dataframe["close"] > dataframe["session_vwap"])
+                        & (dataframe["slope_15m"] > -dataframe["atr14"] * 0.08)
+                        & (dataframe["slope_1h"] > -dataframe["atr14"] * 0.14)
+                    )
+                    covar_parent_signal_admission_short = (
+                        ~delta_covar_veto.fillna(False)
+                        & covar_parent_return.rolling(21, min_periods=8).mean().shift(1).lt(0.00008)
+                        & (dataframe["ema21"] < dataframe["ema55"])
+                        & (dataframe["close"] < dataframe["session_vwap"])
+                        & (dataframe["slope_15m"] < dataframe["atr14"] * 0.08)
+                        & (dataframe["slope_1h"] < dataframe["atr14"] * 0.14)
+                    )
+                    friction_aware_window = (
+                        dataframe["atr14"].between(dataframe["atr_ma50"] * 0.50, dataframe["atr_ma50"] * 2.40)
+                        & dataframe["bar_range_atr"].between(0.10, 2.80)
+                        & dataframe["body_atr"].between(0.03, 1.90)
+                        & dataframe["rvol96"].between(0.25, 4.55)
+                    )
+                    raw = (
+                        covar_parent_signal_admission_long.fillna(False)
+                        & friction_aware_window.fillna(False)
+                        & dataframe["rsi14"].between(44, 76)
+                    )
+                    short_raw = (
+                        covar_parent_signal_admission_short.fillna(False)
+                        & friction_aware_window.fillna(False)
+                        & dataframe["rsi14"].between(24, 56)
+                    )
+                elif "{spec.key}" == "local_polynomial_curvature_acceleration_filter":
+                    curvature_acceleration_state_long = (
+                        dataframe["local_poly_slope_bps_55"].between(0.18, 18.0)
+                        & dataframe["local_poly_curvature_bps_55"].between(0.001, 1.80)
+                        & dataframe["local_poly_curvature_z"].between(0.10, 3.20)
+                        & dataframe["local_poly_slope_acceleration"].between(0.04, 8.50)
+                    )
+                    curvature_acceleration_state_short = (
+                        dataframe["local_poly_slope_bps_55"].between(-18.0, -0.18)
+                        & dataframe["local_poly_curvature_bps_55"].between(-1.80, -0.001)
+                        & dataframe["local_poly_curvature_z"].between(-3.20, -0.10)
+                        & dataframe["local_poly_slope_acceleration"].between(-8.50, -0.04)
+                    )
+                    parent_trend_admission_long = (
+                        (dataframe["ema21"] > dataframe["ema55"])
+                        & (dataframe["close"] > dataframe["session_vwap"])
+                        & (dataframe["slope_15m"] > -dataframe["atr14"] * 0.08)
+                        & (dataframe["slope_1h"] > -dataframe["atr14"] * 0.14)
+                        & (dataframe["slope_4h"] > -dataframe["atr14"] * 0.18)
+                    )
+                    parent_trend_admission_short = (
+                        (dataframe["ema21"] < dataframe["ema55"])
+                        & (dataframe["close"] < dataframe["session_vwap"])
+                        & (dataframe["slope_15m"] < dataframe["atr14"] * 0.08)
+                        & (dataframe["slope_1h"] < dataframe["atr14"] * 0.14)
+                        & (dataframe["slope_4h"] < dataframe["atr14"] * 0.18)
+                    )
+                    friction_aware_window = (
+                        dataframe["atr14"].between(dataframe["atr_ma50"] * 0.50, dataframe["atr_ma50"] * 2.25)
+                        & dataframe["bar_range_atr"].between(0.10, 2.75)
+                        & dataframe["body_atr"].between(0.03, 1.85)
+                        & dataframe["rvol96"].between(0.25, 4.25)
+                    )
+                    curvature_exhaustion_veto_long = (
+                        dataframe["rsi14"].gt(82)
+                        | (dataframe["close"] > dataframe["ema21"] + dataframe["atr14"] * 3.05)
+                        | dataframe["local_poly_curvature_z"].gt(4.20)
+                        | (dataframe["slope_4h"] < -dataframe["atr14"] * 0.20)
+                    )
+                    curvature_exhaustion_veto_short = (
+                        dataframe["rsi14"].lt(18)
+                        | (dataframe["close"] < dataframe["ema21"] - dataframe["atr14"] * 3.05)
+                        | dataframe["local_poly_curvature_z"].lt(-4.20)
+                        | (dataframe["slope_4h"] > dataframe["atr14"] * 0.20)
+                    )
+                    raw = (
+                        curvature_acceleration_state_long.fillna(False)
+                        & parent_trend_admission_long.fillna(False)
+                        & friction_aware_window.fillna(False)
+                        & dataframe["rsi14"].between(44, 76)
+                        & ~curvature_exhaustion_veto_long.fillna(False)
+                    )
+                    short_raw = (
+                        curvature_acceleration_state_short.fillna(False)
+                        & parent_trend_admission_short.fillna(False)
+                        & friction_aware_window.fillna(False)
+                        & dataframe["rsi14"].between(24, 56)
+                        & ~curvature_exhaustion_veto_short.fillna(False)
+                    )
+                elif "{spec.key}" == "ultimate_oscillator_mtf_divergence_filter":
+                    ultimate_bullish_divergence = (
+                        dataframe["close"].le(dataframe["close"].rolling(34, min_periods=13).min().shift(1) * 1.0015)
+                        & dataframe["ultimate_oscillator_value_shifted"].gt(dataframe["ultimate_oscillator_low34"] + 1.25)
+                        & dataframe["ultimate_oscillator_value_shifted"].between(24.0, 48.0)
+                    )
+                    ultimate_bearish_divergence = (
+                        dataframe["close"].ge(dataframe["close"].rolling(34, min_periods=13).max().shift(1) * 0.9985)
+                        & dataframe["ultimate_oscillator_value_shifted"].lt(dataframe["ultimate_oscillator_high34"] - 1.25)
+                        & dataframe["ultimate_oscillator_value_shifted"].between(52.0, 76.0)
+                    )
+                    ultimate_reclaim_long = (
+                        dataframe["ultimate_oscillator_value_shifted"].gt(32.0)
+                        & dataframe["ultimate_oscillator_value_shifted"].gt(dataframe["ultimate_oscillator_value_shifted"].shift(2) + 0.45)
+                    )
+                    ultimate_reclaim_short = (
+                        dataframe["ultimate_oscillator_value_shifted"].lt(68.0)
+                        & dataframe["ultimate_oscillator_value_shifted"].lt(dataframe["ultimate_oscillator_value_shifted"].shift(2) - 0.45)
+                    )
+                    mtf_trend_reclaim_long = (
+                        (dataframe["ema21"] > dataframe["ema55"])
+                        & (dataframe["close"] > dataframe["session_vwap"] - dataframe["atr14"] * 0.20)
+                        & (dataframe["slope_15m"] > -dataframe["atr14"] * 0.06)
+                        & (dataframe["slope_1h"] > -dataframe["atr14"] * 0.12)
+                        & (dataframe["slope_4h"] > -dataframe["atr14"] * 0.18)
+                    )
+                    mtf_trend_reclaim_short = (
+                        (dataframe["ema21"] < dataframe["ema55"])
+                        & (dataframe["close"] < dataframe["session_vwap"] + dataframe["atr14"] * 0.20)
+                        & (dataframe["slope_15m"] < dataframe["atr14"] * 0.06)
+                        & (dataframe["slope_1h"] < dataframe["atr14"] * 0.12)
+                        & (dataframe["slope_4h"] < dataframe["atr14"] * 0.18)
+                    )
+                    friction_aware_window = (
+                        dataframe["atr14"].between(dataframe["atr_ma50"] * 0.50, dataframe["atr_ma50"] * 2.30)
+                        & dataframe["bar_range_atr"].between(0.10, 2.80)
+                        & dataframe["body_atr"].between(0.03, 1.90)
+                        & dataframe["rvol96"].between(0.25, 4.50)
+                    )
+                    raw = (
+                        ultimate_bullish_divergence.fillna(False)
+                        & ultimate_reclaim_long.fillna(False)
+                        & mtf_trend_reclaim_long.fillna(False)
+                        & friction_aware_window.fillna(False)
+                        & dataframe["rsi14"].between(34, 76)
+                    )
+                    short_raw = (
+                        ultimate_bearish_divergence.fillna(False)
+                        & ultimate_reclaim_short.fillna(False)
+                        & mtf_trend_reclaim_short.fillna(False)
+                        & friction_aware_window.fillna(False)
+                        & dataframe["rsi14"].between(24, 66)
+                    )
+                elif "{spec.key}" == "true_strength_index_mtf_reacceleration_filter":
+                    true_strength_index_reacceleration_long = (
+                        dataframe["true_strength_index_value_shifted"].between(-18.0, 36.0)
+                        & dataframe["true_strength_index_value_shifted"].gt(dataframe["true_strength_index_signal_shifted"])
+                        & dataframe["true_strength_index_histogram_shifted"].gt(
+                            dataframe["true_strength_index_histogram_shifted"].rolling(21, min_periods=8).mean().shift(1)
+                            + 0.28
+                        )
+                        & dataframe["true_strength_index_value_shifted"].gt(
+                            dataframe["true_strength_index_value_shifted"].shift(3) + 0.65
+                        )
+                    )
+                    true_strength_index_reacceleration_short = (
+                        dataframe["true_strength_index_value_shifted"].between(-36.0, 18.0)
+                        & dataframe["true_strength_index_value_shifted"].lt(dataframe["true_strength_index_signal_shifted"])
+                        & dataframe["true_strength_index_histogram_shifted"].lt(
+                            dataframe["true_strength_index_histogram_shifted"].rolling(21, min_periods=8).mean().shift(1)
+                            - 0.28
+                        )
+                        & dataframe["true_strength_index_value_shifted"].lt(
+                            dataframe["true_strength_index_value_shifted"].shift(3) - 0.65
+                        )
+                    )
+                    tsi_mtf_trend_reclaim_long = (
+                        (dataframe["ema21"] > dataframe["ema55"])
+                        & (dataframe["close"] > dataframe["session_vwap"] - dataframe["atr14"] * 0.22)
+                        & (dataframe["slope_15m"] > -dataframe["atr14"] * 0.05)
+                        & (dataframe["slope_1h"] > -dataframe["atr14"] * 0.10)
+                        & (dataframe["slope_4h"] > -dataframe["atr14"] * 0.16)
+                    )
+                    tsi_mtf_trend_reclaim_short = (
+                        (dataframe["ema21"] < dataframe["ema55"])
+                        & (dataframe["close"] < dataframe["session_vwap"] + dataframe["atr14"] * 0.22)
+                        & (dataframe["slope_15m"] < dataframe["atr14"] * 0.05)
+                        & (dataframe["slope_1h"] < dataframe["atr14"] * 0.10)
+                        & (dataframe["slope_4h"] < dataframe["atr14"] * 0.16)
+                    )
+                    friction_aware_window = (
+                        dataframe["atr14"].between(dataframe["atr_ma50"] * 0.48, dataframe["atr_ma50"] * 2.35)
+                        & dataframe["bar_range_atr"].between(0.10, 2.85)
+                        & dataframe["body_atr"].between(0.03, 1.95)
+                        & dataframe["rvol96"].between(0.24, 4.60)
+                    )
+                    raw = (
+                        true_strength_index_reacceleration_long.fillna(False)
+                        & tsi_mtf_trend_reclaim_long.fillna(False)
+                        & friction_aware_window.fillna(False)
+                        & dataframe["rsi14"].between(36, 78)
+                    )
+                    short_raw = (
+                        true_strength_index_reacceleration_short.fillna(False)
+                        & tsi_mtf_trend_reclaim_short.fillna(False)
+                        & friction_aware_window.fillna(False)
+                        & dataframe["rsi14"].between(22, 64)
+                    )
+                elif "{spec.key}" == "trend_intensity_index_reacceleration_filter":
+                    trend_intensity_reacceleration_long = (
+                        dataframe["trend_intensity_index_value_shifted"].between(52.0, 86.0)
+                        & dataframe["trend_intensity_index_slope"].gt(0.18)
+                        & dataframe["trend_intensity_index_reacceleration"].gt(0.05)
+                        & dataframe["trend_intensity_index_value_shifted"].gt(
+                            dataframe["trend_intensity_index_value_shifted"].shift(3) + 0.80
+                        )
+                        & dataframe["trend_intensity_index_pullback_depth_atr"].between(0.05, 1.55)
+                    )
+                    trend_intensity_reacceleration_short = (
+                        dataframe["trend_intensity_index_value_shifted"].between(14.0, 48.0)
+                        & dataframe["trend_intensity_index_slope"].lt(-0.18)
+                        & dataframe["trend_intensity_index_reacceleration"].lt(-0.05)
+                        & dataframe["trend_intensity_index_value_shifted"].lt(
+                            dataframe["trend_intensity_index_value_shifted"].shift(3) - 0.80
+                        )
+                        & dataframe["trend_intensity_index_pullback_depth_atr"].between(0.05, 1.55)
+                    )
+                    tii_parent_trend_admission_long = (
+                        (dataframe["ema21"] > dataframe["ema55"])
+                        & (dataframe["close"] > dataframe["session_vwap"] - dataframe["atr14"] * 0.18)
+                        & (dataframe["close"] > dataframe["ema21"] - dataframe["atr14"] * 0.12)
+                        & (dataframe["slope_15m"] > -dataframe["atr14"] * 0.05)
+                        & (dataframe["slope_1h"] > -dataframe["atr14"] * 0.10)
+                        & (dataframe["slope_4h"] > -dataframe["atr14"] * 0.16)
+                    )
+                    tii_parent_trend_admission_short = (
+                        (dataframe["ema21"] < dataframe["ema55"])
+                        & (dataframe["close"] < dataframe["session_vwap"] + dataframe["atr14"] * 0.18)
+                        & (dataframe["close"] < dataframe["ema21"] + dataframe["atr14"] * 0.12)
+                        & (dataframe["slope_15m"] < dataframe["atr14"] * 0.05)
+                        & (dataframe["slope_1h"] < dataframe["atr14"] * 0.10)
+                        & (dataframe["slope_4h"] < dataframe["atr14"] * 0.16)
+                    )
+                    friction_aware_window = (
+                        dataframe["atr14"].between(dataframe["atr_ma50"] * 0.50, dataframe["atr_ma50"] * 2.30)
+                        & dataframe["bar_range_atr"].between(0.10, 2.80)
+                        & dataframe["body_atr"].between(0.03, 1.90)
+                        & dataframe["rvol96"].between(0.25, 4.50)
+                    )
+                    tii_extension_veto_long = (
+                        dataframe["rsi14"].gt(82)
+                        | (dataframe["close"] > dataframe["ema21"] + dataframe["atr14"] * 2.85)
+                        | dataframe["trend_intensity_index_value_shifted"].gt(92.0)
+                    )
+                    tii_extension_veto_short = (
+                        dataframe["rsi14"].lt(18)
+                        | (dataframe["close"] < dataframe["ema21"] - dataframe["atr14"] * 2.85)
+                        | dataframe["trend_intensity_index_value_shifted"].lt(8.0)
+                    )
+                    raw = (
+                        trend_intensity_reacceleration_long.fillna(False)
+                        & tii_parent_trend_admission_long.fillna(False)
+                        & friction_aware_window.fillna(False)
+                        & dataframe["rsi14"].between(38, 78)
+                        & ~tii_extension_veto_long.fillna(False)
+                    )
+                    short_raw = (
+                        trend_intensity_reacceleration_short.fillna(False)
+                        & tii_parent_trend_admission_short.fillna(False)
+                        & friction_aware_window.fillna(False)
+                        & dataframe["rsi14"].between(22, 62)
+                        & ~tii_extension_veto_short.fillna(False)
+                    )
+                elif "{spec.key}" == "tsmom_vol_scaled_low_turnover_rrr":
+                    tsmom_parent_trend_long = (
+                        (dataframe["ema21"] > dataframe["ema55"])
+                        & dataframe["tsmom_return_55_shifted"].gt(0.0)
+                        & dataframe["tsmom_return_144_shifted"].gt(0.0)
+                        & (dataframe["slope_1h"] > -dataframe["atr14"] * 0.08)
+                        & (dataframe["slope_4h"] > -dataframe["atr14"] * 0.12)
+                    )
+                    tsmom_parent_trend_short = (
+                        (dataframe["ema21"] < dataframe["ema55"])
+                        & dataframe["tsmom_return_55_shifted"].lt(0.0)
+                        & dataframe["tsmom_return_144_shifted"].lt(0.0)
+                        & (dataframe["slope_1h"] < dataframe["atr14"] * 0.08)
+                        & (dataframe["slope_4h"] < dataframe["atr14"] * 0.12)
+                    )
+                    tsmom_low_turnover_friction_window = (
+                        dataframe["tsmom_low_turnover_hold_state"].fillna(False)
+                        & dataframe["tsmom_vol_budget_ok"].fillna(False)
+                        & dataframe["atr14"].between(dataframe["atr_ma50"] * 0.45, dataframe["atr_ma50"] * 2.15)
+                        & dataframe["bar_range_atr"].between(0.08, 2.65)
+                        & dataframe["rvol96"].between(0.18, 3.80)
+                    )
+                    tsmom_extension_veto_long = (
+                        dataframe["rsi14"].gt(84)
+                        | (dataframe["close"] > dataframe["ema21"] + dataframe["atr14"] * 3.20)
+                        | dataframe["tsmom_vol_scaled_score"].gt(10.5)
+                    )
+                    tsmom_extension_veto_short = (
+                        dataframe["rsi14"].lt(16)
+                        | (dataframe["close"] < dataframe["ema21"] - dataframe["atr14"] * 3.20)
+                        | dataframe["tsmom_vol_scaled_score"].lt(-10.5)
+                    )
+                    raw = (
+                        dataframe["tsmom_vol_scaled_score"].gt(1.25)
+                        & tsmom_parent_trend_long.fillna(False)
+                        & tsmom_low_turnover_friction_window.fillna(False)
+                        & dataframe["rsi14"].between(40, 78)
+                        & ~tsmom_extension_veto_long.fillna(False)
+                    )
+                    short_raw = (
+                        dataframe["tsmom_vol_scaled_score"].lt(-1.25)
+                        & tsmom_parent_trend_short.fillna(False)
+                        & tsmom_low_turnover_friction_window.fillna(False)
+                        & dataframe["rsi14"].between(22, 60)
+                        & ~tsmom_extension_veto_short.fillna(False)
+                    )
+                elif "{spec.key}" == "rsi_range_shift_regime_trend_filter":
+                    rsi_bull_range_support = (
+                        dataframe["rsi14"].rolling(21, min_periods=8).min().shift(1).between(38.0, 52.0)
+                        & dataframe["rsi14"].between(46.0, 72.0)
+                        & dataframe["rsi14"].gt(dataframe["rsi14"].rolling(13, min_periods=5).median().shift(1))
+                    )
+                    rsi_bear_range_rejection = (
+                        dataframe["rsi14"].rolling(21, min_periods=8).max().shift(1).between(48.0, 64.0)
+                        & dataframe["rsi14"].between(28.0, 54.0)
+                        & dataframe["rsi14"].lt(dataframe["rsi14"].rolling(13, min_periods=5).median().shift(1))
+                    )
+                    rsi_range_shift_long = (
+                        rsi_bull_range_support.fillna(False)
+                        & dataframe["rsi14"].gt(dataframe["rsi14"].shift(2) + 0.45)
+                        & dataframe["close"].gt(dataframe["ema21"] - dataframe["atr14"] * 0.18)
+                        & dataframe["close"].gt(dataframe["session_vwap"] - dataframe["atr14"] * 0.22)
+                    )
+                    rsi_range_shift_short = (
+                        rsi_bear_range_rejection.fillna(False)
+                        & dataframe["rsi14"].lt(dataframe["rsi14"].shift(2) - 0.45)
+                        & dataframe["close"].lt(dataframe["ema21"] + dataframe["atr14"] * 0.18)
+                        & dataframe["close"].lt(dataframe["session_vwap"] + dataframe["atr14"] * 0.22)
+                    )
+                    parent_trend_admission_long = (
+                        (dataframe["ema21"] > dataframe["ema55"])
+                        & (dataframe["slope_15m"] > -dataframe["atr14"] * 0.06)
+                        & (dataframe["slope_30m"] > -dataframe["atr14"] * 0.08)
+                        & (dataframe["slope_1h"] > -dataframe["atr14"] * 0.12)
+                    )
+                    parent_trend_admission_short = (
+                        (dataframe["ema21"] < dataframe["ema55"])
+                        & (dataframe["slope_15m"] < dataframe["atr14"] * 0.06)
+                        & (dataframe["slope_30m"] < dataframe["atr14"] * 0.08)
+                        & (dataframe["slope_1h"] < dataframe["atr14"] * 0.12)
+                    )
+                    practical_bar_window = (
+                        dataframe["atr14"].between(dataframe["atr_ma50"] * 0.52, dataframe["atr_ma50"] * 2.10)
+                        & dataframe["bar_range_atr"].between(0.08, 2.65)
+                        & dataframe["body_atr"].between(0.03, 1.85)
+                        & dataframe["rvol96"].between(0.25, 4.40)
+                    )
+                    rsi_exhaustion_long = dataframe["rsi14"].gt(80)
+                    rsi_exhaustion_short = dataframe["rsi14"].lt(20)
+                    raw = (
+                        rsi_range_shift_long.fillna(False)
+                        & parent_trend_admission_long.fillna(False)
+                        & practical_bar_window.fillna(False)
+                        & ~rsi_exhaustion_long.fillna(False)
+                    )
+                    short_raw = (
+                        rsi_range_shift_short.fillna(False)
+                        & parent_trend_admission_short.fillna(False)
+                        & practical_bar_window.fillna(False)
+                        & ~rsi_exhaustion_short.fillna(False)
+                    )
+                elif "{spec.key}" == "dss_bressert_reacceleration_filter":
+                    dss_bressert_reacceleration_long = (
+                        dataframe["dss_bressert_value_shifted"].between(28.0, 72.0)
+                        & dataframe["dss_bressert_value_shifted"].gt(dataframe["dss_bressert_signal_shifted"])
+                        & dataframe["dss_bressert_slope"].gt(0.22)
+                        & dataframe["dss_bressert_reacceleration"].gt(0.06)
+                        & dataframe["dss_bressert_value_shifted"].gt(
+                            dataframe["dss_bressert_value_shifted"].shift(3) + 0.90
+                        )
+                        & dataframe["dss_bressert_pullback_depth_atr"].between(0.05, 1.65)
+                    )
+                    dss_bressert_reacceleration_short = (
+                        dataframe["dss_bressert_value_shifted"].between(28.0, 72.0)
+                        & dataframe["dss_bressert_value_shifted"].lt(dataframe["dss_bressert_signal_shifted"])
+                        & dataframe["dss_bressert_slope"].lt(-0.22)
+                        & dataframe["dss_bressert_reacceleration"].lt(-0.06)
+                        & dataframe["dss_bressert_value_shifted"].lt(
+                            dataframe["dss_bressert_value_shifted"].shift(3) - 0.90
+                        )
+                        & dataframe["dss_bressert_pullback_depth_atr"].between(0.05, 1.65)
+                    )
+                    dss_parent_trend_admission_long = (
+                        (dataframe["ema21"] > dataframe["ema55"])
+                        & (dataframe["close"] > dataframe["session_vwap"] - dataframe["atr14"] * 0.20)
+                        & (dataframe["close"] > dataframe["ema21"] - dataframe["atr14"] * 0.14)
+                        & (dataframe["slope_15m"] > -dataframe["atr14"] * 0.05)
+                        & (dataframe["slope_1h"] > -dataframe["atr14"] * 0.10)
+                        & (dataframe["slope_4h"] > -dataframe["atr14"] * 0.16)
+                    )
+                    dss_parent_trend_admission_short = (
+                        (dataframe["ema21"] < dataframe["ema55"])
+                        & (dataframe["close"] < dataframe["session_vwap"] + dataframe["atr14"] * 0.20)
+                        & (dataframe["close"] < dataframe["ema21"] + dataframe["atr14"] * 0.14)
+                        & (dataframe["slope_15m"] < dataframe["atr14"] * 0.05)
+                        & (dataframe["slope_1h"] < dataframe["atr14"] * 0.10)
+                        & (dataframe["slope_4h"] < dataframe["atr14"] * 0.16)
+                    )
+                    friction_aware_window = (
+                        dataframe["atr14"].between(dataframe["atr_ma50"] * 0.48, dataframe["atr_ma50"] * 2.35)
+                        & dataframe["bar_range_atr"].between(0.10, 2.85)
+                        & dataframe["body_atr"].between(0.03, 1.95)
+                        & dataframe["rvol96"].between(0.24, 4.60)
+                    )
+                    dss_extension_veto_long = (
+                        dataframe["rsi14"].gt(82)
+                        | dataframe["dss_bressert_value_shifted"].gt(88.0)
+                        | (dataframe["close"] > dataframe["ema21"] + dataframe["atr14"] * 2.90)
+                    )
+                    dss_extension_veto_short = (
+                        dataframe["rsi14"].lt(18)
+                        | dataframe["dss_bressert_value_shifted"].lt(12.0)
+                        | (dataframe["close"] < dataframe["ema21"] - dataframe["atr14"] * 2.90)
+                    )
+                    raw = (
+                        dss_bressert_reacceleration_long.fillna(False)
+                        & dss_parent_trend_admission_long.fillna(False)
+                        & friction_aware_window.fillna(False)
+                        & dataframe["rsi14"].between(36, 78)
+                        & ~dss_extension_veto_long.fillna(False)
+                    )
+                    short_raw = (
+                        dss_bressert_reacceleration_short.fillna(False)
+                        & dss_parent_trend_admission_short.fillna(False)
+                        & friction_aware_window.fillna(False)
+                        & dataframe["rsi14"].between(22, 64)
+                        & ~dss_extension_veto_short.fillna(False)
+                    )
+                elif "{spec.key}" == "chande_momentum_mtf_reacceleration_filter":
+                    chande_momentum_reacceleration_long = (
+                        dataframe["chande_momentum_value_shifted"].between(-24.0, 42.0)
+                        & dataframe["chande_momentum_value_shifted"].gt(dataframe["chande_momentum_signal_shifted"])
+                        & dataframe["chande_momentum_histogram_shifted"].gt(
+                            dataframe["chande_momentum_histogram_shifted"].rolling(21, min_periods=8).mean().shift(1)
+                            + 0.35
+                        )
+                        & dataframe["chande_momentum_value_shifted"].gt(
+                            dataframe["chande_momentum_value_shifted"].shift(3) + 0.90
+                        )
+                    )
+                    chande_momentum_reacceleration_short = (
+                        dataframe["chande_momentum_value_shifted"].between(-42.0, 24.0)
+                        & dataframe["chande_momentum_value_shifted"].lt(dataframe["chande_momentum_signal_shifted"])
+                        & dataframe["chande_momentum_histogram_shifted"].lt(
+                            dataframe["chande_momentum_histogram_shifted"].rolling(21, min_periods=8).mean().shift(1)
+                            - 0.35
+                        )
+                        & dataframe["chande_momentum_value_shifted"].lt(
+                            dataframe["chande_momentum_value_shifted"].shift(3) - 0.90
+                        )
+                    )
+                    cmo_mtf_trend_reclaim_long = (
+                        (dataframe["ema21"] > dataframe["ema55"])
+                        & (dataframe["close"] > dataframe["session_vwap"] - dataframe["atr14"] * 0.22)
+                        & (dataframe["slope_15m"] > -dataframe["atr14"] * 0.05)
+                        & (dataframe["slope_1h"] > -dataframe["atr14"] * 0.10)
+                        & (dataframe["slope_4h"] > -dataframe["atr14"] * 0.16)
+                    )
+                    cmo_mtf_trend_reclaim_short = (
+                        (dataframe["ema21"] < dataframe["ema55"])
+                        & (dataframe["close"] < dataframe["session_vwap"] + dataframe["atr14"] * 0.22)
+                        & (dataframe["slope_15m"] < dataframe["atr14"] * 0.05)
+                        & (dataframe["slope_1h"] < dataframe["atr14"] * 0.10)
+                        & (dataframe["slope_4h"] < dataframe["atr14"] * 0.16)
+                    )
+                    friction_aware_window = (
+                        dataframe["atr14"].between(dataframe["atr_ma50"] * 0.48, dataframe["atr_ma50"] * 2.35)
+                        & dataframe["bar_range_atr"].between(0.10, 2.85)
+                        & dataframe["body_atr"].between(0.03, 1.95)
+                        & dataframe["rvol96"].between(0.24, 4.60)
+                    )
+                    raw = (
+                        chande_momentum_reacceleration_long.fillna(False)
+                        & cmo_mtf_trend_reclaim_long.fillna(False)
+                        & friction_aware_window.fillna(False)
+                        & dataframe["rsi14"].between(36, 78)
+                    )
+                    short_raw = (
+                        chande_momentum_reacceleration_short.fillna(False)
+                        & cmo_mtf_trend_reclaim_short.fillna(False)
+                        & friction_aware_window.fillna(False)
+                        & dataframe["rsi14"].between(22, 64)
+                    )
+                elif "{spec.key}" == "anchored_return_memory_decay_reacceleration_filter":
+                    anchored_return_reacceleration_long = (
+                        dataframe["anchored_session_return_shifted"].between(-0.0065, 0.0180)
+                        & dataframe["anchored_session_return_shifted"].gt(
+                            dataframe["anchored_return_long_memory_mean"]
+                        )
+                        & dataframe["anchored_return_memory_decay"].between(-0.0045, 0.0025)
+                        & dataframe["anchored_return_reacceleration"].gt(0.00045)
+                        & dataframe["anchored_return_memory_decay_ratio"].between(0.02, 1.85)
+                    )
+                    anchored_return_reacceleration_short = (
+                        dataframe["anchored_session_return_shifted"].between(-0.0180, 0.0065)
+                        & dataframe["anchored_session_return_shifted"].lt(
+                            dataframe["anchored_return_long_memory_mean"]
+                        )
+                        & dataframe["anchored_return_memory_decay"].between(-0.0025, 0.0045)
+                        & dataframe["anchored_return_reacceleration"].lt(-0.00045)
+                        & dataframe["anchored_return_memory_decay_ratio"].between(0.02, 1.85)
+                    )
+                    anchored_return_parent_trend_long = (
+                        (dataframe["ema21"] > dataframe["ema55"])
+                        & (dataframe["close"] > dataframe["session_vwap"] - dataframe["atr14"] * 0.18)
+                        & (dataframe["close"] > dataframe["ema21"] - dataframe["atr14"] * 0.14)
+                        & (dataframe["slope_15m"] > -dataframe["atr14"] * 0.05)
+                        & (dataframe["slope_1h"] > -dataframe["atr14"] * 0.10)
+                        & (dataframe["slope_4h"] > -dataframe["atr14"] * 0.16)
+                    )
+                    anchored_return_parent_trend_short = (
+                        (dataframe["ema21"] < dataframe["ema55"])
+                        & (dataframe["close"] < dataframe["session_vwap"] + dataframe["atr14"] * 0.18)
+                        & (dataframe["close"] < dataframe["ema21"] + dataframe["atr14"] * 0.14)
+                        & (dataframe["slope_15m"] < dataframe["atr14"] * 0.05)
+                        & (dataframe["slope_1h"] < dataframe["atr14"] * 0.10)
+                        & (dataframe["slope_4h"] < dataframe["atr14"] * 0.16)
+                    )
+                    friction_aware_window = (
+                        dataframe["atr14"].between(dataframe["atr_ma50"] * 0.48, dataframe["atr_ma50"] * 2.35)
+                        & dataframe["bar_range_atr"].between(0.10, 2.85)
+                        & dataframe["body_atr"].between(0.03, 1.95)
+                        & dataframe["rvol96"].between(0.24, 4.60)
+                    )
+                    raw = (
+                        anchored_return_reacceleration_long.fillna(False)
+                        & anchored_return_parent_trend_long.fillna(False)
+                        & friction_aware_window.fillna(False)
+                        & dataframe["rsi14"].between(36, 78)
+                    )
+                    short_raw = (
+                        anchored_return_reacceleration_short.fillna(False)
+                        & anchored_return_parent_trend_short.fillna(False)
+                        & friction_aware_window.fillna(False)
+                        & dataframe["rsi14"].between(22, 64)
+                    )
+                elif "{spec.key}" == "volume_weighted_macd_trend_reacceleration_filter":
+                    vwmacd_reacceleration_long = (
+                        dataframe["vwmacd_spread_shifted"].gt(dataframe["vwmacd_signal_shifted"])
+                        & dataframe["vwmacd_histogram_shifted"].gt(
+                            dataframe["vwmacd_histogram_shifted"].rolling(21, min_periods=8).mean().shift(1)
+                        )
+                        & dataframe["vwmacd_reacceleration"].gt(dataframe["atr14"].shift(1) * 0.005)
+                    )
+                    vwmacd_reacceleration_short = (
+                        dataframe["vwmacd_spread_shifted"].lt(dataframe["vwmacd_signal_shifted"])
+                        & dataframe["vwmacd_histogram_shifted"].lt(
+                            dataframe["vwmacd_histogram_shifted"].rolling(21, min_periods=8).mean().shift(1)
+                        )
+                        & dataframe["vwmacd_reacceleration"].lt(-dataframe["atr14"].shift(1) * 0.005)
+                    )
+                    vwmacd_parent_trend_long = (
+                        (dataframe["ema21"] > dataframe["ema55"])
+                        & (dataframe["close"] > dataframe["session_vwap"] - dataframe["atr14"] * 0.22)
+                        & (dataframe["slope_15m"] > -dataframe["atr14"] * 0.05)
+                        & (dataframe["slope_1h"] > -dataframe["atr14"] * 0.10)
+                        & (dataframe["slope_4h"] > -dataframe["atr14"] * 0.16)
+                    )
+                    vwmacd_parent_trend_short = (
+                        (dataframe["ema21"] < dataframe["ema55"])
+                        & (dataframe["close"] < dataframe["session_vwap"] + dataframe["atr14"] * 0.22)
+                        & (dataframe["slope_15m"] < dataframe["atr14"] * 0.05)
+                        & (dataframe["slope_1h"] < dataframe["atr14"] * 0.10)
+                        & (dataframe["slope_4h"] < dataframe["atr14"] * 0.16)
+                    )
+                    friction_aware_window = (
+                        dataframe["atr14"].between(dataframe["atr_ma50"] * 0.48, dataframe["atr_ma50"] * 2.35)
+                        & dataframe["bar_range_atr"].between(0.10, 2.85)
+                        & dataframe["body_atr"].between(0.03, 1.95)
+                        & dataframe["rvol96"].between(0.24, 4.60)
+                    )
+                    raw = (
+                        vwmacd_reacceleration_long.fillna(False)
+                        & vwmacd_parent_trend_long.fillna(False)
+                        & friction_aware_window.fillna(False)
+                        & dataframe["rsi14"].between(36, 78)
+                    )
+                    short_raw = (
+                        vwmacd_reacceleration_short.fillna(False)
+                        & vwmacd_parent_trend_short.fillna(False)
+                        & friction_aware_window.fillna(False)
+                        & dataframe["rsi14"].between(22, 64)
+                    )
+                elif "{spec.key}" == "buff_averages_volume_weighted_trend_reacceleration_filter":
+                    buff_averages_reacceleration_long = (
+                        dataframe["buff_averages_spread_shifted"].gt(dataframe["buff_averages_spread_signal"])
+                        & dataframe["buff_averages_spread_shifted"].gt(0.0)
+                        & dataframe["buff_averages_reacceleration"].gt(dataframe["atr14"].shift(1) * 0.004)
+                    )
+                    buff_averages_reacceleration_short = (
+                        dataframe["buff_averages_spread_shifted"].lt(dataframe["buff_averages_spread_signal"])
+                        & dataframe["buff_averages_spread_shifted"].lt(0.0)
+                        & dataframe["buff_averages_reacceleration"].lt(-dataframe["atr14"].shift(1) * 0.004)
+                    )
+                    buff_averages_mtf_resonance_long = (
+                        (dataframe["ema21"] > dataframe["ema55"])
+                        & (dataframe["close"] > dataframe["session_vwap"] - dataframe["atr14"] * 0.22)
+                        & (dataframe["slope_15m"] > -dataframe["atr14"] * 0.05)
+                        & (dataframe["slope_1h"] > -dataframe["atr14"] * 0.10)
+                        & (dataframe["slope_4h"] > -dataframe["atr14"] * 0.16)
+                    )
+                    buff_averages_mtf_resonance_short = (
+                        (dataframe["ema21"] < dataframe["ema55"])
+                        & (dataframe["close"] < dataframe["session_vwap"] + dataframe["atr14"] * 0.22)
+                        & (dataframe["slope_15m"] < dataframe["atr14"] * 0.05)
+                        & (dataframe["slope_1h"] < dataframe["atr14"] * 0.10)
+                        & (dataframe["slope_4h"] < dataframe["atr14"] * 0.16)
+                    )
+                    friction_aware_window = (
+                        dataframe["atr14"].between(dataframe["atr_ma50"] * 0.48, dataframe["atr_ma50"] * 2.35)
+                        & dataframe["bar_range_atr"].between(0.10, 2.85)
+                        & dataframe["body_atr"].between(0.03, 1.95)
+                        & dataframe["rvol96"].between(0.24, 4.60)
+                    )
+                    raw = (
+                        buff_averages_reacceleration_long.fillna(False)
+                        & buff_averages_mtf_resonance_long.fillna(False)
+                        & friction_aware_window.fillna(False)
+                        & dataframe["rsi14"].between(36, 78)
+                    )
+                    short_raw = (
+                        buff_averages_reacceleration_short.fillna(False)
+                        & buff_averages_mtf_resonance_short.fillna(False)
+                        & friction_aware_window.fillna(False)
+                        & dataframe["rsi14"].between(22, 64)
+                    )
+                elif "{spec.key}" == "decay_weighted_trend_reacceleration_filter":
+                    decay_weighted_reacceleration_long = (
+                        dataframe["decay_weighted_trend_spread_shifted"].gt(0.0)
+                        & dataframe["decay_weighted_pullback_energy"].between(-1.20, 0.35)
+                        & dataframe["decay_weighted_reacceleration"].gt(0.015)
+                    )
+                    decay_weighted_reacceleration_short = (
+                        dataframe["decay_weighted_trend_spread_shifted"].lt(0.0)
+                        & dataframe["decay_weighted_pullback_energy"].between(-0.35, 1.20)
+                        & dataframe["decay_weighted_reacceleration"].lt(-0.015)
+                    )
+                    decay_weighted_parent_trend_long = (
+                        (dataframe["ema21"] > dataframe["ema55"])
+                        & (dataframe["close"] > dataframe["session_vwap"] - dataframe["atr14"] * 0.20)
+                        & (dataframe["slope_15m"] > -dataframe["atr14"] * 0.05)
+                        & (dataframe["slope_1h"] > -dataframe["atr14"] * 0.10)
+                        & (dataframe["slope_4h"] > -dataframe["atr14"] * 0.16)
+                    )
+                    decay_weighted_parent_trend_short = (
+                        (dataframe["ema21"] < dataframe["ema55"])
+                        & (dataframe["close"] < dataframe["session_vwap"] + dataframe["atr14"] * 0.20)
+                        & (dataframe["slope_15m"] < dataframe["atr14"] * 0.05)
+                        & (dataframe["slope_1h"] < dataframe["atr14"] * 0.10)
+                        & (dataframe["slope_4h"] < dataframe["atr14"] * 0.16)
+                    )
+                    friction_aware_window = (
+                        dataframe["atr14"].between(dataframe["atr_ma50"] * 0.48, dataframe["atr_ma50"] * 2.35)
+                        & dataframe["bar_range_atr"].between(0.10, 2.85)
+                        & dataframe["body_atr"].between(0.03, 1.95)
+                        & dataframe["rvol96"].between(0.24, 4.60)
+                    )
+                    raw = (
+                        decay_weighted_reacceleration_long.fillna(False)
+                        & decay_weighted_parent_trend_long.fillna(False)
+                        & friction_aware_window.fillna(False)
+                        & dataframe["rsi14"].between(36, 78)
+                    )
+                    short_raw = (
+                        decay_weighted_reacceleration_short.fillna(False)
+                        & decay_weighted_parent_trend_short.fillna(False)
+                        & friction_aware_window.fillna(False)
+                        & dataframe["rsi14"].between(22, 64)
+                    )
+                elif "{spec.key}" == "asi_trend_breakout_admission_filter":
+                    asi_trend_breakout_admission_long = (
+                        dataframe["asi_accumulative_swing_index_shifted"].gt(
+                            dataframe["asi_breakout_line_shifted"]
+                        )
+                        | (
+                            dataframe["asi_accumulative_swing_index_shifted"].gt(
+                                dataframe["asi_signal_mean_shifted"]
+                            )
+                            & dataframe["asi_slope_shifted"].gt(1.25)
+                            & dataframe["asi_reacceleration_shifted"].gt(0.30)
+                        )
+                    )
+                    asi_trend_breakout_admission_short = (
+                        dataframe["asi_accumulative_swing_index_shifted"].lt(
+                            dataframe["asi_breakdown_line_shifted"]
+                        )
+                        | (
+                            dataframe["asi_accumulative_swing_index_shifted"].lt(
+                                dataframe["asi_signal_mean_shifted"]
+                            )
+                            & dataframe["asi_slope_shifted"].lt(-1.25)
+                            & dataframe["asi_reacceleration_shifted"].lt(-0.30)
+                        )
+                    )
+                    asi_parent_trend_admission_long = (
+                        (dataframe["ema21"] > dataframe["ema55"])
+                        & (dataframe["close"] > dataframe["session_vwap"] - dataframe["atr14"] * 0.18)
+                        & (dataframe["close"] > dataframe["ema21"] - dataframe["atr14"] * 0.14)
+                        & (dataframe["slope_15m"] > -dataframe["atr14"] * 0.05)
+                        & (dataframe["slope_1h"] > -dataframe["atr14"] * 0.10)
+                        & (dataframe["slope_4h"] > -dataframe["atr14"] * 0.16)
+                    )
+                    asi_parent_trend_admission_short = (
+                        (dataframe["ema21"] < dataframe["ema55"])
+                        & (dataframe["close"] < dataframe["session_vwap"] + dataframe["atr14"] * 0.18)
+                        & (dataframe["close"] < dataframe["ema21"] + dataframe["atr14"] * 0.14)
+                        & (dataframe["slope_15m"] < dataframe["atr14"] * 0.05)
+                        & (dataframe["slope_1h"] < dataframe["atr14"] * 0.10)
+                        & (dataframe["slope_4h"] < dataframe["atr14"] * 0.16)
+                    )
+                    friction_aware_window = (
+                        dataframe["atr14"].between(dataframe["atr_ma50"] * 0.48, dataframe["atr_ma50"] * 2.35)
+                        & dataframe["bar_range_atr"].between(0.10, 2.85)
+                        & dataframe["body_atr"].between(0.03, 1.95)
+                        & dataframe["rvol96"].between(0.24, 4.60)
+                    )
+                    raw = (
+                        asi_trend_breakout_admission_long.fillna(False)
+                        & asi_parent_trend_admission_long.fillna(False)
+                        & friction_aware_window.fillna(False)
+                        & ~dataframe["asi_near_zero_veto"].fillna(True)
+                        & dataframe["rsi14"].between(36, 78)
+                    )
+                    short_raw = (
+                        asi_trend_breakout_admission_short.fillna(False)
+                        & asi_parent_trend_admission_short.fillna(False)
+                        & friction_aware_window.fillna(False)
+                        & ~dataframe["asi_near_zero_veto"].fillna(True)
+                        & dataframe["rsi14"].between(22, 64)
+                    )
+                elif "{spec.key}" == "damiani_volatmeter_trend_admission_filter":
+                    damiani_trend_admission_long = (
+                        dataframe["damiani_noise_suppressed_state"].fillna(False)
+                        & dataframe["damiani_signal_ratio_shifted"].between(1.02, 2.85)
+                        & dataframe["damiani_signal_slope_shifted"].gt(0.010)
+                        & dataframe["close"].gt(dataframe["ema21"] - dataframe["atr14"] * 0.10)
+                    )
+                    damiani_trend_admission_short = (
+                        dataframe["damiani_noise_suppressed_state"].fillna(False)
+                        & dataframe["damiani_signal_ratio_shifted"].between(1.02, 2.85)
+                        & dataframe["damiani_signal_slope_shifted"].gt(0.010)
+                        & dataframe["close"].lt(dataframe["ema21"] + dataframe["atr14"] * 0.10)
+                    )
+                    damiani_parent_trend_admission_long = (
+                        (dataframe["ema21"] > dataframe["ema55"])
+                        & (dataframe["close"] > dataframe["session_vwap"] - dataframe["atr14"] * 0.18)
+                        & (dataframe["slope_15m"] > -dataframe["atr14"] * 0.05)
+                        & (dataframe["slope_1h"] > -dataframe["atr14"] * 0.10)
+                        & (dataframe["slope_4h"] > -dataframe["atr14"] * 0.16)
+                    )
+                    damiani_parent_trend_admission_short = (
+                        (dataframe["ema21"] < dataframe["ema55"])
+                        & (dataframe["close"] < dataframe["session_vwap"] + dataframe["atr14"] * 0.18)
+                        & (dataframe["slope_15m"] < dataframe["atr14"] * 0.05)
+                        & (dataframe["slope_1h"] < dataframe["atr14"] * 0.10)
+                        & (dataframe["slope_4h"] < dataframe["atr14"] * 0.16)
+                    )
+                    friction_aware_window = (
+                        dataframe["atr14"].between(dataframe["atr_ma50"] * 0.48, dataframe["atr_ma50"] * 2.35)
+                        & dataframe["bar_range_atr"].between(0.10, 2.85)
+                        & dataframe["body_atr"].between(0.03, 1.95)
+                        & dataframe["rvol96"].between(0.24, 4.60)
+                    )
+                    raw = (
+                        damiani_trend_admission_long.fillna(False)
+                        & damiani_parent_trend_admission_long.fillna(False)
+                        & friction_aware_window.fillna(False)
+                        & dataframe["rsi14"].between(36, 78)
+                    )
+                    short_raw = (
+                        damiani_trend_admission_short.fillna(False)
+                        & damiani_parent_trend_admission_short.fillna(False)
+                        & friction_aware_window.fillna(False)
+                        & dataframe["rsi14"].between(22, 64)
+                    )
+                elif "{spec.key}" == "internal_bar_strength_state_filter":
+                    internal_bar_strength_low_reclaim_long = (
+                        dataframe["internal_bar_strength_shifted"].gt(
+                            dataframe["internal_bar_strength_low_band"]
+                        )
+                        & dataframe["internal_bar_strength_shifted"].between(0.16, 0.58)
+                        & dataframe["internal_bar_strength_recovery"].gt(0.08)
+                        & dataframe["close"].gt(dataframe["session_vwap"] - dataframe["atr14"] * 0.45)
+                    )
+                    internal_bar_strength_high_fade_short = (
+                        dataframe["internal_bar_strength_shifted"].lt(
+                            dataframe["internal_bar_strength_high_band"]
+                        )
+                        & dataframe["internal_bar_strength_shifted"].between(0.42, 0.84)
+                        & dataframe["internal_bar_strength_high_fade"].gt(0.08)
+                        & dataframe["close"].lt(dataframe["session_vwap"] + dataframe["atr14"] * 0.45)
+                    )
+                    internal_bar_strength_parent_admission_long = (
+                        (dataframe["close"] > dataframe["ema21"] - dataframe["atr14"] * 0.35)
+                        & (dataframe["close"] > dataframe["range_low40"] + dataframe["atr14"] * 0.08)
+                        & (dataframe["slope_5m"] > -dataframe["atr14"] * 0.05)
+                        & (dataframe["slope_15m"] > -dataframe["atr14"] * 0.10)
+                        & (dataframe["slope_1h"] > -dataframe["atr14"] * 0.18)
+                    )
+                    internal_bar_strength_parent_admission_short = (
+                        (dataframe["close"] < dataframe["ema21"] + dataframe["atr14"] * 0.35)
+                        & (dataframe["close"] < dataframe["range_high40"] - dataframe["atr14"] * 0.08)
+                        & (dataframe["slope_5m"] < dataframe["atr14"] * 0.05)
+                        & (dataframe["slope_15m"] < dataframe["atr14"] * 0.10)
+                        & (dataframe["slope_1h"] < dataframe["atr14"] * 0.18)
+                    )
+                    friction_aware_window = (
+                        dataframe["atr14"].between(dataframe["atr_ma50"] * 0.45, dataframe["atr_ma50"] * 2.25)
+                        & dataframe["bar_range_atr"].between(0.08, 2.65)
+                        & dataframe["body_atr"].between(0.02, 1.85)
+                        & dataframe["rvol96"].between(0.22, 4.20)
+                    )
+                    raw = (
+                        internal_bar_strength_low_reclaim_long.fillna(False)
+                        & internal_bar_strength_parent_admission_long.fillna(False)
+                        & friction_aware_window.fillna(False)
+                        & dataframe["rsi14"].between(24, 62)
+                    )
+                    short_raw = (
+                        internal_bar_strength_high_fade_short.fillna(False)
+                        & internal_bar_strength_parent_admission_short.fillna(False)
+                        & friction_aware_window.fillna(False)
+                        & dataframe["rsi14"].between(38, 76)
+                    )
+                elif "{spec.key}" == "volume_clock_relative_participation_breakout":
+                    participation_window = dataframe["minute_of_day_ny"].between(0, 16 * 60)
+                    volume_clock_mtf_trend_long = (
+                        dataframe["volume_clock_mtf_trend_long"].ge(2)
+                        & (dataframe["volume_clock_mtf_trend_short"] <= 3)
+                    )
+                    volume_clock_mtf_trend_short = (
+                        dataframe["volume_clock_mtf_trend_short"].ge(2)
+                        & (dataframe["volume_clock_mtf_trend_long"] <= 3)
+                    )
+                    friction_aware_window = (
+                        dataframe["atr14"].between(dataframe["atr_ma50"] * 0.42, dataframe["atr_ma50"] * 2.55)
+                        & dataframe["bar_range_atr"].between(0.08, 2.95)
+                        & dataframe["body_atr"].between(0.02, 2.20)
+                        & dataframe["rvol96"].between(0.20, 5.40)
+                    )
+                    raw = (
+                        participation_window
+                        & dataframe["volume_clock_breakout_long"].fillna(False)
+                        & volume_clock_mtf_trend_long.fillna(False)
+                        & friction_aware_window.fillna(False)
+                        & (dataframe["close"] > dataframe["ema21"] - dataframe["atr14"] * 0.22)
+                        & (dataframe["close"] > dataframe["session_vwap"] - dataframe["atr14"] * 0.32)
+                        & dataframe["rsi14"].between(38, 78)
+                    )
+                    short_raw = (
+                        participation_window
+                        & dataframe["volume_clock_breakout_short"].fillna(False)
+                        & volume_clock_mtf_trend_short.fillna(False)
+                        & friction_aware_window.fillna(False)
+                        & (dataframe["close"] < dataframe["ema21"] + dataframe["atr14"] * 0.22)
+                        & (dataframe["close"] < dataframe["session_vwap"] + dataframe["atr14"] * 0.32)
+                        & dataframe["rsi14"].between(22, 62)
+                    )
+                elif "{spec.key}" == "volume_flow_impulse_trend_rejoin_filter":
+                    volume_flow_trend_context_long = (
+                        (dataframe["ema21"] > dataframe["ema55"])
+                        & dataframe["ema21_slope_bps_12"].gt(0.18)
+                        & (dataframe["slope_15m"] > -dataframe["atr14"] * 0.05)
+                        & (dataframe["slope_1h"] > -dataframe["atr14"] * 0.10)
+                    )
+                    volume_flow_trend_context_short = (
+                        (dataframe["ema21"] < dataframe["ema55"])
+                        & dataframe["ema21_slope_bps_12"].lt(-0.18)
+                        & (dataframe["slope_15m"] < dataframe["atr14"] * 0.05)
+                        & (dataframe["slope_1h"] < dataframe["atr14"] * 0.10)
+                    )
+                    volume_flow_rejoin_long = (
+                        (dataframe["low"].rolling(3, min_periods=1).min() <= dataframe["ema21"] + dataframe["atr14"] * 0.28)
+                        & (dataframe["close"] > dataframe["ema21"])
+                        & (dataframe["close"] > dataframe["session_vwap"] - dataframe["atr14"] * 0.35)
+                    )
+                    volume_flow_rejoin_short = (
+                        (dataframe["high"].rolling(3, min_periods=1).max() >= dataframe["ema21"] - dataframe["atr14"] * 0.28)
+                        & (dataframe["close"] < dataframe["ema21"])
+                        & (dataframe["close"] < dataframe["session_vwap"] + dataframe["atr14"] * 0.35)
+                    )
+                    volume_flow_impulse_trend_rejoin_long = (
+                        dataframe["volume_flow_klinger_z_shifted"].ge(0.75)
+                        & dataframe["volume_flow_klinger_hist_shifted"].gt(0.0)
+                        & dataframe["volume_flow_obv_slope_shifted"].gt(0.0)
+                        & dataframe["volume_flow_obv_accel_shifted"].gt(0.0)
+                        & volume_flow_trend_context_long.fillna(False)
+                        & volume_flow_rejoin_long.fillna(False)
+                    )
+                    volume_flow_impulse_trend_rejoin_short = (
+                        dataframe["volume_flow_klinger_z_shifted"].le(-0.75)
+                        & dataframe["volume_flow_klinger_hist_shifted"].lt(0.0)
+                        & dataframe["volume_flow_obv_slope_shifted"].lt(0.0)
+                        & dataframe["volume_flow_obv_accel_shifted"].lt(0.0)
+                        & volume_flow_trend_context_short.fillna(False)
+                        & volume_flow_rejoin_short.fillna(False)
+                    )
+                    friction_aware_window = (
+                        dataframe["atr14"].between(dataframe["atr_ma50"] * 0.35, dataframe["atr_ma50"] * 2.80)
+                        & dataframe["bar_range_atr"].between(0.05, 3.20)
+                        & dataframe["body_atr"].between(0.02, 2.45)
+                        & dataframe["rvol96"].between(0.18, 6.20)
+                    )
+                    raw = (
+                        volume_flow_impulse_trend_rejoin_long.fillna(False)
+                        & friction_aware_window.fillna(False)
+                        & dataframe["rsi14"].between(36, 82)
+                    )
+                    short_raw = (
+                        volume_flow_impulse_trend_rejoin_short.fillna(False)
+                        & friction_aware_window.fillna(False)
+                        & dataframe["rsi14"].between(18, 64)
+                    )
+                elif "{spec.key}" == "relative_vigor_index_mtf_reacceleration_filter":
+                    relative_vigor_reacceleration_long = (
+                        dataframe["relative_vigor_index_value_shifted"].between(-22.0, 44.0)
+                        & dataframe["relative_vigor_index_value_shifted"].gt(
+                            dataframe["relative_vigor_index_signal_shifted"]
+                        )
+                        & dataframe["relative_vigor_index_histogram_shifted"].gt(
+                            dataframe["relative_vigor_index_histogram_shifted"].rolling(21, min_periods=8).mean().shift(1)
+                            + 0.28
+                        )
+                        & dataframe["relative_vigor_index_reacceleration"].gt(0.06)
+                    )
+                    relative_vigor_reacceleration_short = (
+                        dataframe["relative_vigor_index_value_shifted"].between(-44.0, 22.0)
+                        & dataframe["relative_vigor_index_value_shifted"].lt(
+                            dataframe["relative_vigor_index_signal_shifted"]
+                        )
+                        & dataframe["relative_vigor_index_histogram_shifted"].lt(
+                            dataframe["relative_vigor_index_histogram_shifted"].rolling(21, min_periods=8).mean().shift(1)
+                            - 0.28
+                        )
+                        & dataframe["relative_vigor_index_reacceleration"].lt(-0.06)
+                    )
+                    rvi_mtf_trend_reclaim_long = (
+                        (dataframe["ema21"] > dataframe["ema55"])
+                        & (dataframe["close"] > dataframe["session_vwap"] - dataframe["atr14"] * 0.22)
+                        & (dataframe["slope_15m"] > -dataframe["atr14"] * 0.05)
+                        & (dataframe["slope_1h"] > -dataframe["atr14"] * 0.10)
+                        & (dataframe["slope_4h"] > -dataframe["atr14"] * 0.16)
+                    )
+                    rvi_mtf_trend_reclaim_short = (
+                        (dataframe["ema21"] < dataframe["ema55"])
+                        & (dataframe["close"] < dataframe["session_vwap"] + dataframe["atr14"] * 0.22)
+                        & (dataframe["slope_15m"] < dataframe["atr14"] * 0.05)
+                        & (dataframe["slope_1h"] < dataframe["atr14"] * 0.10)
+                        & (dataframe["slope_4h"] < dataframe["atr14"] * 0.16)
+                    )
+                    friction_aware_window = (
+                        dataframe["atr14"].between(dataframe["atr_ma50"] * 0.48, dataframe["atr_ma50"] * 2.35)
+                        & dataframe["bar_range_atr"].between(0.10, 2.85)
+                        & dataframe["body_atr"].between(0.03, 1.95)
+                        & dataframe["rvol96"].between(0.24, 4.60)
+                    )
+                    raw = (
+                        relative_vigor_reacceleration_long.fillna(False)
+                        & rvi_mtf_trend_reclaim_long.fillna(False)
+                        & friction_aware_window.fillna(False)
+                        & dataframe["rsi14"].between(36, 78)
+                    )
+                    short_raw = (
+                        relative_vigor_reacceleration_short.fillna(False)
+                        & rvi_mtf_trend_reclaim_short.fillna(False)
+                        & friction_aware_window.fillna(False)
+                        & dataframe["rsi14"].between(22, 64)
+                    )
+                elif "{spec.key}" == "low_volatility_trend_pullback_reacceleration":
+                    low_volatility_trend_long = (
+                        dataframe["low_volatility_state"].fillna(False)
+                        & (dataframe["ema21"] > dataframe["ema55"])
+                        & (dataframe["ema55"] > dataframe["ema144"] - dataframe["atr14"] * 0.12)
+                        & dataframe["low_volatility_trend_slope_bps"].gt(0.18)
+                    )
+                    low_volatility_trend_short = (
+                        dataframe["low_volatility_state"].fillna(False)
+                        & (dataframe["ema21"] < dataframe["ema55"])
+                        & (dataframe["ema55"] < dataframe["ema144"] + dataframe["atr14"] * 0.12)
+                        & dataframe["low_volatility_trend_slope_bps"].lt(-0.18)
+                    )
+                    low_volatility_trend_pullback_reacceleration_long = (
+                        dataframe["low_volatility_pullback_depth_atr"].between(-1.65, 0.30)
+                        & dataframe["low_volatility_reacceleration"].gt(0.08)
+                        & (dataframe["close"] > dataframe["ema21"])
+                        & (dataframe["close"] > dataframe["session_vwap"] - dataframe["atr14"] * 0.20)
+                    )
+                    low_volatility_trend_pullback_reacceleration_short = (
+                        dataframe["low_volatility_pullback_depth_atr"].between(-0.30, 1.65)
+                        & dataframe["low_volatility_reacceleration"].lt(-0.08)
+                        & (dataframe["close"] < dataframe["ema21"])
+                        & (dataframe["close"] < dataframe["session_vwap"] + dataframe["atr14"] * 0.20)
+                    )
+                    mtf_optional_resonance_long = (
+                        (dataframe["slope_15m"] > -dataframe["atr14"] * 0.08)
+                        & (dataframe["slope_30m"] > -dataframe["atr14"] * 0.10)
+                        & (dataframe["slope_1h"] > -dataframe["atr14"] * 0.14)
+                    )
+                    mtf_optional_resonance_short = (
+                        (dataframe["slope_15m"] < dataframe["atr14"] * 0.08)
+                        & (dataframe["slope_30m"] < dataframe["atr14"] * 0.10)
+                        & (dataframe["slope_1h"] < dataframe["atr14"] * 0.14)
+                    )
+                    friction_aware_window = (
+                        dataframe["atr14"].between(dataframe["atr_ma50"] * 0.45, dataframe["atr_ma50"] * 2.20)
+                        & dataframe["bar_range_atr"].between(0.06, 2.55)
+                        & dataframe["body_atr"].between(0.03, 1.90)
+                        & dataframe["rvol96"].between(0.24, 4.30)
+                    )
+                    raw = (
+                        low_volatility_trend_long.fillna(False)
+                        & low_volatility_trend_pullback_reacceleration_long.fillna(False)
+                        & mtf_optional_resonance_long.fillna(False)
+                        & friction_aware_window.fillna(False)
+                        & dataframe["rsi14"].between(44, 78)
+                    )
+                    short_raw = (
+                        low_volatility_trend_short.fillna(False)
+                        & low_volatility_trend_pullback_reacceleration_short.fillna(False)
+                        & mtf_optional_resonance_short.fillna(False)
+                        & friction_aware_window.fillna(False)
+                        & dataframe["rsi14"].between(22, 56)
+                    )
+                elif "{spec.key}" == "hurst_efficiency_density_repair":
+                    hurst_density_repair_trend_long = (
+                        (dataframe["ema21"] > dataframe["ema55"])
+                        & (dataframe["ema55"] > dataframe["ema144"] - dataframe["atr14"] * 0.12)
+                        & dataframe["hurst_reacceleration_bps"].gt(0.10)
+                    )
+                    hurst_efficiency_persistence = (
+                        dataframe["hurst_efficiency_ratio_shifted"].ge(0.20)
+                        & dataframe["hurst_proxy_shifted"].between(0.42, 0.82)
+                        & dataframe["hurst_context_efficiency_ratio_shifted"].ge(0.25)
+                        & dataframe["hurst_context_trend_shifted"].fillna(False)
+                    )
+                    hurst_density_repair_reclaim_long = (
+                        dataframe["hurst_compression_pause"].fillna(False)
+                        & (dataframe["low"].shift(1) <= dataframe["ema21"].shift(1))
+                        & (dataframe["close"] > dataframe["ema21"])
+                        & (dataframe["close"] > dataframe["close"].shift(1))
+                    )
+                    dataframe["hurst_density_repair_microbreak_long"] = (
+                        dataframe["hurst_compression_pause"].fillna(False)
+                        & (dataframe["close"] > dataframe["high"].rolling(4, min_periods=2).max().shift(1))
+                        & (dataframe["low"].shift(1) <= dataframe["ema21"].shift(1))
+                    )
+                    friction_aware_window = (
+                        dataframe["atr14"].between(dataframe["atr_ma50"] * 0.45, dataframe["atr_ma50"] * 2.25)
+                        & dataframe["bar_range_atr"].between(0.08, 2.65)
+                        & dataframe["body_atr"].between(0.02, 1.95)
+                        & dataframe["rvol96"].between(0.22, 4.60)
+                    )
+                    raw = (
+                        hurst_density_repair_trend_long.fillna(False)
+                        & hurst_efficiency_persistence.fillna(False)
+                        & (
+                            hurst_density_repair_reclaim_long.fillna(False)
+                            | dataframe["hurst_density_repair_microbreak_long"].fillna(False)
+                        )
+                        & friction_aware_window.fillna(False)
+                        & dataframe["rsi14"].between(38, 78)
+                    )
+                elif "{spec.key}" == "fisher_transform_trend_rejoin":
+                    fisher_transform_trend_long = (
+                        (dataframe["ema21"] > dataframe["ema55"])
+                        & (dataframe["ema55"] > dataframe["ema144"] - dataframe["atr14"] * 0.10)
+                        & dataframe["fisher_transform_rejoin_slope_bps"].gt(0.05)
+                    )
+                    fisher_transform_rejoin_long = (
+                        dataframe["fisher_transform_value_shifted"].between(-2.25, -0.10)
+                        & dataframe["fisher_transform_turn"].ge(0.18)
+                        & dataframe["fisher_transform_pullback_depth_atr"].between(0.04, 1.80)
+                        & (dataframe["close"] > dataframe["ema21"])
+                        & (dataframe["close"] > dataframe["close"].shift(1))
+                    )
+                    fisher_mtf_slope_resonance_long = (
+                        (dataframe["slope_15m"] > -dataframe["atr14"] * 0.08)
+                        & (dataframe["slope_30m"] > -dataframe["atr14"] * 0.10)
+                        & (dataframe["slope_1h"] > -dataframe["atr14"] * 0.14)
+                    )
+                    friction_aware_window = (
+                        dataframe["atr14"].between(dataframe["atr_ma50"] * 0.45, dataframe["atr_ma50"] * 2.30)
+                        & dataframe["bar_range_atr"].between(0.06, 2.70)
+                        & dataframe["body_atr"].between(0.03, 1.95)
+                        & dataframe["rvol96"].between(0.22, 4.50)
+                    )
+                    raw = (
+                        fisher_transform_trend_long.fillna(False)
+                        & fisher_transform_rejoin_long.fillna(False)
+                        & fisher_mtf_slope_resonance_long.fillna(False)
+                        & friction_aware_window.fillna(False)
+                        & dataframe["rsi14"].between(38, 78)
+                    )
+                elif "{spec.key}" == "session_vwap_absorption_reacceleration":
+                    session_vwap_absorption_state = (
+                        dataframe["session_vwap_absorption_distance_atr"].le(0.75)
+                        & dataframe["session_vwap_absorption_compressed"].fillna(False)
+                        & dataframe["session_vwap_absorption_muted_drift_atr"].le(1.00)
+                        & dataframe["session_vwap_absorption_volume_ratio"].ge(0.45)
+                    )
+                    session_vwap_reacceleration_long = (
+                        session_vwap_absorption_state.fillna(False)
+                        & (dataframe["close"] > dataframe["session_vwap"])
+                        & (dataframe["close"] > dataframe["high"].shift(1))
+                        & dataframe["session_vwap_trigger_range_ratio"].ge(0.95)
+                        & dataframe["session_vwap_reacceleration_slope"].gt(0.00)
+                        & (dataframe["ema21"] > dataframe["ema55"] - dataframe["atr14"] * 0.14)
+                    )
+                    session_vwap_reacceleration_short = (
+                        session_vwap_absorption_state.fillna(False)
+                        & (dataframe["close"] < dataframe["session_vwap"])
+                        & (dataframe["close"] < dataframe["low"].shift(1))
+                        & dataframe["session_vwap_trigger_range_ratio"].ge(0.95)
+                        & dataframe["session_vwap_reacceleration_slope"].lt(0.00)
+                        & (dataframe["ema21"] < dataframe["ema55"] + dataframe["atr14"] * 0.14)
+                    )
+                    session_vwap_mtf_optional_resonance_long = (
+                        (dataframe["slope_15m"] > -dataframe["atr14"] * 0.08)
+                        & (dataframe["slope_30m"] > -dataframe["atr14"] * 0.10)
+                        & (dataframe["slope_1h"] > -dataframe["atr14"] * 0.14)
+                    )
+                    session_vwap_mtf_optional_resonance_short = (
+                        (dataframe["slope_15m"] < dataframe["atr14"] * 0.08)
+                        & (dataframe["slope_30m"] < dataframe["atr14"] * 0.10)
+                        & (dataframe["slope_1h"] < dataframe["atr14"] * 0.14)
+                    )
+                    friction_aware_window = (
+                        dataframe["atr14"].between(dataframe["atr_ma50"] * 0.42, dataframe["atr_ma50"] * 2.35)
+                        & dataframe["bar_range_atr"].between(0.06, 2.75)
+                        & dataframe["body_atr"].between(0.02, 2.05)
+                        & dataframe["rvol96"].between(0.20, 4.80)
+                    )
+                    raw = (
+                        session_vwap_reacceleration_long.fillna(False)
+                        & session_vwap_mtf_optional_resonance_long.fillna(False)
+                        & friction_aware_window.fillna(False)
+                        & dataframe["rsi14"].between(36, 78)
+                    )
+                    short_raw = (
+                        session_vwap_reacceleration_short.fillna(False)
+                        & session_vwap_mtf_optional_resonance_short.fillna(False)
+                        & friction_aware_window.fillna(False)
+                        & dataframe["rsi14"].between(22, 64)
+                    )
+                elif "{spec.key}" == "balance_of_power_volume_pressure_trend_acceptance_filter":
+                    bop_volume_pressure_trend_acceptance_long = (
+                        dataframe["bop_pressure_shifted"].gt(0.10)
+                        & dataframe["bop_pressure_impulse"].gt(0.035)
+                        & dataframe["bop_volume_participation"].between(0.72, 3.80)
+                        & dataframe["bop_body_acceptance"].between(0.045, 1.85)
+                        & dataframe["bop_range_efficiency"].gt(0.24)
+                    )
+                    bop_volume_pressure_trend_acceptance_short = (
+                        dataframe["bop_pressure_shifted"].lt(-0.10)
+                        & dataframe["bop_pressure_impulse"].lt(-0.035)
+                        & dataframe["bop_volume_participation"].between(0.72, 3.80)
+                        & dataframe["bop_body_acceptance"].between(0.045, 1.85)
+                        & dataframe["bop_range_efficiency"].gt(0.24)
+                    )
+                    bop_mtf_trend_acceptance_long = (
+                        (dataframe["ema21"] > dataframe["ema55"])
+                        & (dataframe["close"] > dataframe["session_vwap"] - dataframe["atr14"] * 0.25)
+                        & (dataframe["slope_15m"] > -dataframe["atr14"] * 0.06)
+                        & (dataframe["slope_30m"] > -dataframe["atr14"] * 0.09)
+                        & (dataframe["slope_1h"] > -dataframe["atr14"] * 0.14)
+                    )
+                    bop_mtf_trend_acceptance_short = (
+                        (dataframe["ema21"] < dataframe["ema55"])
+                        & (dataframe["close"] < dataframe["session_vwap"] + dataframe["atr14"] * 0.25)
+                        & (dataframe["slope_15m"] < dataframe["atr14"] * 0.06)
+                        & (dataframe["slope_30m"] < dataframe["atr14"] * 0.09)
+                        & (dataframe["slope_1h"] < dataframe["atr14"] * 0.14)
+                    )
+                    friction_aware_window = (
+                        dataframe["atr14"].between(dataframe["atr_ma50"] * 0.42, dataframe["atr_ma50"] * 2.35)
+                        & dataframe["bar_range_atr"].between(0.08, 2.75)
+                        & dataframe["body_atr"].between(0.025, 1.95)
+                        & dataframe["rvol96"].between(0.24, 4.20)
+                    )
+                    raw = (
+                        bop_volume_pressure_trend_acceptance_long.fillna(False)
+                        & bop_mtf_trend_acceptance_long.fillna(False)
+                        & friction_aware_window.fillna(False)
+                        & dataframe["rsi14"].between(42, 78)
+                    )
+                    short_raw = (
+                        bop_volume_pressure_trend_acceptance_short.fillna(False)
+                        & bop_mtf_trend_acceptance_short.fillna(False)
+                        & friction_aware_window.fillna(False)
+                        & dataframe["rsi14"].between(22, 58)
+                    )
+                elif "{spec.key}" == "polarized_fractal_efficiency_trend_acceptance":
+                    pfe_trend_acceptance_long = (
+                        dataframe["pfe_shifted"].ge(45.0)
+                        & dataframe["pfe_slope_shifted"].ge(2.0)
+                        & dataframe["pfe_lookback_return_bps_shifted"].ge(8.0)
+                        & dataframe["pfe_fast_slope_bps_shifted"].gt(0.0)
+                        & (dataframe["ema21"] > dataframe["ema55"])
+                        & dataframe["pfe_mtf_long_aligned"].ge(1)
+                    )
+                    pfe_trend_acceptance_short = (
+                        dataframe["pfe_shifted"].le(-45.0)
+                        & dataframe["pfe_slope_shifted"].le(-2.0)
+                        & dataframe["pfe_lookback_return_bps_shifted"].le(-8.0)
+                        & dataframe["pfe_fast_slope_bps_shifted"].lt(0.0)
+                        & (dataframe["ema21"] < dataframe["ema55"])
+                        & dataframe["pfe_mtf_short_aligned"].ge(1)
+                    )
+                    pfe_mtf_trend_resonance_long = (
+                        (dataframe["close"] > dataframe["session_vwap"] - dataframe["atr14"] * 0.24)
+                        & (dataframe["slope_15m"] > -dataframe["atr14"] * 0.05)
+                        & (dataframe["slope_30m"] > -dataframe["atr14"] * 0.08)
+                        & (dataframe["slope_1h"] > -dataframe["atr14"] * 0.12)
+                    )
+                    pfe_mtf_trend_resonance_short = (
+                        (dataframe["close"] < dataframe["session_vwap"] + dataframe["atr14"] * 0.24)
+                        & (dataframe["slope_15m"] < dataframe["atr14"] * 0.05)
+                        & (dataframe["slope_30m"] < dataframe["atr14"] * 0.08)
+                        & (dataframe["slope_1h"] < dataframe["atr14"] * 0.12)
+                    )
+                    friction_aware_window = (
+                        dataframe["atr14"].between(dataframe["atr_ma50"] * 0.42, dataframe["atr_ma50"] * 2.30)
+                        & dataframe["bar_range_atr"].between(0.08, 2.65)
+                        & dataframe["body_atr"].between(0.025, 1.90)
+                        & dataframe["rvol96"].between(0.24, 4.30)
+                    )
+                    raw = (
+                        pfe_trend_acceptance_long.fillna(False)
+                        & pfe_mtf_trend_resonance_long.fillna(False)
+                        & friction_aware_window.fillna(False)
+                        & dataframe["rsi14"].between(34, 78)
+                    )
+                    short_raw = (
+                        pfe_trend_acceptance_short.fillna(False)
+                        & pfe_mtf_trend_resonance_short.fillna(False)
+                        & friction_aware_window.fillna(False)
+                        & dataframe["rsi14"].between(22, 66)
+                    )
+                elif "{spec.key}" == "heikin_ashi_kama_trend_pullback_rejoin_long_quality_30m":
+                    heikin_kama_quality_rejoin_long = (
+                        dataframe["ha_trend_shifted"].gt(0.0)
+                        & dataframe["heikin_kama_slope_bps_shifted"].fillna(0.0).ge(0.0)
+                        & dataframe["heikin_kama_efficiency_shifted"].fillna(0.0).ge(0.12)
+                        & dataframe["heikin_kama_pullback_low_prev"].le(-24.0)
+                        & dataframe["heikin_kama_deviation_bps"].ge(-6.0)
+                        & dataframe["heikin_kama_mtf_long_aligned"].fillna(0).ge(1)
+                        & dataframe["atr14"].notna()
+                    )
+                    raw = heikin_kama_quality_rejoin_long.fillna(False)
+                elif "{spec.key}" == "stochastic_rsi_mtf_reacceleration_filter":
+                    stochastic_rsi_reacceleration_long = (
+                        dataframe["stochastic_rsi_k_shifted"].between(18.0, 72.0)
+                        & dataframe["stochastic_rsi_k_shifted"].gt(dataframe["stochastic_rsi_d_shifted"])
+                        & dataframe["stochastic_rsi_histogram_shifted"].gt(
+                            dataframe["stochastic_rsi_histogram_shifted"].rolling(21, min_periods=8).mean().shift(1)
+                            + 0.45
+                        )
+                        & dataframe["stochastic_rsi_k_shifted"].gt(
+                            dataframe["stochastic_rsi_k_shifted"].shift(3) + 2.20
+                        )
+                    )
+                    stochastic_rsi_reacceleration_short = (
+                        dataframe["stochastic_rsi_k_shifted"].between(28.0, 82.0)
+                        & dataframe["stochastic_rsi_k_shifted"].lt(dataframe["stochastic_rsi_d_shifted"])
+                        & dataframe["stochastic_rsi_histogram_shifted"].lt(
+                            dataframe["stochastic_rsi_histogram_shifted"].rolling(21, min_periods=8).mean().shift(1)
+                            - 0.45
+                        )
+                        & dataframe["stochastic_rsi_k_shifted"].lt(
+                            dataframe["stochastic_rsi_k_shifted"].shift(3) - 2.20
+                        )
+                    )
+                    stoch_rsi_mtf_trend_reclaim_long = (
+                        (dataframe["ema21"] > dataframe["ema55"])
+                        & (dataframe["close"] > dataframe["session_vwap"] - dataframe["atr14"] * 0.22)
+                        & (dataframe["slope_15m"] > -dataframe["atr14"] * 0.05)
+                        & (dataframe["slope_1h"] > -dataframe["atr14"] * 0.10)
+                        & (dataframe["slope_4h"] > -dataframe["atr14"] * 0.16)
+                    )
+                    stoch_rsi_mtf_trend_reclaim_short = (
+                        (dataframe["ema21"] < dataframe["ema55"])
+                        & (dataframe["close"] < dataframe["session_vwap"] + dataframe["atr14"] * 0.22)
+                        & (dataframe["slope_15m"] < dataframe["atr14"] * 0.05)
+                        & (dataframe["slope_1h"] < dataframe["atr14"] * 0.10)
+                        & (dataframe["slope_4h"] < dataframe["atr14"] * 0.16)
+                    )
+                    friction_aware_window = (
+                        dataframe["atr14"].between(dataframe["atr_ma50"] * 0.48, dataframe["atr_ma50"] * 2.30)
+                        & dataframe["bar_range_atr"].between(0.10, 2.75)
+                        & dataframe["body_atr"].between(0.03, 1.90)
+                        & dataframe["rvol96"].between(0.24, 4.40)
+                    )
+                    raw = (
+                        stochastic_rsi_reacceleration_long.fillna(False)
+                        & stoch_rsi_mtf_trend_reclaim_long.fillna(False)
+                        & friction_aware_window.fillna(False)
+                        & dataframe["rsi14"].between(34, 78)
+                    )
+                    short_raw = (
+                        stochastic_rsi_reacceleration_short.fillna(False)
+                        & stoch_rsi_mtf_trend_reclaim_short.fillna(False)
+                        & friction_aware_window.fillna(False)
+                        & dataframe["rsi14"].between(22, 66)
+                    )
+                elif "{spec.key}" == "kdj_stochastic_jline_reacceleration":
+                    kdj_jline_reacceleration_long = (
+                        dataframe["kdj_jline_shifted"].between(12.0, 98.0)
+                        & dataframe["kdj_jline_shifted"].gt(dataframe["kdj_d_shifted"] + 1.25)
+                        & dataframe["kdj_jline_delta3_shifted"].gt(2.40)
+                        & dataframe["kdj_jline_shifted"].gt(dataframe["kdj_jline_signal_shifted"] + 0.35)
+                    )
+                    kdj_jline_reacceleration_short = (
+                        dataframe["kdj_jline_shifted"].between(2.0, 88.0)
+                        & dataframe["kdj_jline_shifted"].lt(dataframe["kdj_d_shifted"] - 1.25)
+                        & dataframe["kdj_jline_delta3_shifted"].lt(-2.40)
+                        & dataframe["kdj_jline_shifted"].lt(dataframe["kdj_jline_signal_shifted"] - 0.35)
+                    )
+                    kdj_mtf_slope_resonance_long = (
+                        (dataframe["ema21"] > dataframe["ema55"])
+                        & (dataframe["close"] > dataframe["session_vwap"] - dataframe["atr14"] * 0.24)
+                        & (dataframe["slope_15m"] > -dataframe["atr14"] * 0.05)
+                        & (dataframe["slope_1h"] > -dataframe["atr14"] * 0.10)
+                        & (dataframe["slope_4h"] > -dataframe["atr14"] * 0.16)
+                    )
+                    kdj_mtf_slope_resonance_short = (
+                        (dataframe["ema21"] < dataframe["ema55"])
+                        & (dataframe["close"] < dataframe["session_vwap"] + dataframe["atr14"] * 0.24)
+                        & (dataframe["slope_15m"] < dataframe["atr14"] * 0.05)
+                        & (dataframe["slope_1h"] < dataframe["atr14"] * 0.10)
+                        & (dataframe["slope_4h"] < dataframe["atr14"] * 0.16)
+                    )
+                    friction_aware_window = (
+                        dataframe["atr14"].between(dataframe["atr_ma50"] * 0.46, dataframe["atr_ma50"] * 2.35)
+                        & dataframe["bar_range_atr"].between(0.10, 2.80)
+                        & dataframe["body_atr"].between(0.03, 1.95)
+                        & dataframe["rvol96"].between(0.24, 4.45)
+                    )
+                    raw = (
+                        kdj_jline_reacceleration_long.fillna(False)
+                        & kdj_mtf_slope_resonance_long.fillna(False)
+                        & friction_aware_window.fillna(False)
+                        & dataframe["rsi14"].between(33, 79)
+                    )
+                    short_raw = (
+                        kdj_jline_reacceleration_short.fillna(False)
+                        & kdj_mtf_slope_resonance_short.fillna(False)
+                        & friction_aware_window.fillna(False)
+                        & dataframe["rsi14"].between(21, 67)
+                    )
+                elif "{spec.key}" == "score_driven_gas_state_admission_filter":
+                    score_driven_parent_admission_long = (
+                        dataframe["gas_location_score"].between(0.05, 18.0)
+                        & dataframe["gas_location_drift"].between(-0.85, 6.50)
+                        & dataframe["gas_scale_expansion"].between(0.42, 2.45)
+                        & dataframe["gas_tail_pressure"].between(0.18, 2.85)
+                        & (dataframe["ema21"] > dataframe["ema55"])
+                        & (dataframe["close"] > dataframe["session_vwap"])
+                        & (dataframe["slope_15m"] > -dataframe["atr14"] * 0.08)
+                        & (dataframe["slope_1h"] > -dataframe["atr14"] * 0.14)
+                    )
+                    score_driven_parent_admission_short = (
+                        dataframe["gas_location_score"].between(-18.0, -0.05)
+                        & dataframe["gas_location_drift"].between(-6.50, 0.85)
+                        & dataframe["gas_scale_expansion"].between(0.42, 2.45)
+                        & dataframe["gas_tail_pressure"].between(0.18, 2.85)
+                        & (dataframe["ema21"] < dataframe["ema55"])
+                        & (dataframe["close"] < dataframe["session_vwap"])
+                        & (dataframe["slope_15m"] < dataframe["atr14"] * 0.08)
+                        & (dataframe["slope_1h"] < dataframe["atr14"] * 0.14)
+                    )
+                    friction_aware_window = (
+                        dataframe["atr14"].between(dataframe["atr_ma50"] * 0.50, dataframe["atr_ma50"] * 2.35)
+                        & dataframe["bar_range_atr"].between(0.10, 2.80)
+                        & dataframe["body_atr"].between(0.03, 1.90)
+                        & dataframe["rvol96"].between(0.25, 4.45)
+                    )
+                    gas_tail_risk_veto_long = (
+                        dataframe["gas_standardized_score"].lt(-3.20)
+                        | dataframe["gas_tail_pressure"].gt(3.20)
+                        | dataframe["gas_scale_expansion"].gt(2.85)
+                        | dataframe["rsi14"].gt(82)
+                    )
+                    gas_tail_risk_veto_short = (
+                        dataframe["gas_standardized_score"].gt(3.20)
+                        | dataframe["gas_tail_pressure"].gt(3.20)
+                        | dataframe["gas_scale_expansion"].gt(2.85)
+                        | dataframe["rsi14"].lt(18)
+                    )
+                    raw = (
+                        score_driven_parent_admission_long.fillna(False)
+                        & friction_aware_window.fillna(False)
+                        & dataframe["rsi14"].between(44, 76)
+                        & ~gas_tail_risk_veto_long.fillna(False)
+                    )
+                    short_raw = (
+                        score_driven_parent_admission_short.fillna(False)
+                        & friction_aware_window.fillna(False)
+                        & dataframe["rsi14"].between(24, 56)
+                        & ~gas_tail_risk_veto_short.fillna(False)
+                    )
+                elif "{spec.key}" in (
+                    "event_duration_liquidity_clock_trend_filter",
+                    "trendexpansion_event_duration_liquidity_clock",
+                ):
+                    event_duration_parent_admission_long = (
+                        dataframe["event_clock_trend_participation"].fillna(False)
+                        & ~dataframe["event_clock_burst_state"].fillna(False)
+                        & ~dataframe["event_clock_dead_state"].fillna(False)
+                        & (dataframe["ema21"] > dataframe["ema55"])
+                        & (dataframe["close"] > dataframe["session_vwap"])
+                        & (dataframe["close"] > dataframe["ema21"] - dataframe["atr14"] * 0.16)
+                        & (dataframe["slope_5m"] > -dataframe["atr14"] * 0.04)
+                        & (dataframe["slope_15m"] > -dataframe["atr14"] * 0.06)
+                        & (dataframe["slope_1h"] > -dataframe["atr14"] * 0.12)
+                    )
+                    event_duration_parent_admission_short = (
+                        dataframe["event_clock_trend_participation"].fillna(False)
+                        & ~dataframe["event_clock_burst_state"].fillna(False)
+                        & ~dataframe["event_clock_dead_state"].fillna(False)
+                        & (dataframe["ema21"] < dataframe["ema55"])
+                        & (dataframe["close"] < dataframe["session_vwap"])
+                        & (dataframe["close"] < dataframe["ema21"] + dataframe["atr14"] * 0.16)
+                        & (dataframe["slope_5m"] < dataframe["atr14"] * 0.04)
+                        & (dataframe["slope_15m"] < dataframe["atr14"] * 0.06)
+                        & (dataframe["slope_1h"] < dataframe["atr14"] * 0.12)
+                    )
+                    friction_aware_window = (
+                        dataframe["atr14"].between(dataframe["atr_ma50"] * 0.52, dataframe["atr_ma50"] * 2.25)
+                        & dataframe["bar_range_atr"].between(0.10, 2.75)
+                        & dataframe["body_atr"].between(0.04, 1.95)
+                        & dataframe["rvol96"].between(0.30, 4.60)
+                    )
+                    event_clock_exhaustion_veto_long = (
+                        dataframe["event_clock_compression_ratio"].lt(0.22)
+                        | dataframe["event_duration_liquidity_clock"].gt(4.30)
+                        | dataframe["bar_range_atr"].gt(3.05)
+                        | dataframe["rsi14"].gt(82)
+                    )
+                    event_clock_exhaustion_veto_short = (
+                        dataframe["event_clock_compression_ratio"].lt(0.22)
+                        | dataframe["event_duration_liquidity_clock"].gt(4.30)
+                        | dataframe["bar_range_atr"].gt(3.05)
+                        | dataframe["rsi14"].lt(18)
+                    )
+                    raw = (
+                        event_duration_parent_admission_long.fillna(False)
+                        & friction_aware_window.fillna(False)
+                        & dataframe["rsi14"].between(44, 76)
+                        & ~event_clock_exhaustion_veto_long.fillna(False)
+                    )
+                    short_raw = (
+                        event_duration_parent_admission_short.fillna(False)
+                        & friction_aware_window.fillna(False)
+                        & dataframe["rsi14"].between(24, 56)
+                        & ~event_clock_exhaustion_veto_short.fillna(False)
+                    )
+                elif "{spec.key}" == "renko_price_brick_reacceleration_filter":
+                    renko_parent_admission_long = (
+                        dataframe["renko_brick_reacceleration_long"].fillna(False)
+                        & ~dataframe["renko_brick_churn_veto"].fillna(False)
+                        & dataframe["renko_price_brick_direction"].eq(1)
+                        & (dataframe["ema21"] > dataframe["ema55"])
+                        & (dataframe["close"] > dataframe["session_vwap"] - dataframe["atr14"] * 0.20)
+                        & (dataframe["slope_15m"] > -dataframe["atr14"] * 0.06)
+                        & (dataframe["slope_1h"] > -dataframe["atr14"] * 0.12)
+                    )
+                    renko_parent_admission_short = (
+                        dataframe["renko_brick_reacceleration_short"].fillna(False)
+                        & ~dataframe["renko_brick_churn_veto"].fillna(False)
+                        & dataframe["renko_price_brick_direction"].eq(-1)
+                        & (dataframe["ema21"] < dataframe["ema55"])
+                        & (dataframe["close"] < dataframe["session_vwap"] + dataframe["atr14"] * 0.20)
+                        & (dataframe["slope_15m"] < dataframe["atr14"] * 0.06)
+                        & (dataframe["slope_1h"] < dataframe["atr14"] * 0.12)
+                    )
+                    friction_aware_window = (
+                        dataframe["atr14"].between(dataframe["atr_ma50"] * 0.48, dataframe["atr_ma50"] * 2.35)
+                        & dataframe["bar_range_atr"].between(0.10, 2.85)
+                        & dataframe["body_atr"].between(0.03, 1.95)
+                        & dataframe["rvol96"].between(0.25, 4.60)
+                    )
+                    renko_overextension_veto_long = (
+                        dataframe["renko_price_brick_run_length"].gt(9)
+                        | dataframe["renko_price_brick_extension_ratio"].gt(2.65)
+                        | dataframe["rsi14"].gt(82)
+                    )
+                    renko_overextension_veto_short = (
+                        dataframe["renko_price_brick_run_length"].gt(9)
+                        | dataframe["renko_price_brick_extension_ratio"].gt(2.65)
+                        | dataframe["rsi14"].lt(18)
+                    )
+                    raw = (
+                        renko_parent_admission_long.fillna(False)
+                        & friction_aware_window.fillna(False)
+                        & dataframe["rsi14"].between(42, 76)
+                        & ~renko_overextension_veto_long.fillna(False)
+                    )
+                    short_raw = (
+                        renko_parent_admission_short.fillna(False)
+                        & friction_aware_window.fillna(False)
+                        & dataframe["rsi14"].between(24, 58)
+                        & ~renko_overextension_veto_short.fillna(False)
+                    )
+                elif "{spec.key}" == "candlestick_pattern_context_reliability_gate":
+                    pattern_long = (
+                        dataframe["bullish_engulfing_shifted"].fillna(False)
+                        | dataframe["bullish_marubozu_shifted"].fillna(False)
+                    )
+                    pattern_short = (
+                        dataframe["bearish_engulfing_shifted"].fillna(False)
+                        | dataframe["bearish_marubozu_shifted"].fillna(False)
+                    )
+                    context_reliable = (
+                        dataframe["candlestick_pattern_strength_shifted"].between(0.18, 2.85)
+                        & ~dataframe["candlestick_pattern_uncertain"].fillna(False)
+                        & dataframe["bar_range_atr"].between(0.10, 2.90)
+                        & dataframe["body_atr"].between(0.04, 1.95)
+                        & dataframe["rvol96"].between(0.35, 4.80)
+                    )
+                    candlestick_context_reliability_long = (
+                        pattern_long
+                        & context_reliable.fillna(False)
+                        & (dataframe["ema21"] > dataframe["ema55"])
+                        & (dataframe["close"] > dataframe["session_vwap"] - dataframe["atr14"] * 0.16)
+                        & (dataframe["slope_5m"] > -dataframe["atr14"] * 0.04)
+                        & (dataframe["slope_15m"] > -dataframe["atr14"] * 0.07)
+                        & (dataframe["slope_1h"] > -dataframe["atr14"] * 0.14)
+                    )
+                    candlestick_context_reliability_short = (
+                        pattern_short
+                        & context_reliable.fillna(False)
+                        & (dataframe["ema21"] < dataframe["ema55"])
+                        & (dataframe["close"] < dataframe["session_vwap"] + dataframe["atr14"] * 0.16)
+                        & (dataframe["slope_5m"] < dataframe["atr14"] * 0.04)
+                        & (dataframe["slope_15m"] < dataframe["atr14"] * 0.07)
+                        & (dataframe["slope_1h"] < dataframe["atr14"] * 0.14)
+                    )
+                    raw = (
+                        candlestick_context_reliability_long.fillna(False)
+                        & dataframe["rsi14"].between(42, 76)
+                    )
+                    short_raw = (
+                        candlestick_context_reliability_short.fillna(False)
+                        & dataframe["rsi14"].between(24, 58)
+                    )
+                elif "{spec.key}" == "state_space_slope_dispersion_trend_hold":
+                    state_price = dataframe["close"].ewm(span=34, adjust=False, min_periods=20).mean()
+                    state_slope_bps = state_price.diff(8) / dataframe["close"].replace(0, np.nan) * 10000.0
+                    state_slope_persistence = (
+                        state_slope_bps.rolling(5).mean().between(1.2, 18.0)
+                        & state_slope_bps.gt(state_slope_bps.shift(16) * 0.45)
+                    )
+                    residual = dataframe["close"] - state_price
+                    residual_dispersion = residual.abs().rolling(34).mean() / dataframe["atr14"].clip(lower=0.01)
+                    residual_dispersion_expansion = (
+                        residual_dispersion.between(0.22, 2.35)
+                        & residual_dispersion.gt(residual_dispersion.rolling(55).median() * 1.05)
+                    )
+                    mtf_trend_breadth_confirmation = (
+                        (dataframe["slope_5m"] > 0)
+                        & (dataframe["slope_15m"] > 0)
+                        & (dataframe["slope_30m"] > -dataframe["atr14"] * 0.10)
+                        & (dataframe["slope_1h"] > -dataframe["atr14"] * 0.08)
+                    )
+                    low_turnover_atr_hold = (
+                        dataframe["atr14"].between(dataframe["atr_ma50"] * 0.55, dataframe["atr_ma50"] * 1.85)
+                        & dataframe["bar_range_atr"].between(0.08, 2.55)
+                        & dataframe["body_atr"].between(0.04, 1.65)
+                        & dataframe["rvol96"].between(0.30, 3.80)
+                    )
+                    exhaustion_veto = (
+                        dataframe["rsi14"].gt(80)
+                        | (dataframe["close"] > dataframe["ema21"] + dataframe["atr14"] * 3.2)
+                        | (dataframe["slope_4h"] < -dataframe["atr14"] * 0.16)
+                        | (dataframe["slope_1d"] < -dataframe["atr14"] * 0.10)
+                    )
+                    raw = (
+                        state_slope_persistence.fillna(False)
+                        & residual_dispersion_expansion.fillna(False)
+                        & mtf_trend_breadth_confirmation.fillna(False)
+                        & low_turnover_atr_hold.fillna(False)
+                        & (dataframe["ema55"] > dataframe["ema144"])
+                        & (dataframe["close"] > dataframe["ema55"])
+                        & dataframe["rsi14"].between(48, 76)
+                        & ~exhaustion_veto.fillna(False)
+                    )
+                elif "{spec.key}" == "gsadf_explosive_trend_breakout":
+                    explosive_trend_slope_acceleration = (
+                        dataframe["explosive_slope_bps_48"].between(0.55, 18.0)
+                        & dataframe["explosive_slope_bps_144"].gt(-0.35)
+                        & dataframe["explosive_trend_slope_acceleration"].between(0.05, 9.5)
+                    )
+                    adf_like_residual_persistence = (
+                        dataframe["adf_like_residual_persistence"].between(0.50, 0.96)
+                        & (dataframe["close"] > dataframe["ema55"])
+                    )
+                    mtf_slope_confirmation = (
+                        (dataframe["slope_5m"] > -dataframe["atr14"] * 0.04)
+                        & (dataframe["slope_15m"] > -dataframe["atr14"] * 0.06)
+                        & (dataframe["slope_30m"] > -dataframe["atr14"] * 0.08)
+                        & (dataframe["slope_1h"] > -dataframe["atr14"] * 0.10)
+                        & (dataframe["slope_4h"] > -dataframe["atr14"] * 0.16)
+                    )
+                    friction_aware_atr_hold = (
+                        dataframe["atr14"].between(dataframe["atr_ma50"] * 0.55, dataframe["atr_ma50"] * 2.15)
+                        & dataframe["bar_range_atr"].between(0.10, 2.85)
+                        & dataframe["body_atr"].between(0.04, 1.95)
+                        & dataframe["rvol96"].between(0.30, 4.20)
+                    )
+                    exhaustion_veto = (
+                        dataframe["rsi14"].gt(82)
+                        | (dataframe["close"] > dataframe["ema21"] + dataframe["atr14"] * 3.3)
+                        | (dataframe["slope_4h"] < -dataframe["atr14"] * 0.18)
+                        | (dataframe["slope_1d"] < -dataframe["atr14"] * 0.12)
+                    )
+                    raw = (
+                        explosive_trend_slope_acceleration.fillna(False)
+                        & adf_like_residual_persistence.fillna(False)
+                        & mtf_slope_confirmation.fillna(False)
+                        & friction_aware_atr_hold.fillna(False)
+                        & (dataframe["ema21"] > dataframe["ema55"])
+                        & (dataframe["close"] > dataframe["ema21"])
+                        & dataframe["rsi14"].between(48, 78)
+                        & ~exhaustion_veto.fillna(False)
+                    )
+                elif "{spec.key}" == "variance_ratio_serial_correlation_trend_hold":
+                    variance_ratio_persistence = (
+                        dataframe["variance_ratio_4"].between(1.02, 1.85)
+                        & dataframe["variance_ratio_16"].between(1.01, 1.75)
+                        & dataframe["variance_ratio_4"].gt(dataframe["variance_ratio_4"].rolling(55).median() * 0.98)
+                    )
+                    positive_serial_correlation_trend_hold = (
+                        dataframe["serial_corr_12"].between(0.04, 0.55)
+                        & dataframe["serial_corr_48"].gt(-0.02)
+                        & dataframe["ema21_slope_bps_12"].between(0.35, 18.0)
+                        & dataframe["ema55_slope_bps_48"].gt(-0.20)
+                    )
+                    mtf_momentum_confirmation = (
+                        (dataframe["slope_5m"] > -dataframe["atr14"] * 0.04)
+                        & (dataframe["slope_15m"] > -dataframe["atr14"] * 0.06)
+                        & (dataframe["slope_30m"] > -dataframe["atr14"] * 0.08)
+                        & (dataframe["slope_1h"] > -dataframe["atr14"] * 0.10)
+                        & (dataframe["slope_4h"] > -dataframe["atr14"] * 0.16)
+                    )
+                    friction_aware_atr_hold = (
+                        dataframe["atr14"].between(dataframe["atr_ma50"] * 0.52, dataframe["atr_ma50"] * 2.05)
+                        & dataframe["bar_range_atr"].between(0.10, 2.70)
+                        & dataframe["body_atr"].between(0.04, 1.85)
+                        & dataframe["rvol96"].between(0.30, 4.10)
+                    )
+                    exhaustion_veto = (
+                        dataframe["rsi14"].gt(82)
+                        | (dataframe["close"] > dataframe["ema21"] + dataframe["atr14"] * 3.1)
+                        | (dataframe["slope_4h"] < -dataframe["atr14"] * 0.18)
+                        | (dataframe["variance_ratio_4"] < 0.92)
+                    )
+                    raw = (
+                        variance_ratio_persistence.fillna(False)
+                        & positive_serial_correlation_trend_hold.fillna(False)
+                        & mtf_momentum_confirmation.fillna(False)
+                        & friction_aware_atr_hold.fillna(False)
+                        & (dataframe["ema21"] > dataframe["ema55"])
+                        & (dataframe["close"] > dataframe["ema21"])
+                        & dataframe["rsi14"].between(46, 78)
+                        & ~exhaustion_veto.fillna(False)
+                    )
+                elif "{spec.key}" == "teager_kaiser_energy_impulse_trend_gate":
+                    return_series = dataframe["close"].pct_change().replace([np.inf, -np.inf], np.nan)
+                    teager_kaiser_energy_impulse = (
+                        return_series.shift(1).pow(2) - return_series.shift(2) * return_series
+                    ).abs()
+                    energy_reference = teager_kaiser_energy_impulse.rolling(144, min_periods=55).median().shift(1)
+                    energy_scale = teager_kaiser_energy_impulse.rolling(144, min_periods=55).std().shift(1).replace(0, np.nan)
+                    energy_impulse_z = (teager_kaiser_energy_impulse - energy_reference) / energy_scale
+                    energy_impulse_persistence = (
+                        energy_impulse_z.between(0.18, 2.65)
+                        & energy_impulse_z.rolling(8, min_periods=3).mean().gt(
+                            energy_impulse_z.rolling(55, min_periods=21).median().shift(1) * 0.92
+                        )
+                        & dataframe["ema21_slope_bps_12"].between(0.24, 18.0)
+                        & dataframe["ema55_slope_bps_48"].gt(-0.24)
+                    )
+                    mtf_trend_resonance = (
+                        (dataframe["slope_5m"] > -dataframe["atr14"] * 0.04)
+                        & (dataframe["slope_15m"] > -dataframe["atr14"] * 0.06)
+                        & (dataframe["slope_30m"] > -dataframe["atr14"] * 0.08)
+                        & (dataframe["slope_1h"] > -dataframe["atr14"] * 0.10)
+                        & (dataframe["slope_4h"] > -dataframe["atr14"] * 0.16)
+                    )
+                    friction_aware_atr_hold = (
+                        dataframe["atr14"].between(dataframe["atr_ma50"] * 0.52, dataframe["atr_ma50"] * 2.08)
+                        & dataframe["bar_range_atr"].between(0.10, 2.75)
+                        & dataframe["body_atr"].between(0.04, 1.88)
+                        & dataframe["rvol96"].between(0.30, 4.15)
+                    )
+                    energy_climax_veto = (
+                        dataframe["rsi14"].gt(82)
+                        | energy_impulse_z.gt(3.80)
+                        | (dataframe["close"] > dataframe["ema21"] + dataframe["atr14"] * 3.1)
+                        | (dataframe["slope_4h"] < -dataframe["atr14"] * 0.18)
+                    )
+                    raw = (
+                        energy_impulse_persistence.fillna(False)
+                        & mtf_trend_resonance.fillna(False)
+                        & friction_aware_atr_hold.fillna(False)
+                        & (dataframe["ema21"] > dataframe["ema55"])
+                        & (dataframe["close"] > dataframe["ema21"])
+                        & dataframe["rsi14"].between(46, 78)
+                        & ~energy_climax_veto.fillna(False)
+                    )
+                elif "{spec.key}" == "volatility_managed_trend_size_gate":
+                    completed_return = dataframe["close"].pct_change().shift(1).replace([np.inf, -np.inf], np.nan)
+                    realized_volatility_state = completed_return.rolling(96, min_periods=34).std()
+                    realized_volatility_reference = realized_volatility_state.rolling(377, min_periods=144).median().shift(1)
+                    realized_volatility_scale = realized_volatility_state.rolling(377, min_periods=144).std().shift(1).replace(0, np.nan)
+                    realized_volatility_z = (realized_volatility_state - realized_volatility_reference) / realized_volatility_scale
+                    realized_volatility_throttle = (
+                        realized_volatility_state.gt(0)
+                        & realized_volatility_state.le(realized_volatility_reference.fillna(realized_volatility_state) * 1.85)
+                        & realized_volatility_z.fillna(0.0).between(-1.15, 1.90)
+                        & dataframe["atr14"].between(dataframe["atr_ma50"] * 0.48, dataframe["atr_ma50"] * 2.15)
+                    )
+                    volatility_stress_veto = (
+                        realized_volatility_z.gt(2.35)
+                        | dataframe["bar_range_atr"].gt(3.05)
+                        | dataframe["rvol96"].gt(5.25)
+                        | dataframe["body_atr"].gt(2.15)
+                    )
+                    parent_trend_signal_survives = (
+                        (dataframe["ema21"] > dataframe["ema55"])
+                        & (dataframe["close"] > dataframe["ema21"] - dataframe["atr14"] * 0.12)
+                        & (dataframe["close"] > dataframe["session_vwap"] - dataframe["atr14"] * 0.18)
+                        & (dataframe["slope_5m"] > -dataframe["atr14"] * 0.04)
+                        & (dataframe["slope_15m"] > -dataframe["atr14"] * 0.06)
+                        & (dataframe["slope_1h"] > -dataframe["atr14"] * 0.12)
+                    )
+                    parent_trend_signal_survives_short = (
+                        (dataframe["ema21"] < dataframe["ema55"])
+                        & (dataframe["close"] < dataframe["ema21"] + dataframe["atr14"] * 0.12)
+                        & (dataframe["close"] < dataframe["session_vwap"] + dataframe["atr14"] * 0.18)
+                        & (dataframe["slope_5m"] < dataframe["atr14"] * 0.04)
+                        & (dataframe["slope_15m"] < dataframe["atr14"] * 0.06)
+                        & (dataframe["slope_1h"] < dataframe["atr14"] * 0.12)
+                    )
+                    raw = (
+                        parent_trend_signal_survives.fillna(False)
+                        & realized_volatility_throttle.fillna(False)
+                        & dataframe["rsi14"].between(44, 78)
+                        & ~volatility_stress_veto.fillna(False)
+                    )
+                    short_raw = (
+                        parent_trend_signal_survives_short.fillna(False)
+                        & realized_volatility_throttle.fillna(False)
+                        & dataframe["rsi14"].between(22, 56)
+                        & ~volatility_stress_veto.fillna(False)
+                    )
+                elif "{spec.key}" == "mann_kendall_theil_sen_trend_gate":
+                    mann_kendall_persistence = (
+                        dataframe["mann_kendall_rank_corr_55"].between(0.22, 0.96)
+                        & dataframe["mann_kendall_rank_corr_89"].gt(0.10)
+                        & dataframe["mann_kendall_rank_corr_55"].gt(dataframe["mann_kendall_rank_corr_55"].rolling(55).median() * 0.96)
+                    )
+                    theil_sen_slope_confirmation = (
+                        dataframe["theil_sen_robust_slope_bps"].between(0.28, 16.0)
+                        & dataframe["theil_sen_slope_consistency"].ge(0.75)
+                        & dataframe["ema55_slope_bps_48"].gt(-0.22)
+                    )
+                    mtf_monotone_trend_confirmation = (
+                        (dataframe["slope_5m"] > -dataframe["atr14"] * 0.04)
+                        & (dataframe["slope_15m"] > -dataframe["atr14"] * 0.06)
+                        & (dataframe["slope_30m"] > -dataframe["atr14"] * 0.08)
+                        & (dataframe["slope_1h"] > -dataframe["atr14"] * 0.10)
+                        & (dataframe["slope_4h"] > -dataframe["atr14"] * 0.16)
+                    )
+                    friction_aware_atr_hold = (
+                        dataframe["atr14"].between(dataframe["atr_ma50"] * 0.52, dataframe["atr_ma50"] * 2.00)
+                        & dataframe["bar_range_atr"].between(0.10, 2.65)
+                        & dataframe["body_atr"].between(0.04, 1.80)
+                        & dataframe["rvol96"].between(0.30, 4.00)
+                    )
+                    exhaustion_veto = (
+                        dataframe["rsi14"].gt(82)
+                        | (dataframe["close"] > dataframe["ema21"] + dataframe["atr14"] * 3.0)
+                        | (dataframe["slope_4h"] < -dataframe["atr14"] * 0.18)
+                        | dataframe["mann_kendall_rank_corr_55"].lt(-0.05)
+                    )
+                    raw = (
+                        mann_kendall_persistence.fillna(False)
+                        & theil_sen_slope_confirmation.fillna(False)
+                        & mtf_monotone_trend_confirmation.fillna(False)
+                        & friction_aware_atr_hold.fillna(False)
+                        & (dataframe["ema21"] > dataframe["ema55"])
+                        & (dataframe["close"] > dataframe["ema21"])
+                        & dataframe["rsi14"].between(46, 78)
+                        & ~exhaustion_veto.fillna(False)
+                    )
+                elif "{spec.key}" == "quantile_regression_trend_asymmetry_gate":
+                    quantile_regression_trend_asymmetry_long = (
+                        dataframe["quantile_median_slope_bps"].between(0.04, 5.5)
+                        & dataframe["quantile_upper_slope_bps"].between(0.02, 8.5)
+                        & dataframe["quantile_lower_slope_bps"].gt(-3.2)
+                        & dataframe["quantile_tail_slope_asymmetry"].between(-1.2, 9.0)
+                    )
+                    mtf_distributional_slope_confirmation = (
+                        (dataframe["slope_5m"] > -dataframe["atr14"] * 0.04)
+                        & (dataframe["slope_15m"] > -dataframe["atr14"] * 0.06)
+                        & (dataframe["slope_30m"] > -dataframe["atr14"] * 0.08)
+                        & (dataframe["slope_1h"] > -dataframe["atr14"] * 0.10)
+                        & (dataframe["slope_4h"] > -dataframe["atr14"] * 0.16)
+                    )
+                    friction_aware_atr_hold = (
+                        dataframe["atr14"].between(dataframe["atr_ma50"] * 0.52, dataframe["atr_ma50"] * 2.05)
+                        & dataframe["bar_range_atr"].between(0.10, 2.70)
+                        & dataframe["body_atr"].between(0.04, 1.85)
+                        & dataframe["rvol96"].between(0.30, 4.05)
+                    )
+                    adverse_tail_veto = (
+                        dataframe["rsi14"].gt(82)
+                        | (dataframe["close"] > dataframe["ema21"] + dataframe["atr14"] * 3.0)
+                        | dataframe["quantile_lower_slope_bps"].lt(-4.8)
+                        | dataframe["quantile_tail_slope_asymmetry"].lt(-2.0)
+                        | (dataframe["slope_4h"] < -dataframe["atr14"] * 0.18)
+                    )
+                    raw = (
+                        quantile_regression_trend_asymmetry_long.fillna(False)
+                        & mtf_distributional_slope_confirmation.fillna(False)
+                        & friction_aware_atr_hold.fillna(False)
+                        & (dataframe["ema21"] > dataframe["ema55"])
+                        & (dataframe["close"] > dataframe["ema21"])
+                        & dataframe["rsi14"].between(46, 78)
+                        & ~adverse_tail_veto.fillna(False)
+                    )
+                elif "{spec.key}" == "median_price_envelope_reacceleration_filter":
+                    median_price_envelope_reacceleration_long = (
+                        dataframe["median_price_envelope_center_slope_bps"].between(0.18, 14.5)
+                        & dataframe["median_price_envelope_displacement"].between(-0.22, 1.85)
+                        & dataframe["median_price_envelope_reacceleration"].between(0.04, 1.60)
+                        & dataframe["median_price_envelope_width"].between(0.12, 2.40)
+                    )
+                    mtf_median_envelope_confirmation = (
+                        (dataframe["slope_5m"] > -dataframe["atr14"] * 0.04)
+                        & (dataframe["slope_15m"] > -dataframe["atr14"] * 0.06)
+                        & (dataframe["slope_30m"] > -dataframe["atr14"] * 0.08)
+                        & (dataframe["slope_1h"] > -dataframe["atr14"] * 0.10)
+                        & (dataframe["slope_4h"] > -dataframe["atr14"] * 0.16)
+                    )
+                    friction_aware_atr_hold = (
+                        dataframe["atr14"].between(dataframe["atr_ma50"] * 0.52, dataframe["atr_ma50"] * 2.02)
+                        & dataframe["bar_range_atr"].between(0.10, 2.68)
+                        & dataframe["body_atr"].between(0.04, 1.82)
+                        & dataframe["rvol96"].between(0.30, 4.00)
+                    )
+                    median_envelope_failure_veto = (
+                        dataframe["rsi14"].gt(82)
+                        | (dataframe["close"] < dataframe["median_price_envelope_center"] - dataframe["atr14"] * 0.65)
+                        | dataframe["median_price_envelope_reacceleration"].lt(-0.35)
+                        | (dataframe["slope_4h"] < -dataframe["atr14"] * 0.18)
+                    )
+                    raw = (
+                        median_price_envelope_reacceleration_long.fillna(False)
+                        & mtf_median_envelope_confirmation.fillna(False)
+                        & friction_aware_atr_hold.fillna(False)
+                        & (dataframe["ema21"] > dataframe["ema55"])
+                        & (dataframe["close"] > dataframe["median_price_envelope_center"] - dataframe["atr14"] * 0.18)
+                        & dataframe["rsi14"].between(44, 78)
+                        & ~median_envelope_failure_veto.fillna(False)
+                    )
+                elif "{spec.key}" == "emd_imf_trend_residual_gate":
+                    emd_imf_trend_residual_agreement = dataframe["emd_imf_trend_residual_agreement"]
+                    mtf_residual_energy_veto = (
+                        dataframe["emd_imf_energy_ratio"].gt(3.20)
+                        | dataframe["emd_imf_residual_slope_bps"].lt(-0.32)
+                        | (dataframe["slope_4h"] < -dataframe["atr14"] * 0.18)
+                    )
+                    friction_aware_atr_hold = (
+                        dataframe["atr14"].between(dataframe["atr_ma50"] * 0.52, dataframe["atr_ma50"] * 2.05)
+                        & dataframe["bar_range_atr"].between(0.10, 2.70)
+                        & dataframe["body_atr"].between(0.04, 1.85)
+                        & dataframe["rvol96"].between(0.30, 4.05)
+                    )
+                    raw = (
+                        emd_imf_trend_residual_agreement.fillna(False)
+                        & ~mtf_residual_energy_veto.fillna(False)
+                        & friction_aware_atr_hold.fillna(False)
+                        & (dataframe["ema21"] > dataframe["ema55"])
+                        & (dataframe["close"] > dataframe["ema21"])
+                        & (dataframe["close"] > dataframe["session_vwap"] - dataframe["atr14"] * 0.22)
+                        & dataframe["rsi14"].between(46, 78)
+                    )
+                elif "{spec.key}" == "unit_root_stationarity_mode_switch_gate":
+                    stationary_mode_ok = (
+                        dataframe["pp_adf_unit_root_proxy"].between(-0.10, 0.82)
+                        & dataframe["kpss_stationarity_proxy"].between(0.25, 1.85)
+                    )
+                    stationarity_mode_parent_admission_long = (
+                        stationary_mode_ok.fillna(False)
+                        & dataframe["df_gls_detrended_slope"].gt(-0.22)
+                        & (dataframe["ema21"] > dataframe["ema55"])
+                        & (dataframe["close"] > dataframe["session_vwap"])
+                        & (dataframe["slope_15m"] > -dataframe["atr14"] * 0.08)
+                        & (dataframe["slope_1h"] > -dataframe["atr14"] * 0.14)
+                    )
+                    stationarity_mode_parent_admission_short = (
+                        stationary_mode_ok.fillna(False)
+                        & dataframe["df_gls_detrended_slope"].lt(0.22)
+                        & (dataframe["ema21"] < dataframe["ema55"])
+                        & (dataframe["close"] < dataframe["session_vwap"])
+                        & (dataframe["slope_15m"] < dataframe["atr14"] * 0.08)
+                        & (dataframe["slope_1h"] < dataframe["atr14"] * 0.14)
+                    )
+                    friction_aware_window = (
+                        dataframe["atr14"].between(dataframe["atr_ma50"] * 0.50, dataframe["atr_ma50"] * 2.35)
+                        & dataframe["bar_range_atr"].between(0.10, 2.75)
+                        & dataframe["body_atr"].between(0.03, 1.90)
+                        & dataframe["rvol96"].between(0.25, 4.50)
+                    )
+                    raw = (
+                        stationarity_mode_parent_admission_long.fillna(False)
+                        & friction_aware_window.fillna(False)
+                        & dataframe["rsi14"].between(44, 76)
+                    )
+                    short_raw = (
+                        stationarity_mode_parent_admission_short.fillna(False)
+                        & friction_aware_window.fillna(False)
+                        & dataframe["rsi14"].between(24, 56)
+                    )
+                elif "{spec.key}" == "swing_leg_duration_amplitude_asymmetry_filter":
+                    ordered_swing_regime_long = (
+                        (dataframe["ema21"] > dataframe["ema55"])
+                        & (dataframe["ema55"] > dataframe["ema144"])
+                        & (dataframe["slope_30m"] > -dataframe["atr14"] * 0.08)
+                        & (dataframe["slope_1h"] > -dataframe["atr14"] * 0.12)
+                    )
+                    ordered_swing_regime_short = (
+                        (dataframe["ema21"] < dataframe["ema55"])
+                        & (dataframe["ema55"] < dataframe["ema144"])
+                        & (dataframe["slope_30m"] < dataframe["atr14"] * 0.08)
+                        & (dataframe["slope_1h"] < dataframe["atr14"] * 0.12)
+                    )
+                    swing_leg_duration_amplitude_asymmetry_long = (
+                        dataframe["swing_leg_amplitude_ratio"].between(1.08, 3.20)
+                        & dataframe["swing_leg_velocity_ratio"].between(1.03, 3.80)
+                        & dataframe["swing_leg_duration_ratio"].between(0.45, 2.20)
+                        & dataframe["swing_leg_pullback_contained"].between(0.12, 2.30)
+                        & (dataframe["close"] > dataframe["swing_leg_midpoint"])
+                        & (dataframe["close"] > dataframe["ema21"])
+                        & (dataframe["close"] > dataframe["session_vwap"] - dataframe["atr14"] * 0.18)
+                    )
+                    swing_leg_duration_amplitude_asymmetry_short = (
+                        dataframe["swing_leg_amplitude_ratio"].between(0.18, 0.92)
+                        & dataframe["swing_leg_velocity_ratio"].between(0.16, 0.97)
+                        & dataframe["swing_leg_duration_ratio"].between(0.45, 2.20)
+                        & dataframe["swing_leg_pullback_contained"].between(0.12, 2.30)
+                        & (dataframe["close"] < dataframe["swing_leg_midpoint"])
+                        & (dataframe["close"] < dataframe["ema21"])
+                        & (dataframe["close"] < dataframe["session_vwap"] + dataframe["atr14"] * 0.18)
+                    )
+                    friction_aware_window = (
+                        dataframe["atr14"].between(dataframe["atr_ma50"] * 0.48, dataframe["atr_ma50"] * 2.45)
+                        & dataframe["bar_range_atr"].between(0.08, 2.65)
+                        & dataframe["body_atr"].between(0.04, 1.95)
+                        & dataframe["rvol96"].between(0.30, 4.80)
+                    )
+                    raw = (
+                        ordered_swing_regime_long.fillna(False)
+                        & swing_leg_duration_amplitude_asymmetry_long.fillna(False)
+                        & friction_aware_window.fillna(False)
+                        & dataframe["rsi14"].between(46, 78)
+                    )
+                    short_raw = (
+                        ordered_swing_regime_short.fillna(False)
+                        & swing_leg_duration_amplitude_asymmetry_short.fillna(False)
+                        & friction_aware_window.fillna(False)
+                        & dataframe["rsi14"].between(22, 54)
+                    )
+                elif "{spec.key}" == "vhf_chop_trend_reacceleration":
+                    vhf_chop_compression_release = (
+                        dataframe["vhf_34_shifted"].between(0.34, 0.82)
+                        & dataframe["chop_34_shifted"].between(24.0, 58.0)
+                        & dataframe["vhf_reacceleration_shifted"].gt(0.018)
+                        & dataframe["directional_efficiency_shifted"].between(0.12, 0.54)
+                    )
+                    mtf_reacceleration_long = (
+                        (dataframe["slope_5m"] > -dataframe["atr14"] * 0.05)
+                        & (dataframe["slope_15m"] > -dataframe["atr14"] * 0.07)
+                        & (dataframe["slope_30m"] > -dataframe["atr14"] * 0.09)
+                        & (dataframe["slope_1h"] > -dataframe["atr14"] * 0.12)
+                    )
+                    mtf_reacceleration_short = (
+                        (dataframe["slope_5m"] < dataframe["atr14"] * 0.05)
+                        & (dataframe["slope_15m"] < dataframe["atr14"] * 0.07)
+                        & (dataframe["slope_30m"] < dataframe["atr14"] * 0.09)
+                        & (dataframe["slope_1h"] < dataframe["atr14"] * 0.12)
+                    )
+                    vhf_chop_reacceleration_long = (
+                        vhf_chop_compression_release.fillna(False)
+                        & (dataframe["ema21"] > dataframe["ema55"])
+                        & (dataframe["close"] > dataframe["ema21"])
+                        & dataframe["ema21_slope_bps_12"].gt(0.32)
+                        & (dataframe["close"] > dataframe["session_vwap"] - dataframe["atr14"] * 0.18)
+                        & mtf_reacceleration_long.fillna(False)
+                    )
+                    vhf_chop_reacceleration_short = (
+                        vhf_chop_compression_release.fillna(False)
+                        & (dataframe["ema21"] < dataframe["ema55"])
+                        & (dataframe["close"] < dataframe["ema21"])
+                        & dataframe["ema21_slope_bps_12"].lt(-0.32)
+                        & (dataframe["close"] < dataframe["session_vwap"] + dataframe["atr14"] * 0.18)
+                        & mtf_reacceleration_short.fillna(False)
+                    )
+                    friction_aware_window = (
+                        dataframe["atr14"].between(dataframe["atr_ma50"] * 0.48, dataframe["atr_ma50"] * 2.35)
+                        & dataframe["bar_range_atr"].between(0.08, 2.75)
+                        & dataframe["body_atr"].between(0.04, 1.90)
+                        & dataframe["rvol96"].between(0.30, 4.70)
+                    )
+                    raw = (
+                        vhf_chop_reacceleration_long.fillna(False)
+                        & friction_aware_window.fillna(False)
+                        & dataframe["rsi14"].between(46, 80)
+                    )
+                    short_raw = (
+                        vhf_chop_reacceleration_short.fillna(False)
+                        & friction_aware_window.fillna(False)
+                        & dataframe["rsi14"].between(20, 54)
+                    )
+                elif "{spec.key}" == "trendexpansion_bocpd_dynmom_vhfchop":
+                    other_regimes_reference_veto_only = (
+                        dataframe["vhf_chop_no_trend_veto_shifted"].fillna(True)
+                        | dataframe["bocpd_hazard_proxy_shifted"].lt(-0.18)
+                    )
+                    trendexpansion_admission = (
+                        dataframe["bocpd_run_length_reset_shifted"].fillna(False)
+                        & dataframe["bocpd_hazard_proxy_shifted"].between(0.08, 2.85)
+                        & ~other_regimes_reference_veto_only.fillna(True)
+                    )
+                    dynamic_momentum_consensus_long = dataframe["dynmom_consensus_shifted"].ge(2)
+                    dynamic_momentum_consensus_short = dataframe["dynmom_consensus_shifted"].le(-2)
+                    mtf_context_long = (
+                        (dataframe["slope_5m"] > -dataframe["atr14"] * 0.04)
+                        & (dataframe["slope_15m"] > -dataframe["atr14"] * 0.06)
+                        & (dataframe["slope_30m"] > -dataframe["atr14"] * 0.08)
+                        & (dataframe["slope_1h"] > -dataframe["atr14"] * 0.12)
+                        & (dataframe["slope_4h"] > -dataframe["atr14"] * 0.18)
+                    )
+                    mtf_context_short = (
+                        (dataframe["slope_5m"] < dataframe["atr14"] * 0.04)
+                        & (dataframe["slope_15m"] < dataframe["atr14"] * 0.06)
+                        & (dataframe["slope_30m"] < dataframe["atr14"] * 0.08)
+                        & (dataframe["slope_1h"] < dataframe["atr14"] * 0.12)
+                        & (dataframe["slope_4h"] < dataframe["atr14"] * 0.18)
+                    )
+                    trendexpansion_only_long = (
+                        trendexpansion_admission.fillna(False)
+                        & dynamic_momentum_consensus_long.fillna(False)
+                        & mtf_context_long.fillna(False)
+                        & (dataframe["ema21"] > dataframe["ema55"])
+                        & (dataframe["close"] > dataframe["session_vwap"] - dataframe["atr14"] * 0.16)
+                        & dataframe["rsi14"].between(42, 78)
+                        & dataframe["rvol96"].between(0.28, 4.80)
+                    )
+                    trendexpansion_only_short = (
+                        trendexpansion_admission.fillna(False)
+                        & dynamic_momentum_consensus_short.fillna(False)
+                        & mtf_context_short.fillna(False)
+                        & (dataframe["ema21"] < dataframe["ema55"])
+                        & (dataframe["close"] < dataframe["session_vwap"] + dataframe["atr14"] * 0.16)
+                        & dataframe["rsi14"].between(22, 58)
+                        & dataframe["rvol96"].between(0.28, 4.80)
+                    )
+                    raw = trendexpansion_only_long.fillna(False)
+                    short_raw = trendexpansion_only_short.fillna(False)
+                elif "{spec.key}" == "trend_expansion_only_regime_transition_clean_state_shift":
+                    other_regimes_reference_veto_only = (
+                        dataframe["state_shift_chop_shifted"].gt(54.0)
+                        | dataframe["state_shift_vhf_shifted"].lt(0.32)
+                        | dataframe["state_shift_vhf_rise_shifted"].lt(0.006)
+                    )
+                    state_shift_mtf_aligned_long = (
+                        dataframe["slope_5m"].gt(-dataframe["atr14"] * 0.04).astype(int)
+                        + dataframe["slope_15m"].gt(-dataframe["atr14"] * 0.06).astype(int)
+                        + dataframe["slope_30m"].gt(-dataframe["atr14"] * 0.08).astype(int)
+                        + dataframe["slope_1h"].gt(-dataframe["atr14"] * 0.12).astype(int)
+                        + dataframe["slope_4h"].gt(-dataframe["atr14"] * 0.18).astype(int)
+                    ).ge(2)
+                    state_shift_clean_transition_long = (
+                        dataframe["state_shift_prior_narrow_range"].fillna(False)
+                        & dataframe["state_shift_vhf_shifted"].ge(0.32)
+                        & dataframe["state_shift_vhf_rise_shifted"].gt(0.006)
+                        & dataframe["state_shift_adx_rise_shifted"].gt(0.30)
+                        & dataframe["state_shift_momentum_bps_shifted"].gt(0.54)
+                        & ~other_regimes_reference_veto_only.fillna(True)
+                        & state_shift_mtf_aligned_long.fillna(False)
+                        & (dataframe["ema21"] > dataframe["ema55"])
+                        & (dataframe["close"] > dataframe["ema21"])
+                        & (dataframe["close"] > dataframe["session_vwap"] - dataframe["atr14"] * 0.16)
+                        & dataframe["rsi14"].between(42, 78)
+                    )
+                    state_shift_friction_window = (
+                        dataframe["atr14"].between(dataframe["atr_ma50"] * 0.48, dataframe["atr_ma50"] * 2.35)
+                        & dataframe["bar_range_atr"].between(0.08, 2.75)
+                        & dataframe["body_atr"].between(0.04, 1.90)
+                        & dataframe["rvol96"].between(0.28, 4.80)
+                    )
+                    raw = (
+                        state_shift_clean_transition_long.fillna(False)
+                        & state_shift_friction_window.fillna(False)
+                    )
+                elif "{spec.key}" == "trend_expansion_only_regime_transition_retest_hold_quality":
+                    other_regimes_reference_veto_only = (
+                        dataframe["state_shift_chop_shifted"].gt(55.0)
+                        | dataframe["state_shift_vhf_shifted"].lt(0.30)
+                        | dataframe["state_shift_vhf_rise_shifted"].lt(0.004)
+                    )
+                    state_shift_mtf_aligned_long = (
+                        dataframe["slope_5m"].gt(-dataframe["atr14"] * 0.04).astype(int)
+                        + dataframe["slope_15m"].gt(-dataframe["atr14"] * 0.06).astype(int)
+                        + dataframe["slope_30m"].gt(-dataframe["atr14"] * 0.08).astype(int)
+                        + dataframe["slope_1h"].gt(-dataframe["atr14"] * 0.12).astype(int)
+                        + dataframe["slope_4h"].gt(-dataframe["atr14"] * 0.18).astype(int)
+                    ).ge(2)
+                    state_shift_retest_quality_long = (
+                        dataframe["state_shift_retest_hold_long"].fillna(False)
+                        & dataframe["state_shift_vhf_shifted"].ge(0.30)
+                        & dataframe["state_shift_vhf_rise_shifted"].gt(0.004)
+                        & dataframe["state_shift_adx_rise_shifted"].gt(0.20)
+                        & dataframe["state_shift_momentum_bps_shifted"].gt(0.4275)
+                        & ~other_regimes_reference_veto_only.fillna(True)
+                        & state_shift_mtf_aligned_long.fillna(False)
+                        & dataframe["adx14"].ge(19.0)
+                        & (dataframe["ema21"] > dataframe["ema55"])
+                        & (dataframe["close"] > dataframe["ema21"])
+                        & (dataframe["close"] > dataframe["session_vwap"] - dataframe["atr14"] * 0.16)
+                        & dataframe["rsi14"].between(42, 78)
+                    )
+                    state_shift_friction_window = (
+                        dataframe["atr14"].between(dataframe["atr_ma50"] * 0.48, dataframe["atr_ma50"] * 2.35)
+                        & dataframe["bar_range_atr"].between(0.08, 2.75)
+                        & dataframe["body_atr"].between(0.04, 1.90)
+                        & dataframe["rvol96"].between(0.28, 4.80)
+                    )
+                    raw = (
+                        state_shift_retest_quality_long.fillna(False)
+                        & state_shift_friction_window.fillna(False)
+                    )
+                elif "{spec.key}" == "trend_expansion_only_regime_transition_strict_state_shift":
+                    other_regimes_reference_veto_only = (
+                        dataframe["state_shift_chop_shifted"].gt(50.0)
+                        | dataframe["state_shift_vhf_shifted"].lt(0.36)
+                        | dataframe["state_shift_vhf_rise_shifted"].lt(0.008)
+                    )
+                    state_shift_mtf_aligned_long = (
+                        dataframe["slope_5m"].gt(-dataframe["atr14"] * 0.04).astype(int)
+                        + dataframe["slope_15m"].gt(-dataframe["atr14"] * 0.06).astype(int)
+                        + dataframe["slope_30m"].gt(-dataframe["atr14"] * 0.08).astype(int)
+                        + dataframe["slope_1h"].gt(-dataframe["atr14"] * 0.12).astype(int)
+                        + dataframe["slope_4h"].gt(-dataframe["atr14"] * 0.18).astype(int)
+                    ).ge(3)
+                    state_shift_strict_transition_long = (
+                        dataframe["state_shift_prior_narrow_range"].fillna(False)
+                        & dataframe["state_shift_vhf_shifted"].ge(0.36)
+                        & dataframe["state_shift_vhf_rise_shifted"].gt(0.008)
+                        & dataframe["state_shift_adx_rise_shifted"].gt(0.40)
+                        & dataframe["state_shift_momentum_bps_shifted"].gt(0.7975)
+                        & ~other_regimes_reference_veto_only.fillna(True)
+                        & state_shift_mtf_aligned_long.fillna(False)
+                        & (dataframe["ema21"] > dataframe["ema55"])
+                        & (dataframe["close"] > dataframe["ema21"])
+                        & (dataframe["close"] > dataframe["session_vwap"] - dataframe["atr14"] * 0.16)
+                        & dataframe["rsi14"].between(42, 78)
+                    )
+                    state_shift_friction_window = (
+                        dataframe["atr14"].between(dataframe["atr_ma50"] * 0.48, dataframe["atr_ma50"] * 2.35)
+                        & dataframe["bar_range_atr"].between(0.08, 2.75)
+                        & dataframe["body_atr"].between(0.04, 1.90)
+                        & dataframe["rvol96"].between(0.28, 4.80)
+                    )
+                    raw = (
+                        state_shift_strict_transition_long.fillna(False)
+                        & state_shift_friction_window.fillna(False)
+                    )
+                elif "{spec.key}" == "medrv_minrv_noise_robust_vol_state_gate":
+                    noise_robust_state_ok = (
+                        dataframe["rv_medrv_disagreement_shifted"].le(0.70)
+                        & dataframe["robust_vol_state_z_shifted"].between(-0.80, 1.80)
+                    )
+                    medrv_minrv_noise_robust_state_long = (
+                        noise_robust_state_ok.fillna(False)
+                        & (dataframe["ema21"] > dataframe["ema55"])
+                        & (dataframe["close"] > dataframe["ema21"])
+                        & dataframe["ema21_slope_bps_12"].gt(0.30)
+                        & (dataframe["close"] > dataframe["session_vwap"] - dataframe["atr14"] * 0.22)
+                        & (dataframe["slope_30m"] > -dataframe["atr14"] * 0.10)
+                        & (dataframe["slope_1h"] > -dataframe["atr14"] * 0.14)
+                    )
+                    medrv_minrv_noise_robust_state_short = (
+                        noise_robust_state_ok.fillna(False)
+                        & (dataframe["ema21"] < dataframe["ema55"])
+                        & (dataframe["close"] < dataframe["ema21"])
+                        & dataframe["ema21_slope_bps_12"].lt(-0.30)
+                        & (dataframe["close"] < dataframe["session_vwap"] + dataframe["atr14"] * 0.22)
+                        & (dataframe["slope_30m"] < dataframe["atr14"] * 0.10)
+                        & (dataframe["slope_1h"] < dataframe["atr14"] * 0.14)
+                    )
+                    friction_aware_window = (
+                        dataframe["atr14"].between(dataframe["atr_ma50"] * 0.48, dataframe["atr_ma50"] * 2.45)
+                        & dataframe["bar_range_atr"].between(0.08, 2.75)
+                        & dataframe["body_atr"].between(0.03, 1.95)
+                        & dataframe["rvol96"].between(0.25, 4.75)
+                    )
+                    raw = (
+                        medrv_minrv_noise_robust_state_long.fillna(False)
+                        & friction_aware_window.fillna(False)
+                        & dataframe["rsi14"].between(44, 78)
+                    )
+                    short_raw = (
+                        medrv_minrv_noise_robust_state_short.fillna(False)
+                        & friction_aware_window.fillna(False)
+                        & dataframe["rsi14"].between(22, 56)
+                    )
+                elif "{spec.key}" == "directional_sign_entropy_release_reacceleration":
+                    entropy_release_reacceleration_long = (
+                        dataframe["directional_sign_entropy_shifted"].between(0.58, 1.02)
+                        & dataframe["directional_sign_entropy_release"].gt(0.035)
+                        & dataframe["signed_return_reacceleration"].gt(0.00018)
+                        & dataframe["close"].gt(dataframe["ema21"])
+                        & dataframe["ema21"].gt(dataframe["ema55"])
+                        & dataframe["close"].gt(dataframe["session_vwap"] - dataframe["atr14"] * 0.24)
+                        & (dataframe["slope_1h"] > -dataframe["atr14"] * 0.12)
+                    )
+                    entropy_release_reacceleration_short = (
+                        dataframe["directional_sign_entropy_shifted"].between(0.58, 1.02)
+                        & dataframe["directional_sign_entropy_release"].gt(0.035)
+                        & dataframe["signed_return_reacceleration"].lt(-0.00018)
+                        & dataframe["close"].lt(dataframe["ema21"])
+                        & dataframe["ema21"].lt(dataframe["ema55"])
+                        & dataframe["close"].lt(dataframe["session_vwap"] + dataframe["atr14"] * 0.24)
+                        & (dataframe["slope_1h"] < dataframe["atr14"] * 0.12)
+                    )
+                    friction_aware_window = (
+                        dataframe["atr14"].between(dataframe["atr_ma50"] * 0.46, dataframe["atr_ma50"] * 2.40)
+                        & dataframe["bar_range_atr"].between(0.08, 2.75)
+                        & dataframe["body_atr"].between(0.03, 1.95)
+                        & dataframe["rvol96"].between(0.25, 4.60)
+                    )
+                    raw = (
+                        entropy_release_reacceleration_long.fillna(False)
+                        & friction_aware_window.fillna(False)
+                        & dataframe["rsi14"].between(44, 78)
+                    )
+                    short_raw = (
+                        entropy_release_reacceleration_short.fillna(False)
+                        & friction_aware_window.fillna(False)
+                        & dataframe["rsi14"].between(22, 56)
+                    )
+                elif "{spec.key}" == "pesaran_timmermann_directional_accuracy_admission_filter":
+                    pt_directional_skill_long = (
+                        dataframe["pt_forecast_direction_shifted"].gt(0.0)
+                        & dataframe["pt_realized_direction_shifted"].gt(0.0)
+                        & dataframe["pt_directional_accuracy_score"].gt(0.055)
+                    )
+                    pt_directional_skill_short = (
+                        dataframe["pt_forecast_direction_shifted"].lt(0.0)
+                        & dataframe["pt_realized_direction_shifted"].lt(0.0)
+                        & dataframe["pt_directional_accuracy_score"].gt(0.055)
+                    )
+                    parent_trend_admission_long = (
+                        (dataframe["ema21"] > dataframe["ema55"])
+                        & dataframe["close"].gt(dataframe["ema21"] - dataframe["atr14"] * 0.08)
+                        & dataframe["ema21_slope_bps_12"].gt(0.12)
+                        & (dataframe["slope_30m"] > -dataframe["atr14"] * 0.08)
+                        & (dataframe["slope_1h"] > -dataframe["atr14"] * 0.12)
+                    )
+                    parent_trend_admission_short = (
+                        (dataframe["ema21"] < dataframe["ema55"])
+                        & dataframe["close"].lt(dataframe["ema21"] + dataframe["atr14"] * 0.08)
+                        & dataframe["ema21_slope_bps_12"].lt(-0.12)
+                        & (dataframe["slope_30m"] < dataframe["atr14"] * 0.08)
+                        & (dataframe["slope_1h"] < dataframe["atr14"] * 0.12)
+                    )
+                    friction_aware_window = (
+                        dataframe["atr14"].between(dataframe["atr_ma50"] * 0.46, dataframe["atr_ma50"] * 2.45)
+                        & dataframe["bar_range_atr"].between(0.08, 2.80)
+                        & dataframe["body_atr"].between(0.03, 2.00)
+                        & dataframe["rvol96"].between(0.25, 4.75)
+                    )
+                    raw = (
+                        pt_directional_skill_long.fillna(False)
+                        & parent_trend_admission_long.fillna(False)
+                        & friction_aware_window.fillna(False)
+                        & dataframe["rsi14"].between(44, 78)
+                    )
+                    short_raw = (
+                        pt_directional_skill_short.fillna(False)
+                        & parent_trend_admission_short.fillna(False)
+                        & friction_aware_window.fillna(False)
+                        & dataframe["rsi14"].between(22, 56)
+                    )
+                elif "{spec.key}" == "elder_thermometer_heat_rejoin":
+                    heat_band = dataframe["elder_thermometer_heat_ratio_shifted"].between(0.72, 2.45)
+                    heat_reacceleration = dataframe["elder_thermometer_heat_delta_shifted"].between(-0.18, 1.10)
+                    heat_direction_long = dataframe["elder_thermometer_direction_shifted"].ge(0.0)
+                    heat_direction_short = dataframe["elder_thermometer_direction_shifted"].le(0.0)
+                    mtf_heat_rejoin_long = (
+                        (dataframe["slope_5m"] > -dataframe["atr14"] * 0.06)
+                        & (dataframe["slope_15m"] > -dataframe["atr14"] * 0.08)
+                        & (dataframe["slope_30m"] > -dataframe["atr14"] * 0.10)
+                        & (dataframe["slope_1h"] > -dataframe["atr14"] * 0.14)
+                    )
+                    mtf_heat_rejoin_short = (
+                        (dataframe["slope_5m"] < dataframe["atr14"] * 0.06)
+                        & (dataframe["slope_15m"] < dataframe["atr14"] * 0.08)
+                        & (dataframe["slope_30m"] < dataframe["atr14"] * 0.10)
+                        & (dataframe["slope_1h"] < dataframe["atr14"] * 0.14)
+                    )
+                    heat_normalized_rejoin_long = (
+                        heat_band.fillna(False)
+                        & heat_reacceleration.fillna(False)
+                        & heat_direction_long.fillna(False)
+                        & (dataframe["ema21"] > dataframe["ema55"])
+                        & (dataframe["close"] > dataframe["ema21"])
+                        & dataframe["ema21_slope_bps_12"].gt(0.22)
+                        & (dataframe["close"] > dataframe["session_vwap"] - dataframe["atr14"] * 0.20)
+                        & mtf_heat_rejoin_long.fillna(False)
+                    )
+                    heat_normalized_rejoin_short = (
+                        heat_band.fillna(False)
+                        & heat_reacceleration.fillna(False)
+                        & heat_direction_short.fillna(False)
+                        & (dataframe["ema21"] < dataframe["ema55"])
+                        & (dataframe["close"] < dataframe["ema21"])
+                        & dataframe["ema21_slope_bps_12"].lt(-0.22)
+                        & (dataframe["close"] < dataframe["session_vwap"] + dataframe["atr14"] * 0.20)
+                        & mtf_heat_rejoin_short.fillna(False)
+                    )
+                    friction_aware_window = (
+                        dataframe["atr14"].between(dataframe["atr_ma50"] * 0.44, dataframe["atr_ma50"] * 2.55)
+                        & dataframe["bar_range_atr"].between(0.08, 2.85)
+                        & dataframe["body_atr"].between(0.04, 2.05)
+                        & dataframe["rvol96"].between(0.28, 4.95)
+                    )
+                    raw = (
+                        heat_normalized_rejoin_long.fillna(False)
+                        & friction_aware_window.fillna(False)
+                        & dataframe["rsi14"].between(44, 80)
+                    )
+                    short_raw = (
+                        heat_normalized_rejoin_short.fillna(False)
+                        & friction_aware_window.fillna(False)
+                        & dataframe["rsi14"].between(20, 56)
+                    )
+                elif "{spec.key}" == "pgo_atr_trend_rejoin":
+                    pgo_rejoin_long = (
+                        dataframe["pgo_atr_deviation_shifted"].between(-1.65, 0.45)
+                        & dataframe["pgo_rejoin_impulse_shifted"].gt(0.045)
+                        & dataframe["pgo_basis_slope_bps_shifted"].gt(0.12)
+                    )
+                    pgo_rejoin_short = (
+                        dataframe["pgo_atr_deviation_shifted"].between(-0.45, 1.65)
+                        & dataframe["pgo_rejoin_impulse_shifted"].lt(-0.045)
+                        & dataframe["pgo_basis_slope_bps_shifted"].lt(-0.12)
+                    )
+                    mtf_pgo_rejoin_long = (
+                        (dataframe["slope_5m"] > -dataframe["atr14"] * 0.055)
+                        & (dataframe["slope_15m"] > -dataframe["atr14"] * 0.075)
+                        & (dataframe["slope_30m"] > -dataframe["atr14"] * 0.105)
+                        & (dataframe["slope_1h"] > -dataframe["atr14"] * 0.135)
+                    )
+                    mtf_pgo_rejoin_short = (
+                        (dataframe["slope_5m"] < dataframe["atr14"] * 0.055)
+                        & (dataframe["slope_15m"] < dataframe["atr14"] * 0.075)
+                        & (dataframe["slope_30m"] < dataframe["atr14"] * 0.105)
+                        & (dataframe["slope_1h"] < dataframe["atr14"] * 0.135)
+                    )
+                    pgo_atr_trend_rejoin_long = (
+                        pgo_rejoin_long.fillna(False)
+                        & (dataframe["ema21"] > dataframe["ema55"])
+                        & dataframe["ema21_slope_bps_12"].gt(0.18)
+                        & (dataframe["close"] > dataframe["session_vwap"] - dataframe["atr14"] * 0.32)
+                        & mtf_pgo_rejoin_long.fillna(False)
+                    )
+                    pgo_atr_trend_rejoin_short = (
+                        pgo_rejoin_short.fillna(False)
+                        & (dataframe["ema21"] < dataframe["ema55"])
+                        & dataframe["ema21_slope_bps_12"].lt(-0.18)
+                        & (dataframe["close"] < dataframe["session_vwap"] + dataframe["atr14"] * 0.32)
+                        & mtf_pgo_rejoin_short.fillna(False)
+                    )
+                    friction_aware_window = (
+                        dataframe["atr14"].between(dataframe["atr_ma50"] * 0.42, dataframe["atr_ma50"] * 2.50)
+                        & dataframe["bar_range_atr"].between(0.07, 2.80)
+                        & dataframe["body_atr"].between(0.03, 2.00)
+                        & dataframe["rvol96"].between(0.24, 4.80)
+                    )
+                    raw = (
+                        pgo_atr_trend_rejoin_long.fillna(False)
+                        & friction_aware_window.fillna(False)
+                        & dataframe["rsi14"].between(43, 79)
+                    )
+                    short_raw = (
+                        pgo_atr_trend_rejoin_short.fillna(False)
+                        & friction_aware_window.fillna(False)
+                        & dataframe["rsi14"].between(21, 57)
+                    )
+                elif "{spec.key}" == "gann_hilo_atr_trend_rejoin_filter":
+                    mtf_gann_hilo_rejoin_long = (
+                        (dataframe["slope_5m"] > -dataframe["atr14"] * 0.055)
+                        & (dataframe["slope_15m"] > -dataframe["atr14"] * 0.075)
+                        & (dataframe["slope_30m"] > -dataframe["atr14"] * 0.105)
+                        & (dataframe["slope_1h"] > -dataframe["atr14"] * 0.135)
+                    )
+                    mtf_gann_hilo_rejoin_short = (
+                        (dataframe["slope_5m"] < dataframe["atr14"] * 0.055)
+                        & (dataframe["slope_15m"] < dataframe["atr14"] * 0.075)
+                        & (dataframe["slope_30m"] < dataframe["atr14"] * 0.105)
+                        & (dataframe["slope_1h"] < dataframe["atr14"] * 0.135)
+                    )
+                    gann_hilo_atr_rejoin_long = (
+                        dataframe["gann_hilo_activator_state"].ge(0)
+                        & dataframe["gann_hilo_state_persistence"].ge(2)
+                        & dataframe["gann_hilo_rejoin_distance_atr"].between(-0.20, 1.45)
+                        & dataframe["gann_hilo_rejoin_impulse_atr"].gt(0.025)
+                        & (dataframe["close"] > dataframe["gann_hilo_low_shifted"])
+                        & (dataframe["ema21"] > dataframe["ema55"])
+                        & dataframe["ema21_slope_bps_12"].gt(0.16)
+                        & mtf_gann_hilo_rejoin_long.fillna(False)
+                    )
+                    gann_hilo_atr_rejoin_short = (
+                        dataframe["gann_hilo_activator_state"].le(0)
+                        & dataframe["gann_hilo_state_persistence"].le(-2)
+                        & dataframe["gann_hilo_short_rejoin_distance_atr"].between(-0.20, 1.45)
+                        & dataframe["gann_hilo_rejoin_impulse_atr"].lt(-0.025)
+                        & (dataframe["close"] < dataframe["gann_hilo_high_shifted"])
+                        & (dataframe["ema21"] < dataframe["ema55"])
+                        & dataframe["ema21_slope_bps_12"].lt(-0.16)
+                        & mtf_gann_hilo_rejoin_short.fillna(False)
+                    )
+                    friction_aware_window = (
+                        dataframe["atr14"].between(dataframe["atr_ma50"] * 0.42, dataframe["atr_ma50"] * 2.50)
+                        & dataframe["bar_range_atr"].between(0.07, 2.80)
+                        & dataframe["body_atr"].between(0.03, 2.00)
+                        & dataframe["rvol96"].between(0.24, 4.80)
+                    )
+                    raw = (
+                        gann_hilo_atr_rejoin_long.fillna(False)
+                        & friction_aware_window.fillna(False)
+                        & dataframe["rsi14"].between(43, 79)
+                    )
+                    short_raw = (
+                        gann_hilo_atr_rejoin_short.fillna(False)
+                        & friction_aware_window.fillna(False)
+                        & dataframe["rsi14"].between(21, 57)
+                    )
+                elif "{spec.key}" == "heikin_ashi_kama_trend_pullback_rejoin":
+                    mtf_rejoin_long = (
+                        (dataframe["slope_15m"] > -dataframe["atr14"] * 0.075)
+                        & (dataframe["slope_30m"] > -dataframe["atr14"] * 0.105)
+                        & (dataframe["slope_1h"] > -dataframe["atr14"] * 0.135)
+                    )
+                    heikin_ashi_kama_rejoin_long = (
+                        dataframe["ha_trend_shifted"].gt(0)
+                        & dataframe["kama_slope_bps_shifted"].ge(0.0)
+                        & dataframe["kama_efficiency_shifted"].ge(0.16)
+                        & dataframe["kama_pullback_low_prev"].le(-34.0)
+                        & dataframe["kama_deviation_bps"].ge(-8.0)
+                        & (dataframe["ema21"] > dataframe["ema55"])
+                        & dataframe["ema21_slope_bps_12"].gt(0.12)
+                        & mtf_rejoin_long.fillna(False)
+                    )
+                    friction_aware_window = (
+                        dataframe["atr14"].between(dataframe["atr_ma50"] * 0.42, dataframe["atr_ma50"] * 2.65)
+                        & dataframe["bar_range_atr"].between(0.07, 2.95)
+                        & dataframe["body_atr"].between(0.02, 2.20)
+                        & dataframe["rvol96"].between(0.22, 5.20)
+                    )
+                    raw = (
+                        heikin_ashi_kama_rejoin_long.fillna(False)
+                        & friction_aware_window.fillna(False)
+                        & dataframe["rsi14"].between(40, 82)
+                    )
+                elif "{spec.key}" == "ultimate_williams_reacceleration":
+                    ordered_oscillator_trend_long = (
+                        (dataframe["ema21"] > dataframe["ema55"])
+                        & (dataframe["ema55"] > dataframe["ema144"])
+                        & dataframe["ultimate_williams_trend_bps"].ge(0.18)
+                        & (dataframe["slope_15m"] > -dataframe["atr14"] * 0.08)
+                        & (dataframe["slope_1h"] > -dataframe["atr14"] * 0.14)
+                    )
+                    ordered_oscillator_trend_short = (
+                        (dataframe["ema21"] < dataframe["ema55"])
+                        & (dataframe["ema55"] < dataframe["ema144"])
+                        & dataframe["ultimate_williams_trend_bps"].le(-0.18)
+                        & (dataframe["slope_15m"] < dataframe["atr14"] * 0.08)
+                        & (dataframe["slope_1h"] < dataframe["atr14"] * 0.14)
+                    )
+                    ultimate_williams_reacceleration_long = (
+                        dataframe["ultimate_oscillator_shifted"].ge(50.0)
+                        & dataframe["ultimate_oscillator_delta"].ge(0.20)
+                        & dataframe["williams_r_prev_min3"].le(-65.0)
+                        & dataframe["williams_r_shifted"].ge(-50.0)
+                        & (dataframe["close"] > dataframe["ema21"])
+                        & (dataframe["close"] > dataframe["session_vwap"] - dataframe["atr14"] * 0.20)
+                    )
+                    ultimate_williams_reacceleration_short = (
+                        dataframe["ultimate_oscillator_shifted"].le(50.0)
+                        & dataframe["ultimate_oscillator_delta"].le(-0.20)
+                        & dataframe["williams_r_prev_max3"].ge(-35.0)
+                        & dataframe["williams_r_shifted"].le(-50.0)
+                        & (dataframe["close"] < dataframe["ema21"])
+                        & (dataframe["close"] < dataframe["session_vwap"] + dataframe["atr14"] * 0.20)
+                    )
+                    friction_aware_window = (
+                        dataframe["atr14"].between(dataframe["atr_ma50"] * 0.45, dataframe["atr_ma50"] * 2.60)
+                        & dataframe["bar_range_atr"].between(0.06, 2.90)
+                        & dataframe["body_atr"].between(0.03, 2.05)
+                        & dataframe["rvol96"].between(0.22, 5.10)
+                    )
+                    raw = (
+                        ordered_oscillator_trend_long.fillna(False)
+                        & ultimate_williams_reacceleration_long.fillna(False)
+                        & friction_aware_window.fillna(False)
+                    )
+                    short_raw = (
+                        ordered_oscillator_trend_short.fillna(False)
+                        & ultimate_williams_reacceleration_short.fillna(False)
+                        & friction_aware_window.fillna(False)
+                    )
                 elif "{spec.key}" == "tod_balanced_ym_late_session_cadence_addon":
                     sparse_month_window = dataframe["date"].dt.strftime("%Y-%m").isin(
                         ["2024-11", "2024-12", "2025-01"]
@@ -4395,6 +15846,54 @@ def strategy_source(spec: CandidateSpec, *, symbol: str, timeframe: str) -> str:
                         & dataframe["rsi14"].between(46, 72)
                         & dataframe["adx14"].between(14, 42)
                         & dataframe["body_atr"].between(0.05, 1.6)
+                    )
+                elif "{spec.key}" == "overnight_intraday_disagreement_reclaim":
+                    ny_reclaim_window = dataframe["minute_of_day_ny"].between(9 * 60 + 35, 11 * 60 + 45)
+                    overnight_gap_down = dataframe["overnight_return"] <= -0.0025
+                    overnight_gap_up = dataframe["overnight_return"] >= 0.0025
+                    intraday_continuation_failure_long = (
+                        overnight_gap_down
+                        & (dataframe["low"] <= dataframe["prior_day_low"] + dataframe["atr14"] * 0.18)
+                        & (dataframe["close"] > dataframe["session_open"])
+                    )
+                    intraday_continuation_failure_short = (
+                        overnight_gap_up
+                        & (dataframe["high"] >= dataframe["prior_day_high"] - dataframe["atr14"] * 0.18)
+                        & (dataframe["close"] < dataframe["session_open"])
+                    )
+                    session_vwap_midpoint_reclaim_long = (
+                        (dataframe["close"] > dataframe["session_vwap"])
+                        & (dataframe["close"] > dataframe["overnight_midpoint"])
+                        & (dataframe["close"].shift(1) <= dataframe["overnight_midpoint"].shift(1))
+                    )
+                    session_vwap_midpoint_reclaim_short = (
+                        (dataframe["close"] < dataframe["session_vwap"])
+                        & (dataframe["close"] < dataframe["overnight_midpoint"])
+                        & (dataframe["close"].shift(1) >= dataframe["overnight_midpoint"].shift(1))
+                    )
+                    mtf_slope_veto_long = (dataframe["slope_30m"] < -dataframe["atr14"] * 0.20) | (
+                        dataframe["slope_1h"] < -dataframe["atr14"] * 0.16
+                    )
+                    mtf_slope_veto_short = (dataframe["slope_30m"] > dataframe["atr14"] * 0.20) | (
+                        dataframe["slope_1h"] > dataframe["atr14"] * 0.16
+                    )
+                    raw = (
+                        ny_reclaim_window
+                        & intraday_continuation_failure_long.fillna(False)
+                        & session_vwap_midpoint_reclaim_long.fillna(False)
+                        & ~mtf_slope_veto_long.fillna(False)
+                        & dataframe["rvol96"].between(0.70, 5.0)
+                        & dataframe["rsi14"].between(34, 62)
+                        & dataframe["body_atr"].between(0.08, 2.4)
+                    )
+                    short_raw = (
+                        ny_reclaim_window
+                        & intraday_continuation_failure_short.fillna(False)
+                        & session_vwap_midpoint_reclaim_short.fillna(False)
+                        & ~mtf_slope_veto_short.fillna(False)
+                        & dataframe["rvol96"].between(0.70, 5.0)
+                        & dataframe["rsi14"].between(38, 66)
+                        & dataframe["body_atr"].between(0.08, 2.4)
                     )
                 elif "{spec.key}" == "supertrend_adx_displacement":
                     trend_root = (
@@ -4686,6 +16185,281 @@ def strategy_source(spec: CandidateSpec, *, symbol: str, timeframe: str) -> str:
                         & dataframe["rsi14"].between(47, 79)
                         & dataframe["body_atr"].between(0.06, 2.3)
                     )
+                elif "{spec.key}" == "aroon_cci_cadence_lift_volume_persistence_retest":
+                    symbol_ok = metadata.get("pair") in ("NQ/USD", "ES/USD")
+                    trend_root = (
+                        (dataframe["ema21"] > dataframe["ema55"])
+                        & (dataframe["ema55"] > dataframe["ema144"])
+                    )
+                    directional_persistence = (
+                        (dataframe["aroon_up25"] > 64.0)
+                        & (dataframe["aroon_down25"] < 42.0)
+                        & (dataframe["aroon_up25"] > dataframe["aroon_down25"] + 25.0)
+                    )
+                    cci_reacceleration = (
+                        dataframe["cci20"].between(55.0, 220.0)
+                        & (dataframe["cci20"] > dataframe["cci20"].shift(2) + 15.0)
+                    )
+                    economic_slope = (
+                        (dataframe["ema21_slope_bps_12"] > 10.0)
+                        & (dataframe["ema55_slope_bps_48"] > 10.0)
+                    )
+                    retest_vwap_acceptance = (
+                        (
+                            dataframe["low"]
+                            <= (dataframe["session_vwap"] + dataframe["atr14"] * 0.10)
+                        )
+                        & (dataframe["close"] > dataframe["session_vwap"])
+                    )
+                    ema_retest_acceptance = (
+                        (dataframe["low"] <= dataframe["ema21"] + dataframe["atr14"] * 0.14)
+                        & (dataframe["close"] > dataframe["ema21"])
+                    )
+                    retest_volume_expansion = (
+                        (dataframe["volume"].rolling(3).mean() > dataframe["vol_ma20"] * 1.10)
+                        & dataframe["rvol96"].between(0.85, 4.8)
+                    )
+                    volume_persistence_retest = (
+                        (ema_retest_acceptance | retest_vwap_acceptance)
+                        & retest_volume_expansion.fillna(False)
+                        & (dataframe["close"] > dataframe["range_high40"] * 0.996)
+                    )
+                    raw = (
+                        symbol_ok
+                        & trend_root
+                        & directional_persistence.fillna(False)
+                        & cci_reacceleration.fillna(False)
+                        & economic_slope.fillna(False)
+                        & volume_persistence_retest.fillna(False)
+                        & dataframe["adx14"].between(16, 50)
+                        & dataframe["rsi14"].between(49, 78)
+                        & dataframe["body_atr"].between(0.07, 2.1)
+                    )
+                elif "{spec.key}" == "aroon_band_acceptance_trendbirth":
+                    mtf_trendexpansion_birth_long = (
+                        (dataframe["ema21"] > dataframe["ema55"])
+                        & dataframe["ema21_slope_bps_12"].gt(0.8)
+                        & dataframe["ema55_slope_bps_48"].gt(-0.4)
+                        & dataframe["slope_30m"].gt(-dataframe["atr14"] * 0.06)
+                    )
+                    mtf_trendexpansion_birth_short = (
+                        (dataframe["ema21"] < dataframe["ema55"])
+                        & dataframe["ema21_slope_bps_12"].lt(-0.8)
+                        & dataframe["ema55_slope_bps_48"].lt(0.4)
+                        & dataframe["slope_30m"].lt(dataframe["atr14"] * 0.06)
+                    )
+                    dataframe["aroon_trend_birth_long"] = (
+                        dataframe["aroon_up25"].gt(62.0)
+                        & dataframe["aroon_down25"].lt(48.0)
+                        & (dataframe["aroon_up25"] > dataframe["aroon_down25"] + 18.0)
+                    )
+                    dataframe["aroon_trend_birth_short"] = (
+                        dataframe["aroon_down25"].gt(62.0)
+                        & dataframe["aroon_up25"].lt(48.0)
+                        & (dataframe["aroon_down25"] > dataframe["aroon_up25"] + 18.0)
+                    )
+                    dataframe["aroon_band_acceptance_long"] = (
+                        (
+                            dataframe["close"].gt(dataframe["aroon_band_upper34"])
+                            | (
+                                dataframe["close"].gt(dataframe["aroon_band_mid34"])
+                                & dataframe["close"].gt(dataframe["session_vwap"])
+                            )
+                        )
+                        & dataframe["aroon_band_mid_slope_bps12"].gt(0.6)
+                    )
+                    dataframe["aroon_band_acceptance_short"] = (
+                        (
+                            dataframe["close"].lt(dataframe["aroon_band_lower34"])
+                            | (
+                                dataframe["close"].lt(dataframe["aroon_band_mid34"])
+                                & dataframe["close"].lt(dataframe["session_vwap"])
+                            )
+                        )
+                        & dataframe["aroon_band_mid_slope_bps12"].lt(-0.6)
+                    )
+                    raw = (
+                        mtf_trendexpansion_birth_long.fillna(False)
+                        & dataframe["aroon_trend_birth_long"].fillna(False)
+                        & dataframe["aroon_band_acceptance_long"].fillna(False)
+                        & dataframe["aroon_band_width_atr"].between(0.45, 7.0)
+                        & dataframe["adx14"].between(13, 54)
+                        & dataframe["rvol96"].between(0.45, 5.4)
+                        & dataframe["rsi14"].between(44, 82)
+                        & dataframe["body_atr"].between(0.05, 2.6)
+                    )
+                    short_raw = (
+                        mtf_trendexpansion_birth_short.fillna(False)
+                        & dataframe["aroon_trend_birth_short"].fillna(False)
+                        & dataframe["aroon_band_acceptance_short"].fillna(False)
+                        & dataframe["aroon_band_width_atr"].between(0.45, 7.0)
+                        & dataframe["adx14"].between(13, 54)
+                        & dataframe["rvol96"].between(0.45, 5.4)
+                        & dataframe["rsi14"].between(18, 56)
+                        & dataframe["body_atr"].between(0.05, 2.6)
+                    )
+                elif "{spec.key}" == "range_estimator_disagreement_compression_release":
+                    mtf_long = (
+                        (dataframe["ema20_30m"] > dataframe["ema50_30m"])
+                        & (dataframe["slope_30m"] > 0.0)
+                        & (dataframe["ema20_1h"] > dataframe["ema50_1h"])
+                        & (dataframe["slope_1h"] > 0.0)
+                    )
+                    mtf_short = (
+                        (dataframe["ema20_30m"] < dataframe["ema50_30m"])
+                        & (dataframe["slope_30m"] < 0.0)
+                        & (dataframe["ema20_1h"] < dataframe["ema50_1h"])
+                        & (dataframe["slope_1h"] < 0.0)
+                    )
+                    release_long = (
+                        dataframe["compression_release_breakout"].fillna(False)
+                        & (dataframe["close"] > dataframe["range_high40"])
+                        & (dataframe["close"] > dataframe["session_vwap"])
+                    )
+                    release_short = (
+                        dataframe["compression_release_breakout"].fillna(False)
+                        & (dataframe["close"] < dataframe["range_low40"])
+                        & (dataframe["close"] < dataframe["session_vwap"])
+                    )
+                    raw = (
+                        mtf_long.fillna(False)
+                        & release_long.fillna(False)
+                        & dataframe["adx14"].between(15, 48)
+                        & dataframe["rvol96"].between(0.70, 4.8)
+                        & dataframe["rsi14"].between(48, 78)
+                        & dataframe["body_atr"].between(0.08, 2.4)
+                    )
+                    short_raw = (
+                        mtf_short.fillna(False)
+                        & release_short.fillna(False)
+                        & dataframe["adx14"].between(15, 48)
+                        & dataframe["rvol96"].between(0.70, 4.8)
+                        & dataframe["rsi14"].between(22, 52)
+                        & dataframe["body_atr"].between(0.08, 2.4)
+                    )
+                elif "{spec.key}" == "yang_zhang_range_vol_split_reacceleration":
+                    close_location = (
+                        (dataframe["close"] - dataframe["low"])
+                        / (dataframe["high"] - dataframe["low"]).replace(0, np.nan)
+                    )
+                    mtf_long = (
+                        (dataframe["ema20_30m"] > dataframe["ema50_30m"])
+                        & (dataframe["slope_30m"] > -dataframe["atr14"] * 0.04)
+                        & (dataframe["ema20_1h"] > dataframe["ema50_1h"])
+                        & (dataframe["slope_1h"] > -dataframe["atr14"] * 0.06)
+                    )
+                    mtf_short = (
+                        (dataframe["ema20_30m"] < dataframe["ema50_30m"])
+                        & (dataframe["slope_30m"] < dataframe["atr14"] * 0.04)
+                        & (dataframe["ema20_1h"] < dataframe["ema50_1h"])
+                        & (dataframe["slope_1h"] < dataframe["atr14"] * 0.06)
+                    )
+                    yz_long_acceptance = (
+                        dataframe["yz_range_vol_reacceleration"].fillna(False)
+                        & dataframe["yz_gap_noise_cap"].fillna(False)
+                        & close_location.gt(0.58)
+                        & (dataframe["close"] > dataframe["session_vwap"])
+                        & (dataframe["close"] > dataframe["ema55"])
+                    )
+                    yz_short_acceptance = (
+                        dataframe["yz_range_vol_reacceleration"].fillna(False)
+                        & dataframe["yz_gap_noise_cap"].fillna(False)
+                        & close_location.lt(0.42)
+                        & (dataframe["close"] < dataframe["session_vwap"])
+                        & (dataframe["close"] < dataframe["ema55"])
+                    )
+                    raw = (
+                        mtf_long.fillna(False)
+                        & yz_long_acceptance.fillna(False)
+                        & dataframe["adx14"].between(14, 52)
+                        & dataframe["rvol96"].between(0.45, 5.2)
+                        & dataframe["rsi14"].between(46, 80)
+                        & dataframe["body_atr"].between(0.06, 2.5)
+                    )
+                    short_raw = (
+                        mtf_short.fillna(False)
+                        & yz_short_acceptance.fillna(False)
+                        & dataframe["adx14"].between(14, 52)
+                        & dataframe["rvol96"].between(0.45, 5.2)
+                        & dataframe["rsi14"].between(20, 54)
+                        & dataframe["body_atr"].between(0.06, 2.5)
+                    )
+                elif "{spec.key}" == "inside_bar_breakout_hold":
+                    trend_acceptance_long = (
+                        (dataframe["ema21"] > dataframe["ema55"])
+                        & dataframe["ema21_slope_bps_12"].gt(0.8)
+                        & dataframe["ema55_slope_bps_48"].gt(-0.6)
+                        & (dataframe["close"] > dataframe["session_vwap"] - dataframe["atr14"] * 0.25)
+                    )
+                    trend_acceptance_short = (
+                        (dataframe["ema21"] < dataframe["ema55"])
+                        & dataframe["ema21_slope_bps_12"].lt(-0.8)
+                        & dataframe["ema55_slope_bps_48"].lt(0.6)
+                        & (dataframe["close"] < dataframe["session_vwap"] + dataframe["atr14"] * 0.25)
+                    )
+                    low_turnover_atr_hold = (
+                        dataframe["atr14"].between(dataframe["atr_ma50"] * 0.50, dataframe["atr_ma50"] * 2.25)
+                        & dataframe["bar_range_atr"].between(0.08, 2.80)
+                        & dataframe["body_atr"].between(0.04, 2.05)
+                        & dataframe["rvol96"].between(0.35, 4.80)
+                    )
+                    raw = (
+                        dataframe["inside_breakout_hold_long"].fillna(False)
+                        & trend_acceptance_long.fillna(False)
+                        & low_turnover_atr_hold.fillna(False)
+                        & dataframe["adx14"].between(13, 52)
+                        & dataframe["rsi14"].between(43, 78)
+                    )
+                    short_raw = (
+                        dataframe["inside_breakout_hold_short"].fillna(False)
+                        & trend_acceptance_short.fillna(False)
+                        & low_turnover_atr_hold.fillna(False)
+                        & dataframe["adx14"].between(13, 52)
+                        & dataframe["rsi14"].between(22, 57)
+                    )
+                elif "{spec.key}" == "realized_skew_semivariance_trend_acceptance":
+                    mtf_slope_resonance_long = (
+                        dataframe["slope_15m"].gt(-dataframe["atr14"] * 0.05)
+                        & dataframe["slope_30m"].gt(-dataframe["atr14"] * 0.08)
+                        & dataframe["slope_1h"].gt(-dataframe["atr14"] * 0.10)
+                    )
+                    mtf_slope_resonance_short = (
+                        dataframe["slope_15m"].lt(dataframe["atr14"] * 0.05)
+                        & dataframe["slope_30m"].lt(dataframe["atr14"] * 0.08)
+                        & dataframe["slope_1h"].lt(dataframe["atr14"] * 0.10)
+                    )
+                    dataframe["realized_asymmetry_trend_acceptance_long"] = (
+                        dataframe["realized_skew_96_shifted"].gt(0.12)
+                        & dataframe["semivariance_balance_shifted"].gt(0.08)
+                        & (dataframe["ema21"] > dataframe["ema55"])
+                        & dataframe["ema21_slope_bps_12"].gt(1.0)
+                        & dataframe["ema55_slope_bps_48"].gt(-0.4)
+                        & (dataframe["close"] > dataframe["session_vwap"] - dataframe["atr14"] * 0.20)
+                    )
+                    dataframe["realized_asymmetry_trend_acceptance_short"] = (
+                        dataframe["realized_skew_96_shifted"].lt(-0.12)
+                        & dataframe["semivariance_balance_shifted"].lt(-0.08)
+                        & (dataframe["ema21"] < dataframe["ema55"])
+                        & dataframe["ema21_slope_bps_12"].lt(-1.0)
+                        & dataframe["ema55_slope_bps_48"].lt(0.4)
+                        & (dataframe["close"] < dataframe["session_vwap"] + dataframe["atr14"] * 0.20)
+                    )
+                    raw = (
+                        dataframe["realized_asymmetry_trend_acceptance_long"].fillna(False)
+                        & mtf_slope_resonance_long.fillna(False)
+                        & dataframe["adx14"].between(14, 54)
+                        & dataframe["rsi14"].between(44, 80)
+                        & dataframe["bar_range_atr"].between(0.08, 3.10)
+                        & dataframe["rvol96"].between(0.45, 5.20)
+                    )
+                    short_raw = (
+                        dataframe["realized_asymmetry_trend_acceptance_short"].fillna(False)
+                        & mtf_slope_resonance_short.fillna(False)
+                        & dataframe["adx14"].between(14, 54)
+                        & dataframe["rsi14"].between(20, 56)
+                        & dataframe["bar_range_atr"].between(0.08, 3.10)
+                        & dataframe["rvol96"].between(0.45, 5.20)
+                    )
                 elif "{spec.key}" == "supertrend_adx_liquidity_sweep_reclaim":
                     trend_root = (
                         (dataframe["supertrend_trend"] > 0)
@@ -4750,6 +16524,49 @@ def strategy_source(spec: CandidateSpec, *, symbol: str, timeframe: str) -> str:
                     )
                     raw = end_of_day | mean_target_long.fillna(False)
                     short_raw = end_of_day | mean_target_short.fillna(False)
+                elif "{spec.key}" == "jdk_relative_rotation_regime_gate":
+                    constructive_leadership = dataframe["jdk_leadership_constructive"].fillna(False)
+                    defensive_leadership = dataframe["jdk_leadership_defensive"].fillna(False)
+                    rotation_persistent = dataframe["jdk_rotation_persistence"].fillna(0).ge(3)
+                    rs_momentum_rising = dataframe["jdk_rs_momentum"].gt(0.02)
+                    rs_momentum_falling = dataframe["jdk_rs_momentum"].lt(-0.02)
+                    absolute_trend_up = (
+                        (dataframe["ema21"] > dataframe["ema55"])
+                        & (dataframe["close"] > dataframe["session_vwap"])
+                        & (dataframe["slope_15m"] > -dataframe["atr14"] * 0.04)
+                    )
+                    absolute_trend_down = (
+                        (dataframe["ema21"] < dataframe["ema55"])
+                        & (dataframe["close"] < dataframe["session_vwap"])
+                        & (dataframe["slope_15m"] < dataframe["atr14"] * 0.04)
+                    )
+                    relative_rotation_rejoin_long = (
+                        constructive_leadership
+                        & rotation_persistent
+                        & rs_momentum_rising.fillna(False)
+                        & absolute_trend_up.fillna(False)
+                        & dataframe["close"].gt(dataframe["ema21"] - dataframe["atr14"] * 0.08)
+                    )
+                    relative_rotation_rejoin_short = (
+                        defensive_leadership
+                        & rs_momentum_falling.fillna(False)
+                        & absolute_trend_down.fillna(False)
+                        & dataframe["close"].lt(dataframe["ema21"] + dataframe["atr14"] * 0.08)
+                    )
+                    raw = (
+                        relative_rotation_rejoin_long.fillna(False)
+                        & dataframe["adx14"].between(15, 52)
+                        & dataframe["rvol96"].between(0.55, 5.5)
+                        & dataframe["rsi14"].between(44, 80)
+                        & dataframe["body_atr"].between(0.06, 2.4)
+                    )
+                    short_raw = (
+                        relative_rotation_rejoin_short.fillna(False)
+                        & dataframe["adx14"].between(15, 52)
+                        & dataframe["rvol96"].between(0.55, 5.5)
+                        & dataframe["rsi14"].between(20, 56)
+                        & dataframe["body_atr"].between(0.06, 2.4)
+                    )
                 else:
                     raw = trend & vwap_reclaim & breakout & rvol_ok & rsi_ok & body_ok
                 entry_raw = raw.fillna(False)
@@ -4803,6 +16620,2322 @@ def strategy_source(spec: CandidateSpec, *, symbol: str, timeframe: str) -> str:
                     end_of_day = dataframe["minute_of_day_ny"].ge(15 * 60 + 30)
                     raw = end_of_day
                     short_raw = end_of_day
+                elif "{spec.key}" == "overnight_intraday_disagreement_reclaim":
+                    end_of_day = dataframe["minute_of_day_ny"].ge(15 * 60 + 30)
+                    reclaim_failure_long = (
+                        dataframe["close"].le(dataframe["overnight_midpoint"])
+                        | dataframe["close"].lt(dataframe["session_vwap"])
+                        | dataframe["rsi14"].gt(72)
+                    )
+                    reclaim_failure_short = (
+                        dataframe["close"].ge(dataframe["overnight_midpoint"])
+                        | dataframe["close"].gt(dataframe["session_vwap"])
+                        | dataframe["rsi14"].lt(28)
+                    )
+                    raw = end_of_day | reclaim_failure_long.fillna(False)
+                    short_raw = end_of_day | reclaim_failure_short.fillna(False)
+                elif "{spec.key}" in ("trend_magic_cci_atr_slow_long", "trend_magic_cci_atr_balanced_long"):
+                    end_of_session = dataframe["minute_of_day_ny"].ge(16 * 60)
+                    trend_magic_failure_long = (
+                        dataframe["trend_magic_dir_shifted"].lt(0)
+                        | dataframe["trend_magic_cci_shifted"].lt(-25.0)
+                        | dataframe["close"].lt(dataframe["trend_magic_line_shifted"])
+                        | dataframe["trend_magic_context_votes_long"].lt({trend_magic_params["min_context"]})
+                        | dataframe["close"].lt(dataframe["ema55"] - dataframe["atr14"] * 0.35)
+                        | dataframe["rsi14"].gt(84)
+                    )
+                    raw = end_of_session | trend_magic_failure_long.fillna(False)
+                elif "{spec.key}" == "first30_last30_momentum_close_drive":
+                    end_of_day = dataframe["minute_of_day_ny"].ge(16 * 60)
+                    momentum_failure_long = (
+                        dataframe["close"].lt(dataframe["session_vwap"])
+                        | dataframe["close"].lt(dataframe["ema21"])
+                        | dataframe["rsi14"].gt(78)
+                    )
+                    momentum_failure_short = (
+                        dataframe["close"].gt(dataframe["session_vwap"])
+                        | dataframe["close"].gt(dataframe["ema21"])
+                        | dataframe["rsi14"].lt(22)
+                    )
+                    raw = end_of_day | momentum_failure_long.fillna(False)
+                    short_raw = end_of_day | momentum_failure_short.fillna(False)
+                elif "{spec.key}" == "order_flow_imbalance_proxy_trend_reversal_gate":
+                    end_of_day = dataframe["minute_of_day_ny"].ge(16 * 60)
+                    order_flow_exit_long = (
+                        dataframe["close"].lt(dataframe["session_vwap"])
+                        | dataframe["close"].lt(dataframe["ema21"] - dataframe["atr14"] * 0.20)
+                        | dataframe["ofi_proxy_z"].lt(-2.40)
+                        | (dataframe["slope_15m"] < -dataframe["atr14"] * 0.18)
+                        | dataframe["rsi14"].gt(80)
+                    )
+                    order_flow_exit_short = (
+                        dataframe["close"].gt(dataframe["session_vwap"])
+                        | dataframe["close"].gt(dataframe["ema21"] + dataframe["atr14"] * 0.20)
+                        | dataframe["ofi_proxy_z"].gt(2.40)
+                        | (dataframe["slope_15m"] > dataframe["atr14"] * 0.18)
+                        | dataframe["rsi14"].lt(20)
+                    )
+                    raw = end_of_day | order_flow_exit_long.fillna(False)
+                    short_raw = end_of_day | order_flow_exit_short.fillna(False)
+                elif "{spec.key}" == "adaptive_vwap_deviation_half_life_reversion_gate":
+                    end_of_day = dataframe["minute_of_day_ny"].ge(16 * 60)
+                    deviation_expansion = (
+                        dataframe["vwap_deviation_decay_ratio"].gt(1.35)
+                        & dataframe["abs_vwap_deviation_atr"].gt(1.40)
+                    )
+                    vwap_reversion_exit_long = (
+                        dataframe["close"].ge(dataframe["session_vwap"])
+                        | dataframe["vwap_deviation_atr"].gt(-0.10)
+                        | dataframe["close"].lt(dataframe["ema21"] - dataframe["atr14"] * 0.80)
+                        | dataframe["slope_15m"].lt(-dataframe["atr14"] * 0.20)
+                        | deviation_expansion.fillna(False)
+                    )
+                    vwap_reversion_exit_short = (
+                        dataframe["close"].le(dataframe["session_vwap"])
+                        | dataframe["vwap_deviation_atr"].lt(0.10)
+                        | dataframe["close"].gt(dataframe["ema21"] + dataframe["atr14"] * 0.80)
+                        | dataframe["slope_15m"].gt(dataframe["atr14"] * 0.20)
+                        | deviation_expansion.fillna(False)
+                    )
+                    raw = end_of_day | vwap_reversion_exit_long.fillna(False)
+                    short_raw = end_of_day | vwap_reversion_exit_short.fillna(False)
+                elif "{spec.key}" == "range_entropy_squeeze_breadth_release":
+                    end_of_day = dataframe["minute_of_day_ny"].ge(15 * 60 + 45)
+                    low_turnover_exit_guard = (
+                        dataframe["close"].lt(dataframe["ema21"])
+                        | dataframe["close"].lt(dataframe["session_vwap"])
+                        | dataframe["rsi14"].gt(78)
+                        | dataframe["bar_range_atr"].gt(3.0)
+                    )
+                    raw = end_of_day | low_turnover_exit_guard.fillna(False)
+                elif "{spec.key}" == "permutation_entropy_chop_filter":
+                    end_of_day = dataframe["minute_of_day_ny"].ge(15 * 60 + 45)
+                    chop_filter_exit = (
+                        dataframe["close"].lt(dataframe["ema21"])
+                        | dataframe["close"].lt(dataframe["session_vwap"])
+                        | dataframe["rsi14"].gt(80)
+                        | dataframe["bar_range_atr"].gt(2.8)
+                    )
+                    raw = end_of_day | chop_filter_exit.fillna(False)
+                elif "{spec.key}" == "conformal_interval_width_risk_throttle":
+                    end_of_day = dataframe["minute_of_day_ny"].ge(16 * 60)
+                    conformal_width_break = (
+                        dataframe["conformal_interval_width_percentile_shifted"].gt(1.05)
+                        | dataframe["conformal_miscoverage_rate_shifted"].gt(0.42)
+                    )
+                    parent_loss_long = (
+                        dataframe["close"].lt(dataframe["ema21"])
+                        | dataframe["close"].lt(dataframe["session_vwap"] - dataframe["atr14"] * 0.30)
+                        | (dataframe["slope_15m"] < -dataframe["atr14"] * 0.14)
+                    )
+                    parent_loss_short = (
+                        dataframe["close"].gt(dataframe["ema21"])
+                        | dataframe["close"].gt(dataframe["session_vwap"] + dataframe["atr14"] * 0.30)
+                        | (dataframe["slope_15m"] > dataframe["atr14"] * 0.14)
+                    )
+                    raw = (
+                        end_of_day
+                        | conformal_width_break.fillna(False)
+                        | parent_loss_long.fillna(False)
+                        | dataframe["rsi14"].gt(82)
+                    )
+                    short_raw = (
+                        end_of_day
+                        | conformal_width_break.fillna(False)
+                        | parent_loss_short.fillna(False)
+                        | dataframe["rsi14"].lt(18)
+                    )
+                elif "{spec.key}" == "realized_vol_term_structure_breakout":
+                    end_of_day = dataframe["minute_of_day_ny"].ge(16 * 60)
+                    atr_managed_hold_failure_long = (
+                        dataframe["close"].lt(dataframe["ema21"])
+                        | dataframe["close"].lt(dataframe["range_low40"] + dataframe["atr14"] * 0.12)
+                        | dataframe["rv_ratio"].lt(0.70)
+                        | dataframe["rsi14"].gt(82)
+                    )
+                    atr_managed_hold_failure_short = (
+                        dataframe["close"].gt(dataframe["ema21"])
+                        | dataframe["close"].gt(dataframe["range_high40"] - dataframe["atr14"] * 0.12)
+                        | dataframe["rv_ratio"].lt(0.70)
+                        | dataframe["rsi14"].lt(18)
+                    )
+                    raw = end_of_day | atr_managed_hold_failure_long.fillna(False)
+                    short_raw = end_of_day | atr_managed_hold_failure_short.fillna(False)
+                elif "{spec.key}" == "regime_transition_failure_reclaim":
+                    end_of_day = dataframe["minute_of_day_ny"].ge(15 * 60 + 45)
+                    reclaim_failure_long = (
+                        dataframe["close"].lt(dataframe["session_vwap"])
+                        | dataframe["close"].lt(dataframe["ema21"])
+                        | dataframe["rsi14"].gt(76)
+                        | (dataframe["slope_15m"] < -dataframe["atr14"] * 0.18)
+                    )
+                    reclaim_failure_short = (
+                        dataframe["close"].gt(dataframe["session_vwap"])
+                        | dataframe["close"].gt(dataframe["ema21"])
+                        | dataframe["rsi14"].lt(24)
+                        | (dataframe["slope_15m"] > dataframe["atr14"] * 0.18)
+                    )
+                    raw = end_of_day | reclaim_failure_long.fillna(False)
+                    short_raw = end_of_day | reclaim_failure_short.fillna(False)
+                elif "{spec.key}" == "evt_tail_index_exceedance_regime_gate":
+                    end_of_day = dataframe["minute_of_day_ny"].ge(16 * 60)
+                    tail_failure_long = (
+                        dataframe["tail_exceedance_intensity"].gt(
+                            dataframe["tail_exceedance_intensity"].rolling(144, min_periods=55).quantile(0.88).shift(1)
+                        )
+                        | dataframe["close"].lt(dataframe["session_vwap"])
+                        | dataframe["close"].lt(dataframe["ema21"])
+                        | dataframe["rsi14"].gt(80)
+                    )
+                    tail_failure_short = (
+                        dataframe["tail_exceedance_intensity"].gt(
+                            dataframe["tail_exceedance_intensity"].rolling(144, min_periods=55).quantile(0.88).shift(1)
+                        )
+                        | dataframe["close"].gt(dataframe["session_vwap"])
+                        | dataframe["close"].gt(dataframe["ema21"])
+                        | dataframe["rsi14"].lt(20)
+                    )
+                    raw = end_of_day | tail_failure_long.fillna(False)
+                    short_raw = end_of_day | tail_failure_short.fillna(False)
+                elif "{spec.key}" == "intraday_liquidity_seasonality_residual_shock_filter":
+                    end_of_day = dataframe["minute_of_day_ny"].ge(16 * 60)
+                    residual_shock_failure_long = (
+                        dataframe["liquidity_residual_shock_score"].lt(0.82)
+                        | dataframe["close"].lt(dataframe["session_vwap"])
+                        | dataframe["close"].lt(dataframe["ema21"])
+                        | dataframe["rsi14"].gt(80)
+                    )
+                    residual_shock_failure_short = (
+                        dataframe["liquidity_residual_shock_score"].lt(0.82)
+                        | dataframe["close"].gt(dataframe["session_vwap"])
+                        | dataframe["close"].gt(dataframe["ema21"])
+                        | dataframe["rsi14"].lt(20)
+                    )
+                    raw = end_of_day | residual_shock_failure_long.fillna(False)
+                    short_raw = end_of_day | residual_shock_failure_short.fillna(False)
+                elif "{spec.key}" == "ssa_spectral_trend_denoise_filter":
+                    end_of_day = dataframe["minute_of_day_ny"].ge(16 * 60)
+                    low_rank_trend = dataframe["close"].rolling(55).mean()
+                    trend_failure_long = (
+                        dataframe["close"].lt(low_rank_trend)
+                        | dataframe["close"].lt(dataframe["ema55"])
+                        | dataframe["rsi14"].gt(82)
+                        | (dataframe["slope_15m"] < -dataframe["atr14"] * 0.18)
+                    )
+                    trend_failure_short = (
+                        dataframe["close"].gt(low_rank_trend)
+                        | dataframe["close"].gt(dataframe["ema55"])
+                        | dataframe["rsi14"].lt(18)
+                        | (dataframe["slope_15m"] > dataframe["atr14"] * 0.18)
+                    )
+                    raw = end_of_day | trend_failure_long.fillna(False)
+                    short_raw = end_of_day | trend_failure_short.fillna(False)
+                elif "{spec.key}" == "vmd_intrinsic_mode_trend_rejoin_filter":
+                    end_of_day = dataframe["minute_of_day_ny"].ge(16 * 60)
+                    vmd_low_frequency_mode_proxy = dataframe["close"].ewm(span=144, adjust=False, min_periods=55).mean()
+                    vmd_mid_frequency_mode_proxy = dataframe["close"].ewm(span=55, adjust=False, min_periods=21).mean()
+                    vmd_high_frequency_residual = dataframe["close"] - vmd_mid_frequency_mode_proxy
+                    vmd_low_mode_slope_bps_shifted = (
+                        vmd_low_frequency_mode_proxy.diff(21)
+                        / dataframe["close"].replace(0, np.nan)
+                        * 10000.0
+                    ).shift(1)
+                    vmd_low_mode_energy_shifted = (
+                        vmd_low_frequency_mode_proxy.diff().pow(2).rolling(34, min_periods=13).mean().shift(1)
+                    )
+                    vmd_high_mode_energy_shifted = (
+                        vmd_high_frequency_residual.pow(2).rolling(34, min_periods=13).mean().shift(1)
+                    )
+                    vmd_high_mode_energy_ratio_shifted = (
+                        vmd_high_mode_energy_shifted / vmd_low_mode_energy_shifted.replace(0, np.nan)
+                    )
+                    vmd_mode_failure = vmd_high_mode_energy_ratio_shifted.gt(5.80)
+                    trend_failure_long = (
+                        dataframe["close"].lt(vmd_mid_frequency_mode_proxy)
+                        | dataframe["close"].lt(dataframe["ema55"])
+                        | dataframe["rsi14"].gt(82)
+                        | (dataframe["slope_15m"] < -dataframe["atr14"] * 0.18)
+                        | vmd_low_mode_slope_bps_shifted.lt(-0.45)
+                        | vmd_mode_failure
+                    )
+                    trend_failure_short = (
+                        dataframe["close"].gt(vmd_mid_frequency_mode_proxy)
+                        | dataframe["close"].gt(dataframe["ema55"])
+                        | dataframe["rsi14"].lt(18)
+                        | (dataframe["slope_15m"] > dataframe["atr14"] * 0.18)
+                        | vmd_low_mode_slope_bps_shifted.gt(0.45)
+                        | vmd_mode_failure
+                    )
+                    raw = end_of_day | trend_failure_long.fillna(False)
+                    short_raw = end_of_day | trend_failure_short.fillna(False)
+                elif "{spec.key}" == "ehlers_autocorr_periodogram_cycle_regime_gate":
+                    end_of_day = dataframe["minute_of_day_ny"].ge(16 * 60 + 55)
+                    atr = dataframe["atr14"].clip(lower=0.01)
+                    ehlers_cycle_instability_exit = (
+                        dataframe["ehlers_cycle_power_shifted"].lt(0.12)
+                        | dataframe["ehlers_cycle_concentration_shifted"].lt(0.04)
+                        | dataframe["ehlers_cycle_stability_shifted"].gt(1.80)
+                    )
+                    ehlers_long_cycle_failure = (
+                        ehlers_cycle_instability_exit
+                        | dataframe["close"].lt(dataframe["ema55"])
+                        | dataframe["close"].lt(dataframe["session_vwap"] - atr * 0.42)
+                        | (dataframe["slope_30m"] < -atr * 0.16)
+                        | dataframe["rsi14"].gt(82)
+                    )
+                    ehlers_short_cycle_failure = (
+                        ehlers_cycle_instability_exit
+                        | dataframe["close"].gt(dataframe["ema55"])
+                        | dataframe["close"].gt(dataframe["session_vwap"] + atr * 0.42)
+                        | (dataframe["slope_30m"] > atr * 0.16)
+                        | dataframe["rsi14"].lt(18)
+                    )
+                    raw = end_of_day | ehlers_long_cycle_failure.fillna(False)
+                    short_raw = end_of_day | ehlers_short_cycle_failure.fillna(False)
+                elif "{spec.key}" == "hilbert_analytic_phase_trend_admission":
+                    end_of_day = dataframe["minute_of_day_ny"].ge(16 * 60 + 55)
+                    atr = dataframe["atr14"].clip(lower=0.01)
+                    hilbert_phase_decoherence_exit = (
+                        dataframe["phase_coherence_score_shifted"].lt(0.16)
+                        | dataframe["hilbert_amp_z_shifted"].lt(-0.95)
+                        | dataframe["hilbert_phase_accel_shifted"].abs().gt(0.82)
+                    )
+                    hilbert_long_phase_failure = (
+                        hilbert_phase_decoherence_exit
+                        | dataframe["hilbert_phase_slope_shifted"].lt(-0.018)
+                        | dataframe["close"].lt(dataframe["ema55"])
+                        | dataframe["close"].lt(dataframe["session_vwap"] - atr * 0.40)
+                        | (dataframe["slope_30m"] < -atr * 0.15)
+                        | dataframe["rsi14"].gt(82)
+                    )
+                    hilbert_short_phase_failure = (
+                        hilbert_phase_decoherence_exit
+                        | dataframe["hilbert_phase_slope_shifted"].gt(0.018)
+                        | dataframe["close"].gt(dataframe["ema55"])
+                        | dataframe["close"].gt(dataframe["session_vwap"] + atr * 0.40)
+                        | (dataframe["slope_30m"] > atr * 0.15)
+                        | dataframe["rsi14"].lt(18)
+                    )
+                    raw = end_of_day | hilbert_long_phase_failure.fillna(False)
+                    short_raw = end_of_day | hilbert_short_phase_failure.fillna(False)
+                elif "{spec.key}" == "wavelet_coherence_lead_lag_filter":
+                    end_of_day = dataframe["minute_of_day_ny"].ge(16 * 60)
+                    short_scale_leader_return = dataframe["close"].pct_change(13).rolling(21).mean()
+                    medium_scale_follower_return = dataframe["close"].pct_change(34).rolling(34).mean()
+                    scale_localized_coherence = (
+                        short_scale_leader_return.rolling(55).corr(medium_scale_follower_return)
+                    )
+                    coherence_failure = scale_localized_coherence.lt(0.12)
+                    trend_failure_long = (
+                        dataframe["close"].lt(dataframe["ema55"])
+                        | dataframe["rsi14"].gt(82)
+                        | (dataframe["slope_15m"] < -dataframe["atr14"] * 0.18)
+                        | coherence_failure
+                    )
+                    trend_failure_short = (
+                        dataframe["close"].gt(dataframe["ema55"])
+                        | dataframe["rsi14"].lt(18)
+                        | (dataframe["slope_15m"] > dataframe["atr14"] * 0.18)
+                        | coherence_failure
+                    )
+                    raw = end_of_day | trend_failure_long.fillna(False)
+                    short_raw = end_of_day | trend_failure_short.fillna(False)
+                elif "{spec.key}" == "dynamic_lead_lag_breadth_gate":
+                    end_of_day = dataframe["minute_of_day_ny"].ge(16 * 60)
+                    dll_leader_agreement_decay = (
+                        dataframe["dll_leadlag_score_bps"].lt(0.0)
+                        | dataframe["dll_leadlag_agreement_long"].lt(1)
+                        | dataframe["dll_leadlag_max_abs_corr"].lt(0.06)
+                    )
+                    dll_parent_trend_failure = (
+                        dataframe["dll_nq_momentum_bps"].lt(-10.0)
+                        | dataframe["dll_nq_ema_fast"].lt(dataframe["dll_nq_ema_slow"])
+                        | dataframe["close"].lt(dataframe["ema55"])
+                        | dataframe["rsi14"].gt(84)
+                    )
+                    raw = end_of_day | dll_leader_agreement_decay.fillna(False) | dll_parent_trend_failure.fillna(False)
+                elif "{spec.key}" == "bocpd_runlength_transition_acceptance":
+                    end_of_day = dataframe["minute_of_day_ny"].ge(16 * 60)
+                    bocpd_return = dataframe["close"].pct_change()
+                    bocpd_return_mean = bocpd_return.rolling(89, min_periods=34).mean().shift(1)
+                    bocpd_return_vol = bocpd_return.rolling(89, min_periods=34).std().shift(1)
+                    bocpd_return_surprise = (
+                        (bocpd_return - bocpd_return_mean).abs()
+                        / bocpd_return_vol.replace(0, np.nan)
+                    )
+                    bocpd_transition_probability_shifted = (
+                        bocpd_return_surprise.rolling(8, min_periods=3).mean() / 10.0
+                    ).clip(lower=0.0, upper=1.0).shift(1)
+                    bocpd_reset_state = bocpd_transition_probability_shifted.ge(0.34).fillna(False)
+                    bocpd_run_length_proxy = (
+                        (~bocpd_reset_state).astype(float)
+                        .groupby(bocpd_reset_state.cumsum())
+                        .cumsum()
+                    )
+                    bocpd_transition_failure = (
+                        bocpd_transition_probability_shifted.gt(0.48)
+                        | bocpd_run_length_proxy.lt(2.0)
+                    )
+                    trend_failure_long = (
+                        dataframe["close"].lt(dataframe["session_vwap"])
+                        | dataframe["close"].lt(dataframe["ema55"])
+                        | dataframe["rsi14"].gt(82)
+                        | (dataframe["slope_15m"] < -dataframe["atr14"] * 0.18)
+                        | bocpd_transition_failure
+                    )
+                    trend_failure_short = (
+                        dataframe["close"].gt(dataframe["session_vwap"])
+                        | dataframe["close"].gt(dataframe["ema55"])
+                        | dataframe["rsi14"].lt(18)
+                        | (dataframe["slope_15m"] > dataframe["atr14"] * 0.18)
+                        | bocpd_transition_failure
+                    )
+                    raw = end_of_day | trend_failure_long.fillna(False)
+                    short_raw = end_of_day | trend_failure_short.fillna(False)
+                elif "{spec.key}" == "filtered_markov_trendexpansion_posterior_gate":
+                    end_of_day = dataframe["minute_of_day_ny"].ge(16 * 60)
+                    markov_trend_score = (
+                        (dataframe["ema21"] - dataframe["ema55"])
+                        / dataframe["atr14"].replace(0, np.nan)
+                    ).clip(lower=-6.0, upper=6.0)
+                    markov_direction_quality = (
+                        dataframe["slope_15m"].div(dataframe["atr14"].replace(0, np.nan))
+                        + dataframe["slope_1h"].div(dataframe["atr14"].replace(0, np.nan))
+                    ).clip(lower=-6.0, upper=6.0)
+                    markov_displacement_quality = (
+                        dataframe["body_atr"].rolling(8, min_periods=3).mean()
+                        + dataframe["bar_range_atr"].rolling(8, min_periods=3).mean()
+                    ).clip(lower=0.0, upper=6.0)
+                    markov_filtered_trend_probability = (
+                        0.50
+                        + 0.045 * markov_trend_score
+                        + 0.035 * markov_direction_quality
+                        + 0.030 * (markov_displacement_quality - 1.0)
+                    ).clip(lower=0.0, upper=1.0)
+                    markov_filtered_probability_shifted = markov_filtered_trend_probability.shift(1)
+                    markov_probability_failure = (
+                        markov_filtered_probability_shifted.lt(0.48)
+                        | markov_filtered_probability_shifted.gt(0.91)
+                    )
+                    trend_failure_long = (
+                        dataframe["close"].lt(dataframe["session_vwap"])
+                        | dataframe["close"].lt(dataframe["ema55"])
+                        | dataframe["rsi14"].gt(82)
+                        | (dataframe["slope_15m"] < -dataframe["atr14"] * 0.18)
+                        | markov_probability_failure
+                    )
+                    trend_failure_short = (
+                        dataframe["close"].gt(dataframe["session_vwap"])
+                        | dataframe["close"].gt(dataframe["ema55"])
+                        | dataframe["rsi14"].lt(18)
+                        | (dataframe["slope_15m"] > dataframe["atr14"] * 0.18)
+                        | markov_probability_failure
+                    )
+                    raw = end_of_day | trend_failure_long.fillna(False)
+                    short_raw = end_of_day | trend_failure_short.fillna(False)
+                elif "{spec.key}" == "residual_momentum_beta_neutral_parent_admission":
+                    end_of_day = dataframe["minute_of_day_ny"].ge(16 * 60)
+                    market_mode_return = (
+                        dataframe["slope_15m"].div(dataframe["close"].replace(0, np.nan))
+                        + dataframe["slope_1h"].div(dataframe["close"].replace(0, np.nan))
+                        + dataframe["slope_4h"].div(dataframe["close"].replace(0, np.nan))
+                    ) / 3.0
+                    own_return = dataframe["close"].pct_change()
+                    rolling_beta_to_market_mode = (
+                        own_return.rolling(144, min_periods=55).cov(market_mode_return)
+                        / market_mode_return.rolling(144, min_periods=55).var().replace(0, np.nan)
+                    ).clip(lower=-2.5, upper=2.5).shift(1)
+                    beta_neutral_residual_return = own_return - rolling_beta_to_market_mode * market_mode_return
+                    residual_momentum = beta_neutral_residual_return.rolling(34, min_periods=13).sum()
+                    residual_volatility = beta_neutral_residual_return.rolling(89, min_periods=34).std().shift(1)
+                    residual_momentum_decay_long = residual_momentum.lt(-residual_volatility * 0.10)
+                    residual_momentum_decay_short = residual_momentum.gt(residual_volatility * 0.10)
+                    trend_failure_long = (
+                        dataframe["close"].lt(dataframe["session_vwap"])
+                        | dataframe["close"].lt(dataframe["ema55"])
+                        | dataframe["rsi14"].gt(82)
+                        | (dataframe["slope_15m"] < -dataframe["atr14"] * 0.18)
+                        | residual_momentum_decay_long
+                    )
+                    trend_failure_short = (
+                        dataframe["close"].gt(dataframe["session_vwap"])
+                        | dataframe["close"].gt(dataframe["ema55"])
+                        | dataframe["rsi14"].lt(18)
+                        | (dataframe["slope_15m"] > dataframe["atr14"] * 0.18)
+                        | residual_momentum_decay_short
+                    )
+                    raw = end_of_day | trend_failure_long.fillna(False)
+                    short_raw = end_of_day | trend_failure_short.fillna(False)
+                elif "{spec.key}" == "jdk_relative_rotation_regime_gate":
+                    end_of_day = dataframe["minute_of_day_ny"].ge(16 * 60)
+                    rotation_flip_against_long = (
+                        dataframe["jdk_leadership_defensive"].fillna(False)
+                        | dataframe["jdk_rs_momentum"].lt(-0.05)
+                        | dataframe["jdk_rs_ratio"].lt(-1.25)
+                    )
+                    rotation_flip_against_short = (
+                        dataframe["jdk_leadership_constructive"].fillna(False)
+                        | dataframe["jdk_rs_momentum"].gt(0.05)
+                        | dataframe["jdk_rs_ratio"].gt(1.25)
+                    )
+                    trend_failure_long = (
+                        dataframe["close"].lt(dataframe["session_vwap"])
+                        | dataframe["close"].lt(dataframe["ema55"])
+                        | dataframe["rsi14"].gt(82)
+                        | (dataframe["slope_15m"] < -dataframe["atr14"] * 0.18)
+                        | rotation_flip_against_long
+                    )
+                    trend_failure_short = (
+                        dataframe["close"].gt(dataframe["session_vwap"])
+                        | dataframe["close"].gt(dataframe["ema55"])
+                        | dataframe["rsi14"].lt(18)
+                        | (dataframe["slope_15m"] > dataframe["atr14"] * 0.18)
+                        | rotation_flip_against_short
+                    )
+                    raw = end_of_day | trend_failure_long.fillna(False)
+                    short_raw = end_of_day | trend_failure_short.fillna(False)
+                elif "{spec.key}" == "jolts_labor_tightness_regime_filter":
+                    end_of_day = dataframe["minute_of_day_ny"].ge(16 * 60)
+                    macro_not_ready = ~dataframe["jolts_labor_tightness_release_lag_ok"].fillna(False)
+                    labor_pressure = dataframe["job_openings_to_unemployed_proxy"]
+                    labor_pressure_slope = dataframe["jolts_labor_tightness_pressure_slope"]
+                    macro_regime_failure_long = (
+                        macro_not_ready
+                        | labor_pressure.lt(0.80)
+                        | labor_pressure_slope.lt(-0.16)
+                        | dataframe["close"].lt(dataframe["session_vwap"])
+                        | dataframe["close"].lt(dataframe["ema55"])
+                        | dataframe["rsi14"].gt(82)
+                    )
+                    macro_regime_failure_short = (
+                        macro_not_ready
+                        | labor_pressure.gt(1.45)
+                        | labor_pressure_slope.gt(0.16)
+                        | dataframe["close"].gt(dataframe["session_vwap"])
+                        | dataframe["close"].gt(dataframe["ema55"])
+                        | dataframe["rsi14"].lt(18)
+                    )
+                    raw = end_of_day | macro_regime_failure_long.fillna(False)
+                    short_raw = end_of_day | macro_regime_failure_short.fillna(False)
+                elif "{spec.key}" == "matrix_profile_motif_discord_admission_filter":
+                    end_of_day = dataframe["minute_of_day_ny"].ge(16 * 60)
+                    rolling_subsequence_return = dataframe["close"].pct_change(21).rolling(34).mean()
+                    rolling_subsequence_vol = dataframe["close"].pct_change().rolling(34).std()
+                    motif_reference_return = rolling_subsequence_return.rolling(144).median()
+                    matrix_profile_distance = (
+                        (rolling_subsequence_return - motif_reference_return).abs()
+                        / rolling_subsequence_vol.replace(0, np.nan)
+                    )
+                    matrix_profile_distance_z = (
+                        matrix_profile_distance
+                        - matrix_profile_distance.rolling(144).median()
+                    ) / matrix_profile_distance.rolling(144).std().replace(0, np.nan)
+                    discord_veto = matrix_profile_distance_z.gt(2.35)
+                    motif_failure = matrix_profile_distance_z.gt(1.75)
+                    trend_failure_long = (
+                        dataframe["close"].lt(dataframe["session_vwap"])
+                        | dataframe["close"].lt(dataframe["ema55"])
+                        | dataframe["rsi14"].gt(82)
+                        | (dataframe["slope_15m"] < -dataframe["atr14"] * 0.18)
+                        | discord_veto
+                        | motif_failure
+                    )
+                    trend_failure_short = (
+                        dataframe["close"].gt(dataframe["session_vwap"])
+                        | dataframe["close"].gt(dataframe["ema55"])
+                        | dataframe["rsi14"].lt(18)
+                        | (dataframe["slope_15m"] > dataframe["atr14"] * 0.18)
+                        | discord_veto
+                        | motif_failure
+                    )
+                    raw = end_of_day | trend_failure_long.fillna(False)
+                    short_raw = end_of_day | trend_failure_short.fillna(False)
+                elif "{spec.key}" == "visibility_graph_trend_persistence_filter":
+                    end_of_day = dataframe["minute_of_day_ny"].ge(16 * 60)
+                    graph_return = dataframe["close"].pct_change(13)
+                    graph_direction = np.sign(graph_return).replace(0, np.nan)
+                    visibility_graph_persistence_ratio = (
+                        (graph_direction == graph_direction.shift(1)).astype(float).rolling(34).mean()
+                    )
+                    visibility_graph_noise_ratio = (
+                        (graph_direction != graph_direction.shift(1)).astype(float).rolling(21).mean()
+                    )
+                    graph_noise_veto = visibility_graph_noise_ratio.gt(0.68) | visibility_graph_persistence_ratio.lt(0.42)
+                    graph_persistence_failure = visibility_graph_persistence_ratio.lt(0.46) | graph_noise_veto
+                    trend_failure_long = (
+                        dataframe["close"].lt(dataframe["session_vwap"])
+                        | dataframe["close"].lt(dataframe["ema55"])
+                        | dataframe["rsi14"].gt(82)
+                        | (dataframe["slope_15m"] < -dataframe["atr14"] * 0.18)
+                        | graph_persistence_failure
+                    )
+                    trend_failure_short = (
+                        dataframe["close"].gt(dataframe["session_vwap"])
+                        | dataframe["close"].gt(dataframe["ema55"])
+                        | dataframe["rsi14"].lt(18)
+                        | (dataframe["slope_15m"] > dataframe["atr14"] * 0.18)
+                        | graph_persistence_failure
+                    )
+                    raw = end_of_day | trend_failure_long.fillna(False)
+                    short_raw = end_of_day | trend_failure_short.fillna(False)
+                elif "{spec.key}" == "l1_trend_filter_slope_stability_gate":
+                    end_of_day = dataframe["minute_of_day_ny"].ge(16 * 60)
+                    sparse_trend_proxy = dataframe["close"].ewm(span=89, adjust=False, min_periods=34).mean()
+                    sparse_trend_slow = dataframe["close"].ewm(span=233, adjust=False, min_periods=89).mean()
+                    l1_trend_slope_bps = sparse_trend_proxy.diff(13) / dataframe["close"].replace(0, np.nan) * 10000.0
+                    l1_trend_slow_slope_bps = sparse_trend_slow.diff(34) / dataframe["close"].replace(0, np.nan) * 10000.0
+                    l1_slope_sign = np.sign(l1_trend_slope_bps).replace(0, np.nan)
+                    l1_kink_density = (l1_slope_sign != l1_slope_sign.shift(1)).astype(float).rolling(55).mean()
+                    l1_stability_failure_long = (
+                        l1_trend_slope_bps.lt(-0.18)
+                        | l1_trend_slow_slope_bps.lt(-0.75)
+                        | l1_kink_density.gt(0.44)
+                    )
+                    l1_stability_failure_short = (
+                        l1_trend_slope_bps.gt(0.18)
+                        | l1_trend_slow_slope_bps.gt(0.75)
+                        | l1_kink_density.gt(0.44)
+                    )
+                    trend_failure_long = (
+                        dataframe["close"].lt(dataframe["session_vwap"])
+                        | dataframe["close"].lt(dataframe["ema55"])
+                        | dataframe["rsi14"].gt(82)
+                        | (dataframe["slope_15m"] < -dataframe["atr14"] * 0.18)
+                        | l1_stability_failure_long
+                    )
+                    trend_failure_short = (
+                        dataframe["close"].gt(dataframe["session_vwap"])
+                        | dataframe["close"].gt(dataframe["ema55"])
+                        | dataframe["rsi14"].lt(18)
+                        | (dataframe["slope_15m"] > dataframe["atr14"] * 0.18)
+                        | l1_stability_failure_short
+                    )
+                    raw = end_of_day | trend_failure_long.fillna(False)
+                    short_raw = end_of_day | trend_failure_short.fillna(False)
+                elif "{spec.key}" == "hawkes_intensity_cluster_admission_filter":
+                    end_of_day = dataframe["minute_of_day_ny"].ge(16 * 60)
+                    event_threshold = dataframe["bar_range_atr"].rolling(144).quantile(0.68).shift(1)
+                    displacement_threshold = dataframe["body_atr"].rolling(144).quantile(0.62).shift(1)
+                    hawkes_up_event = (
+                        dataframe["close"].gt(dataframe["open"])
+                        & dataframe["bar_range_atr"].gt(event_threshold)
+                        & dataframe["body_atr"].gt(displacement_threshold)
+                    )
+                    hawkes_down_event = (
+                        dataframe["close"].lt(dataframe["open"])
+                        & dataframe["bar_range_atr"].gt(event_threshold)
+                        & dataframe["body_atr"].gt(displacement_threshold)
+                    )
+                    hawkes_up_event_intensity = hawkes_up_event.astype(float).ewm(span=21, adjust=False).mean()
+                    hawkes_down_event_intensity = hawkes_down_event.astype(float).ewm(span=21, adjust=False).mean()
+                    hawkes_total_intensity = hawkes_up_event_intensity + hawkes_down_event_intensity
+                    hawkes_directional_excitation_ratio = (
+                        (hawkes_up_event_intensity - hawkes_down_event_intensity)
+                        / hawkes_total_intensity.replace(0, np.nan)
+                    )
+                    hawkes_two_sided_noise_ratio = (
+                        hawkes_up_event_intensity.rolling(34).mean().clip(upper=hawkes_down_event_intensity.rolling(34).mean())
+                        / hawkes_total_intensity.rolling(34).mean().replace(0, np.nan)
+                    )
+                    hawkes_structure_failure = (
+                        hawkes_total_intensity.rolling(21).mean().gt(0.48)
+                        | hawkes_two_sided_noise_ratio.gt(0.44)
+                        | hawkes_directional_excitation_ratio.abs().lt(0.10)
+                    )
+                    trend_failure_long = (
+                        dataframe["close"].lt(dataframe["session_vwap"])
+                        | dataframe["close"].lt(dataframe["ema55"])
+                        | dataframe["rsi14"].gt(82)
+                        | (dataframe["slope_15m"] < -dataframe["atr14"] * 0.18)
+                        | hawkes_structure_failure
+                    )
+                    trend_failure_short = (
+                        dataframe["close"].gt(dataframe["session_vwap"])
+                        | dataframe["close"].gt(dataframe["ema55"])
+                        | dataframe["rsi14"].lt(18)
+                        | (dataframe["slope_15m"] > dataframe["atr14"] * 0.18)
+                        | hawkes_structure_failure
+                    )
+                    raw = end_of_day | trend_failure_long.fillna(False)
+                    short_raw = end_of_day | trend_failure_short.fillna(False)
+                elif "{spec.key}" == "beveridge_nelson_cycle_trend_filter":
+                    end_of_day = dataframe["minute_of_day_ny"].ge(16 * 60)
+                    bn_log_price = np.log(dataframe["close"].replace(0, np.nan))
+                    bn_permanent_trend_proxy = bn_log_price.ewm(span=144, adjust=False, min_periods=55).mean()
+                    bn_permanent_slope_bps = bn_permanent_trend_proxy.diff(13).shift(1) * 10000.0
+                    bn_permanent_slope_accel = bn_permanent_slope_bps.diff(8).shift(1)
+                    bn_transitory_gap_bps = (bn_log_price - bn_permanent_trend_proxy).shift(1) * 10000.0
+                    bn_transitory_gap_z = (
+                        bn_transitory_gap_bps
+                        / bn_transitory_gap_bps.rolling(144, min_periods=55).std().shift(1).replace(0, np.nan)
+                    )
+                    bn_cycle_contraction = bn_transitory_gap_bps.abs().lt(
+                        bn_transitory_gap_bps.abs().rolling(55, min_periods=21).mean().shift(1)
+                    )
+                    bn_structure_failure_long = (
+                        bn_permanent_slope_bps.lt(-0.18)
+                        | bn_permanent_slope_accel.lt(-1.25)
+                        | bn_transitory_gap_z.gt(2.20)
+                        | ~bn_cycle_contraction.fillna(False)
+                    )
+                    bn_structure_failure_short = (
+                        bn_permanent_slope_bps.gt(0.18)
+                        | bn_permanent_slope_accel.gt(1.25)
+                        | bn_transitory_gap_z.lt(-2.20)
+                        | ~bn_cycle_contraction.fillna(False)
+                    )
+                    trend_failure_long = (
+                        dataframe["close"].lt(dataframe["session_vwap"])
+                        | dataframe["close"].lt(dataframe["ema55"])
+                        | dataframe["rsi14"].gt(82)
+                        | (dataframe["slope_15m"] < -dataframe["atr14"] * 0.18)
+                        | bn_structure_failure_long
+                    )
+                    trend_failure_short = (
+                        dataframe["close"].gt(dataframe["session_vwap"])
+                        | dataframe["close"].gt(dataframe["ema55"])
+                        | dataframe["rsi14"].lt(18)
+                        | (dataframe["slope_15m"] > dataframe["atr14"] * 0.18)
+                        | bn_structure_failure_short
+                    )
+                    raw = end_of_day | trend_failure_long.fillna(False)
+                    short_raw = end_of_day | trend_failure_short.fillna(False)
+                elif "{spec.key}" == "rqa_determinism_trend_persistence_filter":
+                    end_of_day = dataframe["minute_of_day_ny"].ge(16 * 60)
+                    rqa_embedding_return = dataframe["close"].pct_change(3)
+                    rqa_embedding_slope = dataframe["close"].pct_change(13)
+                    rqa_state_distance = (
+                        (rqa_embedding_return - rqa_embedding_return.shift(13)).abs()
+                        + (rqa_embedding_slope - rqa_embedding_slope.shift(13)).abs()
+                    )
+                    rqa_radius = rqa_state_distance.rolling(144).quantile(0.35).shift(1)
+                    rqa_recurrent_state = rqa_state_distance.le(rqa_radius)
+                    rqa_recurrence_rate = rqa_recurrent_state.astype(float).rolling(34).mean()
+                    rqa_diagonal_line_length = rqa_recurrent_state.astype(float).rolling(8).sum()
+                    rqa_determinism = (
+                        rqa_diagonal_line_length.ge(5).astype(float).rolling(34).mean()
+                        / rqa_recurrence_rate.replace(0, np.nan)
+                    ).clip(upper=1.0)
+                    rqa_vertical_run = (
+                        rqa_recurrent_state
+                        & rqa_recurrent_state.shift(1).fillna(False)
+                        & rqa_recurrent_state.shift(2).fillna(False)
+                    )
+                    rqa_laminarity = (
+                        rqa_vertical_run.astype(float).rolling(34).mean()
+                        / rqa_recurrence_rate.replace(0, np.nan)
+                    ).clip(upper=1.0)
+                    rqa_structure_failure = (
+                        rqa_recurrence_rate.lt(0.18)
+                        | rqa_recurrence_rate.gt(0.82)
+                        | rqa_determinism.lt(0.24)
+                        | rqa_laminarity.lt(0.06)
+                    )
+                    trend_failure_long = (
+                        dataframe["close"].lt(dataframe["session_vwap"])
+                        | dataframe["close"].lt(dataframe["ema55"])
+                        | dataframe["rsi14"].gt(82)
+                        | (dataframe["slope_15m"] < -dataframe["atr14"] * 0.18)
+                        | rqa_structure_failure
+                    )
+                    trend_failure_short = (
+                        dataframe["close"].gt(dataframe["session_vwap"])
+                        | dataframe["close"].gt(dataframe["ema55"])
+                        | dataframe["rsi14"].lt(18)
+                        | (dataframe["slope_15m"] > dataframe["atr14"] * 0.18)
+                        | rqa_structure_failure
+                    )
+                    raw = end_of_day | trend_failure_long.fillna(False)
+                    short_raw = end_of_day | trend_failure_short.fillna(False)
+                elif "{spec.key}" == "jump_activity_index_finite_infinite_state_filter":
+                    end_of_day = dataframe["minute_of_day_ny"].ge(16 * 60)
+                    jump_activity_return = dataframe["close"].pct_change()
+                    jump_activity_return_power_1 = jump_activity_return.abs().rolling(34).mean()
+                    jump_activity_return_power_2 = jump_activity_return.pow(2).rolling(34).mean()
+                    jump_activity_small_return_frequency = (
+                        jump_activity_return.abs()
+                        .le(jump_activity_return.abs().rolling(144).quantile(0.45).shift(1))
+                        .astype(float)
+                        .rolling(34)
+                        .mean()
+                    )
+                    jump_activity_power_ratio = (
+                        jump_activity_return_power_1.pow(2)
+                        / jump_activity_return_power_2.replace(0, np.nan)
+                    )
+                    jump_activity_index_proxy = (
+                        (1.0 / jump_activity_power_ratio.replace(0, np.nan))
+                        * jump_activity_small_return_frequency
+                    ).clip(lower=0.0, upper=3.0)
+                    finite_infinite_activity_state = jump_activity_index_proxy.rolling(21).mean()
+                    infinite_activity_failure = (
+                        finite_infinite_activity_state.gt(1.85)
+                        | jump_activity_small_return_frequency.gt(0.76)
+                        | jump_activity_power_ratio.lt(0.34)
+                    )
+                    trend_failure_long = (
+                        dataframe["close"].lt(dataframe["session_vwap"])
+                        | dataframe["close"].lt(dataframe["ema55"])
+                        | dataframe["rsi14"].gt(82)
+                        | (dataframe["slope_15m"] < -dataframe["atr14"] * 0.18)
+                        | infinite_activity_failure
+                    )
+                    trend_failure_short = (
+                        dataframe["close"].gt(dataframe["session_vwap"])
+                        | dataframe["close"].gt(dataframe["ema55"])
+                        | dataframe["rsi14"].lt(18)
+                        | (dataframe["slope_15m"] > dataframe["atr14"] * 0.18)
+                        | infinite_activity_failure
+                    )
+                    raw = end_of_day | trend_failure_long.fillna(False)
+                    short_raw = end_of_day | trend_failure_short.fillna(False)
+                elif "{spec.key}" == "pettitt_rank_shift_breakout_reliability_filter":
+                    end_of_day = dataframe["minute_of_day_ny"].ge(16 * 60)
+                    pettitt_return = dataframe["close"].pct_change()
+                    pettitt_rank_statistic = (
+                        pettitt_return.rolling(89, min_periods=34).rank(pct=True)
+                        - pettitt_return.rolling(233, min_periods=89).rank(pct=True).shift(1)
+                    )
+                    pettitt_rank_shift = pettitt_rank_statistic.rolling(21, min_periods=8).mean()
+                    pettitt_rank_dispersion = pettitt_rank_statistic.rolling(55, min_periods=21).std().shift(1)
+                    pettitt_location_balance = (
+                        dataframe["close"].pct_change(21)
+                        / dataframe["atr14"].div(dataframe["close"].replace(0, np.nan)).replace(0, np.nan)
+                    )
+                    pettitt_shift_failure_long = (
+                        pettitt_rank_shift.lt(-pettitt_rank_dispersion * 0.10)
+                        | pettitt_location_balance.lt(-0.18)
+                        | dataframe["close"].lt(dataframe["session_vwap"])
+                        | dataframe["close"].lt(dataframe["ema55"])
+                        | dataframe["rsi14"].gt(82)
+                    )
+                    pettitt_shift_failure_short = (
+                        pettitt_rank_shift.gt(pettitt_rank_dispersion * 0.10)
+                        | pettitt_location_balance.gt(0.18)
+                        | dataframe["close"].gt(dataframe["session_vwap"])
+                        | dataframe["close"].gt(dataframe["ema55"])
+                        | dataframe["rsi14"].lt(18)
+                    )
+                    raw = end_of_day | pettitt_shift_failure_long.fillna(False)
+                    short_raw = end_of_day | pettitt_shift_failure_short.fillna(False)
+                elif "{spec.key}" == "market_turbulence_mahalanobis_state_filter":
+                    end_of_day = dataframe["minute_of_day_ny"].ge(16 * 60)
+                    mahalanobis_return_vector = pd.concat(
+                        [
+                            dataframe["close"].pct_change(3).rename("ret_3"),
+                            dataframe["close"].pct_change(13).rename("ret_13"),
+                            dataframe["close"].pct_change(34).rename("ret_34"),
+                            dataframe["slope_15m"].div(dataframe["close"].replace(0, np.nan)).rename("slope_15m_norm"),
+                            dataframe["slope_1h"].div(dataframe["close"].replace(0, np.nan)).rename("slope_1h_norm"),
+                        ],
+                        axis=1,
+                    )
+                    turbulence_center = mahalanobis_return_vector.rolling(390, min_periods=120).mean().shift(1)
+                    turbulence_scale = mahalanobis_return_vector.rolling(390, min_periods=120).std().shift(1).replace(0, np.nan)
+                    market_turbulence_distance = (
+                        ((mahalanobis_return_vector - turbulence_center) / turbulence_scale)
+                        .pow(2)
+                        .sum(axis=1)
+                        .div(5.0)
+                        .pow(0.5)
+                    )
+                    market_turbulence_percentile = (
+                        market_turbulence_distance.rolling(390, min_periods=120)
+                        .rank(pct=True)
+                        .shift(1)
+                    )
+                    turbulence_failure = (
+                        market_turbulence_percentile.gt(0.94)
+                        | dataframe["close"].lt(dataframe["session_vwap"])
+                        | dataframe["close"].lt(dataframe["ema55"])
+                        | dataframe["rsi14"].gt(82)
+                        | (dataframe["slope_15m"] < -dataframe["atr14"] * 0.18)
+                    )
+                    turbulence_failure_short = (
+                        market_turbulence_percentile.gt(0.94)
+                        | dataframe["close"].gt(dataframe["session_vwap"])
+                        | dataframe["close"].gt(dataframe["ema55"])
+                        | dataframe["rsi14"].lt(18)
+                        | (dataframe["slope_15m"] > dataframe["atr14"] * 0.18)
+                    )
+                    raw = end_of_day | turbulence_failure.fillna(False)
+                    short_raw = end_of_day | turbulence_failure_short.fillna(False)
+                elif "{spec.key}" == "rough_volatility_local_roughness_filter":
+                    end_of_day = dataframe["minute_of_day_ny"].ge(16 * 60)
+                    rough_volatility_return = dataframe["close"].pct_change()
+                    realized_volatility_fast = rough_volatility_return.rolling(21).std()
+                    realized_volatility_slow = rough_volatility_return.rolling(144).std().shift(1)
+                    realized_volatility_acceleration = (
+                        realized_volatility_fast / realized_volatility_slow.replace(0, np.nan)
+                    )
+                    local_roughness_short = rough_volatility_return.abs().rolling(13).mean()
+                    local_roughness_long = rough_volatility_return.abs().rolling(89).mean().shift(1)
+                    local_roughness_persistence = (
+                        local_roughness_short / local_roughness_long.replace(0, np.nan)
+                    )
+                    roughness_structure_failure = (
+                        realized_volatility_acceleration.lt(0.55)
+                        | realized_volatility_acceleration.gt(2.45)
+                        | local_roughness_persistence.lt(0.50)
+                        | local_roughness_persistence.gt(2.65)
+                    )
+                    roughness_failure_long = (
+                        dataframe["close"].lt(dataframe["session_vwap"])
+                        | dataframe["close"].lt(dataframe["ema55"])
+                        | dataframe["rsi14"].gt(82)
+                        | (dataframe["slope_15m"] < -dataframe["atr14"] * 0.18)
+                        | roughness_structure_failure
+                    )
+                    roughness_failure_short = (
+                        dataframe["close"].gt(dataframe["session_vwap"])
+                        | dataframe["close"].gt(dataframe["ema55"])
+                        | dataframe["rsi14"].lt(18)
+                        | (dataframe["slope_15m"] > dataframe["atr14"] * 0.18)
+                        | roughness_structure_failure
+                    )
+                    raw = end_of_day | roughness_failure_long.fillna(False)
+                    short_raw = end_of_day | roughness_failure_short.fillna(False)
+                elif "{spec.key}" == "structural_break_variance_shift_admission_filter":
+                    end_of_day = dataframe["minute_of_day_ny"].ge(16 * 60)
+                    structural_break_return = dataframe["close"].pct_change()
+                    parent_slope_fast = dataframe["close"].pct_change(21)
+                    parent_slope_slow = dataframe["close"].pct_change(89)
+                    rolling_parameter_gap = (parent_slope_fast - parent_slope_slow).abs()
+                    structural_break_reference = rolling_parameter_gap.rolling(233, min_periods=89).median().shift(1)
+                    structural_break_scale = rolling_parameter_gap.rolling(233, min_periods=89).std().shift(1).replace(0, np.nan)
+                    structural_break_score = (
+                        rolling_parameter_gap - structural_break_reference
+                    ) / structural_break_scale
+                    variance_fast = structural_break_return.rolling(34).var()
+                    variance_slow = structural_break_return.rolling(233, min_periods=89).var().shift(1)
+                    variance_shift_score = variance_fast / variance_slow.replace(0, np.nan)
+                    variance_shift_veto = variance_shift_score.gt(2.25) | variance_shift_score.lt(0.32)
+                    break_state_failure = structural_break_score.abs().gt(2.10) | variance_shift_veto
+                    trend_failure_long = (
+                        dataframe["close"].lt(dataframe["session_vwap"])
+                        | dataframe["close"].lt(dataframe["ema55"])
+                        | dataframe["rsi14"].gt(82)
+                        | (dataframe["slope_15m"] < -dataframe["atr14"] * 0.18)
+                        | break_state_failure
+                    )
+                    trend_failure_short = (
+                        dataframe["close"].gt(dataframe["session_vwap"])
+                        | dataframe["close"].gt(dataframe["ema55"])
+                        | dataframe["rsi14"].lt(18)
+                        | (dataframe["slope_15m"] > dataframe["atr14"] * 0.18)
+                        | break_state_failure
+                    )
+                    raw = end_of_day | trend_failure_long.fillna(False)
+                    short_raw = end_of_day | trend_failure_short.fillna(False)
+                elif "{spec.key}" == "high_low_spread_amihud_liquidity_shock_filter":
+                    end_of_day = dataframe["minute_of_day_ny"].ge(16 * 60)
+                    high_low_log_range = np.log(
+                        dataframe["high"] / dataframe["low"].replace(0, np.nan)
+                    ).abs()
+                    two_bar_high_low_log_range = np.log(
+                        dataframe["high"].rolling(2).max()
+                        / dataframe["low"].rolling(2).min().replace(0, np.nan)
+                    ).abs()
+                    high_low_spread_component = (
+                        2.0 * high_low_log_range - two_bar_high_low_log_range
+                    ).clip(lower=0.0, upper=0.08)
+                    corwin_schultz_spread_proxy = (
+                        2.0
+                        * (np.exp(high_low_spread_component) - 1.0)
+                        / (1.0 + np.exp(high_low_spread_component))
+                    )
+                    dollar_volume_proxy = (
+                        dataframe["close"].abs() * dataframe["volume"].abs()
+                    ).replace(0, np.nan)
+                    amihud_price_impact = dataframe["close"].pct_change().abs() / dollar_volume_proxy
+                    amihud_price_impact_shock = (
+                        amihud_price_impact
+                        / amihud_price_impact.rolling(144, min_periods=55).median().shift(1).replace(0, np.nan)
+                    ).clip(lower=0.0, upper=20.0)
+                    liquidity_shock_percentile = (
+                        (corwin_schultz_spread_proxy * amihud_price_impact_shock)
+                        .rolling(233, min_periods=89)
+                        .rank(pct=True)
+                        .shift(1)
+                    )
+                    liquidity_failure = (
+                        liquidity_shock_percentile.gt(0.90)
+                        | amihud_price_impact_shock.gt(1.85)
+                    )
+                    trend_failure_long = (
+                        dataframe["close"].lt(dataframe["session_vwap"])
+                        | dataframe["close"].lt(dataframe["ema55"])
+                        | dataframe["rsi14"].gt(82)
+                        | (dataframe["slope_15m"] < -dataframe["atr14"] * 0.18)
+                        | liquidity_failure
+                    )
+                    trend_failure_short = (
+                        dataframe["close"].gt(dataframe["session_vwap"])
+                        | dataframe["close"].gt(dataframe["ema55"])
+                        | dataframe["rsi14"].lt(18)
+                        | (dataframe["slope_15m"] > dataframe["atr14"] * 0.18)
+                        | liquidity_failure
+                    )
+                    raw = end_of_day | trend_failure_long.fillna(False)
+                    short_raw = end_of_day | trend_failure_short.fillna(False)
+                elif "{spec.key}" == "kyle_lambda_impact_resilience_filter":
+                    end_of_day = dataframe["minute_of_day_ny"].ge(16 * 60)
+                    close_return = dataframe["close"].pct_change()
+                    impact_signed_volume_proxy = (
+                        np.sign(dataframe["close"] - dataframe["open"]) * dataframe["volume"].abs()
+                    )
+                    impact_signed_volume_proxy_shifted = impact_signed_volume_proxy.shift(1)
+                    impact_return_shifted = close_return.shift(1)
+                    impact_dollar_flow_proxy_shifted = (
+                        impact_signed_volume_proxy_shifted * dataframe["close"].shift(1).abs()
+                    ).replace(0, np.nan)
+                    kyle_lambda_impact_proxy = (
+                        impact_return_shifted.rolling(144, min_periods=55).cov(impact_dollar_flow_proxy_shifted)
+                        / impact_dollar_flow_proxy_shifted.rolling(144, min_periods=55).var().replace(0, np.nan)
+                    ).abs().clip(lower=0.0, upper=1.0e-4)
+                    kyle_lambda_baseline = kyle_lambda_impact_proxy.rolling(233, min_periods=89).median().shift(1)
+                    kyle_lambda_shock_ratio = (
+                        kyle_lambda_impact_proxy / kyle_lambda_baseline.replace(0, np.nan)
+                    ).clip(lower=0.0, upper=25.0)
+                    kyle_lambda_percentile = (
+                        kyle_lambda_impact_proxy.rolling(233, min_periods=89).rank(pct=True).shift(1)
+                    )
+                    impact_flow_percentile = (
+                        impact_signed_volume_proxy_shifted.abs().rolling(233, min_periods=89).rank(pct=True).shift(1)
+                    )
+                    impact_reversal_return = close_return.rolling(5, min_periods=2).sum().shift(1)
+                    impact_reversal_atr = dataframe["atr14"].shift(1).div(dataframe["close"].shift(1).replace(0, np.nan))
+                    impact_resilience_state = (
+                        kyle_lambda_percentile.between(0.12, 0.78)
+                        | (
+                            impact_flow_percentile.gt(0.76)
+                            & kyle_lambda_percentile.between(0.28, 0.90)
+                            & impact_reversal_return.abs().lt(impact_reversal_atr * 0.85)
+                        )
+                    )
+                    lambda_impact_failure = (
+                        kyle_lambda_percentile.gt(0.92)
+                        | (kyle_lambda_shock_ratio.gt(2.65) & impact_flow_percentile.gt(0.70))
+                        | ~impact_resilience_state.fillna(False)
+                    )
+                    trend_failure_long = (
+                        dataframe["close"].lt(dataframe["session_vwap"])
+                        | dataframe["close"].lt(dataframe["ema55"])
+                        | dataframe["rsi14"].gt(82)
+                        | (dataframe["slope_15m"] < -dataframe["atr14"] * 0.18)
+                        | lambda_impact_failure
+                    )
+                    trend_failure_short = (
+                        dataframe["close"].gt(dataframe["session_vwap"])
+                        | dataframe["close"].gt(dataframe["ema55"])
+                        | dataframe["rsi14"].lt(18)
+                        | (dataframe["slope_15m"] > dataframe["atr14"] * 0.18)
+                        | lambda_impact_failure
+                    )
+                    raw = end_of_day | trend_failure_long.fillna(False)
+                    short_raw = end_of_day | trend_failure_short.fillna(False)
+                elif "{spec.key}" == "signed_return_impact_absorption_reversal_gate":
+                    end_of_day = dataframe["minute_of_day_ny"].ge(16 * 60)
+                    close_return = dataframe["close"].pct_change()
+                    signed_return_impact_proxy = (
+                        close_return.shift(1)
+                        / dataframe["volume"].abs().rolling(21, min_periods=8).mean().shift(1).replace(0, np.nan)
+                    ) * 1_000_000.0
+                    impact_absorption_baseline = signed_return_impact_proxy.abs().rolling(
+                        144,
+                        min_periods=55,
+                    ).median().shift(1)
+                    impact_absorption_state = (
+                        signed_return_impact_proxy.abs()
+                        / impact_absorption_baseline.replace(0, np.nan)
+                    ).clip(lower=0.0, upper=25.0)
+                    impact_absorption_decay_long = (
+                        signed_return_impact_proxy.gt(0.0)
+                        | impact_absorption_state.gt(8.5)
+                        | dataframe["close"].lt(dataframe["session_vwap"] - dataframe["atr14"] * 0.65)
+                        | dataframe["rsi14"].gt(68)
+                    )
+                    impact_absorption_decay_short = (
+                        signed_return_impact_proxy.lt(0.0)
+                        | impact_absorption_state.gt(8.5)
+                        | dataframe["close"].gt(dataframe["session_vwap"] + dataframe["atr14"] * 0.65)
+                        | dataframe["rsi14"].lt(32)
+                    )
+                    raw = end_of_day | impact_absorption_decay_long.fillna(False)
+                    short_raw = end_of_day | impact_absorption_decay_short.fillna(False)
+                elif "{spec.key}" == "correlation_network_centrality_risk_gate":
+                    end_of_day = dataframe["minute_of_day_ny"].ge(16 * 60)
+                    network_parent_return = dataframe["close"].pct_change(21).shift(1)
+                    network_peer_return_15m = dataframe["slope_15m"].div(dataframe["close"].replace(0, np.nan)).shift(1)
+                    network_peer_return_1h = dataframe["slope_1h"].div(dataframe["close"].replace(0, np.nan)).shift(1)
+                    network_peer_return_4h = dataframe["slope_4h"].div(dataframe["close"].replace(0, np.nan)).shift(1)
+                    network_corr_15m = network_parent_return.rolling(144, min_periods=55).corr(network_peer_return_15m)
+                    network_corr_1h = network_parent_return.rolling(144, min_periods=55).corr(network_peer_return_1h)
+                    network_corr_4h = network_parent_return.rolling(144, min_periods=55).corr(network_peer_return_4h)
+                    network_average_correlation = (
+                        network_corr_15m.fillna(0.0) + network_corr_1h.fillna(0.0) + network_corr_4h.fillna(0.0)
+                    ) / 3.0
+                    correlation_network_distance_proxy = np.sqrt(
+                        (2.0 * (1.0 - network_average_correlation.clip(-0.99, 0.99))).clip(lower=0.0)
+                    )
+                    mst_centrality_crowding_state_shifted = (
+                        network_average_correlation.abs().rolling(89, min_periods=34).mean().shift(1)
+                    )
+                    market_mode_compression_shifted = (
+                        (1.0 - correlation_network_distance_proxy.clip(0.0, 2.0) / 2.0)
+                        .rolling(55, min_periods=21)
+                        .mean()
+                        .shift(1)
+                    )
+                    network_crowding_failure = (
+                        mst_centrality_crowding_state_shifted.gt(0.80)
+                        | market_mode_compression_shifted.gt(0.76)
+                        | correlation_network_distance_proxy.lt(0.34)
+                    )
+                    trend_failure_long = (
+                        dataframe["close"].lt(dataframe["session_vwap"])
+                        | dataframe["close"].lt(dataframe["ema55"])
+                        | dataframe["rsi14"].gt(82)
+                        | (dataframe["slope_15m"] < -dataframe["atr14"] * 0.18)
+                        | network_crowding_failure
+                    )
+                    trend_failure_short = (
+                        dataframe["close"].gt(dataframe["session_vwap"])
+                        | dataframe["close"].gt(dataframe["ema55"])
+                        | dataframe["rsi14"].lt(18)
+                        | (dataframe["slope_15m"] > dataframe["atr14"] * 0.18)
+                        | network_crowding_failure
+                    )
+                    raw = end_of_day | trend_failure_long.fillna(False)
+                    short_raw = end_of_day | trend_failure_short.fillna(False)
+                elif "{spec.key}" == "dcca_cross_correlation_trend_admission_filter":
+                    end_of_day = dataframe["minute_of_day_ny"].ge(16 * 60)
+                    dcca_parent_return = dataframe["close"].pct_change(21)
+                    dcca_peer_return = (
+                        dataframe["slope_15m"].div(dataframe["close"].replace(0, np.nan))
+                        + dataframe["slope_1h"].div(dataframe["close"].replace(0, np.nan))
+                    ) / 2.0
+                    dcca_parent_trend = dcca_parent_return - dcca_parent_return.rolling(89, min_periods=34).mean().shift(1)
+                    dcca_peer_trend = dcca_peer_return - dcca_peer_return.rolling(89, min_periods=34).mean().shift(1)
+                    dcca_peer_coherence = dcca_parent_trend.rolling(144, min_periods=55).corr(dcca_peer_trend).shift(1)
+                    dcca_trend_coherence_score = (
+                        dcca_peer_coherence
+                        * np.sign(dcca_parent_trend.rolling(21, min_periods=8).mean().shift(1))
+                    )
+                    dcca_coherence_failure_long = (
+                        dcca_trend_coherence_score.lt(0.04)
+                        | dcca_peer_coherence.abs().lt(0.10)
+                        | dcca_peer_coherence.rolling(55, min_periods=21).std().shift(1).gt(0.34)
+                    )
+                    dcca_coherence_failure_short = (
+                        dcca_trend_coherence_score.gt(-0.04)
+                        | dcca_peer_coherence.abs().lt(0.10)
+                        | dcca_peer_coherence.rolling(55, min_periods=21).std().shift(1).gt(0.34)
+                    )
+                    trend_failure_long = (
+                        dataframe["close"].lt(dataframe["session_vwap"])
+                        | dataframe["close"].lt(dataframe["ema55"])
+                        | dataframe["rsi14"].gt(82)
+                        | (dataframe["slope_15m"] < -dataframe["atr14"] * 0.18)
+                        | dcca_coherence_failure_long
+                    )
+                    trend_failure_short = (
+                        dataframe["close"].gt(dataframe["session_vwap"])
+                        | dataframe["close"].gt(dataframe["ema55"])
+                        | dataframe["rsi14"].lt(18)
+                        | (dataframe["slope_15m"] > dataframe["atr14"] * 0.18)
+                        | dcca_coherence_failure_short
+                    )
+                    raw = end_of_day | trend_failure_long.fillna(False)
+                    short_raw = end_of_day | trend_failure_short.fillna(False)
+                elif "{spec.key}" == "covar_systemic_tail_risk_admission_filter":
+                    end_of_day = dataframe["minute_of_day_ny"].ge(16 * 60)
+                    covar_parent_return = dataframe["close"].pct_change(21)
+                    covar_peer_system_return = (
+                        dataframe["slope_15m"].div(dataframe["close"].replace(0, np.nan))
+                        + dataframe["slope_1h"].div(dataframe["close"].replace(0, np.nan))
+                        + dataframe["slope_4h"].div(dataframe["close"].replace(0, np.nan))
+                    ) / 3.0
+                    parent_tail_threshold = covar_parent_return.rolling(377, min_periods=144).quantile(0.10).shift(1)
+                    median_system_var = covar_peer_system_return.rolling(377, min_periods=144).median().shift(1)
+                    conditional_tail_sample = covar_peer_system_return.where(covar_parent_return.le(parent_tail_threshold))
+                    conditional_system_var = conditional_tail_sample.rolling(377, min_periods=55).quantile(0.20).shift(1)
+                    delta_covar_stress_state = (conditional_system_var - median_system_var).abs()
+                    delta_covar_stress_reference = delta_covar_stress_state.rolling(233, min_periods=89).quantile(0.72).shift(1)
+                    delta_covar_failure = delta_covar_stress_state.gt(delta_covar_stress_reference)
+                    trend_failure_long = (
+                        dataframe["close"].lt(dataframe["session_vwap"])
+                        | dataframe["close"].lt(dataframe["ema55"])
+                        | dataframe["rsi14"].gt(82)
+                        | (dataframe["slope_15m"] < -dataframe["atr14"] * 0.18)
+                        | delta_covar_failure
+                    )
+                    trend_failure_short = (
+                        dataframe["close"].gt(dataframe["session_vwap"])
+                        | dataframe["close"].gt(dataframe["ema55"])
+                        | dataframe["rsi14"].lt(18)
+                        | (dataframe["slope_15m"] > dataframe["atr14"] * 0.18)
+                        | delta_covar_failure
+                    )
+                    raw = end_of_day | trend_failure_long.fillna(False)
+                    short_raw = end_of_day | trend_failure_short.fillna(False)
+                elif "{spec.key}" == "jensen_shannon_return_distribution_shift_gate":
+                    end_of_day = dataframe["minute_of_day_ny"].ge(16 * 60)
+                    js_shift_failure = dataframe["js_distribution_shift_gate"].gt(
+                        dataframe["js_distribution_shift_reference"].fillna(0.1250) * 1.35
+                    )
+                    trend_failure_long = (
+                        dataframe["close"].lt(dataframe["session_vwap"])
+                        | dataframe["close"].lt(dataframe["ema55"])
+                        | dataframe["rsi14"].gt(82)
+                        | (dataframe["slope_15m"] < -dataframe["atr14"] * 0.18)
+                        | js_shift_failure
+                    )
+                    trend_failure_short = (
+                        dataframe["close"].gt(dataframe["session_vwap"])
+                        | dataframe["close"].gt(dataframe["ema55"])
+                        | dataframe["rsi14"].lt(18)
+                        | (dataframe["slope_15m"] > dataframe["atr14"] * 0.18)
+                        | js_shift_failure
+                    )
+                    raw = end_of_day | trend_failure_long.fillna(False)
+                    short_raw = end_of_day | trend_failure_short.fillna(False)
+                elif "{spec.key}" == "bartels_rank_serial_randomness_trend_filter":
+                    end_of_day = dataframe["minute_of_day_ny"].ge(16 * 60)
+                    bartels_rank_randomness_failure = (
+                        ~dataframe["bartels_rank_nonrandom_trend_quality"].fillna(False)
+                        | dataframe["bartels_rank_serial_randomness_score"].gt(
+                            dataframe["bartels_rank_serial_randomness_score"]
+                            .rolling(144, min_periods=55)
+                            .quantile(0.90)
+                            .shift(1)
+                        )
+                        | dataframe["bartels_rank_serial_randomness_score"].lt(0.38)
+                    )
+                    bartels_rank_trend_failure_long = (
+                        dataframe["close"].lt(dataframe["session_vwap"])
+                        | dataframe["close"].lt(dataframe["ema55"])
+                        | dataframe["rsi14"].gt(82)
+                        | (dataframe["slope_15m"] < -dataframe["atr14"] * 0.18)
+                        | (dataframe["slope_1h"] < -dataframe["atr14"] * 0.22)
+                    )
+                    bartels_rank_trend_failure_short = (
+                        dataframe["close"].gt(dataframe["session_vwap"])
+                        | dataframe["close"].gt(dataframe["ema55"])
+                        | dataframe["rsi14"].lt(18)
+                        | (dataframe["slope_15m"] > dataframe["atr14"] * 0.18)
+                        | (dataframe["slope_1h"] > dataframe["atr14"] * 0.22)
+                    )
+                    raw = (
+                        end_of_day
+                        | bartels_rank_randomness_failure.fillna(False)
+                        | bartels_rank_trend_failure_long.fillna(False)
+                    )
+                    short_raw = (
+                        end_of_day
+                        | bartels_rank_randomness_failure.fillna(False)
+                        | bartels_rank_trend_failure_short.fillna(False)
+                    )
+                elif "{spec.key}" == "participation_clock_breakout":
+                    end_of_day = dataframe["minute_of_day_ny"].ge(16 * 60)
+                    participation_clock = dataframe["rvol96"].rolling(96, min_periods=24).rank(pct=True).shift(1)
+                    rvol_acceleration = dataframe["rvol96"].diff(3).shift(1)
+                    opening_range_high = dataframe["high"].rolling(16, min_periods=4).max().shift(1)
+                    opening_range_low = dataframe["low"].rolling(16, min_periods=4).min().shift(1)
+                    opening_range_acceptance_long = (
+                        dataframe["close"].gt(opening_range_high)
+                        & dataframe["low"].gt(opening_range_high - dataframe["atr14"] * 0.35)
+                    )
+                    opening_range_acceptance_short = (
+                        dataframe["close"].lt(opening_range_low)
+                        & dataframe["high"].lt(opening_range_low + dataframe["atr14"] * 0.35)
+                    )
+                    participation_decay = participation_clock.lt(0.42) | rvol_acceleration.lt(-0.12)
+                    long_failure = (
+                        dataframe["close"].lt(dataframe["session_vwap"])
+                        | dataframe["close"].lt(opening_range_high - dataframe["atr14"] * 0.28)
+                        | ~opening_range_acceptance_long.fillna(False)
+                        | participation_decay.fillna(False)
+                    )
+                    short_failure = (
+                        dataframe["close"].gt(dataframe["session_vwap"])
+                        | dataframe["close"].gt(opening_range_low + dataframe["atr14"] * 0.28)
+                        | ~opening_range_acceptance_short.fillna(False)
+                        | participation_decay.fillna(False)
+                    )
+                    raw = end_of_day | long_failure.fillna(False)
+                    short_raw = end_of_day | short_failure.fillna(False)
+                elif "{spec.key}" == "local_polynomial_curvature_acceleration_filter":
+                    end_of_day = dataframe["minute_of_day_ny"].ge(16 * 60)
+                    curvature_state_decay_long = (
+                        dataframe["local_poly_slope_bps_55"].lt(0.02)
+                        | dataframe["local_poly_curvature_bps_55"].lt(-0.02)
+                        | dataframe["local_poly_slope_acceleration"].lt(-0.08)
+                        | dataframe["local_poly_curvature_z"].lt(-0.55)
+                    )
+                    curvature_state_decay_short = (
+                        dataframe["local_poly_slope_bps_55"].gt(-0.02)
+                        | dataframe["local_poly_curvature_bps_55"].gt(0.02)
+                        | dataframe["local_poly_slope_acceleration"].gt(0.08)
+                        | dataframe["local_poly_curvature_z"].gt(0.55)
+                    )
+                    parent_trend_failure_long = (
+                        dataframe["close"].lt(dataframe["session_vwap"])
+                        | dataframe["close"].lt(dataframe["ema55"])
+                        | dataframe["rsi14"].gt(82)
+                        | (dataframe["slope_15m"] < -dataframe["atr14"] * 0.18)
+                        | (dataframe["slope_1h"] < -dataframe["atr14"] * 0.22)
+                    )
+                    parent_trend_failure_short = (
+                        dataframe["close"].gt(dataframe["session_vwap"])
+                        | dataframe["close"].gt(dataframe["ema55"])
+                        | dataframe["rsi14"].lt(18)
+                        | (dataframe["slope_15m"] > dataframe["atr14"] * 0.18)
+                        | (dataframe["slope_1h"] > dataframe["atr14"] * 0.22)
+                    )
+                    raw = (
+                        end_of_day
+                        | curvature_state_decay_long.fillna(False)
+                        | parent_trend_failure_long.fillna(False)
+                    )
+                    short_raw = (
+                        end_of_day
+                        | curvature_state_decay_short.fillna(False)
+                        | parent_trend_failure_short.fillna(False)
+                    )
+                elif "{spec.key}" == "ultimate_oscillator_mtf_divergence_filter":
+                    end_of_day = dataframe["minute_of_day_ny"].ge(16 * 60)
+                    ultimate_reclaim_failure_long = (
+                        dataframe["ultimate_oscillator_value_shifted"].lt(30.0)
+                        | dataframe["close"].lt(dataframe["session_vwap"])
+                        | dataframe["close"].lt(dataframe["ema55"])
+                        | dataframe["rsi14"].gt(82)
+                        | (dataframe["slope_15m"] < -dataframe["atr14"] * 0.18)
+                    )
+                    ultimate_reclaim_failure_short = (
+                        dataframe["ultimate_oscillator_value_shifted"].gt(70.0)
+                        | dataframe["close"].gt(dataframe["session_vwap"])
+                        | dataframe["close"].gt(dataframe["ema55"])
+                        | dataframe["rsi14"].lt(18)
+                        | (dataframe["slope_15m"] > dataframe["atr14"] * 0.18)
+                    )
+                    raw = end_of_day | ultimate_reclaim_failure_long.fillna(False)
+                    short_raw = end_of_day | ultimate_reclaim_failure_short.fillna(False)
+                elif "{spec.key}" == "true_strength_index_mtf_reacceleration_filter":
+                    end_of_day = dataframe["minute_of_day_ny"].ge(16 * 60)
+                    tsi_reacceleration_failure_long = (
+                        dataframe["true_strength_index_value_shifted"].lt(dataframe["true_strength_index_signal_shifted"] - 0.35)
+                        | dataframe["true_strength_index_histogram_shifted"].lt(-0.95)
+                        | dataframe["close"].lt(dataframe["session_vwap"])
+                        | dataframe["close"].lt(dataframe["ema55"])
+                        | dataframe["rsi14"].gt(82)
+                        | (dataframe["slope_15m"] < -dataframe["atr14"] * 0.17)
+                    )
+                    tsi_reacceleration_failure_short = (
+                        dataframe["true_strength_index_value_shifted"].gt(dataframe["true_strength_index_signal_shifted"] + 0.35)
+                        | dataframe["true_strength_index_histogram_shifted"].gt(0.95)
+                        | dataframe["close"].gt(dataframe["session_vwap"])
+                        | dataframe["close"].gt(dataframe["ema55"])
+                        | dataframe["rsi14"].lt(18)
+                        | (dataframe["slope_15m"] > dataframe["atr14"] * 0.17)
+                    )
+                    raw = end_of_day | tsi_reacceleration_failure_long.fillna(False)
+                    short_raw = end_of_day | tsi_reacceleration_failure_short.fillna(False)
+                elif "{spec.key}" == "trend_intensity_index_reacceleration_filter":
+                    end_of_day = dataframe["minute_of_day_ny"].ge(16 * 60)
+                    tii_reacceleration_failure_long = (
+                        dataframe["trend_intensity_index_slope"].lt(-0.10)
+                        | dataframe["trend_intensity_index_reacceleration"].lt(-0.18)
+                        | dataframe["trend_intensity_index_value_shifted"].lt(48.0)
+                        | dataframe["close"].lt(dataframe["session_vwap"])
+                        | dataframe["close"].lt(dataframe["ema55"])
+                        | dataframe["rsi14"].gt(82)
+                        | (dataframe["slope_15m"] < -dataframe["atr14"] * 0.17)
+                    )
+                    tii_reacceleration_failure_short = (
+                        dataframe["trend_intensity_index_slope"].gt(0.10)
+                        | dataframe["trend_intensity_index_reacceleration"].gt(0.18)
+                        | dataframe["trend_intensity_index_value_shifted"].gt(52.0)
+                        | dataframe["close"].gt(dataframe["session_vwap"])
+                        | dataframe["close"].gt(dataframe["ema55"])
+                        | dataframe["rsi14"].lt(18)
+                        | (dataframe["slope_15m"] > dataframe["atr14"] * 0.17)
+                    )
+                    raw = end_of_day | tii_reacceleration_failure_long.fillna(False)
+                    short_raw = end_of_day | tii_reacceleration_failure_short.fillna(False)
+                elif "{spec.key}" == "tsmom_vol_scaled_low_turnover_rrr":
+                    tsmom_trend_decay_long = (
+                        dataframe["tsmom_vol_scaled_score"].lt(0.35)
+                        | dataframe["tsmom_return_55_shifted"].lt(-0.0008)
+                        | dataframe["close"].lt(dataframe["ema55"])
+                        | (dataframe["slope_1h"] < -dataframe["atr14"] * 0.18)
+                        | dataframe["tsmom_realized_vol_55_shifted"].gt(
+                            dataframe["tsmom_realized_vol_55_shifted"].rolling(144, min_periods=55).quantile(0.94)
+                        )
+                    )
+                    tsmom_trend_decay_short = (
+                        dataframe["tsmom_vol_scaled_score"].gt(-0.35)
+                        | dataframe["tsmom_return_55_shifted"].gt(0.0008)
+                        | dataframe["close"].gt(dataframe["ema55"])
+                        | (dataframe["slope_1h"] > dataframe["atr14"] * 0.18)
+                        | dataframe["tsmom_realized_vol_55_shifted"].gt(
+                            dataframe["tsmom_realized_vol_55_shifted"].rolling(144, min_periods=55).quantile(0.94)
+                        )
+                    )
+                    raw = tsmom_trend_decay_long.fillna(False)
+                    short_raw = tsmom_trend_decay_short.fillna(False)
+                elif "{spec.key}" == "dss_bressert_reacceleration_filter":
+                    end_of_day = dataframe["minute_of_day_ny"].ge(16 * 60)
+                    dss_reacceleration_failure_long = (
+                        dataframe["dss_bressert_value_shifted"].lt(dataframe["dss_bressert_signal_shifted"] - 0.40)
+                        | dataframe["dss_bressert_reacceleration"].lt(-0.20)
+                        | dataframe["close"].lt(dataframe["session_vwap"])
+                        | dataframe["close"].lt(dataframe["ema55"])
+                        | dataframe["rsi14"].gt(82)
+                        | (dataframe["slope_15m"] < -dataframe["atr14"] * 0.17)
+                    )
+                    dss_reacceleration_failure_short = (
+                        dataframe["dss_bressert_value_shifted"].gt(dataframe["dss_bressert_signal_shifted"] + 0.40)
+                        | dataframe["dss_bressert_reacceleration"].gt(0.20)
+                        | dataframe["close"].gt(dataframe["session_vwap"])
+                        | dataframe["close"].gt(dataframe["ema55"])
+                        | dataframe["rsi14"].lt(18)
+                        | (dataframe["slope_15m"] > dataframe["atr14"] * 0.17)
+                    )
+                    raw = end_of_day | dss_reacceleration_failure_long.fillna(False)
+                    short_raw = end_of_day | dss_reacceleration_failure_short.fillna(False)
+                elif "{spec.key}" == "rsi_range_shift_regime_trend_filter":
+                    end_of_day = dataframe["minute_of_day_ny"].ge(16 * 60)
+                    rsi_range_failure_long = (
+                        dataframe["rsi14"].lt(42)
+                        | dataframe["close"].lt(dataframe["ema21"] - dataframe["atr14"] * 0.22)
+                        | dataframe["slope_15m"].lt(-dataframe["atr14"] * 0.18)
+                        | dataframe["rsi14"].gt(82)
+                    )
+                    rsi_range_failure_short = (
+                        dataframe["rsi14"].gt(58)
+                        | dataframe["close"].gt(dataframe["ema21"] + dataframe["atr14"] * 0.22)
+                        | dataframe["slope_15m"].gt(dataframe["atr14"] * 0.18)
+                        | dataframe["rsi14"].lt(18)
+                    )
+                    raw = end_of_day | rsi_range_failure_long.fillna(False)
+                    short_raw = end_of_day | rsi_range_failure_short.fillna(False)
+                elif "{spec.key}" == "chande_momentum_mtf_reacceleration_filter":
+                    end_of_day = dataframe["minute_of_day_ny"].ge(16 * 60)
+                    chande_reacceleration_failure_long = (
+                        dataframe["chande_momentum_value_shifted"].lt(dataframe["chande_momentum_signal_shifted"] - 0.45)
+                        | dataframe["chande_momentum_histogram_shifted"].lt(-1.05)
+                        | dataframe["close"].lt(dataframe["session_vwap"])
+                        | dataframe["close"].lt(dataframe["ema55"])
+                        | dataframe["rsi14"].gt(82)
+                        | (dataframe["slope_15m"] < -dataframe["atr14"] * 0.17)
+                    )
+                    chande_reacceleration_failure_short = (
+                        dataframe["chande_momentum_value_shifted"].gt(dataframe["chande_momentum_signal_shifted"] + 0.45)
+                        | dataframe["chande_momentum_histogram_shifted"].gt(1.05)
+                        | dataframe["close"].gt(dataframe["session_vwap"])
+                        | dataframe["close"].gt(dataframe["ema55"])
+                        | dataframe["rsi14"].lt(18)
+                        | (dataframe["slope_15m"] > dataframe["atr14"] * 0.17)
+                    )
+                    raw = end_of_day | chande_reacceleration_failure_long.fillna(False)
+                    short_raw = end_of_day | chande_reacceleration_failure_short.fillna(False)
+                elif "{spec.key}" == "anchored_return_memory_decay_reacceleration_filter":
+                    end_of_day = dataframe["minute_of_day_ny"].ge(16 * 60)
+                    anchored_memory_failure_long = (
+                        dataframe["anchored_return_reacceleration"].lt(-0.00025)
+                        | dataframe["anchored_session_return_shifted"].lt(dataframe["anchored_return_memory_mean"] - 0.0028)
+                        | dataframe["close"].lt(dataframe["session_vwap"])
+                        | dataframe["close"].lt(dataframe["ema55"])
+                        | dataframe["rsi14"].gt(82)
+                        | (dataframe["slope_15m"] < -dataframe["atr14"] * 0.17)
+                    )
+                    anchored_memory_failure_short = (
+                        dataframe["anchored_return_reacceleration"].gt(0.00025)
+                        | dataframe["anchored_session_return_shifted"].gt(dataframe["anchored_return_memory_mean"] + 0.0028)
+                        | dataframe["close"].gt(dataframe["session_vwap"])
+                        | dataframe["close"].gt(dataframe["ema55"])
+                        | dataframe["rsi14"].lt(18)
+                        | (dataframe["slope_15m"] > dataframe["atr14"] * 0.17)
+                    )
+                    raw = end_of_day | anchored_memory_failure_long.fillna(False)
+                    short_raw = end_of_day | anchored_memory_failure_short.fillna(False)
+                elif "{spec.key}" == "volume_weighted_macd_trend_reacceleration_filter":
+                    end_of_day = dataframe["minute_of_day_ny"].ge(16 * 60)
+                    vwmacd_reacceleration_failure_long = (
+                        dataframe["vwmacd_spread_shifted"].lt(dataframe["vwmacd_signal_shifted"])
+                        | dataframe["vwmacd_reacceleration"].lt(-dataframe["atr14"].shift(1) * 0.004)
+                        | dataframe["close"].lt(dataframe["session_vwap"])
+                        | dataframe["close"].lt(dataframe["ema55"])
+                        | dataframe["rsi14"].gt(82)
+                        | (dataframe["slope_15m"] < -dataframe["atr14"] * 0.17)
+                    )
+                    vwmacd_reacceleration_failure_short = (
+                        dataframe["vwmacd_spread_shifted"].gt(dataframe["vwmacd_signal_shifted"])
+                        | dataframe["vwmacd_reacceleration"].gt(dataframe["atr14"].shift(1) * 0.004)
+                        | dataframe["close"].gt(dataframe["session_vwap"])
+                        | dataframe["close"].gt(dataframe["ema55"])
+                        | dataframe["rsi14"].lt(18)
+                        | (dataframe["slope_15m"] > dataframe["atr14"] * 0.17)
+                    )
+                    raw = end_of_day | vwmacd_reacceleration_failure_long.fillna(False)
+                    short_raw = end_of_day | vwmacd_reacceleration_failure_short.fillna(False)
+                elif "{spec.key}" == "buff_averages_volume_weighted_trend_reacceleration_filter":
+                    end_of_day = dataframe["minute_of_day_ny"].ge(16 * 60)
+                    buff_averages_reacceleration_failure_long = (
+                        dataframe["buff_averages_spread_shifted"].lt(dataframe["buff_averages_spread_signal"])
+                        | dataframe["buff_averages_spread_shifted"].lt(0.0)
+                        | dataframe["buff_averages_reacceleration"].lt(-dataframe["atr14"].shift(1) * 0.0035)
+                        | dataframe["close"].lt(dataframe["session_vwap"])
+                        | dataframe["close"].lt(dataframe["ema55"])
+                        | dataframe["rsi14"].gt(82)
+                        | (dataframe["slope_15m"] < -dataframe["atr14"] * 0.17)
+                    )
+                    buff_averages_reacceleration_failure_short = (
+                        dataframe["buff_averages_spread_shifted"].gt(dataframe["buff_averages_spread_signal"])
+                        | dataframe["buff_averages_spread_shifted"].gt(0.0)
+                        | dataframe["buff_averages_reacceleration"].gt(dataframe["atr14"].shift(1) * 0.0035)
+                        | dataframe["close"].gt(dataframe["session_vwap"])
+                        | dataframe["close"].gt(dataframe["ema55"])
+                        | dataframe["rsi14"].lt(18)
+                        | (dataframe["slope_15m"] > dataframe["atr14"] * 0.17)
+                    )
+                    raw = end_of_day | buff_averages_reacceleration_failure_long.fillna(False)
+                    short_raw = end_of_day | buff_averages_reacceleration_failure_short.fillna(False)
+                elif "{spec.key}" == "decay_weighted_trend_reacceleration_filter":
+                    end_of_day = dataframe["minute_of_day_ny"].ge(16 * 60)
+                    decay_weighted_failure_long = (
+                        dataframe["decay_weighted_reacceleration"].lt(-0.010)
+                        | dataframe["decay_weighted_trend_spread_shifted"].lt(0.0)
+                        | dataframe["decay_weighted_pullback_energy"].gt(1.35)
+                        | dataframe["close"].lt(dataframe["session_vwap"])
+                        | dataframe["close"].lt(dataframe["ema55"])
+                        | dataframe["rsi14"].gt(82)
+                        | (dataframe["slope_15m"] < -dataframe["atr14"] * 0.17)
+                    )
+                    decay_weighted_failure_short = (
+                        dataframe["decay_weighted_reacceleration"].gt(0.010)
+                        | dataframe["decay_weighted_trend_spread_shifted"].gt(0.0)
+                        | dataframe["decay_weighted_pullback_energy"].lt(-1.35)
+                        | dataframe["close"].gt(dataframe["session_vwap"])
+                        | dataframe["close"].gt(dataframe["ema55"])
+                        | dataframe["rsi14"].lt(18)
+                        | (dataframe["slope_15m"] > dataframe["atr14"] * 0.17)
+                    )
+                    raw = end_of_day | decay_weighted_failure_long.fillna(False)
+                    short_raw = end_of_day | decay_weighted_failure_short.fillna(False)
+                elif "{spec.key}" == "asi_trend_breakout_admission_filter":
+                    end_of_day = dataframe["minute_of_day_ny"].ge(16 * 60)
+                    asi_admission_failure_long = (
+                        dataframe["asi_near_zero_veto"].fillna(True)
+                        | dataframe["asi_accumulative_swing_index_shifted"].lt(
+                            dataframe["asi_signal_mean_shifted"] - 2.5
+                        )
+                        | dataframe["asi_slope_shifted"].lt(-1.10)
+                        | dataframe["close"].lt(dataframe["session_vwap"])
+                        | dataframe["close"].lt(dataframe["ema55"])
+                        | dataframe["rsi14"].gt(82)
+                        | (dataframe["slope_15m"] < -dataframe["atr14"] * 0.17)
+                    )
+                    asi_admission_failure_short = (
+                        dataframe["asi_near_zero_veto"].fillna(True)
+                        | dataframe["asi_accumulative_swing_index_shifted"].gt(
+                            dataframe["asi_signal_mean_shifted"] + 2.5
+                        )
+                        | dataframe["asi_slope_shifted"].gt(1.10)
+                        | dataframe["close"].gt(dataframe["session_vwap"])
+                        | dataframe["close"].gt(dataframe["ema55"])
+                        | dataframe["rsi14"].lt(18)
+                        | (dataframe["slope_15m"] > dataframe["atr14"] * 0.17)
+                    )
+                    raw = end_of_day | asi_admission_failure_long.fillna(False)
+                    short_raw = end_of_day | asi_admission_failure_short.fillna(False)
+                elif "{spec.key}" == "damiani_volatmeter_trend_admission_filter":
+                    end_of_day = dataframe["minute_of_day_ny"].ge(16 * 60)
+                    damiani_admission_failure_long = (
+                        ~dataframe["damiani_noise_suppressed_state"].fillna(False)
+                        | dataframe["damiani_signal_ratio_shifted"].lt(0.98)
+                        | dataframe["damiani_noise_ratio_shifted"].gt(2.05)
+                        | dataframe["close"].lt(dataframe["session_vwap"])
+                        | dataframe["close"].lt(dataframe["ema55"])
+                        | dataframe["rsi14"].gt(82)
+                        | (dataframe["slope_15m"] < -dataframe["atr14"] * 0.17)
+                    )
+                    damiani_admission_failure_short = (
+                        ~dataframe["damiani_noise_suppressed_state"].fillna(False)
+                        | dataframe["damiani_signal_ratio_shifted"].lt(0.98)
+                        | dataframe["damiani_noise_ratio_shifted"].gt(2.05)
+                        | dataframe["close"].gt(dataframe["session_vwap"])
+                        | dataframe["close"].gt(dataframe["ema55"])
+                        | dataframe["rsi14"].lt(18)
+                        | (dataframe["slope_15m"] > dataframe["atr14"] * 0.17)
+                    )
+                    raw = end_of_day | damiani_admission_failure_long.fillna(False)
+                    short_raw = end_of_day | damiani_admission_failure_short.fillna(False)
+                elif "{spec.key}" == "internal_bar_strength_state_filter":
+                    end_of_day = dataframe["minute_of_day_ny"].ge(16 * 60)
+                    internal_bar_strength_failure_long = (
+                        dataframe["internal_bar_strength_shifted"].lt(0.12)
+                        | dataframe["internal_bar_strength_shifted"].gt(0.78)
+                        | dataframe["internal_bar_strength_recovery"].lt(-0.04)
+                        | dataframe["close"].lt(dataframe["session_vwap"] - dataframe["atr14"] * 0.65)
+                        | dataframe["close"].lt(dataframe["range_low40"])
+                        | dataframe["rsi14"].gt(74)
+                        | (dataframe["slope_15m"] < -dataframe["atr14"] * 0.18)
+                    )
+                    internal_bar_strength_failure_short = (
+                        dataframe["internal_bar_strength_shifted"].gt(0.88)
+                        | dataframe["internal_bar_strength_shifted"].lt(0.22)
+                        | dataframe["internal_bar_strength_high_fade"].lt(-0.04)
+                        | dataframe["close"].gt(dataframe["session_vwap"] + dataframe["atr14"] * 0.65)
+                        | dataframe["close"].gt(dataframe["range_high40"])
+                        | dataframe["rsi14"].lt(26)
+                        | (dataframe["slope_15m"] > dataframe["atr14"] * 0.18)
+                    )
+                    raw = end_of_day | internal_bar_strength_failure_long.fillna(False)
+                    short_raw = end_of_day | internal_bar_strength_failure_short.fillna(False)
+                elif "{spec.key}" == "volume_clock_relative_participation_breakout":
+                    end_of_day = dataframe["minute_of_day_ny"].ge(16 * 60)
+                    volume_clock_failure_long = (
+                        dataframe["relative_participation"].lt(0.60)
+                        | dataframe["volume_clock_accel"].lt(-0.35)
+                        | dataframe["volume_clock_mtf_trend_short"].ge(3)
+                        | dataframe["close"].lt(dataframe["session_vwap"] - dataframe["atr14"] * 0.55)
+                        | dataframe["close"].lt(dataframe["ema55"])
+                        | dataframe["rsi14"].gt(82)
+                        | (dataframe["slope_15m"] < -dataframe["atr14"] * 0.18)
+                    )
+                    volume_clock_failure_short = (
+                        dataframe["relative_participation"].lt(0.60)
+                        | dataframe["volume_clock_accel"].lt(-0.35)
+                        | dataframe["volume_clock_mtf_trend_long"].ge(3)
+                        | dataframe["close"].gt(dataframe["session_vwap"] + dataframe["atr14"] * 0.55)
+                        | dataframe["close"].gt(dataframe["ema55"])
+                        | dataframe["rsi14"].lt(18)
+                        | (dataframe["slope_15m"] > dataframe["atr14"] * 0.18)
+                    )
+                    raw = end_of_day | volume_clock_failure_long.fillna(False)
+                    short_raw = end_of_day | volume_clock_failure_short.fillna(False)
+                elif "{spec.key}" == "volume_flow_impulse_trend_rejoin_filter":
+                    volume_flow_decay_long = (
+                        dataframe["volume_flow_klinger_hist_shifted"].lt(0.0)
+                        | dataframe["volume_flow_klinger_z_shifted"].lt(-0.20)
+                        | dataframe["volume_flow_obv_accel_shifted"].lt(-0.10)
+                        | dataframe["close"].lt(dataframe["ema55"])
+                        | dataframe["close"].lt(dataframe["session_vwap"] - dataframe["atr14"] * 0.65)
+                        | (dataframe["slope_1h"] < -dataframe["atr14"] * 0.18)
+                        | dataframe["rsi14"].gt(84)
+                    )
+                    volume_flow_decay_short = (
+                        dataframe["volume_flow_klinger_hist_shifted"].gt(0.0)
+                        | dataframe["volume_flow_klinger_z_shifted"].gt(0.20)
+                        | dataframe["volume_flow_obv_accel_shifted"].gt(0.10)
+                        | dataframe["close"].gt(dataframe["ema55"])
+                        | dataframe["close"].gt(dataframe["session_vwap"] + dataframe["atr14"] * 0.65)
+                        | (dataframe["slope_1h"] > dataframe["atr14"] * 0.18)
+                        | dataframe["rsi14"].lt(16)
+                    )
+                    raw = volume_flow_decay_long.fillna(False)
+                    short_raw = volume_flow_decay_short.fillna(False)
+                elif "{spec.key}" == "relative_vigor_index_mtf_reacceleration_filter":
+                    end_of_day = dataframe["minute_of_day_ny"].ge(16 * 60)
+                    rvi_reacceleration_failure_long = (
+                        dataframe["relative_vigor_index_value_shifted"].lt(
+                            dataframe["relative_vigor_index_signal_shifted"] - 0.28
+                        )
+                        | dataframe["relative_vigor_index_reacceleration"].lt(-0.08)
+                        | dataframe["close"].lt(dataframe["session_vwap"])
+                        | dataframe["close"].lt(dataframe["ema55"])
+                        | dataframe["rsi14"].gt(82)
+                        | (dataframe["slope_15m"] < -dataframe["atr14"] * 0.17)
+                    )
+                    rvi_reacceleration_failure_short = (
+                        dataframe["relative_vigor_index_value_shifted"].gt(
+                            dataframe["relative_vigor_index_signal_shifted"] + 0.28
+                        )
+                        | dataframe["relative_vigor_index_reacceleration"].gt(0.08)
+                        | dataframe["close"].gt(dataframe["session_vwap"])
+                        | dataframe["close"].gt(dataframe["ema55"])
+                        | dataframe["rsi14"].lt(18)
+                        | (dataframe["slope_15m"] > dataframe["atr14"] * 0.17)
+                    )
+                    raw = end_of_day | rvi_reacceleration_failure_long.fillna(False)
+                    short_raw = end_of_day | rvi_reacceleration_failure_short.fillna(False)
+                elif "{spec.key}" == "low_volatility_trend_pullback_reacceleration":
+                    end_of_day = dataframe["minute_of_day_ny"].ge(16 * 60)
+                    low_volatility_reacceleration_failure_long = (
+                        ~dataframe["low_volatility_state"].fillna(False)
+                        | dataframe["low_volatility_reacceleration"].lt(-0.12)
+                        | dataframe["close"].lt(dataframe["session_vwap"] - dataframe["atr14"] * 0.42)
+                        | dataframe["close"].lt(dataframe["ema55"])
+                        | dataframe["rsi14"].gt(82)
+                        | (dataframe["slope_15m"] < -dataframe["atr14"] * 0.17)
+                    )
+                    low_volatility_reacceleration_failure_short = (
+                        ~dataframe["low_volatility_state"].fillna(False)
+                        | dataframe["low_volatility_reacceleration"].gt(0.12)
+                        | dataframe["close"].gt(dataframe["session_vwap"] + dataframe["atr14"] * 0.42)
+                        | dataframe["close"].gt(dataframe["ema55"])
+                        | dataframe["rsi14"].lt(18)
+                        | (dataframe["slope_15m"] > dataframe["atr14"] * 0.17)
+                    )
+                    raw = end_of_day | low_volatility_reacceleration_failure_long.fillna(False)
+                    short_raw = end_of_day | low_volatility_reacceleration_failure_short.fillna(False)
+                elif "{spec.key}" == "hurst_efficiency_density_repair":
+                    end_of_day = dataframe["minute_of_day_ny"].ge(16 * 60)
+                    hurst_density_repair_failure_long = (
+                        dataframe["hurst_efficiency_ratio_shifted"].lt(0.13)
+                        | dataframe["hurst_reacceleration_bps"].lt(-0.14)
+                        | dataframe["close"].lt(dataframe["session_vwap"] - dataframe["atr14"] * 0.42)
+                        | dataframe["close"].lt(dataframe["ema55"])
+                        | dataframe["rsi14"].gt(82)
+                        | (dataframe["slope_15m"] < -dataframe["atr14"] * 0.17)
+                    )
+                    raw = end_of_day | hurst_density_repair_failure_long.fillna(False)
+                elif "{spec.key}" == "fisher_transform_trend_rejoin":
+                    end_of_day = dataframe["minute_of_day_ny"].ge(16 * 60)
+                    fisher_transform_rejoin_failure_long = (
+                        dataframe["fisher_transform_turn"].lt(-0.22)
+                        | dataframe["fisher_transform_value_shifted"].gt(1.25)
+                        | dataframe["close"].lt(dataframe["session_vwap"] - dataframe["atr14"] * 0.42)
+                        | dataframe["close"].lt(dataframe["ema55"])
+                        | dataframe["rsi14"].gt(84)
+                        | (dataframe["slope_15m"] < -dataframe["atr14"] * 0.18)
+                    )
+                    raw = end_of_day | fisher_transform_rejoin_failure_long.fillna(False)
+                elif "{spec.key}" == "session_vwap_absorption_reacceleration":
+                    end_of_day = dataframe["minute_of_day_ny"].ge(16 * 60)
+                    session_vwap_reacceleration_failure_long = (
+                        dataframe["session_vwap_reacceleration_slope"].lt(-0.35)
+                        | dataframe["close"].lt(dataframe["session_vwap"] - dataframe["atr14"] * 0.42)
+                        | dataframe["close"].lt(dataframe["ema55"])
+                        | dataframe["rsi14"].gt(82)
+                        | (dataframe["slope_15m"] < -dataframe["atr14"] * 0.17)
+                    )
+                    session_vwap_reacceleration_failure_short = (
+                        dataframe["session_vwap_reacceleration_slope"].gt(0.35)
+                        | dataframe["close"].gt(dataframe["session_vwap"] + dataframe["atr14"] * 0.42)
+                        | dataframe["close"].gt(dataframe["ema55"])
+                        | dataframe["rsi14"].lt(18)
+                        | (dataframe["slope_15m"] > dataframe["atr14"] * 0.17)
+                    )
+                    raw = end_of_day | session_vwap_reacceleration_failure_long.fillna(False)
+                    short_raw = end_of_day | session_vwap_reacceleration_failure_short.fillna(False)
+                elif "{spec.key}" == "balance_of_power_volume_pressure_trend_acceptance_filter":
+                    end_of_day = dataframe["minute_of_day_ny"].ge(16 * 60)
+                    bop_volume_pressure_failure_long = (
+                        dataframe["bop_pressure_shifted"].lt(-0.05)
+                        | dataframe["bop_pressure_impulse"].lt(-0.06)
+                        | dataframe["bop_volume_participation"].lt(0.48)
+                        | dataframe["close"].lt(dataframe["session_vwap"] - dataframe["atr14"] * 0.35)
+                        | dataframe["close"].lt(dataframe["ema55"])
+                        | dataframe["rsi14"].gt(84)
+                        | (dataframe["slope_15m"] < -dataframe["atr14"] * 0.18)
+                    )
+                    bop_volume_pressure_failure_short = (
+                        dataframe["bop_pressure_shifted"].gt(0.05)
+                        | dataframe["bop_pressure_impulse"].gt(0.06)
+                        | dataframe["bop_volume_participation"].lt(0.48)
+                        | dataframe["close"].gt(dataframe["session_vwap"] + dataframe["atr14"] * 0.35)
+                        | dataframe["close"].gt(dataframe["ema55"])
+                        | dataframe["rsi14"].lt(16)
+                        | (dataframe["slope_15m"] > dataframe["atr14"] * 0.18)
+                    )
+                    raw = end_of_day | bop_volume_pressure_failure_long.fillna(False)
+                    short_raw = end_of_day | bop_volume_pressure_failure_short.fillna(False)
+                elif "{spec.key}" == "stochastic_rsi_mtf_reacceleration_filter":
+                    end_of_day = dataframe["minute_of_day_ny"].ge(16 * 60)
+                    stochastic_rsi_reacceleration_failure_long = (
+                        dataframe["stochastic_rsi_k_shifted"].lt(dataframe["stochastic_rsi_d_shifted"] - 1.20)
+                        | dataframe["stochastic_rsi_histogram_shifted"].lt(-2.40)
+                        | dataframe["close"].lt(dataframe["session_vwap"])
+                        | dataframe["close"].lt(dataframe["ema55"])
+                        | dataframe["rsi14"].gt(82)
+                        | (dataframe["slope_15m"] < -dataframe["atr14"] * 0.17)
+                    )
+                    stochastic_rsi_reacceleration_failure_short = (
+                        dataframe["stochastic_rsi_k_shifted"].gt(dataframe["stochastic_rsi_d_shifted"] + 1.20)
+                        | dataframe["stochastic_rsi_histogram_shifted"].gt(2.40)
+                        | dataframe["close"].gt(dataframe["session_vwap"])
+                        | dataframe["close"].gt(dataframe["ema55"])
+                        | dataframe["rsi14"].lt(18)
+                        | (dataframe["slope_15m"] > dataframe["atr14"] * 0.17)
+                    )
+                    raw = end_of_day | stochastic_rsi_reacceleration_failure_long.fillna(False)
+                    short_raw = end_of_day | stochastic_rsi_reacceleration_failure_short.fillna(False)
+                elif "{spec.key}" == "kdj_stochastic_jline_reacceleration":
+                    end_of_day = dataframe["minute_of_day_ny"].ge(16 * 60)
+                    kdj_reacceleration_failure_long = (
+                        dataframe["kdj_jline_shifted"].lt(dataframe["kdj_d_shifted"] - 1.10)
+                        | dataframe["kdj_jline_delta3_shifted"].lt(-3.20)
+                        | dataframe["close"].lt(dataframe["session_vwap"])
+                        | dataframe["close"].lt(dataframe["ema55"])
+                        | dataframe["rsi14"].gt(83)
+                        | (dataframe["slope_15m"] < -dataframe["atr14"] * 0.17)
+                    )
+                    kdj_reacceleration_failure_short = (
+                        dataframe["kdj_jline_shifted"].gt(dataframe["kdj_d_shifted"] + 1.10)
+                        | dataframe["kdj_jline_delta3_shifted"].gt(3.20)
+                        | dataframe["close"].gt(dataframe["session_vwap"])
+                        | dataframe["close"].gt(dataframe["ema55"])
+                        | dataframe["rsi14"].lt(17)
+                        | (dataframe["slope_15m"] > dataframe["atr14"] * 0.17)
+                    )
+                    raw = end_of_day | kdj_reacceleration_failure_long.fillna(False)
+                    short_raw = end_of_day | kdj_reacceleration_failure_short.fillna(False)
+                elif "{spec.key}" == "score_driven_gas_state_admission_filter":
+                    end_of_day = dataframe["minute_of_day_ny"].ge(16 * 60)
+                    gas_state_decay_long = (
+                        dataframe["gas_location_score"].lt(-0.02)
+                        | dataframe["gas_location_drift"].lt(-1.20)
+                        | dataframe["gas_scale_expansion"].gt(2.95)
+                        | dataframe["gas_tail_pressure"].gt(3.35)
+                    )
+                    gas_state_decay_short = (
+                        dataframe["gas_location_score"].gt(0.02)
+                        | dataframe["gas_location_drift"].gt(1.20)
+                        | dataframe["gas_scale_expansion"].gt(2.95)
+                        | dataframe["gas_tail_pressure"].gt(3.35)
+                    )
+                    parent_trend_failure_long = (
+                        dataframe["close"].lt(dataframe["session_vwap"])
+                        | dataframe["close"].lt(dataframe["ema55"])
+                        | dataframe["rsi14"].gt(82)
+                        | (dataframe["slope_15m"] < -dataframe["atr14"] * 0.18)
+                    )
+                    parent_trend_failure_short = (
+                        dataframe["close"].gt(dataframe["session_vwap"])
+                        | dataframe["close"].gt(dataframe["ema55"])
+                        | dataframe["rsi14"].lt(18)
+                        | (dataframe["slope_15m"] > dataframe["atr14"] * 0.18)
+                    )
+                    raw = (
+                        end_of_day
+                        | gas_state_decay_long.fillna(False)
+                        | parent_trend_failure_long.fillna(False)
+                    )
+                    short_raw = (
+                        end_of_day
+                        | gas_state_decay_short.fillna(False)
+                        | parent_trend_failure_short.fillna(False)
+                    )
+                elif "{spec.key}" == "inside_bar_breakout_hold":
+                    end_of_day = dataframe["minute_of_day_ny"].ge(16 * 60 + 45)
+                    inside_hold_failure_long = (
+                        dataframe["close"].lt(dataframe["inside_range_low"])
+                        | dataframe["close"].lt(dataframe["ema55"] - dataframe["atr14"] * 0.24)
+                        | dataframe["close"].lt(dataframe["session_vwap"] - dataframe["atr14"] * 0.50)
+                        | dataframe["rsi14"].gt(83)
+                        | (dataframe["slope_15m"] < -dataframe["atr14"] * 0.18)
+                    )
+                    inside_hold_failure_short = (
+                        dataframe["close"].gt(dataframe["inside_range_high"])
+                        | dataframe["close"].gt(dataframe["ema55"] + dataframe["atr14"] * 0.24)
+                        | dataframe["close"].gt(dataframe["session_vwap"] + dataframe["atr14"] * 0.50)
+                        | dataframe["rsi14"].lt(17)
+                        | (dataframe["slope_15m"] > dataframe["atr14"] * 0.18)
+                    )
+                    raw = end_of_day | inside_hold_failure_long.fillna(False)
+                    short_raw = end_of_day | inside_hold_failure_short.fillna(False)
+                elif "{spec.key}" == "realized_skew_semivariance_trend_acceptance":
+                    end_of_day = dataframe["minute_of_day_ny"].ge(16 * 60 + 45)
+                    asymmetry_decay_long = (
+                        dataframe["realized_skew_96_shifted"].lt(-0.02)
+                        | dataframe["semivariance_balance_shifted"].lt(-0.04)
+                        | dataframe["close"].lt(dataframe["ema55"] - dataframe["atr14"] * 0.20)
+                        | dataframe["close"].lt(dataframe["session_vwap"] - dataframe["atr14"] * 0.48)
+                        | dataframe["rsi14"].gt(84)
+                        | (dataframe["slope_15m"] < -dataframe["atr14"] * 0.18)
+                    )
+                    asymmetry_decay_short = (
+                        dataframe["realized_skew_96_shifted"].gt(0.02)
+                        | dataframe["semivariance_balance_shifted"].gt(0.04)
+                        | dataframe["close"].gt(dataframe["ema55"] + dataframe["atr14"] * 0.20)
+                        | dataframe["close"].gt(dataframe["session_vwap"] + dataframe["atr14"] * 0.48)
+                        | dataframe["rsi14"].lt(16)
+                        | (dataframe["slope_15m"] > dataframe["atr14"] * 0.18)
+                    )
+                    raw = end_of_day | asymmetry_decay_long.fillna(False)
+                    short_raw = end_of_day | asymmetry_decay_short.fillna(False)
+                elif "{spec.key}" == "shiryaev_roberts_quickest_change_persistence_filter":
+                    end_of_day = dataframe["minute_of_day_ny"].ge(16 * 60)
+                    sr_reference = dataframe["shiryaev_roberts_reference"].fillna(3.0)
+                    shiryaev_roberts_collapse_veto = (
+                        dataframe["shiryaev_roberts_stat_shifted"].lt(sr_reference * 0.70)
+                        | dataframe["shiryaev_roberts_persistence_ratio"].lt(0.78)
+                    )
+                    parent_trend_failure_long = (
+                        dataframe["close"].lt(dataframe["session_vwap"])
+                        | dataframe["close"].lt(dataframe["ema55"])
+                        | dataframe["rsi14"].gt(82)
+                        | (dataframe["slope_15m"] < -dataframe["atr14"] * 0.18)
+                        | dataframe["shiryaev_roberts_stat_short_shifted"].gt(sr_reference * 1.35)
+                    )
+                    parent_trend_failure_short = (
+                        dataframe["close"].gt(dataframe["session_vwap"])
+                        | dataframe["close"].gt(dataframe["ema55"])
+                        | dataframe["rsi14"].lt(18)
+                        | (dataframe["slope_15m"] > dataframe["atr14"] * 0.18)
+                        | dataframe["shiryaev_roberts_stat_long_shifted"].gt(sr_reference * 1.35)
+                    )
+                    raw = (
+                        end_of_day
+                        | shiryaev_roberts_collapse_veto.fillna(False)
+                        | parent_trend_failure_long.fillna(False)
+                    )
+                    short_raw = (
+                        end_of_day
+                        | shiryaev_roberts_collapse_veto.fillna(False)
+                        | parent_trend_failure_short.fillna(False)
+                    )
+                elif "{spec.key}" in (
+                    "event_duration_liquidity_clock_trend_filter",
+                    "trendexpansion_event_duration_liquidity_clock",
+                ):
+                    end_of_day = dataframe["minute_of_day_ny"].ge(16 * 60)
+                    event_duration_decay_long = (
+                        dataframe["event_clock_dead_state"].fillna(False)
+                        | dataframe["event_clock_burst_state"].fillna(False)
+                        | dataframe["event_clock_compression_ratio"].gt(1.18)
+                        | dataframe["event_duration_liquidity_clock"].gt(4.20)
+                    )
+                    event_duration_decay_short = (
+                        dataframe["event_clock_dead_state"].fillna(False)
+                        | dataframe["event_clock_burst_state"].fillna(False)
+                        | dataframe["event_clock_compression_ratio"].gt(1.18)
+                        | dataframe["event_duration_liquidity_clock"].gt(4.20)
+                    )
+                    parent_trend_failure_long = (
+                        dataframe["close"].lt(dataframe["session_vwap"])
+                        | dataframe["close"].lt(dataframe["ema55"])
+                        | dataframe["rsi14"].gt(82)
+                        | (dataframe["slope_15m"] < -dataframe["atr14"] * 0.16)
+                    )
+                    parent_trend_failure_short = (
+                        dataframe["close"].gt(dataframe["session_vwap"])
+                        | dataframe["close"].gt(dataframe["ema55"])
+                        | dataframe["rsi14"].lt(18)
+                        | (dataframe["slope_15m"] > dataframe["atr14"] * 0.16)
+                    )
+                    raw = (
+                        end_of_day
+                        | event_duration_decay_long.fillna(False)
+                        | parent_trend_failure_long.fillna(False)
+                    )
+                    short_raw = (
+                        end_of_day
+                        | event_duration_decay_short.fillna(False)
+                        | parent_trend_failure_short.fillna(False)
+                    )
+                elif "{spec.key}" == "renko_price_brick_reacceleration_filter":
+                    end_of_day = dataframe["minute_of_day_ny"].ge(16 * 60)
+                    renko_decay_long = (
+                        dataframe["renko_price_brick_state"].lt(0)
+                        | dataframe["renko_price_brick_direction"].lt(0)
+                        | dataframe["renko_brick_churn_veto"].fillna(False)
+                        | dataframe["renko_price_brick_run_length"].gt(11)
+                        | dataframe["renko_price_brick_extension_ratio"].gt(3.10)
+                    )
+                    renko_decay_short = (
+                        dataframe["renko_price_brick_state"].gt(0)
+                        | dataframe["renko_price_brick_direction"].gt(0)
+                        | dataframe["renko_brick_churn_veto"].fillna(False)
+                        | dataframe["renko_price_brick_run_length"].gt(11)
+                        | dataframe["renko_price_brick_extension_ratio"].gt(3.10)
+                    )
+                    parent_trend_failure_long = (
+                        dataframe["close"].lt(dataframe["session_vwap"] - dataframe["atr14"] * 0.12)
+                        | dataframe["close"].lt(dataframe["ema55"])
+                        | dataframe["rsi14"].gt(82)
+                        | (dataframe["slope_15m"] < -dataframe["atr14"] * 0.16)
+                    )
+                    parent_trend_failure_short = (
+                        dataframe["close"].gt(dataframe["session_vwap"] + dataframe["atr14"] * 0.12)
+                        | dataframe["close"].gt(dataframe["ema55"])
+                        | dataframe["rsi14"].lt(18)
+                        | (dataframe["slope_15m"] > dataframe["atr14"] * 0.16)
+                    )
+                    raw = (
+                        end_of_day
+                        | renko_decay_long.fillna(False)
+                        | parent_trend_failure_long.fillna(False)
+                    )
+                    short_raw = (
+                        end_of_day
+                        | renko_decay_short.fillna(False)
+                        | parent_trend_failure_short.fillna(False)
+                    )
+                elif "{spec.key}" == "candlestick_pattern_context_reliability_gate":
+                    end_of_day = dataframe["minute_of_day_ny"].ge(16 * 60)
+                    opposing_pattern_long = (
+                        dataframe["bearish_engulfing_shifted"].fillna(False)
+                        | dataframe["bearish_marubozu_shifted"].fillna(False)
+                    )
+                    opposing_pattern_short = (
+                        dataframe["bullish_engulfing_shifted"].fillna(False)
+                        | dataframe["bullish_marubozu_shifted"].fillna(False)
+                    )
+                    parent_trend_failure_long = (
+                        dataframe["close"].lt(dataframe["session_vwap"] - dataframe["atr14"] * 0.10)
+                        | dataframe["close"].lt(dataframe["ema55"])
+                        | dataframe["rsi14"].gt(82)
+                        | (dataframe["slope_15m"] < -dataframe["atr14"] * 0.16)
+                        | opposing_pattern_long
+                    )
+                    parent_trend_failure_short = (
+                        dataframe["close"].gt(dataframe["session_vwap"] + dataframe["atr14"] * 0.10)
+                        | dataframe["close"].gt(dataframe["ema55"])
+                        | dataframe["rsi14"].lt(18)
+                        | (dataframe["slope_15m"] > dataframe["atr14"] * 0.16)
+                        | opposing_pattern_short
+                    )
+                    raw = end_of_day | parent_trend_failure_long.fillna(False)
+                    short_raw = end_of_day | parent_trend_failure_short.fillna(False)
+                elif "{spec.key}" == "gsadf_explosive_trend_breakout":
+                    end_of_day = dataframe["minute_of_day_ny"].ge(16 * 60)
+                    explosive_trend_failure = (
+                        dataframe["close"].lt(dataframe["ema55"])
+                        | dataframe["explosive_slope_bps_48"].lt(-0.20)
+                        | dataframe["adf_like_residual_persistence"].lt(0.42)
+                        | dataframe["rsi14"].gt(84)
+                        | (dataframe["slope_15m"] < -dataframe["atr14"] * 0.16)
+                    )
+                    raw = end_of_day | explosive_trend_failure.fillna(False)
+                elif "{spec.key}" == "variance_ratio_serial_correlation_trend_hold":
+                    end_of_day = dataframe["minute_of_day_ny"].ge(16 * 60)
+                    serial_correlation_trend_failure = (
+                        dataframe["close"].lt(dataframe["ema55"])
+                        | dataframe["serial_corr_12"].lt(-0.03)
+                        | dataframe["variance_ratio_4"].lt(0.95)
+                        | dataframe["rsi14"].gt(84)
+                        | (dataframe["slope_15m"] < -dataframe["atr14"] * 0.16)
+                    )
+                    raw = end_of_day | serial_correlation_trend_failure.fillna(False)
+                elif "{spec.key}" == "teager_kaiser_energy_impulse_trend_gate":
+                    end_of_day = dataframe["minute_of_day_ny"].ge(16 * 60)
+                    return_series = dataframe["close"].pct_change().replace([np.inf, -np.inf], np.nan)
+                    teager_kaiser_energy_impulse = (
+                        return_series.shift(1).pow(2) - return_series.shift(2) * return_series
+                    ).abs()
+                    energy_reference = teager_kaiser_energy_impulse.rolling(144, min_periods=55).median().shift(1)
+                    energy_scale = teager_kaiser_energy_impulse.rolling(144, min_periods=55).std().shift(1).replace(0, np.nan)
+                    energy_impulse_z = (teager_kaiser_energy_impulse - energy_reference) / energy_scale
+                    nonlinear_energy_failure = (
+                        dataframe["close"].lt(dataframe["ema55"])
+                        | energy_impulse_z.lt(-0.85)
+                        | energy_impulse_z.gt(4.10)
+                        | dataframe["rsi14"].gt(84)
+                        | (dataframe["slope_15m"] < -dataframe["atr14"] * 0.16)
+                    )
+                    raw = end_of_day | nonlinear_energy_failure.fillna(False)
+                elif "{spec.key}" == "volatility_managed_trend_size_gate":
+                    end_of_day = dataframe["minute_of_day_ny"].ge(16 * 60)
+                    completed_return = dataframe["close"].pct_change().shift(1).replace([np.inf, -np.inf], np.nan)
+                    realized_volatility_state = completed_return.rolling(96, min_periods=34).std()
+                    realized_volatility_reference = realized_volatility_state.rolling(377, min_periods=144).median().shift(1)
+                    realized_volatility_scale = realized_volatility_state.rolling(377, min_periods=144).std().shift(1).replace(0, np.nan)
+                    realized_volatility_z = (realized_volatility_state - realized_volatility_reference) / realized_volatility_scale
+                    volatility_stress_veto = (
+                        realized_volatility_z.gt(2.35)
+                        | dataframe["bar_range_atr"].gt(3.05)
+                        | dataframe["rvol96"].gt(5.25)
+                        | dataframe["body_atr"].gt(2.15)
+                    )
+                    parent_trend_failure_long = (
+                        dataframe["close"].lt(dataframe["session_vwap"] - dataframe["atr14"] * 0.10)
+                        | dataframe["close"].lt(dataframe["ema55"])
+                        | dataframe["rsi14"].gt(82)
+                        | (dataframe["slope_15m"] < -dataframe["atr14"] * 0.18)
+                        | (dataframe["slope_1h"] < -dataframe["atr14"] * 0.22)
+                    )
+                    parent_trend_failure_short = (
+                        dataframe["close"].gt(dataframe["session_vwap"] + dataframe["atr14"] * 0.10)
+                        | dataframe["close"].gt(dataframe["ema55"])
+                        | dataframe["rsi14"].lt(18)
+                        | (dataframe["slope_15m"] > dataframe["atr14"] * 0.18)
+                        | (dataframe["slope_1h"] > dataframe["atr14"] * 0.22)
+                    )
+                    raw = (
+                        end_of_day
+                        | volatility_stress_veto.fillna(False)
+                        | parent_trend_failure_long.fillna(False)
+                    )
+                    short_raw = (
+                        end_of_day
+                        | volatility_stress_veto.fillna(False)
+                        | parent_trend_failure_short.fillna(False)
+                    )
+                elif "{spec.key}" == "rsrs_high_low_regression_trend_admission":
+                    end_of_day = dataframe["minute_of_day_ny"].ge(16 * 60 + 55)
+                    rsrs_admission_decay_long = (
+                        dataframe["rsrs_z_144_shifted"].lt(-0.15)
+                        | dataframe["rsrs_r2_24_shifted"].lt(0.24)
+                        | dataframe["close"].lt(dataframe["session_vwap"] - dataframe["atr14"] * 0.45)
+                        | dataframe["ema20"].lt(dataframe["ema55"])
+                    )
+                    rsrs_admission_decay_short = (
+                        dataframe["rsrs_z_144_shifted"].gt(0.15)
+                        | dataframe["rsrs_r2_24_shifted"].lt(0.24)
+                        | dataframe["close"].gt(dataframe["session_vwap"] + dataframe["atr14"] * 0.45)
+                        | dataframe["ema20"].gt(dataframe["ema55"])
+                    )
+                    raw = end_of_day | rsrs_admission_decay_long.fillna(False)
+                    short_raw = end_of_day | rsrs_admission_decay_short.fillna(False)
+                elif "{spec.key}" == "polarized_fractal_efficiency_trend_acceptance":
+                    end_of_day = dataframe["minute_of_day_ny"].ge(16 * 60 + 45)
+                    pfe_acceptance_decay_long = (
+                        dataframe["pfe_shifted"].lt(18.0)
+                        | dataframe["pfe_slope_shifted"].lt(-4.0)
+                        | dataframe["pfe_lookback_return_bps_shifted"].lt(-4.0)
+                        | dataframe["close"].lt(dataframe["session_vwap"] - dataframe["atr14"] * 0.45)
+                        | dataframe["ema21"].lt(dataframe["ema55"])
+                        | dataframe["rsi14"].gt(84)
+                        | (dataframe["slope_30m"] < -dataframe["atr14"] * 0.18)
+                    )
+                    pfe_acceptance_decay_short = (
+                        dataframe["pfe_shifted"].gt(-18.0)
+                        | dataframe["pfe_slope_shifted"].gt(4.0)
+                        | dataframe["pfe_lookback_return_bps_shifted"].gt(4.0)
+                        | dataframe["close"].gt(dataframe["session_vwap"] + dataframe["atr14"] * 0.45)
+                        | dataframe["ema21"].gt(dataframe["ema55"])
+                        | dataframe["rsi14"].lt(16)
+                        | (dataframe["slope_30m"] > dataframe["atr14"] * 0.18)
+                    )
+                    raw = end_of_day | pfe_acceptance_decay_long.fillna(False)
+                    short_raw = end_of_day | pfe_acceptance_decay_short.fillna(False)
+                elif "{spec.key}" == "heikin_ashi_kama_trend_pullback_rejoin_long_quality_30m":
+                    heikin_kama_decay_long = (
+                        dataframe["ha_trend_shifted"].lt(0.0)
+                        | dataframe["heikin_kama_efficiency_shifted"].fillna(0.0).lt(0.04)
+                        | dataframe["close"].lt(dataframe["heikin_kama"] - dataframe["atr14"] * 0.80)
+                        | dataframe["rsi14"].gt(86.0)
+                        | dataframe["slope_1h"].lt(-dataframe["atr14"] * 0.22)
+                    )
+                    raw = heikin_kama_decay_long.fillna(False)
+                elif "{spec.key}" == "vhf_chop_trend_reacceleration":
+                    end_of_day = dataframe["minute_of_day_ny"].ge(16 * 60 + 45)
+                    vhf_chop_decay_long = (
+                        dataframe["vhf_reacceleration_shifted"].lt(-0.006)
+                        | dataframe["chop_34_shifted"].gt(66.0)
+                        | dataframe["directional_efficiency_shifted"].lt(0.06)
+                        | dataframe["close"].lt(dataframe["session_vwap"] - dataframe["atr14"] * 0.45)
+                        | dataframe["ema21"].lt(dataframe["ema55"])
+                    )
+                    vhf_chop_decay_short = (
+                        dataframe["vhf_reacceleration_shifted"].lt(-0.006)
+                        | dataframe["chop_34_shifted"].gt(66.0)
+                        | dataframe["directional_efficiency_shifted"].lt(0.06)
+                        | dataframe["close"].gt(dataframe["session_vwap"] + dataframe["atr14"] * 0.45)
+                        | dataframe["ema21"].gt(dataframe["ema55"])
+                    )
+                    raw = end_of_day | vhf_chop_decay_long.fillna(False)
+                    short_raw = end_of_day | vhf_chop_decay_short.fillna(False)
+                elif "{spec.key}" == "trendexpansion_bocpd_dynmom_vhfchop":
+                    end_of_day = dataframe["minute_of_day_ny"].ge(16 * 60 + 45)
+                    trendexpansion_decay_long = (
+                        dataframe["vhf_chop_no_trend_veto_shifted"].fillna(True)
+                        | dataframe["dynmom_consensus_shifted"].lt(1)
+                        | dataframe["bocpd_hazard_proxy_shifted"].lt(-0.12)
+                        | dataframe["close"].lt(dataframe["session_vwap"] - dataframe["atr14"] * 0.42)
+                        | dataframe["ema21"].lt(dataframe["ema55"])
+                    )
+                    trendexpansion_decay_short = (
+                        dataframe["vhf_chop_no_trend_veto_shifted"].fillna(True)
+                        | dataframe["dynmom_consensus_shifted"].gt(-1)
+                        | dataframe["bocpd_hazard_proxy_shifted"].lt(-0.12)
+                        | dataframe["close"].gt(dataframe["session_vwap"] + dataframe["atr14"] * 0.42)
+                        | dataframe["ema21"].gt(dataframe["ema55"])
+                    )
+                    raw = end_of_day | trendexpansion_decay_long.fillna(False)
+                    short_raw = end_of_day | trendexpansion_decay_short.fillna(False)
+                elif "{spec.key}" == "trend_expansion_only_regime_transition_clean_state_shift":
+                    end_of_day = dataframe["minute_of_day_ny"].ge(16 * 60 + 45)
+                    other_regimes_reference_veto_only = (
+                        dataframe["state_shift_chop_shifted"].gt(62.0)
+                        | dataframe["state_shift_vhf_shifted"].lt(0.20)
+                        | dataframe["state_shift_vhf_rise_shifted"].lt(-0.004)
+                    )
+                    state_shift_clean_decay_long = (
+                        other_regimes_reference_veto_only.fillna(True)
+                        | dataframe["state_shift_momentum_bps_shifted"].lt(-0.20)
+                        | dataframe["close"].lt(dataframe["session_vwap"] - dataframe["atr14"] * 0.42)
+                        | dataframe["close"].lt(dataframe["ema21"])
+                        | dataframe["rsi14"].gt(84)
+                        | dataframe["slope_15m"].lt(-dataframe["atr14"] * 0.18)
+                    )
+                    raw = end_of_day | state_shift_clean_decay_long.fillna(False)
+                elif "{spec.key}" == "trend_expansion_only_regime_transition_retest_hold_quality":
+                    end_of_day = dataframe["minute_of_day_ny"].ge(16 * 60 + 45)
+                    other_regimes_reference_veto_only = (
+                        dataframe["state_shift_chop_shifted"].gt(62.0)
+                        | dataframe["state_shift_vhf_shifted"].lt(0.20)
+                        | dataframe["state_shift_vhf_rise_shifted"].lt(-0.004)
+                    )
+                    state_shift_retest_decay_long = (
+                        other_regimes_reference_veto_only.fillna(True)
+                        | dataframe["state_shift_momentum_bps_shifted"].lt(-0.20)
+                        | dataframe["close"].lt(dataframe["session_vwap"] - dataframe["atr14"] * 0.42)
+                        | dataframe["close"].lt(dataframe["ema21"])
+                        | dataframe["rsi14"].gt(84)
+                        | dataframe["slope_15m"].lt(-dataframe["atr14"] * 0.18)
+                    )
+                    raw = end_of_day | state_shift_retest_decay_long.fillna(False)
+                elif "{spec.key}" == "trend_expansion_only_regime_transition_strict_state_shift":
+                    end_of_day = dataframe["minute_of_day_ny"].ge(16 * 60 + 45)
+                    other_regimes_reference_veto_only = (
+                        dataframe["state_shift_chop_shifted"].gt(62.0)
+                        | dataframe["state_shift_vhf_shifted"].lt(0.20)
+                        | dataframe["state_shift_vhf_rise_shifted"].lt(-0.004)
+                    )
+                    state_shift_strict_decay_long = (
+                        other_regimes_reference_veto_only.fillna(True)
+                        | dataframe["state_shift_momentum_bps_shifted"].lt(-0.20)
+                        | dataframe["close"].lt(dataframe["session_vwap"] - dataframe["atr14"] * 0.42)
+                        | dataframe["close"].lt(dataframe["ema21"])
+                        | dataframe["rsi14"].gt(84)
+                        | dataframe["slope_15m"].lt(-dataframe["atr14"] * 0.18)
+                    )
+                    raw = end_of_day | state_shift_strict_decay_long.fillna(False)
+                elif "{spec.key}" == "elder_thermometer_heat_rejoin":
+                    end_of_day = dataframe["minute_of_day_ny"].ge(16 * 60 + 45)
+                    heat_exhaustion = (
+                        dataframe["elder_thermometer_heat_ratio_shifted"].gt(3.15)
+                        | dataframe["elder_thermometer_heat_delta_shifted"].lt(-0.46)
+                    )
+                    heat_rejoin_decay_long = (
+                        heat_exhaustion.fillna(False)
+                        | dataframe["close"].lt(dataframe["session_vwap"] - dataframe["atr14"] * 0.45)
+                        | dataframe["ema21"].lt(dataframe["ema55"])
+                        | dataframe["rsi14"].gt(84)
+                        | (dataframe["slope_30m"] < -dataframe["atr14"] * 0.18)
+                    )
+                    heat_rejoin_decay_short = (
+                        heat_exhaustion.fillna(False)
+                        | dataframe["close"].gt(dataframe["session_vwap"] + dataframe["atr14"] * 0.45)
+                        | dataframe["ema21"].gt(dataframe["ema55"])
+                        | dataframe["rsi14"].lt(16)
+                        | (dataframe["slope_30m"] > dataframe["atr14"] * 0.18)
+                    )
+                    raw = end_of_day | heat_rejoin_decay_long.fillna(False)
+                    short_raw = end_of_day | heat_rejoin_decay_short.fillna(False)
+                elif "{spec.key}" == "pgo_atr_trend_rejoin":
+                    end_of_day = dataframe["minute_of_day_ny"].ge(16 * 60 + 45)
+                    pgo_rejoin_failure_long = (
+                        dataframe["pgo_atr_deviation_shifted"].lt(-2.25)
+                        | dataframe["pgo_rejoin_impulse_shifted"].lt(-0.18)
+                        | dataframe["close"].lt(dataframe["session_vwap"] - dataframe["atr14"] * 0.48)
+                        | dataframe["ema21"].lt(dataframe["ema55"])
+                        | dataframe["rsi14"].gt(84)
+                        | (dataframe["slope_30m"] < -dataframe["atr14"] * 0.18)
+                    )
+                    pgo_rejoin_failure_short = (
+                        dataframe["pgo_atr_deviation_shifted"].gt(2.25)
+                        | dataframe["pgo_rejoin_impulse_shifted"].gt(0.18)
+                        | dataframe["close"].gt(dataframe["session_vwap"] + dataframe["atr14"] * 0.48)
+                        | dataframe["ema21"].gt(dataframe["ema55"])
+                        | dataframe["rsi14"].lt(16)
+                        | (dataframe["slope_30m"] > dataframe["atr14"] * 0.18)
+                    )
+                    raw = end_of_day | pgo_rejoin_failure_long.fillna(False)
+                    short_raw = end_of_day | pgo_rejoin_failure_short.fillna(False)
+                elif "{spec.key}" == "medrv_minrv_noise_robust_vol_state_gate":
+                    end_of_day = dataframe["minute_of_day_ny"].ge(16 * 60 + 45)
+                    robust_state_decay = (
+                        dataframe["rv_medrv_disagreement_shifted"].gt(0.95)
+                        | dataframe["robust_vol_state_z_shifted"].gt(2.25)
+                        | dataframe["robust_vol_state_z_shifted"].lt(-1.35)
+                    )
+                    parent_trend_decay_long = (
+                        dataframe["close"].lt(dataframe["ema55"])
+                        | dataframe["close"].lt(dataframe["session_vwap"] - dataframe["atr14"] * 0.45)
+                        | (dataframe["slope_30m"] < -dataframe["atr14"] * 0.18)
+                    )
+                    parent_trend_decay_short = (
+                        dataframe["close"].gt(dataframe["ema55"])
+                        | dataframe["close"].gt(dataframe["session_vwap"] + dataframe["atr14"] * 0.45)
+                        | (dataframe["slope_30m"] > dataframe["atr14"] * 0.18)
+                    )
+                    raw = end_of_day | robust_state_decay.fillna(False) | parent_trend_decay_long.fillna(False)
+                    short_raw = end_of_day | robust_state_decay.fillna(False) | parent_trend_decay_short.fillna(False)
+                elif "{spec.key}" == "kairi_ym5m_year_stability_refinement":
+                    end_of_day = dataframe["minute_of_day_ny"].ge(16 * 60 + 45)
+                    kairi_trend_decay = (
+                        dataframe["kairi_ma_deviation_bps"].gt(22.0)
+                        | dataframe["kairi_fast_slope_bps"].lt(-0.8)
+                        | dataframe["close"].lt(dataframe["kairi_ema48"])
+                        | dataframe["close"].lt(dataframe["session_vwap"] - dataframe["atr14"] * 0.55)
+                        | dataframe["rsi14"].gt(84)
+                        | (dataframe["slope_30m"] < -dataframe["atr14"] * 0.18)
+                    )
+                    raw = end_of_day | kairi_trend_decay.fillna(False)
+                elif "{spec.key}" == "mann_kendall_theil_sen_trend_gate":
+                    end_of_day = dataframe["minute_of_day_ny"].ge(16 * 60)
+                    rank_monotone_trend_failure = (
+                        dataframe["close"].lt(dataframe["ema55"])
+                        | dataframe["mann_kendall_rank_corr_55"].lt(0.02)
+                        | dataframe["theil_sen_robust_slope_bps"].lt(-0.18)
+                        | dataframe["rsi14"].gt(84)
+                        | (dataframe["slope_15m"] < -dataframe["atr14"] * 0.16)
+                    )
+                    raw = end_of_day | rank_monotone_trend_failure.fillna(False)
+                elif "{spec.key}" == "quantile_regression_trend_asymmetry_gate":
+                    end_of_day = dataframe["minute_of_day_ny"].ge(16 * 60)
+                    quantile_tail_failure = (
+                        dataframe["close"].lt(dataframe["ema55"])
+                        | dataframe["quantile_median_slope_bps"].lt(-0.10)
+                        | dataframe["quantile_lower_slope_bps"].lt(-4.2)
+                        | dataframe["quantile_tail_slope_asymmetry"].lt(-1.6)
+                        | dataframe["rsi14"].gt(84)
+                        | (dataframe["slope_15m"] < -dataframe["atr14"] * 0.16)
+                    )
+                    raw = end_of_day | quantile_tail_failure.fillna(False)
+                elif "{spec.key}" == "median_price_envelope_reacceleration_filter":
+                    end_of_day = dataframe["minute_of_day_ny"].ge(16 * 60)
+                    median_envelope_trend_failure = (
+                        dataframe["close"].lt(dataframe["median_price_envelope_center"] - dataframe["atr14"] * 0.45)
+                        | dataframe["median_price_envelope_center_slope_bps"].lt(-0.12)
+                        | dataframe["median_price_envelope_reacceleration"].lt(-0.42)
+                        | dataframe["rsi14"].gt(84)
+                        | (dataframe["slope_15m"] < -dataframe["atr14"] * 0.16)
+                    )
+                    raw = end_of_day | median_envelope_trend_failure.fillna(False)
+                elif "{spec.key}" == "ultimate_williams_reacceleration":
+                    end_of_day = dataframe["minute_of_day_ny"].ge(16 * 60 + 45)
+                    ultimate_williams_decay_long = (
+                        dataframe["ultimate_oscillator_shifted"].lt(42.0)
+                        | dataframe["ultimate_oscillator_delta"].lt(-0.35)
+                        | dataframe["williams_r_shifted"].lt(-82.0)
+                        | dataframe["close"].lt(dataframe["ema55"])
+                        | dataframe["close"].lt(dataframe["session_vwap"] - dataframe["atr14"] * 0.42)
+                        | (dataframe["slope_15m"] < -dataframe["atr14"] * 0.16)
+                    )
+                    ultimate_williams_decay_short = (
+                        dataframe["ultimate_oscillator_shifted"].gt(58.0)
+                        | dataframe["ultimate_oscillator_delta"].gt(0.35)
+                        | dataframe["williams_r_shifted"].gt(-18.0)
+                        | dataframe["close"].gt(dataframe["ema55"])
+                        | dataframe["close"].gt(dataframe["session_vwap"] + dataframe["atr14"] * 0.42)
+                        | (dataframe["slope_15m"] > dataframe["atr14"] * 0.16)
+                    )
+                    raw = end_of_day | ultimate_williams_decay_long.fillna(False)
+                    short_raw = end_of_day | ultimate_williams_decay_short.fillna(False)
+                elif "{spec.key}" == "pesaran_timmermann_directional_accuracy_admission_filter":
+                    end_of_day = dataframe["minute_of_day_ny"].ge(16 * 60 + 45)
+                    pt_skill_failure = dataframe["pt_directional_accuracy_score"].lt(0.0)
+                    pt_trend_failure_long = (
+                        dataframe["pt_forecast_direction_shifted"].lt(0.0)
+                        | dataframe["close"].lt(dataframe["ema55"])
+                        | dataframe["close"].lt(dataframe["session_vwap"] - dataframe["atr14"] * 0.42)
+                        | (dataframe["slope_1h"] < -dataframe["atr14"] * 0.16)
+                    )
+                    pt_trend_failure_short = (
+                        dataframe["pt_forecast_direction_shifted"].gt(0.0)
+                        | dataframe["close"].gt(dataframe["ema55"])
+                        | dataframe["close"].gt(dataframe["session_vwap"] + dataframe["atr14"] * 0.42)
+                        | (dataframe["slope_1h"] > dataframe["atr14"] * 0.16)
+                    )
+                    raw = end_of_day | pt_skill_failure.fillna(False) | pt_trend_failure_long.fillna(False)
+                    short_raw = end_of_day | pt_skill_failure.fillna(False) | pt_trend_failure_short.fillna(False)
                 elif "{spec.key}" == "wpr_fractal_ict_zone_reclaim":
                     end_of_day = dataframe["minute_of_day_ny"].ge(15 * 60 + 45)
                     mean_target_long = (
@@ -4833,17 +18966,6 @@ def strategy_source(spec: CandidateSpec, *, symbol: str, timeframe: str) -> str:
                     )
                     raw = end_of_day | mean_target_long.fillna(False)
                     short_raw = end_of_day | mean_target_short.fillna(False)
-                elif "{spec.key}" == "hurst_efficiency_density_repair":
-                    end_of_day = dataframe["minute_of_day_ny"].ge(16 * 60)
-                    hurst_density_repair_failure_long = (
-                        dataframe["hurst_efficiency_ratio_shifted"].lt(0.13)
-                        | dataframe["hurst_reacceleration_bps"].lt(-0.14)
-                        | dataframe["close"].lt(dataframe["session_vwap"] - dataframe["atr14"] * 0.42)
-                        | dataframe["close"].lt(dataframe["ema55"])
-                        | dataframe["rsi14"].gt(82)
-                        | (dataframe["slope_15m"] < -dataframe["atr14"] * 0.17)
-                    )
-                    raw = end_of_day | hurst_density_repair_failure_long.fillna(False)
                 elif "{spec.key}" == "value_area_vpoc_htf_trend_mss_filter":
                     end_of_day = dataframe["minute_of_day_ny"].ge(15 * 60 + 45)
                     vpoc_loss_long = (
@@ -4868,6 +18990,44 @@ def strategy_source(spec: CandidateSpec, *, symbol: str, timeframe: str) -> str:
                         | (dataframe["close"] > dataframe["ema21"])
                         | dataframe["rsi14"].lt(20)
                     )
+                elif "{spec.key}" == "htf_range_edge_cisd_mss_displacement_te":
+                    end_of_day = dataframe["minute_of_day_ny"].ge(16 * 60 + 45)
+                    posterior_decay_long = (
+                        dataframe["close"].lt(dataframe["session_vwap"] - dataframe["atr14"] * 0.35)
+                        | dataframe["close"].lt(dataframe["ema21"] - dataframe["atr14"] * 0.18)
+                        | dataframe["bear_cisd_delivery_flip"].fillna(False)
+                        | dataframe["bear_mss"].fillna(False)
+                        | dataframe["htf_range_top_sweep"].fillna(False)
+                        | dataframe["rsi14"].gt(84)
+                    )
+                    posterior_decay_short = (
+                        dataframe["close"].gt(dataframe["session_vwap"] + dataframe["atr14"] * 0.35)
+                        | dataframe["close"].gt(dataframe["ema21"] + dataframe["atr14"] * 0.18)
+                        | dataframe["bull_cisd_delivery_flip"].fillna(False)
+                        | dataframe["bull_mss"].fillna(False)
+                        | dataframe["htf_range_bottom_sweep"].fillna(False)
+                        | dataframe["rsi14"].lt(16)
+                    )
+                    raw = end_of_day | posterior_decay_long.fillna(False)
+                    short_raw = end_of_day | posterior_decay_short.fillna(False)
+                elif "{spec.key}" == "htf_range_breakout_retest_te_selective":
+                    end_of_day = dataframe["minute_of_day_ny"].ge(16 * 60 + 30)
+                    selective_breakout_decay_long = (
+                        dataframe["close"].lt(dataframe["htf_range_high96"] - dataframe["atr14"] * 0.04)
+                        | dataframe["close"].lt(dataframe["session_vwap"] - dataframe["atr14"] * 0.22)
+                        | dataframe["bear_cisd_delivery_flip"].fillna(False)
+                        | dataframe["bear_mss"].fillna(False)
+                        | dataframe["rsi14"].gt(82)
+                    )
+                    selective_breakout_decay_short = (
+                        dataframe["close"].gt(dataframe["htf_range_low96"] + dataframe["atr14"] * 0.04)
+                        | dataframe["close"].gt(dataframe["session_vwap"] + dataframe["atr14"] * 0.22)
+                        | dataframe["bull_cisd_delivery_flip"].fillna(False)
+                        | dataframe["bull_mss"].fillna(False)
+                        | dataframe["rsi14"].lt(18)
+                    )
+                    raw = end_of_day | selective_breakout_decay_long.fillna(False)
+                    short_raw = end_of_day | selective_breakout_decay_short.fillna(False)
                 elif "{spec.key}" == "vwap_reclaim_rvol_trend_quality_filter":
                     raw = (
                         dataframe["close"].lt(dataframe["session_vwap"])
@@ -4893,6 +19053,164 @@ def strategy_source(spec: CandidateSpec, *, symbol: str, timeframe: str) -> str:
                     )
                     raw = end_of_day | mean_target_long.fillna(False)
                     short_raw = end_of_day | mean_target_short.fillna(False)
+                elif "{spec.key}" == "bds_nonlinear_dependence_admission_filter":
+                    end_of_day = dataframe["minute_of_day_ny"].ge(15 * 60 + 45)
+                    bds_signal_decay = dataframe["bds_nonlinear_dependence_score"].lt(
+                        dataframe["bds_nonlinear_dependence_score"]
+                        .rolling(89, min_periods=34)
+                        .quantile(0.35)
+                        .shift(1)
+                    )
+                    raw = (
+                        end_of_day
+                        | bds_signal_decay.fillna(False)
+                        | dataframe["close"].lt(dataframe["session_vwap"])
+                        | dataframe["ema21"].lt(dataframe["ema55"])
+                        | dataframe["rsi14"].gt(80)
+                    )
+                    short_raw = (
+                        end_of_day
+                        | bds_signal_decay.fillna(False)
+                        | dataframe["close"].gt(dataframe["session_vwap"])
+                        | dataframe["ema21"].gt(dataframe["ema55"])
+                        | dataframe["rsi14"].lt(20)
+                    )
+                elif "{spec.key}" == "rolling_regression_residual_trend_rejoin_gate":
+                    maintenance_flatten = dataframe["minute_of_day_ny"].ge(16 * 60 + 55)
+                    residual_failure_long = (
+                        dataframe["rolling_regression_residual_atr"].lt(-2.20)
+                        | dataframe["rolling_regression_residual_rejoin_delta"].lt(-0.10)
+                    )
+                    residual_failure_short = (
+                        dataframe["rolling_regression_residual_atr"].gt(2.20)
+                        | dataframe["rolling_regression_residual_rejoin_delta"].gt(0.10)
+                    )
+                    trendline_decay_long = (
+                        dataframe["regression_slope_bps_96"].lt(0.05)
+                        | dataframe["regression_r2_96"].lt(0.12)
+                        | dataframe["close"].lt(dataframe["ema55"])
+                        | dataframe["close"].lt(dataframe["session_vwap"] - dataframe["atr14"] * 0.45)
+                    )
+                    trendline_decay_short = (
+                        dataframe["regression_slope_bps_96"].gt(-0.05)
+                        | dataframe["regression_r2_96"].lt(0.12)
+                        | dataframe["close"].gt(dataframe["ema55"])
+                        | dataframe["close"].gt(dataframe["session_vwap"] + dataframe["atr14"] * 0.45)
+                    )
+                    mtf_slope_failure_long = (
+                        (dataframe["slope_30m"] < -dataframe["atr14"] * 0.18)
+                        | (dataframe["slope_1h"] < -dataframe["atr14"] * 0.20)
+                    )
+                    mtf_slope_failure_short = (
+                        (dataframe["slope_30m"] > dataframe["atr14"] * 0.18)
+                        | (dataframe["slope_1h"] > dataframe["atr14"] * 0.20)
+                    )
+                    raw = (
+                        maintenance_flatten
+                        | residual_failure_long.fillna(False)
+                        | trendline_decay_long.fillna(False)
+                        | mtf_slope_failure_long.fillna(False)
+                    )
+                    short_raw = (
+                        maintenance_flatten
+                        | residual_failure_short.fillna(False)
+                        | trendline_decay_short.fillna(False)
+                        | mtf_slope_failure_short.fillna(False)
+                    )
+                elif "{spec.key}" == "linear_regression_r2_slope_trend_rejoin_filter":
+                    maintenance_flatten = dataframe["minute_of_day_ny"].ge(16 * 60 + 55)
+                    residual_rejoin_failure_long = (
+                        dataframe["rolling_regression_residual_atr"].lt(-2.10)
+                        | dataframe["rolling_regression_residual_rejoin_delta"].lt(-0.12)
+                    )
+                    residual_rejoin_failure_short = (
+                        dataframe["rolling_regression_residual_atr"].gt(2.10)
+                        | dataframe["rolling_regression_residual_rejoin_delta"].gt(0.12)
+                    )
+                    linear_regression_fit_decay_long = (
+                        dataframe["regression_slope_bps_96"].lt(0.04)
+                        | dataframe["regression_r2_96"].lt(0.12)
+                        | dataframe["close"].lt(dataframe["ema55"])
+                        | dataframe["close"].lt(dataframe["session_vwap"] - dataframe["atr14"] * 0.45)
+                    )
+                    linear_regression_fit_decay_short = (
+                        dataframe["regression_slope_bps_96"].gt(-0.04)
+                        | dataframe["regression_r2_96"].lt(0.12)
+                        | dataframe["close"].gt(dataframe["ema55"])
+                        | dataframe["close"].gt(dataframe["session_vwap"] + dataframe["atr14"] * 0.45)
+                    )
+                    mtf_slope_failure_long = (
+                        (dataframe["slope_30m"] < -dataframe["atr14"] * 0.18)
+                        | (dataframe["slope_1h"] < -dataframe["atr14"] * 0.20)
+                        | (dataframe["slope_4h"] < -dataframe["atr14"] * 0.24)
+                    )
+                    mtf_slope_failure_short = (
+                        (dataframe["slope_30m"] > dataframe["atr14"] * 0.18)
+                        | (dataframe["slope_1h"] > dataframe["atr14"] * 0.20)
+                        | (dataframe["slope_4h"] > dataframe["atr14"] * 0.24)
+                    )
+                    raw = (
+                        maintenance_flatten
+                        | residual_rejoin_failure_long.fillna(False)
+                        | linear_regression_fit_decay_long.fillna(False)
+                        | mtf_slope_failure_long.fillna(False)
+                    )
+                    short_raw = (
+                        maintenance_flatten
+                        | residual_rejoin_failure_short.fillna(False)
+                        | linear_regression_fit_decay_short.fillna(False)
+                        | mtf_slope_failure_short.fillna(False)
+                    )
+                elif "{spec.key}" == "elder_force_index_pullback_continuation":
+                    end_of_session = dataframe["minute_of_day_ny"].ge(16 * 60 + 55)
+                    elder_force_decay_long = (
+                        dataframe["elder_force_index_slope"].lt(0.0)
+                        & dataframe["elder_force_index_smooth"].lt(dataframe["elder_force_index_smooth"].shift(3))
+                    )
+                    elder_force_decay_short = (
+                        dataframe["elder_force_index_slope"].gt(0.0)
+                        & dataframe["elder_force_index_smooth"].gt(dataframe["elder_force_index_smooth"].shift(3))
+                    )
+                    trend_loss_long = (
+                        dataframe["close"].lt(dataframe["ema55"])
+                        | dataframe["close"].lt(dataframe["session_vwap"] - dataframe["atr14"] * 0.55)
+                        | (dataframe["slope_15m"] < -dataframe["atr14"] * 0.16)
+                    )
+                    trend_loss_short = (
+                        dataframe["close"].gt(dataframe["ema55"])
+                        | dataframe["close"].gt(dataframe["session_vwap"] + dataframe["atr14"] * 0.55)
+                        | (dataframe["slope_15m"] > dataframe["atr14"] * 0.16)
+                    )
+                    raw = (
+                        end_of_session
+                        | elder_force_decay_long.fillna(False)
+                        | trend_loss_long.fillna(False)
+                        | dataframe["rsi14"].gt(82)
+                    )
+                    short_raw = (
+                        end_of_session
+                        | elder_force_decay_short.fillna(False)
+                        | trend_loss_short.fillna(False)
+                        | dataframe["rsi14"].lt(18)
+                    )
+                elif "{spec.key}" == "heikin_ashi_kama_trend_pullback_rejoin":
+                    end_of_session = dataframe["minute_of_day_ny"].ge(16 * 60 + 55)
+                    heikin_kama_decay_long = (
+                        dataframe["ha_trend_shifted"].lt(0)
+                        | dataframe["kama_slope_bps_shifted"].lt(-1.5)
+                        | dataframe["kama_efficiency_shifted"].lt(0.05)
+                    )
+                    trend_loss_long = (
+                        dataframe["close"].lt(dataframe["kama"])
+                        | dataframe["close"].lt(dataframe["ema55"])
+                        | (dataframe["slope_15m"] < -dataframe["atr14"] * 0.16)
+                        | dataframe["rsi14"].gt(84)
+                    )
+                    raw = (
+                        end_of_session
+                        | heikin_kama_decay_long.fillna(False)
+                        | trend_loss_long.fillna(False)
+                    )
                 else:
                     raw = (
                         (dataframe["close"] < dataframe["session_vwap"])
@@ -4919,6 +19237,7 @@ def prepare_aq_workspace(
     start: str,
     end: str,
 ) -> Path:
+    symbols, _aliases = canonical_tomac_symbol_sequence(symbols)
     workspace = root / "aq_workspaces" / timeframe
     workspace.mkdir(parents=True, exist_ok=True)
     (workspace / "user_data/strategies_external").mkdir(parents=True, exist_ok=True)
@@ -4949,14 +19268,51 @@ def stage_aq_inputs(
     end: str,
     families: list[str] | None = None,
 ) -> dict[str, Any]:
+    symbols, symbol_aliases = canonical_tomac_symbol_sequence(symbols)
     workspace = prepare_aq_workspace(root, symbols=symbols, timeframe=timeframe, start=start, end=end)
     staged: list[str] = []
     dense_fill_stats: list[dict[str, Any]] = []
+    macro_sidecar_stats: dict[str, Any] | None = None
+    macro_sidecars: list[dict[str, Any]] = []
+    jdk_relative_rotation_sidecars: list[dict[str, Any]] = []
+    dynamic_lead_lag_sidecars: list[dict[str, Any]] = []
     for symbol in symbols:
         clean_feather = root / "clean" / symbol / f"{symbol}_USD-{timeframe}.feather"
         target = futures_feather_path(workspace, symbol, timeframe)
         clean_frame = pd.read_feather(clean_feather)
         dense_frame, fill_stats = dense_calendar_for_aq(clean_frame, timeframe)
+        if family_selection_requires_mbs_macro_sidecar(families):
+            dense_frame, macro_sidecar_stats = merge_mbs_macro_rate_sidecar(dense_frame, root)
+            macro_sidecars.append(macro_sidecar_stats)
+        if family_selection_requires_jolts_macro_sidecar(families):
+            dense_frame, macro_sidecar_stats = merge_jolts_macro_sidecar(dense_frame, root)
+            macro_sidecars.append(macro_sidecar_stats)
+        if family_selection_requires_jdk_relative_rotation_sidecar(families):
+            dense_frame, jdk_sidecar_stats = merge_jdk_relative_rotation_sidecar(
+                dense_frame,
+                root,
+                symbol=symbol,
+                timeframe=timeframe,
+                symbols=symbols,
+            )
+            jdk_relative_rotation_sidecars.append(jdk_sidecar_stats)
+        if family_selection_requires_dynamic_lead_lag_sidecar(families):
+            dense_frame, dynamic_sidecar_stats = merge_dynamic_lead_lag_breadth_sidecar(
+                dense_frame,
+                root,
+                symbol=symbol,
+                timeframe=timeframe,
+            )
+            sidecar_path = (
+                workspace
+                / "user_data/strategies_external"
+                / f"{DYNAMIC_LEAD_LAG_BREADTH_FAMILY}_{symbol}_{timeframe}_sidecar.feather"
+            )
+            sidecar_frame = dense_frame[["date", *DYNAMIC_LEAD_LAG_SIDECAR_COLUMNS]].copy()
+            sidecar_frame.to_feather(sidecar_path)
+            dynamic_sidecar_stats["strategy_sidecar_feather"] = str(sidecar_path)
+            dense_frame = dense_frame[["date", "open", "high", "low", "close", "volume"]].copy()
+            dynamic_lead_lag_sidecars.append(dynamic_sidecar_stats)
         target.parent.mkdir(parents=True, exist_ok=True)
         dense_frame.to_feather(target)
         fill_stats["symbol"] = symbol
@@ -4979,7 +19335,17 @@ def stage_aq_inputs(
         "data": staged,
         "strategies": strategy_paths,
         "strategy_specs": [spec.__dict__ for spec in generated_strategy_specs(symbols, timeframe, families=families)],
+        "symbol_aliases": symbol_aliases,
         "aq_dense_fill": dense_fill_stats,
+        "macro_sidecars": macro_sidecars,
+        "jdk_relative_rotation_sidecars": jdk_relative_rotation_sidecars,
+        "dynamic_lead_lag_sidecars": dynamic_lead_lag_sidecars,
+        "macro_sidecar": macro_sidecar_stats
+        or {
+            "status": "not_required",
+            "materialized_columns": [],
+            "future_lookahead": False,
+        },
     }
 
 
@@ -5178,6 +19544,17 @@ def parse_freqtrade_result_table_blocks(stdout: str) -> list[dict[str, Any]]:
 
 def classify_screen_row(row: dict[str, Any]) -> dict[str, Any]:
     scored = dict(row)
+    raw_symbol = str(scored.get("symbol") or scored.get("pair") or "")
+    canonical_symbol = canonical_tomac_symbol(raw_symbol)
+    existing_symbol = str(scored.get("symbol") or "").upper().strip()
+    existing_pair = str(scored.get("pair") or "").upper().strip()
+    if existing_symbol and existing_symbol != canonical_symbol:
+        scored["legacy_symbol_alias"] = existing_symbol
+    if existing_pair and normalize_futures_root(existing_pair) != canonical_symbol:
+        scored["legacy_pair_alias"] = existing_pair
+    if canonical_symbol:
+        scored["symbol"] = canonical_symbol
+        scored["pair"] = f"{canonical_symbol}/USD"
     trades = int(safe_float(scored.get("trade_count")))
     gross = safe_float(scored.get("total_profit_pct") or scored.get("raw_total_profit_pct"))
     days = max(1, int(scored.get("days") or SESSIONS_2021_2025))
@@ -5186,13 +19563,12 @@ def classify_screen_row(row: dict[str, Any]) -> dict[str, Any]:
     scored["trade_count"] = trades
     scored["raw_total_profit_pct"] = round(gross, 6)
     scored["trades_per_day"] = round(trades / days, 6)
-    for bps in (0, 1, 2, 5):
-        scored[f"{bps}bps_per_side_total_profit_pct"] = round(gross - trades * bps * 0.02, 6)
-    profile = futures_cost_profile(str(scored.get("symbol") or scored.get("pair") or ""))
+    cost_symbol = cost_profile_symbol_for_source(str(scored.get("symbol") or scored.get("pair") or ""))
+    profile = futures_cost_profile(cost_symbol)
     representative_price = safe_float(scored.get("representative_entry_price") or scored.get("last_close"))
     if representative_price <= 0:
-        defaults = {"ES": 5200.0, "NQ": 18000.0, "YM": 39000.0, "XAU": 2300.0}
-        representative_price = defaults.get(profile.root_symbol if profile else "", 1.0)
+        defaults = {"ES": 5200.0, "NQ": 18000.0, "YM": 39000.0, "GC": 2300.0, "MGC": 2300.0}
+        representative_price = defaults.get(profile.root_symbol if profile else cost_symbol, 1.0)
     if profile is not None:
         cost_pct = profile.round_trip_cost_pct(representative_price)
         fee_pct = profile.round_trip_fee_pct(representative_price)
@@ -5231,18 +19607,11 @@ def classify_screen_row(row: dict[str, Any]) -> dict[str, Any]:
         scored["instrument_cost_total_profit_pct"] = None
         scored["survives_instrument_fee_only"] = False
         scored["survives_instrument_cost"] = False
-    scored["density_target_1_to_3_per_day"] = 1.0 <= scored["trades_per_day"] <= 3.0
     scored["minimum_trade_sample_floor_met"] = trades >= 30
-    scored["survives_1bps_per_side"] = scored["1bps_per_side_total_profit_pct"] > 0
-    scored["survives_2bps_per_side"] = scored["2bps_per_side_total_profit_pct"] > 0
-    scored["survives_5bps_per_side"] = scored["5bps_per_side_total_profit_pct"] > 0
-    scored["cost_stress_5bps_role"] = "telemetry_not_futures_hard_gate"
     if gross <= 0:
         scored["cost_wall_bucket"] = "gross_negative_not_cost_rescuable"
     elif not scored["survives_instrument_cost"]:
         scored["cost_wall_bucket"] = "zero_edge_churn_not_rescued_by_realistic_cost"
-    elif not scored["survives_5bps_per_side"]:
-        scored["cost_wall_bucket"] = "bps_stress_false_negative_recheck"
     elif scored["gross_edge_bps_per_trade"] >= 10.0 and scored["trades_per_day"] <= 3.0:
         scored["cost_wall_bucket"] = "large_move_low_turnover_cost_negligible"
     else:
@@ -5250,8 +19619,7 @@ def classify_screen_row(row: dict[str, Any]) -> dict[str, Any]:
     scored["has_win_loss_diversity"] = wins > 0 and losses > 0
     scored["direction_consistent_local"] = scored.get("direction") in {"long", "short", "long_short"}
     scored["gate1_survivor"] = bool(
-        scored["density_target_1_to_3_per_day"]
-        and scored["minimum_trade_sample_floor_met"]
+        scored["minimum_trade_sample_floor_met"]
         and scored["cost_model_verified_for_promotion"]
         and scored["survives_instrument_cost"]
         and scored["has_win_loss_diversity"]
@@ -5342,6 +19710,56 @@ def session_scope_summary(clean_bundles: list[dict[str, Any]] | None) -> dict[st
     }
 
 
+def data_provenance_summary(clean_bundles: list[dict[str, Any]] | None) -> dict[str, Any]:
+    bundles = clean_bundles or []
+    symbol_statuses: list[dict[str, Any]] = []
+    timeframes: set[str] = set()
+    for bundle in bundles:
+        validation = bundle.get("source_archive_validation") or {}
+        timeframes.update(str(timeframe) for timeframe in (bundle.get("timeframes") or {}))
+        symbol_statuses.append(
+            {
+                "symbol": bundle.get("symbol"),
+                "source_csv": bundle.get("source_csv"),
+                "archive_zip": validation.get("archive_zip"),
+                "archive_member": validation.get("archive_member"),
+                "status": validation.get("status") or "missing_source_archive_validation",
+                "blockers": validation.get("blockers") or [],
+            }
+        )
+    source_archive_pass = bool(bundles) and all(
+        item["status"] == "pass_zip_pristine_source" for item in symbol_statuses
+    )
+    source_archive_status = (
+        "pass_zip_pristine_source"
+        if source_archive_pass
+        else "missing_clean_bundles"
+        if not bundles
+        else "fail_closed_polluted_or_unverified_source"
+    )
+    return {
+        "data_provenance": {
+            "cleaning_status": "cleaned_or_verified_retained"
+            if source_archive_pass
+            else "data_scope_blocked_for_cleaned_target",
+            "source_root": str(TOMAC),
+            "symbol_aliases": [],
+            "timeframes": sorted(timeframes),
+            "raw_fallback_used": False,
+            "resample_policy": "closed_left_label_left_for_derived_frames",
+            "source_archive_validation": {
+                "status": source_archive_status,
+                "symbol_statuses": symbol_statuses,
+            },
+        },
+        "source_archive_validation": {
+            "status": source_archive_status,
+            "symbol_statuses": symbol_statuses,
+        },
+        "source_archive_validation_status": source_archive_status,
+    }
+
+
 def write_csv(path: Path, rows: list[dict[str, Any]]) -> None:
     if not rows:
         return
@@ -5421,7 +19839,7 @@ def normalize_root_path(value: object) -> str | None:
 
 def allowed_collision_roots(root: Path, compact_root: Path) -> set[Path]:
     roots = {root, compact_root}
-    if root.name == "aq":
+    if root.name in {"aq", "run"}:
         roots.add(root.parent)
     return roots
 
@@ -5520,31 +19938,35 @@ def write_aq_gate_summary(
     stdout_path = Path(command["stdout_path"])
     rows = score_rows(stdout_path.read_text(encoding="utf-8"), specs)
     session_scope = session_scope_summary(clean_bundles)
+    data_provenance = data_provenance_summary(clean_bundles)
+    source_archive_pass = (
+        data_provenance["data_provenance"]["source_archive_validation"]["status"]
+        == "pass_zip_pristine_source"
+    )
     for row in rows:
         row.update(session_scope)
+        row.update(data_provenance)
     raw_survivors = [row for row in rows if row.get("scope") == "per_pair" and row.get("gate1_survivor")]
-    survivors = raw_survivors if session_scope["eth_full_retained_session_evidence"] else []
+    survivors = (
+        raw_survivors
+        if session_scope["eth_full_retained_session_evidence"] and source_archive_pass
+        else []
+    )
     raw_realistic_cost_survivors = [
         row
         for row in rows
         if row.get("scope") == "per_pair" and row.get("survives_instrument_cost")
     ]
     realistic_cost_survivors = (
-        raw_realistic_cost_survivors if session_scope["eth_full_retained_session_evidence"] else []
+        raw_realistic_cost_survivors
+        if session_scope["eth_full_retained_session_evidence"] and source_archive_pass
+        else []
     )
-    bps_false_negative_rechecks = [
-        row
-        for row in realistic_cost_survivors
-        if row.get("cost_wall_bucket") == "bps_stress_false_negative_recheck"
-    ]
-    stress_survivors = [
-        row
-        for row in rows
-        if row.get("scope") == "per_pair" and row.get("survives_5bps_per_side")
-    ]
     decision = (
-        "gate1_autoquant_instrument_cost_density_survivor_downstream_required"
+        "gate1_autoquant_instrument_cost_survivor_downstream_required"
         if survivors
+        else "blocked_source_archive_validation_unverified_no_downstream"
+        if (raw_survivors or raw_realistic_cost_survivors) and not source_archive_pass
         else "blocked_session_scope_unverified_no_downstream"
         if raw_survivors and not session_scope["eth_full_retained_session_evidence"]
         else "observation_realistic_cost_survivor_needs_non_cost_gate_repair"
@@ -5565,18 +19987,14 @@ def write_aq_gate_summary(
         "trade_usable": False,
         "update_goal": False,
         **session_scope,
+        **data_provenance,
         "survivors_instrument_cost": survivors,
         "raw_instrument_cost_survivors_before_session_scope": raw_survivors,
         "survivors_declared_cost": survivors,
         "realistic_cost_survivors_before_gate1": realistic_cost_survivors,
         "raw_realistic_cost_survivors_before_session_scope": raw_realistic_cost_survivors,
-        "bps_stress_false_negative_rechecks": bps_false_negative_rechecks,
-        "survivors_5bps": stress_survivors if session_scope["eth_full_retained_session_evidence"] else [],
-        "cost_stress_survivors_5bps": stress_survivors if session_scope["eth_full_retained_session_evidence"] else [],
-        "raw_cost_stress_survivors_5bps_before_session_scope": stress_survivors,
         "raw_survivors_before_session_scope": raw_survivors,
         "cost_gate_authority": "instrument_cost",
-        "cost_stress_5bps_role": "telemetry_not_futures_hard_gate",
         "hard_promotion_gates_required_next": {
             "direction_consistent_aq_to_execution_tree": "not_run_yet",
             "duration_readiness_confirmed": "not_run_yet",
@@ -5607,12 +20025,405 @@ def write_aq_gate_summary(
     return gate
 
 
+def shanghai_iso_timestamp() -> str:
+    return datetime.now(ZoneInfo("Asia/Shanghai")).isoformat(timespec="seconds")
+
+
+def representative_gate_row(gate: dict[str, Any]) -> dict[str, Any]:
+    for key in (
+        "survivors_instrument_cost",
+        "realistic_cost_survivors_before_gate1",
+        "raw_realistic_cost_survivors_before_session_scope",
+        "raw_survivors_before_session_scope",
+    ):
+        rows = gate.get(key) or []
+        if rows:
+            return dict(rows[0])
+    return {}
+
+
+def representative_staged_strategy_row(
+    summary: dict[str, Any],
+    gate: dict[str, Any],
+) -> dict[str, Any]:
+    timeframe = gate.get("timeframe")
+    families = summary.get("families") or []
+    family = families[0] if families else None
+    for staging in summary.get("aq_staging") or []:
+        for spec in staging.get("strategy_specs") or []:
+            if timeframe and spec.get("timeframe") != timeframe:
+                continue
+            if family and spec.get("family") != family:
+                continue
+            return {
+                "strategy_name": spec.get("class_name"),
+                "factor_id": spec.get("factor_id"),
+                "branch_path": spec.get("branch_path"),
+                "family": spec.get("family"),
+                "direction": spec.get("direction"),
+            }
+    return {}
+
+
+def write_terminal_regime_feedback_packets(
+    root: Path,
+    compact_root: Path,
+    summary: dict[str, Any],
+) -> None:
+    gate_summaries = summary.get("aq_gate_summaries") or []
+    if not gate_summaries:
+        return
+    gate = gate_summaries[-1]
+    row = representative_gate_row(gate)
+    if not row:
+        row = representative_staged_strategy_row(summary, gate)
+    checks = root / "checks"
+    checks.mkdir(parents=True, exist_ok=True)
+    compact_checks = compact_root / "checks"
+    compact_checks.mkdir(parents=True, exist_ok=True)
+
+    timeframe = gate.get("timeframe")
+    factor_family = row.get("family") or (summary.get("families") or ["unknown"])[0]
+    factor_id = row.get("factor_id") or f"unresolved_{factor_family}_{timeframe}"
+    branch_path = row.get("branch_path") or (
+        "RegimeTransition -> TrendExpansionOnly -> unresolved_factor"
+    )
+    command = gate.get("command") or {}
+    evidence_paths = {
+        "summary": str(root / "summary.json"),
+        "gate": str(root / "summaries" / f"autoquant_clean_{timeframe}_gate.json"),
+        "rows": str(root / "summaries" / f"autoquant_clean_{timeframe}_rows.csv"),
+        "command_exit": str(root / "checks" / f"run_tomac_{timeframe}.exit"),
+        "terminal_metrics": str(root / "checks" / "terminal_metrics.json"),
+        "terminal_summary": str(root / "summaries" / "terminal_summary.json"),
+        "regime_feedback_evidence_packet": str(
+            root / "checks" / "regime_feedback_evidence_packet.json"
+        ),
+        "runner": str(REPO / "support/docs/experiments/actionable-regime-confidence/scripts/run_tomac_index_futures_clean_aq_v1.py"),
+        "runner_test": str(REPO / "support/docs/experiments/actionable-regime-confidence/scripts/test_tomac_index_futures_clean_aq.py"),
+    }
+    practical_flags = {
+        "downstream_allowed": bool(gate.get("downstream_allowed")),
+        "pre_bayes_allowed": bool(gate.get("pre_bayes_allowed")),
+        "bbn_allowed": bool(gate.get("bbn_allowed")),
+        "catboost_allowed": False,
+        "execution_tree_allowed": False,
+        "promotion_allowed": False,
+        "trade_usable": False,
+        "update_goal": False,
+    }
+    evidence_nodes = [
+        "HTF range-edge prior",
+        "breakout/breakdown acceptance",
+        "range-edge retest hold",
+        "MSS/CHoCH close-through",
+        "CISD delivery flip",
+        "displacement/FVG impulse",
+        "ADX/VHF/MTF trendiness quality",
+    ]
+    terminal_status = (
+        "gate1_clean_survivor_pending_downstream_regime_feedback"
+        if gate.get("downstream_allowed")
+        else "terminalized_aq_observation_only"
+    )
+    generated_at = shanghai_iso_timestamp()
+    terminal_metrics = {
+        "schema_version": "factor-aq-terminal-metrics/v2",
+        "generated_at": generated_at,
+        "agent_name": root.name,
+        "route_alias": "sd/ict-engi-fact-rese-muta",
+        "repo_root": str(REPO),
+        "run_root": str(root),
+        "compact_root": str(compact_root),
+        "factor_family": factor_family,
+        "factor_id": factor_id,
+        "branch_path": branch_path,
+        "branch_fields_preserved": bool(factor_family and factor_id and branch_path),
+        "cost_gate_authority": gate.get("cost_gate_authority") or "instrument_cost",
+        "cost_row": row,
+        "survivors_instrument_cost": gate.get("survivors_instrument_cost") or [],
+        "candidate": {
+            "factor_family": factor_family,
+            "factor_id": factor_id,
+            "branch_path": branch_path,
+            "posterior_target": "next_segment_trendexpansion",
+            "entry_allowed_regimes": ["TrendExpansion"],
+            "other_regimes_policy": "reference_veto_only_no_entry",
+            "symbols": summary.get("symbols") or [],
+            "planned_aq_timeframe": timeframe,
+            "context_timeframes": list(summary.get("timeframes") or []),
+            "session_scope": gate.get("session_scope"),
+            "rth_filter_applied": gate.get("rth_filter_applied"),
+        },
+        "belief_network_contract": {
+            "does_not_require_current_materialized_ltf_trendexpansion": True,
+            "target": "predict_next_segment_trendexpansion",
+            "closed_bar_only": True,
+            "next_bar_or_later_execution": True,
+            "evidence_nodes": evidence_nodes,
+            "other_regimes_policy": "reference_veto_only_no_entry",
+        },
+        "data_provenance": gate.get("data_provenance") or {},
+        "source_archive_validation_status": gate.get("source_archive_validation_status"),
+        "session_scope": gate.get("session_scope"),
+        "rth_filter_applied": gate.get("rth_filter_applied"),
+        "eth_full_retained_session_evidence": gate.get("eth_full_retained_session_evidence"),
+        "aq_result": {
+            "timeframe": timeframe,
+            "command_exit": command.get("exit"),
+            "timed_out": command.get("timed_out"),
+            "decision": gate.get("decision"),
+            "rank_rows": gate.get("rank_rows"),
+            "survivors_instrument_cost_count": len(gate.get("survivors_instrument_cost") or []),
+            "realistic_cost_survivors_before_gate1_count": len(
+                gate.get("realistic_cost_survivors_before_gate1") or []
+            ),
+            "representative_row": row,
+            "evidence_paths": evidence_paths,
+        },
+        "terminal_status": terminal_status,
+        "terminal_decision": gate.get("decision"),
+        **practical_flags,
+        "same_tree_practical_closure": None,
+    }
+
+    placement_status = (
+        "pending_belief_network_and_execution_tree_readback"
+        if gate.get("downstream_allowed")
+        else "observation_only_not_admitted"
+    )
+    cost_model = {
+        "cost_profile_id": row.get("cost_profile_id"),
+        "cost_profile_source": row.get("cost_profile_source"),
+        "cost_model_status": row.get("cost_model_status"),
+        "promotion_cost_verified": bool(row.get("promotion_cost_verified")),
+        "instrument_all_in_round_trip_cash": row.get("instrument_all_in_round_trip_cash"),
+        "instrument_round_trip_cost_pct": row.get("instrument_round_trip_cost_pct"),
+        "survives_instrument_cost": bool(row.get("survives_instrument_cost")),
+    }
+    per_timeframe_evidence = [
+        {
+            "timeframe": timeframe,
+            "strategy": row.get("strategy_name"),
+            "factor_id": factor_id,
+            "trades": row.get("trade_count"),
+            "trades_per_day": row.get("trades_per_day"),
+            "gross_profit_total_pct": row.get("raw_total_profit_pct") or row.get("total_profit_pct"),
+            "net_after_verified_cost_pct": row.get("instrument_cost_total_profit_pct"),
+            "profit_factor": row.get("profit_factor"),
+            "winrate": row.get("win_rate_pct"),
+            "regime_feedback_hint": (
+                "positive_backtest_autoquant_gate1_observation"
+                if row.get("gate1_survivor")
+                else "backtest_autoquant_observation_only"
+            ),
+            "negative_evidence": [
+                "accepted_paper_live_execution_feedback_missing",
+                "belief_network_readback_pending",
+                "execution_tree_readback_pending",
+                "same_tree_practical_closure_missing",
+            ],
+        }
+    ]
+    blockers = [
+        "accepted_paper_live_execution_feedback_missing",
+        "belief_network_readback_pending",
+        "execution_tree_readback_pending",
+        "same_tree_practical_closure_missing",
+    ]
+    regime_packet = {
+        "schema_version": "autoquant-regime-feedback-evidence-packet/v1",
+        "evidence_type": "backtest_autoquant_feedback",
+        "feedback_source": "exact_aq_backtest",
+        "regime_root": "TrendExpansion",
+        "generated_at": generated_at,
+        "agent_name": root.name,
+        "factor_family": factor_family,
+        "factor_id": factor_id,
+        "branch_path": branch_path,
+        "posterior_target": "next_segment_trendexpansion",
+        "entry_policy": {
+            "entry_allowed_regime": "TrendExpansion",
+            "other_regimes_policy": "reference_veto_only_no_entry",
+            "side_policy": row.get("direction") or "unknown",
+            "session_scope": gate.get("session_scope"),
+            "rth_filter_applied": gate.get("rth_filter_applied"),
+        },
+        "entry_allowed_regimes": ["TrendExpansion"],
+        "other_regimes_policy": "reference_veto_only_no_entry",
+        "no_lookahead_controls": {
+            "closed_bar_only": True,
+            "next_bar_or_later_execution": True,
+            **dict(summary.get("future_leakage_policy") or {}),
+        },
+        "closed_loop_contract": {
+            "stage_order": [
+                "cleaned_data_provenance",
+                "autoquant_gate1",
+                "belief_network_bbn_readback",
+                "path_ranker_or_catboost_readback",
+                "execution_tree_readback",
+                "paper_live_feedback",
+                "terminal_trade_usable_decision",
+            ],
+            "current_stage": "autoquant_gate1",
+            "trade_usable_requires_all_stages": True,
+        },
+        "belief_network_contract": terminal_metrics["belief_network_contract"],
+        "data_provenance": gate.get("data_provenance") or {},
+        "cost_model": cost_model,
+        "per_timeframe_evidence": per_timeframe_evidence,
+        "session_scope": gate.get("session_scope"),
+        "rth_filter_applied": gate.get("rth_filter_applied"),
+        "eth_full_retained_session_evidence": gate.get("eth_full_retained_session_evidence"),
+        "backtest_autoquant_feedback": terminal_metrics["aq_result"],
+        "belief_network_placement": {
+            "target_regime_node": "TrendExpansion",
+            "target_branch_path": branch_path,
+            "status": placement_status,
+            "visible_in_bbn_feedback": False,
+        },
+        "execution_tree_placement": {
+            "target_branch_path": branch_path,
+            "status": placement_status,
+            "visible_in_execution_tree": False,
+        },
+        "regime_feedback_admission": {
+            "status": placement_status,
+            "regime_observation_queue": True,
+            "regime_calibration_queue": True,
+            "pre_bayes_feedback": False,
+            "bbn_feedback": False,
+            "catboost_training": False,
+            "path_ranker_training": False,
+            "execution_tree_training": False,
+            "promotion": False,
+            "trade_usable_report_allowed": False,
+        },
+        "practical_flags": practical_flags,
+        "blockers": blockers,
+        "source_artifacts": evidence_paths,
+        "evidence_paths": evidence_paths,
+        "reporting_policy": {
+            "only_report_practical_when_all_true": [
+                "accepted paper/live execution feedback packet",
+                "belief network / BBN readback",
+                "execution_tree_trace or workflow-status readback",
+                "same-tree practical closure",
+                "terminal metrics promotion_allowed=true and trade_usable=true",
+            ]
+        },
+        **practical_flags,
+    }
+    for base in (checks, compact_checks):
+        (base / "terminal_metrics.json").write_text(
+            json.dumps(terminal_metrics, indent=2) + "\n",
+            encoding="utf-8",
+        )
+        (base / "regime_feedback_evidence_packet.json").write_text(
+            json.dumps(regime_packet, indent=2) + "\n",
+            encoding="utf-8",
+        )
+    for base in (root / "summaries", compact_root / "summaries"):
+        base.mkdir(parents=True, exist_ok=True)
+        (base / "terminal_summary.json").write_text(
+            json.dumps(terminal_metrics, indent=2) + "\n",
+            encoding="utf-8",
+        )
+
+
+def _relative_evidence_path(path: Path, *, root: Path) -> str:
+    try:
+        return str(path.relative_to(root))
+    except ValueError:
+        return str(path)
+
+
+def compact_prior_aq_readback(root: Path) -> dict[str, Any]:
+    summaries = root / "summaries"
+    checks = root / "checks"
+    gate_summaries: list[dict[str, Any]] = []
+    for gate_path in sorted(summaries.glob("autoquant_clean_*_gate.json")):
+        try:
+            gate = json.loads(gate_path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError) as exc:
+            gate_summaries.append(
+                {
+                    "file": _relative_evidence_path(gate_path, root=root),
+                    "read_error": str(exc),
+                }
+            )
+            continue
+        gate_summaries.append(
+            {
+                "file": _relative_evidence_path(gate_path, root=root),
+                "timeframe": gate.get("timeframe"),
+                "decision": gate.get("decision"),
+                "downstream_allowed": bool(gate.get("downstream_allowed")),
+                "pre_bayes_allowed": bool(gate.get("pre_bayes_allowed")),
+                "bbn_allowed": bool(gate.get("bbn_allowed")),
+                "catboost_allowed": bool(gate.get("catboost_allowed")),
+                "execution_tree_allowed": bool(gate.get("execution_tree_allowed")),
+                "promotion_allowed": False,
+                "trade_usable": False,
+                "update_goal": False,
+                "prior_gate_practical_flags_observed": any(
+                    bool(gate.get(key)) for key in ("promotion_allowed", "trade_usable", "update_goal")
+                ),
+                "prior_gate_promotion_allowed": False,
+                "prior_gate_trade_usable": False,
+                "prior_gate_update_goal": False,
+                "survivors_instrument_cost_count": len(gate.get("survivors_instrument_cost") or []),
+                "raw_survivors_before_session_scope_count": len(gate.get("raw_survivors_before_session_scope") or []),
+            }
+        )
+
+    exit_files: list[dict[str, Any]] = []
+    for exit_path in sorted(checks.glob("run_tomac_*.exit")):
+        try:
+            exit_code = exit_path.read_text(encoding="utf-8").strip()
+        except OSError as exc:
+            exit_files.append(
+                {
+                    "file": _relative_evidence_path(exit_path, root=root),
+                    "read_error": str(exc),
+                }
+            )
+            continue
+        exit_files.append(
+            {
+                "file": _relative_evidence_path(exit_path, root=root),
+                "exit_code": exit_code,
+            }
+        )
+
+    prior_summary: dict[str, Any] = {}
+    summary_path = root / "summary.json"
+    if summary_path.exists():
+        try:
+            prior_summary = json.loads(summary_path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError) as exc:
+            prior_summary = {"read_error": str(exc)}
+
+    return {
+        "present": bool(gate_summaries or exit_files or prior_summary),
+        "summary_decision": prior_summary.get("decision"),
+        "summary_aq_gate_count": len(prior_summary.get("aq_gate_summaries") or []),
+        "gate_summary_count": len(gate_summaries),
+        "exit_file_count": len(exit_files),
+        "gate_summaries": gate_summaries,
+        "exit_files": exit_files,
+    }
+
+
 def write_claim_collision_no_launch_summary(
     root: Path,
     compact_root: Path,
     *,
     args: argparse.Namespace,
+    raw_requested_symbols: list[str],
     requested_symbols: list[str],
+    symbol_aliases: list[dict[str, str]],
     matched_symbols: list[str],
     skipped_symbols: list[str],
     timeframes: tuple[str, ...],
@@ -5626,7 +20437,9 @@ def write_claim_collision_no_launch_summary(
         "compact_root": str(compact_root),
         "start": args.start,
         "end": args.end,
+        "raw_requested_symbols": raw_requested_symbols,
         "requested_symbols": requested_symbols,
+        "symbol_aliases": symbol_aliases,
         "symbols": matched_symbols,
         "skipped_symbols": skipped_symbols,
         "timeframes": timeframes,
@@ -5635,6 +20448,9 @@ def write_claim_collision_no_launch_summary(
         "aq_staging": aq_staging,
         "aq_commands": [],
         "aq_gate_summaries": [],
+        "prior_aq_readback": compact_prior_aq_readback(root),
+        **session_scope_summary(clean_bundles),
+        **data_provenance_summary(clean_bundles),
         "decision": guard["decision"],
         "downstream_allowed": False,
         "promotion_allowed": False,
@@ -5644,6 +20460,7 @@ def write_claim_collision_no_launch_summary(
     }
     (root / "summary.json").write_text(json.dumps(summary, indent=2) + "\n", encoding="utf-8")
     (compact_root / "summary.json").write_text(json.dumps(summary, indent=2) + "\n", encoding="utf-8")
+    write_terminal_regime_feedback_packets(root, compact_root, summary)
     return summary
 
 
@@ -5652,7 +20469,8 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
     compact_root = Path(args.compact_root)
     root.mkdir(parents=True, exist_ok=True)
     compact_root.mkdir(parents=True, exist_ok=True)
-    requested_symbols = [item.strip().upper() for item in args.symbols.split(",") if item.strip()]
+    raw_requested_symbols = [item.strip().upper() for item in args.symbols.split(",") if item.strip()]
+    requested_symbols, symbol_aliases = canonical_tomac_symbol_sequence(raw_requested_symbols)
     timeframes = tuple(item.strip() for item in args.timeframes.split(",") if item.strip())
     raw_families = getattr(args, "families", None)
     families = [item.strip() for item in raw_families.split(",") if item.strip()] if raw_families else None
@@ -5676,7 +20494,9 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
                 root,
                 compact_root,
                 args=args,
+                raw_requested_symbols=raw_requested_symbols,
                 requested_symbols=requested_symbols,
+                symbol_aliases=symbol_aliases,
                 matched_symbols=matched_symbols,
                 skipped_symbols=skipped_symbols,
                 timeframes=timeframes,
@@ -5729,7 +20549,9 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
                     root,
                     compact_root,
                     args=args,
+                    raw_requested_symbols=raw_requested_symbols,
                     requested_symbols=requested_symbols,
+                    symbol_aliases=symbol_aliases,
                     matched_symbols=matched_symbols,
                     skipped_symbols=skipped_symbols,
                     timeframes=timeframes,
@@ -5765,7 +20587,9 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         "compact_root": str(compact_root),
         "start": args.start,
         "end": args.end,
+        "raw_requested_symbols": raw_requested_symbols,
         "requested_symbols": requested_symbols,
+        "symbol_aliases": symbol_aliases,
         "symbols": matched_symbols,
         "skipped_symbols": skipped_symbols,
         "timeframes": timeframes,
@@ -5774,6 +20598,8 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         "aq_staging": aq_staging,
         "aq_commands": aq_commands,
         "aq_gate_summaries": aq_gate_summaries,
+        **session_scope_summary(clean_bundles),
+        **data_provenance_summary(clean_bundles),
         "future_leakage_policy": {
             "front_selection": "current timestamp volume only",
             "roll_adjustment": "previous selected close minus new selected open at roll boundary",
@@ -5783,6 +20609,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
     }
     (root / "summary.json").write_text(json.dumps(summary, indent=2) + "\n", encoding="utf-8")
     (compact_root / "summary.json").write_text(json.dumps(summary, indent=2) + "\n", encoding="utf-8")
+    write_terminal_regime_feedback_packets(root, compact_root, summary)
     return summary
 
 

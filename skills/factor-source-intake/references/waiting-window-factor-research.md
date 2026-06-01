@@ -36,6 +36,11 @@ Machine flags for all waiting-window intake packets:
   factor id, branch labels, `/tmp` claims, and repo run packet names.
 - Write compact packets to the current lane workdoc or a repo-local intake
   document under `support/docs/experiments/actionable-regime-confidence/`.
+- For Python prescreens run during crowded windows, classify artifacts before
+  using them: `*.interrupted.exit`, signal exits, and timeout exits are
+  `interrupted_no_verdict`; fixture-only prescreens are parser/readback coverage
+  only. Neither can open Gate 1, downstream, promotion, or trade-usability
+  gates. Record the no-verdict in the workdoc, claim, and terminal summary.
 - Prefer ideas that address current observed bottlenecks: 1m cost wall, sparse
   positive density, cross-engine parity, paper feedback semantics, lifecycle
   maturity, and path-ranker consumption.

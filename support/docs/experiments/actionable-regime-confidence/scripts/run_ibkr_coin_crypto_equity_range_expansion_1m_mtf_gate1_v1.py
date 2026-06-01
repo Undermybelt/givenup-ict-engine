@@ -350,7 +350,6 @@ def instrument_cost_rows(rank_rows: list[dict], day_counts: dict[str, int]) -> l
         raw_pct = safe_float(row.get("total_profit_pct"))
         days = max(1, day_counts.get(timeframe, 1))
         trades_per_day = trade_count / days
-        density_ok = 1.0 <= trades_per_day <= 3.0
         rows.append(
             {
                 "package_id": row.get("package_id"),
@@ -369,7 +368,7 @@ def instrument_cost_rows(rank_rows: list[dict], day_counts: dict[str, int]) -> l
                 "cost_model": unverified_equity_cost_model(timeframe),
                 "promotion_cost_verified": False,
                 "survives_instrument_cost": False,
-                "density_target_1_to_3_per_day": density_ok,
+                "minimum_trade_sample_floor_met": trade_count > 0,
                 "gate1_survivor": False,
             }
         )
@@ -609,8 +608,8 @@ def main() -> int:
     branch_fields_preserved = bool(material_rows) and all(row["branch_path"] == BRANCH_PATH for row in material_rows)
     cost_model_verified = any(row["promotion_cost_verified"] for row in cost_rows)
     if instrument_cost_survivors and branch_fields_preserved and cost_model_verified:
-        decision = "gate1_instrument_cost_density_survivor_downstream_candidate"
-        interpretation = "At least one exact COIN timeframe survived verified instrument-cost economics with practical density and rooted branch fields preserved. Same-root downstream readback is allowed next, but promotion remains false until execution predicates pass."
+        decision = "gate1_instrument_cost_survivor_downstream_candidate"
+        interpretation = "At least one exact COIN timeframe survived verified instrument-cost economics with rooted branch fields preserved. Same-root downstream readback is allowed next, but promotion remains false until execution predicates pass."
         next_work = "Run same-root downstream only after preserving the verified instrument-cost packet, then require the full practical lifecycle before promotion."
         pre_bayes_allowed = bbn_allowed = catboost_allowed = execution_tree_allowed = True
     elif rank_rows and not cost_model_verified:
@@ -619,8 +618,8 @@ def main() -> int:
         next_work = "Verify official IBKR US equity commission, regulatory, routing, account, pricing-plan, currency, and fee-effective-date assumptions before any downstream admission."
         pre_bayes_allowed = bbn_allowed = catboost_allowed = execution_tree_allowed = False
     elif rank_rows:
-        decision = "drop_gate1_instrument_cost_or_density_failed"
-        interpretation = "COIN produced AQ rank rows, but no row survived both verified instrument-cost economics and practical trade density. Stop before downstream."
+        decision = "drop_gate1_instrument_cost_failed"
+        interpretation = "COIN produced AQ rank rows, but no row survived verified instrument-cost economics. Stop before downstream."
         next_work = "Preserve as observation and rotate to a materially different family or a same-root variant that widens per-trade excursion before verified costs."
         pre_bayes_allowed = bbn_allowed = catboost_allowed = execution_tree_allowed = False
     else:

@@ -37,6 +37,7 @@ REQUIRED_COLS = ["date", "open", "high", "low", "close", "volume"]
 DEFAULT_MAX_JUMP_PCT = 5.0  # 1m close-to-close jump above this is treated as bad tick
 TIMEFRAME_TO_PANDAS = {
     "1m": "1min",
+    "3m": "3min",
     "5m": "5min",
     "15m": "15min",
     "30m": "30min",

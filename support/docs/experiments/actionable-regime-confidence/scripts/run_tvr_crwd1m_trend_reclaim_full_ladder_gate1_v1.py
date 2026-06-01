@@ -276,7 +276,6 @@ def instrument_cost_rows(rank_rows: list[dict], day_counts: dict[str, int]) -> l
                 "minimum_trade_sample_floor_met": trades >= EXACT_MIN_TRADES,
                 "trading_days": days,
                 "trades_per_day": trades_per_day,
-                "density_target_1_to_3_per_day": 1.0 <= trades_per_day <= 3.0,
                 "win_rate_pct": safe_float(item.get("win_rate_pct")),
                 "raw_total_profit_pct": raw,
                 "instrument_cost_total_profit_pct": None,
@@ -442,7 +441,7 @@ def main() -> int:
                 "fresh_provider_parity=false",
                 "local_cache_replay=true",
                 f"branch_path={BRANCH_PATH}",
-                f"downstream_allowed=false_until_exact_{EXACT_TIMEFRAME}_instrument_cost_density_survives",
+                f"downstream_allowed=false_until_exact_{EXACT_TIMEFRAME}_instrument_cost_survives",
                 "equity_cost_model=unverified_fail_closed",
             ],
         }
@@ -488,7 +487,7 @@ def main() -> int:
     )
     downstream_allowed = bool(branch_fields_preserved and instrument_cost_survivors and cost_model_verified)
     if downstream_allowed:
-        decision = "gate1_instrument_cost_density_survivor_downstream_candidate"
+        decision = "gate1_instrument_cost_survivor_downstream_candidate"
         interpretation = "CRWD exact root survived only after verified instrument-cost economics and branch fields were preserved. This is not promotion; it only allows exact downstream readback."
         next_work = "Run downstream only with the verified instrument-cost packet preserved and practical lifecycle gates still false until independently proven."
     elif rank_rows and not cost_model_verified:
@@ -496,7 +495,7 @@ def main() -> int:
         interpretation = "CRWD produced AQ rank rows from retained TVR data, but the exact equity commission model was not verified from official sources, so cost survival and downstream admission fail closed."
         next_work = "Verify official CRWD equity commission, regulatory, routing, account, pricing-plan, currency, and fee-effective-date assumptions before downstream admission."
     elif rank_rows:
-        decision = "drop_gate1_instrument_cost_or_density_failed"
+        decision = "drop_gate1_instrument_cost_failed"
         interpretation = "CRWD produced AQ rank rows, but no row survived both verified instrument-cost economics and practical density. Stop before downstream."
         next_work = "Preserve as observation and rotate to a materially different family or verify exact instrument costs before reconsidering."
     else:

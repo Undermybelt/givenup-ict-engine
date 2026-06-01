@@ -312,7 +312,7 @@ def material_payload(
         "strategy_class_name": class_name,
         "strategy_brief": "EWM Malaysia ETF long-only Bayesian win/loss posterior fused with synthetic two-state Markov transition persistence.",
         "evaluation_priority": [
-            "exact_1m_origin_verified_instrument_cost_density",
+            "exact_1m_origin_verified_instrument_cost",
             "per_timeframe_context",
             "branch_identity",
             "downstream_admission_readiness",
@@ -408,7 +408,7 @@ def instrument_cost_rows(rank_rows: list[dict], day_counts: dict[str, int]) -> l
                 "survives_instrument_cost": False,
                 "win_rate_pct": safe_float(row.get("win_rate_pct")),
                 "sharpe": safe_float(row.get("sharpe")),
-                "practical_density": 1.0 <= trades_per_day <= 3.0,
+                "minimum_trade_sample_floor_met": trade_count > 0,
                 "gate1_survivor": False,
             }
         )

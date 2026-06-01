@@ -85,6 +85,9 @@ version: 3
 - The user asks for `trade_usable=true`, `实战因子`, `盈利因子`, or factor
   training without naming a session: default the target to ETH/full retained
   session. Do not silently run or count RTH-only variants as success.
+- The user mentions `数据清洗`, `清洗工序`, `每笔 edge`, `交易密度`,
+  `成本墙`, `ETH时间数据`, `数据可证`, `网上找新因子`, or asks why a
+  factor candidate was not screened before implementation.
 
 ## Class-level workflow
 1. Confirm the objective, scoring surface, and session scope before any lane
@@ -93,11 +96,20 @@ version: 3
    comparison evidence and keep `promotion_allowed=false`,
    `trade_usable=false`, and `update_goal=false` unless the user explicitly
    requests RTH in the current task.
-2. Verify that the mutation-evaluation path is scoring the actual mutated parameters.
-3. Isolate experiment state before comparing parameter candidates.
-4. Inspect whether dead/null metrics are suppressing large chunks of the score.
-5. Only then run broader or finer sweeps.
-6. Stop parameter brute force once isolated runs re-confirm defaults or expose structural bottlenecks.
+2. Run the mandatory data-cleaning/provenance gate before interpreting any
+   signal metric: source identity, timestamp order, duplicate/null/gap checks,
+   timezone/session classification, ETH/full-retained coverage evidence,
+   return sanity, no-lookahead feature/target alignment, and MTF resample
+   integrity. Missing proof is `data_cleaning_unverified`, not a weak pass.
+3. For web-sourced or paper/repo/social candidates, prefilter before coding by
+   per-trade edge, trade density, verified cost wall, and ETH time-data
+   provability. Reject weak candidates into source reserve instead of spending
+   provider/AQ/downstream budget on them.
+4. Verify that the mutation-evaluation path is scoring the actual mutated parameters.
+5. Isolate experiment state before comparing parameter candidates.
+6. Inspect whether dead/null metrics are suppressing large chunks of the score.
+7. Only then run broader or finer sweeps.
+8. Stop parameter brute force once isolated runs re-confirm defaults or expose structural bottlenecks.
 
 ## Core principles
 - Shared state can fake improvement; isolated state is the default for comparison studies.
@@ -105,6 +117,37 @@ version: 3
 - A scoring preview path that ignores mutated params invalidates the search surface.
 - Once defaults remain best after fair isolated evaluation, switch to structural work instead of more sweeps.
 - Reusable post-training experience is not done until it lands in a skill/reference plus router/index trigger if future automatic loading matters. If code removes, renames, or downgrades a gate/readback field, update this skill in the same work slice before reusing old gate language.
+
+## Mandatory data cleaning and candidate prefilter
+- Treat data cleaning as a hard gate before factor scoring, not as a cosmetic
+  cleanup step after a result appears. Every workdoc, runner output, terminal
+  metrics/summary, or handoff that claims factor evidence must record the input
+  provider/path, fetch command or source archive, timestamp timezone, row count,
+  duplicate/out-of-order/null checks, return-sanity checks, session coverage,
+  and whether the target uses ETH/full-retained rows or an RTH comparison.
+- Multi-timeframe context must use completed bars only. After resampling a
+  lower timeframe into `5m/15m/30m/1h/4h/1d`, drop empty or incomplete buckets
+  such as market-closed `1h` bars before HTF rolling calculations and before
+  reindexing back to the low-timeframe frame. Do not forward-fill synthetic HTF
+  context across missing market-closed buckets and call it clean evidence.
+- Feature/target alignment must be closed-bar and no-lookahead: signals use only
+  information available at or before the decision bar, and entry/label rows must
+  be shifted to the next executable bar or later. If availability time is not
+  proven, classify the packet as `lookahead_unverified`.
+- When searching the web for new factor ideas, discard weak candidates before
+  implementation unless all four prefilters are plausible and recordable:
+  `per_trade_edge` above realistic all-in cost/slippage, `trade_density` inside
+  the lane's cadence target without becoming churn, `cost_wall` verified from
+  official broker/exchange/regulatory sources or a complete verified cache row,
+  and `eth_time_data_provable` for the product/timeframe/session needed by the
+  user's default ETH/full-retained objective.
+- Source text, a paper abstract, a GitHub strategy, a social post, or a blog
+  backtest is idea evidence only. If per-trade edge, density, cost, or ETH data
+  proof is missing, mark the idea `idea_only`, `paper_only`,
+  `repo_source_only`, `data_scope_blocked_for_eth_target`,
+  `cost_model_unverified`, or `data_cleaning_unverified`; keep
+  `promotion_allowed=false`, `trade_usable=false`, and `update_goal=false`.
+- See `references/data-cleaning-and-candidate-prefilter-20260601.md`.
 
 ## Repo training scratch rule
 - Factor-training scratch belongs in `/tmp/ict-engine-...`, not in the repo.
@@ -3019,7 +3062,7 @@ Users can disable any factor family at runtime via YAML config:
 
 ## Chinese triggers
 
-`训练因子经验`, `因子训练经验`, `训练完沉淀skill`, `训练后更新skill`, `等待的时候做点有益的`, `等待窗口`, `因子知识储备`, `论文策略指标`, `factor training lessons`, `factor-research经验`, `autoresearch经验`, `mutation scoring经验`, `参数扫完沉淀`, `因子训练复盘`, `paper strategy reserve`, `factor source intake`, `claim/runtime waiting window`, `手续费未知`, `交易费率`, `佣金模型`, `期货手续费`, `期货费率`, `股票手续费`, `个股费率`, `ETF费率`, `ETF手续费`, `期权手续费`, `期权佣金`, `fee model`, `commission model`, `cost model`, `futures commission`, `futures cost model`.
+`训练因子经验`, `因子训练经验`, `训练完沉淀skill`, `训练后更新skill`, `等待的时候做点有益的`, `等待窗口`, `因子知识储备`, `论文策略指标`, `factor training lessons`, `factor-research经验`, `autoresearch经验`, `mutation scoring经验`, `参数扫完沉淀`, `因子训练复盘`, `paper strategy reserve`, `factor source intake`, `claim/runtime waiting window`, `数据清洗`, `清洗工序`, `每笔 edge`, `交易密度`, `成本墙`, `ETH时间数据`, `数据可证`, `网上找新因子`, `candidate prefilter`, `data cleaning`, `per-trade edge`, `trade density`, `cost wall`, `ETH time data`, `手续费未知`, `交易费率`, `佣金模型`, `期货手续费`, `期货费率`, `股票手续费`, `个股费率`, `ETF费率`, `ETF手续费`, `期权手续费`, `期权佣金`, `fee model`, `commission model`, `cost model`, `futures commission`, `futures cost model`.
 
 ## See references
 - `references/mutation-scoring-and-bottlenecks.md`
@@ -3033,6 +3076,7 @@ Users can disable any factor family at runtime via YAML config:
 - `references/paper-repo-alpha-intake-to-auto-quant.md`
 - `references/instrument-cost-model-verification.md`
 - `references/futures-contract-cost-models-ibkr.md`
+- `references/data-cleaning-and-candidate-prefilter-20260601.md`
 - `references/high-window-reclaim-tree-handoff.md`
 - `references/ibkr-high-window-reclaim-1m-mtf-gate.md`
 - `references/regime-rooted-mtf-provider-ladder.md`

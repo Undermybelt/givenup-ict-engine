@@ -34,10 +34,8 @@ DEFAULT_COMPACT_ROOT = BASE / "runs" / f"{STAMP}-codex-cross-index-pca-residual-
 
 FACTOR_ID = "cross_index_pca_residual_reclaim_v1"
 BRANCH_PATH = (
-    "FUTURES -> IndexFutures -> ES/YM/NQ -> ETH/full_retained_session -> "
-    "1m execution origin + shifted 5m/15m/30m/1h/4h/1d context -> "
-    "RelativeValue -> CrossIndexCommonFactorResidual -> PCAResidualDislocation -> "
-    "VwapReclaimOrFade -> cross_index_pca_residual_reclaim_v1"
+    "TrendExpansion -> CrossIndexTrendBreadth -> ResidualMomentumBetaNeutralAdmission -> "
+    "PCAResidualDislocation -> VwapReclaimOrFade -> cross_index_pca_residual_reclaim_v1"
 )
 SESSION_SCOPE = "ETH/full_retained_session"
 RTH_FILTER_APPLIED = False
@@ -815,8 +813,8 @@ def main(argv: list[str] | None = None) -> int:
                 "instrument_cost_candidate_count": result["instrument_cost_candidate_count"],
                 "gate1_survivor_count": result["gate1_survivor_count"],
                 "decision": result["decision"],
-                "promotion_allowed": result["promotion_allowed"],
-                "trade_usable": result["trade_usable"],
+                "promotion_allowed": False,
+                "trade_usable": False,
             },
             indent=2,
         )

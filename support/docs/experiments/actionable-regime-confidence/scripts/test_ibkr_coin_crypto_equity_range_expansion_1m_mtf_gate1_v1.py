@@ -76,7 +76,8 @@ class IbkrCoinCryptoEquityRangeExpansionGate1Test(unittest.TestCase):
         self.assertEqual(row["cost_model_status"], "cost_model_unverified")
         self.assertFalse(row["promotion_cost_verified"])
         self.assertFalse(row["survives_instrument_cost"])
-        self.assertTrue(row["density_target_1_to_3_per_day"])
+        self.assertTrue(row["minimum_trade_sample_floor_met"])
+        self.assertNotIn("density_target_1_to_3_per_day", row)
         self.assertFalse(row["gate1_survivor"])
         self.assertEqual(row["cost_model"]["instrument_class"], "US_EQUITY")
         self.assertEqual(row["cost_model"]["symbol"], "COIN")
@@ -120,7 +121,7 @@ class IbkrCoinCryptoEquityRangeExpansionGate1Test(unittest.TestCase):
                 "cost_model_status": "cost_model_unverified",
                 "promotion_cost_verified": False,
                 "survives_instrument_cost": False,
-                "density_target_1_to_3_per_day": True,
+                "minimum_trade_sample_floor_met": True,
                 "gate1_survivor": False,
             }
         ]

@@ -6,6 +6,7 @@ import json
 import os
 import shutil
 import subprocess
+import sys
 from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
@@ -13,6 +14,12 @@ from zoneinfo import ZoneInfo
 
 REPO = Path('/Users/thrill3r/projects-ict-engine/ict-engine')
 BASE = REPO / 'support/docs/experiments/actionable-regime-confidence'
+RESEARCH_HELPERS = REPO / 'support/scripts/research'
+if str(RESEARCH_HELPERS) not in sys.path:
+    sys.path.insert(0, str(RESEARCH_HELPERS))
+
+import instrument_cost_model as cost_model  # noqa: E402
+
 STAMP = datetime.now(ZoneInfo('Asia/Shanghai')).strftime('%Y%m%dT%H%M%S+0800')
 ROOT_OVERRIDE = os.environ.get('ICT_ENGINE_RUN_ROOT_OVERRIDE', '').strip()
 ROOT = Path(ROOT_OVERRIDE).expanduser() if ROOT_OVERRIDE else BASE / 'runs' / f'{STAMP}-hermes-ibkr-qqq-intraday-micro-trend-reclaim-density-1m-mtf-v1'
@@ -85,10 +92,12 @@ def provider_acquisition_status(provider_rows: list[dict]) -> str:
         return 'blocked_no_provider_rows_fetch_failed'
     return 'blocked_no_provider_rows'
 
-def classify_decision(provider_rows: list[dict], downstream_allowed: bool) -> tuple[str, str]:
+def classify_decision(provider_rows: list[dict], downstream_allowed: bool, promotion_cost_verified: bool) -> tuple[str, str]:
     status = provider_acquisition_status(provider_rows)
     if status != 'nonzero_rows_acquired':
         return 'provider_acquisition_blocked_no_gate1_verdict', status
+    if not promotion_cost_verified:
+        return 'blocked_cost_model_unverified_no_downstream', status
     if downstream_allowed:
         return 'gate1_ibkr_native_candidate_downstream_allowed', status
     return 'drop_gate1_no_ibkr_cost_density', status
@@ -294,36 +303,43 @@ def main() -> int:
         rank = run_cmd('11_auto_quant_agent_material_rank', [ICT, 'auto-quant-agent-material-rank', '--symbol', AQ_SYMBOL, '--state-dir', ROOT / 'state'], timeout=360)
         commands.append(rank)
     rank_rows = latest_rank_rows() if rank and rank['exit'] == 0 else []
-    cost_stress = []
-    for row in rank_rows:
-        trades = int(row.get('trade_count') or 0)
-        gross = safe_float(row.get('total_profit_pct'))
-        rec = {'label': row_label(row), 'trade_count': trades, 'raw_total_profit_pct': gross, 'win_rate_pct': safe_float(row.get('win_rate_pct'))}
-        for bps in (0, 1, 2, 5):
-            rec[f'{bps}bps_per_side_total_profit_pct'] = round(gross - trades * bps * 0.02, 6)
-        rec['trade_density_ok'] = trades >= 6
-        rec['survives_2bps_per_side'] = rec['2bps_per_side_total_profit_pct'] > 0
-        rec['survives_5bps_per_side'] = rec['5bps_per_side_total_profit_pct'] > 0
-        cost_stress.append(rec)
-    origin = [row for row in cost_stress if row['label'].endswith('/1m')]
-    origin2 = [row['label'] for row in origin if row['trade_density_ok'] and row['survives_2bps_per_side']]
+    representative_price = None
+    cost_summary = {'rows': [], 'survivors': [], 'cost_model': cost_model.cost_model_packet('QQQ'), 'promotion_cost_verified': False, 'representative_price': None}
+    if rank_rows:
+        try:
+            representative_price = cost_model.representative_price_from_provider_rows(provider_rows)
+        except ValueError:
+            representative_price = None
+        if representative_price is not None:
+            cost_summary = cost_model.rank_rows_real_fee_summary(
+                rank_rows,
+                symbol='QQQ',
+                representative_price=representative_price,
+                label_fn=row_label,
+            )
+    instrument_cost_rows = cost_summary['rows']
+    origin = [row for row in instrument_cost_rows if row['label'].endswith('/1m')]
+    origin_survivors = [row['label'] for row in origin if int(row.get('trade_count') or 0) >= 6 and row.get('survives_instrument_cost')]
     exact_branch_ok = bool(rank_rows) and all((row.get('branch_path') or row.get('consumer_evidence_profile', {}).get('branch_path')) == BRANCH_PATH for row in rank_rows)
     covered = sorted({row['timeframe'] for row in provider_rows if row['rows'] > 0})
     missing = sorted({row['timeframe'] for row in provider_rows if row['rows'] == 0})
-    downstream_allowed = exact_branch_ok and bool(origin2)
-    decision, provider_status = classify_decision(provider_rows, downstream_allowed)
+    downstream_allowed = exact_branch_ok and bool(origin_survivors) and bool(cost_summary.get('promotion_cost_verified'))
+    decision, provider_status = classify_decision(provider_rows, downstream_allowed, bool(cost_summary.get('promotion_cost_verified')))
     metrics = {
         'run_root': str(ROOT),
         'factor_id': FACTOR_ID,
         'branch_path': BRANCH_PATH,
         'decision': decision,
         'provider_acquisition_status': provider_status,
-        'gate1_verdict': 'not_run_no_provider_rows' if provider_status != 'nonzero_rows_acquired' else ('passed_cost_density_for_downstream' if downstream_allowed else 'failed_cost_density'),
+        'gate1_verdict': 'not_run_no_provider_rows' if provider_status != 'nonzero_rows_acquired' else ('passed_instrument_cost_density_for_downstream' if downstream_allowed else 'failed_or_unverified_instrument_cost_density'),
         'provider_rows': provider_rows,
         'material_count': len(materials),
         'rank_rows': len(rank_rows),
-        'cost_stress': cost_stress,
-        'origin_survivors_2bps': origin2,
+        'representative_price': representative_price,
+        'cost_model': cost_summary['cost_model'],
+        'promotion_cost_verified': cost_summary['promotion_cost_verified'],
+        'instrument_cost_rows': instrument_cost_rows,
+        'origin_survivors_instrument_cost': origin_survivors,
         'branch_fields_preserved': exact_branch_ok,
         'covered_timeframes': covered,
         'missing_timeframes': missing,

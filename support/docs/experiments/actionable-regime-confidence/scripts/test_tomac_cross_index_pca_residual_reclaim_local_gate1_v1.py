@@ -108,6 +108,17 @@ class TomacCrossIndexPcaResidualReclaimLocalGate1Test(unittest.TestCase):
         self.assertFalse(classified["trade_usable"])
         self.assertFalse(classified["update_goal"])
 
+    def test_branch_paths_are_regime_rooted_without_provenance_prefixes(self) -> None:
+        runner = load_runner()
+
+        self.assertTrue(runner.BRANCH_PATH.startswith("TrendExpansion ->"))
+        self.assertNotIn("FUTURES", runner.BRANCH_PATH)
+        self.assertNotIn("IndexFutures", runner.BRANCH_PATH)
+        self.assertNotIn("ETH/full_retained_session", runner.BRANCH_PATH)
+        self.assertNotIn("1m execution origin", runner.BRANCH_PATH)
+        for variant in runner.variants():
+            self.assertTrue(variant.branch_path.startswith("TrendExpansion ->"))
+
     def test_score_trades_emits_only_raw_and_instrument_cost_economics(self) -> None:
         runner = load_runner()
         trades = [

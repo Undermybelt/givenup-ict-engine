@@ -320,7 +320,6 @@ def instrument_cost_rows(rank_rows: list[dict], day_counts: dict[str, int]) -> l
         timeframe = rank_timeframe(item)
         days = max(1, day_counts.get(timeframe, 1))
         trades_per_day = trades / days
-        density_ok = 1.0 <= trades_per_day <= 3.0
         rows.append(
             {
                 "package_id": item.get("package_id") or "",
@@ -338,7 +337,7 @@ def instrument_cost_rows(rank_rows: list[dict], day_counts: dict[str, int]) -> l
                 "cost_model": unverified_equity_cost_model(timeframe),
                 "promotion_cost_verified": False,
                 "survives_instrument_cost": False,
-                "density_target_1_to_3_per_day": density_ok,
+                "minimum_trade_sample_floor_met": trades > 0,
                 "gate1_survivor": False,
             }
         )

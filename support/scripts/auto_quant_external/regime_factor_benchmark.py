@@ -1298,13 +1298,16 @@ def bocpd_lite_feature_vectors(
         body_surprise = predictive_surprise(series["body"], idx, 16, 64)
         chop_surprise = predictive_surprise(series["chop"], idx, 16, 64)
         volume_surprise = predictive_surprise(series["volume"], idx, 16, 64)
-        joint_surprise = mean(
-            [
-                value
-                for value in [range_surprise, body_surprise, chop_surprise, volume_surprise]
-                if math.isfinite(value)
-            ]
-        ) if any(math.isfinite(value) for value in [range_surprise, body_surprise, chop_surprise, volume_surprise]) else float("nan")
+        finite_surprises = [
+            value
+            for value in [range_surprise, body_surprise, chop_surprise, volume_surprise]
+            if math.isfinite(value)
+        ]
+        joint_surprise = (
+            sum(finite_surprises) / len(finite_surprises)
+            if finite_surprises
+            else float("nan")
+        )
         series["joint"].append(joint_surprise)
 
         if idx == 0 or not math.isfinite(joint_surprise):

@@ -3184,3 +3184,72 @@ Decision:
   incomplete until a real practical closure packet exists, a current matching
   heavy done-definition proof exists, and release readiness is proven from a
   clean/source-aligned export.
+
+## Py-Compile False Live Classifier Follow-Up - 2026-05-31T17:30+0800
+
+Loophole found:
+
+- A standalone factor audit briefly counted a command shaped as
+  `python -m py_compile support/docs/experiments/.../run_tomac_*.py` as a live
+  factor process because the command referenced a `run_tomac` wrapper path.
+- This is a syntax/compile check, not provider, AQ, or factor runtime
+  ownership.
+
+Repair in working tree:
+
+- `support/scripts/factor_claim_terminalization_audit.py` now treats
+  `python -m py_compile` and `python -m compileall` like other test/readback
+  commands for live-process classification.
+- Regression added:
+  `test_live_process_classifier_ignores_py_compile_factor_wrapper`.
+
+Verification:
+
+- Passed focused regression:
+  `python3 -m unittest support.scripts.tests.test_factor_claim_terminalization_audit.FactorClaimTerminalizationAuditTest.test_live_process_classifier_ignores_py_compile_factor_wrapper -v`.
+- Passed:
+  `python3 -m py_compile support/scripts/factor_claim_terminalization_audit.py support/scripts/tests/test_factor_claim_terminalization_audit.py`.
+- Passed:
+  `git diff --check -- support/scripts/factor_claim_terminalization_audit.py support/scripts/tests/test_factor_claim_terminalization_audit.py`.
+- Passed full classifier suite:
+  `python3 -m unittest support.scripts.tests.test_factor_claim_terminalization_audit -v`
+  (`128/128`).
+
+Commit decision:
+
+- Not committed in this slice because
+  `support/scripts/factor_claim_terminalization_audit.py` and
+  `support/scripts/tests/test_factor_claim_terminalization_audit.py` already
+  contain other uncommitted hunks from separate live-process duplicate-count
+  and same-tree practical closure work. Committing the whole files would mix
+  unrelated work.
+- Keep this as a verified working-tree repair until a clean classifier slice
+  can be staged or the surrounding hunks are explicitly accepted.
+
+Current factor readback after the py-compile fix:
+
+```bash
+python3 support/scripts/factor_claim_terminalization_audit.py --compact --portable-paths --output /tmp/ict-engine-factor-closure-after-pycompile-fix-20260531T1730.json
+```
+
+Result:
+
+- Exit code `1`.
+- The py-compile false owner is gone.
+- Factor closure is blocked by a real live Hurst efficiency clean-AQ runtime:
+  root
+  `/tmp/ict-engine-hurst-efficiency-density-repair-exact-aq-20260531T172807+0800`,
+  pid `10470` with related pid `10906`.
+- Compact summary:
+  `live_factor_processes=1`, `live_factor_process_instances=2`,
+  `duplicate_live_factor_process_instances=1`,
+  `promotion_allowed_true=0`, `trade_usable_true=0`,
+  `same_tree_practical_closure=null`.
+
+Decision:
+
+- The classifier loophole is repaired in the working tree and verified, but
+  full objective closure is again blocked by a real live AQ runtime.
+- Do not launch a sibling AQ/provider lane; wait for the Hurst root to exit,
+  inspect terminal artifacts, and rerun compact factor closure before any
+  completion or practical-use claim.

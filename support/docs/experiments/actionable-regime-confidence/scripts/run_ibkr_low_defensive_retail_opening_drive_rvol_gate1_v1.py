@@ -174,7 +174,7 @@ def rank_branch_path(item: dict) -> str:
     return str(item.get("branch_path") or item.get("regime_profit_branch_path") or "")
 
 
-def is_gate1_density_eligible(trade_count: int) -> bool:
+def is_minimum_trade_sample_floor_met(trade_count: int) -> bool:
     return trade_count >= MIN_GATE1_TRADE_COUNT
 
 
@@ -209,10 +209,9 @@ def instrument_cost_rows(rank_rows: list[dict], day_counts: dict[str, int]) -> l
                 "timeframe": timeframe,
                 "trade_count": trade_count,
                 "min_gate1_trade_count": MIN_GATE1_TRADE_COUNT,
-                "minimum_trade_sample_floor_met": is_gate1_density_eligible(trade_count),
+                "minimum_trade_sample_floor_met": is_minimum_trade_sample_floor_met(trade_count),
                 "trading_days": days,
                 "trades_per_day": trades_per_day,
-                "density_target_1_to_3_per_day": 1.0 <= trades_per_day <= 3.0,
                 "win_rate_pct": safe_float(item.get("win_rate_pct")),
                 "raw_total_profit_pct": raw_profit,
                 "instrument_cost_total_profit_pct": None,
@@ -674,16 +673,16 @@ def run_launch() -> int:
         interpretation = "Auto-Quant returned rank rows, but the rooted branch fields did not preserve the exact regime-root path. Treat this as blocked evidence, not a profitability signal."
         next_work = "Repair branch metadata preservation before any downstream Pre-Bayes/BBN/CatBoost/execution-tree handoff."
     elif downstream_allowed:
-        decision = "gate1_instrument_cost_density_survivor_downstream_candidate"
-        interpretation = "Gate 1 produced a rooted LOW survivor only after verified instrument-cost economics and practical density. This is not promotion; it only earns exact downstream readback."
+        decision = "gate1_instrument_cost_survivor_downstream_candidate"
+        interpretation = "Gate 1 produced a rooted LOW survivor after verified instrument-cost economics and the minimum trade sample floor. This is not promotion; it only earns exact downstream readback."
         next_work = "Run exact downstream on the surviving rooted lane only with the verified instrument-cost packet preserved and full practical lifecycle gates still false until proven."
     elif rank_rows and not cost_model_verified:
         decision = "gate1_cost_model_unverified_no_downstream"
         interpretation = "LOW produced AQ rank rows, but the exact IBKR LOW equity commission model was not verified from official sources, so cost survival and downstream admission fail closed."
         next_work = "Verify official IBKR US equity commission, regulatory, routing, account, pricing-plan, currency, and fee-effective-date assumptions before any downstream admission."
     elif rank_rows and total_trades > 0 and positive_rows > 0:
-        decision = "drop_or_incubate_gate1_instrument_cost_or_density_failure"
-        interpretation = "The branch produced positive raw IBKR trades, but no row survived verified instrument-cost economics plus practical density. This is a Gate 1 practical failure."
+        decision = "drop_or_incubate_gate1_instrument_cost_failure"
+        interpretation = "The branch produced positive raw IBKR trades, but no row survived verified instrument-cost economics. This is a Gate 1 practical failure."
         next_work = "Do not run Pre-Bayes/BBN/CatBoost/execution-tree for this exact branch; rotate to another factor leaf or materially widen per-trade excursion."
     elif any(row["provider_data_acquired"] == "true" for row in provider_rows):
         decision = "drop_small_cycle"

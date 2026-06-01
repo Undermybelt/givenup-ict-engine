@@ -31,6 +31,35 @@ class RegimeFactorBenchmarkSessionProfileTests(unittest.TestCase):
         self.assertTrue(benchmark.needs_scalar_vectors_for_feature_sets(["ms_regime"]))
         self.assertFalse(benchmark.needs_scalar_vectors_for_feature_sets(["session_profile"]))
 
+    def test_bocpd_lite_feature_vectors_compute_joint_surprise_without_name_error(self) -> None:
+        candles = []
+        start = datetime(2026, 5, 26, 13, 30, tzinfo=timezone.utc)
+        price = 100.0
+        for idx in range(80):
+            open_ = price
+            close = price + (0.05 if idx < 40 else 0.18)
+            high = max(open_, close) + 0.12
+            low = min(open_, close) - 0.08
+            candles.append(
+                benchmark.Candle(
+                    timestamp=start + timedelta(minutes=idx),
+                    open=open_,
+                    high=high,
+                    low=low,
+                    close=close,
+                    volume=1000 + idx * 4,
+                )
+            )
+            price = close
+        features = benchmark.build_features(candles)
+        vectors = benchmark.scalar_feature_vectors(candles, features)
+
+        out = benchmark.bocpd_lite_feature_vectors(candles, features, vectors)
+
+        self.assertEqual(len(candles), len(out["bocpd_joint_surprise"]))
+        self.assertEqual(len(candles), len(out["bocpd_hazard_prob"]))
+        self.assertTrue(all(math.isfinite(value) for value in out["bocpd_hazard_prob"]))
+
     def test_session_profile_snapshot_matches_market_profile_formulas(self) -> None:
         session = [
             candle("2026-05-26T13:30:00+00:00", 100.0, 101.0, 99.5, 100.5, 10),

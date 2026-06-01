@@ -4,6 +4,7 @@ from __future__ import annotations
 import csv
 import importlib.util
 import json
+import os
 import shutil
 import sys
 from datetime import datetime
@@ -26,9 +27,20 @@ base.SOURCE_DATA = base.SOURCE_ROOT / "data/provider/normalized/ibkr_mgc_202606_
 base.AQ_SYMBOL = "IBKR_MGC1M_MAMA_FAMA_TREND_TURN_7D_GATE1_V1"
 base.FACTOR_ID = "ibkr_mgc1m_mama_fama_trend_turn_7d_gate1_v1"
 base.BRANCH_PATH = "CycleTrendTurn -> MamaFamaTrendTurn -> ibkr_mgc1m_mama_fama_trend_turn_7d_gate1_v1"
+base.ROOT_SYMBOL = "MGC"
+base.PRODUCT = "precious_metals"
+base.EXCHANGE = "COMEX"
+base.MULTIPLIER = "10"
+base.CONTRACT_FILE_TOKEN = "mgc"
+base.LAST_TRADE_DATE = "202606"
 base.SOURCE_BACKED_FAMILY = "Ehlers MESA Adaptive Moving Average / MAMA-FAMA trend turn"
 base.SUMMARY_TABLE_TITLE = "Exact MGC 1m MAMA/FAMA trend-turn rows:"
 base.DOWNSTREAM_DECISION = "gate1_ibkr_mgc1m_mama_fama_trend_turn_downstream_allowed"
+base.BLOCKED_DECISION = "drop_or_block_gate1_practical"
+
+IBKR_HOST = os.environ.get("ICT_IBKR_HOST", "127.0.0.1")
+IBKR_PORT = os.environ.get("ICT_IBKR_PORT", "").strip()
+IBKR_CLIENT_ID = int(os.environ.get("ICT_IBKR_CLIENT_ID", "863"))
 
 base.VARIANTS = [
     base.Variant("mama_dense", 10, 0.002, -0.004, 0.42, -0.035, 1.05, 0.0022, -0.0060, 0.0008, 0.0022),
@@ -189,5 +201,131 @@ base.label_for = label_for
 base.strategy_source = strategy_source
 base.write_materials = write_materials
 
+
+def prepare_fresh_ibkr_source() -> Path:
+    raw_dir = base.ROOT / "data/provider/raw"
+    raw_dir.mkdir(parents=True, exist_ok=True)
+    output = raw_dir / "ibkr_mgc_202606_1m_7d_fresh.csv"
+    argv: list[object] = [
+        base.PY,
+        base.REPO / "support/scripts/auto_quant_external/fetch_external.py",
+        "ibkr-historical",
+        "--symbol",
+        base.ROOT_SYMBOL,
+        "--sec-type",
+        "FUT",
+        "--exchange",
+        base.EXCHANGE,
+        "--currency",
+        "USD",
+        "--last-trade-date",
+        base.LAST_TRADE_DATE,
+        "--multiplier",
+        base.MULTIPLIER,
+        "--bar-size",
+        "1 min",
+        "--duration",
+        "7 D",
+        "--what-to-show",
+        "TRADES",
+        "--host",
+        IBKR_HOST,
+        "--client-id",
+        str(IBKR_CLIENT_ID),
+        "--output",
+        output,
+    ]
+    if IBKR_PORT:
+        argv += ["--port", IBKR_PORT]
+    result = base.run_cmd("00_ibkr_fresh_fetch", argv, timeout=600)
+    if result["exit"] != 0:
+        raise SystemExit(f"fresh IBKR fetch failed with exit={result['exit']}")
+    return output
+
+
+def patched_main() -> int:
+    for sub in ["data/provider/raw", "data/provider/normalized", "agent-material", "summaries", "checks", "command-output", "state", "scripts"]:
+        (base.ROOT / sub).mkdir(parents=True, exist_ok=True)
+    shutil.copy2(__file__, base.ROOT / "scripts" / Path(__file__).name)
+    data_path = base.ROOT / f"data/provider/normalized/ibkr_{base.CONTRACT_FILE_TOKEN}_{base.LAST_TRADE_DATE}_1m_7d.csv"
+    commands = [base.run_cmd("00_provider_status_ibkr", [base.ICT, "provider-status", "--provider", "ibkr", "--agent"], timeout=60)]
+    source_path = prepare_fresh_ibkr_source()
+    shutil.copy2(source_path, data_path)
+    provider_rows = [{
+        "provider": "IBKR",
+        "sec_type": "FUT",
+        "symbol": base.ROOT_SYMBOL,
+        "product": base.PRODUCT,
+        "exchange": base.EXCHANGE,
+        "last_trade_date": base.LAST_TRADE_DATE,
+        "timeframe": "1m",
+        "duration": "7 D",
+        "rows": base.row_count(data_path),
+        "path": str(data_path),
+        "source_csv": str(source_path),
+        "local_cache_replay": "false_fresh_ibkr_fetch_from_same_session",
+    }]
+    with (base.ROOT / "summaries/provider_provenance_matrix.csv").open("w", newline="", encoding="utf-8") as handle:
+        writer = csv.DictWriter(handle, fieldnames=list(provider_rows[0].keys()))
+        writer.writeheader()
+        writer.writerows(provider_rows)
+    materials = write_materials(data_path)
+    strategies = [Path(json.loads(path.read_text(encoding="utf-8"))["strategy_source_path"]) for path in materials]
+    commands.append(base.run_cmd("04_strategy_py_compile", [base.PY, "-m", "py_compile", *strategies], timeout=120))
+    if commands[-1]["exit"] == 0:
+        args: list[object] = [base.ICT, "auto-quant-agent-material-batch", "--symbol", base.AQ_SYMBOL, "--state-dir", base.ROOT / "state", "--max-parallel", "1"]
+        if base.AQ_REPO.exists():
+            args += ["--repo-url", base.AQ_REPO]
+        for material in materials:
+            args += ["--material", material]
+        commands.append(base.run_cmd("05_auto_quant_agent_material_batch", args, timeout=900))
+    if commands[-1]["exit"] == 0:
+        commands.append(base.run_cmd("06_auto_quant_agent_material_dispatch", [base.ICT, "auto-quant-agent-material-dispatch", "--symbol", base.AQ_SYMBOL, "--state-dir", base.ROOT / "state"], timeout=1200))
+    if commands[-1]["exit"] == 0:
+        commands.append(base.run_cmd("07_auto_quant_agent_material_rank", [base.ICT, "auto-quant-agent-material-rank", "--symbol", base.AQ_SYMBOL, "--state-dir", base.ROOT / "state"], timeout=240))
+
+    rank_rows = base.latest_rank_rows() if commands[-1]["name"] == "07_auto_quant_agent_material_rank" and commands[-1]["exit"] == 0 else []
+    representative_price = base.cost_model.representative_price_from_provider_rows(provider_rows)
+    cost_summary = base.cost_model.rank_rows_real_fee_summary(
+        rank_rows,
+        symbol=base.ROOT_SYMBOL,
+        representative_price=representative_price,
+        label_fn=label_for,
+    )
+    cost_rows = cost_summary["rows"]
+    survivors_instrument_cost = cost_summary["survivors"]
+    branch_paths = sorted({str(row.get("branch_path") or "") for row in rank_rows})
+    branch_ok = bool(rank_rows) and branch_paths == [base.BRANCH_PATH]
+    downstream = base.hard_gate_downstream_allowed(branch_ok, survivors_instrument_cost)
+    decision = base.DOWNSTREAM_DECISION if downstream else base.BLOCKED_DECISION
+    metrics = {
+        "run_root": str(base.ROOT), "source_provider_root": str(base.SOURCE_ROOT), "factor_id": base.FACTOR_ID,
+        "branch_path": base.BRANCH_PATH, "decision": decision, "source_backed_family": base.SOURCE_BACKED_FAMILY,
+        "provider_rows": provider_rows, "rank_rows": len(rank_rows),
+        "rank_total_trade_count": sum(int(row.get("trade_count") or 0) for row in rank_rows),
+        "representative_price": representative_price,
+        "cost_model": cost_summary["cost_model"],
+        "promotion_cost_verified": cost_summary["promotion_cost_verified"],
+        "exact_1m_instrument_cost_rows": cost_rows,
+        "exact_1m_survivors_instrument_cost": survivors_instrument_cost,
+        "branch_paths": branch_paths, "branch_fields_preserved": branch_ok, "downstream_allowed": downstream,
+        "pre_bayes_allowed": downstream, "bbn_allowed": downstream, "catboost_allowed": downstream, "execution_tree_allowed": downstream,
+        "promotion_allowed": False, "trade_usable": False, "update_goal": False, "local_cache_replay": False,
+        "command_exits": {cmd["name"]: cmd["exit"] for cmd in commands}, "skill_update": "needed_after_downstream" if downstream else "not_needed",
+    }
+    (base.ROOT / "checks/terminal_metrics.json").write_text(json.dumps(metrics, indent=2) + "\n", encoding="utf-8")
+    base.cost_model.write_real_fee_rank_rows_csv(base.ROOT / "summaries/rank_rows.csv", cost_rows)
+    lines = base.cost_model.real_fee_rank_table_lines(
+        decision=decision,
+        title=base.SUMMARY_TABLE_TITLE,
+        rows=cost_rows,
+        branch_ok=branch_ok,
+        survivors=survivors_instrument_cost,
+        downstream=downstream,
+    )
+    (base.ROOT / "summaries/terminal_decision_summary.md").write_text("\n".join(lines), encoding="utf-8")
+    print(json.dumps(metrics, indent=2))
+    return 0 if commands and commands[-1]["name"] == "07_auto_quant_agent_material_rank" and commands[-1]["exit"] == 0 else 1
+
 if __name__ == "__main__":
-    raise SystemExit(base.main())
+    raise SystemExit(patched_main())

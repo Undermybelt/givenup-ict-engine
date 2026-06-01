@@ -41,6 +41,26 @@ clone/bootstrap path when the managed Auto-Quant checkout is missing.
 - `skills/`: existing repo-local evidence skills; optional agent aids, not runtime inputs
 - `.agents/skills/` if present: project-specific AI workflow skills added for development tasks
 
+### Repo-local skill keyword routing
+
+Repo-local files under `skills/` are optional agent aids, but agents must load
+the relevant one when the task keyword matches. If no literal skill invocation
+tool exists, emulate invocation by reading the repo-local `SKILL.md` before
+factor analysis, planning, coding, browsing, or launch work.
+
+- `skills/ict-engi-fact-rese-muta/SKILL.md`: load for `盈利因子训练`,
+  `训练因子经验`, `训练完沉淀skill`, `因子训练复盘`, `数据清洗`,
+  `清洗工序`, `每笔 edge`, `交易密度`, `成本墙`, `ETH时间数据`,
+  `数据可证`, `网上找新因子`, `trade_usable=true`, `Gate 1`,
+  `Auto-Quant`, `TOMAC`, `IBKR`, `commission model`, or `cost model`.
+  That skill owns the reusable cleaning gate and candidate prefilter:
+  prove source/timestamps/OHLCV/session/MTF/no-lookahead integrity, then screen
+  web-sourced ideas by per-trade edge, trade density, verified cost wall, and
+  ETH/full-retained time-data provability before spending provider/AQ budget.
+- `skills/auto-quant-handoff-harness/SKILL.md`: load for Auto-Quant handoff,
+  lane workspace isolation, agent workflow payloads, plan/work/review evidence,
+  or adoption review.
+
 ### Non-negotiable repo rules
 
 - Keep trial state in `/tmp/...` even if a command help default says `state`. `support/scripts/smoke_acceptance.sh` rejects repo-local state unless `ICT_ENGINE_ALLOW_REPO_STATE=1`.
