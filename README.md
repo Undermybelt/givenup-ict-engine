@@ -237,6 +237,14 @@ cargo run -- factor-pipeline-debug \
 ### 🔬 Run Auto-Quant factor iteration
 
 ```bash
+cargo run -- auto-quant-status \
+  --state-dir /tmp/ict-engine-auto-quant \
+  --human
+
+cargo run -- auto-quant-bootstrap \
+  --state-dir /tmp/ict-engine-auto-quant \
+  --repo-url https://github.com/undermybelt/Auto-Quant
+
 cargo run -- factor-research \
   --symbol <SYM> \
   --data <cleaned-15m.json> \

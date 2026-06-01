@@ -30,7 +30,7 @@ Scope:
 | `options-dealer-context` | Convert options chain, IV, skew, gamma walls, and 0DTE pressure into structured evidence for regime and execution tree features. | financial-services option-vol-analysis workflow, adapted to `ict-engine` fail-closed provider policy. |
 | `market-structure-context` | Convert ICT/SMC structural observations such as BOS, CHoCH, order blocks, fair value gaps, premium/discount, and liquidity sweeps into structured evidence. | OpenMobius-skill structural taxonomy and freshness discipline, sanitized to provider-backed evidence only. |
 | `factor-source-intake` | Use blocked/waiting windows for interruptible paper, repository, strategy, and indicator intake that produces codeable regime-rooted candidates without launching shared runtime work. | ict-engine Board B factor-training contract plus public source-intake discipline. |
-| `auto-quant-handoff-harness` | Keep Auto-Quant handoffs lane-isolated and reviewable with plan/work/review artifacts before adoption review. | Claude Code Harness plan/work/review pattern, absorbed without plugin installers, hooks, MCP setup, or bundled binaries. |
+| `auto-quant-handoff-harness` | Keep Auto-Quant handoffs lane-isolated and reviewable with Life-Harness lifecycle layers, plan/work/review artifacts, and regime feedback evidence packets before adoption review. | Life-Harness four-layer runtime adaptation, TraderAlice/Auto-Quant README/program usage contract, and Claude Code Harness plan/work/review pattern, absorbed without plugin installers, hooks, MCP setup, or bundled binaries. |
 
 `factor-source-intake` includes `references/waiting-window-factor-research.md`
 for productive claim/runtime waiting windows. It keeps all source-intake output
@@ -44,7 +44,35 @@ for later owned Gate 1 slices.
 `auto-quant-handoff-harness` is the companion for `factor-research` and
 `factor-autoresearch` handoff payloads. It requires `agent_workflow` fields,
 lane-local `AUTO_QUANT_WORKSPACE` usage, measured review artifacts, and an
-explicit boundary that Auto-Quant success is candidate evidence only.
+explicit boundary that Auto-Quant success is candidate evidence only. Completed
+AQ/exact-AQ runs must also emit
+`checks/regime_feedback_evidence_packet.json` so cost-positive or failed
+regime-root evidence feeds regime observation/calibration without becoming
+accepted paper/live feedback. That packet must name the pending belief-network
+and execution-tree placement targets; those targets remain pending until
+accepted paper/live feedback, BBN readback, execution-tree readback, same-tree
+practical closure, and terminal `trade_usable=true` all pass.
+The skill also absorbs TraderAlice/Auto-Quant's core harness rule: `prepare.py`,
+`run.py`, `config.json`, shared data, and templates are the read-only evaluation
+contract, while each factor iteration must modify the matching strategy file,
+measure through `run.py`, update `results.tsv`, and write lane-local
+`plan.md`/`review.md` evidence before returning to ict-engine.
+It also absorbs Life-Harness as a runtime-interface method: handoff payloads
+must expose environment contract, procedural skill, action realization, and
+trajectory regulation layers; mine measured failures into `failure_patterns.md`;
+return layer assignments, safety rationale, regression review, and remaining
+failures; and freeze returned artifacts before ict-engine adoption evaluation.
+`auto-quant-adoption-review` must surface `life_harness_review` so external
+execution readiness stays separate from adoption/practical-readiness allowance.
+`auto-quant-status` must keep that boundary visible through a fail-closed
+`life_harness_hint` when a Life-Harness handoff exists.
+Do not apply Life-Harness layer language to non-LLM-agent harnesses such as
+`market-data-harness`, `structural_feedback_replay_harness.py`, or
+`factor_candidate_harness_presets.json`; those remain governed by their native
+provider/data, replay, and preset contracts unless a future agent loop is added.
+Release-clone agents must also be reminded to bootstrap the managed checkout
+from `https://github.com/undermybelt/Auto-Quant`; maintainer-local paths are
+not part of the public startup contract.
 
 ## External Skill Review
 
@@ -55,6 +83,8 @@ explicit boundary that Auto-Quant success is candidate evidence only.
 | `star23/Day1Global-Skills` | Partial absorb, do not vendor raw. | Useful macro, sentiment, and BTC-cycle checklists, but raw skills rely on broad web search, contain recommendation language and promotional footer requirements, and are not structured runtime evidence. |
 | `wbh604/UZI-Skill` | Do not vendor raw. | Heavy installer/scripts/hooks, A-share stock-analysis assumptions, social/report generation, local cache gates, and optional tunnel behavior are outside `ict-engine` runtime boundaries. Only the general risk-checklist pattern is reusable elsewhere. |
 | `MobiusQuant/OpenMobius-skill` | Partial absorb, do not vendor raw. | Strong ICT/SMC structural taxonomy and freshness rules, but the raw runtime depends on Mobius API calls, local embeddings/index build, Playwright/browser assets, and chart/image flows outside `ict-engine` runtime boundaries. |
+| `TraderAlice/Auto-Quant` | Partial absorb, do not vendor raw. | Strong autoresearch harness contract: agent-owned strategy files, read-only `prepare.py`/`run.py`/`config.json`, `results.tsv` event log, and repeated measured backtests. ict-engine keeps those mechanics but leaves promotion to its own adoption, feedback, and practical-readiness gates. |
+| `Tianshi-Xu/Life-Harness` | Methodology absorb, do not vendor raw. | Useful four-layer runtime adaptation and failure-mining loop; raw benchmark runtimes, Docker/uv setup, model/provider calls, and evaluation harnesses stay outside ict-engine. |
 
 ## Hard Boundaries
 

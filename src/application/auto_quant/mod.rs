@@ -160,7 +160,7 @@ mod tests {
         assert_eq!(
             readiness.recommended_next_command,
             format!(
-                "ict-engine auto-quant-bootstrap --state-dir {}",
+                "ict-engine auto-quant-bootstrap --state-dir {} --repo-url https://github.com/undermybelt/Auto-Quant",
                 temp.path().to_string_lossy()
             )
         );

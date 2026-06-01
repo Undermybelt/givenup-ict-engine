@@ -94,6 +94,7 @@ struct AutoQuantReadinessCompactSurface<'a> {
     bootstrap_needed: bool,
     update_available: bool,
     recommended_next_command: &'a str,
+    life_harness_hint: Option<&'a super::readiness::AutoQuantLifeHarnessReadinessHint>,
     notes: &'a [String],
 }
 
@@ -123,6 +124,7 @@ fn build_auto_quant_readiness_compact_surface(
         bootstrap_needed: readiness.bootstrap_needed,
         update_available: readiness.update_available,
         recommended_next_command: &readiness.recommended_next_command,
+        life_harness_hint: readiness.life_harness_hint.as_ref(),
         notes: &readiness.notes,
     }
 }
@@ -135,9 +137,10 @@ fn render_auto_quant_readiness_human_output(
         readiness.status, readiness.dependency_healthy, readiness.data_ready
     )];
     match readiness.status.as_str() {
-        "missing_dependency" => {
-            lines.push("Next: bootstrap the managed Auto-Quant checkout".to_string())
-        }
+        "missing_dependency" => lines.push(format!(
+            "Next: bootstrap the managed Auto-Quant checkout from {}",
+            readiness.dependency_status.repo_url
+        )),
         "dependency_unhealthy" => {
             lines.push("Next: repair the managed Auto-Quant checkout before use".to_string())
         }
@@ -165,6 +168,12 @@ fn render_auto_quant_readiness_human_output(
         ));
     } else if !readiness.recommended_next_command.trim().is_empty() {
         lines.push(format!("Run: {}", readiness.recommended_next_command));
+    }
+    if let Some(hint) = &readiness.life_harness_hint {
+        lines.push(format!(
+            "Life-Harness: status={} | adoption_eval_allowed={} | review={}",
+            hint.status, hint.adoption_evaluation_allowed, hint.review_command
+        ));
     }
     lines.push(format!(
         "Workspace: repo={} | data={} | strategies={}",
@@ -371,8 +380,8 @@ pub fn auto_quant_prepare_workspace_command(state_dir: &str) -> Result<()> {
     let readiness_before = auto_quant_readiness(state_dir)?;
     if readiness_before.bootstrap_needed {
         bail!(
-            "auto-quant dependency is missing; bootstrap first with ict-engine auto-quant-bootstrap --state-dir {}",
-            state_dir
+            "auto-quant dependency is missing; bootstrap first with {}",
+            readiness_before.recommended_next_command
         );
     }
     if !readiness_before.dependency_healthy {
@@ -515,13 +524,15 @@ pub fn auto_quant_adoption_review_command(
         "json" | "compact" | "agent" => print_redacted_json(&review),
         "human" => {
             println!(
-                "Auto-Quant adoption review | symbol={} | status={} | handoff_kind={} | backend={} | data_ready={} | dependency_healthy={} | sidecar_status={} | next={}",
+                "Auto-Quant adoption review | symbol={} | status={} | handoff_kind={} | backend={} | data_ready={} | dependency_healthy={} | life_harness_status={} | adoption_eval_allowed={} | sidecar_status={} | next={}",
                 review.symbol,
                 review.review_status,
                 review.handoff_kind,
                 review.backend,
                 review.data_ready,
                 review.dependency_healthy,
+                review.life_harness_review.status,
+                review.life_harness_review.adoption_evaluation_allowed,
                 review
                     .sidecar_handoff_status
                     .as_deref()
@@ -1586,6 +1597,45 @@ class IbkrFutM2KExactShort1Min(IStrategy):
         assert!(workflow_text.contains("plan"), "{workflow_text}");
         assert!(workflow_text.contains("work"), "{workflow_text}");
         assert!(workflow_text.contains("review"), "{workflow_text}");
+        let lifecycle_layers = workflow["lifecycle_layers"].as_array().unwrap();
+        assert_eq!(lifecycle_layers.len(), 4, "{workflow_text}");
+        assert!(
+            workflow_text.contains("Environment Contract Layer"),
+            "{workflow_text}"
+        );
+        assert!(
+            workflow_text.contains("Procedural Skill Layer"),
+            "{workflow_text}"
+        );
+        assert!(
+            workflow_text.contains("Action Realization Layer"),
+            "{workflow_text}"
+        );
+        assert!(
+            workflow_text.contains("Trajectory Regulation Layer"),
+            "{workflow_text}"
+        );
+        assert!(
+            workflow_text.contains("failure_patterns.md"),
+            "{workflow_text}"
+        );
+        assert!(
+            workflow_text.contains("earliest detectable lifecycle layer"),
+            "{workflow_text}"
+        );
+        assert!(
+            workflow_text.contains("regression_review.md"),
+            "{workflow_text}"
+        );
+        assert!(workflow_text.contains("over_trigger"), "{workflow_text}");
+        assert!(
+            workflow_text.contains("frozen returned artifacts"),
+            "{workflow_text}"
+        );
+        assert!(
+            workflow_text.contains("return dominant failure patterns"),
+            "{workflow_text}"
+        );
         assert!(
             workflow_text.contains("Do not mutate shared Auto-Quant repo-root"),
             "{workflow_text}"
@@ -1721,6 +1771,7 @@ class IbkrFutM2KExactShort1Min(IStrategy):
 
         assert!(human.contains("Auto-Quant status | missing_dependency"));
         assert!(human.contains("Run: ict-engine auto-quant-bootstrap"));
+        assert!(human.contains("https://github.com/undermybelt/Auto-Quant"));
         assert!(!human.trim_start().starts_with('{'));
     }
 

@@ -36,7 +36,29 @@ pub struct AutoQuantAdoptionReview {
     pub review_summary: String,
     pub sidecar_handoff_status: Option<String>,
     pub sidecar_missing_artifact_kinds: Vec<String>,
+    pub life_harness_review: AutoQuantLifeHarnessReview,
     pub notes: Vec<String>,
+}
+
+#[derive(Debug, Clone, Serialize)]
+pub struct AutoQuantLifeHarnessReview {
+    pub status: String,
+    pub adoption_evaluation_allowed: bool,
+    pub required_artifacts: Vec<String>,
+    pub missing_artifacts: Vec<String>,
+    pub invalid_artifacts: Vec<String>,
+    pub artifact_checks: Vec<AutoQuantLifeHarnessArtifactCheck>,
+    pub regression_checks: Vec<String>,
+    pub freeze_boundary: Vec<String>,
+    pub notes: Vec<String>,
+}
+
+#[derive(Debug, Clone, Serialize)]
+pub struct AutoQuantLifeHarnessArtifactCheck {
+    pub artifact: String,
+    pub status: String,
+    pub required_terms: Vec<String>,
+    pub missing_terms: Vec<String>,
 }
 
 #[derive(Debug, Clone)]
@@ -205,6 +227,239 @@ fn find_handoff_entry(
     }
 }
 
+fn life_harness_required_return_artifacts(
+    payload: &AutoQuantResearchHandoffPayload,
+) -> Vec<String> {
+    let Some(workflow) = payload.agent_workflow.as_ref() else {
+        return Vec::new();
+    };
+    workflow
+        .expected_artifacts
+        .iter()
+        .filter(|path| !path.starts_with("strategy_library") && !path.trim().is_empty())
+        .cloned()
+        .collect()
+}
+
+fn wildcard_matching_files(pattern: &str) -> Vec<std::path::PathBuf> {
+    let Some(star_index) = pattern.find('*') else {
+        return if Path::new(pattern).exists() {
+            vec![std::path::PathBuf::from(pattern)]
+        } else {
+            Vec::new()
+        };
+    };
+    let before_star = &pattern[..star_index];
+    let after_star = &pattern[star_index + 1..];
+    if after_star.contains(['/', '\\']) {
+        return Vec::new();
+    }
+    let separator_index = before_star.rfind(['/', '\\']);
+    let (directory, filename_prefix) = if let Some(index) = separator_index {
+        (&pattern[..index], &pattern[index + 1..star_index])
+    } else {
+        (".", before_star)
+    };
+    let Ok(entries) = std::fs::read_dir(directory) else {
+        return Vec::new();
+    };
+    entries
+        .filter_map(Result::ok)
+        .filter_map(|entry| {
+            let path = entry.path();
+            if !path.is_file() {
+                return None;
+            }
+            let filename = entry.file_name();
+            let filename = filename.to_string_lossy();
+            if filename.starts_with(filename_prefix) && filename.ends_with(after_star) {
+                Some(path)
+            } else {
+                None
+            }
+        })
+        .collect()
+}
+
+fn life_harness_required_terms(artifact: &str) -> Vec<String> {
+    if artifact.ends_with("strategies/*.py") {
+        return vec!["class".to_string()];
+    }
+    let filename = Path::new(artifact)
+        .file_name()
+        .and_then(|value| value.to_str())
+        .unwrap_or_default();
+    match filename {
+        "plan.md" => vec![
+            "objective".to_string(),
+            "lifecycle".to_string(),
+            "verification".to_string(),
+        ],
+        "failure_patterns.md" => vec![
+            "failure".to_string(),
+            "lifecycle".to_string(),
+            "mechanical".to_string(),
+        ],
+        "harness_layer_updates.md" => vec!["layer".to_string(), "update".to_string()],
+        "run.log" => vec!["backtest".to_string(), "strategy".to_string()],
+        "review.md" => vec![
+            "lifecycle".to_string(),
+            "safety".to_string(),
+            "remaining failure".to_string(),
+        ],
+        "regression_review.md" => vec![
+            "over_trigger".to_string(),
+            "valid_action_blocking".to_string(),
+            "misleading_guidance".to_string(),
+            "loop_regression".to_string(),
+        ],
+        "results.tsv" => vec![
+            "commit".to_string(),
+            "event".to_string(),
+            "strategy_name".to_string(),
+        ],
+        _ => Vec::new(),
+    }
+}
+
+fn life_harness_artifact_check(artifact: &str) -> AutoQuantLifeHarnessArtifactCheck {
+    let required_terms = life_harness_required_terms(artifact);
+    let matching_files = wildcard_matching_files(artifact);
+    if matching_files.is_empty() {
+        return AutoQuantLifeHarnessArtifactCheck {
+            artifact: artifact.to_string(),
+            status: "missing".to_string(),
+            required_terms,
+            missing_terms: Vec::new(),
+        };
+    }
+    let mut combined = String::new();
+    for file in matching_files {
+        if let Ok(content) = std::fs::read_to_string(file) {
+            combined.push_str(&content);
+            combined.push('\n');
+        }
+    }
+    if combined.trim().is_empty() {
+        return AutoQuantLifeHarnessArtifactCheck {
+            artifact: artifact.to_string(),
+            status: "empty".to_string(),
+            missing_terms: required_terms.clone(),
+            required_terms,
+        };
+    }
+    let normalized = combined.to_ascii_lowercase();
+    let missing_terms = required_terms
+        .iter()
+        .filter(|term| !normalized.contains(&term.to_ascii_lowercase()))
+        .cloned()
+        .collect::<Vec<_>>();
+    let status = if missing_terms.is_empty() {
+        "ok"
+    } else {
+        "content_weak"
+    };
+    AutoQuantLifeHarnessArtifactCheck {
+        artifact: artifact.to_string(),
+        status: status.to_string(),
+        required_terms,
+        missing_terms,
+    }
+}
+
+fn life_harness_artifact_checks(
+    required_artifacts: &[String],
+) -> Vec<AutoQuantLifeHarnessArtifactCheck> {
+    required_artifacts
+        .iter()
+        .map(|artifact| life_harness_artifact_check(artifact))
+        .collect()
+}
+
+fn build_life_harness_review(
+    payload: &AutoQuantResearchHandoffPayload,
+) -> AutoQuantLifeHarnessReview {
+    let Some(workflow) = payload.agent_workflow.as_ref() else {
+        return AutoQuantLifeHarnessReview {
+            status: "legacy_handoff_without_life_harness_contract".to_string(),
+            adoption_evaluation_allowed: false,
+            required_artifacts: Vec::new(),
+            missing_artifacts: Vec::new(),
+            invalid_artifacts: Vec::new(),
+            artifact_checks: Vec::new(),
+            regression_checks: Vec::new(),
+            freeze_boundary: Vec::new(),
+            notes: vec![
+                "legacy handoff has no Life-Harness agent_workflow contract; preserve compatibility but do not treat this as proof of Life-Harness optimization".to_string(),
+            ],
+        };
+    };
+    if workflow.lifecycle_layers.is_empty() {
+        return AutoQuantLifeHarnessReview {
+            status: "legacy_handoff_without_lifecycle_layers".to_string(),
+            adoption_evaluation_allowed: false,
+            required_artifacts: Vec::new(),
+            missing_artifacts: Vec::new(),
+            invalid_artifacts: Vec::new(),
+            artifact_checks: Vec::new(),
+            regression_checks: workflow.regression_checks.clone(),
+            freeze_boundary: workflow.freeze_boundary.clone(),
+            notes: vec![
+                "agent_workflow exists but has no lifecycle_layers; preserve compatibility but do not treat this as proof of Life-Harness optimization".to_string(),
+            ],
+        };
+    }
+    let required_artifacts = life_harness_required_return_artifacts(payload);
+    let artifact_checks = life_harness_artifact_checks(&required_artifacts);
+    let missing_artifacts = artifact_checks
+        .iter()
+        .filter(|check| check.status == "missing")
+        .map(|check| check.artifact.clone())
+        .collect::<Vec<_>>();
+    let invalid_artifacts = artifact_checks
+        .iter()
+        .filter(|check| check.status != "missing" && check.status != "ok")
+        .map(|check| check.artifact.clone())
+        .collect::<Vec<_>>();
+    let adoption_evaluation_allowed = !required_artifacts.is_empty()
+        && missing_artifacts.is_empty()
+        && invalid_artifacts.is_empty();
+    let status = if !missing_artifacts.is_empty() {
+        "pending_return_artifacts"
+    } else if !invalid_artifacts.is_empty() {
+        "return_artifact_validation_failed"
+    } else if adoption_evaluation_allowed {
+        "ready_for_frozen_artifact_evaluation"
+    } else {
+        "pending_return_artifacts"
+    }
+    .to_string();
+    let notes = if adoption_evaluation_allowed {
+        vec![
+            "Life-Harness return artifacts are present; adoption evaluation must use these frozen artifacts without mutating the harness".to_string(),
+        ]
+    } else if !invalid_artifacts.is_empty() {
+        vec![
+            "Life-Harness return artifacts failed content validation; adoption/practical-readiness evaluation is not allowed until failure patterns, layer updates, safety rationale, regression review, result headers, and strategy evidence are present".to_string(),
+        ]
+    } else {
+        vec![
+            "Life-Harness return artifacts are missing; external execution may still be the next step, but adoption/practical-readiness evaluation is not allowed yet".to_string(),
+        ]
+    };
+    AutoQuantLifeHarnessReview {
+        status,
+        adoption_evaluation_allowed,
+        required_artifacts,
+        missing_artifacts,
+        invalid_artifacts,
+        artifact_checks,
+        regression_checks: workflow.regression_checks.clone(),
+        freeze_boundary: workflow.freeze_boundary.clone(),
+        notes,
+    }
+}
+
 pub fn build_auto_quant_adoption_review(
     symbol: &str,
     state_dir: &str,
@@ -268,10 +523,12 @@ pub fn build_auto_quant_adoption_review(
     let sidecar_review = sidecar_handoff
         .map(load_sidecar_handoff_review)
         .transpose()?;
-    let mut notes = payload.notes;
+    let mut notes = payload.notes.clone();
     if let Some(sidecar_review) = &sidecar_review {
         notes.extend(sidecar_review.usage_warnings.clone());
     }
+    let life_harness_review = build_life_harness_review(&payload);
+    notes.extend(life_harness_review.notes.clone());
     Ok(AutoQuantAdoptionReview {
         symbol: symbol.to_string(),
         state_dir: state_dir.to_string(),
@@ -294,6 +551,7 @@ pub fn build_auto_quant_adoption_review(
         sidecar_missing_artifact_kinds: sidecar_review
             .map(|value| value.missing_artifact_kinds)
             .unwrap_or_default(),
+        life_harness_review,
         notes,
     })
 }
@@ -371,6 +629,33 @@ mod tests {
     };
     use crate::state::ARTIFACT_LEDGER_FILE;
 
+    fn valid_life_harness_artifact_content(artifact: &str) -> &'static str {
+        match std::path::Path::new(artifact)
+            .file_name()
+            .and_then(|value| value.to_str())
+            .unwrap_or_default()
+        {
+            "plan.md" => {
+                "objective: expansion_manipulation\nlifecycle: Environment Contract Layer\nverification: uv run run.py\n"
+            }
+            "failure_patterns.md" => {
+                "dominant failure: no-survivor loop\nlifecycle: Trajectory Regulation Layer\nmechanical signal: repeated empty measured output\n"
+            }
+            "harness_layer_updates.md" => {
+                "layer update: Trajectory Regulation Layer stops same-shape no-survivor reruns\n"
+            }
+            "run.log" => "Auto-Quant backtest measured strategy output\n",
+            "review.md" => {
+                "lifecycle safety rationale: keep only measured strategy changes\nremaining failure modes: no-fill and stale-data loops\n"
+            }
+            "regression_review.md" => {
+                "over_trigger: none\nvalid_action_blocking: none\nmisleading_guidance: none\nloop_regression: checked\n"
+            }
+            "results.tsv" => "commit\tevent\tstrategy_name\tsharpe\tmax_dd\tnote\n",
+            _ => "reviewed\n",
+        }
+    }
+
     #[test]
     fn review_marks_prepare_required_when_data_is_missing() {
         let temp = tempfile::tempdir().unwrap();
@@ -444,6 +729,454 @@ mod tests {
             .iter()
             .any(|command| command.contains("prepare.py")));
         assert_eq!(review.next_step["blocked_reason"], serde_json::Value::Null);
+    }
+
+    #[test]
+    fn review_surfaces_pending_life_harness_return_artifacts() {
+        let temp = tempfile::tempdir().unwrap();
+        let managed = temp.path().join("auto-quant");
+        let data_path = temp.path().join("demo.json");
+        let payload =
+            build_factor_research_handoff_payload(BuildFactorResearchHandoffPayloadInput {
+                symbol: "NQ",
+                data: data_path.to_str().unwrap(),
+                objective: "expansion_manipulation",
+                provider_profile_selector: None,
+                paired_data: None,
+                auxiliary_evidence_path: None,
+                mutation_spec_path: None,
+                strategy_material_root: None,
+                state_dir: temp.path().to_str().unwrap(),
+                dependency_status: healthy_dependency_status_for(managed.to_str().unwrap()),
+            });
+        persist_handoff_payload(temp.path().to_str().unwrap(), &payload).unwrap();
+
+        std::fs::write(&data_path, "[]").unwrap();
+        std::fs::create_dir_all(&payload.workspace.data_dir).unwrap();
+        for index in 0..15 {
+            std::fs::write(
+                std::path::Path::new(&payload.workspace.data_dir)
+                    .join(format!("demo-{index}.feather")),
+                "prepared",
+            )
+            .unwrap();
+        }
+        std::fs::create_dir_all(&payload.workspace.strategies_dir).unwrap();
+        std::fs::write(
+            std::path::Path::new(&payload.workspace.strategies_dir).join("SeedAlpha.py"),
+            "class SeedAlpha: pass",
+        )
+        .unwrap();
+
+        let review =
+            build_auto_quant_adoption_review("NQ", temp.path().to_str().unwrap(), None, None)
+                .unwrap();
+        let value = serde_json::to_value(&review).unwrap();
+        let life_harness = &value["life_harness_review"];
+
+        assert_eq!(life_harness["status"], "pending_return_artifacts");
+        assert_eq!(life_harness["adoption_evaluation_allowed"], false);
+        assert!(life_harness["missing_artifacts"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .any(|item| item.as_str().unwrap().ends_with("failure_patterns.md")));
+        assert!(life_harness["missing_artifacts"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .any(|item| item.as_str().unwrap().ends_with("regression_review.md")));
+    }
+
+    #[test]
+    fn review_allows_frozen_life_harness_artifact_evaluation_when_return_artifacts_exist() {
+        let temp = tempfile::tempdir().unwrap();
+        let managed = temp.path().join("auto-quant");
+        let data_path = temp.path().join("demo.json");
+        let payload =
+            build_factor_research_handoff_payload(BuildFactorResearchHandoffPayloadInput {
+                symbol: "NQ",
+                data: data_path.to_str().unwrap(),
+                objective: "expansion_manipulation",
+                provider_profile_selector: None,
+                paired_data: None,
+                auxiliary_evidence_path: None,
+                mutation_spec_path: None,
+                strategy_material_root: None,
+                state_dir: temp.path().to_str().unwrap(),
+                dependency_status: healthy_dependency_status_for(managed.to_str().unwrap()),
+            });
+        persist_handoff_payload(temp.path().to_str().unwrap(), &payload).unwrap();
+
+        std::fs::write(&data_path, "[]").unwrap();
+        std::fs::create_dir_all(&payload.workspace.data_dir).unwrap();
+        for index in 0..15 {
+            std::fs::write(
+                std::path::Path::new(&payload.workspace.data_dir)
+                    .join(format!("demo-{index}.feather")),
+                "prepared",
+            )
+            .unwrap();
+        }
+        std::fs::create_dir_all(&payload.workspace.strategies_dir).unwrap();
+        std::fs::write(
+            std::path::Path::new(&payload.workspace.strategies_dir).join("SeedAlpha.py"),
+            "class SeedAlpha: pass",
+        )
+        .unwrap();
+        for artifact in payload
+            .agent_workflow
+            .as_ref()
+            .unwrap()
+            .expected_artifacts
+            .iter()
+            .filter(|path| !path.contains('*') && !path.starts_with("strategy_library"))
+        {
+            let artifact_path = std::path::Path::new(artifact);
+            std::fs::create_dir_all(artifact_path.parent().unwrap()).unwrap();
+            std::fs::write(artifact_path, valid_life_harness_artifact_content(artifact)).unwrap();
+        }
+        let returned_strategy_pattern = payload
+            .agent_workflow
+            .as_ref()
+            .unwrap()
+            .expected_artifacts
+            .iter()
+            .find(|path| path.ends_with("strategies/*.py"))
+            .unwrap();
+        let returned_strategy_dir = std::path::Path::new(returned_strategy_pattern)
+            .parent()
+            .unwrap();
+        std::fs::create_dir_all(returned_strategy_dir).unwrap();
+        std::fs::write(
+            returned_strategy_dir.join("ReturnedSeed.py"),
+            "class ReturnedSeed: pass",
+        )
+        .unwrap();
+
+        let review =
+            build_auto_quant_adoption_review("NQ", temp.path().to_str().unwrap(), None, None)
+                .unwrap();
+        let value = serde_json::to_value(&review).unwrap();
+        let life_harness = &value["life_harness_review"];
+
+        assert_eq!(
+            life_harness["status"],
+            "ready_for_frozen_artifact_evaluation",
+            "{}",
+            serde_json::to_string_pretty(life_harness).unwrap()
+        );
+        assert_eq!(life_harness["adoption_evaluation_allowed"], true);
+        assert_eq!(
+            life_harness["missing_artifacts"].as_array().unwrap().len(),
+            0
+        );
+        assert!(life_harness["freeze_boundary"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .any(|item| item.as_str().unwrap().contains("frozen returned artifacts")));
+    }
+
+    #[test]
+    fn review_blocks_life_harness_evaluation_when_return_artifacts_are_content_weak() {
+        let temp = tempfile::tempdir().unwrap();
+        let managed = temp.path().join("auto-quant");
+        let data_path = temp.path().join("demo.json");
+        let payload =
+            build_factor_research_handoff_payload(BuildFactorResearchHandoffPayloadInput {
+                symbol: "NQ",
+                data: data_path.to_str().unwrap(),
+                objective: "expansion_manipulation",
+                provider_profile_selector: None,
+                paired_data: None,
+                auxiliary_evidence_path: None,
+                mutation_spec_path: None,
+                strategy_material_root: None,
+                state_dir: temp.path().to_str().unwrap(),
+                dependency_status: healthy_dependency_status_for(managed.to_str().unwrap()),
+            });
+        persist_handoff_payload(temp.path().to_str().unwrap(), &payload).unwrap();
+
+        std::fs::write(&data_path, "[]").unwrap();
+        std::fs::create_dir_all(&payload.workspace.data_dir).unwrap();
+        for index in 0..15 {
+            std::fs::write(
+                std::path::Path::new(&payload.workspace.data_dir)
+                    .join(format!("demo-{index}.feather")),
+                "prepared",
+            )
+            .unwrap();
+        }
+        std::fs::create_dir_all(&payload.workspace.strategies_dir).unwrap();
+        std::fs::write(
+            std::path::Path::new(&payload.workspace.strategies_dir).join("SeedAlpha.py"),
+            "class SeedAlpha: pass",
+        )
+        .unwrap();
+        for artifact in payload
+            .agent_workflow
+            .as_ref()
+            .unwrap()
+            .expected_artifacts
+            .iter()
+            .filter(|path| !path.contains('*') && !path.starts_with("strategy_library"))
+        {
+            let artifact_path = std::path::Path::new(artifact);
+            std::fs::create_dir_all(artifact_path.parent().unwrap()).unwrap();
+            std::fs::write(artifact_path, "reviewed").unwrap();
+        }
+        let returned_strategy_pattern = payload
+            .agent_workflow
+            .as_ref()
+            .unwrap()
+            .expected_artifacts
+            .iter()
+            .find(|path| path.ends_with("strategies/*.py"))
+            .unwrap();
+        let returned_strategy_dir = std::path::Path::new(returned_strategy_pattern)
+            .parent()
+            .unwrap();
+        std::fs::create_dir_all(returned_strategy_dir).unwrap();
+        std::fs::write(
+            returned_strategy_dir.join("ReturnedSeed.py"),
+            "class ReturnedSeed: pass",
+        )
+        .unwrap();
+
+        let review =
+            build_auto_quant_adoption_review("NQ", temp.path().to_str().unwrap(), None, None)
+                .unwrap();
+        let value = serde_json::to_value(&review).unwrap();
+        let life_harness = &value["life_harness_review"];
+
+        assert_eq!(life_harness["status"], "return_artifact_validation_failed");
+        assert_eq!(life_harness["adoption_evaluation_allowed"], false);
+        assert!(life_harness["notes"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .any(|item| item.as_str().unwrap().contains("failed content validation")));
+    }
+
+    #[test]
+    fn review_blocks_life_harness_evaluation_without_returned_strategy_file() {
+        let temp = tempfile::tempdir().unwrap();
+        let managed = temp.path().join("auto-quant");
+        let data_path = temp.path().join("demo.json");
+        let payload =
+            build_factor_research_handoff_payload(BuildFactorResearchHandoffPayloadInput {
+                symbol: "NQ",
+                data: data_path.to_str().unwrap(),
+                objective: "expansion_manipulation",
+                provider_profile_selector: None,
+                paired_data: None,
+                auxiliary_evidence_path: None,
+                mutation_spec_path: None,
+                strategy_material_root: None,
+                state_dir: temp.path().to_str().unwrap(),
+                dependency_status: healthy_dependency_status_for(managed.to_str().unwrap()),
+            });
+        persist_handoff_payload(temp.path().to_str().unwrap(), &payload).unwrap();
+
+        std::fs::write(&data_path, "[]").unwrap();
+        std::fs::create_dir_all(&payload.workspace.data_dir).unwrap();
+        for index in 0..15 {
+            std::fs::write(
+                std::path::Path::new(&payload.workspace.data_dir)
+                    .join(format!("demo-{index}.feather")),
+                "prepared",
+            )
+            .unwrap();
+        }
+        std::fs::create_dir_all(&payload.workspace.strategies_dir).unwrap();
+        std::fs::write(
+            std::path::Path::new(&payload.workspace.strategies_dir).join("SeedAlpha.py"),
+            "class SeedAlpha: pass",
+        )
+        .unwrap();
+        for artifact in payload
+            .agent_workflow
+            .as_ref()
+            .unwrap()
+            .expected_artifacts
+            .iter()
+            .filter(|path| !path.contains('*') && !path.starts_with("strategy_library"))
+        {
+            let artifact_path = std::path::Path::new(artifact);
+            std::fs::create_dir_all(artifact_path.parent().unwrap()).unwrap();
+            std::fs::write(artifact_path, "reviewed").unwrap();
+        }
+
+        let review =
+            build_auto_quant_adoption_review("NQ", temp.path().to_str().unwrap(), None, None)
+                .unwrap();
+        let value = serde_json::to_value(&review).unwrap();
+        let life_harness = &value["life_harness_review"];
+
+        assert_eq!(life_harness["status"], "pending_return_artifacts");
+        assert_eq!(life_harness["adoption_evaluation_allowed"], false);
+        assert!(life_harness["missing_artifacts"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .any(|item| item.as_str().unwrap().ends_with("strategies/*.py")));
+    }
+
+    #[test]
+    fn review_blocks_life_harness_evaluation_for_legacy_handoff_contract() {
+        let temp = tempfile::tempdir().unwrap();
+        let payload =
+            build_factor_research_handoff_payload(BuildFactorResearchHandoffPayloadInput {
+                symbol: "NQ",
+                data: "demo.json",
+                objective: "expansion_manipulation",
+                provider_profile_selector: None,
+                paired_data: None,
+                auxiliary_evidence_path: None,
+                mutation_spec_path: None,
+                strategy_material_root: None,
+                state_dir: temp.path().to_str().unwrap(),
+                dependency_status: healthy_dependency_status(),
+            });
+        let mut value = serde_json::to_value(&payload).unwrap();
+        value.as_object_mut().unwrap().remove("agent_workflow");
+        let path = persist_handoff_payload(temp.path().to_str().unwrap(), &payload).unwrap();
+        std::fs::write(&path, serde_json::to_string_pretty(&value).unwrap()).unwrap();
+
+        let review =
+            build_auto_quant_adoption_review("NQ", temp.path().to_str().unwrap(), None, None)
+                .unwrap();
+        let life_harness = serde_json::to_value(&review.life_harness_review).unwrap();
+
+        assert_eq!(
+            life_harness["status"],
+            "legacy_handoff_without_life_harness_contract"
+        );
+        assert_eq!(life_harness["adoption_evaluation_allowed"], false);
+    }
+
+    #[test]
+    fn review_blocks_life_harness_evaluation_without_lifecycle_layers() {
+        let temp = tempfile::tempdir().unwrap();
+        let payload =
+            build_factor_research_handoff_payload(BuildFactorResearchHandoffPayloadInput {
+                symbol: "NQ",
+                data: "demo.json",
+                objective: "expansion_manipulation",
+                provider_profile_selector: None,
+                paired_data: None,
+                auxiliary_evidence_path: None,
+                mutation_spec_path: None,
+                strategy_material_root: None,
+                state_dir: temp.path().to_str().unwrap(),
+                dependency_status: healthy_dependency_status(),
+            });
+        let mut value = serde_json::to_value(&payload).unwrap();
+        value["agent_workflow"]["lifecycle_layers"] = serde_json::json!([]);
+        let path = persist_handoff_payload(temp.path().to_str().unwrap(), &payload).unwrap();
+        std::fs::write(&path, serde_json::to_string_pretty(&value).unwrap()).unwrap();
+
+        let review =
+            build_auto_quant_adoption_review("NQ", temp.path().to_str().unwrap(), None, None)
+                .unwrap();
+        let life_harness = serde_json::to_value(&review.life_harness_review).unwrap();
+
+        assert_eq!(
+            life_harness["status"],
+            "legacy_handoff_without_lifecycle_layers"
+        );
+        assert_eq!(life_harness["adoption_evaluation_allowed"], false);
+    }
+
+    #[test]
+    fn review_blocks_life_harness_evaluation_when_run_log_lacks_measured_output() {
+        let temp = tempfile::tempdir().unwrap();
+        let managed = temp.path().join("auto-quant");
+        let data_path = temp.path().join("demo.json");
+        let payload =
+            build_factor_research_handoff_payload(BuildFactorResearchHandoffPayloadInput {
+                symbol: "NQ",
+                data: data_path.to_str().unwrap(),
+                objective: "expansion_manipulation",
+                provider_profile_selector: None,
+                paired_data: None,
+                auxiliary_evidence_path: None,
+                mutation_spec_path: None,
+                strategy_material_root: None,
+                state_dir: temp.path().to_str().unwrap(),
+                dependency_status: healthy_dependency_status_for(managed.to_str().unwrap()),
+            });
+        persist_handoff_payload(temp.path().to_str().unwrap(), &payload).unwrap();
+
+        std::fs::write(&data_path, "[]").unwrap();
+        std::fs::create_dir_all(&payload.workspace.data_dir).unwrap();
+        for index in 0..15 {
+            std::fs::write(
+                std::path::Path::new(&payload.workspace.data_dir)
+                    .join(format!("demo-{index}.feather")),
+                "prepared",
+            )
+            .unwrap();
+        }
+        std::fs::create_dir_all(&payload.workspace.strategies_dir).unwrap();
+        std::fs::write(
+            std::path::Path::new(&payload.workspace.strategies_dir).join("SeedAlpha.py"),
+            "class SeedAlpha: pass",
+        )
+        .unwrap();
+        for artifact in payload
+            .agent_workflow
+            .as_ref()
+            .unwrap()
+            .expected_artifacts
+            .iter()
+            .filter(|path| !path.contains('*') && !path.starts_with("strategy_library"))
+        {
+            let artifact_path = std::path::Path::new(artifact);
+            std::fs::create_dir_all(artifact_path.parent().unwrap()).unwrap();
+            let content = if artifact_path
+                .file_name()
+                .and_then(|value| value.to_str())
+                .is_some_and(|filename| filename == "run.log")
+            {
+                "reviewed"
+            } else {
+                valid_life_harness_artifact_content(artifact)
+            };
+            std::fs::write(artifact_path, content).unwrap();
+        }
+        let returned_strategy_pattern = payload
+            .agent_workflow
+            .as_ref()
+            .unwrap()
+            .expected_artifacts
+            .iter()
+            .find(|path| path.ends_with("strategies/*.py"))
+            .unwrap();
+        let returned_strategy_dir = std::path::Path::new(returned_strategy_pattern)
+            .parent()
+            .unwrap();
+        std::fs::create_dir_all(returned_strategy_dir).unwrap();
+        std::fs::write(
+            returned_strategy_dir.join("ReturnedSeed.py"),
+            "class ReturnedSeed: pass",
+        )
+        .unwrap();
+
+        let review =
+            build_auto_quant_adoption_review("NQ", temp.path().to_str().unwrap(), None, None)
+                .unwrap();
+        let value = serde_json::to_value(&review).unwrap();
+        let life_harness = &value["life_harness_review"];
+
+        assert_eq!(life_harness["status"], "return_artifact_validation_failed");
+        assert_eq!(life_harness["adoption_evaluation_allowed"], false);
+        assert!(life_harness["invalid_artifacts"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .any(|item| item.as_str().unwrap().ends_with("run.log")));
     }
 
     #[test]

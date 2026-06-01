@@ -6,7 +6,7 @@ pub const AUTO_QUANT_ADAPTER_VERSION: &str = "v1";
 pub const AUTO_QUANT_REPO_URL_ENV_VAR: &str = "ICT_ENGINE_AUTO_QUANT_REPO_URL";
 pub const AUTO_QUANT_BRANCH_ENV_VAR: &str = "ICT_ENGINE_AUTO_QUANT_BRANCH";
 pub const AUTO_QUANT_DIR_ENV_VAR: &str = "ICT_ENGINE_AUTO_QUANT_DIR";
-pub const DEFAULT_AUTO_QUANT_REPO_URL: &str = "https://github.com/TraderAlice/Auto-Quant.git";
+pub const DEFAULT_AUTO_QUANT_REPO_URL: &str = "https://github.com/undermybelt/Auto-Quant";
 pub const DEFAULT_AUTO_QUANT_BRANCH: &str = "master";
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]

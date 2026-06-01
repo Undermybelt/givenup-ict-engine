@@ -18,6 +18,16 @@ Read [AGENT.md](AGENT.md) first. It is the authoritative deep contract for zero-
 - `support/docs/plans/2026-05-09-ict-engine-audit-remediation-todo.md` for the audit/remediation ledger; re-check newer dated status before treating it as current
 - `support/docs/plans/2026-05-12-hotplug-personal-data-release-handoff-todo.md` only when release/provider history matters
 
+Auto-Quant startup guard for release clones:
+
+```bash
+cargo run --quiet -- auto-quant-status --state-dir /tmp/ict-engine-auto-quant --human
+cargo run --quiet -- auto-quant-bootstrap --state-dir /tmp/ict-engine-auto-quant --repo-url https://github.com/undermybelt/Auto-Quant
+```
+
+Any agent work that touches factor iteration or Auto-Quant must surface this
+clone/bootstrap path when the managed Auto-Quant checkout is missing.
+
 ### Key directories
 
 - `src/main.rs`: command enum, Clap wiring, large dispatch surface

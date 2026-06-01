@@ -18,7 +18,7 @@ pub fn auto_quant_bootstrap(
     if let Some(repo_url) = repo_url {
         if is_missing_local_repo_url(repo_url) {
             bail!(
-                "auto_quant_bootstrap_repo_missing repo-url={} expected=existing local git repository or reachable Auto-Quant git URL recovery=pass an existing local Auto-Quant checkout with --repo-url or omit --repo-url to use the default upstream",
+                "auto_quant_bootstrap_repo_missing repo-url={} expected=existing local git repository or reachable Auto-Quant git URL recovery=pass an existing local Auto-Quant checkout with --repo-url or omit --repo-url to use the default https://github.com/undermybelt/Auto-Quant source",
                 repo_url
             );
         }

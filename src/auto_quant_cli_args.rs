@@ -63,7 +63,7 @@ pub(crate) struct AutoQuantBootstrapArgs {
     #[arg(
         long,
         env = "ICT_ENGINE_AUTO_QUANT_REPO_URL",
-        help = "Override Auto-Quant upstream repository URL"
+        help = "Override Auto-Quant repository URL; default release-agent source is https://github.com/undermybelt/Auto-Quant"
     )]
     pub(crate) repo_url: Option<String>,
     #[arg(
@@ -86,7 +86,7 @@ pub(crate) struct AutoQuantUpdateArgs {
     #[arg(
         long,
         env = "ICT_ENGINE_AUTO_QUANT_REPO_URL",
-        help = "Override Auto-Quant upstream repository URL"
+        help = "Override Auto-Quant repository URL; default release-agent source is https://github.com/undermybelt/Auto-Quant"
     )]
     pub(crate) repo_url: Option<String>,
     #[arg(

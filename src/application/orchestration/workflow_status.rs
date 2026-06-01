@@ -18,7 +18,9 @@ use super::structural_playbook::{
     resolved_ensemble_vote_for_snapshot, resolved_latest_ensemble_vote,
     StructuralPathRankerRuntimeContext, StructuralRecommendedPathBundleArtifact,
 };
-use crate::application::auto_quant::handoff::apply_provider_profile_to_command;
+use crate::application::auto_quant::handoff::{
+    apply_provider_profile_to_command, AutoQuantAgentWorkflow,
+};
 use crate::application::auto_quant::AutoQuantResearchHandoffPayload;
 use crate::application::belief::{
     jump_calibration_gate_workflow_summary, jump_model_workflow_summary,
@@ -2021,6 +2023,8 @@ pub struct WorkflowAutoQuantHandoffGuide {
     pub workflow_status_command: String,
     pub suggested_next_steps: Vec<String>,
     pub handoff_artifact_path: String,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub agent_workflow: Option<AutoQuantAgentWorkflow>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]
@@ -2519,6 +2523,7 @@ fn build_auto_quant_handoff_guide(
         recommended_next_command,
         suggested_next_steps: payload.suggested_next_steps.clone(),
         handoff_artifact_path: payload.handoff_artifact_path.clone(),
+        agent_workflow: payload.agent_workflow.clone(),
     })
 }
 
@@ -9613,6 +9618,32 @@ mod tests {
             .as_str()
             .unwrap()
             .contains("auto-quant-adoption-review"));
+        let handoff_workflow = &agent["auto_quant_handoff"]["agent_workflow"];
+        let handoff_workflow_text = serde_json::to_string(handoff_workflow).unwrap();
+        assert_eq!(handoff_workflow["workflow_style"], "plan_work_review");
+        assert_eq!(
+            handoff_workflow["lifecycle_layers"]
+                .as_array()
+                .unwrap()
+                .len(),
+            4
+        );
+        assert!(
+            handoff_workflow_text.contains("Environment Contract Layer"),
+            "{handoff_workflow_text}"
+        );
+        assert!(
+            handoff_workflow_text.contains("failure_patterns.md"),
+            "{handoff_workflow_text}"
+        );
+        assert!(
+            handoff_workflow_text.contains("regression_review.md"),
+            "{handoff_workflow_text}"
+        );
+        assert!(
+            handoff_workflow_text.contains("frozen returned artifacts"),
+            "{handoff_workflow_text}"
+        );
     }
 
     #[test]

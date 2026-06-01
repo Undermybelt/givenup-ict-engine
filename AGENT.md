@@ -19,6 +19,22 @@ When a user asks for help, optimize for:
 Default to proving behavior with the real CLI. Do not answer release, readiness,
 provider, or workflow questions from memory when a local command can check it.
 
+## Auto-Quant Startup Requirement
+
+Release-clone agents must not assume this repository already contains the
+Auto-Quant harness. When a task touches factor iteration, Auto-Quant handoff,
+or `--backend auto-quant`, first run or surface:
+
+```bash
+cargo run --quiet -- auto-quant-status --state-dir /tmp/ict-engine-auto-quant --human
+cargo run --quiet -- auto-quant-bootstrap --state-dir /tmp/ict-engine-auto-quant --repo-url https://github.com/undermybelt/Auto-Quant
+```
+
+If Auto-Quant is already bootstrapped, use the reported managed checkout and
+continue. If it is missing, explicitly clone/bootstrap from
+`https://github.com/undermybelt/Auto-Quant`; do not silently fall back to a
+maintainer-local path or a different upstream.
+
 ## User Service Contract
 
 For a new or confused user, guide them through this path first:

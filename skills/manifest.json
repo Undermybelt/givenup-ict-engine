@@ -99,16 +99,28 @@
     {
       "id": "auto-quant-handoff-harness",
       "path": "skills/auto-quant-handoff-harness/SKILL.md",
-      "purpose": "Plan/work/review contract for isolated Auto-Quant handoff lanes before adoption review.",
+      "purpose": "Life-Harness-style lifecycle, plan/work/review, and regime-feedback contract for isolated Auto-Quant handoff lanes before adoption review.",
       "runtime_mapping": [
         "Auto-Quant handoff agent_workflow payload",
+        "Life-Harness lifecycle layer payload",
         "Auto-Quant adoption-review return packets",
-        "Lane-local Auto-Quant workspace evidence"
+        "Auto-Quant adoption-review life_harness_review surface",
+        "Lane-local Auto-Quant workspace evidence",
+        "Regime observation/calibration evidence packets",
+        "Belief network and execution tree placement readbacks"
+      ],
+      "references": [
+        "skills/auto-quant-handoff-harness/references/autoquant-regime-feedback-evidence-contract-20260601.md",
+        "support/docs/plans/2026-06-01-life-harness-runtime-harness-adaptation-audit-codex.md"
       ],
       "source_review": [
+        "Tianshi-Xu/Life-Harness arXiv 2605.22166 and source review",
+        "TraderAlice/Auto-Quant README and program.md usage contract",
+        "Undermybelt/Auto-Quant release-clone default bootstrap source",
         "Claude Code Harness plan/work/review pattern",
         "ict-engine Auto-Quant handoff contract",
-        "local Auto-Quant workspace isolation contract"
+        "local Auto-Quant workspace isolation contract",
+        "2026-06-01 Auto-Quant regime feedback evidence contract"
       ]
     }
   ],
@@ -132,6 +144,14 @@
     {
       "source": "MobiusQuant/OpenMobius-skill raw runtime",
       "reason": "Useful ICT/SMC structural taxonomy and freshness discipline, but the raw install flow depends on Mobius API calls, local embeddings/index build, Playwright downloads, and chart/image workflows outside ict-engine runtime boundaries."
+    },
+    {
+      "source": "TraderAlice/Auto-Quant raw runtime",
+      "reason": "Useful harness mechanics were absorbed, but ict-engine does not vendor the raw repo, run its installers, treat Binance/FreqTrade defaults as universal, or promote Auto-Quant backtests to practical readiness without ict-engine adoption and paper/live feedback gates."
+    },
+    {
+      "source": "Tianshi-Xu/Life-Harness raw benchmark runtimes",
+      "reason": "Useful four-layer runtime adaptation and failure-mining methodology were absorbed, but ict-engine does not vendor or run the raw benchmark harnesses, Docker services, uv environments, model/provider calls, or mutable evaluation loops."
     }
   ]
 }

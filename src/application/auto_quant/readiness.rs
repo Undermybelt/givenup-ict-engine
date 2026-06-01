@@ -18,6 +18,16 @@ use super::types::AutoQuantDependencyStatus;
 use super::workspace_profile::apply_handoff_workspace_profile;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct AutoQuantLifeHarnessReadinessHint {
+    pub status: String,
+    pub adoption_evaluation_allowed: bool,
+    pub handoff_artifact_id: String,
+    pub review_command: String,
+    pub lifecycle_layers: Vec<String>,
+    pub notes: Vec<String>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct AutoQuantReadinessSurface {
     pub status: String,
     pub healthy: bool,
@@ -31,6 +41,8 @@ pub struct AutoQuantReadinessSurface {
     pub recommended_next_command: String,
     pub recommended_next_command_meta: RecommendedNextCommandMeta,
     pub next_step: Value,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub life_harness_hint: Option<AutoQuantLifeHarnessReadinessHint>,
     pub notes: Vec<String>,
 }
 
@@ -55,6 +67,7 @@ pub fn auto_quant_readiness(state_dir: &str) -> Result<AutoQuantReadinessSurface
                 workspace,
                 data_ready,
             );
+            readiness.life_harness_hint = life_harness_readiness_hint_for_handoff(&payload);
             readiness.notes.push(format!(
                 "auto_quant_dependency_resolved_from_handoff:{}",
                 payload.artifact_id
@@ -96,9 +109,10 @@ pub fn auto_quant_readiness_from_status_with_state_dir(
     let mut workspace =
         auto_quant_workspace_config_for_state(&dependency_status.managed_dir, state_dir);
     let mut data_ready = auto_quant_data_ready(&workspace);
-    if let Some(payload) = latest_auto_quant_handoff_payload(state_dir) {
+    let latest_handoff = latest_auto_quant_handoff_payload(state_dir);
+    if let Some(payload) = latest_handoff.as_ref() {
         workspace = payload.workspace.clone();
-        apply_handoff_workspace_profile(&payload, &mut workspace);
+        apply_handoff_workspace_profile(payload, &mut workspace);
         data_ready = auto_quant_handoff_data_ready(
             &workspace,
             &payload.data_path,
@@ -111,10 +125,39 @@ pub fn auto_quant_readiness_from_status_with_state_dir(
         workspace,
         data_ready,
     );
+    if let Some(payload) = latest_handoff.as_ref() {
+        readiness.life_harness_hint = life_harness_readiness_hint_for_handoff(payload);
+    }
     if let Some(guard) = latest_handoff_exact_data_guard(state_dir) {
         readiness.notes.extend(guard.notes);
     }
     readiness
+}
+
+fn life_harness_readiness_hint_for_handoff(
+    payload: &AutoQuantResearchHandoffPayload,
+) -> Option<AutoQuantLifeHarnessReadinessHint> {
+    let workflow = payload.agent_workflow.as_ref()?;
+    if workflow.lifecycle_layers.is_empty() {
+        return None;
+    }
+    Some(AutoQuantLifeHarnessReadinessHint {
+        status: "adoption_review_required".to_string(),
+        adoption_evaluation_allowed: false,
+        handoff_artifact_id: payload.artifact_id.clone(),
+        review_command: format!(
+            "ict-engine auto-quant-adoption-review --symbol {} --state-dir {} --artifact-id {}",
+            payload.symbol, payload.state_dir, payload.artifact_id
+        ),
+        lifecycle_layers: workflow
+            .lifecycle_layers
+            .iter()
+            .map(|layer| layer.name.clone())
+            .collect(),
+        notes: vec![
+            "auto_quant_status is execution-readiness guidance only; run adoption review to check frozen Life-Harness return artifacts".to_string(),
+        ],
+    })
 }
 
 #[derive(Debug, Clone)]
@@ -212,7 +255,10 @@ pub fn auto_quant_readiness_from_status_and_data(
     let (status, command, blocked_reason) = if dependency_status.bootstrap_needed {
         (
             "missing_dependency",
-            format!("ict-engine auto-quant-bootstrap --state-dir {state_dir}"),
+            format!(
+                "ict-engine auto-quant-bootstrap --state-dir {state_dir} --repo-url {}",
+                dependency_status.repo_url
+            ),
             Some("auto_quant_bootstrap_required"),
         )
     } else if !dependency_status.healthy {
@@ -266,6 +312,7 @@ pub fn auto_quant_readiness_from_status_and_data(
         recommended_next_command_meta: recommended_next_command_meta(&command),
         next_step: workflow_next_step_view(&command, blocked_reason),
         recommended_next_command: command,
+        life_harness_hint: None,
         notes,
     }
 }
@@ -366,5 +413,48 @@ mod tests {
             .notes
             .iter()
             .any(|note| note == "auto_quant_profile=synthetic_ohlcv"));
+    }
+
+    #[test]
+    fn readiness_surfaces_life_harness_review_boundary_for_latest_handoff() {
+        let temp = tempfile::tempdir().unwrap();
+        let state_dir = temp.path().join("state");
+        let managed_dir = state_dir.join(".deps/auto-quant");
+        let data_path = temp.path().join("demo.json");
+        let payload =
+            build_factor_research_handoff_payload(BuildFactorResearchHandoffPayloadInput {
+                symbol: "NQ",
+                data: data_path.to_str().unwrap(),
+                objective: "expansion_manipulation",
+                provider_profile_selector: None,
+                paired_data: None,
+                auxiliary_evidence_path: None,
+                mutation_spec_path: None,
+                strategy_material_root: None,
+                state_dir: state_dir.to_str().unwrap(),
+                dependency_status: healthy_dependency_status_for(managed_dir.to_str().unwrap()),
+            });
+        persist_handoff_payload(state_dir.to_str().unwrap(), &payload).unwrap();
+
+        let readiness = auto_quant_readiness_from_status_with_state_dir(
+            &healthy_dependency_status_for(managed_dir.to_str().unwrap()),
+            state_dir.to_str().unwrap(),
+        );
+        let value = serde_json::to_value(readiness).unwrap();
+        let life_harness_hint = &value["life_harness_hint"];
+
+        assert_eq!(life_harness_hint["status"], "adoption_review_required");
+        assert_eq!(life_harness_hint["adoption_evaluation_allowed"], false);
+        assert_eq!(
+            life_harness_hint["lifecycle_layers"]
+                .as_array()
+                .unwrap()
+                .len(),
+            4
+        );
+        assert!(life_harness_hint["review_command"]
+            .as_str()
+            .unwrap()
+            .contains("auto-quant-adoption-review"));
     }
 }

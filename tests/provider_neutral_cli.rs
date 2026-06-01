@@ -475,6 +475,7 @@ fn auto_quant_status_help_and_human_surface_expose_consumer_output_modes() {
     let stdout = String::from_utf8(output.stdout).unwrap();
     assert!(stdout.contains("Auto-Quant status | missing_dependency"));
     assert!(stdout.contains("Run: ict-engine auto-quant-bootstrap"));
+    assert!(stdout.contains("--repo-url https://github.com/undermybelt/Auto-Quant"));
     assert!(!stdout.trim_start().starts_with('{'));
 }
 

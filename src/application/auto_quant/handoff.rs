@@ -69,12 +69,29 @@ pub struct AutoQuantIterationUnitContext {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
+pub struct AutoQuantLifecycleLayer {
+    pub layer_id: String,
+    pub name: String,
+    pub trigger_timing: String,
+    pub ict_engine_mapping: String,
+    pub required_evidence: Vec<String>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
 pub struct AutoQuantAgentWorkflow {
     pub workflow_style: String,
     pub setup_commands: Vec<String>,
     pub environment: Vec<String>,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub lifecycle_layers: Vec<AutoQuantLifecycleLayer>,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub evolution_inputs: Vec<String>,
     pub phases: Vec<String>,
     pub expected_artifacts: Vec<String>,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub regression_checks: Vec<String>,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub freeze_boundary: Vec<String>,
     pub return_to_ict_engine: Vec<String>,
     pub constraints: Vec<String>,
 }
@@ -349,6 +366,9 @@ fn build_auto_quant_agent_workflow(
     let plan_path = lane_root.join("plan.md");
     let review_path = lane_root.join("review.md");
     let run_log = lane_root.join("run.log");
+    let failure_patterns_path = lane_root.join("failure_patterns.md");
+    let layer_updates_path = lane_root.join("harness_layer_updates.md");
+    let regression_path = lane_root.join("regression_review.md");
 
     AutoQuantAgentWorkflow {
         workflow_style: "plan_work_review".to_string(),
@@ -390,32 +410,102 @@ fn build_auto_quant_agent_workflow(
                 results_tsv.to_string_lossy()
             ),
         ],
+        lifecycle_layers: vec![
+            AutoQuantLifecycleLayer {
+                layer_id: "h3_environment_contract".to_string(),
+                name: "Environment Contract Layer".to_string(),
+                trigger_timing: "before interaction / before Auto-Quant iteration".to_string(),
+                ict_engine_mapping: "make provider, data, cost, strategy-file, and adoption boundaries explicit before running a lane".to_string(),
+                required_evidence: vec![
+                    "plan.md names provider/data/cost contracts and immutable evaluation files".to_string(),
+                    "handoff payload keeps shared Auto-Quant config/data read-only under AUTO_QUANT_WORKSPACE".to_string(),
+                ],
+            },
+            AutoQuantLifecycleLayer {
+                layer_id: "h5_procedural_skill".to_string(),
+                name: "Procedural Skill Layer".to_string(),
+                trigger_timing: "task conditioning / lane planning".to_string(),
+                ict_engine_mapping: "retrieve or write compact factor procedure guidance from prior measured trajectories without changing engine gates".to_string(),
+                required_evidence: vec![
+                    "failure_patterns.md records recurring measured failures and reusable procedures".to_string(),
+                    "plan.md maps each candidate idea to at most three active strategy files".to_string(),
+                ],
+            },
+            AutoQuantLifecycleLayer {
+                layer_id: "h2_action_realization".to_string(),
+                name: "Action Realization Layer".to_string(),
+                trigger_timing: "after strategy edit, before measured run/adoption".to_string(),
+                ict_engine_mapping: "validate executable artifacts before run.py/adoption review instead of letting malformed strategy or missing data enter promotion".to_string(),
+                required_evidence: vec![
+                    "review.md confirms each measured iteration edited the matching strategy file before run.py".to_string(),
+                    "run.log/results.tsv show the action was executable and measured".to_string(),
+                ],
+            },
+            AutoQuantLifecycleLayer {
+                layer_id: "h4_trajectory_regulation".to_string(),
+                name: "Trajectory Regulation Layer".to_string(),
+                trigger_timing: "after measured run / between iterations".to_string(),
+                ict_engine_mapping: "detect repeated no-survivor loops, no-fill results, stale data reuse, and budget exhaustion before another same-shape iteration".to_string(),
+                required_evidence: vec![
+                    "review.md records keep/discard/fork/stop decisions from measured output".to_string(),
+                    "regression_review.md checks over-trigger, valid-candidate blocking, misleading guidance, and repeated failure loops".to_string(),
+                ],
+            },
+        ],
+        evolution_inputs: vec![
+            "current Auto-Quant handoff artifact and ict-engine objective".to_string(),
+            "previous run.log/results.tsv/terminal metrics for this lineage when available".to_string(),
+            "failure_patterns.md derived from measured trajectories, not from chat-only speculation".to_string(),
+            "skills/auto-quant-handoff-harness/SKILL.md Life-Harness four-layer contract".to_string(),
+        ],
         phases: vec![
             format!(
-                "plan: read Auto-Quant AGENTS.md, program.md, and this handoff; write {} with objective, lane scope, data paths, candidate ideas, verification commands, and stop conditions before editing strategies",
+                "plan: read Auto-Quant AGENTS.md, README.md, program.md, prepare.py, run.py, _template.py.example, the ict-engine handoff, and the Life-Harness layer contract; write {} with objective, lane scope, data paths, candidate ideas, lifecycle-layer mapping, verification commands, and stop conditions before editing strategies",
                 plan_path.to_string_lossy()
             ),
-            "work: create or evolve at most 3 active non-underscore strategies inside the lane strategies directory; keep config, run.py, prepare.py, and shared data read-only".to_string(),
             format!(
-                "review: run the measured Auto-Quant command with the environment above, inspect {}, update results.tsv, and write {} with keep/discard evidence before exporting anything back",
+                "failure-mining: inspect prior measured trajectories when present and write {} with dominant deterministic failure patterns, earliest detectable lifecycle layer, and why each pattern is mechanical rather than hidden-oracle reasoning",
+                failure_patterns_path.to_string_lossy()
+            ),
+            format!(
+                "work: create or evolve at most 3 active non-underscore strategies inside the lane strategies directory; keep config, run.py, prepare.py, and shared data read-only; record each targeted layer update in {}",
+                layer_updates_path.to_string_lossy()
+            ),
+            format!(
+                "review: run the measured Auto-Quant command with the environment above, inspect {}, update results.tsv, and write {} with keep/discard evidence, lifecycle safety rationale, and remaining failure modes before exporting anything back",
                 run_log.to_string_lossy(),
                 review_path.to_string_lossy()
             ),
         ],
         expected_artifacts: vec![
             plan_path.to_string_lossy().to_string(),
+            failure_patterns_path.to_string_lossy().to_string(),
+            layer_updates_path.to_string_lossy().to_string(),
             run_log.to_string_lossy().to_string(),
             results_tsv.to_string_lossy().to_string(),
             strategies_dir.join("*.py").to_string_lossy().to_string(),
             review_path.to_string_lossy().to_string(),
+            regression_path.to_string_lossy().to_string(),
             "strategy_library.json or an ict-engine adoption bundle when a measured candidate survives review".to_string(),
+        ],
+        regression_checks: vec![
+            "over_trigger: identify any lifecycle rule that would block a previously valid measured strategy".to_string(),
+            "valid_action_blocking: confirm malformed/missing artifacts are blocked before run or adoption, while executable candidate files still run".to_string(),
+            "misleading_guidance: confirm plan/work/review text does not imply promotion_allowed or trade_usable from backtest-only evidence".to_string(),
+            "loop_regression: stop or change branch when repeated measured runs produce the same no-fill/no-survivor/no-data failure".to_string(),
+        ],
+        freeze_boundary: vec![
+            "The model weights, provider data, benchmark/evaluation logic, ict-engine promotion gates, and Auto-Quant run.py/prepare.py/config contract remain fixed.".to_string(),
+            "After a candidate package is returned, ict-engine adoption and practical-readiness evaluation must use the frozen returned artifacts; do not keep editing the harness while claiming evaluation evidence.".to_string(),
         ],
         return_to_ict_engine: vec![
             "run auto-quant-adoption-review against the persisted handoff artifact before any downstream adoption decision".to_string(),
             "report measured trade_count, win_rate, profit_factor, drawdown, cost assumptions, and artifact paths; do not summarize from memory".to_string(),
+            "return dominant failure patterns, lifecycle layer assignment, implemented changes, safety rationale, regression review, and remaining failure modes".to_string(),
             "treat Auto-Quant success as candidate evidence only until ict-engine promotion gates explicitly pass".to_string(),
         ],
         constraints: vec![
+            "Follow Life-Harness runtime interface adaptation: adapt the harness around deterministic failures, not model weights, provider data, evaluation rules, or ict-engine promotion gates".to_string(),
             "Do not mutate shared Auto-Quant repo-root config.json, user_data/strategies, user_data/data, or results.tsv when AUTO_QUANT_WORKSPACE is available".to_string(),
             "Do not run Claude Code Harness plugin installers, hooks, MCP setup, or bundled binaries from this handoff".to_string(),
             "trade_usable is not implied by Auto-Quant run success, sparse positive results, or a generated strategy file".to_string(),
