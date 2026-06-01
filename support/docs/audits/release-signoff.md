@@ -1,7 +1,7 @@
 # Release signoff
 
-Date: 2026-05-29
-Selected candidate: `v0.1.8`
+Date: 2026-06-01
+Selected candidate: `v0.1.9`
 Selected source commit: pending clean selected-source export
 Status: retargeted candidate for the private `ict-engine-release` mirror;
 publishing remains blocked until a clean selected source/export and remote
@@ -13,16 +13,18 @@ readback pass.
 CI failure in the mirror workflow's docs runtime isolation gate. `v0.1.6`
 corrected that immediate failure without rewriting the failed tag.
 
-`v0.1.8` is the next selected candidate because `v0.1.7` is already present in
+`v0.1.9` is the next selected candidate because `v0.1.8` is already present in
 the private release mirror and must not be rewritten or reused. It preserves the
 privacy/docs runtime isolation correction, includes subsequent audit hardening,
-and keeps package-manager publication disabled.
+adds the release-clone Auto-Quant bootstrap guard, and keeps package-manager
+publication disabled.
 
 ## Required gates before publication
 
 - Create a clean selected-source export from the chosen source commit.
 - `python3 support/scripts/release_readiness_audit.py --check-remotes --compact`
-  - must exit `0` after source `origin/main` is aligned to the selected source.
+  - must exit `0` after the selected source/export is clean and the private
+    release mirror readback is aligned for the selected release slice.
 - `python3 support/scripts/ci/check_docs_runtime_isolation.py`
   - must exit `0`; `docs runtime isolation ok`.
 - `python3 support/scripts/release_privacy_audit.py . --compact`
@@ -45,11 +47,10 @@ and keeps package-manager publication disabled.
 Before publishing, confirm:
 
 ```bash
-git ls-remote https://github.com/Undermybelt/givenup-ict-engine.git refs/heads/main
-git ls-remote https://github.com/Undermybelt/ict-engine-release.git refs/heads/main refs/tags/v0.1.8
+git ls-remote https://github.com/Undermybelt/ict-engine-release.git refs/heads/main refs/tags/v0.1.9
 ```
 
-After publishing, confirm mirror `main`, tag `v0.1.8`, the GitHub Release page,
+After publishing, confirm mirror `main`, tag `v0.1.9`, the GitHub Release page,
 and the GitHub Actions run conclusion.
 
 ## Release boundary
@@ -63,4 +64,5 @@ repository = "https://github.com/Undermybelt/ict-engine-release"
 ```
 
 The private mirror `Undermybelt/ict-engine-release` remains the release target.
-The development repo is source/provenance only.
+The development repo is source/provenance only; do not use the configured
+`givenup-ict-engine` origin as the push target for this release-clone guard.

@@ -5,8 +5,8 @@
 - supporting route: `local/hermes-agent-sec-review`
 - repo: `/Users/thrill3r/projects-ict-engine/ict-engine`
 - branch: `main`
-- status: `slice verified / full objective not complete`
-- completion_claim: `false`
+- status: `verified for Life-Harness-applicable agent harness scope`
+- completion_claim: `scoped_true`
 - source paper: `https://arxiv.org/pdf/2605.22166`
 - source code: `https://github.com/Tianshi-Xu/Life-Harness`
 - reviewed source clone: `/tmp/life-harness-review`
@@ -21,12 +21,18 @@ fresh handoff states the remaining blockers.
 
 ## Current Answer
 
-No. I do not have 100% confidence that this objective is complete.
+Yes for the Life-Harness-applicable `ict-engine` harness scope: the Auto-Quant
+LLM-agent handoff/adoption/readiness/workflow-status interface. That scope now
+has direct Life-Harness provenance, first-class runtime fields, fail-closed
+adoption/readiness checks, returned-artifact content validation, regression
+tests, skill/manifest contracts, and zero-config smoke evidence.
 
-The current repo has an Auto-Quant handoff harness and useful plan/work/review
-guidance, but the evidence so far does not prove a faithful Life-Harness
-adaptation. The main missing proof is a direct requirement-by-requirement
-mapping from Life-Harness to `ict-engine` behavior and tests.
+No if "harness" is interpreted as every repo file or command containing the
+word `harness`. `market-data-harness`,
+`structural_feedback_replay_harness.py`, and
+`factor_candidate_harness_presets.json` are non-LLM-agent harnesses and should
+remain governed by their native provider/data, replay, and preset contracts
+unless a future LLM-agent loop is added.
 
 ## External Source Review
 
@@ -395,3 +401,50 @@ Additional verification after scope audit:
 - `cargo clippy --all-targets -- -D warnings`: passed.
 - `git diff --check` on the current touched Life-Harness files and cached
   ignored-reference addition: passed.
+
+## 2026-06-01T11:13+0800 Final Scope-Contract Closure
+
+Additional loophole found:
+- The scope decision was recorded in this plan, but the repo-local
+  `auto-quant-handoff-harness` skill did not explicitly name the non-agent
+  harness surfaces that should not receive Life-Harness H2/H3/H4/H5 language.
+  That left room for a future agent to treat every `harness` filename as part
+  of the Life-Harness objective.
+
+Repair applied:
+- Added a strict skill-contract test requiring the Auto-Quant handoff skill to
+  name `market-data-harness`, `structural_feedback_replay_harness.py`,
+  `factor_candidate_harness_presets.json`, and `non-LLM-agent harnesses`.
+- Updated `skills/auto-quant-handoff-harness/SKILL.md` and `skills/README.md`
+  to state that those surfaces stay under native provider/data, replay, and
+  preset contracts unless a future LLM-agent loop is added.
+
+RED/GREEN evidence:
+- RED:
+  `python3 -m unittest support.scripts.tests.test_autoquant_regime_feedback_skill_contract -v`
+  failed because `market-data-harness` was absent from the skill.
+- GREEN:
+  the same unittest passed after the skill/README scope contract was added
+  (`2 passed; 0 failed`).
+
+Fresh verification in the current tree:
+- `support/scripts/smoke_acceptance.sh`: passed,
+  state dir `/tmp/ict-engine-smoke-acceptance-20260601T030800Z`.
+- `python3 support/scripts/ci/check_docs_runtime_isolation.py`: passed.
+- `cargo test life_harness -- --nocapture`: passed (`8 passed; 0 failed`).
+- `cargo test auto_quant_handoff -- --nocapture`: passed (`6 passed; 0 failed`).
+- `python3 -m unittest support.scripts.tests.test_autoquant_regime_feedback_skill_contract -v`:
+  passed (`2 passed; 0 failed`).
+- `cargo fmt --check`: passed.
+- `cargo clippy --all-targets -- -D warnings`: passed.
+- Targeted `git diff --check` over the Life-Harness slice: passed.
+
+Final conclusion:
+- The Life-Harness paper/code has been absorbed into the `ict-engine`
+  Auto-Quant LLM-agent harness design, not into unrelated non-agent harness
+  utilities.
+- This does not create or imply `trade_usable=true`, practical readiness,
+  paper/live acceptance, release readiness, or a funded/live fill. Those remain
+  governed by the existing `ict-engine` gate chain.
+- The worktree remains shared and dirty. Any later commit must stage only the
+  coherent Life-Harness slice and avoid unrelated factor-training residue.

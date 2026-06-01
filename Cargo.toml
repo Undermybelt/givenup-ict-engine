@@ -1,6 +1,6 @@
 [package]
 name = "ict-engine"
-version = "0.1.8"
+version = "0.1.9"
 edition = "2021"
 description = "ICT Expansion Trading Engine - Probability-based trading analysis"
 license = "PolyForm-Noncommercial-1.0.0"

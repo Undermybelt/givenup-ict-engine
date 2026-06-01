@@ -220,3 +220,50 @@ Results:
 - all listed format/tests passed;
 - CLI smoke printed the full `--repo-url https://github.com/undermybelt/Auto-Quant`
   bootstrap command.
+
+## 2026-06-01T11:39+0800 Current Re-Audit
+
+Current readback:
+
+- `Auto-Quant` is clean at
+  `08bd92b51d0013b1244f1c9567797e898649379a`; `origin/master` and the public
+  `https://github.com/undermybelt/Auto-Quant` readback match that commit.
+- The `ict-engine` release mirror `main` readback is
+  `ee375d186570a02cc32420994bb8f10e32067760`, containing the release-clone
+  Auto-Quant bootstrap guard and tracked repo-local skill files.
+- Fresh release-clone readback from `/tmp/ict-engine-release-aq-bootstrap-readback-20260601`
+  confirmed `skills/README.md`, `skills/manifest.json`,
+  `skills/auto-quant-handoff-harness/SKILL.md`, and the new reference file are
+  tracked.
+
+Fresh verification:
+
+```bash
+python3 -m unittest tests/test_auto_quant_workspace.py -v
+.venv/bin/python -m py_compile auto_quant_workspace.py run.py prepare.py tests/test_auto_quant_workspace.py
+AUTO_QUANT_WORKSPACE=/tmp/auto-quant-empty-smoke-20260601-current-codex AUTO_QUANT_DATA_DIR="$PWD/user_data/data" uv run run.py
+python3 support/scripts/factor_claim_terminalization_audit.py --compact
+python3 support/scripts/done_definition_audit.py --compact --run-all-heavy --heavy-timeout-seconds 1200 --output /tmp/ict-engine-done-definition-heavy-20260601-after-release-push-codex.json
+python3 support/scripts/objective_closure_snapshot.py --compact --check-remotes --timeout-seconds 300 --done-definition-proof /tmp/ict-engine-done-definition-heavy-20260601-after-release-push-codex.json --output-dir /tmp/ict-engine-objective-closure-20260601-after-heavy-proof-codex
+```
+
+Results:
+
+- Auto-Quant workspace tests passed `2/2`; py_compile passed; empty workspace
+  smoke exited `2` with expected `no strategies found`.
+- Factor claim audit passed with `active_claims=0`, `live_factor_processes=0`,
+  `promotion_allowed_true=0`, and `trade_usable_true=0`.
+- Heavy done-definition proof passed with `completion_ready=true`,
+  `pass_count=11`, `fail_count=0`, `skip_count=0`.
+- Parent objective snapshot still reports `summary.status=not_complete`.
+  Remaining blockers are:
+  - `same_tree_practical_closure_unproven`
+  - `release_readiness_blocked`
+
+Next repair:
+
+- Retarget release metadata from reused `v0.1.8` to unused `v0.1.9` so the
+  `release_version_tag_available` blocker is no longer real after the next
+  release-readiness run.
+- Do not claim full completion until a validated same-tree practical closure
+  packet exists and release readiness is proven from a clean selected export.
