@@ -1575,8 +1575,9 @@ mod tests {
         assert_eq!(status, RegimeBbnEvidenceApplicationStatus::Skipped);
         assert_eq!(filter.gating_status, "pass_neutralized");
         assert_eq!(filter.evidence_quality_score, 0.624);
-        assert!(!filter.rationale.iter().any(|item| item.contains(
-            "regime_bundle_bbn_evidence_promoted_gate_to_pass_hard"
-        )));
+        assert!(!filter
+            .rationale
+            .iter()
+            .any(|item| item.contains("regime_bundle_bbn_evidence_promoted_gate_to_pass_hard")));
     }
 }

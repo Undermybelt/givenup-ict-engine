@@ -322,3 +322,64 @@ Result:
 - Full objective is still not complete because no validated
   `same_tree_practical_closure` packet exists and no current
   `trade_usable=true` factor is proven.
+
+## 2026-06-01T18:20+0800 Source Remote Push Gap And Format Repair
+
+Current readback after fresh fetch:
+
+- `Auto-Quant` local `HEAD=08bd92b51d0013b1244f1c9567797e898649379a`;
+  `origin/master` and HTTPS no-rewrite remote readback match.
+- `Auto-Quant` upstream `TraderAlice/Auto-Quant` remains at
+  `34ba6b6ee6aa69813a50a72158d4c089d97afb96`; fork/local `master` is three
+  commits ahead by design and should not be pushed upstream without an
+  explicit upstream contribution instruction.
+- `ict-engine` local `HEAD=4c31ee21c...`; configured source `origin/main`
+  and HTTPS no-rewrite readback were still at
+  `250d9c94ae3b7eb432769f60ff85d220fd3ef2fe`. This means the source remote
+  push part of the objective was not proven for the current local main.
+- The release mirror HTTPS no-rewrite readback was
+  `4a804fd093289c59605bb71002a32117f1b79947`, a separate sanitized mirror
+  lineage. It does not prove the configured source `origin/main` has the local
+  development commits.
+
+Loopholes found:
+
+1. `ict-engine` had three local commits not present on configured
+   `origin/main`.
+2. A clean detached worktree at local `HEAD` failed `cargo fmt --check` because
+   `src/application/regime/consumer_bundle_adapter.rs` contained one
+   rustfmt-only shape drift.
+3. The primary working tree remains shared and dirty; this repair was therefore
+   first verified in `/tmp/ict-engine-push-verify-20260601-codex` and staged by
+   explicit path only.
+
+Repair applied:
+
+- Ran `cargo fmt` in the isolated worktree.
+- The only source diff was the rustfmt rewrite in
+  `src/application/regime/consumer_bundle_adapter.rs`.
+- The source-remote push gap is being closed by pushing the resulting verified
+  fast-forward history to `origin/main`.
+
+Verification before push:
+
+```bash
+git diff --check origin/main..HEAD
+cargo fmt --check
+python3 -m unittest support.scripts.tests.test_autoquant_regime_feedback_skill_contract -v
+python3 -m unittest support.scripts.tests.test_objective_closure_snapshot -v
+cargo test readiness_reports_missing_dependency_with_bootstrap_next_step -- --nocapture
+cargo test --test provider_neutral_cli auto_quant_status_help_and_human_surface_expose_consumer_output_modes -- --nocapture
+cargo test bootstrap_missing_local_repo_error_names_input_and_recovery -- --nocapture
+cargo test strategy_library_import_does_not_promote_practical_gate_from_metadata_flags -- --nocapture
+```
+
+Results:
+
+- `git diff --check` passed.
+- `cargo fmt --check` passed after the rustfmt repair.
+- Auto-Quant regime-feedback skill contract tests passed `2/2`.
+- Objective-closure snapshot tests passed `50/50`.
+- Focused Rust tests for Auto-Quant readiness/bootstrap and provider-neutral CLI
+  all passed.
+- The touched regime consumer-bundle regression passed.
