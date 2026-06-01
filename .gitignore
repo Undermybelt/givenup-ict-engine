@@ -13,6 +13,12 @@ tmp_cycle_seed_spec.json
 catboost_info/
 support/docs/experiments/actionable-regime-confidence/runs/
 
+# Agent training scratch docs belong in /tmp unless explicitly promoted into a
+# force-added evidence packet or durable tracked doc.
+support/docs/experiments/actionable-regime-confidence/20*.md
+support/docs/plans/*factor-training*.md
+support/scripts/auto_quant_external/pandas_*.py
+
 # Local agent workspaces and optional agent-facing skill drafts.
 # Durable repo docs belong under support/docs/; runtime rules must be typed
 # config, command flags, schemas, fixtures, or tests.
