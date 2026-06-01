@@ -2792,6 +2792,126 @@ class ObjectiveClosureSnapshotTest(unittest.TestCase):
         )
         self.assertEqual(snapshot["evidence_files"]["release_readiness_proof"], "clean_export_release.compact.json")
 
+    def test_build_snapshot_applies_release_mirror_export_proof_for_different_dev_head(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            output_dir = Path(tmp)
+            proof_path = output_dir / "release_mirror_export.compact.json"
+            audit_results = {
+                "done_definition": {
+                    "command": {"argv": ["done"], "returncode": 0},
+                    "report": {
+                        "timestamp_utc": "2026-06-01T04:00:00Z",
+                        "summary": {
+                            "status": "pass",
+                            "completion_ready": True,
+                            "evidence_level": "full_enabled_gate_coverage",
+                            "unresolved": [],
+                            "skipped_gates": [],
+                        },
+                        "gates": [{"id": "quickstart_surface", "status": "pass"}],
+                    },
+                    "output_path": output_dir / "done_definition_audit.compact.json",
+                },
+                "factor_closure": {
+                    "command": {"argv": ["factor"], "returncode": 0},
+                    "report": {
+                        "generated_at": "2026-06-01T04:00:01+00:00",
+                        "summary": {
+                            "status": "pass",
+                            "active_claims": 0,
+                            "invalid_active_claims": 0,
+                            "live_factor_processes": 0,
+                            "blocking_reasons": [],
+                            "promotion_allowed_true": 1,
+                            "trade_usable_true": 1,
+                            "same_tree_practical_closure": {
+                                "status": "pass",
+                                "promotion_allowed": True,
+                                "trade_usable": True,
+                                "provider_execution_feedback_chain": "pass",
+                                "evidence_packet": "support/docs/experiments/packet.json",
+                                "evidence_packet_validated": True,
+                            },
+                        },
+                    },
+                    "output_path": output_dir / "factor_claim_terminalization_audit.compact.json",
+                },
+                "release_readiness": {
+                    "command": {"argv": ["release"], "returncode": 1},
+                    "report": {
+                        "head": "dev-source-head",
+                        "timestamp_utc": "2026-06-01T04:00:02Z",
+                        "remote_details": {
+                            "enabled": True,
+                            "origin_status": "pass",
+                            "origin_main": "givenup-old-head",
+                            "release_mirror_status": "pass",
+                            "release_mirror_main": "mirror-export-head",
+                        },
+                        "summary": {
+                            "status": "needs_fix",
+                            "unresolved": ["worktree_clean_for_release", "source_origin_matches_selected_source"],
+                            "pass_count": 3,
+                            "fail_count": 2,
+                            "skip_count": 0,
+                        },
+                        "gates": [
+                            {
+                                "id": "worktree_clean_for_release",
+                                "status": "fail",
+                                "details": {"next_action": "commit or exclude a narrow source slice"},
+                            },
+                            {
+                                "id": "source_origin_matches_selected_source",
+                                "status": "fail",
+                                "details": {"next_action": "do not push provenance origin for mirror-only release"},
+                            },
+                        ],
+                    },
+                    "output_path": output_dir / "release_readiness_audit.compact.json",
+                },
+            }
+            release_readiness_proof = {
+                "path": proof_path,
+                "report": {
+                    "head": "mirror-export-head",
+                    "timestamp_utc": "2026-06-01T03:59:00Z",
+                    "remote_details": {
+                        "enabled": True,
+                        "origin_status": "pass",
+                        "origin_main": "mirror-export-head",
+                        "release_mirror_status": "pass",
+                        "release_mirror_main": "mirror-export-head",
+                    },
+                    "summary": {
+                        "status": "pass",
+                        "unresolved": [],
+                        "pass_count": 5,
+                        "fail_count": 0,
+                        "skip_count": 0,
+                    },
+                    "gates": [
+                        {"id": "worktree_clean_for_release", "status": "pass", "details": {}},
+                        {"id": "source_origin_matches_selected_source", "status": "pass", "details": {}},
+                    ],
+                },
+            }
+
+            snapshot = build_snapshot(
+                audit_results,
+                run_all_heavy=False,
+                check_remotes=True,
+                output_dir=output_dir,
+                release_readiness_proof=release_readiness_proof,
+            )
+
+        release_surface = snapshot["audits"]["release_readiness"]["surface"]
+        self.assertTrue(release_surface["proof_applied"])
+        self.assertEqual(release_surface["proof_scope"], "release_mirror_export")
+        self.assertEqual(release_surface["head"], "mirror-export-head")
+        self.assertEqual(release_surface["remote_details"]["release_mirror_main"], "mirror-export-head")
+        self.assertNotIn("release_readiness_blocked", snapshot["summary"]["blockers"])
+
     def test_build_snapshot_rejects_release_readiness_proof_without_remote_checks(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             output_dir = Path(tmp)

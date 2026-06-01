@@ -170,6 +170,12 @@ def _text(value: object) -> str:
 
 def _portable_repo_root(output_dir: Path | None) -> str:
     if output_dir:
+        cargo_toml = ROOT / "Cargo.toml"
+        if cargo_toml.exists():
+            for line in cargo_toml.read_text(encoding="utf-8").splitlines():
+                match = re.match(r'\s*name\s*=\s*"([^"]+)"\s*$', line)
+                if match:
+                    return match.group(1)
         return ROOT.name
     return str(ROOT)
 
@@ -605,6 +611,8 @@ def _compact_remote_details(remote_details: object) -> dict[str, Any] | None:
     for key in (
         "enabled",
         "failed_sides",
+        "origin_main",
+        "release_mirror_main",
         "origin_status",
         "release_mirror_status",
         "next_action",
@@ -727,8 +735,28 @@ def _release_readiness_proof_status(
     proof_head = surface.get("head")
     current_head = current_release_surface.get("head")
     if proof_head != current_head:
-        surface["proof_rejected_reason"] = "proof_head_mismatch"
-        return surface
+        proof_remote = surface.get("remote_details")
+        current_remote = current_release_surface.get("remote_details")
+        proof_mirror_main = (
+            proof_remote.get("release_mirror_main") if isinstance(proof_remote, dict) else None
+        )
+        current_mirror_main = (
+            current_remote.get("release_mirror_main") if isinstance(current_remote, dict) else None
+        )
+        mirror_export_proof = (
+            isinstance(proof_head, str)
+            and bool(proof_head)
+            and proof_head == proof_mirror_main
+            and proof_head == current_mirror_main
+            and surface.get("status") == "pass"
+        )
+        if mirror_export_proof:
+            surface["proof_scope"] = "release_mirror_export"
+        else:
+            surface["proof_rejected_reason"] = "proof_head_mismatch"
+            return surface
+    else:
+        surface["proof_scope"] = "selected_source_head"
 
     remote_details = report.get("remote_details", {})
     remote_enabled = isinstance(remote_details, dict) and remote_details.get("enabled") is True

@@ -267,3 +267,58 @@ Next repair:
   release-readiness run.
 - Do not claim full completion until a validated same-tree practical closure
   packet exists and release readiness is proven from a clean selected export.
+
+## 2026-06-01T12:05+0800 Mirror-Only Release Proof Repair
+
+Current readback:
+
+- `Auto-Quant` local `HEAD=08bd92b51d0013b1244f1c9567797e898649379a`;
+  remote `https://github.com/undermybelt/Auto-Quant` `master` matches.
+- `ict-engine-release` remote `main=1bd88facb8f1eae362b60fe4983d3eccfdec18c7`;
+  `v0.1.9` is still available and `v0.1.8` exists.
+- `ict-engine` development checkout still has unrelated shared dirty work and
+  `origin=Undermybelt/givenup-ict-engine`, which is provenance only for this
+  release-clone objective.
+- `python3 support/scripts/factor_claim_terminalization_audit.py --compact`
+  now passes with `active_claims=0`, `live_factor_processes=0`,
+  `promotion_allowed_true=0`, `trade_usable_true=0`, and
+  `same_tree_practical_closure=null`.
+
+Loophole found:
+
+- `objective_closure_snapshot.py --release-readiness-proof ...` rejected the
+  clean release-mirror proof when the proof `head` differed from the dirty
+  development checkout `HEAD`.
+- That stale proof rule could push a future agent toward `givenup-ict-engine`
+  just to satisfy `source_origin_matches_selected_source`, even though the
+  required release target is `https://github.com/Undermybelt/ict-engine-release`.
+
+Repair applied:
+
+- `support/scripts/objective_closure_snapshot.py` now accepts a clean
+  release-mirror proof with a different development-checkout `HEAD` only when:
+  - the parent snapshot uses `--check-remotes`;
+  - the proof itself used remote checks and has no skipped gates;
+  - `worktree_clean_for_release=pass` in the proof;
+  - proof summary is `pass`;
+  - proof `head`, proof `release_mirror_main`, and current remote
+    `release_mirror_main` are identical.
+- The local Hermes maintenance skill was updated with the same mirror-only rule
+  so future agents do not treat `givenup-ict-engine` as the release push target.
+
+Verification:
+
+```bash
+python3 -m unittest tests/test_auto_quant_workspace.py -v
+.venv/bin/python -m py_compile auto_quant_workspace.py run.py prepare.py tests/test_auto_quant_workspace.py
+python3 -m unittest support.scripts.tests.test_objective_closure_snapshot -v
+```
+
+Result:
+
+- Auto-Quant workspace tests passed `2/2`; py_compile passed.
+- Objective-closure snapshot tests passed `50/50`, including the new
+  `release_mirror_export` proof case.
+- Full objective is still not complete because no validated
+  `same_tree_practical_closure` packet exists and no current
+  `trade_usable=true` factor is proven.
