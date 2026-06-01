@@ -31,6 +31,28 @@ Scope:
 | `market-structure-context` | Convert ICT/SMC structural observations such as BOS, CHoCH, order blocks, fair value gaps, premium/discount, and liquidity sweeps into structured evidence. | OpenMobius-skill structural taxonomy and freshness discipline, sanitized to provider-backed evidence only. |
 | `factor-source-intake` | Use blocked/waiting windows for interruptible paper, repository, strategy, and indicator intake that produces codeable regime-rooted candidates without launching shared runtime work. | ict-engine Board B factor-training contract plus public source-intake discipline. |
 | `auto-quant-handoff-harness` | Keep Auto-Quant handoffs lane-isolated and reviewable with Life-Harness lifecycle layers, plan/work/review artifacts, and regime feedback evidence packets before adoption review. | Life-Harness four-layer runtime adaptation, TraderAlice/Auto-Quant README/program usage contract, and Claude Code Harness plan/work/review pattern, absorbed without plugin installers, hooks, MCP setup, or bundled binaries. |
+| `ict-engine-runtime` | Mirror the Hermes ict-engine runtime pipeline skill for factor-to-filter-to-BBN-to-path-ranker-to-execution-tree work. | Local Hermes runtime skill, copied into the repo with private paths redacted. |
+| `ict-engi-fact-rese-muta` | Mirror the Hermes factor research, mutation, cost, session-scope, and repo-hygiene skill for profitability-factor work. | Local Hermes factor-training skill, copied into the repo with private paths redacted. |
+| `ict-engine-maintenance-loop` | Mirror the Hermes maintenance, commit hygiene, provider/runtime repair, done-definition, and skill-update loop. | Local Hermes maintenance skill, copied into the repo with private paths redacted. |
+| `ict-engine-release-mirror-ci` | Mirror the Hermes release mirror and cross-OS CI correction skill for publication work. | Local Hermes release skill, copied into the repo with private paths redacted. |
+| `ict-engine-surface-intgr` | Mirror the Hermes surface integration skill for FrameFeatures, PDA/BBN wiring, reporting surfaces, and staged extraction. | Local Hermes integration skill, copied into the repo with private paths redacted. |
+| `mark-spec-fram-feat-fork` | Mirror the Hermes market-specific FrameFeatures fork skill for pre-Bayes label repair when factor evidence is strong. | Local Hermes label-repair skill, copied into the repo with private paths redacted. |
+
+The `ict-engine-*`, `ict-engi-*`, and `mark-spec-fram-feat-fork` entries are
+repo-local mirrors of installed Hermes skills. They are useful for clone-local
+agent context, but the live router still loads the installed `~/.hermes` skill
+unless an operator explicitly uses this repo copy. Keep the repo mirrors
+portable: replace maintainer home paths, private data roots, local Python
+venvs, and raw cache paths with placeholders such as `<ict-engine-repo>`,
+`<managed-auto-quant-checkout>`, `<provider-python>`, or
+`<private-tomac-data-cache>`.
+
+Do not use this directory as a place to preserve failed factor-training residue.
+Temporary plans, scratch runners, local screen output, AQ/Freqtrade state,
+caches, model output, and non-promoted run trees stay under `/tmp` unless they
+are deliberately tracked or force-added as an evidence packet, product
+surface, test fixture, or reviewed durable reference. The done-definition gate
+`repo_training_scratch_surface` is the enforcement point for this boundary.
 
 `factor-source-intake` includes `references/waiting-window-factor-research.md`
 for productive claim/runtime waiting windows. It keeps all source-intake output

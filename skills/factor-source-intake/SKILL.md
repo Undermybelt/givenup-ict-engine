@@ -18,6 +18,26 @@ codeable regime-rooted candidates for later Gate 1 testing.
 
 This skill is not a runtime input. It is an agent-facing intake discipline.
 
+## Repo Hygiene Hard Rule
+
+Factor-training scratch must not accumulate in the repo. During intake,
+prescreening, and prep-only work, write temporary plans, workdocs, runners,
+local screen outputs, AQ/Freqtrade workspaces, caches, model output, and
+non-promoted run trees under `/tmp/ict-engine-...`.
+
+Repo paths are allowed only for intentionally tracked or force-added evidence
+packets, product code/tests, or reviewed durable references. If a candidate has
+not reached `trade_usable=true` and has not become an explicit evidence packet,
+leave it in `/tmp` or delete/externalize it. Do not leave ignored or untracked
+training files under `support/docs/plans/`, `support/docs/experiments/`,
+`support/docs/experiments/actionable-regime-confidence/runs/`, `state/`,
+`state_experiments/`, `.local-artifacts/`, `catboost_info/`, or
+`path_ranker_model/`.
+
+The repo done-definition harness enforces this with
+`repo_training_scratch_surface`; a failing gate means the residue must be
+tracked as a real evidence/product surface, moved to `/tmp`, or removed.
+
 ## Use When
 
 - `factor_claim_terminalization_audit.py --compact` shows fresh active claims,
@@ -81,7 +101,7 @@ Use this quick score before spending runtime on a candidate:
 
 | Field | Good sign | Reject or defer |
 |---|---|---|
-| Data fit | retained/provider data covers origin plus context ladder | short window, missing HTF, raw stitched source |
+| Data fit | cleaned retained/provider data covers origin plus context ladder | short window, missing HTF, raw stitched source, unverified cleaning provenance |
 | Cost fit | hold time and payoff can clear real costs | 1m churn or unknown fee model |
 | Density | likely one trade per 3 sessions to 3/session | sparse hero trade or overtrading |
 | Branch novelty | materially different from terminalized roots | same root with renamed params |
@@ -89,6 +109,40 @@ Use this quick score before spending runtime on a candidate:
 
 If any reject/defer column is hit, record the blocker and keep
 `promotion_allowed=false` / `trade_usable=false`.
+
+## Cleaned Data Gate
+
+For TOMAC futures and regime-rooted profitability work, source intake and
+prescreens must prove cleaned/full-retained data provenance before a candidate
+can move to exact-AQ or provider reproduction.
+
+Required fields in workdocs, terminal metrics, terminal summaries, prep
+packets, and regime feedback packets:
+
+```text
+data_provenance.cleaning_status=cleaned_or_verified_retained
+data_provenance.source_root
+data_provenance.symbol_aliases
+data_provenance.timeframes
+data_provenance.raw_fallback_used=false
+data_provenance.resample_policy=closed_left_label_left_for_derived_frames
+data_provenance.source_archive_validation.status=pass_zip_pristine_source
+```
+
+When cleaned archives exist, prefer them over older retained caches. For TOMAC
+futures ZIP payloads, the extracted source directory must match the ZIP exactly
+before cleaning: no symlinked OHLCV file, no older same-symbol CSV, no shifted
+fallback CSV, and no generated higher-timeframe CSV mixed into the raw source
+directory. A cleaned root derived from a polluted extracted directory is not
+clean evidence even if downstream files are named `cleaned-*`; delete and
+re-extract from the ZIP, then regenerate the cleaned MTF root.
+
+Derived timeframes such as `3m` or `30m` must be causally resampled from cleaned
+`1m` or be marked unavailable. If a row used raw, stitched, uncleaned, polluted,
+symlinked, non-ZIP-pristine, or unknown provenance data, classify it as
+`data_scope_blocked_for_cleaned_target` or `observation_only_uncleaned`, keep
+all practical flags false, and do not launch exact-AQ from that row until it is
+rebased onto cleaned data.
 
 ## Useful Starting References
 

@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "catalog": "ict-engine-agent-skills",
-  "review_date": "2026-05-30",
+  "review_date": "2026-06-01",
   "runtime_consumed_by_ict_engine": false,
   "description": "Optional repo-local agent skills for provider choice and structured evidence preparation. These files are not runtime inputs.",
   "provider_policy": {
@@ -121,6 +121,112 @@
         "ict-engine Auto-Quant handoff contract",
         "local Auto-Quant workspace isolation contract",
         "2026-06-01 Auto-Quant regime feedback evidence contract"
+      ]
+    },
+    {
+      "id": "ict-engine-runtime",
+      "path": "skills/ict-engine-runtime/SKILL.md",
+      "purpose": "Sanitized repo-local mirror of the Hermes ict-engine runtime pipeline skill for factor-to-filter-to-BBN-to-path-ranker-to-execution-tree work.",
+      "runtime_mapping": [
+        "Agent workflow routing context",
+        "BBN/CatBoost/execution-tree evidence preparation",
+        "Runtime closure references"
+      ],
+      "repo_mirror": {
+        "source": "~/.hermes/skills/ict-engine/ict-engine-runtime/SKILL.md",
+        "sanitized_for_repo": true
+      },
+      "source_review": [
+        "local Hermes ict-engine runtime skill"
+      ]
+    },
+    {
+      "id": "ict-engi-fact-rese-muta",
+      "path": "skills/ict-engi-fact-rese-muta/SKILL.md",
+      "purpose": "Sanitized repo-local mirror of the Hermes factor research, mutation, cost, session-scope, and repo-hygiene skill for ict-engine profitability-factor work.",
+      "runtime_mapping": [
+        "Factor-training workdocs and claims",
+        "Mutation and Gate 1 research discipline",
+        "Profitability cost/session promotion gates",
+        "repo_training_scratch_surface hygiene"
+      ],
+      "references": [
+        "skills/ict-engi-fact-rese-muta/references/index.md"
+      ],
+      "repo_mirror": {
+        "source": "~/.hermes/skills/software-development/ict-engi-fact-rese-muta/SKILL.md",
+        "sanitized_for_repo": true
+      },
+      "source_review": [
+        "local Hermes ict-engine factor research and mutation skill"
+      ]
+    },
+    {
+      "id": "ict-engine-maintenance-loop",
+      "path": "skills/ict-engine-maintenance-loop/SKILL.md",
+      "purpose": "Sanitized repo-local mirror of the Hermes maintenance, commit hygiene, provider/runtime repair, done-definition, and skill-update loop for ict-engine.",
+      "runtime_mapping": [
+        "Commit and release-prep evidence",
+        "Provider/runtime readiness repair",
+        "Done-definition and scratch-hygiene audits"
+      ],
+      "repo_mirror": {
+        "source": "~/.hermes/skills/software-development/ict-engine-maintenance-loop/SKILL.md",
+        "sanitized_for_repo": true
+      },
+      "source_review": [
+        "local Hermes ict-engine maintenance loop skill"
+      ]
+    },
+    {
+      "id": "ict-engine-release-mirror-ci",
+      "path": "skills/ict-engine-release-mirror-ci/SKILL.md",
+      "purpose": "Sanitized repo-local mirror of the Hermes release mirror and cross-OS CI correction skill for ict-engine publication work.",
+      "runtime_mapping": [
+        "Release mirror packaging evidence",
+        "Remote CI readback",
+        "Tag and mirror safety checks"
+      ],
+      "repo_mirror": {
+        "source": "~/.hermes/skills/software-development/ict-engine-release-mirror-ci/SKILL.md",
+        "sanitized_for_repo": true
+      },
+      "source_review": [
+        "local Hermes ict-engine release mirror CI skill"
+      ]
+    },
+    {
+      "id": "ict-engine-surface-intgr",
+      "path": "skills/ict-engine-surface-intgr/SKILL.md",
+      "purpose": "Sanitized repo-local mirror of the Hermes surface integration skill for FrameFeatures, PDA/BBN wiring, reporting surfaces, and staged main.rs extraction.",
+      "runtime_mapping": [
+        "Feature and report integration planning",
+        "PDA/BBN surface wiring",
+        "main.rs extraction references"
+      ],
+      "repo_mirror": {
+        "source": "~/.hermes/skills/software-development/ict-engine-surface-intgr/SKILL.md",
+        "sanitized_for_repo": true
+      },
+      "source_review": [
+        "local Hermes ict-engine surface integration skill"
+      ]
+    },
+    {
+      "id": "mark-spec-fram-feat-fork",
+      "path": "skills/mark-spec-fram-feat-fork/SKILL.md",
+      "purpose": "Sanitized repo-local mirror of the Hermes market-specific FrameFeatures fork skill used when raw pre-Bayes labels are wrong despite strong factor evidence.",
+      "runtime_mapping": [
+        "FrameFeatures market-aware fork planning",
+        "factor-pipeline-debug evidence review",
+        "Pre-Bayes label repair references"
+      ],
+      "repo_mirror": {
+        "source": "~/.hermes/skills/software-development/mark-spec-fram-feat-fork/SKILL.md",
+        "sanitized_for_repo": true
+      },
+      "source_review": [
+        "local Hermes market-specific frame-feature fork skill"
       ]
     }
   ],

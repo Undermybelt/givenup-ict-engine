@@ -33,6 +33,108 @@ from done_definition_audit import (  # noqa: E402
 
 
 class DoneDefinitionAuditTest(unittest.TestCase):
+    def test_repo_training_scratch_surface_fails_on_ignored_repo_training_artifacts(self) -> None:
+        import done_definition_audit
+        import subprocess
+
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            scratch_doc = (
+                root
+                / "support"
+                / "docs"
+                / "experiments"
+                / "actionable-regime-confidence"
+                / "20260601T120000+0800-codex-training-scratch.md"
+            )
+            run_summary = (
+                root
+                / "support"
+                / "docs"
+                / "experiments"
+                / "actionable-regime-confidence"
+                / "runs"
+                / "20260601T120000+0800-codex-training-scratch"
+                / "summaries"
+                / "terminal_summary.json"
+            )
+            scratch_doc.parent.mkdir(parents=True, exist_ok=True)
+            run_summary.parent.mkdir(parents=True, exist_ok=True)
+            scratch_doc.write_text("# scratch\n", encoding="utf-8")
+            run_summary.write_text("{}\n", encoding="utf-8")
+            (root / ".gitignore").write_text(
+                "support/docs/experiments/actionable-regime-confidence/20*.md\n"
+                "support/docs/experiments/actionable-regime-confidence/runs/\n",
+                encoding="utf-8",
+            )
+            subprocess.run(["git", "init"], cwd=root, check=True, stdout=subprocess.PIPE)
+            subprocess.run(["git", "add", ".gitignore"], cwd=root, check=True, stdout=subprocess.PIPE)
+
+            original_root = done_definition_audit.ROOT
+            try:
+                done_definition_audit.ROOT = root
+                gate = getattr(
+                    done_definition_audit,
+                    "evaluate_repo_training_scratch_surface",
+                    lambda *_: {"status": "pass", "details": {}},
+                )(20)
+            finally:
+                done_definition_audit.ROOT = original_root
+
+        self.assertEqual(gate["status"], "fail")
+        self.assertIn("repo_training_scratch_artifact_found", gate["details"]["reason"])
+        self.assertEqual(gate["details"]["polluting_path_count"], 2)
+        self.assertIn("/tmp", gate["details"]["rule"])
+
+    def test_repo_training_scratch_surface_allows_tracked_evidence_packet(self) -> None:
+        import done_definition_audit
+        import subprocess
+
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            run_summary = (
+                root
+                / "support"
+                / "docs"
+                / "experiments"
+                / "actionable-regime-confidence"
+                / "runs"
+                / "20260601T120000+0800-codex-evidence"
+                / "summaries"
+                / "terminal_summary.json"
+            )
+            run_summary.parent.mkdir(parents=True, exist_ok=True)
+            run_summary.write_text("{}\n", encoding="utf-8")
+            (root / ".gitignore").write_text(
+                "support/docs/experiments/actionable-regime-confidence/runs/\n",
+                encoding="utf-8",
+            )
+            subprocess.run(["git", "init"], cwd=root, check=True, stdout=subprocess.PIPE)
+            subprocess.run(["git", "add", ".gitignore"], cwd=root, check=True, stdout=subprocess.PIPE)
+            subprocess.run(
+                ["git", "add", "-f", str(run_summary.relative_to(root))],
+                cwd=root,
+                check=True,
+                stdout=subprocess.PIPE,
+            )
+
+            original_root = done_definition_audit.ROOT
+            try:
+                done_definition_audit.ROOT = root
+                gate = getattr(
+                    done_definition_audit,
+                    "evaluate_repo_training_scratch_surface",
+                    lambda *_: {
+                        "status": "fail",
+                        "details": {"polluting_path_count": 1},
+                    },
+                )(20)
+            finally:
+                done_definition_audit.ROOT = original_root
+
+        self.assertEqual(gate["status"], "pass")
+        self.assertEqual(gate["details"]["polluting_path_count"], 0)
+
     def test_evaluate_quickstart_surface_fails_when_command_order_drifts(self) -> None:
         import done_definition_audit
 
@@ -1064,6 +1166,7 @@ Measured on 2026-05-22:
         originals = (
             done_definition_audit.evaluate_quickstart_surface,
             done_definition_audit.evaluate_script_governance,
+            done_definition_audit.evaluate_repo_training_scratch_surface,
             done_definition_audit.evaluate_practical_admission_source_gate,
             done_definition_audit.evaluate_await_launch_source_gate,
             done_definition_audit.evaluate_help_audit_policy,
@@ -1074,6 +1177,7 @@ Measured on 2026-05-22:
         try:
             done_definition_audit.evaluate_quickstart_surface = lambda: pass_gate("quickstart_surface")
             done_definition_audit.evaluate_script_governance = lambda: pass_gate("script_governance_surface")
+            done_definition_audit.evaluate_repo_training_scratch_surface = lambda timeout: pass_gate("repo_training_scratch_surface")
             done_definition_audit.evaluate_practical_admission_source_gate = lambda timeout: pass_gate("practical_admission_source_surface")
             done_definition_audit.evaluate_await_launch_source_gate = lambda timeout: pass_gate("await_launch_source_surface")
             done_definition_audit.evaluate_help_audit_policy = fake_help_audit
@@ -1087,6 +1191,7 @@ Measured on 2026-05-22:
             (
                 done_definition_audit.evaluate_quickstart_surface,
                 done_definition_audit.evaluate_script_governance,
+                done_definition_audit.evaluate_repo_training_scratch_surface,
                 done_definition_audit.evaluate_practical_admission_source_gate,
                 done_definition_audit.evaluate_await_launch_source_gate,
                 done_definition_audit.evaluate_help_audit_policy,

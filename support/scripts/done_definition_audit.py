@@ -40,6 +40,19 @@ PRACTICAL_ADMISSION_WRAPPER_ROOT = (
 PRACTICAL_ADMISSION_REPORT_FILES = (
     ROOT / "support" / "scripts" / "research" / "regime_root_survivor_blocker_report.py",
 )
+REPO_TRAINING_SCRATCH_STATUS_PATHS = (
+    ":(glob)support/docs/experiments/actionable-regime-confidence/20*.md",
+    ":(glob)support/docs/plans/20*.md",
+    ":(glob)support/docs/plans/*factor-training*.md",
+    ":(glob)support/scripts/auto_quant_external/pandas_*.py",
+    ":(glob)support/docs/experiments/actionable-regime-confidence/scripts/run_*.py",
+    ":(glob)support/docs/experiments/actionable-regime-confidence/scripts/test_*.py",
+    "support/docs/experiments/actionable-regime-confidence/runs/",
+    "state/",
+    "state_experiments/",
+    "path_ranker_model/",
+    "catboost_info/",
+)
 DEFAULT_SMOKE_STATE_PREFIX = "/tmp/ict-engine-done-definition-audit-smoke"
 DEFAULT_PRACTICAL_ADMISSION_SOURCE_TIMEOUT_SECONDS = 180
 DEFAULT_FIXED_BPS_COST_MODEL_SOURCE_TIMEOUT_SECONDS = 180
@@ -176,6 +189,67 @@ def evaluate_script_governance() -> dict:
         "script_governance_surface",
         status,
         {"missing_required_files": missing},
+    )
+
+
+def evaluate_repo_training_scratch_surface(timeout_seconds: int) -> dict:
+    status, details = run_command(
+        [
+            "git",
+            "status",
+            "--porcelain=v1",
+            "--ignored=matching",
+            "--untracked-files=normal",
+            "--",
+            *REPO_TRAINING_SCRATCH_STATUS_PATHS,
+        ],
+        cwd=ROOT,
+        timeout=timeout_seconds,
+    )
+    if status != "pass":
+        failed_details = {
+            "reason": "repo_training_scratch_status_unavailable",
+            "rule": (
+                "factor-training scratch, repo-local state, and non-promoted evidence-run "
+                "artifacts must live under /tmp unless they are tracked/force-added as a "
+                "durable evidence packet or product surface"
+            ),
+            "status_command": details.get("command"),
+            "returncode": details.get("returncode"),
+            "stdout": details.get("stdout", ""),
+            "stderr": details.get("stderr", ""),
+        }
+        if "error" in details:
+            failed_details["error"] = details.get("error")
+        return _gate("repo_training_scratch_surface", "fail", failed_details)
+
+    polluting_paths: list[dict[str, str]] = []
+    for line in str(details.get("stdout") or "").splitlines():
+        if len(line) < 4:
+            continue
+        code = line[:2]
+        if code not in {"??", "!!"}:
+            continue
+        polluting_paths.append({"status": code, "path": line[3:]})
+
+    rule = (
+        "factor-training scratch, repo-local state, and non-promoted evidence-run artifacts "
+        "must live under /tmp; repo paths are allowed only when tracked/force-added as a "
+        "durable evidence packet or product surface"
+    )
+    summary = {
+        "reason": "repo_training_scratch_artifact_found" if polluting_paths else "none",
+        "rule": rule,
+        "scan_scope": "training_scratch_docs_scripts_state_and_evidence_runs",
+        "status_pathspecs": list(REPO_TRAINING_SCRATCH_STATUS_PATHS),
+        "polluting_path_count": len(polluting_paths),
+        "polluting_paths_sample": polluting_paths[:20],
+        "status_command": details.get("command"),
+    }
+    return _gate(
+        "repo_training_scratch_surface",
+        "fail" if polluting_paths else "pass",
+        summary,
     )
 
 
@@ -1316,6 +1390,7 @@ def main(argv: list[str] | None = None) -> int:
 
     gates.append(evaluate_quickstart_surface())
     gates.append(evaluate_script_governance())
+    gates.append(evaluate_repo_training_scratch_surface(args.practical_admission_source_timeout_seconds))
     gates.append(
         evaluate_practical_admission_source_gate(
             args.practical_admission_source_timeout_seconds
