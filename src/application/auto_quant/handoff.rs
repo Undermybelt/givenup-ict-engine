@@ -78,10 +78,23 @@ pub struct AutoQuantLifecycleLayer {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
+pub struct AutoQuantEntryRegimeContract {
+    pub contract_id: String,
+    pub primary_entry_regime: String,
+    pub allowed_regime_families: Vec<String>,
+    pub allowed_entry_labels: Vec<String>,
+    pub excluded_entry_labels: Vec<String>,
+    pub non_entry_factor_role: String,
+    pub required_counter_evidence_checks: Vec<String>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
 pub struct AutoQuantAgentWorkflow {
     pub workflow_style: String,
     pub setup_commands: Vec<String>,
     pub environment: Vec<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub entry_regime_contract: Option<AutoQuantEntryRegimeContract>,
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub lifecycle_layers: Vec<AutoQuantLifecycleLayer>,
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
@@ -410,14 +423,16 @@ fn build_auto_quant_agent_workflow(
                 results_tsv.to_string_lossy()
             ),
         ],
+        entry_regime_contract: Some(trend_expansion_entry_regime_contract()),
         lifecycle_layers: vec![
             AutoQuantLifecycleLayer {
                 layer_id: "h3_environment_contract".to_string(),
                 name: "Environment Contract Layer".to_string(),
                 trigger_timing: "before interaction / before Auto-Quant iteration".to_string(),
-                ict_engine_mapping: "make provider, data, cost, strategy-file, and adoption boundaries explicit before running a lane".to_string(),
+                ict_engine_mapping: "make provider, data, cost, strategy-file, trend/expansion entry, and adoption boundaries explicit before running a lane".to_string(),
                 required_evidence: vec![
                     "plan.md names provider/data/cost contracts and immutable evaluation files".to_string(),
+                    "plan.md names TrendExpansion as the only entry regime and maps every non-trend factor to exclusion or counter-evidence".to_string(),
                     "handoff payload keeps shared Auto-Quant config/data read-only under AUTO_QUANT_WORKSPACE".to_string(),
                 ],
             },
@@ -425,19 +440,21 @@ fn build_auto_quant_agent_workflow(
                 layer_id: "h5_procedural_skill".to_string(),
                 name: "Procedural Skill Layer".to_string(),
                 trigger_timing: "task conditioning / lane planning".to_string(),
-                ict_engine_mapping: "retrieve or write compact factor procedure guidance from prior measured trajectories without changing engine gates".to_string(),
+                ict_engine_mapping: "retrieve or write compact factor procedure guidance from prior measured trajectories while preserving the trend/expansion-only entry gate".to_string(),
                 required_evidence: vec![
                     "failure_patterns.md records recurring measured failures and reusable procedures".to_string(),
-                    "plan.md maps each candidate idea to at most three active strategy files".to_string(),
+                    "plan.md classifies each candidate idea as entry, non-trend exclusion, or trend counter-evidence before strategy edits".to_string(),
+                    "plan.md maps each entry candidate idea to at most three active strategy files".to_string(),
                 ],
             },
             AutoQuantLifecycleLayer {
                 layer_id: "h2_action_realization".to_string(),
                 name: "Action Realization Layer".to_string(),
                 trigger_timing: "after strategy edit, before measured run/adoption".to_string(),
-                ict_engine_mapping: "validate executable artifacts before run.py/adoption review instead of letting malformed strategy or missing data enter promotion".to_string(),
+                ict_engine_mapping: "validate executable artifacts and trend/expansion entry guards before run.py/adoption review instead of letting malformed strategy, missing data, or non-trend regimes enter promotion".to_string(),
                 required_evidence: vec![
                     "review.md confirms each measured iteration edited the matching strategy file before run.py".to_string(),
+                    "review.md confirms entries require expansion or trend_continuation evidence and block compression/reversion/manipulation/unknown states".to_string(),
                     "run.log/results.tsv show the action was executable and measured".to_string(),
                 ],
             },
@@ -445,9 +462,10 @@ fn build_auto_quant_agent_workflow(
                 layer_id: "h4_trajectory_regulation".to_string(),
                 name: "Trajectory Regulation Layer".to_string(),
                 trigger_timing: "after measured run / between iterations".to_string(),
-                ict_engine_mapping: "detect repeated no-survivor loops, no-fill results, stale data reuse, and budget exhaustion before another same-shape iteration".to_string(),
+                ict_engine_mapping: "detect repeated no-survivor loops, no-fill results, non-trend over-entry, stale data reuse, and budget exhaustion before another same-shape iteration".to_string(),
                 required_evidence: vec![
                     "review.md records keep/discard/fork/stop decisions from measured output".to_string(),
+                    "regression_review.md checks that non-trend helper factors block or down-rank entries rather than becoming standalone entry signals".to_string(),
                     "regression_review.md checks over-trigger, valid-candidate blocking, misleading guidance, and repeated failure loops".to_string(),
                 ],
             },
@@ -456,11 +474,12 @@ fn build_auto_quant_agent_workflow(
             "current Auto-Quant handoff artifact and ict-engine objective".to_string(),
             "previous run.log/results.tsv/terminal metrics for this lineage when available".to_string(),
             "failure_patterns.md derived from measured trajectories, not from chat-only speculation".to_string(),
+            "TrendExpansion entry contract: only expansion or trend_continuation evidence can authorize entries; all other labels are exclusion or counter-evidence".to_string(),
             "skills/auto-quant-handoff-harness/SKILL.md Life-Harness four-layer contract".to_string(),
         ],
         phases: vec![
             format!(
-                "plan: read Auto-Quant AGENTS.md, README.md, program.md, prepare.py, run.py, _template.py.example, the ict-engine handoff, and the Life-Harness layer contract; write {} with objective, lane scope, data paths, candidate ideas, lifecycle-layer mapping, verification commands, and stop conditions before editing strategies",
+                "plan: read Auto-Quant AGENTS.md, README.md, program.md, prepare.py, run.py, _template.py.example, the ict-engine handoff, and the Life-Harness layer contract; write {} with objective, lane scope, data paths, candidate ideas, TrendExpansion entry classification, lifecycle-layer mapping, verification commands, and stop conditions before editing strategies",
                 plan_path.to_string_lossy()
             ),
             format!(
@@ -468,7 +487,7 @@ fn build_auto_quant_agent_workflow(
                 failure_patterns_path.to_string_lossy()
             ),
             format!(
-                "work: create or evolve at most 3 active non-underscore strategies inside the lane strategies directory; keep config, run.py, prepare.py, and shared data read-only; record each targeted layer update in {}",
+                "work: create or evolve at most 3 active non-underscore entry strategies inside the lane strategies directory; each entry must require expansion or trend_continuation evidence, while compression/reversion/manipulation/unknown evidence may only filter, block, or down-rank; keep config, run.py, prepare.py, and shared data read-only; record each targeted layer update in {}",
                 layer_updates_path.to_string_lossy()
             ),
             format!(
@@ -491,11 +510,12 @@ fn build_auto_quant_agent_workflow(
         regression_checks: vec![
             "over_trigger: identify any lifecycle rule that would block a previously valid measured strategy".to_string(),
             "valid_action_blocking: confirm malformed/missing artifacts are blocked before run or adoption, while executable candidate files still run".to_string(),
+            "entry_regime_regression: confirm entries only occur on expansion or trend_continuation evidence and non-trend labels only block/down-rank".to_string(),
             "misleading_guidance: confirm plan/work/review text does not imply promotion_allowed or trade_usable from backtest-only evidence".to_string(),
             "loop_regression: stop or change branch when repeated measured runs produce the same no-fill/no-survivor/no-data failure".to_string(),
         ],
         freeze_boundary: vec![
-            "The model weights, provider data, benchmark/evaluation logic, ict-engine promotion gates, and Auto-Quant run.py/prepare.py/config contract remain fixed.".to_string(),
+            "The model weights, provider data, benchmark/evaluation logic, ict-engine promotion gates, TrendExpansion entry contract, and Auto-Quant run.py/prepare.py/config contract remain fixed.".to_string(),
             "After a candidate package is returned, ict-engine adoption and practical-readiness evaluation must use the frozen returned artifacts; do not keep editing the harness while claiming evaluation evidence.".to_string(),
         ],
         return_to_ict_engine: vec![
@@ -506,10 +526,34 @@ fn build_auto_quant_agent_workflow(
         ],
         constraints: vec![
             "Follow Life-Harness runtime interface adaptation: adapt the harness around deterministic failures, not model weights, provider data, evaluation rules, or ict-engine promotion gates".to_string(),
+            "Only TrendExpansion entries are allowed: an entry signal must be backed by expansion or trend_continuation evidence; compression, reversion, manipulation, transition, range, and unknown evidence are exclusion or counter-evidence only".to_string(),
             "Do not mutate shared Auto-Quant repo-root config.json, user_data/strategies, user_data/data, or results.tsv when AUTO_QUANT_WORKSPACE is available".to_string(),
             "Do not run Claude Code Harness plugin installers, hooks, MCP setup, or bundled binaries from this handoff".to_string(),
             "trade_usable is not implied by Auto-Quant run success, sparse positive results, or a generated strategy file".to_string(),
             "preserve unrelated ict-engine and Auto-Quant working tree changes".to_string(),
+        ],
+    }
+}
+
+fn trend_expansion_entry_regime_contract() -> AutoQuantEntryRegimeContract {
+    AutoQuantEntryRegimeContract {
+        contract_id: "trend_expansion_entry_only_v1".to_string(),
+        primary_entry_regime: "TrendExpansion".to_string(),
+        allowed_regime_families: vec!["trend".to_string()],
+        allowed_entry_labels: vec!["expansion".to_string(), "trend_continuation".to_string()],
+        excluded_entry_labels: vec![
+            "compression".to_string(),
+            "reversion".to_string(),
+            "manipulation".to_string(),
+            "transition".to_string(),
+            "range".to_string(),
+            "unknown".to_string(),
+        ],
+        non_entry_factor_role: "exclude_non_trend_or_counter_evidence".to_string(),
+        required_counter_evidence_checks: vec![
+            "compression/reversion labels block entry unless later evidence reclassifies the state as expansion or trend_continuation".to_string(),
+            "manipulation/transition labels remain no-entry counter-evidence until resolved into a trend family".to_string(),
+            "unknown or low-confidence regime evidence blocks entry and stays observation-only".to_string(),
         ],
     }
 }

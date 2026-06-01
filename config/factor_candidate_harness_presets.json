@@ -1,5 +1,26 @@
 {
   "schema_version": "factor-candidate-harness-presets/v1",
+  "entry_regime_contract": {
+    "contract_id": "trend_expansion_entry_only_v1",
+    "primary_entry_regime": "TrendExpansion",
+    "allowed_regime_families": [
+      "trend"
+    ],
+    "allowed_entry_labels": [
+      "expansion",
+      "trend_continuation"
+    ],
+    "excluded_entry_labels": [
+      "compression",
+      "reversion",
+      "manipulation",
+      "transition",
+      "range",
+      "unknown"
+    ],
+    "non_entry_factor_role": "exclude_non_trend_or_counter_evidence",
+    "description": "Candidate harness entries are allowed only when regime evidence supports TrendExpansion. Non-trend factors are filters, blockers, down-rankers, or counter-evidence for trend identification, not standalone entry authorization."
+  },
   "candidates": [
     {
       "candidate_id": "family_f_vrp_compression_15m_v1",

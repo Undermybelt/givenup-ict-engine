@@ -14,6 +14,21 @@ PRESET_PATH = Path("config/factor_candidate_harness_presets.json")
 PROFILE_DIR = Path("support/examples/factor_candidate_profiles")
 EXAMPLE_PACKS_DIR = Path("support/examples/factor_candidate_packs")
 NAMING_CONTRACT_VERSION = "factor-artifact-naming/v1"
+DEFAULT_ENTRY_REGIME_CONTRACT = {
+    "contract_id": "trend_expansion_entry_only_v1",
+    "primary_entry_regime": "TrendExpansion",
+    "allowed_regime_families": ["trend"],
+    "allowed_entry_labels": ["expansion", "trend_continuation"],
+    "excluded_entry_labels": [
+        "compression",
+        "reversion",
+        "manipulation",
+        "transition",
+        "range",
+        "unknown",
+    ],
+    "non_entry_factor_role": "exclude_non_trend_or_counter_evidence",
+}
 REQUIRED_CANDIDATE_PACK_FILES = (
     "factor_expression.json",
     "factor_eval_grid_summary.json",
@@ -32,6 +47,14 @@ def _normalized(value: str) -> str:
 
 def _load_presets(repo_root: Path) -> list[dict[str, Any]]:
     return _load_json(repo_root / PRESET_PATH).get("candidates", [])
+
+
+def _load_entry_regime_contract(repo_root: Path) -> dict[str, Any]:
+    payload = _load_json(repo_root / PRESET_PATH)
+    contract = payload.get("entry_regime_contract")
+    if isinstance(contract, dict) and contract:
+        return contract
+    return dict(DEFAULT_ENTRY_REGIME_CONTRACT)
 
 
 def _artifact_path(path: str | Path, repo_root: Path) -> Path:
@@ -321,12 +344,23 @@ def _reusable_input_refs(candidate: dict[str, Any], repo_root: Path) -> list[str
     return refs
 
 
+def _entry_decision_role(candidate: dict[str, Any]) -> str:
+    role = str(candidate.get("regime_role") or "").strip().lower()
+    promotion_state = str(candidate.get("promotion_state") or "").strip().lower()
+    if role == "regime_only" or promotion_state == "regime_only":
+        return "regime_classifier_gate"
+    if role == "confirmation_only":
+        return "exclude_non_trend_or_counter_evidence"
+    return "entry_candidate_requires_trend_expansion_confirmation"
+
+
 def build_candidate_registry(
     repo_root: Path | str,
     profile_selector: str | None = None,
 ) -> dict[str, Any]:
     repo_root = Path(repo_root).resolve()
     presets = _load_presets(repo_root)
+    entry_contract = _load_entry_regime_contract(repo_root)
     profile = _resolve_profile(repo_root, profile_selector)
     overrides = {
         item["candidate_id"]: item
@@ -354,6 +388,8 @@ def build_candidate_registry(
         candidate["archive_evidence_status"] = "not_runtime_input"
         candidate["archive_refs"] = []
         candidate["reusable_input_refs"] = _reusable_input_refs(candidate, repo_root)
+        candidate["entry_regime_contract"] = entry_contract
+        candidate["entry_decision_role"] = _entry_decision_role(candidate)
         candidate["naming_contract"] = {
             "version": NAMING_CONTRACT_VERSION,
             "artifact_layers": [
@@ -381,6 +417,7 @@ def build_candidate_registry(
             "selection_label": selection_label,
             "candidate_count": len(candidates),
             "buildable_count": buildable_count,
+            "entry_regime_contract": entry_contract,
         },
         "candidates": candidates,
     }
@@ -527,6 +564,8 @@ def _candidate_list_entry(candidate: dict[str, Any], repo_root: Path) -> dict[st
         "artifact_kind": artifact_plan["artifact_kind"],
         "evidence_status": artifact_plan["evidence_status"],
         "curation_decision": artifact_plan["curation_decision"],
+        "entry_regime_contract": candidate.get("entry_regime_contract"),
+        "entry_decision_role": candidate.get("entry_decision_role"),
         "reusable_input_refs": candidate.get("reusable_input_refs", []),
     }
     if artifact_plan["build_mode"] == "candidate_pack_dir":

@@ -153,6 +153,14 @@ class FactorCandidateResolverTests(unittest.TestCase):
             bundle["summary"]["naming_contract_version"],
             "factor-artifact-naming/v1",
         )
+        self.assertEqual(
+            bundle["summary"]["entry_regime_contract"]["primary_entry_regime"],
+            "TrendExpansion",
+        )
+        self.assertEqual(
+            bundle["summary"]["entry_regime_contract"]["allowed_entry_labels"],
+            ["expansion", "trend_continuation"],
+        )
         self.assertIsNone(bundle["selected_profile"])
         buildable = [candidate for candidate in bundle["candidates"] if candidate["artifact_ready"]]
         self.assertEqual(len(buildable), 8)
@@ -175,6 +183,10 @@ class FactorCandidateResolverTests(unittest.TestCase):
                 for ref in order_block["reusable_input_refs"]
             )
         )
+        self.assertEqual(
+            order_block["entry_decision_role"],
+            "exclude_non_trend_or_counter_evidence",
+        )
         deferred = next(
             item
             for item in bundle["candidates"]
@@ -187,6 +199,7 @@ class FactorCandidateResolverTests(unittest.TestCase):
         self.assertEqual(deferred["evidence_status"], "deferred")
         self.assertEqual(deferred["curation_decision"], "needs_named_prerequisite")
         self.assertEqual(deferred["artifact_kind"], "regime_benchmark_json")
+        self.assertEqual(deferred["entry_decision_role"], "regime_classifier_gate")
         self.assertEqual(deferred["archive_evidence_status"], "not_runtime_input")
         self.assertEqual(deferred["archive_refs"], [])
         for cid in [
@@ -199,6 +212,10 @@ class FactorCandidateResolverTests(unittest.TestCase):
             candidate = next(item for item in bundle["candidates"] if item["candidate_id"] == cid)
             self.assertNotIn("/tmp/", candidate["strategy_source"])
             self.assertTrue(all("/tmp/" not in ref for ref in candidate["reusable_input_refs"]))
+            self.assertEqual(
+                candidate["entry_decision_role"],
+                "entry_candidate_requires_trend_expansion_confirmation",
+            )
 
     def test_build_candidate_registry_with_profile_marks_reusable_artifacts(self) -> None:
         bundle = resolver.build_candidate_registry(
@@ -588,6 +605,14 @@ class FactorCandidateResolverTests(unittest.TestCase):
         self.assertEqual(vrp["learning_admission_status"], "blocked")
         self.assertIn("long_run_expectancy_after_declared_friction", vrp)
         self.assertEqual(
+            vrp["entry_regime_contract"]["primary_entry_regime"],
+            "TrendExpansion",
+        )
+        self.assertEqual(
+            vrp["entry_decision_role"],
+            "entry_candidate_requires_trend_expansion_confirmation",
+        )
+        self.assertEqual(
             vrp["profitability_status"],
             "declared_friction_missing",
         )
@@ -607,6 +632,10 @@ class FactorCandidateResolverTests(unittest.TestCase):
         self.assertEqual(order_block["aggregate_label"], "preferred_density")
         self.assertEqual(order_block["transfer_status"], "cross_market_candidate")
         self.assertEqual(order_block["learning_admission_status"], "blocked")
+        self.assertEqual(
+            order_block["entry_decision_role"],
+            "exclude_non_trend_or_counter_evidence",
+        )
         self.assertIn("long_run_expectancy_after_declared_friction", order_block)
         self.assertEqual(
             order_block["profitability_status"],

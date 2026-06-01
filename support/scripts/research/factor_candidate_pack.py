@@ -622,6 +622,11 @@ def _candidate_expression(
         "context_timeframes": candidate_spec.get("context_timeframes", []),
         "branch_path_contract": branch_path_contract,
         "regime_role": candidate_spec.get("regime_role", "mixed"),
+        "entry_regime_contract": candidate_spec.get("entry_regime_contract"),
+        "entry_decision_role": candidate_spec.get(
+            "entry_decision_role",
+            "entry_candidate_requires_trend_expansion_confirmation",
+        ),
         "evidence_window": candidate_spec.get("evidence_window"),
         "strategy_source": candidate_spec.get("strategy_source"),
         "filter_belief_execution_mapping": {

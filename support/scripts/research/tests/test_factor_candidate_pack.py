@@ -1017,6 +1017,13 @@ Expected_regime: TrendTransition -> LiquidityReclaim -> family_d_liquidity_sweep
             "belief_targets": ["bbn_vol_regime_evidence"],
             "path_ranking_targets": ["structural_path_confidence"],
             "execution_tree_targets": ["transition_guardrail", "observe_gate"],
+            "entry_regime_contract": {
+                "contract_id": "trend_expansion_entry_only_v1",
+                "primary_entry_regime": "TrendExpansion",
+                "allowed_entry_labels": ["expansion", "trend_continuation"],
+                "non_entry_factor_role": "exclude_non_trend_or_counter_evidence",
+            },
+            "entry_decision_role": "entry_candidate_requires_trend_expansion_confirmation",
             "structural_feedback_required": True,
         }
 
@@ -1060,6 +1067,18 @@ Expected_regime: TrendTransition -> LiquidityReclaim -> family_d_liquidity_sweep
             )
 
             self.assertEqual(expression["candidate_id"], "family_f_vrp_compression_v1")
+            self.assertEqual(
+                expression["entry_regime_contract"]["primary_entry_regime"],
+                "TrendExpansion",
+            )
+            self.assertEqual(
+                expression["entry_regime_contract"]["allowed_entry_labels"],
+                ["expansion", "trend_continuation"],
+            )
+            self.assertEqual(
+                expression["entry_decision_role"],
+                "entry_candidate_requires_trend_expansion_confirmation",
+            )
             self.assertEqual(grid["trade_density_summary"]["aggregate_trade_count"], 334)
             self.assertEqual(
                 grid["aggregate_metrics"]["max_drawdown_pct"],

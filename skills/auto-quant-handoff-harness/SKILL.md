@@ -40,6 +40,9 @@ run a lane without touching shared mutable repo state:
 - `AUTO_QUANT_USER_DATA`
 - `AUTO_QUANT_STRATEGIES_DIR`
 - `AUTO_QUANT_RESULTS_TSV`
+- `entry_regime_contract` with `primary_entry_regime=TrendExpansion`,
+  allowed entry labels `expansion` and `trend_continuation`, and a clear
+  non-entry role for all other regime evidence
 - `lifecycle_layers` with environment contract, procedural skill, action
   realization, and trajectory regulation entries
 - `evolution_inputs` derived from measured trajectories
@@ -52,6 +55,27 @@ run a lane without touching shared mutable repo state:
 
 If these fields are missing, do not ask another agent to start Auto-Quant work.
 Repair the handoff first.
+
+## Trend / Expansion Entry Contract
+
+Auto-Quant handoffs are trend / expansion entry harnesses. A strategy may open
+an entry only when the regime evidence supports `TrendExpansion`, represented
+by `expansion` or `trend_continuation` labels. Compression, reversion,
+manipulation, transition, range, unknown, or low-confidence evidence is not an
+alternate entry family. It is exclusion, conflict, or counter-evidence used to
+block/down-rank the entry and improve regime identification.
+
+When planning or reviewing a lane:
+
+- classify each factor as entry evidence, non-trend exclusion evidence, or
+  trend counter-evidence before editing strategy files;
+- require the strategy entry condition to include expansion or
+  trend-continuation evidence;
+- use non-trend factors only as filters, blockers, down-rankers, or review
+  diagnostics unless fresh regime evidence reclassifies the state into the
+  trend family;
+- reject review packets where a compression/reversion/manipulation signal has
+  become a standalone entry trigger.
 
 ## Repository Admission Boundary
 
@@ -327,6 +351,9 @@ The smoke JSON must show:
 ```text
 agent_workflow.workflow_style=plan_work_review
 agent_workflow.environment contains AUTO_QUANT_WORKSPACE
+agent_workflow.entry_regime_contract.primary_entry_regime=TrendExpansion
+agent_workflow.entry_regime_contract.allowed_entry_labels contains expansion and trend_continuation
+agent_workflow.entry_regime_contract.non_entry_factor_role=exclude_non_trend_or_counter_evidence
 agent_workflow.lifecycle_layers contains Environment Contract Layer
 agent_workflow.lifecycle_layers contains Procedural Skill Layer
 agent_workflow.lifecycle_layers contains Action Realization Layer

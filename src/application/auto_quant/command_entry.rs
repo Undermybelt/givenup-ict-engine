@@ -265,9 +265,14 @@ fn render_auto_quant_handoff_human_output(
             .find(|item| item.starts_with("AUTO_QUANT_WORKSPACE="))
             .cloned()
             .unwrap_or_else(|| "AUTO_QUANT_WORKSPACE=<lane-workspace>".to_string());
+        let entry_regime = workflow
+            .entry_regime_contract
+            .as_ref()
+            .map(|contract| contract.primary_entry_regime.as_str())
+            .unwrap_or("not_declared");
         lines.push(format!(
-            "Agent workflow: plan -> work -> review | {}",
-            workspace_env
+            "Agent workflow: plan -> work -> review | entry_regime={} | {}",
+            entry_regime, workspace_env
         ));
     }
     if !payload.notes.is_empty() {
@@ -1597,6 +1602,30 @@ class IbkrFutM2KExactShort1Min(IStrategy):
         assert!(workflow_text.contains("plan"), "{workflow_text}");
         assert!(workflow_text.contains("work"), "{workflow_text}");
         assert!(workflow_text.contains("review"), "{workflow_text}");
+        assert_eq!(
+            workflow["entry_regime_contract"]["contract_id"],
+            "trend_expansion_entry_only_v1"
+        );
+        assert_eq!(
+            workflow["entry_regime_contract"]["primary_entry_regime"],
+            "TrendExpansion"
+        );
+        assert_eq!(
+            workflow["entry_regime_contract"]["allowed_entry_labels"],
+            serde_json::json!(["expansion", "trend_continuation"])
+        );
+        assert_eq!(
+            workflow["entry_regime_contract"]["non_entry_factor_role"],
+            "exclude_non_trend_or_counter_evidence"
+        );
+        assert!(
+            workflow_text.contains("Only TrendExpansion entries are allowed"),
+            "{workflow_text}"
+        );
+        assert!(
+            workflow_text.contains("entry_regime_regression"),
+            "{workflow_text}"
+        );
         let lifecycle_layers = workflow["lifecycle_layers"].as_array().unwrap();
         assert_eq!(lifecycle_layers.len(), 4, "{workflow_text}");
         assert!(
@@ -1645,6 +1674,7 @@ class IbkrFutM2KExactShort1Min(IStrategy):
             "{workflow_text}"
         );
         assert!(human.contains("Agent workflow: plan -> work -> review"));
+        assert!(human.contains("entry_regime=TrendExpansion"));
         assert!(human.contains("AUTO_QUANT_WORKSPACE"));
     }
 
