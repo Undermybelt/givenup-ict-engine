@@ -383,3 +383,64 @@ Results:
 - Focused Rust tests for Auto-Quant readiness/bootstrap and provider-neutral CLI
   all passed.
 - The touched regime consumer-bundle regression passed.
+
+## 2026-06-01T18:35+0800 Post-Source-Push Objective Snapshot
+
+Remote readback after source push:
+
+- `ict-engine` local `HEAD=ff6b11e146817d345f561841cebbe9e6e42341b6`;
+  `origin/main` and HTTPS no-rewrite readback match.
+- `ict-engine-release` HTTPS no-rewrite readback is still
+  `4a804fd093289c59605bb71002a32117f1b79947`.
+- `Auto-Quant` local `HEAD=08bd92b51d0013b1244f1c9567797e898649379a`;
+  `origin/master` and HTTPS no-rewrite readback match.
+
+Fresh commands:
+
+```bash
+python3 support/scripts/factor_claim_terminalization_audit.py --compact
+python3 support/scripts/objective_closure_snapshot.py --compact --check-remotes --timeout-seconds 300 --output-dir /tmp/ict-engine-objective-closure-20260601-after-source-push-codex
+python3 -m unittest tests/test_auto_quant_workspace.py -v
+.venv/bin/python -m py_compile auto_quant_workspace.py run.py prepare.py tests/test_auto_quant_workspace.py
+AUTO_QUANT_WORKSPACE=/tmp/auto-quant-empty-smoke-20260601-after-source-push-codex AUTO_QUANT_DATA_DIR="$PWD/user_data/data" uv run run.py
+```
+
+Results:
+
+- Auto-Quant workspace tests passed `2/2`.
+- Auto-Quant py_compile passed.
+- Auto-Quant empty workspace smoke exited `2` with expected `no strategies found`
+  readiness text.
+- `factor_claim_terminalization_audit.py --compact` returned `needs_attention`
+  because there is one fresh active claim:
+  `20260601T130028+0800-codex-pesaran-timmermann-directional-accuracy-15m-downstream.claim`,
+  age about `10` minutes, `live_factor_processes=0`,
+  `promotion_allowed_true=0`, `trade_usable_true=0`.
+- Parent objective snapshot packet:
+  `/tmp/ict-engine-objective-closure-20260601-after-source-push-codex/objective_closure_snapshot.json`.
+- Parent snapshot remains `summary.status=not_complete`,
+  `completion_proven=false`.
+
+Current blockers:
+
+1. `done_definition_not_completion_ready`: this post-push snapshot was light
+   and skipped `cargo_check_all_targets`, `cargo_clippy_all_targets_deny_warnings`,
+   `cargo_test`, and `smoke_acceptance_tmp_state`.
+2. `factor_closure_blocked`: fresh active Pesaran-Timmermann downstream claim
+   must progress or become stale-safe before terminalization/takeover.
+3. `same_tree_practical_closure_unproven`: no validated same-tree practical
+   closure packet; required stages still missing are provider data, Pre-Bayes,
+   BBN/workflow, path-ranker, execution-tree, feedback/update, and
+   policy-training.
+4. `release_readiness_blocked`: unresolved `worktree_clean_for_release` because
+   the shared development checkout still has unrelated dirty tracked entries.
+
+Verdict remains:
+
+- Source and Auto-Quant remote push/readback gaps are closed.
+- Full objective is still not complete.
+- Next safe action is to wait for or inspect the fresh active
+  Pesaran-Timmermann claim after it is no longer fresh, then rerun factor
+  closure; independently, use clean selected-export evidence for release
+  readiness and run heavy done-definition only when the active claim blocker is
+  gone or explicitly excluded.
