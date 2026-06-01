@@ -1,22 +1,25 @@
 {
   "schema_version": "fixed-bps-cost-model-source-debt-quarantine/v1",
   "decision": "quarantined_untracked_fixed_bps_cost_model_debt",
-  "reviewed_at": "2026-05-31T12:42:31+08:00",
-  "untracked_violation_count": 1790,
+  "reviewed_at": "2026-06-01T08:13:26+08:00",
+  "untracked_violation_count": 1789,
   "untracked_violating_files": 322,
-  "untracked_violations_sha256": "83cb8815355a731606abc26484cb7db0799383710fc147c4433a81e83b641d54",
+  "untracked_violations_sha256": "a00433badb1dae94ecad70e1848d126ad5fcfc1b7767e385dd1500386e3d46a2",
+  "reviewed_alternative_untracked_violations_sha256": [
+    "83cb8815355a731606abc26484cb7db0799383710fc147c4433a81e83b641d54"
+  ],
   "tracked_violation_count": 0,
   "tracked_violating_files": 0,
-  "reviewed_drift": "The 2026-05-31T04:42Z done-definition fixed-bps source scan reported 1790 fixed-bps cost-model violations across 322 active untracked experiment scripts and zero tracked/current authority violations. This quarantine externalizes that untracked shared-worktree debt only; it is not release, promotion, trade-use, real-cost, or objective-completion evidence.",
+  "reviewed_drift": "The 2026-06-01T00:13Z done-definition fixed-bps source scan reported 1789 fixed-bps cost-model violations across 322 active untracked experiment scripts and zero tracked/current authority violations. This quarantine externalizes that untracked shared-worktree debt only; it is not release, promotion, trade-use, real-cost, or objective-completion evidence.",
   "violations_by_type": {
     "fixed_bps_cost_argument": 13,
     "fixed_bps_cost_argument_default": 4,
     "fixed_bps_cost_assignment": 14,
-    "fixed_bps_cost_field": 1179,
+    "fixed_bps_cost_field": 1178,
     "fixed_bps_cost_formula": 420,
     "fixed_bps_cost_ladder": 155,
     "fixed_bps_cost_reference": 5
   },
-  "source_packet": "/tmp/ict-engine-factor-training-loop-audit-20260531T122038+0800/done_definition_audit.after_source_debt_split.compact.json",
+  "source_packet": "/var/folders/l1/8xfkxd9d5yb4kgnlsplv8md40000gn/T/ict-engine-fixed-bps-cost-model-source-debt-95488.json",
   "next_action": "Before objective closure or release, rerun done_definition_audit/objective_closure_snapshot and require this fingerprint to match; if it drifts, treat the new fixed-bps source debt as unquarantined until reviewed. This quarantine does not make any untracked wrapper release-ready, promotion-eligible, trade-usable, or real-cost verified."
 }
