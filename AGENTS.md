@@ -51,6 +51,10 @@ clone/bootstrap path when the managed Auto-Quant checkout is missing.
 - Auto-Quant handoff payloads that launch agent work must carry lane-local
   workspace instructions and plan/work/review evidence requirements; an
   Auto-Quant run is candidate evidence only, not `trade_usable=true`.
+- Non-promoted Auto-Quant/TOMAC lane artifacts stay in `/tmp` unless they are
+  packaged as an explicit evidence packet or current practical-closure proof.
+  Do not add loose source-intake notes, generated wrappers, or strategy sketches
+  to the repo just because they were useful during training.
 
 ### Reuse before rebuild
 

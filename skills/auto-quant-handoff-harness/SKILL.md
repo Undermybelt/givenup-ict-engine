@@ -53,6 +53,26 @@ run a lane without touching shared mutable repo state:
 If these fields are missing, do not ask another agent to start Auto-Quant work.
 Repair the handoff first.
 
+## Repository Admission Boundary
+
+Auto-Quant and TOMAC iteration artifacts belong under the lane-local
+`AUTO_QUANT_WORKSPACE`, run root, or `/tmp` claim/workdoc until they become one
+of these explicit repo-admitted artifacts:
+
+- a structured evidence packet under
+  `support/docs/experiments/actionable-regime-confidence/runs/...`
+- a candidate/adoption bundle that is referenced by such an evidence packet
+- a current `ict-engine` practical-closure artifact proving
+  `promotion_allowed=true` and `trade_usable=true`
+
+Do not commit loose source-intake notes, prep/downstream wrappers, generated
+strategy files, `plan.md`, `review.md`, `run.log`, `results.tsv`, or
+`strategy_library.json` from a non-promoted lane. A fail-closed, prep-only,
+observation-only, or sparse-positive candidate remains `/tmp`-scoped unless it
+is packaged as an evidence packet. If the useful part is a reusable harness
+rule, promote the rule into this skill or typed code/tests; keep the raw lane
+artifact out of the repo.
+
 ## Life-Harness Runtime Adaptation Contract
 
 Source absorbed: arXiv `2605.22166` and
